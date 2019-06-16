@@ -36,12 +36,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public string ReasonPhrase
         {
-            get { return m_ReasonPhrase; }
+            get => m_ReasonPhrase;
 
-            set
-            {
-                m_ReasonPhrase = value ?? throw new ArgumentNullException("ReasonPhrase");
-            }
+            set => m_ReasonPhrase = value ?? throw new ArgumentNullException("ReasonPhrase");
         }
 
         /// <summary>
@@ -55,7 +52,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when invalid SIP version value passed.</exception>
         public double SipVersion
         {
-            get { return m_SipVersion; }
+            get => m_SipVersion;
 
             set
             {
@@ -74,7 +71,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when value is out of allowed range.</exception>
         public int StatusCode
         {
-            get { return m_StatusCode; }
+            get => m_StatusCode;
 
             set
             {
@@ -92,7 +89,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public string StatusCode_ReasonPhrase
         {
-            get { return m_StatusCode + " " + m_ReasonPhrase; }
+            get => m_StatusCode + " " + m_ReasonPhrase;
 
             set
             {

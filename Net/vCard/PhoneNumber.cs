@@ -31,7 +31,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string Number
         {
-            get { return m_Number; }
+            get => m_Number;
 
             set
             {
@@ -45,7 +45,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public PhoneNumberType_enum NumberType
         {
-            get { return m_Type; }
+            get => m_Type;
 
             set
             {

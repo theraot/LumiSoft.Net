@@ -25,10 +25,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets if body has modified.
         /// </summary>
-        public override bool IsModified
-        {
-            get { return m_pMessage.IsModified; }
-        }
+        public override bool IsModified => m_pMessage.IsModified;
 
         /// <summary>
         /// Gets embbed mail message.
@@ -37,7 +34,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
         public Mail_Message Message
         {
-            get { return m_pMessage; }
+            get => m_pMessage;
 
             set
             {

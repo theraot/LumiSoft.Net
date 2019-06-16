@@ -57,7 +57,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public IPBindInfo[] BindInfo
         {
-            get { return m_pBinds; }
+            get => m_pBinds;
 
             set
             {
@@ -124,10 +124,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets currently active flows.
         /// </summary>
-        public SIP_Flow[] Flows
-        {
-            get { return m_pFlowManager.Flows; }
-        }
+        public SIP_Flow[] Flows => m_pFlowManager.Flows;
 
         /// <summary>
         /// Gets if transport layer is running.

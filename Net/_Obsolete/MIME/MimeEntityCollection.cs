@@ -27,18 +27,12 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets mime entities count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pEntities.Count; }
-        }
+        public int Count => m_pEntities.Count;
 
         /// <summary>
         /// Gets mime entity at specified index.
         /// </summary>
-        public MimeEntity this[int index]
-        {
-            get { return (MimeEntity)m_pEntities[index]; }
-        }
+        public MimeEntity this[int index] => (MimeEntity)m_pEntities[index];
 
         /// <summary>
         /// Creates a new mime entity to the end of the collection.

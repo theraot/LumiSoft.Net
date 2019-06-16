@@ -35,7 +35,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int NonceCount
         {
-            get { return m_NonceCount; }
+            get => m_NonceCount;
 
             set
             {

@@ -41,10 +41,7 @@ namespace LumiSoft.Net.FTP
         /// <summary>
         /// Gets if current item is file.
         /// </summary>
-        public bool IsFile
-        {
-            get { return !IsDir; }
-        }
+        public bool IsFile => !IsDir;
 
         /// <summary>
         /// Gets last time file or direcory was modified.

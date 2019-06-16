@@ -51,7 +51,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public uint[] Sources
         {
-            get { return m_Sources; }
+            get => m_Sources;
 
             set
             {
@@ -67,18 +67,12 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTCP packet type.
         /// </summary>
-        public override int Type
-        {
-            get { return RTCP_PacketType.BYE; }
-        }
+        public override int Type => RTCP_PacketType.BYE;
 
         /// <summary>
         /// Gets RTCP version.
         /// </summary>
-        public override int Version
-        {
-            get { return m_Version; }
-        }
+        public override int Version => m_Version;
 
         /// <summary>
         /// Stores BYE packet to the specified buffer.

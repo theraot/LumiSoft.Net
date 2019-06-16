@@ -27,17 +27,14 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets values count.
         /// </summary>
-        public int Count
-        {
-            get { return Values.Count; }
-        }
+        public int Count => Values.Count;
 
         /// <summary>
         /// Gets or sets header field value.
         /// </summary>
         public override string Value
         {
-            get { return ToStringValue(); }
+            get => ToStringValue();
 
             set
             {

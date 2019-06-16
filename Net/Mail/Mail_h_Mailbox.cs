@@ -51,18 +51,12 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get { return false; }
-        }
+        public override bool IsModified => false;
 
         /// <summary>
         /// Gets header field name. For example "Sender".
         /// </summary>
-        public override string Name
-        {
-            get { return m_Name; }
-        }
+        public override string Name => m_Name;
 
         /// <summary>
         /// Parses header field from the specified value.

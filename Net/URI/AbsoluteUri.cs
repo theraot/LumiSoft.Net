@@ -20,18 +20,12 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets URI scheme.
         /// </summary>
-        public virtual string Scheme
-        {
-            get { return m_Scheme; }
-        }
+        public virtual string Scheme => m_Scheme;
 
         /// <summary>
         /// Gets URI value after scheme.
         /// </summary>
-        public string Value
-        {
-            get { return ToString().Split(new[] { ':' }, 2)[1]; }
-        }
+        public string Value => ToString().Split(new[] { ':' }, 2)[1];
 
         /// <summary>
         /// Parse URI from string value.

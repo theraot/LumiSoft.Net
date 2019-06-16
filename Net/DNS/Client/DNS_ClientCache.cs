@@ -26,10 +26,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// Gets number of DNS queries cached.
         /// </summary>
-        public int Count
-        {
-            get { return m_pCache.Count; }
-        }
+        public int Count => m_pCache.Count;
 
         /// <summary>
         /// Gets or sets maximum number of seconds to cache positive DNS responses.

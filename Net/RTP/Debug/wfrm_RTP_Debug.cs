@@ -596,98 +596,65 @@ namespace LumiSoft.Net.RTP.Debug
             /// Gets stream owner RTP session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int Session
-            {
-                get { return m_pStream.Session.GetHashCode(); }
-            }
+            public int Session => m_pStream.Session.GetHashCode();
 
             /// <summary>
             /// Gets number of times <b>SeqNo</b> has wrapped around.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int SeqNoWrapCount
-            {
-                get { return m_pStream.SeqNoWrapCount; }
-            }
+            public int SeqNoWrapCount => m_pStream.SeqNoWrapCount;
 
             /// <summary>
             /// Gets first sequence number what this stream got.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int FirstSeqNo
-            {
-                get { return m_pStream.FirstSeqNo; }
-            }
+            public int FirstSeqNo => m_pStream.FirstSeqNo;
 
             /// <summary>
             /// Gets maximum sequnce number that stream has got.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int MaxSeqNo
-            {
-                get { return m_pStream.MaxSeqNo; }
-            }
+            public int MaxSeqNo => m_pStream.MaxSeqNo;
 
             /// <summary>
             /// Gets how many RTP packets has received by this stream.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long PacketsReceived
-            {
-                get { return m_pStream.PacketsReceived; }
-            }
+            public long PacketsReceived => m_pStream.PacketsReceived;
 
             /// <summary>
             /// Gets how many RTP misorder packets has received by this stream.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long PacketsMisorder
-            {
-                get { return m_pStream.PacketsMisorder; }
-            }
+            public long PacketsMisorder => m_pStream.PacketsMisorder;
 
             /// <summary>
             /// Gets how many RTP data has received by this stream.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long BytesReceived
-            {
-                get { return m_pStream.BytesReceived; }
-            }
+            public long BytesReceived => m_pStream.BytesReceived;
 
             /// <summary>
             /// Gets how many RTP packets has lost during transmission.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long PacketsLost
-            {
-                get { return m_pStream.PacketsLost; }
-            }
+            public long PacketsLost => m_pStream.PacketsLost;
 
             /// <summary>
             /// Gets inter arrival jitter.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public double Jitter
-            {
-                get { return m_pStream.Jitter; }
-            }
+            public double Jitter => m_pStream.Jitter;
 
             /// <summary>
             /// Gets time when last SR(sender report) was received. Returns <b>DateTime.MinValue</b> if no SR received.
             /// </summary>
-            public string LastSRTime
-            {
-                get { return m_pStream.LastSRTime.ToString("HH:mm:ss"); }
-            }
+            public string LastSRTime => m_pStream.LastSRTime.ToString("HH:mm:ss");
 
             /// <summary>
             /// Gets delay between las SR(sender report) and now in seconds.
             /// </summary>
-            public int DelaySinceLastSR
-            {
-                get { return m_pStream.DelaySinceLastSR / 1000; }
-            }
+            public int DelaySinceLastSR => m_pStream.DelaySinceLastSR / 1000;
         }
 
         /// <summary>
@@ -711,73 +678,49 @@ namespace LumiSoft.Net.RTP.Debug
             /// Gets stream owner RTP session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int Session
-            {
-                get { return m_pStream.Session.GetHashCode(); }
-            }
+            public int Session => m_pStream.Session.GetHashCode();
 
             /// <summary>
             /// Gets number of times <b>SeqNo</b> has wrapped around.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int SeqNoWrapCount
-            {
-                get { return m_pStream.SeqNoWrapCount; }
-            }
+            public int SeqNoWrapCount => m_pStream.SeqNoWrapCount;
 
             /// <summary>
             /// Gets next packet sequence number.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int SeqNo
-            {
-                get { return m_pStream.SeqNo; }
-            }
+            public int SeqNo => m_pStream.SeqNo;
 
             /// <summary>
             /// Gets last packet send time.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public string LastPacketTime
-            {
-                get { return m_pStream.LastPacketTime.ToString("HH:mm:ss"); }
-            }
+            public string LastPacketTime => m_pStream.LastPacketTime.ToString("HH:mm:ss");
 
             /// <summary>
             /// Gets last sent RTP packet RTP timestamp header value.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public uint LastPacketRtpTimestamp
-            {
-                get { return m_pStream.LastPacketRtpTimestamp; }
-            }
+            public uint LastPacketRtpTimestamp => m_pStream.LastPacketRtpTimestamp;
 
             /// <summary>
             /// Gets how many RTP packets has sent by this stream.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpPacketsSent
-            {
-                get { return m_pStream.RtpPacketsSent; }
-            }
+            public long RtpPacketsSent => m_pStream.RtpPacketsSent;
 
             /// <summary>
             /// Gets how many RTP bytes has sent by this stream.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpBytesSent
-            {
-                get { return m_pStream.RtpBytesSent; }
-            }
+            public long RtpBytesSent => m_pStream.RtpBytesSent;
 
             /// <summary>
             /// Gets how many RTP data(no RTP header included) bytes has sent by this stream.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpDataBytesSent
-            {
-                get { return m_pStream.RtpDataBytesSent; }
-            }
+            public long RtpDataBytesSent => m_pStream.RtpDataBytesSent;
         }
 
         /// <summary>
@@ -800,206 +743,104 @@ namespace LumiSoft.Net.RTP.Debug
             /// <summary>
             /// Gets total members count.
             /// </summary>
-            public long Members
-            {
-                get { return m_pSession.Members.Length; }
-            }
+            public long Members => m_pSession.Members.Length;
 
             /// <summary>
             /// Gets total members who send RPT data.
             /// </summary>
-            public long Senders
-            {
-                get { return m_pSession.Senders.Length; }
-            }
+            public long Senders => m_pSession.Senders.Length;
 
             /// <summary>
             /// Gets total of RTP packets sent by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpPacketsSent
-            {
-                get
-                {
-                    return m_pSession.RtpPacketsSent;
-                }
-            }
+            public long RtpPacketsSent => m_pSession.RtpPacketsSent;
 
             /// <summary>
             /// Gets total of RTP bytes(RTP headers included) sent by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpBytesSent
-            {
-                get
-                {
-                    return m_pSession.RtpBytesSent;
-                }
-            }
+            public long RtpBytesSent => m_pSession.RtpBytesSent;
 
             /// <summary>
             /// Gets total of RTP packets received by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpPacketsReceived
-            {
-                get
-                {
-                    return m_pSession.RtpPacketsReceived;
-                }
-            }
+            public long RtpPacketsReceived => m_pSession.RtpPacketsReceived;
 
             /// <summary>
             /// Gets total of RTP bytes(RTP headers included) received by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpBytesReceived
-            {
-                get
-                {
-                    return m_pSession.RtpBytesReceived;
-                }
-            }
+            public long RtpBytesReceived => m_pSession.RtpBytesReceived;
 
             /// <summary>
             /// Gets number of times RTP packet sending has failed.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtpFailedTransmissions
-            {
-                get
-                {
-                    return m_pSession.RtpFailedTransmissions;
-                }
-            }
+            public long RtpFailedTransmissions => m_pSession.RtpFailedTransmissions;
 
             /// <summary>
             /// Gets total of RTCP packets sent by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtcpPacketsSent
-            {
-                get
-                {
-                    return m_pSession.RtcpPacketsSent;
-                }
-            }
+            public long RtcpPacketsSent => m_pSession.RtcpPacketsSent;
 
             /// <summary>
             /// Gets total of RTCP bytes(RTCP headers included) sent by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtcpBytesSent
-            {
-                get
-                {
-                    return m_pSession.RtcpBytesSent;
-                }
-            }
+            public long RtcpBytesSent => m_pSession.RtcpBytesSent;
 
             /// <summary>
             /// Gets total of RTCP packets received by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtcpPacketsReceived
-            {
-                get
-                {
-                    return m_pSession.RtcpPacketsReceived;
-                }
-            }
+            public long RtcpPacketsReceived => m_pSession.RtcpPacketsReceived;
 
             /// <summary>
             /// Gets total of RTCP bytes(RTCP headers included) received by this session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtcpBytesReceived
-            {
-                get
-                {
-                    return m_pSession.RtcpBytesReceived;
-                }
-            }
+            public long RtcpBytesReceived => m_pSession.RtcpBytesReceived;
 
             /// <summary>
             /// Gets number of times RTCP packet sending has failed.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public long RtcpFailedTransmissions
-            {
-                get
-                {
-                    return m_pSession.RtcpFailedTransmissions;
-                }
-            }
+            public long RtcpFailedTransmissions => m_pSession.RtcpFailedTransmissions;
 
             /// <summary>
             /// Current RTCP reporting interval in seconds.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int RtcpInterval
-            {
-                get
-                {
-                    return m_pSession.RtcpInterval;
-                }
-            }
+            public int RtcpInterval => m_pSession.RtcpInterval;
 
             /// <summary>
             /// Gets time when last RTCP report was sent.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public string RtcpLastTransmission
-            {
-                get
-                {
-                    return m_pSession.RtcpLastTransmission.ToString("HH:mm:ss");
-                }
-            }
+            public string RtcpLastTransmission => m_pSession.RtcpLastTransmission.ToString("HH:mm:ss");
 
             /// <summary>
             /// Gets number of times local SSRC collision dedected.
             /// </summary>
-            public long LocalCollisions
-            {
-                get
-                {
-                    return m_pSession.LocalCollisions;
-                }
-            }
+            public long LocalCollisions => m_pSession.LocalCollisions;
 
             /// <summary>
             /// Gets number of times remote SSRC collision dedected.
             /// </summary>
-            public long RemoteCollisions
-            {
-                get
-                {
-                    return m_pSession.RemoteCollisions;
-                }
-            }
+            public long RemoteCollisions => m_pSession.RemoteCollisions;
 
             /// <summary>
             /// Gets number of times local packets loop dedected.
             /// </summary>
-            public long LocalPacketsLooped
-            {
-                get
-                {
-                    return m_pSession.LocalPacketsLooped;
-                }
-            }
+            public long LocalPacketsLooped => m_pSession.LocalPacketsLooped;
 
             /// <summary>
             /// Gets number of times remote packets loop dedected.
             /// </summary>
-            public long RemotePacketsLooped
-            {
-                get
-                {
-                    return m_pSession.RemotePacketsLooped;
-                }
-            }
+            public long RemotePacketsLooped => m_pSession.RemotePacketsLooped;
 
             /// <summary>
             /// Gets RTP payload.
@@ -1041,24 +882,12 @@ namespace LumiSoft.Net.RTP.Debug
             /// <summary>
             /// Gets RTP local end point.
             /// </summary>
-            public string LocalEP
-            {
-                get
-                {
-                    return m_pSession.LocalEP.IP + ":" + m_pSession.LocalEP.DataPort + "/" + m_pSession.LocalEP.ControlPort;
-                }
-            }
+            public string LocalEP => m_pSession.LocalEP.IP + ":" + m_pSession.LocalEP.DataPort + "/" + m_pSession.LocalEP.ControlPort;
 
             /// <summary>
             /// Gets RTP stream mode.
             /// </summary>
-            public string StreamMode
-            {
-                get
-                {
-                    return m_pSession.StreamMode.ToString();
-                }
-            }
+            public string StreamMode => m_pSession.StreamMode.ToString();
         }
 
         /// <summary>
@@ -1081,73 +910,49 @@ namespace LumiSoft.Net.RTP.Debug
             /// <summary>
             /// Gets source state.
             /// </summary>
-            public RTP_SourceState State
-            {
-                get { return m_pSource.State; }
-            }
+            public RTP_SourceState State => m_pSource.State;
 
             /// <summary>
             /// Gets owner RTP session.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public int Session
-            {
-                get { return m_pSource.Session.GetHashCode(); }
-            }
+            public int Session => m_pSource.Session.GetHashCode();
 
             /// <summary>
             /// Gets synchronization source ID.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public uint SSRC
-            {
-                get { return m_pSource.SSRC; }
-            }
+            public uint SSRC => m_pSource.SSRC;
 
             /// <summary>
             /// Gets source RTCP end point. Value null means source haven't sent any RTCP packet.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public IPEndPoint RtcpEP
-            {
-                get { return m_pSource.RtcpEP; }
-            }
+            public IPEndPoint RtcpEP => m_pSource.RtcpEP;
 
             /// <summary>
             /// Gets source RTP end point. Value null means source haven't sent any RTCP packet.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public IPEndPoint RtpEP
-            {
-                get { return m_pSource.RtpEP; }
-            }
+            public IPEndPoint RtpEP => m_pSource.RtpEP;
 
             /// <summary>
             /// Gets last time when source sent RTP or RCTP packet.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public string LastActivity
-            {
-                get { return m_pSource.LastActivity.ToString("HH:mm:ss"); }
-            }
+            public string LastActivity => m_pSource.LastActivity.ToString("HH:mm:ss");
 
             /// <summary>
             /// Gets last time when source sent RTCP packet.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public string LastRtcpPacket
-            {
-                get { return m_pSource.LastRtcpPacket.ToString("HH:mm:ss"); }
-            }
+            public string LastRtcpPacket => m_pSource.LastRtcpPacket.ToString("HH:mm:ss");
 
             /// <summary>
             /// Gets last time when source sent RTP packet.
             /// </summary>
             /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-            public string LastRtpPacket
-            {
-                get { return m_pSource.LastRtpPacket.ToString("HH:mm:ss"); }
-            }
+            public string LastRtpPacket => m_pSource.LastRtpPacket.ToString("HH:mm:ss");
         }
     }
 }

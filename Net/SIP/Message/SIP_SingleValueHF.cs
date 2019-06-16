@@ -25,7 +25,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public override string Value
         {
-            get { return ToStringValue(); }
+            get => ToStringValue();
 
             set
             {

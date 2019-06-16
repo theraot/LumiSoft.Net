@@ -35,10 +35,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets number of queued items in queue.
         /// </summary>
-        public int Count
-        {
-            get { return m_pQueue.Count; }
-        }
+        public int Count => m_pQueue.Count;
 
         /// <summary>
         /// Gets queue name.

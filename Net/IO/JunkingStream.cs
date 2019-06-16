@@ -12,43 +12,31 @@ namespace LumiSoft.Net.IO
         /// <summary>
         /// Gets a value indicating whether the stream supports reading. This property always returns false.
         /// </summary>
-        public override bool CanRead
-        {
-            get { return false; }
-        }
+        public override bool CanRead => false;
 
         /// <summary>
         /// Gets a value indicating whether the stream supports seeking. This property always returns false.
         /// </summary>
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
+        public override bool CanSeek => false;
 
         /// <summary>
         /// Gets a value that indicates whether the stream supports writing.
         /// </summary>
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        public override bool CanWrite => true;
 
         /// <summary>
         /// Gets the length of the data available on the stream. This property always throws a NotSupportedException.
         /// </summary>
-        public override long Length
-        {
-            get { throw new NotSupportedException(); }
-        }
+        public override long Length => throw new NotSupportedException();
 
         /// <summary>
         /// Gets or sets the current position in the stream. This property always throws a NotSupportedException.
         /// </summary>
         public override long Position
         {
-            get { throw new NotSupportedException(); }
+            get => throw new NotSupportedException();
 
-            set { throw new NotSupportedException(); }
+            set => throw new NotSupportedException();
         }
         /// <summary>
         /// Not used.

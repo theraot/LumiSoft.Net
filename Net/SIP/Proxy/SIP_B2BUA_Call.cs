@@ -52,12 +52,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets if call has timed out and needs to be terminated.
         /// </summary>
-        public bool IsTimedOut
-        {
-            // TODO:
-
-            get { return false; }
-        }
+        public bool IsTimedOut => false;
 
         /// <summary>
         /// Gets call start time.

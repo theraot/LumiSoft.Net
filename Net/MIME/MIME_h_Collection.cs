@@ -31,10 +31,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pFields.Count; }
-        }
+        public int Count => m_pFields.Count;
 
         /// <summary>
         /// Gets header fields provider.

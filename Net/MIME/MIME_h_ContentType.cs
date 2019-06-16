@@ -104,27 +104,21 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get { return m_IsModified || Parameters.IsModified; }
-        }
+        public override bool IsModified => m_IsModified || Parameters.IsModified;
 
         /// <summary>
         /// Returns always "Content-Type".
         /// </summary>
-        public override string Name
-        {
-            get { return "Content-Type"; }
-        }
+        public override string Name => "Content-Type";
 
         /// <summary>
         /// Gets or sets Content-Type <b>boundary</b> parameter value. Value null means not specified.
         /// </summary>
         public string Param_Boundary
         {
-            get { return Parameters["boundary"]; }
+            get => Parameters["boundary"];
 
-            set { Parameters["boundary"] = value; }
+            set => Parameters["boundary"] = value;
         }
 
         /// <summary>
@@ -132,9 +126,9 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Param_Charset
         {
-            get { return Parameters["charset"]; }
+            get => Parameters["charset"];
 
-            set { Parameters["charset"] = value; }
+            set => Parameters["charset"] = value;
         }
 
         /// <summary>
@@ -142,9 +136,9 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Param_Name
         {
-            get { return Parameters["name"]; }
+            get => Parameters["name"];
 
-            set { Parameters["name"] = value; }
+            set => Parameters["name"] = value;
         }
 
         /// <summary>
@@ -167,19 +161,13 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets media type with subtype as Type/SubType. Well known value are in <see cref="MIME_MediaTypes">MIME_MediaTypes</see>. For example: text/plain.
         /// </summary>
-        public string TypeWithSubtype
-        {
-            get { return Type + "/" + SubType; }
-        }
+        public string TypeWithSubtype => Type + "/" + SubType;
 
         /// <summary>
         /// Gets media type with subtype as Type/SubType. Well known value are in <see cref="MIME_MediaTypes">MIME_MediaTypes</see>. For example: text/plain.
         /// </summary>
         [Obsolete("Mispelled 'TypeWithSubype', use TypeWithSubtype instead !")]
-        public string TypeWithSubype
-        {
-            get { return Type + "/" + SubType; }
-        }
+        public string TypeWithSubype => Type + "/" + SubType;
 
         /// <summary>
         /// Parses header field from the specified value.

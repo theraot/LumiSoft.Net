@@ -40,10 +40,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets body media type. For example: 'text/plain'.
         /// </summary>
-        public string MediaType
-        {
-            get { return m_pContentType.TypeWithSubtype; }
-        }
+        public string MediaType => m_pContentType.TypeWithSubtype;
 
         /// <summary>
         /// Sets body parent.

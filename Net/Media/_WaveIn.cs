@@ -601,10 +601,7 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets header handle.
             /// </summary>
-            public GCHandle HeaderHandle
-            {
-                get { return m_HeaderHandle; }
-            }
+            public GCHandle HeaderHandle => m_HeaderHandle;
 
             /// <summary>
             /// Gets wav header data.

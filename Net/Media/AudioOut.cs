@@ -64,10 +64,7 @@ namespace LumiSoft.Net.Media
         /// <summary>
         /// Gets all available audio output devices.
         /// </summary>
-        public static AudioOutDevice[] Devices
-        {
-            get { return WaveOut.Devices; }
-        }
+        public static AudioOutDevice[] Devices => WaveOut.Devices;
 
         /// <summary>
         /// Gets audio format.
@@ -688,26 +685,17 @@ namespace LumiSoft.Net.Media
                 /// <summary>
                 /// Gets header handle.
                 /// </summary>
-                public GCHandle HeaderHandle
-                {
-                    get { return m_HeaderHandle; }
-                }
+                public GCHandle HeaderHandle => m_HeaderHandle;
 
                 /// <summary>
                 /// Gets header.
                 /// </summary>
-                public WAVEHDR Header
-                {
-                    get { return (WAVEHDR)m_HeaderHandle.Target; }
-                }
+                public WAVEHDR Header => (WAVEHDR)m_HeaderHandle.Target;
 
                 /// <summary>
                 /// Gets wav header data pointer handle.
                 /// </summary>
-                public GCHandle DataHandle
-                {
-                    get { return m_DataHandle; }
-                }
+                public GCHandle DataHandle => m_DataHandle;
 
                 /// <summary>
                 /// Gets wav header data size in bytes.

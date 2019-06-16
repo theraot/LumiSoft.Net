@@ -121,7 +121,7 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public int NumberOfPorts
         {
-            get { return m_NumberOfPorts; }
+            get => m_NumberOfPorts;
 
             set
             {
@@ -144,7 +144,7 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public string Protocol
         {
-            get { return m_Protocol; }
+            get => m_Protocol;
 
             set
             {

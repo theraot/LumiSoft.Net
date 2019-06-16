@@ -30,18 +30,12 @@ namespace LumiSoft.Net.IO
         /// <summary>
         /// Gets number of bytes avialable in FIFO.
         /// </summary>
-        public int Available
-        {
-            get { return m_WriteOffset - m_ReadOffset; }
-        }
+        public int Available => m_WriteOffset - m_ReadOffset;
 
         /// <summary>
         /// Gets maximum number of bytes can buffer in FIFO.
         /// </summary>
-        public int MaxSize
-        {
-            get { return m_pBuffer.Length; }
-        }
+        public int MaxSize => m_pBuffer.Length;
 
         /// <summary>
         /// Clears buffer data.

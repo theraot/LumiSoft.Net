@@ -136,7 +136,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when empty string is passed or value is not token.</exception>
         public string Value
         {
-            get { return m_Value; }
+            get => m_Value;
 
             set
             {

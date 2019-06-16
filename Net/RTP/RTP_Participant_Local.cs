@@ -32,7 +32,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public string Email
         {
-            get { return m_Email; }
+            get => m_Email;
 
             set
             {
@@ -48,7 +48,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public string Location
         {
-            get { return m_Location; }
+            get => m_Location;
 
             set
             {
@@ -63,7 +63,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public string Name
         {
-            get { return m_Name; }
+            get => m_Name;
 
             set
             {
@@ -79,7 +79,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public string Note
         {
-            get { return m_Note; }
+            get => m_Note;
 
             set
             {
@@ -94,7 +94,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public string Phone
         {
-            get { return m_Phone; }
+            get => m_Phone;
 
             set
             {
@@ -110,7 +110,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public string Tool
         {
-            get { return m_Tool; }
+            get => m_Tool;
 
             set
             {

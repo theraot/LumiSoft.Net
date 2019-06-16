@@ -55,7 +55,7 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public string Address
         {
-            get { return m_Address; }
+            get => m_Address;
 
             set
             {
@@ -73,7 +73,7 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public string AddressType
         {
-            get { return m_AddressType; }
+            get => m_AddressType;
 
             set
             {

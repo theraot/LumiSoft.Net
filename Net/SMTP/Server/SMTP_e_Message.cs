@@ -31,11 +31,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference is passed.</exception>
         public Stream Stream
         {
-            get{ return m_pStream; }
+            get => m_pStream;
 
-            set{
-                m_pStream = value ?? throw new ArgumentNullException("Stream");
-            }
+            set => m_pStream = value ?? throw new ArgumentNullException("Stream");
         }
     }
 }

@@ -54,10 +54,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets the sources what participant owns(sends).
         /// </summary>
-        public RTP_Source[] Sources
-        {
-            get { return m_pSources.ToArray(); }
-        }
+        public RTP_Source[] Sources => m_pSources.ToArray();
 
         /// <summary>
         /// Gets or sets user data.

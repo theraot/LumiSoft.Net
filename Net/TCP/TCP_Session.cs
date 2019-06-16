@@ -14,10 +14,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets session authenticated user identity , returns null if not authenticated.
         /// </summary>
-        public virtual GenericIdentity AuthenticatedUserIdentity
-        {
-            get { return null; }
-        }
+        public virtual GenericIdentity AuthenticatedUserIdentity => null;
 
         /// <summary>
         /// Gets the time when session was connected.
@@ -38,10 +35,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if this session is authenticated.
         /// </summary>
-        public bool IsAuthenticated
-        {
-            get { return AuthenticatedUserIdentity != null; }
-        }
+        public bool IsAuthenticated => AuthenticatedUserIdentity != null;
 
         /// <summary>
         /// Gets if session is connected.
@@ -54,10 +48,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if this session TCP connection is secure connection.
         /// </summary>
-        public virtual bool IsSecureConnection
-        {
-            get { return false; }
-        }
+        public virtual bool IsSecureConnection => false;
 
         /// <summary>
         /// Gets the last time when data was sent or received.

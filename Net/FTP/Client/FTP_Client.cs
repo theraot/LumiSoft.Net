@@ -1709,10 +1709,7 @@ namespace LumiSoft.Net.FTP.Client
             /// <summary>
             /// Gets data connection local IP end point.
             /// </summary>
-            public IPEndPoint LocalEndPoint
-            {
-                get { return (IPEndPoint)m_pSocket.LocalEndPoint; }
-            }
+            public IPEndPoint LocalEndPoint => (IPEndPoint)m_pSocket.LocalEndPoint;
 
             /// <summary>
             /// Gets last time when data connection has read or written data.

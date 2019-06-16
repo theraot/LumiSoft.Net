@@ -31,26 +31,17 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>
-        public override bool IsAuthenticated
-        {
-            get { return m_IsAuthenticated; }
-        }
+        public override bool IsAuthenticated => m_IsAuthenticated;
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted
-        {
-            get { return m_IsCompleted; }
-        }
+        public override bool IsCompleted => m_IsCompleted;
 
         /// <summary>
         /// Returns always "LOGIN".
         /// </summary>
-        public override string Name
-        {
-            get { return "LOGIN"; }
-        }
+        public override string Name => "LOGIN";
 
         /// <summary>
         /// Gets if specified SASL mechanism is available only to SSL connection.
@@ -60,10 +51,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName
-        {
-            get { return m_UserName; }
-        }
+        public override string UserName => m_UserName;
 
         /// <summary>
         /// Continues authentication process.

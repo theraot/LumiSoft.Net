@@ -53,7 +53,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string DisplayName
         {
-            get { return m_DisplayName; }
+            get => m_DisplayName;
 
             set
             {
@@ -99,10 +99,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets if current URI is sip or sips URI.
         /// </summary>
-        public bool IsSipOrSipsUri
-        {
-            get { return IsSipUri || IsSecureSipUri; }
-        }
+        public bool IsSipOrSipsUri => IsSipUri || IsSecureSipUri;
 
         /// <summary>
         /// Gets if current URI is SIP uri.
@@ -126,12 +123,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
         public AbsoluteUri Uri
         {
-            get { return m_pUri; }
+            get => m_pUri;
 
-            set
-            {
-                m_pUri = value ?? throw new ArgumentNullException("value");
-            }
+            set => m_pUri = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>

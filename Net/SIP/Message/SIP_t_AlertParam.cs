@@ -21,7 +21,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string Uri
         {
-            get { return m_Uri; }
+            get => m_Uri;
 
             set
             {

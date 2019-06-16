@@ -22,18 +22,12 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets number of registrations in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pRegistrations.Count; }
-        }
+        public int Count => m_pRegistrations.Count;
 
         /// <summary>
         /// Gets SIP registrations what in the collection.
         /// </summary>
-        public SIP_Registration[] Values
-        {
-            get { return m_pRegistrations.ToArray(); }
-        }
+        public SIP_Registration[] Values => m_pRegistrations.ToArray();
 
         /// <summary>
         /// Gets registration with specified registration name. Returns null if specified registration doesn't exist.

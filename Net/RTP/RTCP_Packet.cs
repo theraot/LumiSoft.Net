@@ -30,7 +30,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public int PaddBytesCount
         {
-            get { return m_PaddBytesCount; }
+            get => m_PaddBytesCount;
 
             set
             {

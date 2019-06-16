@@ -22,10 +22,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets how many chars are available for reading.
         /// </summary>
-        public long Available
-        {
-            get { return SourceString.Length; }
-        }
+        public long Available => SourceString.Length;
 
         /// <summary>
         /// Gets original string passed to class constructor.
@@ -35,10 +32,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets position in original string.
         /// </summary>
-        public int Position
-        {
-            get { return OriginalString.Length - SourceString.Length; }
-        }
+        public int Position => OriginalString.Length - SourceString.Length;
 
         /// <summary>
         /// Gets currently remaining string.

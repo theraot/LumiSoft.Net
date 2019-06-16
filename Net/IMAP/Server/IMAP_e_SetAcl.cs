@@ -48,12 +48,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
         public IMAP_r_ServerStatus Response
         {
-            get { return m_pResponse; }
+            get => m_pResponse;
 
-            set
-            {
-                m_pResponse = value ?? throw new ArgumentNullException("value");
-            }
+            set => m_pResponse = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>

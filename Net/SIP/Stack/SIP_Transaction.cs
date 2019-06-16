@@ -110,11 +110,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets transaction related SIP dialog. Returns null if no dialog available.
         /// </summary>
-        public SIP_Dialog Dialog
-        {
-            // FIX ME:
-            get { return null; }
-        }
+        public SIP_Dialog Dialog => null;
 
         /// <summary>
         /// Gets transaction final(2xx - 699) response from responses collection. Returns null if no final responses.
@@ -203,10 +199,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets if transaction is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get { return State == SIP_TransactionState.Disposed; }
-        }
+        public bool IsDisposed => State == SIP_TransactionState.Disposed;
 
         /// <summary>
         /// Gets transaction final(1xx) response from responses collection. Returns null if no provisional responses.

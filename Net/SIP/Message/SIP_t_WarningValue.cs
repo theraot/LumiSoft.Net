@@ -28,7 +28,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string Agent
         {
-            get { return m_Agent; }
+            get => m_Agent;
 
             set
             {
@@ -46,7 +46,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int Code
         {
-            get { return m_Code; }
+            get => m_Code;
 
             set
             {
@@ -64,7 +64,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string Text
         {
-            get { return m_Text; }
+            get => m_Text;
 
             set
             {

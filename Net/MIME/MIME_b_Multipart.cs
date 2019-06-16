@@ -67,10 +67,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets if body has modified.
         /// </summary>
-        public override bool IsModified
-        {
-            get { return BodyParts.IsModified; }
-        }
+        public override bool IsModified => BodyParts.IsModified;
 
         /// <summary>
         /// Gets or sets "epilogue" text. Defined in RFC 2046 5.1.1.
@@ -659,47 +656,23 @@ namespace LumiSoft.Net.MIME
             /// <summary>
             /// Gets a value indicating whether the current stream supports reading.
             /// </summary>
-            public override bool CanRead
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public override bool CanRead => true;
 
             /// <summary>
             /// Gets a value indicating whether the current stream supports seeking.
             /// </summary>
-            public override bool CanSeek
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            public override bool CanSeek => false;
 
             /// <summary>
             /// Gets a value indicating whether the current stream supports writing.
             /// </summary>
-            public override bool CanWrite
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            public override bool CanWrite => false;
 
             /// <summary>
             /// Gets the length in bytes of the stream.  This method is not supported and always throws a NotSupportedException.
             /// </summary>
             /// <exception cref="NotSupportedException">Is raised when this property is accessed.</exception>
-            public override long Length
-            {
-                get
-                {
-                    throw new NotSupportedException();
-                }
-            }
+            public override long Length => throw new NotSupportedException();
 
             /// <summary>
             /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -707,34 +680,22 @@ namespace LumiSoft.Net.MIME
             /// <exception cref="NotSupportedException">Is raised when this property is accessed.</exception>
             public override long Position
             {
-                get
-                {
-                    throw new NotSupportedException();
-                }
+                get => throw new NotSupportedException();
 
-                set
-                {
-                    throw new NotSupportedException();
-                }
+                set => throw new NotSupportedException();
             }
 
             /// <summary>
             /// Gets "preamble" text. Defined in RFC 2046 5.1.1.
             /// </summary>
             /// <remarks>Preamble text is text between MIME entiy headers and first boundary.</remarks>
-            public string TextPreamble
-            {
-                get { return m_pTextPreamble.ToString(); }
-            }
+            public string TextPreamble => m_pTextPreamble.ToString();
 
             /// <summary>
             /// Gets "epilogue" text. Defined in RFC 2046 5.1.1.
             /// </summary>
             /// <remarks>Epilogue text is text after last boundary end.</remarks>
-            public string TextEpilogue
-            {
-                get { return m_pTextEpilogue.ToString(); }
-            }
+            public string TextEpilogue => m_pTextEpilogue.ToString();
 
             /// <summary>
             /// Gets reader state.

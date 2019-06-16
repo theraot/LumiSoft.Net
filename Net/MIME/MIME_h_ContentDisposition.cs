@@ -85,18 +85,12 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get { return m_IsModified || Parameters.IsModified; }
-        }
+        public override bool IsModified => m_IsModified || Parameters.IsModified;
 
         /// <summary>
         /// Returns always "Content-Disposition".
         /// </summary>
-        public override string Name
-        {
-            get { return "Content-Disposition"; }
-        }
+        public override string Name => "Content-Disposition";
 
         /// <summary>
         /// Gets or sets the creation date for a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.4.
@@ -132,9 +126,9 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Param_FileName
         {
-            get { return Parameters["filename"]; }
+            get => Parameters["filename"];
 
-            set { Parameters["filename"] = value; }
+            set => Parameters["filename"] = value;
         }
 
         /// <summary>

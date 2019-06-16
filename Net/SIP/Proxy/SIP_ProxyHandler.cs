@@ -10,10 +10,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets a value indicating whether another request can use this handler.
         /// </summary>
-        public virtual bool IsReusable
-        {
-            get { return false; }
-        }
+        public virtual bool IsReusable => false;
 
         /// <summary>
         /// Gets or stets user data.

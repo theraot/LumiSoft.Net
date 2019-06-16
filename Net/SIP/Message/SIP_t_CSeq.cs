@@ -45,7 +45,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string RequestMethod
         {
-            get { return m_RequestMethod; }
+            get => m_RequestMethod;
 
             set
             {
@@ -63,7 +63,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int SequenceNumber
         {
-            get { return m_SequenceNumber; }
+            get => m_SequenceNumber;
 
             set
             {

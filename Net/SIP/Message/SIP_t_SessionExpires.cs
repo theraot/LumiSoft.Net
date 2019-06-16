@@ -50,7 +50,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when value less than 90 is passed.</exception>
         public int Expires
         {
-            get { return m_Expires; }
+            get => m_Expires;
 
             set
             {

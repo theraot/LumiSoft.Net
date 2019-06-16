@@ -45,18 +45,12 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get { return m_ParseValue == null; }
-        }
+        public override bool IsModified => m_ParseValue == null;
 
         /// <summary>
         /// Gets header field name.
         /// </summary>
-        public override string Name
-        {
-            get { return m_Name; }
-        }
+        public override string Name => m_Name;
 
         /// <summary>
         /// Gets or sets header field value.
@@ -64,7 +58,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when when null reference is passed.</exception>
         public string Value
         {
-            get { return m_Value; }
+            get => m_Value;
 
             set
             {

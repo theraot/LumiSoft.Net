@@ -12,14 +12,8 @@
         {
         }
 
-        public bool IsGlobal
-        {
-            get{ return false; }
-        }
+        public bool IsGlobal => false;
 
-        public string PhoneNmber
-        {
-            get{ return ""; }
-        }
+        public string PhoneNmber => "";
     }
 }

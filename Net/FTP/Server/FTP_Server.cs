@@ -94,7 +94,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <exception cref="ArgumentException">Is raised when ivalid value is passed.</exception>
         public int PassiveStartPort
         {
-            get { return m_PassiveStartPort; }
+            get => m_PassiveStartPort;
 
             set
             {

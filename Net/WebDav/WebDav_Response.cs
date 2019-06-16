@@ -27,10 +27,7 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets 'propstat' elements.
         /// </summary>
-        public WebDav_PropStat[] PropStats
-        {
-            get { return m_pPropStats.ToArray(); }
-        }
+        public WebDav_PropStat[] PropStats => m_pPropStats.ToArray();
 
         /// <summary>
         /// Parses WebDav_Response from 'DAV:response' element.

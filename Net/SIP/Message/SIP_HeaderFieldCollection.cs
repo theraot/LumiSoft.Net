@@ -23,18 +23,12 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets header fields count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pHeaderFields.Count; }
-        }
+        public int Count => m_pHeaderFields.Count;
 
         /// <summary>
         /// Gets header field from specified index.
         /// </summary>
-        public SIP_HeaderField this[int index]
-        {
-            get { return (SIP_HeaderField)m_pHeaderFields[index]; }
-        }
+        public SIP_HeaderField this[int index] => (SIP_HeaderField)m_pHeaderFields[index];
 
         /// <summary>
         /// Adds a new header field with specified name and value to the end of the collection.

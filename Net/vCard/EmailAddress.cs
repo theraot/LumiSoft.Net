@@ -26,7 +26,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string Email
         {
-            get { return m_EmailAddress; }
+            get => m_EmailAddress;
 
             set
             {
@@ -40,7 +40,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public EmailAddressType_enum EmailType
         {
-            get { return m_Type; }
+            get => m_Type;
 
             set
             {

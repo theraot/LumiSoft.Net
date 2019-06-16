@@ -29,12 +29,9 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
         public byte[] Data
         {
-            get { return m_Data; }
+            get => m_Data;
 
-            set
-            {
-                m_Data = value ?? throw new ArgumentNullException("Data");
-            }
+            set => m_Data = value ?? throw new ArgumentNullException("Data");
         }
 
         /// <summary>
@@ -45,10 +42,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets if packet is padded to some bytes boundary.
         /// </summary>
-        public bool IsPadded
-        {
-            get { return false; }
-        }
+        public bool IsPadded => false;
 
         /// <summary>
         /// Gets payload type.
@@ -56,7 +50,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public int PayloadType
         {
-            get { return m_PayloadType; }
+            get => m_PayloadType;
 
             set
             {
@@ -100,7 +94,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public uint SSRC
         {
-            get { return m_SSRC; }
+            get => m_SSRC;
 
             set
             {
@@ -119,7 +113,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public uint Timestamp
         {
-            get { return m_Timestamp; }
+            get => m_Timestamp;
 
             set
             {

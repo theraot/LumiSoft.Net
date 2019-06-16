@@ -23,10 +23,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets header field parameters count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pHeaderField.ParseParameters().Count; }
-        }
+        public int Count => m_pHeaderField.ParseParameters().Count;
 
         /// <summary>
         /// Gets or sets specified parameter value.

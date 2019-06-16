@@ -54,10 +54,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets local participant.
         /// </summary>
-        public RTP_Participant_Local Participant
-        {
-            get { return Session.Session.LocalParticipant; }
-        }
+        public RTP_Participant_Local Participant => Session.Session.LocalParticipant;
 
         /// <summary>
         /// Gets the stream we send. Value null means that source is passive and doesn't send any RTP data.

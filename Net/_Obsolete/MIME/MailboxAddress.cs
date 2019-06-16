@@ -47,7 +47,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string DisplayName
         {
-            get { return m_DisplayName; }
+            get => m_DisplayName;
 
             set
             {
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string EmailAddress
         {
-            get { return m_EmailAddress; }
+            get => m_EmailAddress;
 
             set
             {

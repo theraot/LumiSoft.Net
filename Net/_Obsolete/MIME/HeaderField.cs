@@ -33,7 +33,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string Name
         {
-            get{ return m_Name; }
+            get => m_Name;
 
             set{
                 /* RFC 2822 2.2 Header Fields
@@ -73,11 +73,9 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string Value
         {
-            get{ return MimeUtils.DecodeWords(EncodedValue); }
+            get => MimeUtils.DecodeWords(EncodedValue);
 
-            set{
-                EncodedValue = Core.CanonicalEncode(value,"utf-8");
-            }
+            set => EncodedValue = Core.CanonicalEncode(value,"utf-8");
         }
 
         /// <summary>

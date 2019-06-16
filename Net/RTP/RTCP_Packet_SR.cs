@@ -57,10 +57,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets number of bytes needed for this packet.
         /// </summary>
-        public override int Size
-        {
-            get { return 28 + (24 * ReportBlocks.Count); }
-        }
+        public override int Size => 28 + (24 * ReportBlocks.Count);
 
         /// <summary>
         /// Gets sender synchronization source identifier.
@@ -70,18 +67,12 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTCP packet type.
         /// </summary>
-        public override int Type
-        {
-            get { return RTCP_PacketType.SR; }
-        }
+        public override int Type => RTCP_PacketType.SR;
 
         /// <summary>
         /// Gets RTCP version.
         /// </summary>
-        public override int Version
-        {
-            get { return m_Version; }
-        }
+        public override int Version => m_Version;
 
         /// <summary>
         /// Stores sender report(SR) packet to the specified buffer.

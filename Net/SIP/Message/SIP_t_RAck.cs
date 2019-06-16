@@ -46,7 +46,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int CSeqNumber
         {
-            get { return m_CSeqNumber; }
+            get => m_CSeqNumber;
 
             set
             {
@@ -64,12 +64,9 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string Method
         {
-            get { return m_Method; }
+            get => m_Method;
 
-            set
-            {
-                m_Method = value ?? throw new ArgumentNullException("Method");
-            }
+            set => m_Method = value ?? throw new ArgumentNullException("Method");
         }
 
         /// <summary>
@@ -77,7 +74,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int ResponseNumber
         {
-            get { return m_ResponseNumber; }
+            get => m_ResponseNumber;
 
             set
             {

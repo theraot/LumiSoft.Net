@@ -69,17 +69,11 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets IMAP server response text after status code.
         /// </summary>
-        public string ResponseText
-        {
-            get { return Response.ResponseText; }
-        }
+        public string ResponseText => Response.ResponseText;
 
         /// <summary>
         /// Gets IMAP server error status code.
         /// </summary>
-        public string StatusCode
-        {
-            get { return Response.ResponseCode; }
-        }
+        public string StatusCode => Response.ResponseCode;
     }
 }

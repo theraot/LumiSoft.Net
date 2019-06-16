@@ -31,10 +31,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets number of chars has left for processing.
         /// </summary>
-        public int Available
-        {
-            get { return m_Source.Length - Position; }
-        }
+        public int Available => m_Source.Length - Position;
 
         /// <summary>
         /// Gets position in string.

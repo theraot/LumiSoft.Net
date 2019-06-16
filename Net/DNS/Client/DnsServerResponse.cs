@@ -26,10 +26,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// Gets resource records in the additional records section. NOTE: Before using this property ensure that ConnectionOk=true and ResponseCode=RCODE.NO_ERROR.
         /// </summary>
-        public DNS_rr[] AdditionalAnswers
-        {
-            get { return m_pAdditionalAnswers.ToArray(); }
-        }
+        public DNS_rr[] AdditionalAnswers => m_pAdditionalAnswers.ToArray();
 
         /// <summary>
         /// Gets all resource records returned by server (answer records section + authority records section + additional records section).
@@ -67,18 +64,12 @@ namespace LumiSoft.Net.DNS.Client
         ///  }
         /// }
         /// </code>
-        public DNS_rr[] Answers
-        {
-            get { return m_pAnswers.ToArray(); }
-        }
+        public DNS_rr[] Answers => m_pAnswers.ToArray();
 
         /// <summary>
         /// Gets name server resource records in the authority records section. NOTE: Before using this property ensure that ConnectionOk=true and ResponseCode=RCODE.NO_ERROR.
         /// </summary>
-        public DNS_rr[] AuthoritiveAnswers
-        {
-            get { return m_pAuthoritiveAnswers.ToArray(); }
-        }
+        public DNS_rr[] AuthoritiveAnswers => m_pAuthoritiveAnswers.ToArray();
 
         /// <summary>
         /// Gets if connection to dns server was successful.

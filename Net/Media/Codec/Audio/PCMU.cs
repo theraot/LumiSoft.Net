@@ -74,10 +74,7 @@ namespace LumiSoft.Net.Media.Codec.Audio
         /// <summary>
         /// Gets codec name.
         /// </summary>
-        public override string Name
-        {
-            get { return "PCMU"; }
-        }
+        public override string Name => "PCMU";
 
         /// <summary>
         /// Decodes 8-bit ulaw to linear 16-bit PCM.

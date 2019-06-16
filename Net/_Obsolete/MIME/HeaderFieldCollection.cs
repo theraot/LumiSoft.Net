@@ -27,18 +27,12 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets header fields count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pHeaderFields.Count; }
-        }
+        public int Count => m_pHeaderFields.Count;
 
         /// <summary>
         /// Gets header field from specified index.
         /// </summary>
-        public HeaderField this[int index]
-        {
-            get { return (HeaderField)m_pHeaderFields[index]; }
-        }
+        public HeaderField this[int index] => (HeaderField)m_pHeaderFields[index];
 
         /// <summary>
         /// Adds a new header field with specified name and value to the end of the collection.

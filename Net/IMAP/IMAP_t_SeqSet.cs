@@ -34,10 +34,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets sequence set ranges.
         /// </summary>
-        public Range_long[] Items
-        {
-            get { return m_pSequenceParts.ToArray(); }
-        }
+        public Range_long[] Items => m_pSequenceParts.ToArray();
 
         /// <summary>
         /// Parses <b>sequense-set</b> from string.

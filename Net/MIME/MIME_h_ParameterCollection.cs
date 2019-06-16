@@ -28,10 +28,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pParameters.Count; }
-        }
+        public int Count => m_pParameters.Count;
 
         /// <summary>
         /// Gets if this header field parameters are modified since it has loaded.

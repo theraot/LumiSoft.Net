@@ -83,7 +83,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string CNonce
         {
-            get { return m_Cnonce; }
+            get => m_Cnonce;
 
             set
             {
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
         public string Nonce
         {
-            get { return m_Nonce; }
+            get => m_Nonce;
 
             set
             {
@@ -135,7 +135,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string Password
         {
-            get { return m_Password; }
+            get => m_Password;
 
             set
             {
@@ -163,7 +163,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string Realm
         {
-            get { return m_Realm; }
+            get => m_Realm;
 
             set
             {
@@ -180,7 +180,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string RequestMethod
         {
-            get { return m_Method; }
+            get => m_Method;
 
             set
             {
@@ -208,7 +208,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string UserName
         {
-            get { return m_UserName; }
+            get => m_UserName;
 
             set
             {

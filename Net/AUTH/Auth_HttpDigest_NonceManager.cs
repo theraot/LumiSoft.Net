@@ -31,7 +31,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public int ExpireTime
         {
-            get { return m_ExpireTime; }
+            get => m_ExpireTime;
 
             set
             {

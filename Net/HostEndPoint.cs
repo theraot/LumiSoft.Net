@@ -54,10 +54,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets if <b>Host</b> is IP address.
         /// </summary>
-        public bool IsIPAddress
-        {
-            get { return Net_Utils.IsIPAddress(Host); }
-        }
+        public bool IsIPAddress => Net_Utils.IsIPAddress(Host);
 
         /// <summary>
         /// Gets the port number of the endpoint. Value -1 means port not specified.

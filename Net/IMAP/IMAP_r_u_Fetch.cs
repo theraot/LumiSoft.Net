@@ -79,68 +79,44 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets fetch response data items.
         /// </summary>
-        public IMAP_t_Fetch_r_i[] DataItems
-        {
-            get { return m_pDataItems.ToArray(); }
-        }
+        public IMAP_t_Fetch_r_i[] DataItems => m_pDataItems.ToArray();
 
         // BODYSTRUCTURE
 
         /// <summary>
         /// Gets ENVELOPE value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Envelope Envelope
-        {
-            get { return (IMAP_t_Fetch_r_i_Envelope)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Envelope)); }
-        }
+        public IMAP_t_Fetch_r_i_Envelope Envelope => (IMAP_t_Fetch_r_i_Envelope)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Envelope));
 
         /// <summary>
         /// Gets FLAGS value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Flags Flags
-        {
-            get { return (IMAP_t_Fetch_r_i_Flags)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Flags)); }
-        }
+        public IMAP_t_Fetch_r_i_Flags Flags => (IMAP_t_Fetch_r_i_Flags)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Flags));
 
         /// <summary>
         /// Gets INTERNALDATE value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_InternalDate InternalDate
-        {
-            get { return (IMAP_t_Fetch_r_i_InternalDate)FilterDataItem(typeof(IMAP_t_Fetch_r_i_InternalDate)); }
-        }
+        public IMAP_t_Fetch_r_i_InternalDate InternalDate => (IMAP_t_Fetch_r_i_InternalDate)FilterDataItem(typeof(IMAP_t_Fetch_r_i_InternalDate));
 
         /// <summary>
         /// Gets RFC822 value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822 Rfc822
-        {
-            get { return (IMAP_t_Fetch_r_i_Rfc822)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822)); }
-        }
+        public IMAP_t_Fetch_r_i_Rfc822 Rfc822 => (IMAP_t_Fetch_r_i_Rfc822)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822));
 
         /// <summary>
         /// Gets RFC822.HEADER value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822Header Rfc822Header
-        {
-            get { return (IMAP_t_Fetch_r_i_Rfc822Header)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Header)); }
-        }
+        public IMAP_t_Fetch_r_i_Rfc822Header Rfc822Header => (IMAP_t_Fetch_r_i_Rfc822Header)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Header));
 
         /// <summary>
         /// Gets RFC822.SIZE value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822Size Rfc822Size
-        {
-            get { return (IMAP_t_Fetch_r_i_Rfc822Size)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Size)); }
-        }
+        public IMAP_t_Fetch_r_i_Rfc822Size Rfc822Size => (IMAP_t_Fetch_r_i_Rfc822Size)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Size));
 
         /// <summary>
         /// Gets RFC822.TEXT value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822Text Rfc822Text
-        {
-            get { return (IMAP_t_Fetch_r_i_Rfc822Text)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Text)); }
-        }
+        public IMAP_t_Fetch_r_i_Rfc822Text Rfc822Text => (IMAP_t_Fetch_r_i_Rfc822Text)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Text));
 
         /// <summary>
         /// Gets message 1-based sequence number.
@@ -150,26 +126,17 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets UID value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_Uid UID
-        {
-            get { return (IMAP_t_Fetch_r_i_Uid)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Uid)); }
-        }
+        public IMAP_t_Fetch_r_i_Uid UID => (IMAP_t_Fetch_r_i_Uid)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Uid));
 
         /// <summary>
         /// Gets X-GM-MSGID value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_X_GM_MSGID X_GM_MSGID
-        {
-            get { return (IMAP_t_Fetch_r_i_X_GM_MSGID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_MSGID)); }
-        }
+        public IMAP_t_Fetch_r_i_X_GM_MSGID X_GM_MSGID => (IMAP_t_Fetch_r_i_X_GM_MSGID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_MSGID));
 
         /// <summary>
         /// Gets X-GM-THRID value. Returns null if fetch response doesn't contain specified data-item.
         /// </summary>
-        public IMAP_t_Fetch_r_i_X_GM_THRID X_GM_THRID
-        {
-            get { return (IMAP_t_Fetch_r_i_X_GM_THRID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_THRID)); }
-        }
+        public IMAP_t_Fetch_r_i_X_GM_THRID X_GM_THRID => (IMAP_t_Fetch_r_i_X_GM_THRID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_THRID));
 
         /// <summary>
         /// Starts parsing FETCH response.

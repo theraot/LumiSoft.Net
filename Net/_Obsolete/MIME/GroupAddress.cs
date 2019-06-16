@@ -26,7 +26,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string DisplayName
         {
-            get { return m_DisplayName; }
+            get => m_DisplayName;
 
             set
             {
@@ -44,10 +44,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets Group as RFC 2822(3.4. Address Specification) string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
         /// </summary>
-        public string GroupString
-        {
-            get { return TextUtils.QuoteString(DisplayName) + ":" + GroupMembers.ToMailboxListString() + ";"; }
-        }
+        public string GroupString => TextUtils.QuoteString(DisplayName) + ":" + GroupMembers.ToMailboxListString() + ";";
 
         /// <summary>
         /// Parses Rfc 2822 3.4 group address from group address string. Syntax: display-name':'[mailbox *(',' mailbox)]';'

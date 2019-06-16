@@ -37,7 +37,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Value
         {
-            get{ return m_Value; }
+            get => m_Value;
 
             set{
                 m_Value      = value;

@@ -39,7 +39,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string MediaType
         {
-            get { return m_MediaType; }
+            get => m_MediaType;
 
             set
             {

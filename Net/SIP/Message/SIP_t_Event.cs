@@ -33,7 +33,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when emptu string passed.</exception>
         public string EventType
         {
-            get { return m_EventType; }
+            get => m_EventType;
 
             set
             {

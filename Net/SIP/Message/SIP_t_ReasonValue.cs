@@ -73,12 +73,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
         public string Protocol
         {
-            get { return m_Protocol; }
+            get => m_Protocol;
 
-            set
-            {
-                m_Protocol = value ?? throw new ArgumentNullException("Protocol");
-            }
+            set => m_Protocol = value ?? throw new ArgumentNullException("Protocol");
         }
 
         /// <summary>

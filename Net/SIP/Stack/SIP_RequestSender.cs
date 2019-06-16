@@ -123,10 +123,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get { return m_State == SIP_RequestSenderState.Disposed; }
-        }
+        public bool IsDisposed => m_State == SIP_RequestSenderState.Disposed;
 
         /// <summary>
         /// Gets if request sending has been started.

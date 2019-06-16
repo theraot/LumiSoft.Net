@@ -72,18 +72,12 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets encoded body data size in bytes.
         /// </summary>
-        public int EncodedDataSize
-        {
-            get { return (int)EncodedStream.Length; }
-        }
+        public int EncodedDataSize => (int)EncodedStream.Length;
 
         /// <summary>
         /// Gets if body has modified.
         /// </summary>
-        public override bool IsModified
-        {
-            get { return m_IsModified; }
-        }
+        public override bool IsModified => m_IsModified;
 
         /// <summary>
         /// Gets encoded data stream.

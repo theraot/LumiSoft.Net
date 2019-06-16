@@ -26,17 +26,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets child entities. This property is available only if ContentType = multipart/... .
         /// </summary>
-        public IMAP_BODY_Entity[] ChildEntities
-        {
-            get
-            {
-                //  if((this.ContentType & MediaType_enum.Multipart) == 0){
-                //      throw new Exception("NOTE: ChildEntities property is available only for non-multipart contentype !");
-                //  }
-
-                return m_pChildEntities.ToArray();
-            }
-        }
+        public IMAP_BODY_Entity[] ChildEntities => m_pChildEntities.ToArray();
 
         /// <summary>
         /// Gets header field "<b>Content-Description:</b>" value. Returns null if value isn't set.

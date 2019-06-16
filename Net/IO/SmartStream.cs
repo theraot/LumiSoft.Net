@@ -1414,10 +1414,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public override bool IsDisposed
-            {
-                get { return m_IsDisposed; }
-            }
+            public override bool IsDisposed => m_IsDisposed;
 
             /// <summary>
             /// Gets if asynchronous operation has completed.
@@ -1655,10 +1652,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
             /// </summary>
-            public WaitHandle AsyncWaitHandle
-            {
-                get { return m_pAsyncWaitHandle; }
-            }
+            public WaitHandle AsyncWaitHandle => m_pAsyncWaitHandle;
 
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
@@ -1878,10 +1872,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public override bool IsDisposed
-            {
-                get { return m_IsDisposed; }
-            }
+            public override bool IsDisposed => m_IsDisposed;
 
             /// <summary>
             /// Gets if asynchronous operation has completed.
@@ -2272,10 +2263,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
             /// </summary>
-            public WaitHandle AsyncWaitHandle
-            {
-                get { return m_pAsyncWaitHandle; }
-            }
+            public WaitHandle AsyncWaitHandle => m_pAsyncWaitHandle;
 
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
@@ -2500,10 +2488,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public override bool IsDisposed
-            {
-                get { return m_IsDisposed; }
-            }
+            public override bool IsDisposed => m_IsDisposed;
 
             /// <summary>
             /// Gets if asynchronous operation has completed.
@@ -2756,10 +2741,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
             /// </summary>
-            public WaitHandle AsyncWaitHandle
-            {
-                get { return m_pAsyncWaitHandle; }
-            }
+            public WaitHandle AsyncWaitHandle => m_pAsyncWaitHandle;
 
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
@@ -2932,10 +2914,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
             /// </summary>
-            public WaitHandle AsyncWaitHandle
-            {
-                get { return m_pAsyncWaitHandle; }
-            }
+            public WaitHandle AsyncWaitHandle => m_pAsyncWaitHandle;
 
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.

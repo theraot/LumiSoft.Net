@@ -979,10 +979,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets header as RFC 2822 message headers.
         /// </summary>
-        public string HeaderString
-        {
-            get { return Header.ToHeaderString("utf-8"); }
-        }
+        public string HeaderString => Header.ToHeaderString("utf-8");
 
         /// <summary>
         /// Gets or sets header field "<b>In-Reply-To:</b>" value. Returns null if value isn't set.

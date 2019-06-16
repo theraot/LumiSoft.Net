@@ -38,34 +38,22 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted
-        {
-            get { return m_IsCompleted; }
-        }
+        public override bool IsCompleted => m_IsCompleted;
 
         /// <summary>
         /// Returns always "PLAIN".
         /// </summary>
-        public override string Name
-        {
-            get { return "PLAIN"; }
-        }
+        public override string Name => "PLAIN";
 
         /// <summary>
         /// Gets if the authentication method supports SASL client "inital response".
         /// </summary>
-        public override bool SupportsInitialResponse
-        {
-            get { return true; }
-        }
+        public override bool SupportsInitialResponse => true;
 
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName
-        {
-            get { return m_UserName; }
-        }
+        public override string UserName => m_UserName;
 
         /// <summary>
         /// Continues authentication process.

@@ -48,26 +48,17 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
         /// </summary>
-        public WaitHandle AsyncWaitHandle
-        {
-            get { return AsyncResult.AsyncWaitHandle; }
-        }
+        public WaitHandle AsyncWaitHandle => AsyncResult.AsyncWaitHandle;
 
         /// <summary>
         /// Gets an indication of whether the asynchronous operation completed synchronously.
         /// </summary>
-        public bool CompletedSynchronously
-        {
-            get { return AsyncResult.CompletedSynchronously; }
-        }
+        public bool CompletedSynchronously => AsyncResult.CompletedSynchronously;
 
         /// <summary>
         /// Gets an indication whether the asynchronous operation has completed.
         /// </summary>
-        public bool IsCompleted
-        {
-            get { return AsyncResult.IsCompleted; }
-        }
+        public bool IsCompleted => AsyncResult.IsCompleted;
 
         /// <summary>
         /// Gets if the user called the End*() method.

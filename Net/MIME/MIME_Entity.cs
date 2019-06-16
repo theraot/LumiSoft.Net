@@ -31,7 +31,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
         public MIME_b Body
         {
-            get { return m_pBody; }
+            get => m_pBody;
 
             set
             {

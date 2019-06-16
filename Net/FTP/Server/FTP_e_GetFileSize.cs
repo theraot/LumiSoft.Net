@@ -34,7 +34,7 @@ namespace LumiSoft.Net.FTP.Server
         /// </summary>
         public long FileSize
         {
-            get{ return m_FileSize; }
+            get => m_FileSize;
 
             set{
                 if(value < 0){

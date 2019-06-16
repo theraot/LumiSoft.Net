@@ -31,26 +31,17 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted
-        {
-            get { return m_IsCompleted; }
-        }
+        public override bool IsCompleted => m_IsCompleted;
 
         /// <summary>
         /// Returns always "LOGIN".
         /// </summary>
-        public override string Name
-        {
-            get { return "XOAUTH"; }
-        }
+        public override string Name => "XOAUTH";
 
         /// <summary>
         /// Returns always true, because XOAUTH authentication method supports SASL client "inital response".
         /// </summary>
-        public override bool SupportsInitialResponse
-        {
-            get { return true; }
-        }
+        public override bool SupportsInitialResponse => true;
 
         /// <summary>
         /// Gets user login name.

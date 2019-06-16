@@ -104,7 +104,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("FN", value); }
+            set => Items.SetDecodedValue("FN", value);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("NICKNAME", value); }
+            set => Items.SetDecodedValue("NICKNAME", value);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("NOTE", value); }
+            set => Items.SetDecodedValue("NOTE", value);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("ORG", value); }
+            set => Items.SetDecodedValue("ORG", value);
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("ROLE", value); }
+            set => Items.SetDecodedValue("ROLE", value);
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("TITLE", value); }
+            set => Items.SetDecodedValue("TITLE", value);
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("UID", value); }
+            set => Items.SetDecodedValue("UID", value);
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace LumiSoft.Net.Mime.vCard
                 return item?.DecodedValue;
             }
 
-            set { Items.SetDecodedValue("VERSION", value); }
+            set => Items.SetDecodedValue("VERSION", value);
         }
 
         /// <summary>

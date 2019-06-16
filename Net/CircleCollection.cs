@@ -22,20 +22,14 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pItems.Count; }
-        }
+        public int Count => m_pItems.Count;
 
         /// <summary>
         /// Gets item at the specified index.
         /// </summary>
         /// <param name="index">Item zero based index.</param>
         /// <returns>Returns item at the specified index.</returns>
-        public T this[int index]
-        {
-            get { return m_pItems[index]; }
-        }
+        public T this[int index] => m_pItems[index];
 
         /// <summary>
         /// Adds specified items to the collection.

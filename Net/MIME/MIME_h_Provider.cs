@@ -30,7 +30,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public Type DefaultHeaderField
         {
-            get { return m_pDefaultHeaderField; }
+            get => m_pDefaultHeaderField;
 
             set
             {

@@ -34,26 +34,17 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>
-        public override bool IsAuthenticated
-        {
-            get { return m_IsAuthenticated; }
-        }
+        public override bool IsAuthenticated => m_IsAuthenticated;
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted
-        {
-            get { return m_IsCompleted; }
-        }
+        public override bool IsCompleted => m_IsCompleted;
 
         /// <summary>
         /// Returns always "DIGEST-MD5".
         /// </summary>
-        public override string Name
-        {
-            get { return "DIGEST-MD5"; }
-        }
+        public override string Name => "DIGEST-MD5";
 
         /// <summary>
         /// Gets or sets realm value.
@@ -61,7 +52,7 @@ namespace LumiSoft.Net.AUTH
         /// <remarks>Normally this is host or domain name.</remarks>
         public string Realm
         {
-            get { return m_Realm; }
+            get => m_Realm;
 
             set
             {
@@ -81,10 +72,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName
-        {
-            get { return m_UserName; }
-        }
+        public override string UserName => m_UserName;
 
         /// <summary>
         /// Continues authentication process.

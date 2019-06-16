@@ -23,10 +23,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pCollection.Count; }
-        }
+        public int Count => m_pCollection.Count;
 
         /// <summary>
         /// Gets if enity collection has modified.
@@ -57,10 +54,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <param name="index">MIME entity zero-based index.</param>
         /// <returns>Returns MIME entity.</returns>
-        public MIME_Entity this[int index]
-        {
-            get { return m_pCollection[index]; }
-        }
+        public MIME_Entity this[int index] => m_pCollection[index];
 
         /// <summary>
         /// Adds specified MIME enity to the collection.

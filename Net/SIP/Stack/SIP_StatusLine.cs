@@ -36,7 +36,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public string Reason
         {
-            get { return m_Reason; }
+            get => m_Reason;
 
             set
             {
@@ -55,7 +55,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when <b>value</b> has invalid value.</exception>
         public int StatusCode
         {
-            get { return m_StatusCode; }
+            get => m_StatusCode;
 
             set
             {
@@ -75,7 +75,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when <b>value</b> has invalid value.</exception>
         public string Version
         {
-            get { return m_Version; }
+            get => m_Version;
 
             set
             {

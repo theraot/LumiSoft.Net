@@ -38,7 +38,7 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public long StartTime
         {
-            get { return m_StartTime; }
+            get => m_StartTime;
 
             set
             {
@@ -57,7 +57,7 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public long StopTime
         {
-            get { return m_StopTime; }
+            get => m_StopTime;
 
             set
             {

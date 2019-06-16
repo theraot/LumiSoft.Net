@@ -15,12 +15,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when null value passed as value.</exception>
         public string EventType
         {
-            get { return m_EventType; }
+            get => m_EventType;
 
-            set
-            {
-                m_EventType = value ?? throw new ArgumentNullException("EventType");
-            }
+            set => m_EventType = value ?? throw new ArgumentNullException("EventType");
         }
 
         /// <summary>

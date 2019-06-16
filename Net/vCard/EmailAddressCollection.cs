@@ -29,20 +29,14 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pCollection.Count; }
-        }
+        public int Count => m_pCollection.Count;
 
         /// <summary>
         /// Gets item at the specified index.
         /// </summary>
         /// <param name="index">Index of item which to get.</param>
         /// <returns></returns>
-        public EmailAddress this[int index]
-        {
-            get { return m_pCollection[index]; }
-        }
+        public EmailAddress this[int index] => m_pCollection[index];
 
         /// <summary>
         /// Add new email address to the collection.

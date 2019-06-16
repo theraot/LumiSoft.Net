@@ -63,18 +63,12 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets target IP address.
         /// </summary>
-        public IPAddress IP
-        {
-            get{ return EndPoint.Address; }
-        }
+        public IPAddress IP => EndPoint.Address;
 
         /// <summary>
         /// Gets target port.
         /// </summary>
-        public int Port
-        {
-            get{ return EndPoint.Port; }
-        }
+        public int Port => EndPoint.Port;
 
         /// <summary>
         /// Gets target SIP transport.

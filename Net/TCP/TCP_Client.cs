@@ -101,10 +101,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if TCP client is connected.
         /// </summary>
-        public override bool IsConnected
-        {
-            get { return m_IsConnected; }
-        }
+        public override bool IsConnected => m_IsConnected;
 
         /// <summary>
         /// Gets if this object is disposed.

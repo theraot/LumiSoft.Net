@@ -27,12 +27,9 @@ namespace LumiSoft.Net
         /// <exception cref="ArgumentNullException">Is raised when null reference value is set.</exception>
         public Encoding Charset
         {
-            get { return m_pCharset; }
+            get => m_pCharset;
 
-            set
-            {
-                m_pCharset = value ?? throw new ArgumentNullException("value");
-            }
+            set => m_pCharset = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>

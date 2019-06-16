@@ -111,10 +111,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if session is connected.
         /// </summary>
-        public override bool IsConnected
-        {
-            get { return true; }
-        }
+        public override bool IsConnected => true;
 
         /// <summary>
         /// Gets if TCP server session is disposed.

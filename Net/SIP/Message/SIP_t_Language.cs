@@ -23,7 +23,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string LanguageRange
         {
-            get { return m_LanguageRange; }
+            get => m_LanguageRange;
 
             set
             {

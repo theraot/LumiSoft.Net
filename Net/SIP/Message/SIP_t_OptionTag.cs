@@ -20,7 +20,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string OptionTag
         {
-            get { return m_OptionTag; }
+            get => m_OptionTag;
 
             set
             {

@@ -30,10 +30,7 @@ namespace LumiSoft.Net.UPnP.NAT
         /// <summary>
         /// Gets if UPnP NAT is supported.
         /// </summary>
-        public bool IsSupported
-        {
-            get { return m_ControlUrl != null; }
-        }
+        public bool IsSupported => m_ControlUrl != null;
 
         /// <summary>
         /// This method creates a new port mapping or overwrites an existing mapping.

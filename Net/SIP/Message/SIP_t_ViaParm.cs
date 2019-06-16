@@ -135,7 +135,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string ProtocolName
         {
-            get { return m_ProtocolName; }
+            get => m_ProtocolName;
 
             set
             {
@@ -153,7 +153,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string ProtocolTransport
         {
-            get { return m_ProtocolTransport.ToUpper(); }
+            get => m_ProtocolTransport.ToUpper();
 
             set
             {
@@ -171,7 +171,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string ProtocolVersion
         {
-            get { return m_ProtocolVersion; }
+            get => m_ProtocolVersion;
 
             set
             {
@@ -257,12 +257,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
         public HostEndPoint SentBy
         {
-            get { return m_pSentBy; }
+            get => m_pSentBy;
 
-            set
-            {
-                m_pSentBy = value ?? throw new ArgumentNullException("value");
-            }
+            set => m_pSentBy = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>

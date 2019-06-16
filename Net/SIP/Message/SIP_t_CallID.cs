@@ -20,7 +20,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string CallID
         {
-            get { return m_CallID; }
+            get => m_CallID;
 
             set
             {

@@ -33,10 +33,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets address from SIP URI. Examples: ivar@lumisoft.ee,ivar@195.222.10.1.
         /// </summary>
-        public string Address
-        {
-            get { return User + "@" + m_Host; }
-        }
+        public string Address => User + "@" + m_Host;
 
         /// <summary>
         /// Gets or sets header.
@@ -48,7 +45,7 @@ namespace LumiSoft.Net
         /// </summary>
         public string Host
         {
-            get { return m_Host; }
+            get => m_Host;
 
             set
             {

@@ -75,10 +75,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets if this response is continuation response.
         /// </summary>
-        public bool IsContinue
-        {
-            get { return ResponseCode.Equals("+", StringComparison.InvariantCultureIgnoreCase); }
-        }
+        public bool IsContinue => ResponseCode.Equals("+", StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Gets if this response is error response.
@@ -130,13 +127,7 @@ namespace LumiSoft.Net.IMAP
         /// Value null means not specified. For more info see RFC 3501 7.1.
         /// </summary>
         [Obsolete("Use property OptionalResponse instead.")]
-        public string OptionalResponseCode
-        {
-            get
-            {
-                return OptionalResponse?.ToString().Split(' ')[0];
-            }
-        }
+        public string OptionalResponseCode => OptionalResponse?.ToString().Split(' ')[0];
 
         /// <summary>
         /// Gets IMAP server status response code(OK,NO,BAD).

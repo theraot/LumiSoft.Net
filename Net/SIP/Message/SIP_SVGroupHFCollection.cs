@@ -29,10 +29,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets number of header fields in this group.
         /// </summary>
-        public int Count
-        {
-            get { return m_pFields.Count; }
-        }
+        public int Count => m_pFields.Count;
 
         /// <summary>
         /// Gets header field name what this group holds.
@@ -42,10 +39,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets header fields what are in this group.
         /// </summary>
-        public SIP_SingleValueHF<T>[] HeaderFields
-        {
-            get { return m_pFields.ToArray(); }
-        }
+        public SIP_SingleValueHF<T>[] HeaderFields => m_pFields.ToArray();
 
         /// <summary>
         /// Adds specified header field value to the end of header.

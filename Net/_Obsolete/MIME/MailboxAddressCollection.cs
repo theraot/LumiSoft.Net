@@ -23,10 +23,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets mailboxes count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pMailboxes.Count; }
-        }
+        public int Count => m_pMailboxes.Count;
 
         /// <summary>
         /// Gets or sets owner of this collection.
@@ -36,10 +33,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets mailbox from specified index.
         /// </summary>
-        public MailboxAddress this[int index]
-        {
-            get { return (MailboxAddress)m_pMailboxes[index]; }
-        }
+        public MailboxAddress this[int index] => (MailboxAddress)m_pMailboxes[index];
 
         /// <summary>
         /// Adds a new mailbox to the end of the collection.

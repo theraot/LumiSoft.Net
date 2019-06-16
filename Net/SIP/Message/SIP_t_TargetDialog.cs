@@ -35,7 +35,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when invalid CallID value is passed.</exception>
         public string CallID
         {
-            get { return m_CallID; }
+            get => m_CallID;
 
             set
             {

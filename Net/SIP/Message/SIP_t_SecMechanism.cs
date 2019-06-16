@@ -103,7 +103,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when invalid Mechanism value is passed.</exception>
         public string Mechanism
         {
-            get { return m_Mechanism; }
+            get => m_Mechanism;
 
             set
             {

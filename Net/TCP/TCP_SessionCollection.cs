@@ -24,20 +24,14 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pItems.Count; }
-        }
+        public int Count => m_pItems.Count;
 
         /// <summary>
         /// Gets TCP session with the specified ID.
         /// </summary>
         /// <param name="id">Session ID.</param>
         /// <returns>Returns TCP session with the specified ID.</returns>
-        public T this[string id]
-        {
-            get { return m_pItems[id]; }
-        }
+        public T this[string id] => m_pItems[id];
 
         /// <summary>
         /// Gets number of connections per specified IP.

@@ -32,10 +32,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pList.Count; }
-        }
+        public int Count => m_pList.Count;
 
         /// <summary>
         /// Gets if list has modified since it was loaded.

@@ -237,13 +237,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets selected folder name with optional path. Value null means no selected folder.
         /// </summary>
-        public string SelectedFolderName
-        {
-            get
-            {
-                return m_pSelectedFolder?.Folder;
-            }
-        }
+        public string SelectedFolderName => m_pSelectedFolder?.Folder;
 
         /// <summary>
         /// Gets session owner IMAP server.
@@ -6225,10 +6219,7 @@ namespace LumiSoft.Net.IMAP.Server
             /// <summary>
             /// Gets messages info.
             /// </summary>
-            internal IMAP_MessageInfo[] MessagesInfo
-            {
-                get { return m_pMessagesInfo.ToArray(); }
-            }
+            internal IMAP_MessageInfo[] MessagesInfo => m_pMessagesInfo.ToArray();
         }
 
         /// <summary>

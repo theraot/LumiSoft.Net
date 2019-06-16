@@ -462,12 +462,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public string StunServer
         {
-            get { return m_pTransportLayer.StunServer; }
+            get => m_pTransportLayer.StunServer;
 
-            set
-            {
-                m_pTransportLayer.StunServer = value;
-            }
+            set => m_pTransportLayer.StunServer = value;
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string DispositionType
         {
-            get { return m_DispositionType; }
+            get => m_DispositionType;
 
             set
             {

@@ -44,7 +44,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public DeliveryAddressType_enum AddressType
         {
-            get { return m_Type; }
+            get => m_Type;
 
             set
             {
@@ -58,7 +58,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string Country
         {
-            get { return m_Country; }
+            get => m_Country;
 
             set
             {
@@ -72,7 +72,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string ExtendedAddress
         {
-            get { return m_ExtendedAddress; }
+            get => m_ExtendedAddress;
 
             set
             {
@@ -91,7 +91,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string Locality
         {
-            get { return m_Locality; }
+            get => m_Locality;
 
             set
             {
@@ -105,7 +105,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string PostalCode
         {
-            get { return m_PostalCode; }
+            get => m_PostalCode;
 
             set
             {
@@ -119,7 +119,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string PostOfficeAddress
         {
-            get { return m_PostOfficeAddress; }
+            get => m_PostOfficeAddress;
 
             set
             {
@@ -133,7 +133,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string Region
         {
-            get { return m_Region; }
+            get => m_Region;
 
             set
             {
@@ -147,7 +147,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public string Street
         {
-            get { return m_Street; }
+            get => m_Street;
 
             set
             {

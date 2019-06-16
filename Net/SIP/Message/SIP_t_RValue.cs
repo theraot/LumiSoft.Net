@@ -25,7 +25,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when invalid Namespace value passed.</exception>
         public string Namespace
         {
-            get { return m_Namespace; }
+            get => m_Namespace;
 
             set
             {
@@ -53,7 +53,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when invalid Priority value passed.</exception>
         public string Priority
         {
-            get { return m_Priority; }
+            get => m_Priority;
 
             set
             {

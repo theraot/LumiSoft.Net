@@ -43,18 +43,12 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTCP packet type.
         /// </summary>
-        public override int Type
-        {
-            get { return RTCP_PacketType.SDES; }
-        }
+        public override int Type => RTCP_PacketType.SDES;
 
         /// <summary>
         /// Gets RTCP version.
         /// </summary>
-        public override int Version
-        {
-            get { return m_Version; }
-        }
+        public override int Version => m_Version;
 
         /// <summary>
         /// Stores SDES packet to the specified buffer.

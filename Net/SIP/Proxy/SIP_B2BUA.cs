@@ -39,18 +39,12 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets active calls.
         /// </summary>
-        public SIP_B2BUA_Call[] Calls
-        {
-            get { return m_pCalls.ToArray(); }
-        }
+        public SIP_B2BUA_Call[] Calls => m_pCalls.ToArray();
 
         /// <summary>
         /// Gets B2BUA owner SIP stack.
         /// </summary>
-        public SIP_Stack Stack
-        {
-            get { return m_pProxy.Stack; }
-        }
+        public SIP_Stack Stack => m_pProxy.Stack;
 
         /// <summary>
         /// Cleans up any resources being used.

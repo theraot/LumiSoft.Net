@@ -62,10 +62,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets number of flags in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pFlags.Count; }
-        }
+        public int Count => m_pFlags.Count;
 
         /// <summary>
         /// Parses message flags from flags-string.

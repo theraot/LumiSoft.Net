@@ -34,12 +34,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised ´when null value passed.</exception>
         public SIP_t_CallID CallID
         {
-            get { return m_pCallID; }
+            get => m_pCallID;
 
-            set
-            {
-                m_pCallID = value ?? throw new ArgumentNullException("CallID");
-            }
+            set => m_pCallID = value ?? throw new ArgumentNullException("CallID");
         }
 
         /// <summary>

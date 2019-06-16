@@ -33,9 +33,9 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public virtual string Value
         {
-            get { return m_Value; }
+            get => m_Value;
 
-            set { m_Value = value; }
+            set => m_Value = value;
         }
 
         /// <summary>

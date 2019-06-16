@@ -42,10 +42,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets header field name. For example "Sender".
         /// </summary>
-        public override string Name
-        {
-            get { return "Return-Path"; }
-        }
+        public override string Name => "Return-Path";
 
         /// <summary>
         /// Parses header field from the specified value.

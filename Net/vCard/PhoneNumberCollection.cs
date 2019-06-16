@@ -29,10 +29,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pCollection.Count; }
-        }
+        public int Count => m_pCollection.Count;
 
         /// <summary>
         /// Add new phone number to the collection.

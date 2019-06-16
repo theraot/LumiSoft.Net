@@ -23,20 +23,14 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets number of items int he collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pList.Count; }
-        }
+        public int Count => m_pList.Count;
 
         /// <summary>
         /// Gets item with the specified key.
         /// </summary>
         /// <param name="key">Key.</param>
         /// <returns>Returns item with the specified key. If the specified key is not found, a get operation throws a KeyNotFoundException.</returns>
-        public V this[K key]
-        {
-            get { return m_pDictionary[key]; }
-        }
+        public V this[K key] => m_pDictionary[key];
 
         /// <summary>
         /// Adds the specified key and value to the collection.

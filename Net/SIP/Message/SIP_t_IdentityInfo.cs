@@ -60,7 +60,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when invalid 'absoluteURI' value is passed.</exception>
         public string Uri
         {
-            get { return m_Uri; }
+            get => m_Uri;
 
             set
             {

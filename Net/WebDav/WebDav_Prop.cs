@@ -41,10 +41,7 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets properties.
         /// </summary>
-        public WebDav_p[] Properties
-        {
-            get { return m_pProperties.ToArray(); }
-        }
+        public WebDav_p[] Properties => m_pProperties.ToArray();
 
         /// <summary>
         /// Parses WebDav_Prop from 'DAV:prop' element.

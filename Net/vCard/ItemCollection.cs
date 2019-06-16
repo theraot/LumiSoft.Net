@@ -21,10 +21,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets number of vCard items in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pItems.Count; }
-        }
+        public int Count => m_pItems.Count;
 
         /// <summary>
         /// Adds new vCard item to the collection.

@@ -39,26 +39,17 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted
-        {
-            get { return m_IsCompleted; }
-        }
+        public override bool IsCompleted => m_IsCompleted;
 
         /// <summary>
         /// Returns always "LOGIN".
         /// </summary>
-        public override string Name
-        {
-            get { return "CRAM-MD5"; }
-        }
+        public override string Name => "CRAM-MD5";
 
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName
-        {
-            get { return m_UserName; }
-        }
+        public override string UserName => m_UserName;
 
         /// <summary>
         /// Continues authentication process.

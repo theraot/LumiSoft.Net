@@ -23,26 +23,17 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets property name.
         /// </summary>
-        public override string Name
-        {
-            get { return "resourcetype"; }
-        }
+        public override string Name => "resourcetype";
 
         /// <summary>
         /// Gets property namespace.
         /// </summary>
-        public override string Namespace
-        {
-            get { return "DAV:"; }
-        }
+        public override string Namespace => "DAV:";
 
         /// <summary>
         /// Gets resource types.
         /// </summary>
-        public string[] ResourceTypes
-        {
-            get { return m_pItems.ToArray(); }
-        }
+        public string[] ResourceTypes => m_pItems.ToArray();
 
         /// <summary>
         /// Gets property value.

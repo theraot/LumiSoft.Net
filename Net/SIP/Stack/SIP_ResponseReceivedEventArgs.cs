@@ -31,10 +31,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets SIP dialog where Response belongs to. Returns null if Response doesn't belong any dialog.
         /// </summary>
-        public SIP_Dialog Dialog
-        {
-            get { return m_pStack.TransactionLayer.MatchDialog(Response); }
-        }
+        public SIP_Dialog Dialog => m_pStack.TransactionLayer.MatchDialog(Response);
 
         /// <summary>
         /// Gets or creates dialog.

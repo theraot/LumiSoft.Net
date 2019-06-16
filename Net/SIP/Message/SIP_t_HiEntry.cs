@@ -26,7 +26,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
         public SIP_t_NameAddress Address
         {
-            get { return m_pAddress; }
+            get => m_pAddress;
 
             set
             {

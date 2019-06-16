@@ -30,7 +30,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string AuthData
         {
-            get { return m_AuthData; }
+            get => m_AuthData;
 
             set
             {
@@ -48,7 +48,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string Method
         {
-            get { return m_Method; }
+            get => m_Method;
 
             set
             {

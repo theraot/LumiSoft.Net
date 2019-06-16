@@ -33,7 +33,7 @@ namespace LumiSoft.Net
         /// </summary>
         public string Encoding
         {
-            get { return m_Encoding; }
+            get => m_Encoding;
 
             set
             {

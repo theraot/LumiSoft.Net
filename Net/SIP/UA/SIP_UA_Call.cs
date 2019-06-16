@@ -88,33 +88,17 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Gets call duration in seconds.
         /// </summary>
-        public int Duration
-        {
-            get
-            {
-                return ((TimeSpan)(DateTime.Now - StartTime)).Seconds;
-
-                // TODO: if terminated, we need static value here.
-            }
-        }
+        public int Duration => ((TimeSpan)(DateTime.Now - StartTime)).Seconds;
 
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get { return State == SIP_UA_CallState.Disposed; }
-        }
+        public bool IsDisposed => State == SIP_UA_CallState.Disposed;
 
         /// <summary>
         /// Gets if call is on hold.
         /// </summary>
-        public bool IsOnhold
-        {
-            // TODO:
-
-            get { return false; }
-        }
+        public bool IsOnhold => false;
 
         /// <summary>
         /// Gets if call has been redirected by remote party.

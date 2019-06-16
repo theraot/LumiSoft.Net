@@ -183,10 +183,7 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Returns "data".
             /// </summary>
-            public string ChunkID
-            {
-                get { return "data"; }
-            }
+            public string ChunkID => "data";
 
             /// <summary>
             /// Gets chunk size.
@@ -247,10 +244,7 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Returns "fmt".
             /// </summary>
-            public string ChunkID
-            {
-                get { return "fmt"; }
-            }
+            public string ChunkID => "fmt";
 
             /// <summary>
             /// Gets chunk size.
@@ -311,10 +305,7 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Returns "RIFF".
             /// </summary>
-            public string ChunkID
-            {
-                get { return "RIFF"; }
-            }
+            public string ChunkID => "RIFF";
 
             /// <summary>
             /// Gets chunk size.

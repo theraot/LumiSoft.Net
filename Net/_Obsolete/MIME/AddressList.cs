@@ -29,10 +29,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets address count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pAddresses.Count; }
-        }
+        public int Count => m_pAddresses.Count;
 
         /// <summary>
         /// Gets all mailbox addresses. Note: group address mailbox addresses are also included.
@@ -72,10 +69,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets address from specified index.
         /// </summary>
-        public Address this[int index]
-        {
-            get { return (Address)m_pAddresses[index]; }
-        }
+        public Address this[int index] => (Address)m_pAddresses[index];
 
         /// <summary>
         /// Adds a new address to the end of the collection.

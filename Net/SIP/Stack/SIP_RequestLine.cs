@@ -41,7 +41,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when <b>value</b> has invalid value.</exception>
         public string Method
         {
-            get { return m_Method; }
+            get => m_Method;
 
             set
             {
@@ -64,12 +64,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public AbsoluteUri Uri
         {
-            get { return m_pUri; }
+            get => m_pUri;
 
-            set
-            {
-                m_pUri = value ?? throw new ArgumentNullException("Uri");
-            }
+            set => m_pUri = value ?? throw new ArgumentNullException("Uri");
         }
 
         /// <summary>
@@ -79,7 +76,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when <b>value</b> has invalid value.</exception>
         public string Version
         {
-            get { return m_Version; }
+            get => m_Version;
 
             set
             {

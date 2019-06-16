@@ -70,7 +70,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentException">Is raised when when value less than 1 is passed.</exception>
         public int Time
         {
-            get { return m_Time; }
+            get => m_Time;
 
             set
             {

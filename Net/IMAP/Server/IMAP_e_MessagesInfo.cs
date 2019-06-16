@@ -33,10 +33,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets messages count.
         /// </summary>
-        internal int Exists
-        {
-            get { return MessagesInfo.Count; }
-        }
+        internal int Exists => MessagesInfo.Count;
 
         /// <summary>
         /// Get messages first unseen message 1-based sequnece number. Returns -1 if no umseen messages.

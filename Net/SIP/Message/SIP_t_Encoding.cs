@@ -24,7 +24,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string ContentEncoding
         {
-            get { return m_ContentEncoding; }
+            get => m_ContentEncoding;
 
             set
             {

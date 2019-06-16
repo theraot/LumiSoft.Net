@@ -31,10 +31,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets number of bytes needed for this packet.
         /// </summary>
-        public override int Size
-        {
-            get { return 12 + Data.Length; }
-        }
+        public override int Size => 12 + Data.Length;
 
         /// <summary>
         /// Gets sender synchronization(SSRC) or contributing(CSRC) source identifier.
@@ -49,18 +46,12 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTCP packet type.
         /// </summary>
-        public override int Type
-        {
-            get { return RTCP_PacketType.APP; }
-        }
+        public override int Type => RTCP_PacketType.APP;
 
         /// <summary>
         /// Gets RTCP version.
         /// </summary>
-        public override int Version
-        {
-            get { return m_Version; }
-        }
+        public override int Version => m_Version;
 
         /// <summary>
         /// Stores APP packet to the specified buffer.

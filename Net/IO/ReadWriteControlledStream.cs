@@ -27,37 +27,25 @@ namespace LumiSoft.Net.IO
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanRead
-        {
-            get { return (m_AccessMode & FileAccess.Read) != 0; }
-        }
+        public override bool CanRead => (m_AccessMode & FileAccess.Read) != 0;
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanSeek
-        {
-            get { return m_pStream.CanSeek; }
-        }
+        public override bool CanSeek => m_pStream.CanSeek;
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanWrite
-        {
-            get { return (m_AccessMode & FileAccess.Write) != 0; }
-        }
+        public override bool CanWrite => (m_AccessMode & FileAccess.Write) != 0;
 
         /// <summary>
         /// Gets the length in bytes of the stream.  This method is not supported and always throws a NotSupportedException.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override long Length
-        {
-            get { return m_pStream.Length; }
-        }
+        public override long Length => m_pStream.Length;
 
         /// <summary>
         /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -65,9 +53,9 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public override long Position
         {
-            get { return m_pStream.Position; }
+            get => m_pStream.Position;
 
-            set { m_pStream.Position = value; }
+            set => m_pStream.Position = value;
         }
 
         /// <summary>

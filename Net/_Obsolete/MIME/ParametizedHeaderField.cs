@@ -28,10 +28,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets header field name.
         /// </summary>
-        public string Name
-        {
-            get { return m_pHeaderField.Name; }
-        }
+        public string Name => m_pHeaderField.Name;
 
         /// <summary>
         /// Gets header field parameters.
@@ -43,17 +40,9 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string Value
         {
-            get
-            {
-                // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
-                // First item is value
-                return TextUtils.SplitQuotedString(m_pHeaderField.Value, ';')[0];
-            }
+            get => TextUtils.SplitQuotedString(m_pHeaderField.Value, ';')[0];
 
-            set
-            {
-                StoreParameters(value, ParseParameters());
-            }
+            set => StoreParameters(value, ParseParameters());
         }
 
         /// <summary>

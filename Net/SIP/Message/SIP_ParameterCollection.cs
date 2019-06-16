@@ -22,10 +22,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets parameters count in the collection.
         /// </summary>
-        public int Count
-        {
-            get { return m_pCollection.Count; }
-        }
+        public int Count => m_pCollection.Count;
 
         /// <summary>
         /// Gets specified parameter from collection. Returns null if parameter with specified name doesn't exist.

@@ -29,10 +29,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <exception cref="ArgumentException">Is raised when not supported content-type charset or not supported content-transfer-encoding value.</exception>
         /// <exception cref="NotSupportedException">Is raised when body contains not supported Content-Transfer-Encoding.</exception>
-        public string Text
-        {
-            get { return GetCharset().GetString(Data); }
-        }
+        public string Text => GetCharset().GetString(Data);
 
         /// <summary>
         /// Sets text.

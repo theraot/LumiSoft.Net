@@ -27,12 +27,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
         public SMTP_Reply Reply
         {
-            get { return m_pReply; }
+            get => m_pReply;
 
-            set
-            {
-                m_pReply = value ?? throw new ArgumentNullException("Reply");
-            }
+            set => m_pReply = value ?? throw new ArgumentNullException("Reply");
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public string Encoding
         {
-            get { return m_Encoding; }
+            get => m_Encoding;
 
             set
             {

@@ -57,18 +57,12 @@ namespace LumiSoft.Net.SMTP.Client
         /// Gets SMTP server response text after status code.
         /// </summary>
         [Obsolete("Use property 'ReplyLines' insead.")]
-        public string ResponseText
-        {
-            get { return ReplyLines[0].Text; }
-        }
+        public string ResponseText => ReplyLines[0].Text;
 
         /// <summary>
         /// Gets SMTP status code.
         /// </summary>
         [Obsolete("Use property 'ReplyLines' insead.")]
-        public int StatusCode
-        {
-            get { return ReplyLines[0].ReplyCode; }
-        }
+        public int StatusCode => ReplyLines[0].ReplyCode;
     }
 }

@@ -74,10 +74,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets SSL certificate.
         /// </summary>
-        public X509Certificate2 Certificate
-        {
-            get { return SSL_Certificate; }
-        }
+        public X509Certificate2 Certificate => SSL_Certificate;
 
         /// <summary>
         /// Gets IP end point.
@@ -92,18 +89,12 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets IP address.
         /// </summary>
-        public IPAddress IP
-        {
-            get { return EndPoint.Address; }
-        }
+        public IPAddress IP => EndPoint.Address;
 
         /// <summary>
         /// Gets port.
         /// </summary>
-        public int Port
-        {
-            get { return EndPoint.Port; }
-        }
+        public int Port => EndPoint.Port;
 
         /// <summary>
         /// Gets protocol.

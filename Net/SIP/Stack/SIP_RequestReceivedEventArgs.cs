@@ -39,10 +39,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets SIP dialog where Request belongs to. Returns null if Request doesn't belong any dialog.
         /// </summary>
-        public SIP_Dialog Dialog
-        {
-            get { return m_pStack.TransactionLayer.MatchDialog(Request); }
-        }
+        public SIP_Dialog Dialog => m_pStack.TransactionLayer.MatchDialog(Request);
 
         /// <summary>
         /// Gets data flow what received SIP request.
@@ -54,9 +51,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public bool IsHandled
         {
-            get { return m_IsHandled; }
+            get => m_IsHandled;
 
-            set { m_IsHandled = true; }
+            set => m_IsHandled = true;
         }
 
         /// <summary>

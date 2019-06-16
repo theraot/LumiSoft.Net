@@ -49,10 +49,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets if binding has expired.
         /// </summary>
-        public bool IsExpired
-        {
-            get { return TTL <= 0; }
-        }
+        public bool IsExpired => TTL <= 0;
 
         /// <summary>
         /// Gets the last time when the binding was updated.

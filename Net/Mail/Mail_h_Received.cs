@@ -103,7 +103,7 @@ namespace LumiSoft.Net.Mail
         /// <exception cref="ArgumentException">Is raised when invalid value passed.</exception>
         public string By
         {
-            get { return m_By; }
+            get => m_By;
 
             set
             {
@@ -127,7 +127,7 @@ namespace LumiSoft.Net.Mail
         /// <remarks>RFC defines it, but i don't see any point about that value.</remarks>
         public Mail_t_TcpInfo By_TcpInfo
         {
-            get { return m_pBy_TcpInfo; }
+            get => m_pBy_TcpInfo;
 
             set
             {
@@ -141,7 +141,7 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         public string For
         {
-            get { return m_For; }
+            get => m_For;
 
             set
             {
@@ -158,7 +158,7 @@ namespace LumiSoft.Net.Mail
         /// <exception cref="ArgumentException">Is raised when invalid value passed.</exception>
         public string From
         {
-            get { return m_From; }
+            get => m_From;
 
             set
             {
@@ -184,7 +184,7 @@ namespace LumiSoft.Net.Mail
         /// </remarks>
         public Mail_t_TcpInfo From_TcpInfo
         {
-            get { return m_pFrom_TcpInfo; }
+            get => m_pFrom_TcpInfo;
 
             set
             {
@@ -198,7 +198,7 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         public string ID
         {
-            get { return m_ID; }
+            get => m_ID;
 
             set
             {
@@ -212,25 +212,19 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get { return m_IsModified; }
-        }
+        public override bool IsModified => m_IsModified;
 
         /// <summary>
         /// Returns always "Received".
         /// </summary>
-        public override string Name
-        {
-            get { return "Received"; }
-        }
+        public override string Name => "Received";
 
         /// <summary>
         /// Gets or sets time when message was received.
         /// </summary>
         public DateTime Time
         {
-            get { return m_Time; }
+            get => m_Time;
 
             set
             {
@@ -244,7 +238,7 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         public string Via
         {
-            get { return m_Via; }
+            get => m_Via;
 
             set
             {
@@ -258,7 +252,7 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         public string With
         {
-            get { return m_With; }
+            get => m_With;
 
             set
             {

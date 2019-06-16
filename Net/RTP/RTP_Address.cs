@@ -102,10 +102,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets if this is multicast RTP address.
         /// </summary>
-        public bool IsMulticast
-        {
-            get { return Net_Utils.IsMulticastAddress(IP); }
-        }
+        public bool IsMulticast => Net_Utils.IsMulticastAddress(IP);
 
         /// <summary>
         /// Gets RTPCP end point.
