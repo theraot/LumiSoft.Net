@@ -341,7 +341,8 @@ namespace LumiSoft.Net.UDP
 
                 return (IPEndPoint)m_pSendSocketsIPv4.Next().LocalEndPoint;
             }
-            else if(remoteEP.AddressFamily == AddressFamily.InterNetworkV6){
+
+            if(remoteEP.AddressFamily == AddressFamily.InterNetworkV6){
                 // We don't have any IPv6 local end point.
                 if(m_pSendSocketsIPv6.Count == 0){
                     throw new InvalidOperationException("There is no suitable IPv6 local end point in this.Bindings.");
@@ -349,9 +350,7 @@ namespace LumiSoft.Net.UDP
 
                 return (IPEndPoint)m_pSendSocketsIPv6.Next().LocalEndPoint;
             }
-            else{
-                throw new ArgumentException("Argument 'remoteEP' has unknown AddressFamily.");
-            }
+            throw new ArgumentException("Argument 'remoteEP' has unknown AddressFamily.");
         }
 
         /// <summary>

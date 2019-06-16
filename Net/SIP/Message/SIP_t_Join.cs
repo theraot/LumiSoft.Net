@@ -134,18 +134,17 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
-            set{                
+            set
+            {
                 if(string.IsNullOrEmpty(value)){
                     throw new ArgumentException("ToTag is mandatory and cant be null or empty !");
                 }
-                else{
-                    this.Parameters.Set("to-tag",value);
-                }
+
+                this.Parameters.Set("to-tag",value);
             }
         }
 
@@ -160,18 +159,17 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
-            set{                
+            set
+            {
                 if(string.IsNullOrEmpty(value)){
                     throw new ArgumentException("FromTag is mandatory and cant be null or empty !");
                 }
-                else{
-                    this.Parameters.Set("from-tag",value);
-                }
+
+                this.Parameters.Set("from-tag",value);
             }
         }
     }

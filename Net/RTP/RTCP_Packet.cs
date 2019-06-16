@@ -58,46 +58,44 @@ namespace LumiSoft.Net.RTP
                 return packet;
             }
             // RR
-            else if(type == RTCP_PacketType.RR){
+
+            if(type == RTCP_PacketType.RR){
                 RTCP_Packet_RR packet = new RTCP_Packet_RR();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
             // SDES
-            else if(type == RTCP_PacketType.SDES){
+            if(type == RTCP_PacketType.SDES){
                 RTCP_Packet_SDES packet = new RTCP_Packet_SDES();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
             // BYE
-            else if(type == RTCP_PacketType.BYE){
+            if(type == RTCP_PacketType.BYE){
                 RTCP_Packet_BYE packet = new RTCP_Packet_BYE();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
             // APP
-            else if(type == RTCP_PacketType.APP){
+            if(type == RTCP_PacketType.APP){
                 RTCP_Packet_APP packet = new RTCP_Packet_APP();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
-            else{
-                // We need to move offset.
-                offset += 2;
-                int length = buffer[offset++] << 8 | buffer[offset++];
-                offset += length;
+// We need to move offset.
+            offset += 2;
+            int length = buffer[offset++] << 8 | buffer[offset++];
+            offset += length;
 
-                if(noException){
-                    return null;
-                }
-                else{
-                    throw new ArgumentException("Unknown RTCP packet type '" + type + "'.");
-                }
+            if(noException){
+                return null;
             }
+
+            throw new ArgumentException("Unknown RTCP packet type '" + type + "'.");
         }
 
         /// <summary>
@@ -127,13 +125,13 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public bool IsPadded
         {
-            get{ 
+            get
+            {
                 if(m_PaddBytesCount > 0){
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
         }
 

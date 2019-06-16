@@ -73,9 +73,8 @@ namespace LumiSoft.Net.Mime.vCard
             if(ParametersString.Length > 0){
                 return Name + ";" + ParametersString + ":" + FoldData(Value);
             }
-            else{
-                return Name + ":" + FoldData(Value);
-            }
+
+            return Name + ":" + FoldData(Value);
         }
 
         /// <summary>
@@ -148,9 +147,8 @@ namespace LumiSoft.Net.Mime.vCard
 
                 return retVal.ToString();
             }
-            else{
-                return data;
-            }
+
+            return data;
         }
 
         /// <summary>

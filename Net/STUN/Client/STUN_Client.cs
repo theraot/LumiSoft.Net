@@ -256,9 +256,8 @@ namespace LumiSoft.Net.STUN.Client
             if(result.PublicEndPoint != null){
                 return result.PublicEndPoint.Address;
             }
-            else{
-                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
-            }
+
+            throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
         }
 
         /// <summary>

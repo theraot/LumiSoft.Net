@@ -107,7 +107,8 @@ namespace LumiSoft.Net.AUTH
 
                 return Encoding.UTF8.GetBytes(m_pResponse.ToResponse());
             }
-            else if(m_State == 1){
+
+            if(m_State == 1){
                 m_State++;
                 m_IsCompleted = true;
 
@@ -118,9 +119,7 @@ namespace LumiSoft.Net.AUTH
 
                 return new byte[0];
             }
-            else{
-                throw new InvalidOperationException("Authentication is completed.");
-            }
+            throw new InvalidOperationException("Authentication is completed.");
         }
 
         /// <summary>

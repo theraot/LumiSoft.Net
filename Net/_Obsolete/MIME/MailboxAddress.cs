@@ -180,14 +180,14 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		public string LocalPart
 		{
-			get{ 
-				if(this.EmailAddress.IndexOf("@") > -1){
+			get
+            {
+                if(this.EmailAddress.IndexOf("@") > -1){
 					return this.EmailAddress.Substring(0,this.EmailAddress.IndexOf("@"));
 				}
-				else{
-					return this.EmailAddress;
-				}
-			}
+
+                return this.EmailAddress;
+            }
 		}
 
 		/// <summary>
@@ -195,14 +195,14 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		public string Domain
 		{
-			get{ 
-				if(this.EmailAddress.IndexOf("@") != -1){
+			get
+            {
+                if(this.EmailAddress.IndexOf("@") != -1){
 					return this.EmailAddress.Substring(this.EmailAddress.IndexOf("@") + 1);
 				}
-				else{
-					return "";
-				}
-			}
+
+                return "";
+            }
 		}
     }
 }

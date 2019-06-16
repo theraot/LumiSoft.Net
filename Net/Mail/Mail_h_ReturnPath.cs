@@ -72,9 +72,8 @@ namespace LumiSoft.Net.Mail
             if(string.IsNullOrEmpty(Address)){
                 return "Return-Path: <>\r\n";
             }
-            else{
-                return "Return-Path: <" + Address + ">\r\n";
-            }
+
+            return "Return-Path: <" + Address + ">\r\n";
         }
 
         /// <summary>

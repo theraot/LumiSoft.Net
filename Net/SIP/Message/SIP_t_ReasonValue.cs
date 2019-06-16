@@ -136,13 +136,13 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int Cause
         {
-            get{
+            get
+            {
                 if(this.Parameters["cause"] == null){
                     return -1;
                 }
-                else{
-                    return Convert.ToInt32(this.Parameters["cause"].Value); 
-                }
+
+                return Convert.ToInt32(this.Parameters["cause"].Value);
             }
 
             set{
@@ -165,9 +165,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{

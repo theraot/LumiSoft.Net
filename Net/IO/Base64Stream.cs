@@ -202,7 +202,8 @@ namespace LumiSoft.Net.IO
                     if(b == -1){
                         break;
                     }
-                    else if(b == '=' || BASE64_DECODE_TABLE[b] != -1){
+
+                    if(b == '=' || BASE64_DECODE_TABLE[b] != -1){
                         readBuffer[readedCount++] = (byte)b;
                         base64Count++;
                     }

@@ -81,35 +81,35 @@ namespace LumiSoft.Net.ABNF
                 return null;
             }
             // We have rulename.
-            else if(char.IsLetter((char)reader.Peek())){
+
+            if(char.IsLetter((char)reader.Peek())){
                 return new ABNF_Repetition(min,max,ABNF_RuleName.Parse(reader));
             }
             // We have group.
-            else if(reader.Peek() == '('){
+            if(reader.Peek() == '('){
                 return new ABNF_Repetition(min,max,ABFN_Group.Parse(reader));
             }
             // We have option.
-            else if(reader.Peek() == '['){
+            if(reader.Peek() == '['){
                 return new ABNF_Repetition(min,max,ABNF_Option.Parse(reader));
             }
             // We have char-val.
-            else if(reader.Peek() == '\"'){
+            if(reader.Peek() == '\"'){
                 return new ABNF_Repetition(min,max,ABNF_CharVal.Parse(reader));
             }
             // We have num-val.
-            else if(reader.Peek() == '%'){
+            if(reader.Peek() == '%'){
                 // Eat '%'.
                 reader.Read();
 
                 if(reader.Peek() == 'd'){
                     return new ABNF_Repetition(min,max,ABNF_DecVal.Parse(reader));
                 }
-                else{
-                    throw new ParseException("Invalid 'num-val' value '" + reader.ReadToEnd() + "'.");
-                }
+
+                throw new ParseException("Invalid 'num-val' value '" + reader.ReadToEnd() + "'.");
             }
             // We have prose-val.
-            else if(reader.Peek() == '<'){
+            if(reader.Peek() == '<'){
                 return new ABNF_Repetition(min,max,ABNF_ProseVal.Parse(reader));
             }
 

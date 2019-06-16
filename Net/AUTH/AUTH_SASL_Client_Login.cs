@@ -66,15 +66,14 @@ namespace LumiSoft.Net.AUTH
 
                 return Encoding.UTF8.GetBytes(m_UserName);
             }
-            else if(m_State == 1){
+
+            if(m_State == 1){
                 m_State++;
                 m_IsCompleted = true;
 
                 return Encoding.UTF8.GetBytes(m_Password);
             }
-            else{
-                throw new InvalidOperationException("Authentication is completed.");
-            }
+            throw new InvalidOperationException("Authentication is completed.");
         }
 
         /// <summary>

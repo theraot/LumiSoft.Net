@@ -69,9 +69,8 @@ namespace LumiSoft.Net.MIME
                 if(m_pEncoding != null){
                     return new MIME_h_Parameter(Name,DecodeExtOctet(value.ToString(),m_pEncoding));
                 }
-                else{
-                    return new MIME_h_Parameter(Name,value.ToString());
-                }
+
+                return new MIME_h_Parameter(Name,value.ToString());
             }
 
             /// <summary>
@@ -379,15 +378,14 @@ namespace LumiSoft.Net.MIME
                 if(m_IsModified){
                     return true;
                 }
-                else{
-                    foreach(MIME_h_Parameter parameter in this.ToArray()){
-                        if(parameter.IsModified){
-                            return true;
-                        }
-                    }
 
-                    return false;
+                foreach(MIME_h_Parameter parameter in this.ToArray()){
+                    if(parameter.IsModified){
+                        return true;
+                    }
                 }
+
+                return false;
             }
         }
 
@@ -421,9 +419,8 @@ namespace LumiSoft.Net.MIME
                 if(m_pParameters.TryGetValue(name,out retVal)){
                     return retVal.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{

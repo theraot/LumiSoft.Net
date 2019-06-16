@@ -183,9 +183,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -228,9 +227,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_ContentDisposition>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -267,13 +265,13 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public int ContentLength
         {
-            get{
+            get
+            {
                 if(Data == null){
                     return 0;
                 }
-                else{
-                    return Data.Length;
-                }
+
+                return Data.Length;
             }
         }
 
@@ -289,9 +287,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -315,9 +312,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_CSeq>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -340,9 +336,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return DateTime.ParseExact(h.Value,"r",System.Globalization.DateTimeFormatInfo.InvariantInfo);
                 }
-                else{
-                    return DateTime.MinValue; 
-                }
+
+                return DateTime.MinValue;
             }
 
             set{
@@ -374,9 +369,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_Event>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -400,9 +394,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return Convert.ToInt32(h.Value);
                 }
-                else{
-                    return -1; 
-                } 
+
+                return -1;
             }
 
             set{
@@ -426,9 +419,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_From>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -459,9 +451,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -485,9 +476,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_IdentityInfo>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -521,9 +511,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_Join>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -548,9 +537,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return Convert.ToInt32(h.Value);
                 }
-                else{
-                    return -1; 
-                } 
+
+                return -1;
             }
 
             set{
@@ -574,9 +562,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -600,9 +587,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return Convert.ToInt32(h.Value);
                 }
-                else{
-                    return -1; 
-                } 
+
+                return -1;
             }
 
             set{
@@ -626,9 +612,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_MinSE>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -652,9 +637,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -687,9 +671,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -739,9 +722,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_RAck>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -781,9 +763,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_ReferSub>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -806,9 +787,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_AddressParam>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -831,9 +811,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_ReferredBy>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -864,9 +843,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_Replaces>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -923,9 +901,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_RetryAfter>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -956,9 +933,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return Convert.ToInt32(h.Value);
                 }
-                else{
-                    return -1; 
-                } 
+
+                return -1;
             }
 
             set{
@@ -1006,9 +982,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1040,9 +1015,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_SessionExpires>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1065,9 +1039,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1090,9 +1063,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1116,9 +1088,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1142,9 +1113,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_SubscriptionState>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1176,9 +1146,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_TargetDialog>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1202,9 +1171,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_Timestamp>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1228,9 +1196,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return ((SIP_SingleValueHF<SIP_t_To>)h).ValueX;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{
@@ -1262,9 +1229,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(h != null){
                     return h.Value;
                 }
-                else{
-                    return null; 
-                }
+
+                return null;
             }
 
             set{

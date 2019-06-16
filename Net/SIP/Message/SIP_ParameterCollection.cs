@@ -85,9 +85,8 @@ namespace LumiSoft.Net.SIP.Message
             if(parameter != null){
                 return true;
             }
-            else{
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>

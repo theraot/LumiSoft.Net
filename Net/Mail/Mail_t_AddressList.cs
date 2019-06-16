@@ -63,7 +63,8 @@ namespace LumiSoft.Net.Mail
                     break;
                 }
                 // group
-                else if(r.Peek(true) == ':'){
+
+                if(r.Peek(true) == ':'){
                     Mail_t_Group group = new Mail_t_Group(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null);
                     // Consume ':'
                     r.Char(true);
@@ -75,18 +76,19 @@ namespace LumiSoft.Net.Mail
                             break;
                         }
                         // In valid address list value.
-                        else if(word == string.Empty){
+
+                        if(word == string.Empty){
                             throw new ParseException("Invalid address-list value '" + value + "'.");
                         }
                         // name-addr
-                        else if(r.Peek(true) == '<'){  
-                            group.Members.Add(new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null,r.ReadParenthesized()));                    
+                        if(r.Peek(true) == '<'){  
+                            @group.Members.Add(new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null,r.ReadParenthesized()));                    
                         }
                         // addr-spec
                         else{
-                            group.Members.Add(new Mail_t_Mailbox(null,word));
+                            @group.Members.Add(new Mail_t_Mailbox(null,word));
                         }
-                       
+
                         // We reached at the end of group.
                         if(r.Peek(true) == ';'){
                             r.Char(true);
@@ -98,7 +100,7 @@ namespace LumiSoft.Net.Mail
                         }
                     }
 
-                    retVal.Add(group);
+                    retVal.Add(@group);
                 }
                 // name-addr
                 else if(r.Peek(true) == '<'){

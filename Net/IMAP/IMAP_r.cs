@@ -112,9 +112,8 @@ namespace LumiSoft.Net.IMAP
                 return false;
             }
             // Completed asynchronously, stream.BeginWrite AsyncCallback will continue processing.
-            else{
-                return true;
-            }
+
+            return true;
         }
     }
 }

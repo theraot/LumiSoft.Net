@@ -64,17 +64,16 @@ namespace LumiSoft.Net
 		/// <param name="length">Number of chars to read.</param>
 		/// <returns></returns>
 		public string ReadSpecifiedLength(int length)
-		{
-			if(SourceString.Length >= length){
+    {
+        if(SourceString.Length >= length){
 				string retVal = SourceString.Substring(0,length);
 				SourceString = SourceString.Substring(length);
 
 				return retVal;
 			}
-			else{
-				throw new Exception("Read length can't be bigger than source string !");
-			}
-		}
+
+        throw new Exception("Read length can't be bigger than source string !");
+    }
 
     /// <summary>
 		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiter in quoted string is skipped.
@@ -154,9 +153,8 @@ namespace LumiSoft.Net
 
 					    return retVal;
 				    }
-				    else{
-					    currentSplitBuffer.Append(c);
-				    }
+
+                    currentSplitBuffer.Append(c);
                 }				
 			}
 
@@ -206,46 +204,45 @@ namespace LumiSoft.Net
 			// quoted word can contain any char, " must be escaped with \
 			// unqouted word can conatin any char except: SP VTAB HTAB,{}()[]<>
 
-			if(SourceString.StartsWith("\"")){
+			if(SourceString.StartsWith("\""))
+            {
                 if(unQuote){
                     return TextUtils.UnQuoteString(QuotedReadToDelimiter(wordTerminatorChars,removeWordTerminator));
                 }
-                else{
-                    return QuotedReadToDelimiter(wordTerminatorChars,removeWordTerminator);
-                }				
-			}
-			else{
-				int wordLength = 0;
-				for(int i=0;i<SourceString.Length;i++){
-					char c = SourceString[i];
 
-                    bool isTerminator = false;
-                    foreach(char terminator in wordTerminatorChars){
-                        if(c == terminator){
-                            isTerminator = true;
-                            break;
-                        }
-                    }
-                    if(isTerminator){
+                return QuotedReadToDelimiter(wordTerminatorChars,removeWordTerminator);
+            }
+
+            int wordLength = 0;
+            for(int i=0;i<SourceString.Length;i++){
+                char c = SourceString[i];
+
+                bool isTerminator = false;
+                foreach(char terminator in wordTerminatorChars){
+                    if(c == terminator){
+                        isTerminator = true;
                         break;
                     }
+                }
+                if(isTerminator){
+                    break;
+                }
 
-					wordLength++;
-				}
+                wordLength++;
+            }
 				
-				string retVal = SourceString.Substring(0,wordLength);
-                if(removeWordTerminator){
-                    if(SourceString.Length >= wordLength + 1){
-                        SourceString = SourceString.Substring(wordLength + 1);
-                    }
+            string retVal = SourceString.Substring(0,wordLength);
+            if(removeWordTerminator){
+                if(SourceString.Length >= wordLength + 1){
+                    SourceString = SourceString.Substring(wordLength + 1);
                 }
-                else{
-				    SourceString = SourceString.Substring(wordLength);
-                }
+            }
+            else{
+                SourceString = SourceString.Substring(wordLength);
+            }
 
-				return retVal;
-			}			
-		}
+            return retVal;
+        }
 
         /// <summary>
 		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
@@ -304,30 +301,29 @@ namespace LumiSoft.Net
 						nestedStartingCharCounter++;
 					}
 					// Closing char
-					else if(SourceString[i] == closingChar){
-						// There isn't nested parenthesis closing chars left, this is closing char what we want
+					else if(SourceString[i] == closingChar)
+                    {
+                        // There isn't nested parenthesis closing chars left, this is closing char what we want
 						if(nestedStartingCharCounter == 0){
 							closingCharIndex = i;
 							break;
 						}
 						// This is nested parenthesis closing char
-						else{
-							nestedStartingCharCounter--;
-						}
-					}
+
+                        nestedStartingCharCounter--;
+                    }
 				}
 			}
 
 			if(closingCharIndex == -1){
 				throw new Exception("There is no closing parenthesize for '" + SourceString + "' !");
 			}
-			else{
-				string retVal = SourceString.Substring(1,closingCharIndex - 1);
-				SourceString = SourceString.Substring(closingCharIndex + 1);
 
-				return retVal;
-			}
-		}
+            string retVal = SourceString.Substring(1,closingCharIndex - 1);
+            SourceString = SourceString.Substring(closingCharIndex + 1);
+
+            return retVal;
+        }
 
         /// <summary>
         /// Reads all remaining string, returns null if no chars left to read.
@@ -376,14 +372,13 @@ namespace LumiSoft.Net
 		/// <param name="case_sensitive">Specifies if compare is case-sensitive.</param>
 		/// <returns>Returns true if source string starts with specified value.</returns>
 		public bool StartsWith(string value,bool case_sensitive)
-		{
-			if(case_sensitive){
+        {
+            if(case_sensitive){
 				return SourceString.StartsWith(value);
 			}
-			else{
-				return SourceString.ToLower().StartsWith(value.ToLower());
-			}
-		}
+
+            return SourceString.ToLower().StartsWith(value.ToLower());
+        }
 
         /// <summary>
 		/// Gets if source string ends with specified value. Compare is case-sensitive.
@@ -402,14 +397,13 @@ namespace LumiSoft.Net
 		/// <param name="case_sensitive">Specifies if compare is case-sensitive.</param>
 		/// <returns>Returns true if source string ends with specified value.</returns>
 		public bool EndsWith(string value,bool case_sensitive)
-		{
-			if(case_sensitive){
+        {
+            if(case_sensitive){
 				return SourceString.EndsWith(value);
 			}
-			else{
-				return SourceString.EndsWith(value,StringComparison.InvariantCultureIgnoreCase);
-			}
-		}
+
+            return SourceString.EndsWith(value,StringComparison.InvariantCultureIgnoreCase);
+        }
 
         /// <summary>
         /// Gets if current source string starts with word. For example if source string starts with

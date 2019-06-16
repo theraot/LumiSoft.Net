@@ -344,7 +344,8 @@ namespace LumiSoft.Net.SIP.Stack
                 if(this.State == SIP_TransactionState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                else if(this.State != SIP_TransactionState.WaitingToStart){
+
+                if(this.State != SIP_TransactionState.WaitingToStart){
                     throw new InvalidOperationException("Start method is valid only in 'WaitingToStart' state.");
                 }
 
@@ -464,17 +465,19 @@ namespace LumiSoft.Net.SIP.Stack
                 if(this.State == SIP_TransactionState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                else if(this.State == SIP_TransactionState.WaitingToStart){
+
+                if(this.State == SIP_TransactionState.WaitingToStart){
                     SetState(SIP_TransactionState.Terminated);
                     return;
                 }
-                else if(m_IsCanceling){
+                if(m_IsCanceling){
                     return;
                 }
-                else if(this.State == SIP_TransactionState.Terminated){
+                if(this.State == SIP_TransactionState.Terminated){
                     // RFC 3261 9.1. We got final response, nothing to cancel.
                     return;
                 }
+
                 if(this.FinalResponse != null){
                     return;
                 }
@@ -518,7 +521,8 @@ namespace LumiSoft.Net.SIP.Stack
                     *) If provisional response, send CANCEL, we should get '478 Request terminated'.
                     *) If final response, skip canceling, nothing to cancel.
                 */
-                else if(m_IsCanceling && response.StatusCodeType == SIP_StatusCodeType.Provisional){
+
+                if(m_IsCanceling && response.StatusCodeType == SIP_StatusCodeType.Provisional){
                     SendCancel();
                     return;
                 }

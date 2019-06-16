@@ -37,9 +37,8 @@ namespace LumiSoft.Net.DNS
 			if(Dns_Client.GetQName(reply,ref offset,ref server)){			
 				return new DNS_rr_NS(name,server,ttl);
 			}
-            else{
-                throw new ArgumentException("Invalid NS resource record data !");
-            }
+
+            throw new ArgumentException("Invalid NS resource record data !");
         }
 
         /// <summary>

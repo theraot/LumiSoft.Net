@@ -360,7 +360,8 @@ namespace LumiSoft.Net.SMTP.Relay
                         m_pLocalBindInfo = m_pServer.GetLocalBinding(t.Target.Address);
 
                         // We have suitable local IP binding for the target.
-                        if(m_pLocalBindInfo != null){
+                        if(m_pLocalBindInfo != null)
+                        {
                             // We found free target, stop searching.
                             if(m_pServer.TryAddIpUsage(t.Target.Address)){
                                 m_pActiveTarget = t;
@@ -369,9 +370,8 @@ namespace LumiSoft.Net.SMTP.Relay
                                 break;
                             }
                             // Connection per IP limit reached.
-                            else{
-                                LogText("Skipping relay target (" + t.HostName + "->" + t.Target.Address + "), maximum connections to the specified IP has reached.");
-                            }
+
+                            LogText("Skipping relay target (" + t.HostName + "->" + t.Target.Address + "), maximum connections to the specified IP has reached.");
                         }
                         // No suitable local IP binding, try next target.
                         else{

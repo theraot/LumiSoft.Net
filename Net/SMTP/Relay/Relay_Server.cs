@@ -272,23 +272,21 @@ namespace LumiSoft.Net.SMTP.Relay
             // This ensures if multiple network connections, all will be load balanced.
 
             // IPv6
-            if(remoteIP.AddressFamily == AddressFamily.InterNetworkV6){
+            if(remoteIP.AddressFamily == AddressFamily.InterNetworkV6)
+            {
                 if(m_pLocalEndPointIPv6.Count == 0){
                     return null;
                 }
-                else{
-                    return m_pLocalEndPointIPv6.Next();
-                }
+
+                return m_pLocalEndPointIPv6.Next();
             }
             // IPv4
-            else{
-                if(m_pLocalEndPointIPv4.Count == 0){
-                    return null;
-                }
-                else{
-                    return m_pLocalEndPointIPv4.Next();
-                }
+
+            if(m_pLocalEndPointIPv4.Count == 0){
+                return null;
             }
+
+            return m_pLocalEndPointIPv4.Next();
         }
 
         /// <summary>
@@ -348,9 +346,6 @@ namespace LumiSoft.Net.SMTP.Relay
                         m_pConnectionsPerIP[ip] = count - 1;
                     }
                 }
-                else{
-                    // No such entry, just skip it.
-                }
             }
         }
 
@@ -373,9 +368,8 @@ namespace LumiSoft.Net.SMTP.Relay
                     return count;
                 }
                 // No usage to specified IP.
-                else{
-                    return 0;
-                }
+
+                return 0;
             }
         }
 

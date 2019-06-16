@@ -106,10 +106,11 @@ namespace LumiSoft.Net.SIP.Proxy
             if(compareValue.QValue == this.QValue){
                 return 0;
             }
-            else if(compareValue.QValue > this.QValue){
+
+            if(compareValue.QValue > this.QValue){
                 return 1;
-            }            
-            else if(compareValue.QValue < this.QValue){
+            }
+            if(compareValue.QValue < this.QValue){
                 return -1;
             }
 
@@ -134,13 +135,13 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         public int TTL
         {
-            get{
+            get
+            {
                 if(DateTime.Now > LastUpdate.AddSeconds(m_Expires)){
                     return 0;
                 }
-                else{
-                    return (int)((TimeSpan)(LastUpdate.AddSeconds(m_Expires) - DateTime.Now)).TotalSeconds;
-                }
+
+                return (int)((TimeSpan)(LastUpdate.AddSeconds(m_Expires) - DateTime.Now)).TotalSeconds;
             }
         }
 

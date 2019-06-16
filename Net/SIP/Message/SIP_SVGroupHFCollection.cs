@@ -90,9 +90,8 @@ namespace LumiSoft.Net.SIP.Message
             if(m_pFields.Count > 0){
                 return m_pFields[0];
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>

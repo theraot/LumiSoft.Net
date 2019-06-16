@@ -776,7 +776,8 @@ namespace LumiSoft.Net.RTP
                         return null;
                     }
                     // A collision or loop of the participant's own packets.
-                    else if(m_pConflictingEPs.ContainsKey(packetEP.ToString())){
+
+                    if(m_pConflictingEPs.ContainsKey(packetEP.ToString())){
                         if(cname == null || cname == source.CName){
                             m_LocalPacketsLooped++;
                         }
@@ -786,47 +787,45 @@ namespace LumiSoft.Net.RTP
                         return null;
                     }
                     // New collision, change SSRC identifier.
-                    else{
-                        m_LocalCollisions++;
-                        m_pConflictingEPs.Add(packetEP.ToString(),DateTime.Now);
+                    m_LocalCollisions++;
+                    m_pConflictingEPs.Add(packetEP.ToString(),DateTime.Now);
 
-                        // Remove SSRC from members,senders. Choose new SSRC, CNAME new and BYE old.
-                        m_pMembers.Remove(source.SSRC);
-                        m_pSenders.Remove(source.SSRC);
-                        uint oldSSRC = source.SSRC;                        
+                    // Remove SSRC from members,senders. Choose new SSRC, CNAME new and BYE old.
+                    m_pMembers.Remove(source.SSRC);
+                    m_pSenders.Remove(source.SSRC);
+                    uint oldSSRC = source.SSRC;                        
+                    source.GenerateNewSSRC();
+                    // Ensure that new SSRC is not in use, if so repaeat while not conflicting SSRC.
+                    while(m_pMembers.ContainsKey(source.SSRC)){
                         source.GenerateNewSSRC();
-                        // Ensure that new SSRC is not in use, if so repaeat while not conflicting SSRC.
-                        while(m_pMembers.ContainsKey(source.SSRC)){
-                            source.GenerateNewSSRC();
-                        }
-                        m_pMembers.Add(source.SSRC,source);
-
-                        RTCP_CompoundPacket compoundPacket = new RTCP_CompoundPacket();
-                        RTCP_Packet_RR rr = new RTCP_Packet_RR();
-                        rr.SSRC = m_pRtcpSource.SSRC;
-                        compoundPacket.Packets.Add(rr);
-                        RTCP_Packet_SDES sdes = new RTCP_Packet_SDES();
-                        RTCP_Packet_SDES_Chunk sdes_chunk = new RTCP_Packet_SDES_Chunk(source.SSRC,m_pSession.LocalParticipant.CNAME);
-                        sdes.Chunks.Add(sdes_chunk);
-                        compoundPacket.Packets.Add(sdes);
-                        RTCP_Packet_BYE bye = new RTCP_Packet_BYE();
-                        bye.Sources = new uint[]{oldSSRC};
-                        bye.LeavingReason = "Collision, changing SSRC.";
-                        compoundPacket.Packets.Add(bye);
-
-                        SendRtcpPacket(compoundPacket);
-                        //----------------------------------------------------------------------
-
-                        // Add new source to members, it's not conflicting any more, we changed SSRC.
-                        source = new RTP_Source_Remote(this,src);
-                        if(rtcp_rtp){
-                            source.SetRtcpEP(packetEP);
-                        }
-                        else{
-                            source.SetRtpEP(packetEP);
-                        }
-                        m_pMembers.Add(src,source);
                     }
+                    m_pMembers.Add(source.SSRC,source);
+
+                    RTCP_CompoundPacket compoundPacket = new RTCP_CompoundPacket();
+                    RTCP_Packet_RR rr = new RTCP_Packet_RR();
+                    rr.SSRC = m_pRtcpSource.SSRC;
+                    compoundPacket.Packets.Add(rr);
+                    RTCP_Packet_SDES sdes = new RTCP_Packet_SDES();
+                    RTCP_Packet_SDES_Chunk sdes_chunk = new RTCP_Packet_SDES_Chunk(source.SSRC,m_pSession.LocalParticipant.CNAME);
+                    sdes.Chunks.Add(sdes_chunk);
+                    compoundPacket.Packets.Add(sdes);
+                    RTCP_Packet_BYE bye = new RTCP_Packet_BYE();
+                    bye.Sources = new uint[]{oldSSRC};
+                    bye.LeavingReason = "Collision, changing SSRC.";
+                    compoundPacket.Packets.Add(bye);
+
+                    SendRtcpPacket(compoundPacket);
+                    //----------------------------------------------------------------------
+
+                    // Add new source to members, it's not conflicting any more, we changed SSRC.
+                    source = new RTP_Source_Remote(this,src);
+                    if(rtcp_rtp){
+                        source.SetRtcpEP(packetEP);
+                    }
+                    else{
+                        source.SetRtpEP(packetEP);
+                    }
+                    m_pMembers.Add(src,source);
                 }
             }
 

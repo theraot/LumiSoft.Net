@@ -79,7 +79,8 @@ namespace LumiSoft.Net.ABNF
             ValueType     valueType = ValueType.Single;
             List<int>     values    = new List<int>();
             StringBuilder b         = new StringBuilder();
-            while(true){
+            while(true)
+            {
                 // We reached end of string.
                 if(reader.Peek() == -1){
                     // - or . without required 1 DIGIT.
@@ -88,7 +89,8 @@ namespace LumiSoft.Net.ABNF
                     }
                     break;
                 }
-                else if(char.IsNumber((char)reader.Peek())){
+
+                if(char.IsNumber((char)reader.Peek())){
                     b.Append((char)reader.Read());
                 }
                 // Concated value.
@@ -135,12 +137,11 @@ namespace LumiSoft.Net.ABNF
             if(valueType == ValueType.Single){
                 return new ABNF_DecVal(values[0],values[0]);
             }
-            else if(valueType == ValueType.Concated){
+
+            if(valueType == ValueType.Concated){
                 return new ABNF_DecVal(values.ToArray());
             }
-            else{
-                return new ABNF_DecVal(values[0],values[1]);
-            }
+            return new ABNF_DecVal(values[0],values[1]);
         }
     }
 }

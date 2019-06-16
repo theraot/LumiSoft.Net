@@ -23,46 +23,45 @@ namespace LumiSoft.Net.IMAP
             if(string.Equals("ALERT",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_Alert.Parse(value);
             }
-            else if(string.Equals("BADCHARSET",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+
+            if(string.Equals("BADCHARSET",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_BadCharset.Parse(value);
             }
-            else if(string.Equals("CAPABILITY",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("CAPABILITY",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_Capability.Parse(value);
             }
-            else if(string.Equals("PARSE",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("PARSE",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_Parse.Parse(value);
             }
-            else if(string.Equals("PERMANENTFLAGS",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("PERMANENTFLAGS",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_PermanentFlags.Parse(value);
             }
-            else if(string.Equals("READ-ONLY",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("READ-ONLY",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_ReadOnly.Parse(value);
             }
-            else if(string.Equals("READ-WRITE",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("READ-WRITE",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_ReadWrite.Parse(value);
             }
-            else if(string.Equals("TRYCREATE",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("TRYCREATE",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_TryCreate.Parse(value);
             }
-            else if(string.Equals("UIDNEXT",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("UIDNEXT",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_UidNext.Parse(value);
             }
-            else if(string.Equals("UIDVALIDITY",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("UIDVALIDITY",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_UidValidity.Parse(value);
             }
-            else if(string.Equals("UNSEEN",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("UNSEEN",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_Unseen.Parse(value);
             }
             //---------------------
-            else if(string.Equals("APPENDUID",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("APPENDUID",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_AppendUid.Parse(value);
             }
-            else if(string.Equals("COPYUID",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals("COPYUID",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_CopyUid.Parse(value);
             }
-            else{
-                return IMAP_t_orc_Unknown.Parse(value);
-            }
+            return IMAP_t_orc_Unknown.Parse(value);
         }
     }
 }

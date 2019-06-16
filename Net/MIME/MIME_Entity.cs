@@ -278,9 +278,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -320,9 +319,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -362,9 +360,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -405,9 +402,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value.Trim();
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -451,9 +447,8 @@ namespace LumiSoft.Net.MIME
 
                     return (MIME_h_ContentType)h;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -492,9 +487,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -535,9 +529,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -578,9 +571,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -626,9 +618,8 @@ namespace LumiSoft.Net.MIME
 
                     return (MIME_h_ContentDisposition)h;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -668,9 +659,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -710,9 +700,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -752,9 +741,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -794,9 +782,8 @@ namespace LumiSoft.Net.MIME
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{

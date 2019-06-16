@@ -348,7 +348,8 @@ namespace LumiSoft.Net.SIP.UA
                 if(State == SIP_UA_CallState.Terminating || State == SIP_UA_CallState.Terminated){
                     return;
                 }
-                else if(State == SIP_UA_CallState.WaitingForStart){
+
+                if(State == SIP_UA_CallState.WaitingForStart){
                     SetState(SIP_UA_CallState.Terminated);
                 }
                 else if(State == SIP_UA_CallState.WaitingToAccept){

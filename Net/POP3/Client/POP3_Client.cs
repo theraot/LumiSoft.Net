@@ -3696,11 +3696,10 @@ namespace LumiSoft.Net.POP3.Client
 					if(line.Trim() == "."){
 						break;
 					}
-					else{
-                        string[] no_size = line.Trim().Split(new char[]{' '});
-                        m_pMessages.Add(Convert.ToInt32(no_size[1]));
-					}
-				}
+
+                    string[] no_size = line.Trim().Split(new char[]{' '});
+                    m_pMessages.Add(Convert.ToInt32(no_size[1]));
+                }
 			}
 			else{
 				throw new POP3_ClientException(line);
@@ -3734,11 +3733,10 @@ namespace LumiSoft.Net.POP3.Client
 					if(line.Trim() == "."){
 						break;
 					}
-					else{
-                        string[] no_uid = line.Trim().Split(new char[]{' '});                        
-                        m_pMessages[Convert.ToInt32(no_uid[0]) - 1].SetUID(no_uid[1]);
-					}
-				}
+
+                    string[] no_uid = line.Trim().Split(new char[]{' '});                        
+                    m_pMessages[Convert.ToInt32(no_uid[0]) - 1].SetUID(no_uid[1]);
+                }
 			}
 			else{
 				m_IsUidlSupported = false;

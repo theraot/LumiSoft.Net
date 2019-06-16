@@ -108,10 +108,9 @@ namespace LumiSoft.Net.Mime
 				if(!parameters.ContainsKey(parameterName)){
 					throw new Exception("Specified parameter '" + parameterName + "' doesn't exist !");
 				}
-				else{
-					return (string)parameters[parameterName];
-				}
-			}
+
+                return (string)parameters[parameterName];
+            }
 
 			set{
 				parameterName = parameterName.ToLower();

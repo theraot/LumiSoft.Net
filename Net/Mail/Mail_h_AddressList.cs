@@ -88,7 +88,7 @@ namespace LumiSoft.Net.Mail
         /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
         /// <returns>Returns header field as string.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
-        {            
+        {
             if(reEncode || this.IsModified){
                 StringBuilder retVal = new StringBuilder();
                 retVal.Append(this.Name + ": ");
@@ -112,9 +112,8 @@ namespace LumiSoft.Net.Mail
 
                 return retVal.ToString();
             }
-            else{
-                return m_ParseValue;
-            }            
+
+            return m_ParseValue;
         }
 
         /// <summary>

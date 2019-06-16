@@ -66,19 +66,18 @@ namespace LumiSoft.Net.AUTH
 
                 return Encoding.ASCII.GetBytes("UserName:");
             }
-            else if(m_State == 1){
+
+            if(m_State == 1){
                 m_State++;
                 m_UserName = Encoding.UTF8.GetString(clientResponse);
             
                 return Encoding.ASCII.GetBytes("Password:");
             }
-            else{
-                m_Password = Encoding.UTF8.GetString(clientResponse);
+            m_Password = Encoding.UTF8.GetString(clientResponse);
 
-                AUTH_e_Authenticate result = OnAuthenticate("",m_UserName,m_Password);
-                m_IsAuthenticated = result.IsAuthenticated;
-                m_IsCompleted = true;
-            }
+            AUTH_e_Authenticate result = OnAuthenticate("",m_UserName,m_Password);
+            m_IsAuthenticated = result.IsAuthenticated;
+            m_IsCompleted = true;
 
             return null;
         }

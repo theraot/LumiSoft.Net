@@ -123,13 +123,13 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public bool IsStarContact
         {
-            get{
+            get
+            {
                 if(Address.Uri.Value.StartsWith("*")){
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
         }
 
@@ -144,13 +144,13 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public double QValue
         {
-            get{
+            get
+            {
                 if(!this.Parameters.Contains("qvalue")){
                     return -1;
                 }
-                else{
-                    return double.Parse(this.Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
-                }
+
+                return double.Parse(this.Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
             }
 
             set{
@@ -177,9 +177,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{

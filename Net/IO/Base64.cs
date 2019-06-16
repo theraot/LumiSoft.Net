@@ -171,14 +171,14 @@ namespace LumiSoft.Net.IO
                 int offsetInBlock = 0;
                 while(offsetInBlock < 4){
                     // Check that we won't exceed buffer data.
-                    if((decodeOffset - encOffset) >= encCount){
+                    if((decodeOffset - encOffset) >= encCount)
+                    {
                         if(offsetInBlock == 0){
                             break;
                         }
                         // Incomplete 4-byte base64 data block.
-                        else{
-                            throw new FormatException("Invalid incomplete base64 4-char block");
-                        }
+
+                        throw new FormatException("Invalid incomplete base64 4-char block");
                     }
 
                     // Read byte.
@@ -201,7 +201,8 @@ namespace LumiSoft.Net.IO
                         break;
                     }
                     // Non-base64 char.
-                    else if(b > 127 || BASE64_DECODE_TABLE[b] == -1){
+
+                    if(b > 127 || BASE64_DECODE_TABLE[b] == -1){
                         if(!ignoreNonBase64Chars){
                             throw new FormatException("Invalid base64 char '" + b + "'.");
                         }

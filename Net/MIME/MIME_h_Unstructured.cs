@@ -82,14 +82,12 @@ namespace LumiSoft.Net.MIME
             if(!reEncode && m_ParseValue != null){
                 return m_ParseValue;
             }
-            else{
-                if(wordEncoder != null){
-                    return m_Name + ": " + wordEncoder.Encode(m_Value) + "\r\n";
-                }
-                else{
-                    return m_Name + ": " + m_Value + "\r\n";
-                }
+
+            if(wordEncoder != null){
+                return m_Name + ": " + wordEncoder.Encode(m_Value) + "\r\n";
             }
+
+            return m_Name + ": " + m_Value + "\r\n";
         }
 
         /// <summary>

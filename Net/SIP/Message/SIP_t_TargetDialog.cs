@@ -128,9 +128,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{                
@@ -153,9 +152,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{                

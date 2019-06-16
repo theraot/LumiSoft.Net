@@ -200,42 +200,41 @@ namespace LumiSoft.Net.SIP.Message
             if(Directive == DirectiveType.Proxy){
                 return "proxy";
             }
-            else if(Directive == DirectiveType.Redirect){
+
+            if(Directive == DirectiveType.Redirect){
                 return "redirect";
             }
-            else if(Directive == DirectiveType.Cancel){
+            if(Directive == DirectiveType.Cancel){
                 return "cancel";
             }
-            else if(Directive == DirectiveType.NoCancel){
+            if(Directive == DirectiveType.NoCancel){
                 return "no-cancel";
             }
-            else if(Directive == DirectiveType.Fork){
+            if(Directive == DirectiveType.Fork){
                 return "fork";
             }
-            else if(Directive == DirectiveType.NoFork){
+            if(Directive == DirectiveType.NoFork){
                 return "no-fork";
             }
-            else if(Directive == DirectiveType.Recurse){
+            if(Directive == DirectiveType.Recurse){
                 return "recurse";
             }
-            else if(Directive == DirectiveType.NoRecurse){
+            if(Directive == DirectiveType.NoRecurse){
                 return "no-recurse";
             }
-            else if(Directive == DirectiveType.Parallel){
+            if(Directive == DirectiveType.Parallel){
                 return "parallel";
             }
-            else if(Directive == DirectiveType.Sequential){
+            if(Directive == DirectiveType.Sequential){
                 return "sequential";
             }
-            else if(Directive == DirectiveType.Queue){
+            if(Directive == DirectiveType.Queue){
                 return "queue";
             }
-            else if(Directive == DirectiveType.NoQueue){
+            if(Directive == DirectiveType.NoQueue){
                 return "no-queue";
             }
-            else{
-                throw new ArgumentException("Invalid property Directive value, this should never happen !");
-            }
+            throw new ArgumentException("Invalid property Directive value, this should never happen !");
         }
 
         /// <summary>

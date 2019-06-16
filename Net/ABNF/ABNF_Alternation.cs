@@ -42,7 +42,8 @@ namespace LumiSoft.Net.ABNF
                     break;
                 }
                 // We have next alternation item.
-                else if(reader.Peek() == '/'){
+
+                if(reader.Peek() == '/'){
                     reader.Read();
                 }
                 // We have unexpected value, probably alternation ends.

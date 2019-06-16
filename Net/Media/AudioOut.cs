@@ -711,9 +711,8 @@ namespace LumiSoft.Net.Media
                     if(m_pPlayItems.Count > 0){
                         return true;
                     }
-                    else{
-                        return false;
-                    }
+
+                    return false;
                 }
             }
 

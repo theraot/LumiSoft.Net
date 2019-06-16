@@ -267,11 +267,10 @@ namespace LumiSoft.Net.FTP.Client
                     if(readedCount == 0){
                         return totalReadedCount;
                     }
-                    else{
-                        target.Write(buffer,0,readedCount);
-                        totalReadedCount += readedCount;
-                        LastActivity = DateTime.Now;
-                    }
+
+                    target.Write(buffer,0,readedCount);
+                    totalReadedCount += readedCount;
+                    LastActivity = DateTime.Now;
                 }
             }
 
@@ -620,35 +619,31 @@ namespace LumiSoft.Net.FTP.Client
                     if(line == null){
                         break;
                     }
-                    else{
-                        string[] parameters = line.Substring(0,line.LastIndexOf(';')).Split(';');
-                        string   name       = line.Substring(line.LastIndexOf(';') + 1).Trim();
 
-                        string   type     = "";
-                        long     size     = 0;
-                        DateTime modified = DateTime.MinValue;
-                        foreach(string parameter in parameters){
-                            string[] name_value = parameter.Split('=');
-                            if(name_value[0].ToLower() == "type"){
-                                type = name_value[1].ToLower();
-                            }
-                            else if(name_value[0].ToLower() == "size"){
-                                size = Convert.ToInt64(name_value[1]);
-                            }
-                            else if(name_value[0].ToLower() == "modify"){
-                                modified = DateTime.ParseExact(name_value[1],"yyyyMMddHHmmss",System.Globalization.DateTimeFormatInfo.InvariantInfo);
-                            }
-                            else{
-                                // Other options won't interest us, skip them.
-                            }
-                        }
+                    string[] parameters = line.Substring(0,line.LastIndexOf(';')).Split(';');
+                    string   name       = line.Substring(line.LastIndexOf(';') + 1).Trim();
 
-                        if(type == "dir"){
-                            retVal.Add(new FTP_ListItem(name,0,modified,true));
+                    string   type     = "";
+                    long     size     = 0;
+                    DateTime modified = DateTime.MinValue;
+                    foreach(string parameter in parameters){
+                        string[] name_value = parameter.Split('=');
+                        if(name_value[0].ToLower() == "type"){
+                            type = name_value[1].ToLower();
                         }
-                        else if(type == "file"){
-                            retVal.Add(new FTP_ListItem(name,size,modified,false));
+                        else if(name_value[0].ToLower() == "size"){
+                            size = Convert.ToInt64(name_value[1]);
                         }
+                        else if(name_value[0].ToLower() == "modify"){
+                            modified = DateTime.ParseExact(name_value[1],"yyyyMMddHHmmss",System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                        }
+                    }
+
+                    if(type == "dir"){
+                        retVal.Add(new FTP_ListItem(name,0,modified,true));
+                    }
+                    else if(type == "file"){
+                        retVal.Add(new FTP_ListItem(name,size,modified,false));
                     }
                 }
             }
@@ -685,7 +680,8 @@ namespace LumiSoft.Net.FTP.Client
                     if(args.Error != null){
                         throw args.Error;
                     }
-                    else if(args.BytesInBuffer == 0){
+
+                    if(args.BytesInBuffer == 0){
                         break;
                     }
                     string line = args.LineUtf8;
@@ -1299,15 +1295,14 @@ namespace LumiSoft.Net.FTP.Client
                         throw new Exception("Remote host disconnected connection unexpectedly.");
                     }
                     // We got final response line, we are done.
-                    else if(response.StartsWith(responseCode + " ")){
+
+                    if(response.StartsWith(responseCode + " ")){
                         retVal.Add(response);
 
                         break;
                     }
                     // Multiline response continues.
-                    else{
-                        retVal.Add(response);
-                    }
+                    retVal.Add(response);
                 }
             }
             // Single line response.

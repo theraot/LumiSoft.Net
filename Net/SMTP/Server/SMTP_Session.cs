@@ -1177,41 +1177,39 @@ namespace LumiSoft.Net.SMTP.Server
                     break;
                 }
                 // Authentication continues.
+
+                // Send server challange.
+                if(serverResponse.Length == 0){
+                    WriteLine("334 ");
+                }
                 else{
-                    // Send server challange.
-                    if(serverResponse.Length == 0){
-                        WriteLine("334 ");
-                    }
-                    else{
-                        WriteLine("334 " + Convert.ToBase64String(serverResponse));
-                    }
+                    WriteLine("334 " + Convert.ToBase64String(serverResponse));
+                }
 
-                    // Read client response. 
-                    SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                    this.TcpStream.ReadLine(readLineOP,false);
-                    if(readLineOP.Error != null){
-                        throw readLineOP.Error;
-                    }                    
-                    // Log
-                    if(this.Server.Logger != null){
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
-                    }
+                // Read client response. 
+                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                this.TcpStream.ReadLine(readLineOP,false);
+                if(readLineOP.Error != null){
+                    throw readLineOP.Error;
+                }                    
+                // Log
+                if(this.Server.Logger != null){
+                    this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
+                }
 
-                    // Client canceled authentication.
-                    if(readLineOP.LineUtf8 == "*"){
-                        WriteLine("501 Authentication canceled.");
-                        return;
-                    }
-                    // We have base64 client response, decode it.
-                    else{
-                        try{
-                            clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
-                        }
-                        catch{
-                            WriteLine("501 Invalid client response '" + clientResponse + "'.");
-                            return;
-                        }
-                    }
+                // Client canceled authentication.
+                if(readLineOP.LineUtf8 == "*"){
+                    WriteLine("501 Authentication canceled.");
+                    return;
+                }
+                // We have base64 client response, decode it.
+
+                try{
+                    clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
+                }
+                catch{
+                    WriteLine("501 Invalid client response '" + clientResponse + "'.");
+                    return;
                 }
             }
         }
@@ -1287,10 +1285,9 @@ namespace LumiSoft.Net.SMTP.Server
                 return;
             }
             // Parse mailbox.
-            else{
-                address = cmdText.Substring(1,cmdText.IndexOf('>') - 1).Trim();
-                cmdText = cmdText.Substring(cmdText.IndexOf('>') + 1).Trim();
-            }
+
+            address = cmdText.Substring(1,cmdText.IndexOf('>') - 1).Trim();
+            cmdText = cmdText.Substring(cmdText.IndexOf('>') + 1).Trim();
 
             string[] parameters = string.IsNullOrEmpty(cmdText) ? new string[0] : cmdText.Split(' ');
             foreach(string parameter in parameters){
@@ -1332,14 +1329,16 @@ namespace LumiSoft.Net.SMTP.Server
                     body = name_value[1].ToUpper();
                 }
                 // RET
-                else if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "RET"){
+                else if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "RET")
+                {
                     // RFC 3461 4.3.
                     //  ret-value = "FULL" / "HDRS"
                     if(name_value.Length == 1){
                         WriteLine("501 Syntax error: RET parameter value must be specified.");
                         return;
                     }
-                    else if(name_value[1].ToUpper() != "FULL"){
+
+                    if(name_value[1].ToUpper() != "FULL"){
                         ret = SMTP_DSN_Ret.FullMessage;
                     }
                     else if(name_value[1].ToUpper() != "HDRS"){
@@ -1453,10 +1452,9 @@ namespace LumiSoft.Net.SMTP.Server
                 return;
             }
             // Parse mailbox.
-            else{
-                address = cmdText.Substring(1,cmdText.IndexOf('>') - 1).Trim();
-                cmdText = cmdText.Substring(cmdText.IndexOf('>') + 1).Trim();
-            }
+
+            address = cmdText.Substring(1,cmdText.IndexOf('>') - 1).Trim();
+            cmdText = cmdText.Substring(cmdText.IndexOf('>') + 1).Trim();
             if(address == string.Empty){
                 WriteLine("501 Syntax error('address' value must be specified), syntax: \"RCPT TO:\" \"<\" address \">\" [SP Rcpt-parameters] CRLF");
                 return;

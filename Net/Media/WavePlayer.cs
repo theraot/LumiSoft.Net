@@ -206,9 +206,8 @@ namespace LumiSoft.Net.Media
                 if(chars.Length == 0){
                     return null;
                 }
-                else{
-                    return new string(chars).Trim();
-                }
+
+                return new string(chars).Trim();
             }
 
             /// <summary>
@@ -338,7 +337,8 @@ namespace LumiSoft.Net.Media
                                     break;
                                 }
                                 // Wave data chunk.
-                                else if(string.Equals(chunkID,"data",StringComparison.InvariantCultureIgnoreCase)){
+
+                                if(string.Equals(chunkID,"data",StringComparison.InvariantCultureIgnoreCase)){
                                     data_Chunk data = wavReader.Read_data();
 
                                     int    totalReaded = 0;

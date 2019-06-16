@@ -60,12 +60,13 @@ namespace LumiSoft.Net.ABNF
                     throw new ParseException("Invalid ABNF 'char-val' value '" + reader.ReadToEnd() + "'.");
                 }
                 // We have closing DQUOTE.
-                else if(reader.Peek() == '\"'){
+
+                if(reader.Peek() == '\"'){
                     reader.Read();
                     break;
                 }
                 // Allowed char.
-                else if((reader.Peek() >= 0x20 && reader.Peek() <= 0x21) || (reader.Peek() >= 0x23 && reader.Peek() <= 0x7E)){
+                if((reader.Peek() >= 0x20 && reader.Peek() <= 0x21) || (reader.Peek() >= 0x23 && reader.Peek() <= 0x7E)){
                     value.Append((char)reader.Read());
                 }
                 // Invalid value.
@@ -102,10 +103,11 @@ namespace LumiSoft.Net.ABNF
                 if(i == 0 && c != '\"'){
                     return false;
                 }
-                else if(i == (value.Length - 1) && c != '\"'){
+
+                if(i == (value.Length - 1) && c != '\"'){
                     return false;
                 }
-                else if(!((c >= 0x20 && c <= 0x21) || (c >= 0x23 && c <= 0x7E))){
+                if(!((c >= 0x20 && c <= 0x21) || (c >= 0x23 && c <= 0x7E))){
                     return false;
                 }
             }

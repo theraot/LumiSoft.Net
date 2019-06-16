@@ -89,13 +89,13 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <returns>Returns queued relay message or null if no messages.</returns>
         public Relay_QueueItem DequeueMessage()
         {
-            lock(m_pQueue){
+            lock(m_pQueue)
+            {
                 if(m_pQueue.Count > 0){
                     return m_pQueue.Dequeue();
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
         }
 

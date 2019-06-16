@@ -127,9 +127,8 @@ namespace LumiSoft.Net.AUTH
 				
                 return Encoding.UTF8.GetBytes(m_UserName + " " + passwordHash);
             }
-            else{
-                throw new InvalidOperationException("Authentication is completed.");
-            }
+
+            throw new InvalidOperationException("Authentication is completed.");
         }
 
         /// <summary>

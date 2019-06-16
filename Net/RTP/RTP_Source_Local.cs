@@ -160,13 +160,13 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal override string CName
         {
-            get{
+            get
+            {
                 if(this.Participant != null){
                     return null;
                 }
-                else{
-                    return this.Participant.CNAME;
-                }
+
+                return this.Participant.CNAME;
             }
         }
     }

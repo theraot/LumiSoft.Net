@@ -80,9 +80,8 @@ namespace LumiSoft.Net.SMTP
             if(MIME_Reader.IsDotAtom(LocalPart)){
                 return LocalPart + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
             }
-            else{
-                return TextUtils.QuoteString(LocalPart) + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
-            }
+
+            return TextUtils.QuoteString(LocalPart) + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
         }
 
         /// <summary>

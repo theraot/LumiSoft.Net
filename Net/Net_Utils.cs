@@ -23,9 +23,8 @@ namespace LumiSoft.Net
             if(string.IsNullOrEmpty(hostName)){
                 return System.Net.Dns.GetHostName();
             }
-            else{
-                return hostName;
-            }
+
+            return hostName;
         }
 
         /// <summary>
@@ -60,11 +59,10 @@ namespace LumiSoft.Net
             if(array1.Length != array2Count){
                 return false;
             }
-            else{
-                for(int i=0;i<array1.Length;i++){
-                    if(!array1.GetValue(i).Equals(array2.GetValue(i))){
-                        return false;
-                    }
+
+            for(int i=0;i<array1.Length;i++){
+                if(!array1.GetValue(i).Equals(array2.GetValue(i))){
+                    return false;
                 }
             }
 
@@ -139,10 +137,9 @@ namespace LumiSoft.Net
                 if(readedCount == 0){
                     return totalReaded;
                 }
-                else{
-                    target.Write(buffer,0,readedCount);
-                    totalReaded += readedCount;
-                }
+
+                target.Write(buffer,0,readedCount);
+                totalReaded += readedCount;
             }
         }
 
@@ -167,22 +164,23 @@ namespace LumiSoft.Net
                 return 1;
             }
             // IPv6 and IPv4
-            else if(sourceIpBytes.Length > destinationIpBytes.Length){
+
+            if(sourceIpBytes.Length > destinationIpBytes.Length){
                 return -1;
             }
             // IPv4 and IPv4 OR IPv6 and IPv6
-            else{                
-                for(int i=0;i<sourceIpBytes.Length;i++){
-                    if(sourceIpBytes[i] < destinationIpBytes[i]){
-                        return 1;
-                    }
-                    else if(sourceIpBytes[i] > destinationIpBytes[i]){
-                        return -1;
-                    }
+            for(int i=0;i<sourceIpBytes.Length;i++)
+            {
+                if(sourceIpBytes[i] < destinationIpBytes[i]){
+                    return 1;
                 }
 
-                return 0;
+                if(sourceIpBytes[i] > destinationIpBytes[i]){
+                    return -1;
+                }
             }
+
+            return 0;
         }
 
         /// <summary>
@@ -219,7 +217,8 @@ namespace LumiSoft.Net
             if(ip.IsIPv6Multicast){
                 return true;
             }
-            else if(ip.AddressFamily == AddressFamily.InterNetwork){
+
+            if(ip.AddressFamily == AddressFamily.InterNetwork){
                 byte[] bytes = ip.GetAddressBytes();
                 if(bytes[0] >= 224 && bytes[0] <= 239){
                     return true;
@@ -387,15 +386,14 @@ namespace LumiSoft.Net
 
                 return socket;
             }
-            else if(localEP.AddressFamily == AddressFamily.InterNetworkV6){
+
+            if(localEP.AddressFamily == AddressFamily.InterNetworkV6){
                 Socket socket = new Socket(AddressFamily.InterNetworkV6,socketType,protocolType);
                 socket.Bind(localEP);
 
                 return socket;
             }
-            else{
-                throw new ArgumentException("Invalid IPEndPoint address family.");
-            }
+            throw new ArgumentException("Invalid IPEndPoint address family.");
         }
 
         /// <summary>
@@ -811,10 +809,9 @@ namespace LumiSoft.Net
 				return retVal;
 			}
 			// There is no decoded bytes
-			else{
-				return new byte[0];
-			}
-		}
+
+            return new byte[0];
+        }
 
         /// <summary>
         /// Computes md5 hash.
@@ -835,9 +832,8 @@ namespace LumiSoft.Net
             if(hex){
 			    return ToHex(hash).ToLower();
             }
-            else{
-                return System.Text.Encoding.Default.GetString(hash);
-            }
+
+            return System.Text.Encoding.Default.GetString(hash);
         }
 
         //--- Obsolte ------------------------------------------------------------------

@@ -453,11 +453,10 @@ namespace LumiSoft.Net.Media
                 if(result != MMSYSERR.NOERROR){
                     throw new Exception("Error preparing wave in buffer, error: " + result + ".");
                 }
-                else{  
-                    result = waveInAddBuffer(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(Header));
-                    if(result != MMSYSERR.NOERROR){
-                        throw new Exception("Error adding wave in buffer, error: " + result + ".");
-                    }
+
+                result = waveInAddBuffer(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(Header));
+                if(result != MMSYSERR.NOERROR){
+                    throw new Exception("Error adding wave in buffer, error: " + result + ".");
                 }
             }
 

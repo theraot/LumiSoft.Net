@@ -410,16 +410,17 @@ namespace LumiSoft.Net.SIP.Stack
             if(method == SIP_Methods.INVITE){
                 return true;
             }
-            else if(method == SIP_Methods.UPDATE){
+
+            if(method == SIP_Methods.UPDATE){
                 return true;
             }
-            else if(method == SIP_Methods.SUBSCRIBE){
+            if(method == SIP_Methods.SUBSCRIBE){
                 return true;
             }
-            else if(method == SIP_Methods.NOTIFY){
+            if(method == SIP_Methods.NOTIFY){
                 return true;
             }
-            else if(method == SIP_Methods.REFER){
+            if(method == SIP_Methods.REFER){
                 return true;
             }
 

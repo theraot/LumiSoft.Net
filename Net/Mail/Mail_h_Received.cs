@@ -121,7 +121,8 @@ namespace LumiSoft.Net.Mail
                     break;
                 }
                 // We have comment, just eat it.
-                else if(r.StartsWith("(")){
+
+                if(r.StartsWith("(")){
                     r.ReadParenthesized();
                 }
                 // We have date-time or unknown-data.
@@ -214,7 +215,7 @@ namespace LumiSoft.Net.Mail
                     }
                     // Unknown, just eat value.
                     else{
-                         r.Word();
+                        r.Word();
                     }
                 }
             }
@@ -287,9 +288,8 @@ namespace LumiSoft.Net.Mail
 
                 return retVal.ToString();
             }
-            else{
-                return m_ParseValue;
-            }
+
+            return m_ParseValue;
         }
 
         /// <summary>

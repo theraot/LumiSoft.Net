@@ -660,7 +660,8 @@ namespace LumiSoft.Net.AUTH
 
                 return new MessageType1(m_Domain,Environment.MachineName).ToByte();
             }
-            else if(m_State == 1){
+
+            if(m_State == 1){
                 m_State++;
                 m_IsCompleted = true;
 
@@ -674,9 +675,7 @@ namespace LumiSoft.Net.AUTH
                     NTLM_Utils.CalculateNT(nonce,m_Password)
                 ).ToByte();
             }
-            else{
-                throw new InvalidOperationException("Authentication is completed.");
-            }
+            throw new InvalidOperationException("Authentication is completed.");
         }
 
         /// <summary>

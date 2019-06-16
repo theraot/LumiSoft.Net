@@ -186,7 +186,8 @@ namespace LumiSoft.Net.RTP
                 return false;
             }
             // The seqNo is order, with permissible gap.
-            else if (udelta < MAX_DROPOUT){
+
+            if (udelta < MAX_DROPOUT){
                 // The seqNo has wrapped around.
                 if(seqNo < m_MaxSeqNo){
                     m_SeqNoWrapCount++;

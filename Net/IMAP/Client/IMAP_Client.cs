@@ -5201,9 +5201,8 @@ namespace LumiSoft.Net.IMAP.Client
                     if(m_pFinalResponse != null && m_pFinalResponse.OptionalResponse != null && m_pFinalResponse.OptionalResponse is IMAP_t_orc_AppendUid){
                         return ((IMAP_t_orc_AppendUid)m_pFinalResponse.OptionalResponse);
                     }
-                    else{
-                        return null;
-                    }
+
+                    return null;
                 }
             }
 
@@ -6571,9 +6570,8 @@ namespace LumiSoft.Net.IMAP.Client
                     if(this.FinalResponse != null && this.FinalResponse.OptionalResponse != null && this.FinalResponse.OptionalResponse is IMAP_t_orc_CopyUid){
                         return ((IMAP_t_orc_CopyUid)this.FinalResponse.OptionalResponse);
                     }
-                    else{
-                        return null;
-                    }
+
+                    return null;
                 }
             }
         }
@@ -8620,11 +8618,10 @@ namespace LumiSoft.Net.IMAP.Client
             if(m_pCapabilities == null){
                 return false;
             }
-            else{
-                foreach(string c in m_pCapabilities){
-                    if(string.Equals(c,capability,StringComparison.InvariantCultureIgnoreCase)){
-                        return true;
-                    }
+
+            foreach(string c in m_pCapabilities){
+                if(string.Equals(c,capability,StringComparison.InvariantCultureIgnoreCase)){
+                    return true;
                 }
             }
 
@@ -8712,9 +8709,8 @@ namespace LumiSoft.Net.IMAP.Client
                 if(retVal.Length == 0){
                     throw new Exception("Unexpected result: IMAP server didn't return LIST response for [... LIST \"\" \"\"].");
                 }
-                else{
-                    return retVal[0].HierarchyDelimiter;
-                }
+
+                return retVal[0].HierarchyDelimiter;
             }
         }
 
@@ -9690,7 +9686,8 @@ namespace LumiSoft.Net.IMAP.Client
                     return null;
                 }
                 // string-literal.
-                else if(m_pFetchReader.StartsWith("{")){
+
+                if(m_pFetchReader.StartsWith("{")){
                     string retVal = m_pImap.ReadStringLiteral(Convert.ToInt32(m_pFetchReader.ReadParenthesized()));
 
                     // Read continuing FETCH line.
@@ -9699,9 +9696,7 @@ namespace LumiSoft.Net.IMAP.Client
                     return retVal;
                 }
                 // quoted-string or atom.
-                else{
-                    return MIME_Encoding_EncodedWord.DecodeS(m_pFetchReader.ReadWord());
-                }
+                return MIME_Encoding_EncodedWord.DecodeS(m_pFetchReader.ReadWord());
             }
         }
 
@@ -9780,9 +9775,8 @@ namespace LumiSoft.Net.IMAP.Client
                 if(op.Error != null){
                     throw op.Error;
                 }
-                else{
-                    return op.FinalResponse;
-                }
+
+                return op.FinalResponse;
             }
         }
     }

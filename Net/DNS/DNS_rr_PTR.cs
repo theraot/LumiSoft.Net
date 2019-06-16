@@ -35,9 +35,8 @@ namespace LumiSoft.Net.DNS
 			if(Dns_Client.GetQName(reply,ref offset,ref domainName)){
 			    return new DNS_rr_PTR(name,domainName,ttl);
             }
-            else{
-                throw new ArgumentException("Invalid PTR resource record data !");
-            }
+
+            throw new ArgumentException("Invalid PTR resource record data !");
         }
 
         /// <summary>

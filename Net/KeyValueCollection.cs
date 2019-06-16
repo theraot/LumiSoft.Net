@@ -45,9 +45,8 @@ namespace LumiSoft.Net
 
                 return true;
             }
-            else{
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>

@@ -408,10 +408,9 @@ namespace LumiSoft.Net
 				return retVal;
 			}
 			// There is no decoded bytes
-			else{
-				return new byte[0];
-			}
-		}
+
+            return new byte[0];
+        }
 
         /// <summary>
 		/// Encodes data with quoted-printable encoding.
@@ -654,24 +653,25 @@ namespace LumiSoft.Net
 							break;
 						}
 						// This isn't right end tag, try next
-						else if(charset_type_text.Length < 3){
-							// Try next end tag
-							iEnd = text.IndexOf("?=",iEnd + 2);
+
+                        if(charset_type_text.Length < 3){
+                            // Try next end tag
+                            iEnd = text.IndexOf("?=",iEnd + 2);
 						
-							// No suitable end tag for active start tag, move offset over start tag.
-							if(iEnd == -1){								
-								retVal.Append("=?");
-								offset = iStart + 2;
-								break;
-							}
-						}
-						// Illegal start tag or start tag is just in side some text, move offset over start tag.
-						else{						
-							retVal.Append("=?");
-							offset = iStart + 2;
-							break;
-						}
-					}
+                            // No suitable end tag for active start tag, move offset over start tag.
+                            if(iEnd == -1){								
+                                retVal.Append("=?");
+                                offset = iStart + 2;
+                                break;
+                            }
+                        }
+                        // Illegal start tag or start tag is just in side some text, move offset over start tag.
+                        else{						
+                            retVal.Append("=?");
+                            offset = iStart + 2;
+                            break;
+                        }
+                    }
 				}
 				// There are no more entries
 				else{
@@ -774,12 +774,11 @@ namespace LumiSoft.Net
 						if(cC >= 0x20 && cC <= 0x25 || cC >= 0x27 && cC <= 0x7E){
 							break;
 						}
-						else{
-							encodeBlock.WriteByte((byte)((cC & 0xFF00) >> 8));
-							encodeBlock.WriteByte((byte)(cC & 0xFF));
-							i = ic;
-						}
-					}
+
+                        encodeBlock.WriteByte((byte)((cC & 0xFF00) >> 8));
+                        encodeBlock.WriteByte((byte)(cC & 0xFF));
+                        i = ic;
+                    }
 
 					// Ecode block
 					byte[] encodedData = Core.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
@@ -836,18 +835,20 @@ namespace LumiSoft.Net
 				if(c == '&'){
 					int endingPos = -1;
 					// Read encoded block
-					for(int b=i+1;b<text.Length;b++){
-						// - marks block end
+					for(int b=i+1;b<text.Length;b++)
+                    {
+                        // - marks block end
 						if(text[b] == '-'){
 							endingPos = b;
 							break;
 						}
 						// Invalid & sequence, just treat it as '&' char and not like shift.
 						// &....&, but must be &....-
-						else if(text[b] == '&'){							
-							break;
-						}
-					}
+
+                        if(text[b] == '&'){							
+                            break;
+                        }
+                    }
 			
 					// If no ending -, invalid encoded block. Treat it like it is
 					if(endingPos == -1){
@@ -949,22 +950,23 @@ namespace LumiSoft.Net
                 return 1;
             }
             // IPv6 and IPv4
-            else if(sourceIpBytes.Length > destinationIpBytes.Length){
+
+            if(sourceIpBytes.Length > destinationIpBytes.Length){
                 return -1;
             }
             // IPv4 and IPv4 OR IPv6 and IPv6
-            else{                
-                for(int i=0;i<sourceIpBytes.Length;i++){
-                    if(sourceIpBytes[i] < destinationIpBytes[i]){
-                        return 1;
-                    }
-                    else if(sourceIpBytes[i] > destinationIpBytes[i]){
-                        return -1;
-                    }
+            for(int i=0;i<sourceIpBytes.Length;i++)
+            {
+                if(sourceIpBytes[i] < destinationIpBytes[i]){
+                    return 1;
                 }
 
-                return 0;
+                if(sourceIpBytes[i] > destinationIpBytes[i]){
+                    return -1;
+                }
             }
+
+            return 0;
         }
 
         /// <summary>
@@ -1044,15 +1046,14 @@ namespace LumiSoft.Net
 
                 return socket;
             }
-            else if(localEP.AddressFamily == AddressFamily.InterNetworkV6){
+
+            if(localEP.AddressFamily == AddressFamily.InterNetworkV6){
                 Socket socket = new Socket(AddressFamily.InterNetworkV6,socketType,protocolType);
                 socket.Bind(localEP);
 
                 return socket;
             }
-            else{
-                throw new ArgumentException("Invalid IPEndPoint address family.");
-            }
+            throw new ArgumentException("Invalid IPEndPoint address family.");
         }
 
         /// <summary>
@@ -1200,9 +1201,8 @@ namespace LumiSoft.Net
             if(hex){
 			    return ToHexString(System.Text.Encoding.Default.GetString(hash)).ToLower();
             }
-            else{
-                return System.Text.Encoding.Default.GetString(hash);
-            }
+
+            return System.Text.Encoding.Default.GetString(hash);
         }
     }
 }

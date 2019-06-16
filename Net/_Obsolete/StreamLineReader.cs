@@ -44,13 +44,14 @@ namespace LumiSoft.Net
 					return retVal;
 				}
                 // LF line found and only LF lines allowed
-                else if(!CRLF_LinesOnly && currByteInt == '\n'){
+
+                if(!CRLF_LinesOnly && currByteInt == '\n'){
                     byte[] retVal = new byte[posInBuffer + 1];
                     Array.Copy(buffer,retVal,posInBuffer + 1);
                     retVal[posInBuffer] = (byte)prevByte;
-				    return retVal;
+                    return retVal;
                 }
-				
+
                 // Buffer is full, add addition m_ReadBufferSize bytes
                 if(posInBuffer == buffer.Length){
                     byte[] newBuffer = new byte[buffer.Length + m_ReadBufferSize];
@@ -82,18 +83,17 @@ namespace LumiSoft.Net
 		public string ReadLineString()
 		{
 			byte[] line = ReadLine();
-			if(line != null){
-				if(m_Encoding == null || m_Encoding == ""){
+			if(line != null)
+            {
+                if(m_Encoding == null || m_Encoding == ""){
 					return System.Text.Encoding.Default.GetString(line);					
 				}
-				else{
-					return System.Text.Encoding.GetEncoding(m_Encoding).GetString(line);
-				}
-			}
-			else{
-				return null;
-			}
-		}
+
+                return System.Text.Encoding.GetEncoding(m_Encoding).GetString(line);
+            }
+
+            return null;
+        }
 
         /// <summary>
 		/// Gets or sets charset encoding to use for string based methods. Default("") encoding is system default encoding.

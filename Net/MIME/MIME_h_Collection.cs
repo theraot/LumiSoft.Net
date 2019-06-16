@@ -377,7 +377,8 @@ namespace LumiSoft.Net.MIME
                     throw readLineOP.Error;
                 }
                 // We reached end of stream.
-                else if(readLineOP.BytesInBuffer == 0){
+
+                if(readLineOP.BytesInBuffer == 0){
                     if(currentHeader.Length > 0){
                         Add(currentHeader.ToString());
                     }
@@ -386,7 +387,7 @@ namespace LumiSoft.Net.MIME
                     return;
                 }
                 // We got blank header terminator line.
-                else if(readLineOP.LineBytesInBuffer == 0){
+                if(readLineOP.LineBytesInBuffer == 0){
                     if(currentHeader.Length > 0){
                         Add(currentHeader.ToString());
                     }
@@ -394,24 +395,22 @@ namespace LumiSoft.Net.MIME
 
                     return;
                 }
-                else{
-                    string line = encoding.GetString(readLineOP.Buffer,0,readLineOP.BytesInBuffer);
+                string line = encoding.GetString(readLineOP.Buffer,0,readLineOP.BytesInBuffer);
  
-                    // New header field starts.
-                    if(currentHeader.Length == 0){
-                         currentHeader.Append(line);
-                    }
-                    // Header field continues.
-                    else if(char.IsWhiteSpace(line[0])){
-                        currentHeader.Append(line);
-                    }
-                    // Current header field closed, new starts.
-                    else{
-                        Add(currentHeader.ToString());
+                // New header field starts.
+                if(currentHeader.Length == 0){
+                    currentHeader.Append(line);
+                }
+                // Header field continues.
+                else if(char.IsWhiteSpace(line[0])){
+                    currentHeader.Append(line);
+                }
+                // Current header field closed, new starts.
+                else{
+                    Add(currentHeader.ToString());
 
-                        currentHeader = new StringBuilder();
-                        currentHeader.Append(line);
-                    }
+                    currentHeader = new StringBuilder();
+                    currentHeader.Append(line);
                 }
             }        
         }

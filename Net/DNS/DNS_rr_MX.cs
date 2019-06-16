@@ -60,9 +60,8 @@ namespace LumiSoft.Net.DNS
 			if(Dns_Client.GetQName(reply,ref offset,ref server)){
 				return new DNS_rr_MX(name,pref,server,ttl);
 			}
-            else{
-                throw new ArgumentException("Invalid MX resource record data !");
-            }
+
+            throw new ArgumentException("Invalid MX resource record data !");
         }
 
         /// <summary>
@@ -84,12 +83,11 @@ namespace LumiSoft.Net.DNS
             if(this.Preference > mx.Preference){
                 return 1;
             }
-            else if(this.Preference < mx.Preference){
+
+            if(this.Preference < mx.Preference){
                 return -1;
             }
-            else{
-                return 0;
-            }
+            return 0;
         }
 
         /// <summary>

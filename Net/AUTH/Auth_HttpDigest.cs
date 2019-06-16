@@ -71,14 +71,13 @@ namespace LumiSoft.Net.AUTH
         /// <param name="password">Password.</param>
         /// <returns>Returns true if authenticated, otherwise false.</returns>
         public bool Authenticate(string userName,string password)
-        {                        
+        {
             // Check that our computed digest is same as client provided.
             if(this.Response == CalculateResponse(userName,password)){
                 return true;
             }
-            else{
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>
@@ -189,9 +188,8 @@ namespace LumiSoft.Net.AUTH
                 return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + this.Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.CNonce + ":" + this.Qop + ":" + Net_Utils.ComputeMd5(a2,true),true);
             }
             // qop not present
-            else{                
-                return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + this.Nonce + ":" + Net_Utils.ComputeMd5(a2,true),true);
-            }
+
+            return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + this.Nonce + ":" + Net_Utils.ComputeMd5(a2,true),true);
         }
 
         /// <summary>
@@ -281,15 +279,14 @@ namespace LumiSoft.Net.AUTH
 
                 return KD(H(A1),this.Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.CNonce + ":" + this.Qop + ":" + H(A2));
             }
-            else if(string.IsNullOrEmpty(this.Qop)){
+
+            if(string.IsNullOrEmpty(this.Qop)){
                 // request-digest = <"> < KD ( H(A1), unq(nonce-value) ":" H(A2) ) > <">
                 // We don't add quoutes here.
 
                 return KD(H(A1),this.Nonce + ":" + H(A2));
             }
-            else{
-                throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
-            }
+            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
         }
 
         /// <summary>

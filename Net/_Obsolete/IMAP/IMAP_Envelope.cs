@@ -483,34 +483,33 @@ namespace LumiSoft.Net.IMAP
 
                 return null;
             }
-            else{
-                List<Mail_t_Address> retVal = new List<Mail_t_Address>();
-                // Eat addresses starting "(".
-                r.ReadSpecifiedLength(1);
 
-                while(r.Available > 0){
-                    // We have addresses ending ")".
-                    if(r.StartsWith(")")){
-                        r.ReadSpecifiedLength(1);
-                        break;
-                    }
+            List<Mail_t_Address> retVal = new List<Mail_t_Address>();
+            // Eat addresses starting "(".
+            r.ReadSpecifiedLength(1);
 
-                    // Eat address starting "(".
+            while(r.Available > 0){
+                // We have addresses ending ")".
+                if(r.StartsWith(")")){
                     r.ReadSpecifiedLength(1);
-
-                    string personalName = ReadAndDecodeWord(r.ReadWord());
-                    string atDomainList = r.ReadWord();
-                    string mailboxName  = r.ReadWord();
-                    string hostName     = r.ReadWord();
-
-                    retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
-
-                    // Eat address ending ")".
-                    r.ReadSpecifiedLength(1);
+                    break;
                 }
 
-                return retVal.ToArray();
+                // Eat address starting "(".
+                r.ReadSpecifiedLength(1);
+
+                string personalName = ReadAndDecodeWord(r.ReadWord());
+                string atDomainList = r.ReadWord();
+                string mailboxName  = r.ReadWord();
+                string hostName     = r.ReadWord();
+
+                retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
+
+                // Eat address ending ")".
+                r.ReadSpecifiedLength(1);
             }
+
+            return retVal.ToArray();
         }
 
         /// <summary>
@@ -545,35 +544,34 @@ namespace LumiSoft.Net.IMAP
 
                 return null;
             }
-            else{
-                List<Mail_t_Address> retVal = new List<Mail_t_Address>();
-                // Eat addresses starting "(".
-                fetchReader.GetReader().ReadSpecifiedLength(1);
 
-                while(fetchReader.GetReader().Available > 0){
-                    // We have addresses ending ")".
-                    if(fetchReader.GetReader().StartsWith(")")){
-                        fetchReader.GetReader().ReadSpecifiedLength(1);
-                        break;
-                    }
+            List<Mail_t_Address> retVal = new List<Mail_t_Address>();
+            // Eat addresses starting "(".
+            fetchReader.GetReader().ReadSpecifiedLength(1);
 
-                    // Eat address starting "(".
+            while(fetchReader.GetReader().Available > 0){
+                // We have addresses ending ")".
+                if(fetchReader.GetReader().StartsWith(")")){
                     fetchReader.GetReader().ReadSpecifiedLength(1);
-
-                    string personalName = ReadAndDecodeWord(fetchReader.ReadString());
-                    string atDomainList = fetchReader.ReadString();
-                    string mailboxName  = fetchReader.ReadString();
-                    string hostName     = fetchReader.ReadString();
-
-                    retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
-
-                    // Eat address ending ")".
-                    fetchReader.GetReader().ReadSpecifiedLength(1);
-                    fetchReader.GetReader().ReadToFirstChar();
+                    break;
                 }
 
-                return retVal.ToArray();
+                // Eat address starting "(".
+                fetchReader.GetReader().ReadSpecifiedLength(1);
+
+                string personalName = ReadAndDecodeWord(fetchReader.ReadString());
+                string atDomainList = fetchReader.ReadString();
+                string mailboxName  = fetchReader.ReadString();
+                string hostName     = fetchReader.ReadString();
+
+                retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
+
+                // Eat address ending ")".
+                fetchReader.GetReader().ReadSpecifiedLength(1);
+                fetchReader.GetReader().ReadToFirstChar();
             }
+
+            return retVal.ToArray();
         }
 
         /// <summary>
@@ -666,12 +664,11 @@ namespace LumiSoft.Net.IMAP
             if(text == null){
                 return null;
             }
-            else if(string.Equals(text,"NIL",StringComparison.InvariantCultureIgnoreCase)){
+
+            if(string.Equals(text,"NIL",StringComparison.InvariantCultureIgnoreCase)){
                 return "";
             }
-            else{
-                return MIME_Encoding_EncodedWord.DecodeTextS(text);
-            }
+            return MIME_Encoding_EncodedWord.DecodeTextS(text);
         }
 
         /// <summary>

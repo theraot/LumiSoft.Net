@@ -50,7 +50,8 @@ namespace LumiSoft.Net.Mail
                     break;
                 }
                 // name-addr
-                else if(r.Peek(true) == '<'){
+
+                if(r.Peek(true) == '<'){
                     retVal.Add(new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word.Trim())) : null,r.ReadParenthesized()));                    
                 }
                 // addr-spec

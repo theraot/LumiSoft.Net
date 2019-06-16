@@ -445,13 +445,12 @@ namespace LumiSoft.Net.SIP.Proxy
                         Dispose();
                         return;
                     }
+
+                    if(m_pFlow != null){
+                        SendToFlow(m_pFlow,m_pRequest.Copy());
+                    }
                     else{
-                        if(m_pFlow != null){
-                            SendToFlow(m_pFlow,m_pRequest.Copy());
-                        }
-                        else{
-                            SendToNextHop();
-                        }
+                        SendToNextHop();
                     }
                 }
             }

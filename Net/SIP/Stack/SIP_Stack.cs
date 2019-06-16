@@ -684,9 +684,6 @@ namespace LumiSoft.Net.SIP.Stack
                                 targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
                             }
                             // Target won't support SIPS.
-                            else{
-                                // TODO: What to do ?
-                            }
                         }
                         else if(messageSize > MTU){
                             if(supportedTransports.ContainsKey(SIP_Transport.TCP)){
@@ -698,9 +695,6 @@ namespace LumiSoft.Net.SIP.Stack
                                 targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
                             }
                             // Target support UDP only, but TCP is required.
-                            else{
-                                // TODO: What to do ?
-                            }
                         }
                         else{
                             if(supportedTransports.ContainsKey(SIP_Transport.UDP)){

@@ -37,13 +37,12 @@ namespace LumiSoft.Net.MIME
         /// <param name="text">Text to encode.</param>
         /// <returns>Returns encoded text.</returns>
         public string Encode(string text)
-        {            
+        {
             if(MustEncode(text)){
                 return EncodeS(m_Encoding,m_pCharset,Split,text);
             }
-            else{
-                return text;
-            }
+
+            return text;
         }
 
         /// <summary>
@@ -164,9 +163,8 @@ namespace LumiSoft.Net.MIME
 
                 return retVal.ToString();
             }
-            else{
-                return text;
-            }
+
+            return text;
         }
 
         /// <summary>

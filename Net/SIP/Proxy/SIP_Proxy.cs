@@ -369,11 +369,10 @@ namespace LumiSoft.Net.SIP.Proxy
 
                         return;
                     }
-                    else{
-                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x405_Method_Not_Allowed,e.Request));
 
-                        return;
-                    }
+                    e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x405_Method_Not_Allowed,e.Request));
+
+                    return;
                 }
                 // Forward REGISTER.
                 // else{
@@ -716,9 +715,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 return false;
             }
             // Valid nonce, consume it so that nonce can't be used any more. 
-            else{
-                m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
-            }
+
+            m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
 
             SIP_AuthenticateEventArgs eArgs = this.OnAuthenticate(auth);
             // Authenticate failed.

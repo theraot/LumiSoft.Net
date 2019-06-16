@@ -136,11 +136,10 @@ namespace LumiSoft.Net.IO
                                 return false;
                             }
                             // Buffering completed synchronously, continue processing.
-                            else{
-                                // We reached end of stream, no more data.
-                                if(m_pOwner.BytesInReadBuffer == 0){                                    
-                                    return true;
-                                }
+
+                            // We reached end of stream, no more data.
+                            if(m_pOwner.BytesInReadBuffer == 0){                                    
+                                return true;
                             }
                         }
 
@@ -310,9 +309,8 @@ namespace LumiSoft.Net.IO
                     if(this.BytesInBuffer == 0){
                         return null;
                     }
-                    else{
-                        return Encoding.ASCII.GetString(m_pBuffer,0,this.LineBytesInBuffer); 
-                    }
+
+                    return Encoding.ASCII.GetString(m_pBuffer,0,this.LineBytesInBuffer);
                 }
             }
 
@@ -330,9 +328,8 @@ namespace LumiSoft.Net.IO
                     if(this.BytesInBuffer == 0){
                         return null;
                     }
-                    else{
-                        return Encoding.UTF8.GetString(m_pBuffer,0,this.LineBytesInBuffer);
-                    }
+
+                    return Encoding.UTF8.GetString(m_pBuffer,0,this.LineBytesInBuffer);
                 }
             }
 
@@ -350,9 +347,8 @@ namespace LumiSoft.Net.IO
                     if(this.BytesInBuffer == 0){
                         return null;
                     }
-                    else{
-                        return Encoding.UTF32.GetString(m_pBuffer,0,this.LineBytesInBuffer);
-                    }
+
+                    return Encoding.UTF32.GetString(m_pBuffer,0,this.LineBytesInBuffer);
                 }
             }
 
@@ -539,31 +535,30 @@ namespace LumiSoft.Net.IO
                     return true;
                 }
                 // We reached end of stream, no more data.
-                else if(m_pReadLineOP.BytesInBuffer == 0){
+
+                if(m_pReadLineOP.BytesInBuffer == 0){
                     m_pException = new IncompleteDataException("Data is not period-terminated.");
 
                     return true;
                 }
                 // We have period terminator.
-                else if(m_pReadLineOP.LineBytesInBuffer == 1 && m_pReadLineOP.Buffer[0] == '.'){
+                if(m_pReadLineOP.LineBytesInBuffer == 1 && m_pReadLineOP.Buffer[0] == '.'){
                     return true;
                 }
                 // Normal line.
-                else{
-                    if(m_MaxCount < 1 || m_BytesStored < m_MaxCount){
-                        // Period handling: If line starts with '.', it must be removed.
-                        if(m_pReadLineOP.Buffer[0] == '.'){
-                            m_pStream.Write(m_pReadLineOP.Buffer,1,m_pReadLineOP.BytesInBuffer - 1);
-                            m_BytesStored += m_pReadLineOP.BytesInBuffer - 1;
-                            m_LinesStored++;
-                        }
-                        // Nomrmal line.
-                        else{
-                            m_pStream.Write(m_pReadLineOP.Buffer,0,m_pReadLineOP.BytesInBuffer);
-                            m_BytesStored += m_pReadLineOP.BytesInBuffer;
-                            m_LinesStored++;
-                        }                        
+                if(m_MaxCount < 1 || m_BytesStored < m_MaxCount){
+                    // Period handling: If line starts with '.', it must be removed.
+                    if(m_pReadLineOP.Buffer[0] == '.'){
+                        m_pStream.Write(m_pReadLineOP.Buffer,1,m_pReadLineOP.BytesInBuffer - 1);
+                        m_BytesStored += m_pReadLineOP.BytesInBuffer - 1;
+                        m_LinesStored++;
                     }
+                    // Nomrmal line.
+                    else{
+                        m_pStream.Write(m_pReadLineOP.Buffer,0,m_pReadLineOP.BytesInBuffer);
+                        m_BytesStored += m_pReadLineOP.BytesInBuffer;
+                        m_LinesStored++;
+                    }                        
                 }
 
                 return false;
@@ -966,63 +961,62 @@ namespace LumiSoft.Net.IO
             if(async){
                 return op.Start(async,this);
             }
-            else{
-                byte[]             buffer         = op.Buffer;
-                int                bytesInBuffer  = 0;
-                int                lastByte       = -1;
-                bool               CRLFLinesOnly  = true;
-                int                lineBuffSize   = buffer.Length;
-                SizeExceededAction exceededAction = op.SizeExceededAction;
-                Exception          exception      = null;
 
-                try{
-                    while(true){                        
-                        // Read buffer empty, buff next data block.
-                        if(m_ReadBufferOffset >= m_ReadBufferCount){                        
-                            this.BufferRead(false,null);
+            byte[]             buffer         = op.Buffer;
+            int                bytesInBuffer  = 0;
+            int                lastByte       = -1;
+            bool               CRLFLinesOnly  = true;
+            int                lineBuffSize   = buffer.Length;
+            SizeExceededAction exceededAction = op.SizeExceededAction;
+            Exception          exception      = null;
+
+            try{
+                while(true){                        
+                    // Read buffer empty, buff next data block.
+                    if(m_ReadBufferOffset >= m_ReadBufferCount){                        
+                        this.BufferRead(false,null);
                         
-                            // We reached end of stream, no more data.
-                            if(m_ReadBufferCount == 0){                                    
-                                break;
-                            }                        
-                        }
-
-                        byte b = m_pReadBuffer[m_ReadBufferOffset++];
-                        
-                        // Line buffer full.
-                        if(bytesInBuffer >= lineBuffSize){
-                            if(exception == null){
-                                exception = new LineSizeExceededException();
-                            }
-
-                            if(exceededAction == SizeExceededAction.ThrowException){                                
-                                break;
-                            }
-                        }
-                        // Store byte.
-                        else{
-                            buffer[bytesInBuffer++] = b;
-                        }
-
-                        // We have LF line.
-                        if(b == '\n'){
-                            if(!CRLFLinesOnly || CRLFLinesOnly && lastByte == '\r'){
-                                break;
-                            }
-                        }
-
-                        lastByte = b;
+                        // We reached end of stream, no more data.
+                        if(m_ReadBufferCount == 0){                                    
+                            break;
+                        }                        
                     }
-                }
-                catch(Exception x){
-                    exception = x;
-                }
 
-                // Set read line operation result data.
-                op.SetInfo(bytesInBuffer,exception);
+                    byte b = m_pReadBuffer[m_ReadBufferOffset++];
+                        
+                    // Line buffer full.
+                    if(bytesInBuffer >= lineBuffSize){
+                        if(exception == null){
+                            exception = new LineSizeExceededException();
+                        }
 
-                return true;
+                        if(exceededAction == SizeExceededAction.ThrowException){                                
+                            break;
+                        }
+                    }
+                    // Store byte.
+                    else{
+                        buffer[bytesInBuffer++] = b;
+                    }
+
+                    // We have LF line.
+                    if(b == '\n'){
+                        if(!CRLFLinesOnly || CRLFLinesOnly && lastByte == '\r'){
+                            break;
+                        }
+                    }
+
+                    lastByte = b;
+                }
             }
+            catch(Exception x){
+                exception = x;
+            }
+
+            // Set read line operation result data.
+            op.SetInfo(bytesInBuffer,exception);
+
+            return true;
         }
 
         /// <summary>
@@ -1129,7 +1123,8 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentNullException("op");
             }
 
-            if(!op.Start(this)){
+            if(!op.Start(this))
+            {
                 if(!async){
                     // Wait while async operation completes.
                     while(!op.IsCompleted){
@@ -1138,14 +1133,12 @@ namespace LumiSoft.Net.IO
 
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
             // Completed synchronously.
-            else{
-                return true;
-            }
+
+            return true;
         }
 
         /// <summary>
@@ -1271,9 +1264,8 @@ namespace LumiSoft.Net.IO
                 if(readedCount == 0){
                     break;
                 }
-                else{
-                    stream.Write(buffer,0,readedCount);
-                }
+
+                stream.Write(buffer,0,readedCount);
             }
         }
 
@@ -1295,9 +1287,8 @@ namespace LumiSoft.Net.IO
             if(this.BytesInReadBuffer == 0){
                 return -1;
             }
-            else{
-                return m_pReadBuffer[m_ReadBufferOffset];
-            }
+
+            return m_pReadBuffer[m_ReadBufferOffset];
         }
 
         /// <summary>
@@ -1723,9 +1714,8 @@ namespace LumiSoft.Net.IO
             if(op.Error != null){
                 throw op.Error;
             }
-            else{
-                return op.BytesWritten;
-            }
+
+            return op.BytesWritten;
         }
 
         /// <summary>
@@ -2182,13 +2172,12 @@ namespace LumiSoft.Net.IO
             if(this.BytesInReadBuffer == 0){
                 return 0;
             }
-            else{
-                int countToCopy = Math.Min(count,this.BytesInReadBuffer);
-                Array.Copy(m_pReadBuffer,m_ReadBufferOffset,buffer,offset,countToCopy);
-                m_ReadBufferOffset += countToCopy;
 
-                return countToCopy;
-            }
+            int countToCopy = Math.Min(count,this.BytesInReadBuffer);
+            Array.Copy(m_pReadBuffer,m_ReadBufferOffset,buffer,offset,countToCopy);
+            m_ReadBufferOffset += countToCopy;
+
+            return countToCopy;
         }
 
         /// <summary>
@@ -2279,28 +2268,25 @@ namespace LumiSoft.Net.IO
                 if(!m_pReadBufferOP.Start(async,m_pReadBuffer,m_pReadBuffer.Length)){
                     return true;
                 }
-                else{
-                    if(m_pReadBufferOP.Error != null){
-                        throw m_pReadBufferOP.Error;
-                    }
-                    else{
-                        m_ReadBufferOffset =  0;
-                        m_ReadBufferCount  =  m_pReadBufferOP.BytesInBuffer;
-                        m_BytesReaded      += m_pReadBufferOP.BytesInBuffer;
-                        m_LastActivity     =  DateTime.Now; 
-                    }
 
-                    return false;
+                if(m_pReadBufferOP.Error != null){
+                    throw m_pReadBufferOP.Error;
                 }
-            }
-            else{
-                int countReaded = m_pStream.Read(m_pReadBuffer,0,m_pReadBuffer.Length);
-                m_ReadBufferCount  =  countReaded;
-                m_BytesReaded      += countReaded;
+
+                m_ReadBufferOffset =  0;
+                m_ReadBufferCount  =  m_pReadBufferOP.BytesInBuffer;
+                m_BytesReaded      += m_pReadBufferOP.BytesInBuffer;
                 m_LastActivity     =  DateTime.Now;
 
                 return false;
             }
+
+            int countReaded = m_pStream.Read(m_pReadBuffer,0,m_pReadBuffer.Length);
+            m_ReadBufferCount  =  countReaded;
+            m_BytesReaded      += countReaded;
+            m_LastActivity     =  DateTime.Now;
+
+            return false;
         }
 
         /// <summary>
@@ -2610,12 +2596,11 @@ namespace LumiSoft.Net.IO
                                 return;
                             }
                             // Buffering completed synchronously, continue processing.
-                            else{
-                                // We reached end of stream, no more data.
-                                if(m_pOwner.BytesInReadBuffer == 0){
-                                    Completed();
-                                    return;
-                                }
+
+                            // We reached end of stream, no more data.
+                            if(m_pOwner.BytesInReadBuffer == 0){
+                                Completed();
+                                return;
                             }
                         }
 
@@ -2627,7 +2612,8 @@ namespace LumiSoft.Net.IO
                             break;               
                         }
                         // We have CRLF line.
-                        else if(b == '\r' && m_pOwner.Peek() == '\n'){
+
+                        if(b == '\r' && m_pOwner.Peek() == '\n'){
                             // Consume LF char.
                             m_pOwner.ReadByte();
                             BytesReaded++;
@@ -2635,24 +2621,20 @@ namespace LumiSoft.Net.IO
                             break;
                         }
                         // We have CR line.
-                        else if(b == '\r'){
+                        if(b == '\r'){
                             break;
                         }
                         // We have normal line data char.
+// Line buffer full.
+                        if(BytesStored >= m_MaxCount){
+                            if(m_SizeExceededAction == SizeExceededAction.ThrowException){
+                                throw new LineSizeExceededException();
+                            }
+                            // Just skip storing.
+                        }
                         else{
-                            // Line buffer full.
-                            if(BytesStored >= m_MaxCount){
-                                if(m_SizeExceededAction == SizeExceededAction.ThrowException){
-                                    throw new LineSizeExceededException();
-                                }
-                                // Just skip storing.
-                                else{
-                                }
-                            }
-                            else{
-                                Buffer[m_OffsetInBuffer++] = b;
-                                BytesStored++;
-                            }
+                            Buffer[m_OffsetInBuffer++] = b;
+                            BytesStored++;
                         }
                     }
                 }
@@ -2810,14 +2792,14 @@ namespace LumiSoft.Net.IO
                     }
                     else{
                         // We have exceeded maximum allowed data count.
-                        if(m_MaxCount > 0 && (BytesStored + storedCount + 2) > m_MaxCount){
+                        if(m_MaxCount > 0 && (BytesStored + storedCount + 2) > m_MaxCount)
+                        {
                             if(m_SizeExceededAction == SizeExceededAction.ThrowException){
                                 throw new DataSizeExceededException();
                             }
                             // Just skip storing.
-                            else{
-                                Exception = new DataSizeExceededException();
-                            }
+
+                            Exception = new DataSizeExceededException();
                         }
                         else{
                             // Store readed line.
@@ -2979,11 +2961,10 @@ namespace LumiSoft.Net.IO
                                 return;
                             }
                             // Buffering completed synchronously, continue processing.
-                            else{
-                                // We reached end of stream, no more data.
-                                if(m_pOwner.BytesInReadBuffer == 0){
-                                    throw new IncompleteDataException();
-                                }
+
+                            // We reached end of stream, no more data.
+                            if(m_pOwner.BytesInReadBuffer == 0){
+                                throw new IncompleteDataException();
                             }
                         }
                     
@@ -3143,12 +3124,11 @@ namespace LumiSoft.Net.IO
                             return;
                         }
                         // Buffering completed synchronously, continue processing.
-                        else{
-                            // We reached end of stream, no more data.
-                            if(m_pOwner.BytesInReadBuffer == 0){
-                                Completed();
-                                return;
-                            }
+
+                        // We reached end of stream, no more data.
+                        if(m_pOwner.BytesInReadBuffer == 0){
+                            Completed();
+                            return;
                         }
                     }
 
@@ -3285,9 +3265,8 @@ namespace LumiSoft.Net.IO
             if(ar.BytesReaded == 0){
                 return -1;
             }
-            else{
-                return ar.BytesStored;
-            }
+
+            return ar.BytesStored;
         }
     }
 }

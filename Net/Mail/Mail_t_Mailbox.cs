@@ -56,13 +56,12 @@ namespace LumiSoft.Net.Mail
                     throw new ParseException("Not valid 'mailbox' value '" + value + "'.");
                 }
                 // name-addr
-                else if(r.Peek(true) == '<'){
+
+                if(r.Peek(true) == '<'){
                     return new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word.Trim())) : null,r.ReadParenthesized());
                 }
                 // addr-spec
-                else{
-                    return new Mail_t_Mailbox(null,word);
-                }
+                return new Mail_t_Mailbox(null,word);
             }
 
             throw new ParseException("Not valid 'mailbox' value '" + value + "'.");
@@ -87,14 +86,12 @@ namespace LumiSoft.Net.Mail
             if(string.IsNullOrEmpty(DisplayName)){
                 return Address;
             }
-            else{
-                if(wordEncoder != null && MIME_Encoding_EncodedWord.MustEncode(DisplayName)){
-                    return wordEncoder.Encode(DisplayName) + " " + "<" + Address + ">";
-                }
-                else{
-                    return TextUtils.QuoteString(DisplayName) + " " + "<" + Address + ">";
-                }
+
+            if(wordEncoder != null && MIME_Encoding_EncodedWord.MustEncode(DisplayName)){
+                return wordEncoder.Encode(DisplayName) + " " + "<" + Address + ">";
             }
+
+            return TextUtils.QuoteString(DisplayName) + " " + "<" + Address + ">";
         }
 
         /// <summary>
@@ -130,9 +127,8 @@ namespace LumiSoft.Net.Mail
                 if(localpart_domain.Length == 2){
                     return localpart_domain[1]; 
                 }
-                else{
-                    return "";
-                }
+
+                return "";
             }
         }
     }

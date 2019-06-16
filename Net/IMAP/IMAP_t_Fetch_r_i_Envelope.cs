@@ -354,34 +354,33 @@ namespace LumiSoft.Net.IMAP
 
                 return null;
             }
-            else{
-                List<Mail_t_Address> retVal = new List<Mail_t_Address>();
-                // Eat addresses starting "(".
-                r.ReadSpecifiedLength(1);
 
-                while(r.Available > 0){
-                    // We have addresses ending ")".
-                    if(r.StartsWith(")")){
-                        r.ReadSpecifiedLength(1);
-                        break;
-                    }
+            List<Mail_t_Address> retVal = new List<Mail_t_Address>();
+            // Eat addresses starting "(".
+            r.ReadSpecifiedLength(1);
 
-                    // Eat address starting "(".
+            while(r.Available > 0){
+                // We have addresses ending ")".
+                if(r.StartsWith(")")){
                     r.ReadSpecifiedLength(1);
-
-                    string personalName = ReadAndDecodeWord(r);
-                    string atDomainList = r.ReadWord();
-                    string mailboxName  = r.ReadWord();
-                    string hostName     = r.ReadWord();
-
-                    retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
-
-                    // Eat address ending ")".
-                    r.ReadSpecifiedLength(1);
+                    break;
                 }
 
-                return retVal.ToArray();
+                // Eat address starting "(".
+                r.ReadSpecifiedLength(1);
+
+                string personalName = ReadAndDecodeWord(r);
+                string atDomainList = r.ReadWord();
+                string mailboxName  = r.ReadWord();
+                string hostName     = r.ReadWord();
+
+                retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
+
+                // Eat address ending ")".
+                r.ReadSpecifiedLength(1);
             }
+
+            return retVal.ToArray();
         }
 
         /// <summary>
@@ -406,18 +405,16 @@ namespace LumiSoft.Net.IMAP
                                                 
                 return MIME_Encoding_EncodedWord.DecodeTextS(r.ReadSpecifiedLength(literalSize));
             }
-            else{
-                string word = r.ReadWord();
-                if(word == null){
-                    throw new ParseException("Excpetcted quoted-string or string-literal, but non available.");
-                }
-                else if(string.Equals(word,"NIL",StringComparison.InvariantCultureIgnoreCase)){
-                    return "";
-                }
-                else{
-                    return MIME_Encoding_EncodedWord.DecodeTextS(word);
-                }
+
+            string word = r.ReadWord();
+            if(word == null){
+                throw new ParseException("Excpetcted quoted-string or string-literal, but non available.");
             }
+
+            if(string.Equals(word,"NIL",StringComparison.InvariantCultureIgnoreCase)){
+                return "";
+            }
+            return MIME_Encoding_EncodedWord.DecodeTextS(word);
         }
 
         /// <summary>

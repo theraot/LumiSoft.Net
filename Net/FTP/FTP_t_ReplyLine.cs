@@ -67,9 +67,8 @@ namespace LumiSoft.Net.FTP
             if(IsLastLine){
                 return ReplyCode.ToString() + " " + Text + "\r\n";
             }
-            else{
-                return ReplyCode.ToString() + "-" + Text + "\r\n";
-            }
+
+            return ReplyCode.ToString() + "-" + Text + "\r\n";
         }
 
         /// <summary>

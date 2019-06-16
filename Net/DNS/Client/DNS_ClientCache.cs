@@ -107,19 +107,18 @@ namespace LumiSoft.Net.DNS.Client
             }
 
             CacheEntry entry = null;
-            if(m_pCache.TryGetValue(qname + qtype,out entry)){
+            if(m_pCache.TryGetValue(qname + qtype,out entry))
+            {
                 // Cache entry has expired.
                 if(DateTime.Now > entry.Expires){
                     return null;
                 }
-                else{
-                    return entry.Response;
-                }
+
+                return entry.Response;
             }
-            else{
-                return null;
-            }
-		}
+
+            return null;
+        }
 
         /// <summary>
 		/// Adds dns records to cache. If old entry exists, it is replaced.

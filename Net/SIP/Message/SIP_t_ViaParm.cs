@@ -263,14 +263,12 @@ namespace LumiSoft.Net.SIP.Message
                 if(m_pSentBy.Port != -1){
                     return m_pSentBy.Port;
                 }
-                else{
-                    if(this.ProtocolTransport == SIP_Transport.TLS){
-                        return 5061;
-                    }
-                    else{
-                        return 5060;
-                    }
+
+                if(this.ProtocolTransport == SIP_Transport.TLS){
+                    return 5061;
                 }
+
+                return 5060;
             }
         }
                
@@ -286,9 +284,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{                
@@ -315,9 +312,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -340,9 +336,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -365,9 +360,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return IPAddress.Parse(parameter.Value);
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -387,17 +381,16 @@ namespace LumiSoft.Net.SIP.Message
         {
             get{ 
                 SIP_Parameter parameter = this.Parameters["rport"];
-                if(parameter != null){
+                if(parameter != null)
+                {
                     if(parameter.Value == ""){
                         return 0;
                     }
-                    else{
-                        return Convert.ToInt32(parameter.Value);
-                    }
+
+                    return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{
@@ -423,9 +416,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);                    
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{

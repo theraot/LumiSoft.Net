@@ -84,9 +84,8 @@ namespace LumiSoft.Net
                 }
             }
             // We have host name without port.
-            else{
-                return new HostEndPoint(value,defaultPort);
-            }
+
+            return new HostEndPoint(value,defaultPort);
         }
 
         /// <summary>
@@ -98,9 +97,8 @@ namespace LumiSoft.Net
             if(Port == -1){
                 return Host;
             }
-            else{
-                return Host + ":" + Port.ToString();
-            }
+
+            return Host + ":" + Port.ToString();
         }
 
         /// <summary>

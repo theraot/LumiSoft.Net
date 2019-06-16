@@ -42,9 +42,8 @@ namespace LumiSoft.Net.ABNF
             if(reader.Peek() != ']'){
                 throw new ParseException("Invalid ABNF 'option' value '" + reader.ReadToEnd() + "'."); 
             }
-            else{
-                reader.Read();
-            }
+
+            reader.Read();
 
             return retVal;
         }

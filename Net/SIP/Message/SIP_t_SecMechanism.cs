@@ -131,13 +131,13 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public double Q
         {
-            get{
+            get
+            {
                 if(!this.Parameters.Contains("qvalue")){
                     return -1;
                 }
-                else{
-                    return double.Parse(this.Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
-                }
+
+                return double.Parse(this.Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
             }
 
             set{
@@ -164,9 +164,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{                
@@ -189,9 +188,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{                
@@ -214,9 +212,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{                

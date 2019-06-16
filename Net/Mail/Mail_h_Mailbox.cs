@@ -68,7 +68,8 @@ namespace LumiSoft.Net.Mail
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
             // name-addr
-            else if(r.Peek(true) == '<'){
+
+            if(r.Peek(true) == '<'){
                 Mail_h_Mailbox h = new Mail_h_Mailbox(name_value[0],new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null,r.ReadParenthesized()));
                 h.m_ParseValue = value;
 
@@ -95,9 +96,8 @@ namespace LumiSoft.Net.Mail
             if(!reEncode && m_ParseValue != null){
                 return m_ParseValue;
             }
-            else{
-                return m_Name + ": " + Address.ToString(wordEncoder) + "\r\n";
-            }
+
+            return m_Name + ": " + Address.ToString(wordEncoder) + "\r\n";
         }
 
         /// <summary>

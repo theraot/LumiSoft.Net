@@ -460,43 +460,42 @@ namespace LumiSoft.Net.SIP.Stack
                     if(m_pLocalPublicEP != null){
                         return m_pLocalPublicEP;
                     }
-                    else{
-                        m_pLocalPublicEP = this.LocalEP;
 
-                        try{
-                            AutoResetEvent completionWaiter = new AutoResetEvent(false);
-                            // Create OPTIONS request
-                            SIP_Request optionsRequest = m_pStack.CreateRequest(SIP_Methods.OPTIONS,new SIP_t_NameAddress("sip:ping@publicIP.com"),new SIP_t_NameAddress("sip:ping@publicIP.com"));
-                            optionsRequest.MaxForwards = 0;
-                            SIP_ClientTransaction optionsTransaction = m_pStack.TransactionLayer.CreateClientTransaction(this,optionsRequest,true);
-                            optionsTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(delegate(object s,SIP_ResponseReceivedEventArgs e){
-                                SIP_t_ViaParm via = e.Response.Via.GetTopMostValue();       
+                    m_pLocalPublicEP = this.LocalEP;
+
+                    try{
+                        AutoResetEvent completionWaiter = new AutoResetEvent(false);
+                        // Create OPTIONS request
+                        SIP_Request optionsRequest = m_pStack.CreateRequest(SIP_Methods.OPTIONS,new SIP_t_NameAddress("sip:ping@publicIP.com"),new SIP_t_NameAddress("sip:ping@publicIP.com"));
+                        optionsRequest.MaxForwards = 0;
+                        SIP_ClientTransaction optionsTransaction = m_pStack.TransactionLayer.CreateClientTransaction(this,optionsRequest,true);
+                        optionsTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(delegate(object s,SIP_ResponseReceivedEventArgs e){
+                            SIP_t_ViaParm via = e.Response.Via.GetTopMostValue();       
                 
-                                IPEndPoint publicEP = new IPEndPoint(via.Received == null ? this.LocalEP.Address : via.Received,via.RPort > 0 ? via.RPort : this.LocalEP.Port);
-                                // Set public EP port only if public IP is also different from local EP.
-                                if(!this.LocalEP.Address.Equals(publicEP.Address)){
-                                    m_pLocalPublicEP = publicEP;
-                                }
+                            IPEndPoint publicEP = new IPEndPoint(via.Received == null ? this.LocalEP.Address : via.Received,via.RPort > 0 ? via.RPort : this.LocalEP.Port);
+                            // Set public EP port only if public IP is also different from local EP.
+                            if(!this.LocalEP.Address.Equals(publicEP.Address)){
+                                m_pLocalPublicEP = publicEP;
+                            }
 
+                            completionWaiter.Set();
+                        });
+                        optionsTransaction.StateChanged += new EventHandler(delegate(object s,EventArgs e){
+                            if(optionsTransaction.State == SIP_TransactionState.Terminated){                 
                                 completionWaiter.Set();
-                            });
-                            optionsTransaction.StateChanged += new EventHandler(delegate(object s,EventArgs e){
-                                if(optionsTransaction.State == SIP_TransactionState.Terminated){                 
-                                    completionWaiter.Set();
-                                }
-                            });
-                            optionsTransaction.Start();
+                            }
+                        });
+                        optionsTransaction.Start();
                  
-                            // Wait OPTIONS request to complete.
-                            completionWaiter.WaitOne();
-                            completionWaiter.Close();
-                        }
-                        catch{
-                        }
-
-                        return m_pLocalPublicEP;
+                        // Wait OPTIONS request to complete.
+                        completionWaiter.WaitOne();
+                        completionWaiter.Close();
                     }
-               // }
+                    catch{
+                    }
+
+                    return m_pLocalPublicEP;
+                    // }
             }
         }
 
@@ -559,9 +558,8 @@ namespace LumiSoft.Net.SIP.Stack
                 if(m_Transport == SIP_Transport.TLS){
                     return true;
                 }
-                else{
-                    return false; 
-                }
+
+                return false;
             }
         }
 
@@ -626,9 +624,8 @@ namespace LumiSoft.Net.SIP.Stack
                 if(m_Transport == SIP_Transport.TCP || m_Transport == SIP_Transport.TLS){
                     return m_pTcpSession.LastActivity;
                 }
-                else{
-                    return m_LastActivity; 
-                }
+
+                return m_LastActivity;
             }
         }
 

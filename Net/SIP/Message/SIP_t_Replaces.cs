@@ -118,9 +118,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -143,9 +142,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -163,13 +161,13 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public bool EarlyFlag
         {                                    
-            get{ 
+            get
+            {
                 if(this.Parameters.Contains("early-only")){
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
 
             set{

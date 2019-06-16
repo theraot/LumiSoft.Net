@@ -97,9 +97,8 @@ namespace LumiSoft.Net.SIP.Message
             if(Delay > 0){
                 return Time.ToString() + " " + Delay.ToString();
             }
-            else{
-                return Time.ToString();
-            }
+
+            return Time.ToString();
         }
 
         /// <summary>

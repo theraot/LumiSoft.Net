@@ -157,15 +157,14 @@ namespace LumiSoft.Net.IMAP
 				return seqMaxValue;
 			}
 			// Number
-			else{
-				try{
-					return Convert.ToInt64(seqNumberValue);
-				}
-				catch{
-					throw new Exception("Invalid <seq-number> '" + seqNumberValue + "' value !");
-				}
-			}
-		}
+
+            try{
+                return Convert.ToInt64(seqNumberValue);
+            }
+            catch{
+                throw new Exception("Invalid <seq-number> '" + seqNumberValue + "' value !");
+            }
+        }
 
         /// <summary>
         /// Gets sequence set ranges.

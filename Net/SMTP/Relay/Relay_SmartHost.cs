@@ -65,16 +65,17 @@ namespace LumiSoft.Net.SMTP.Relay
             if(Host != smartHost.Host){
                 return false;
             }
-            else if(Port != smartHost.Port){
+
+            if(Port != smartHost.Port){
                 return false;
             }
-            else if(SslMode != smartHost.SslMode){
+            if(SslMode != smartHost.SslMode){
                 return false;
             }
-            else if(UserName != smartHost.UserName){
+            if(UserName != smartHost.UserName){
                 return false;
             }
-            else if(Password != smartHost.Password){
+            if(Password != smartHost.Password){
                 return false;
             }
 

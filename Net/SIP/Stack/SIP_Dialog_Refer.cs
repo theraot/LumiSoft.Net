@@ -40,9 +40,8 @@ namespace LumiSoft.Net.SIP.Stack
 
                 return true;
             }
-            else{
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>

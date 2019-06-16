@@ -88,12 +88,14 @@ namespace LumiSoft.Net.TCP
                     Connect(null,new IPEndPoint(ips[i],port),ssl);
                     break;
                 }
-                catch(Exception x){
+                catch(Exception x)
+                {
                     if(this.IsConnected){
                         throw x;
                     }
                     // Connect failed for specified IP address, if there are some more IPs left, try next, otherwise forward exception.
-                    else if(i == (ips.Length - 1)){
+
+                    if(i == (ips.Length - 1)){
                         throw x;
                     }
                 }
@@ -368,14 +370,13 @@ namespace LumiSoft.Net.TCP
                 if(m_pCertCallback != null){
                     return m_pCertCallback(sender,certificate,chain,sslPolicyErrors);
                 }
-                else{
-                    if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
-                        return true;
-                    }
 
-                    // Do not allow this client to communicate with unauthenticated servers.
-                    return false;
+                if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
+                    return true;
                 }
+
+                // Do not allow this client to communicate with unauthenticated servers.
+                return false;
             }
 
             /// <summary>
@@ -654,14 +655,13 @@ namespace LumiSoft.Net.TCP
             if(ValidateCertificateCallback != null){
                 return ValidateCertificateCallback(sender,certificate,chain,sslPolicyErrors);
             }
-            else{
-                if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
-                    return true;
-                }
 
-                // Do not allow this client to communicate with unauthenticated servers.
-                return false;
+            if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
+                return true;
             }
+
+            // Do not allow this client to communicate with unauthenticated servers.
+            return false;
         }
 
         /// <summary>
@@ -769,14 +769,13 @@ namespace LumiSoft.Net.TCP
                 if(m_pCertCallback != null){
                     return m_pCertCallback(sender,certificate,chain,sslPolicyErrors);
                 }
-                else{
-                    if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
-                        return true;
-                    }
 
-                    // Do not allow this client to communicate with unauthenticated servers.
-                    return false;
+                if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
+                    return true;
                 }
+
+                // Do not allow this client to communicate with unauthenticated servers.
+                return false;
             }
 
             /// <summary>

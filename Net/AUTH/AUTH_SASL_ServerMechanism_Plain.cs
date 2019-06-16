@@ -68,16 +68,15 @@ namespace LumiSoft.Net.AUTH
                 return new byte[0];
             }
             // Parse response
-            else{
-                string[] authzid_authcid_passwd = Encoding.UTF8.GetString(clientResponse).Split('\0');
-                if(authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1])){  
-                    m_UserName = authzid_authcid_passwd[1];
-                    AUTH_e_Authenticate result = OnAuthenticate(authzid_authcid_passwd[0],authzid_authcid_passwd[1],authzid_authcid_passwd[2]);
-                    m_IsAuthenticated = result.IsAuthenticated;
-                }
 
-                m_IsCompleted = true;
+            string[] authzid_authcid_passwd = Encoding.UTF8.GetString(clientResponse).Split('\0');
+            if(authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1])){  
+                m_UserName = authzid_authcid_passwd[1];
+                AUTH_e_Authenticate result = OnAuthenticate(authzid_authcid_passwd[0],authzid_authcid_passwd[1],authzid_authcid_passwd[2]);
+                m_IsAuthenticated = result.IsAuthenticated;
             }
+
+            m_IsCompleted = true;
 
             return null;
         }

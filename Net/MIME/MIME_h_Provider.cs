@@ -46,18 +46,17 @@ namespace LumiSoft.Net.MIME
             if(name == string.Empty){
                 throw new ParseException("Invalid header field value '" + field + "'.");
             }
-            else{
-                try{
-                    if(HeaderFields.ContainsKey(name)){ 
-                        headerField = (MIME_h)HeaderFields[name].GetMethod("Parse").Invoke(null,new object[]{field});
-                    }
-                    else{
-                        headerField = (MIME_h)m_pDefaultHeaderField.GetMethod("Parse").Invoke(null,new object[]{field});
-                    }
+
+            try{
+                if(HeaderFields.ContainsKey(name)){ 
+                    headerField = (MIME_h)HeaderFields[name].GetMethod("Parse").Invoke(null,new object[]{field});
                 }
-                catch(Exception x){
-                    headerField = new MIME_h_Unparsed(field,x.InnerException);
+                else{
+                    headerField = (MIME_h)m_pDefaultHeaderField.GetMethod("Parse").Invoke(null,new object[]{field});
                 }
+            }
+            catch(Exception x){
+                headerField = new MIME_h_Unparsed(field,x.InnerException);
             }
 
             return headerField;

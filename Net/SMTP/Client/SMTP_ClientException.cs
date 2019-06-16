@@ -63,13 +63,13 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public bool IsPermanentError
         {
-            get{
+            get
+            {
                 if(ReplyLines[0].ReplyCode >= 500 && ReplyLines[0].ReplyCode <= 599){
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
         }
     }

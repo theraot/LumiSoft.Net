@@ -341,171 +341,170 @@ namespace LumiSoft.Net.SIP.Message
             if(nameLower == "accept"){
                 return new SIP_MultiValueHF<SIP_t_AcceptRange>("Accept:",value);
             }
-            else if(nameLower == "accept-contact"){
+
+            if(nameLower == "accept-contact"){
                 return new SIP_MultiValueHF<SIP_t_ACValue>("Accept-Contact:",value);
             }
-            else if(nameLower == "accept-encoding"){
+            if(nameLower == "accept-encoding"){
                 return new SIP_MultiValueHF<SIP_t_Encoding>("Accept-Encoding:",value);
             }
-            else if(nameLower == "accept-language"){
+            if(nameLower == "accept-language"){
                 return new SIP_MultiValueHF<SIP_t_Language>("Accept-Language:",value);
             }
-            else if(nameLower == "accept-resource-priority"){
+            if(nameLower == "accept-resource-priority"){
                 return new SIP_MultiValueHF<SIP_t_RValue>("Accept-Resource-Priority:",value);
             }
-            else if(nameLower == "alert-info"){
+            if(nameLower == "alert-info"){
                 return new SIP_MultiValueHF<SIP_t_AlertParam>("Alert-Info:",value);
             }
-            else if(nameLower == "allow"){
+            if(nameLower == "allow"){
                 return new SIP_MultiValueHF<SIP_t_Method>("Allow:",value);
             }
-            else if(nameLower == "allow-events"){
+            if(nameLower == "allow-events"){
                 return new SIP_MultiValueHF<SIP_t_EventType>("Allow-Events:",value);
             }
-            else if(nameLower == "authentication-info"){
+            if(nameLower == "authentication-info"){
                 return new SIP_SingleValueHF<SIP_t_AuthenticationInfo>("Authentication-Info:",new SIP_t_AuthenticationInfo(value));
             }
-            else if(nameLower == "authorization"){
+            if(nameLower == "authorization"){
                 return new SIP_SingleValueHF<SIP_t_Credentials>("Authorization:",new SIP_t_Credentials(value));
             }
-            else if(nameLower == "contact"){
+            if(nameLower == "contact"){
                 return new SIP_MultiValueHF<SIP_t_ContactParam>("Contact:",value);
             }
-            else if(nameLower == "Content-Disposition"){
+            if(nameLower == "Content-Disposition"){
                 return new SIP_SingleValueHF<SIP_t_ContentDisposition>("Content-Disposition:",new SIP_t_ContentDisposition(value));
             }
-            else if(nameLower == "cseq"){
+            if(nameLower == "cseq"){
                 return new SIP_SingleValueHF<SIP_t_CSeq>("CSeq:",new SIP_t_CSeq(value));
             }
-            else if(nameLower == "content-encoding"){
+            if(nameLower == "content-encoding"){
                 return new SIP_MultiValueHF<SIP_t_ContentCoding>("Content-Encoding:",value);
             }
-            else if(nameLower == "content-language"){
+            if(nameLower == "content-language"){
                 return new SIP_MultiValueHF<SIP_t_LanguageTag>("Content-Language:",value);
             }
-            else if(nameLower == "error-info"){
+            if(nameLower == "error-info"){
                 return new SIP_MultiValueHF<SIP_t_ErrorUri>("Error-Info:",value);
             }
-            else if(nameLower == "event"){
+            if(nameLower == "event"){
                 return new SIP_SingleValueHF<SIP_t_Event>("Event:",new SIP_t_Event(value));
             }
-            else if(nameLower == "from"){
+            if(nameLower == "from"){
                 return new SIP_SingleValueHF<SIP_t_From>("From:",new SIP_t_From(value));
             }
-            else if(nameLower == "history-info"){
+            if(nameLower == "history-info"){
                 return new SIP_MultiValueHF<SIP_t_HiEntry>("History-Info:",value);
             }
-            else if(nameLower == "identity-info"){
+            if(nameLower == "identity-info"){
                 return new SIP_SingleValueHF<SIP_t_IdentityInfo>("Identity-Info:",new SIP_t_IdentityInfo(value));
             }
-            else if(nameLower == "in-replay-to"){
+            if(nameLower == "in-replay-to"){
                 return new SIP_MultiValueHF<SIP_t_CallID>("In-Reply-To:",value);
             }
-            else if(nameLower == "join"){
+            if(nameLower == "join"){
                 return new SIP_SingleValueHF<SIP_t_Join>("Join:",new SIP_t_Join(value));
             }
-            else if(nameLower == "min-se"){
+            if(nameLower == "min-se"){
                 return new SIP_SingleValueHF<SIP_t_MinSE>("Min-SE:",new SIP_t_MinSE(value));
             }
-            else if(nameLower == "path"){
+            if(nameLower == "path"){
                 return new SIP_MultiValueHF<SIP_t_AddressParam>("Path:",value);
             }
-            else if(nameLower == "proxy-authenticate"){
+            if(nameLower == "proxy-authenticate"){
                 return new SIP_SingleValueHF<SIP_t_Challenge>("Proxy-Authenticate:",new SIP_t_Challenge(value));
             }
-            else if(nameLower == "proxy-authorization"){
+            if(nameLower == "proxy-authorization"){
                 return new SIP_SingleValueHF<SIP_t_Credentials>("Proxy-Authorization:",new SIP_t_Credentials(value));
             }
-            else if(nameLower == "proxy-require"){
+            if(nameLower == "proxy-require"){
                 return new SIP_MultiValueHF<SIP_t_OptionTag>("Proxy-Require:",value);
             }
-            else if(nameLower == "rack"){
+            if(nameLower == "rack"){
                 return new SIP_SingleValueHF<SIP_t_RAck>("RAck:",new SIP_t_RAck(value));
             }
-            else if(nameLower == "reason"){
+            if(nameLower == "reason"){
                 return new SIP_MultiValueHF<SIP_t_ReasonValue>("Reason:",value);
             }
-            else if(nameLower == "record-route"){
+            if(nameLower == "record-route"){
                 return new SIP_MultiValueHF<SIP_t_AddressParam>("Record-Route:",value);
             }
-            else if(nameLower == "refer-sub"){
+            if(nameLower == "refer-sub"){
                 return new SIP_SingleValueHF<SIP_t_ReferSub>("Refer-Sub:",new SIP_t_ReferSub(value));
             }
-            else if(nameLower == "refer-to"){
+            if(nameLower == "refer-to"){
                 return new SIP_SingleValueHF<SIP_t_AddressParam>("Refer-To:",new SIP_t_AddressParam(value));
             }
-            else if(nameLower == "referred-by"){
+            if(nameLower == "referred-by"){
                 return new SIP_SingleValueHF<SIP_t_ReferredBy>("Referred-By:",new SIP_t_ReferredBy(value));
             }
-            else if(nameLower == "reject-contact"){
+            if(nameLower == "reject-contact"){
                 return new SIP_MultiValueHF<SIP_t_RCValue>("Reject-Contact:",value);
             }
-            else if(nameLower == "replaces"){
+            if(nameLower == "replaces"){
                 return new SIP_SingleValueHF<SIP_t_SessionExpires>("Replaces:",new SIP_t_SessionExpires(value));
             }
-            else if(nameLower == "reply-to"){
+            if(nameLower == "reply-to"){
                 return new SIP_MultiValueHF<SIP_t_AddressParam>("Reply-To:",value);
             }
-            else if(nameLower == "request-disposition"){
+            if(nameLower == "request-disposition"){
                 return new SIP_MultiValueHF<SIP_t_Directive>("Request-Disposition:",value);
             }
-            else if(nameLower == "require"){
+            if(nameLower == "require"){
                 return new SIP_MultiValueHF<SIP_t_OptionTag>("Require:",value);
             }
-            else if(nameLower == "resource-priority"){
+            if(nameLower == "resource-priority"){
                 return new SIP_MultiValueHF<SIP_t_RValue>("Resource-Priority:",value);
             }
-            else if(nameLower == "retry-after"){
+            if(nameLower == "retry-after"){
                 return new SIP_SingleValueHF<SIP_t_RetryAfter>("Retry-After:",new SIP_t_RetryAfter(value));
             }
-            else if(nameLower == "route"){
+            if(nameLower == "route"){
                 return new SIP_MultiValueHF<SIP_t_AddressParam>("Route:",value);
             }
-            else if(nameLower == "security-client"){
+            if(nameLower == "security-client"){
                 return new SIP_MultiValueHF<SIP_t_SecMechanism>("Security-Client:",value);
             }
-            else if(nameLower == "security-server"){
+            if(nameLower == "security-server"){
                 return new SIP_MultiValueHF<SIP_t_SecMechanism>("Security-Server:",value);
             }
-            else if(nameLower == "security-verify"){
+            if(nameLower == "security-verify"){
                 return new SIP_MultiValueHF<SIP_t_SecMechanism>("Security-Verify:",value);
             }
-            else if(nameLower == "service-route"){
+            if(nameLower == "service-route"){
                 return new SIP_MultiValueHF<SIP_t_AddressParam>("Service-Route:",value);
             }
-            else if(nameLower == "session-expires"){
+            if(nameLower == "session-expires"){
                 return new SIP_SingleValueHF<SIP_t_SessionExpires>("Session-Expires:",new SIP_t_SessionExpires(value));
             }
-            else if(nameLower == "subscription-state"){
+            if(nameLower == "subscription-state"){
                 return new SIP_SingleValueHF<SIP_t_SubscriptionState>("Subscription-State:",new SIP_t_SubscriptionState(value));
             }
-            else if(nameLower == "supported"){
+            if(nameLower == "supported"){
                 return new SIP_MultiValueHF<SIP_t_OptionTag>("Supported:",value);
             }
-            else if(nameLower == "target-dialog"){
+            if(nameLower == "target-dialog"){
                 return new SIP_SingleValueHF<SIP_t_TargetDialog>("Target-Dialog:",new SIP_t_TargetDialog(value));
             }
-            else if(nameLower == "timestamp"){
+            if(nameLower == "timestamp"){
                 return new SIP_SingleValueHF<SIP_t_Timestamp>("Timestamp:",new SIP_t_Timestamp(value));
             }
-            else if(nameLower == "to"){
+            if(nameLower == "to"){
                 return new SIP_SingleValueHF<SIP_t_To>("To:",new SIP_t_To(value));
             }
-            else if(nameLower == "unsupported"){
+            if(nameLower == "unsupported"){
                 return new SIP_MultiValueHF<SIP_t_OptionTag>("Unsupported:",value);
             }
-            else if(nameLower == "via"){
+            if(nameLower == "via"){
                 return new SIP_MultiValueHF<SIP_t_ViaParm>("Via:",value);
             }
-            else if(nameLower == "warning"){
+            if(nameLower == "warning"){
                 return new SIP_MultiValueHF<SIP_t_WarningValue>("Warning:",value);
             }
-            else if(nameLower == "www-authenticate"){
+            if(nameLower == "www-authenticate"){
                 return new SIP_SingleValueHF<SIP_t_Challenge>("WWW-Authenticate:",new SIP_t_Challenge(value));
             }
-            else{
-                return new SIP_HeaderField(name,value);
-            }
+            return new SIP_HeaderField(name,value);
         }
 
         /// <summary>

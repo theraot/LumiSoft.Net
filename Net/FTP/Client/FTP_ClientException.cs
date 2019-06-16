@@ -44,13 +44,13 @@ namespace LumiSoft.Net.FTP.Client
         /// </summary>
         public bool IsPermanentError
         {
-            get{
+            get
+            {
                 if(StatusCode >= 500 && StatusCode <= 599){
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
         }
     }

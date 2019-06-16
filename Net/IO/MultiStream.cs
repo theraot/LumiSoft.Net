@@ -116,18 +116,17 @@ namespace LumiSoft.Net.IO
                 if(m_pStreams.Count == 0){
                     return 0;
                 }
-                else{
-                    int readedCount = m_pStreams.Peek().Read(buffer,offset,count);
-                    // We have readed all current stream data.
-                    if(readedCount == 0){
-                        // Move to next stream .
-                        m_pStreams.Dequeue();
 
-                        // Next while loop will process "read".
-                    }
-                    else{
-                        return readedCount;
-                    }
+                int readedCount = m_pStreams.Peek().Read(buffer,offset,count);
+                // We have readed all current stream data.
+                if(readedCount == 0){
+                    // Move to next stream .
+                    m_pStreams.Dequeue();
+
+                    // Next while loop will process "read".
+                }
+                else{
+                    return readedCount;
                 }
             }
         }

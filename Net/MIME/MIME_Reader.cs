@@ -52,24 +52,22 @@ namespace LumiSoft.Net.MIME
                 if(peekChar == -1){
                     break;
                 }
+
+                char c = (char)peekChar;
+                if(IsAText(c)){
+                    retVal.Append((char)Char(false));
+                }
+                // Char is not part of 'atom', break.
                 else{
-                    char c = (char)peekChar;
-                    if(IsAText(c)){
-                        retVal.Append((char)Char(false));
-                    }
-                    // Char is not part of 'atom', break.
-                    else{
-                        break;
-                    }
+                    break;
                 }
             }
 
             if(retVal.Length > 0){
                 return retVal.ToString();
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -91,26 +89,24 @@ namespace LumiSoft.Net.MIME
                 // We reached end of string.
                 if(atom == null){
                     break;
-                }                
-                else{
-                    retVal.Append(atom);
+                }
+
+                retVal.Append(atom);
                                       
-                    // dot-atom-text continues.                    
-                    if(Peek(false) == '.'){
-                        retVal.Append((char)Char(false));
-                    }
-                    else{
-                        break;
-                    }
+                // dot-atom-text continues.                    
+                if(Peek(false) == '.'){
+                    retVal.Append((char)Char(false));
+                }
+                else{
+                    break;
                 }
             }
 
             if(retVal.Length > 0){
                 return retVal.ToString();
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -132,24 +128,22 @@ namespace LumiSoft.Net.MIME
                 if(peekChar == -1){
                     break;
                 }
+
+                char c = (char)peekChar;
+                if(IsToken(c)){
+                    retVal.Append((char)Char(false));
+                }
+                // Char is not part of 'token', break.
                 else{
-                    char c = (char)peekChar;
-                    if(IsToken(c)){
-                        retVal.Append((char)Char(false));
-                    }
-                    // Char is not part of 'token', break.
-                    else{
-                        break;
-                    }
+                    break;
                 }
             }
 
             if(retVal.Length > 0){
                 return retVal.ToString();
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -182,17 +176,18 @@ namespace LumiSoft.Net.MIME
                 if(intC == -1){
                     throw new ArgumentException("Invalid 'comment' value, no closing ')'.");
                 }
-                else if(intC == '('){
+
+                if(intC == '('){
                     nestedParenthesis++;
                 }
-                else if(intC == ')'){
+                else if(intC == ')')
+                {
                     // We readed whole 'comment' ok.
                     if(nestedParenthesis == 0){
                         break;
                     }
-                    else{
-                        nestedParenthesis--;
-                    }
+
+                    nestedParenthesis--;
                 }
                 else{
                     retVal.Append((char)intC);
@@ -217,9 +212,8 @@ namespace LumiSoft.Net.MIME
             if(Peek(true) == '"'){
                 return QuotedString();
             }
-            else{
-                return DotAtom();
-            }
+
+            return DotAtom();
         }
 
         /// <summary>
@@ -327,7 +321,8 @@ namespace LumiSoft.Net.MIME
                     throw new ArgumentException("Invalid quoted-string, end quote is missing.");
                 }
                 // This char is escaped.
-                else if(escape){
+
+                if(escape){
                     escape = false;
 
                     retVal.Append((char)intC);
@@ -363,9 +358,8 @@ namespace LumiSoft.Net.MIME
             if(Peek(true) == '"'){
                 return QuotedString();
             }
-            else{
-                return Token();
-            }
+
+            return Token();
         }
 
         /// <summary>
@@ -383,41 +377,39 @@ namespace LumiSoft.Net.MIME
             if(peek == -1){
                 return null;
             }
-            else if(peek == '"'){
+
+            if(peek == '"'){
                 return "\"" + QuotedString() + "\"";
             }
-            else if(peek == '='){
+            if(peek == '='){
                 return EncodedWord();
             }
-            else{
-                string word = Atom();
-                if(word == null){
-                    return null;
-                }
-                
-                // Try to encode invalid encoded-words if any mixed in text.
-                word = encodedword_regex.Replace(word,delegate(Match m){
-                    string encodedWord = m.Value;
-                    try{
-                        if(string.Equals(m.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
-                            return MIME_Utils.QDecode(Encoding.GetEncoding(m.Groups["charset"].Value),m.Groups["value"].Value);
-                        }
-                        else if(string.Equals(m.Groups["encoding"].Value,"B",StringComparison.InvariantCultureIgnoreCase)){
-                            return Encoding.GetEncoding(m.Groups["charset"].Value).GetString(Net_Utils.FromBase64(Encoding.Default.GetBytes(m.Groups["value"].Value)));
-                        }
-                        // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
-                        else{
-                            return encodedWord;
-                        }
-                    }
-                    catch{
-                        // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
-                        return encodedWord;
-                    }
-                });        
-
-                return word;
+            string word = Atom();
+            if(word == null){
+                return null;
             }
+                
+            // Try to encode invalid encoded-words if any mixed in text.
+            word = encodedword_regex.Replace(word,delegate(Match m){
+                string encodedWord = m.Value;
+                try{
+                    if(string.Equals(m.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
+                        return MIME_Utils.QDecode(Encoding.GetEncoding(m.Groups["charset"].Value),m.Groups["value"].Value);
+                    }
+
+                    if(string.Equals(m.Groups["encoding"].Value,"B",StringComparison.InvariantCultureIgnoreCase)){
+                        return Encoding.GetEncoding(m.Groups["charset"].Value).GetString(Net_Utils.FromBase64(Encoding.Default.GetBytes(m.Groups["value"].Value)));
+                    }
+                    // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
+                    return encodedWord;
+                }
+                catch{
+                    // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
+                    return encodedWord;
+                }
+            });        
+
+            return word;
         }
 
         /// <summary>
@@ -450,7 +442,8 @@ namespace LumiSoft.Net.MIME
                 if(peekChar == -1){
                     break;
                 }
-                else if(peekChar == ' ' || peekChar == '\t' || peekChar == '\r' || peekChar == '\n'){
+
+                if(peekChar == ' ' || peekChar == '\t' || peekChar == '\r' || peekChar == '\n'){
                     retVal.Append(m_Source[Position++]);
                 }
                 else{
@@ -475,9 +468,8 @@ namespace LumiSoft.Net.MIME
             if(Position > m_Source.Length - 1){
                 return -1;
             }
-            else{
-                return m_Source[Position++];
-            }
+
+            return m_Source[Position++];
         }
 
         /// <summary>
@@ -494,9 +486,8 @@ namespace LumiSoft.Net.MIME
             if(Position > m_Source.Length - 1){
                 return -1;
             }
-            else{
-                return m_Source[Position];
-            }
+
+            return m_Source[Position];
         }
 
         /// <summary>
@@ -544,9 +535,8 @@ namespace LumiSoft.Net.MIME
             if((c >= 65 && c <= 90) || (c >= 97 && c <= 122)){
                 return true;
             }
-            else{
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>
@@ -566,12 +556,11 @@ namespace LumiSoft.Net.MIME
             if(IsAlpha(c) || char.IsDigit(c)){
                 return true;
             }
-            else{
-                foreach(char aC in atextChars){
-                    if(c == aC){
-                        return true;
-                    }
-                }                
+
+            foreach(char aC in atextChars){
+                if(c == aC){
+                    return true;
+                }
             }
 
             return false;
@@ -644,14 +633,13 @@ namespace LumiSoft.Net.MIME
             if(c <= 31 || c == 127){
                 return false;
             }
-            else if(c == ' '){
+
+            if(c == ' '){
                 return false;
             }
-            else{
-                foreach(char tsC in tspecials){
-                    if(tsC == c){
-                        return false;
-                    }
+            foreach(char tsC in tspecials){
+                if(tsC == c){
+                    return false;
                 }
             }
 
@@ -675,14 +663,13 @@ namespace LumiSoft.Net.MIME
             if(c <= 31 || c > 127){
                 return false;
             }
-            else if(c == ' ' || c == '*' || c == '\'' || c == '%'){
+
+            if(c == ' ' || c == '*' || c == '\'' || c == '%'){
                 return false;
             }
-            else{
-                foreach(char cS in tspecials){
-                    if(c == cS){
-                        return false;
-                    }
+            foreach(char cS in tspecials){
+                if(c == cS){
+                    return false;
                 }
             }
 
@@ -738,8 +725,9 @@ namespace LumiSoft.Net.MIME
 						nestedStartingCharCounter++;
 					}
 					// Closing char
-					else if(m_Source[i] == closingChar){
-						// There isn't nested parenthesis closing chars left, this is closing char what we want.
+					else if(m_Source[i] == closingChar)
+                    {
+                        // There isn't nested parenthesis closing chars left, this is closing char what we want.
 						if(nestedStartingCharCounter == 0){
                             string retVal = m_Source.Substring(Position,i - Position);
                             Position = i + 1;
@@ -747,10 +735,9 @@ namespace LumiSoft.Net.MIME
 				            return retVal;
 						}
 						// This is nested parenthesis closing char
-						else{
-							nestedStartingCharCounter--;
-						}
-					}
+
+                        nestedStartingCharCounter--;
+                    }
 				}
 
 				lastChar = m_Source[i];
@@ -804,12 +791,11 @@ namespace LumiSoft.Net.MIME
 				if(!inQuotedString && isDelimiter){
 					return currentSplitBuffer.ToString();
 				}
-				else{
-					currentSplitBuffer.Append(c);
-                    Position++;
-				}
 
-				lastChar = c;
+                currentSplitBuffer.Append(c);
+                Position++;
+
+                lastChar = c;
 			}
             
 			// If we reached so far then we are end of string, return it.

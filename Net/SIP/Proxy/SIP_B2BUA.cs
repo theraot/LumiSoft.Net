@@ -66,9 +66,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     trToCancel.Cancel();
                     //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x200_Ok));
                 }
-                else{
-                    //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x481_Call_Transaction_Does_Not_Exist));
-                }
             }
             // We never should ge BYE here, because transport layer must match it to dialog.
             else if(request.RequestLine.Method == SIP_Methods.BYE){

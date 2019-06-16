@@ -119,23 +119,22 @@ namespace LumiSoft.Net.AUTH
 
                 return Encoding.UTF8.GetBytes(m_Key);
             }
-            else{
-                // Parse client response. response = userName SP hash.
-                string[] user_hash = Encoding.UTF8.GetString(clientResponse).Split(' ');
-                if(user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0])){
-                    m_UserName = user_hash[0];
-                    AUTH_e_UserInfo result = OnGetUserInfo(user_hash[0]);
-                    if(result.UserExists){
-                        // hash = Hex(HmacMd5(hashKey,password))
-                        string hash = Net_Utils.ToHex(HmacMd5(m_Key,result.Password));
-                        if(hash == user_hash[1]){
-                            m_IsAuthenticated = true;
-                        }
+
+            // Parse client response. response = userName SP hash.
+            string[] user_hash = Encoding.UTF8.GetString(clientResponse).Split(' ');
+            if(user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0])){
+                m_UserName = user_hash[0];
+                AUTH_e_UserInfo result = OnGetUserInfo(user_hash[0]);
+                if(result.UserExists){
+                    // hash = Hex(HmacMd5(hashKey,password))
+                    string hash = Net_Utils.ToHex(HmacMd5(m_Key,result.Password));
+                    if(hash == user_hash[1]){
+                        m_IsAuthenticated = true;
                     }
                 }
-
-                m_IsCompleted = true;
             }
+
+            m_IsCompleted = true;
 
             return null;
         }

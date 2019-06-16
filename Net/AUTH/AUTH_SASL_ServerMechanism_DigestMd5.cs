@@ -72,7 +72,8 @@ namespace LumiSoft.Net.AUTH
      
                 return Encoding.UTF8.GetBytes(callenge.ToChallenge());
             }
-            else if(m_State == 1){
+
+            if(m_State == 1){
                 m_State++;
 
                 try{
@@ -99,9 +100,7 @@ namespace LumiSoft.Net.AUTH
 
                 return Encoding.UTF8.GetBytes("rspauth=\"\"");
             }
-            else{
-                m_IsCompleted = true;
-            }
+            m_IsCompleted = true;
 
             return null;
         }

@@ -59,9 +59,8 @@ namespace LumiSoft.Net.SIP
 
                 return sUri;
             }
-            else{
-                return uri;
-            }      
+
+            return uri;
         }
 
         /// <summary>
@@ -91,18 +90,21 @@ namespace LumiSoft.Net.SIP
         {
             uri = uri.ToLower();
 
-            try{
+            try
+            {
                 if(uri.StartsWith("tel:")){
                     return true;
                 }
-                else if(IsSipOrSipsUri(uri)){
+
+                if(IsSipOrSipsUri(uri)){
                     SIP_Uri sipUri = SIP_Uri.Parse(uri);
                     // RFC 3398 12. If user part starts with +, it's tel: URI.
                     if(sipUri.User.StartsWith("+")){
                         return true;
                     }
                     // RFC 3398 12.
-                    else if(sipUri.Param_User != null && sipUri.Param_User.ToLower() == "phone"){
+
+                    if(sipUri.Param_User != null && sipUri.Param_User.ToLower() == "phone"){
                         return true;
                     }
                 }
@@ -166,10 +168,11 @@ namespace LumiSoft.Net.SIP
             if(method == SIP_Methods.INVITE){
                 return true;
             }
-            else if(method == SIP_Methods.SUBSCRIBE){
+
+            if(method == SIP_Methods.SUBSCRIBE){
                 return true;
             }
-            else if(method == SIP_Methods.REFER){
+            if(method == SIP_Methods.REFER){
                 return true;
             }
 
@@ -200,12 +203,11 @@ namespace LumiSoft.Net.SIP
             if(transport.ToUpper() == SIP_Transport.TCP){
                 return true;
             }
-            else if(transport.ToUpper() == SIP_Transport.TLS){
+
+            if(transport.ToUpper() == SIP_Transport.TLS){
                 return true;
             }
-            else{
-                return false;
-            }
+            return false;
         }
 
         /// <summary>

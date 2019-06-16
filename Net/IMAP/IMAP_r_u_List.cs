@@ -139,24 +139,23 @@ namespace LumiSoft.Net.IMAP
             if(string.IsNullOrEmpty(FolderName)){
                 return "* LIST (\\Noselect) \"/\" \"\"\r\n";
             }
-            else{
-                StringBuilder retVal = new StringBuilder();
-                retVal.Append("* LIST (");
-                if(FolderAttributes != null){
-                    for(int i=0;i<FolderAttributes.Length;i++){
-                        if(i > 0){
-                            retVal.Append(" ");
-                        }
-                        retVal.Append(FolderAttributes[i]);
-                    }
-                }
-                retVal.Append(") ");
-                retVal.Append("\"" + HierarchyDelimiter + "\" ");
-                retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
-                retVal.Append("\r\n");
 
-                return retVal.ToString();
+            StringBuilder retVal = new StringBuilder();
+            retVal.Append("* LIST (");
+            if(FolderAttributes != null){
+                for(int i=0;i<FolderAttributes.Length;i++){
+                    if(i > 0){
+                        retVal.Append(" ");
+                    }
+                    retVal.Append(FolderAttributes[i]);
+                }
             }
+            retVal.Append(") ");
+            retVal.Append("\"" + HierarchyDelimiter + "\" ");
+            retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
+            retVal.Append("\r\n");
+
+            return retVal.ToString();
         }
 
         /// <summary>

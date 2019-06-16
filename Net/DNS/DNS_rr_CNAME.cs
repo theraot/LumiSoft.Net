@@ -35,9 +35,8 @@ namespace LumiSoft.Net.DNS
 			if(Dns_Client.GetQName(reply,ref offset,ref alias)){			
 				return new DNS_rr_CNAME(name,alias,ttl);
 			}
-            else{
-                throw new ArgumentException("Invalid CNAME resource record data !");
-            }
+
+            throw new ArgumentException("Invalid CNAME resource record data !");
         }
 
         /// <summary>

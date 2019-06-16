@@ -191,9 +191,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("VERSION",value); }
@@ -209,9 +208,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return Name.Parse(item);
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -234,9 +232,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("FN",value); }
@@ -252,9 +249,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("NICKNAME",value); }
@@ -270,9 +266,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){                    
                     return Image.FromStream(new MemoryStream(System.Text.Encoding.Default.GetBytes(item.DecodedValue)));
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ 
@@ -303,9 +298,8 @@ namespace LumiSoft.Net.Mime.vCard
                     };
                     return DateTime.ParseExact(date,dateFormats,System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
                 }
-                else{
-                    return DateTime.MinValue;
-                }
+
+                return DateTime.MinValue;
             }
 
             set{ 
@@ -373,9 +367,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("TITLE",value); }
@@ -391,9 +384,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("ROLE",value); }
@@ -409,9 +401,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("ORG",value); }
@@ -427,9 +418,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("NOTE",value); }
@@ -445,9 +435,8 @@ namespace LumiSoft.Net.Mime.vCard
                 if(item != null){
                     return item.DecodedValue;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{ Items.SetDecodedValue("UID",value); }

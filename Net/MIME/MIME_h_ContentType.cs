@@ -156,14 +156,13 @@ namespace LumiSoft.Net.MIME
             if(!reEncode && !this.IsModified){
                 return m_ParseValue;
             }
-            else{
-                StringBuilder retVal = new StringBuilder();
-                retVal.Append("Content-Type: " + Type + "/" + SubType);
-                retVal.Append(Parameters.ToString(parmetersCharset));
-                retVal.Append("\r\n");
 
-                return retVal.ToString();
-            }
+            StringBuilder retVal = new StringBuilder();
+            retVal.Append("Content-Type: " + Type + "/" + SubType);
+            retVal.Append(Parameters.ToString(parmetersCharset));
+            retVal.Append("\r\n");
+
+            return retVal.ToString();
         }
 
         /// <summary>

@@ -110,9 +110,8 @@ namespace LumiSoft.Net.MIME
 
                 return MIME_Message.ParseFromStream(new MemoryStream(signedCms.ContentInfo.Content));
             }
-            else{
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>

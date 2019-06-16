@@ -100,9 +100,8 @@ namespace LumiSoft.Net.SIP.Message
                     if(string.IsNullOrEmpty(word)){
                         break;
                     }
-                    else{
-                        buf.Append(word);
-                    }
+
+                    buf.Append(word);
                 }
 
                 reader.ReadToFirstChar();
@@ -135,9 +134,8 @@ namespace LumiSoft.Net.SIP.Message
                 return "<" + m_pUri.ToString() + ">";
             }
             // name-addr
-            else{
-                return TextUtils.QuoteString(m_DisplayName) + " <" + m_pUri.ToString() + ">";
-            }            
+
+            return TextUtils.QuoteString(m_DisplayName) + " <" + m_pUri.ToString() + ">";
         }
 
         /// <summary>

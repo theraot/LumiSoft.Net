@@ -173,9 +173,8 @@ namespace LumiSoft.Net.IMAP
                 return false;
             }
             // Completed asynchronously, stream.BeginWrite AsyncCallback will continue processing.
-            else{
-                return true;
-            }
+
+            return true;
         }
 
         /// <summary>
@@ -542,13 +541,11 @@ namespace LumiSoft.Net.IMAP
                     }
                 }
                 // Read string literal completed async.
-                else{
-                    return true;
-                }
+
+                return true;
             }
-            else{
-                throw new ParseException("No string-literal available '" + r.SourceString + "'.");
-            }
+
+            throw new ParseException("No string-literal available '" + r.SourceString + "'.");
         }
 
         /// <summary>
@@ -585,7 +582,8 @@ namespace LumiSoft.Net.IMAP
                 return false;
             }
             // Data value is returned as string-literal.
-            else if(r.StartsWith("{",false)){
+
+            if(r.StartsWith("{",false)){
                 IMAP_Client.ReadStringLiteralAsyncOP op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(r.ReadParenthesized()));
                 op.CompletedAsync += delegate(object sender,EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e){
                     try{
@@ -632,17 +630,14 @@ namespace LumiSoft.Net.IMAP
                     }
                 }
                 // Read string literal completed async.
-                else{
-                    return true;
-                }
+
+                return true;
             }
             // Data is quoted-string.
-            else{
-                byte[] data = Encoding.UTF8.GetBytes(r.ReadWord());
-                stream.Write(data,0,data.Length);
+            byte[] data = Encoding.UTF8.GetBytes(r.ReadWord());
+            stream.Write(data,0,data.Length);
 
-                return false;
-            }
+            return false;
         }
 
         /// <summary>

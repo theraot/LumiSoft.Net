@@ -41,14 +41,13 @@ namespace LumiSoft.Net.Mail
             if(reader.Peek(true) != '@'){
                 return null;
             }
-            else{
-                // Eat "@".
-                reader.Char(true);
 
-                retVal.Append('@');
-                retVal.Append(reader.DotAtom());
-            }
-                        
+            // Eat "@".
+            reader.Char(true);
+
+            retVal.Append('@');
+            retVal.Append(reader.DotAtom());
+
             return retVal.ToString();
         }
     }

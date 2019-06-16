@@ -216,24 +216,23 @@ namespace LumiSoft.Net.SIP.Stack
                 if(m_StatusCode >= 100 && m_StatusCode < 200){
                     return SIP_StatusCodeType.Provisional;
                 }
-                else if(m_StatusCode >= 200 && m_StatusCode < 300){
+
+                if(m_StatusCode >= 200 && m_StatusCode < 300){
                     return SIP_StatusCodeType.Success;
                 }
-                else if(m_StatusCode >= 300 && m_StatusCode < 400){
+                if(m_StatusCode >= 300 && m_StatusCode < 400){
                     return SIP_StatusCodeType.Redirection;
                 }
-                else if(m_StatusCode >= 400 && m_StatusCode < 500){
+                if(m_StatusCode >= 400 && m_StatusCode < 500){
                     return SIP_StatusCodeType.RequestFailure;
                 }
-                else if(m_StatusCode >= 500 && m_StatusCode < 600){
+                if(m_StatusCode >= 500 && m_StatusCode < 600){
                     return SIP_StatusCodeType.ServerFailure;
                 }
-                else if(m_StatusCode >= 600 && m_StatusCode < 700){
+                if(m_StatusCode >= 600 && m_StatusCode < 700){
                     return SIP_StatusCodeType.GlobalFailure;
                 }
-                else{
-                    throw new Exception("Unknown SIP StatusCodeType !");
-                }
+                throw new Exception("Unknown SIP StatusCodeType !");
             }
         }
 

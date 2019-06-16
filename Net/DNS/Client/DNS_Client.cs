@@ -324,9 +324,8 @@ namespace LumiSoft.Net.DNS.Client
                 if(op.Error != null){
                     throw op.Error;
                 }
-                else{
-                    return op.Addresses;
-                }
+
+                return op.Addresses;
             }
         }
 
@@ -680,9 +679,8 @@ namespace LumiSoft.Net.DNS.Client
                 if(op.Error != null){
                     throw op.Error;
                 }
-                else{
-                    return op.HostEntries;
-                }
+
+                return op.HostEntries;
             }
         }
 
@@ -1000,9 +998,8 @@ namespace LumiSoft.Net.DNS.Client
                 if(op.Error != null){
                     throw op.Error;
                 }
-                else{
-                    return op.Hosts;
-                }
+
+                return op.Hosts;
             }
         }
 
@@ -1518,20 +1515,19 @@ namespace LumiSoft.Net.DNS.Client
 			
 						return GetQNameI(reply,ref pStart,ref name);
 					}
-					else{
-						/* Label length (length = 8Bit and first 2 bits always 0)
+
+                    /* Label length (length = 8Bit and first 2 bits always 0)
 						    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 						    empty | lablel length in bytes 
                         */
-						int labelLength = (reply[offset] & 0x3F);
-						offset++;
+                    int labelLength = (reply[offset] & 0x3F);
+                    offset++;
 				
-						// Copy label into name 
-						name += Encoding.UTF8.GetString(reply,offset,labelLength);
-						offset += labelLength;
-					}
-									
-					// If the next char isn't terminator, label continues - add dot between two labels.
+                    // Copy label into name 
+                    name += Encoding.UTF8.GetString(reply,offset,labelLength);
+                    offset += labelLength;
+
+                    // If the next char isn't terminator, label continues - add dot between two labels.
 					if (reply[offset] != 0){
 						name += ".";
 					}					
@@ -1840,24 +1836,22 @@ namespace LumiSoft.Net.DNS.Client
 			if(host.IndexOf(".") == -1){
 				return System.Net.Dns.GetHostEntry(host).AddressList;
 			}
-			else{
-				// hostName_IP must be host name, try to resolve it's IP
-				using(Dns_Client dns = new Dns_Client()){
-				    DnsServerResponse resp = dns.Query(host,DNS_QType.A);
-				    if(resp.ResponseCode == DNS_RCode.NO_ERROR){
-					    DNS_rr_A[] records = resp.GetARecords();
-					    IPAddress[] retVal = new IPAddress[records.Length];
-					    for(int i=0;i<records.Length;i++){
-						    retVal[i] = records[i].IP;
-					    }
 
-					    return retVal;
-				    }
-				    else{
-					    throw new Exception(resp.ResponseCode.ToString());
-				    }
+            // hostName_IP must be host name, try to resolve it's IP
+            using(Dns_Client dns = new Dns_Client()){
+                DnsServerResponse resp = dns.Query(host,DNS_QType.A);
+                if(resp.ResponseCode == DNS_RCode.NO_ERROR){
+                    DNS_rr_A[] records = resp.GetARecords();
+                    IPAddress[] retVal = new IPAddress[records.Length];
+                    for(int i=0;i<records.Length;i++){
+                        retVal[i] = records[i].IP;
+                    }
+
+                    return retVal;
                 }
-			}
-		}
+
+                throw new Exception(resp.ResponseCode.ToString());
+            }
+        }
     }
 }

@@ -115,9 +115,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{                

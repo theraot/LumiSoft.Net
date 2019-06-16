@@ -156,21 +156,20 @@ namespace LumiSoft.Net.MIME
             if(transferEncoding == MIME_TransferEncodings.QuotedPrintable){                
                 return new QuotedPrintableStream(new SmartStream(EncodedStream,false),FileAccess.Read);
             }
-            else if(transferEncoding == MIME_TransferEncodings.Base64){
+
+            if(transferEncoding == MIME_TransferEncodings.Base64){
                 return new Base64Stream(EncodedStream,false,true,FileAccess.Read);
-            }            
-            else if(transferEncoding == MIME_TransferEncodings.Binary){
+            }
+            if(transferEncoding == MIME_TransferEncodings.Binary){
                 return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
-            else if(transferEncoding == MIME_TransferEncodings.EightBit){
+            if(transferEncoding == MIME_TransferEncodings.EightBit){
                 return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
-            else if(transferEncoding == MIME_TransferEncodings.SevenBit){
+            if(transferEncoding == MIME_TransferEncodings.SevenBit){
                 return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
-            else{
-                throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + this.Entity.ContentTransferEncoding + "'.");
-            }
+            throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + this.Entity.ContentTransferEncoding + "'.");
         }
 
         /// <summary>

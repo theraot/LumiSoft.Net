@@ -244,9 +244,8 @@ namespace LumiSoft.Net.Mail
                         throw new ParseException("Header field 'Date' parsing failed.");
                     }
                 }
-                else{
-                    return DateTime.MinValue;
-                }
+
+                return DateTime.MinValue;
             }
 
             set{
@@ -291,9 +290,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_MailboxList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -337,9 +335,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_Mailbox)h).Address;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -384,9 +381,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -430,9 +426,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -476,9 +471,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -522,9 +516,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -564,9 +557,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -605,9 +597,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -648,9 +639,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -689,9 +679,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -731,9 +720,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -772,9 +760,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -819,9 +806,8 @@ namespace LumiSoft.Net.Mail
                         throw new ParseException("Header field 'Resent-Date' parsing failed.");
                     }
                 }
-                else{
-                    return DateTime.MinValue;
-                }
+
+                return DateTime.MinValue;
             }
 
             set{
@@ -866,9 +852,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_MailboxList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -913,9 +898,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_Mailbox)h).Address;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -959,9 +943,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1005,9 +988,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1051,9 +1033,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1096,9 +1077,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_AddressList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1136,9 +1116,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1181,9 +1160,8 @@ namespace LumiSoft.Net.Mail
 
                     return (Mail_h_ReturnPath)h;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1232,9 +1210,8 @@ namespace LumiSoft.Net.Mail
 
                     return retVal.ToArray();
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
         }
 
@@ -1265,9 +1242,8 @@ namespace LumiSoft.Net.Mail
 
                     return ((Mail_h_MailboxList)h).Addresses;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1310,9 +1286,8 @@ namespace LumiSoft.Net.Mail
 
                     return (Mail_h_DispositionNotificationOptions)h;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1353,9 +1328,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1395,9 +1369,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1436,9 +1409,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1481,9 +1453,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1522,9 +1493,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1563,9 +1533,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1604,9 +1573,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1645,9 +1613,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1686,9 +1653,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1727,9 +1693,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1769,9 +1734,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1838,9 +1802,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -1879,9 +1842,8 @@ namespace LumiSoft.Net.Mail
                 if(h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{

@@ -64,9 +64,8 @@ namespace LumiSoft.Net.SDP
                 return "a=" + Name + "\r\n";
             }
             // a=<attribute>:<value>
-            else{
-                return "a=" + Name + ":" + Value + "\r\n";
-            }
+
+            return "a=" + Name + ":" + Value + "\r\n";
         }
 
         /// <summary>

@@ -26,14 +26,13 @@ namespace LumiSoft.Net.IMAP
 		/// <param name="bodystructure">Specifies if to construct BODY or BODYSTRUCTURE.</param>
 		/// <returns></returns>
 		public static string ConstructBodyStructure(Mail_Message message,bool bodystructure)
-		{			
-			if(bodystructure){
+        {
+            if(bodystructure){
 				return "BODYSTRUCTURE " + ConstructParts(message,bodystructure);
 			}
-			else{
-				return "BODY " + ConstructParts(message,bodystructure);
-			}
-		}
+
+            return "BODY " + ConstructParts(message,bodystructure);
+        }
 
 		/// <summary>
 		/// Constructs specified entity and it's childentities bodystructure string.

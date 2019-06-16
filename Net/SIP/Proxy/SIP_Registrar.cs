@@ -257,7 +257,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found,request));
                 return;
             }
-            else if(!OnCanRegister(userName,to.Address)){
+
+            if(!OnCanRegister(userName,to.Address)){
                 transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x403_Forbidden,request));
                 return;
             }
@@ -277,7 +278,8 @@ namespace LumiSoft.Net.SIP.Proxy
                     transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": RFC 3261 10.3.6 -> If star(*) present, only 1 contact allowed.",request));
                     return;
                 }
-                else if(starContact.Expires != 0){
+
+                if(starContact.Expires != 0){
                     transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": RFC 3261 10.3.6 -> star(*) contact parameter 'expires' value must be always '0'.",request));
                     return;
                 }

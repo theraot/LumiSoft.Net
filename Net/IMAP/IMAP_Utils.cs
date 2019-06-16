@@ -188,10 +188,9 @@ namespace LumiSoft.Net.IMAP
                     throw new ArgumentException("Argument 'date' value '" + date + "' is not valid IMAP date.");
                 }
             }
-            else{
-                return LumiSoft.Net.MIME.MIME_Utils.ParseRfc2822DateTime(date);
-            }
-		}
+
+            return LumiSoft.Net.MIME.MIME_Utils.ParseRfc2822DateTime(date);
+        }
 
         /// <summary>
 		/// Converts date time to IMAP date time string.
@@ -268,12 +267,11 @@ namespace LumiSoft.Net.IMAP
 						if(cC >= 0x20 && cC <= 0x25 || cC >= 0x27 && cC <= 0x7E){
 							break;
 						}
-						else{
-							encodeBlock.WriteByte((byte)((cC & 0xFF00) >> 8));
-							encodeBlock.WriteByte((byte)(cC & 0xFF));
-							i = ic;
-						}
-					}
+
+                        encodeBlock.WriteByte((byte)((cC & 0xFF00) >> 8));
+                        encodeBlock.WriteByte((byte)(cC & 0xFF));
+                        i = ic;
+                    }
 
 					// Ecode block
 					byte[] encodedData = Net_Utils.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
@@ -329,18 +327,20 @@ namespace LumiSoft.Net.IMAP
 				if(c == '&'){
 					int endingPos = -1;
 					// Read encoded block
-					for(int b=i+1;b<text.Length;b++){
-						// - marks block end
+					for(int b=i+1;b<text.Length;b++)
+                    {
+                        // - marks block end
 						if(text[b] == '-'){
 							endingPos = b;
 							break;
 						}
 						// Invalid & sequence, just treat it as '&' char and not like shift.
 						// &....&, but must be &....-
-						else if(text[b] == '&'){							
-							break;
-						}
-					}
+
+                        if(text[b] == '&'){							
+                            break;
+                        }
+                    }
 			
 					// If no ending -, invalid encoded block. Treat it like it is
 					if(endingPos == -1){
@@ -403,12 +403,11 @@ namespace LumiSoft.Net.IMAP
             if(encoding == IMAP_Mailbox_Encoding.ImapUtf7){
                 return "\"" + IMAP_Utils.Encode_IMAP_UTF7_String(mailbox) + "\"";
             }
-            else if(encoding == IMAP_Mailbox_Encoding.ImapUtf8){
+
+            if(encoding == IMAP_Mailbox_Encoding.ImapUtf8){
                 return "*\"" + mailbox + "\"";
             }
-            else{
-                return "\"" + mailbox + "\"";
-            }
+            return "\"" + mailbox + "\"";
         }
 
         /// <summary>
@@ -433,9 +432,8 @@ namespace LumiSoft.Net.IMAP
             if(mailbox.StartsWith("*\"")){
                 return mailbox.Substring(2,mailbox.Length - 3);
             }
-            else{
-                return Decode_IMAP_UTF7_String(TextUtils.UnQuoteString(mailbox));
-            }
+
+            return Decode_IMAP_UTF7_String(TextUtils.UnQuoteString(mailbox));
         }
 
         /// <summary>
@@ -477,11 +475,13 @@ namespace LumiSoft.Net.IMAP
         public static bool MustUseLiteralString(string value,bool utf8StringSupported)
         {
             if(value != null){
-                foreach(char c in value){
+                foreach(char c in value)
+                {
                     if(!utf8StringSupported && c > 126){
                         return true;
                     }
-                    else if(char.IsControl(c)){
+
+                    if(char.IsControl(c)){
                         return true;
                     }
                 }
@@ -507,7 +507,8 @@ namespace LumiSoft.Net.IMAP
             if(value == null){
                 return Encoding.ASCII.GetBytes("NIL");
             }
-            else if(value == ""){
+
+            if(value == ""){
                 return Encoding.ASCII.GetBytes("\"\"");
             }
 
@@ -534,15 +535,14 @@ namespace LumiSoft.Net.IMAP
                 return buffer;
             }
             // Use IMAP utf8-quoted string. RFC 5738.
-            else if(utf8StringSupported){
+
+            if(utf8StringSupported){
                 // utf8-quoted   = "*" DQUOTE *UQUOTED-CHAR DQUOTE
 
                 return Encoding.UTF8.GetBytes("*" + TextUtils.QuoteString(value));
             }
             // Use IMAP quoted string.
-            else{
-                return charset.GetBytes(TextUtils.QuoteString(value));
-            }
+            return charset.GetBytes(TextUtils.QuoteString(value));
         }
 
         /// <summary>
@@ -566,16 +566,15 @@ namespace LumiSoft.Net.IMAP
                 return reader.ReadWord();
             }
             // string/astring/nstring
-            else{
-                string word = reader.ReadWord();
-                
-                // nstring
-                if(string.Equals(word,"NIL",StringComparison.InvariantCultureIgnoreCase)){
-                    return null;
-                }
 
-                return word;
+            string word = reader.ReadWord();
+                
+            // nstring
+            if(string.Equals(word,"NIL",StringComparison.InvariantCultureIgnoreCase)){
+                return null;
             }
+
+            return word;
         }
 
         //---- Obsolete

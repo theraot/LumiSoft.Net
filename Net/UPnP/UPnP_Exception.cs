@@ -60,11 +60,12 @@ namespace LumiSoft.Net.UPnP
 
                         break;
                     }
-                    else if(currentNode.ChildNodes.Count > 0){
+
+                    if(currentNode.ChildNodes.Count > 0){
                         for(int i=0;i<currentNode.ChildNodes.Count;i++){
                             queue.Insert(i,currentNode.ChildNodes[i]);
                         }
-                    }                    
+                    }
                 }
             }
             catch{

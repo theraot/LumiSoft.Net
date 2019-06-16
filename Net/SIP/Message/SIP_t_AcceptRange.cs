@@ -77,7 +77,8 @@ namespace LumiSoft.Net.SIP.Message
                     break;
                 }
                 // We have parameter
-                else if(reader.SourceString.StartsWith(";")){
+
+                if(reader.SourceString.StartsWith(";")){
                     reader.ReadSpecifiedLength(1);
                     string paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
                     if(paramString != ""){
@@ -185,9 +186,8 @@ namespace LumiSoft.Net.SIP.Message
                 if(parameter != null){
                     return Convert.ToDouble(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{

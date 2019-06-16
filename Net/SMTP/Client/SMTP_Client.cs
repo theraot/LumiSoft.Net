@@ -942,21 +942,20 @@ namespace LumiSoft.Net.SMTP.Client
             if(authMethods.Count == 0){
                 throw new NotSupportedException("SMTP server does not support authentication.");
             }
-            else if(authMethods.Contains("DIGEST-MD5")){
+
+            if(authMethods.Contains("DIGEST-MD5")){
                 return new AUTH_SASL_Client_DigestMd5("SMTP",this.RemoteEndPoint.Address.ToString(),userName,password);
             }
-            else if(authMethods.Contains("CRAM-MD5")){
+            if(authMethods.Contains("CRAM-MD5")){
                 return new AUTH_SASL_Client_CramMd5(userName,password);
             }
-            else if(authMethods.Contains("LOGIN")){
+            if(authMethods.Contains("LOGIN")){
                 return new AUTH_SASL_Client_Login(userName,password);
             }
-            else if(authMethods.Contains("PLAIN")){
+            if(authMethods.Contains("PLAIN")){
                 return new AUTH_SASL_Client_Plain(userName,password);
             }
-            else{
-                throw new NotSupportedException("We don't support any of the SMTP server authentication methods.");
-            }
+            throw new NotSupportedException("We don't support any of the SMTP server authentication methods.");
         }
 
         /// <summary>
@@ -2245,10 +2244,9 @@ namespace LumiSoft.Net.SMTP.Client
                                 return;
                             }
                             // Send next BDAT data-chunk.
-                            else{
-                                // Start reading next message data-block.
-                                m_pStream.BeginRead(m_pBdatBuffer,0,m_pBdatBuffer.Length,this.BdatChunkReadingCompleted,null);
-                            }
+
+                            // Start reading next message data-block.
+                            m_pStream.BeginRead(m_pBdatBuffer,0,m_pBdatBuffer.Length,this.BdatChunkReadingCompleted,null);
                         }
                         // BDAT failed.
                         else{
@@ -4547,9 +4545,8 @@ namespace LumiSoft.Net.SMTP.Client
             if(castedAsyncResult.AsyncDelegate is GetDomainHostsDelegate){
                 return ((GetDomainHostsDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
             }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginGetDomainHosts method.");
-            }
+
+            throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginGetDomainHosts method.");
         }
 
         /// <summary>

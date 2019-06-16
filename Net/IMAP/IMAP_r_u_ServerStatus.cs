@@ -116,13 +116,13 @@ namespace LumiSoft.Net.IMAP
         [Obsolete("Use property OptionalResponse instead.")]
         public string OptionalResponseCode
         {
-            get{ 
+            get
+            {
                 if(OptionalResponse == null){
                     return null;
                 }
-                else{
-                    return OptionalResponse.ToString().Split(' ')[0];
-                }
+
+                return OptionalResponse.ToString().Split(' ')[0];
             }
         }
 
@@ -136,11 +136,10 @@ namespace LumiSoft.Net.IMAP
                 if(OptionalResponse == null){
                     return null;
                 }
-                else{
-                    string[] code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
 
-                    return code_args.Length == 2 ? code_args[1] : "";
-                }
+                string[] code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
+
+                return code_args.Length == 2 ? code_args[1] : "";
             }
         }
     }

@@ -191,10 +191,9 @@ namespace LumiSoft.Net.Mime
                 DateTime d = new DateTime(year,month,day,hour,minute,second).AddMinutes(zoneMinutes);
                 return new DateTime(d.Year,d.Month,d.Day,d.Hour,d.Minute,d.Second,DateTimeKind.Utc).ToLocalTime();
             }
-            else{
-                return new DateTime(year,month,day);
-            }
-		}
+
+            return new DateTime(year,month,day);
+        }
 
         /// <summary>
 		/// Converts date to rfc 2822 date time string.
@@ -331,15 +330,14 @@ namespace LumiSoft.Net.Mime
 						return mainFiled.Substring(1,mainFiled.IndexOf("\"",1) - 1);
 					}
 					// value without ""
-					else{
-						int endIndex = mainFiled.Length;
-						if(mainFiled.IndexOf(" ") > -1){
-							endIndex = mainFiled.IndexOf(" ");
-						}
 
-						return mainFiled.Substring(0,endIndex);
-					}						
-				}
+                    int endIndex = mainFiled.Length;
+                    if(mainFiled.IndexOf(" ") > -1){
+                        endIndex = mainFiled.IndexOf(" ");
+                    }
+
+                    return mainFiled.Substring(0,endIndex);
+                }
 			}
 			
 			return "";			
@@ -361,90 +359,88 @@ namespace LumiSoft.Net.Mime
 			if(contentType.IndexOf("text/plain") > -1){
 				return MediaType_enum.Text_plain;
 			}
-			else if(contentType.IndexOf("text/html") > -1){
-				return MediaType_enum.Text_html;
-			}
-			else if(contentType.IndexOf("text/xml") > -1){
-				return MediaType_enum.Text_xml;
-			}
-			else if(contentType.IndexOf("text/rtf") > -1){
-				return MediaType_enum.Text_rtf;
-			}
-			else if(contentType.IndexOf("text") > -1){
-				return MediaType_enum.Text;
-			}
-			//---------------------------------------------//
 
-			//--- Image/xxx -------------------------------//
-			else if(contentType.IndexOf("image/gif") > -1){
-				return MediaType_enum.Image_gif;
-			}
-			else if(contentType.IndexOf("image/tiff") > -1){
-				return MediaType_enum.Image_tiff;
-			}
-			else if(contentType.IndexOf("image/jpeg") > -1){
-				return MediaType_enum.Image_jpeg;
-			}
-			else if(contentType.IndexOf("image") > -1){
-				return MediaType_enum.Image;
-			}
-			//---------------------------------------------//
+            if(contentType.IndexOf("text/html") > -1){
+                return MediaType_enum.Text_html;
+            }
+            if(contentType.IndexOf("text/xml") > -1){
+                return MediaType_enum.Text_xml;
+            }
+            if(contentType.IndexOf("text/rtf") > -1){
+                return MediaType_enum.Text_rtf;
+            }
+            if(contentType.IndexOf("text") > -1){
+                return MediaType_enum.Text;
+            }
+            //---------------------------------------------//
 
-			//--- Audio/xxx -------------------------------//
-			else if(contentType.IndexOf("audio") > -1){
-				return MediaType_enum.Audio;
-			}
-			//---------------------------------------------//
+            //--- Image/xxx -------------------------------//
+            if(contentType.IndexOf("image/gif") > -1){
+                return MediaType_enum.Image_gif;
+            }
+            if(contentType.IndexOf("image/tiff") > -1){
+                return MediaType_enum.Image_tiff;
+            }
+            if(contentType.IndexOf("image/jpeg") > -1){
+                return MediaType_enum.Image_jpeg;
+            }
+            if(contentType.IndexOf("image") > -1){
+                return MediaType_enum.Image;
+            }
+            //---------------------------------------------//
 
-			//--- Video/xxx -------------------------------//
-			else if(contentType.IndexOf("video") > -1){
-				return MediaType_enum.Video;
-			}
-			//---------------------------------------------//
+            //--- Audio/xxx -------------------------------//
+            if(contentType.IndexOf("audio") > -1){
+                return MediaType_enum.Audio;
+            }
+            //---------------------------------------------//
 
-			//--- Application/xxx -------------------------//
-			else if(contentType.IndexOf("application/octet-stream") > -1){
-				return MediaType_enum.Application_octet_stream;
-			}
-			else if(contentType.IndexOf("application") > -1){
-				return MediaType_enum.Application;
-			}
-			//---------------------------------------------//
+            //--- Video/xxx -------------------------------//
+            if(contentType.IndexOf("video") > -1){
+                return MediaType_enum.Video;
+            }
+            //---------------------------------------------//
 
-			//--- Multipart/xxx ---------------------------//
-			else if(contentType.IndexOf("multipart/mixed") > -1){
-				return MediaType_enum.Multipart_mixed;
-			}
-			else if(contentType.IndexOf("multipart/alternative") > -1){
-				return MediaType_enum.Multipart_alternative;
-			}
-			else if(contentType.IndexOf("multipart/parallel") > -1){
-				return MediaType_enum.Multipart_parallel;
-			}
-			else if(contentType.IndexOf("multipart/related") > -1){
-				return MediaType_enum.Multipart_related;
-			}
-			else if(contentType.IndexOf("multipart/signed") > -1){
-				return MediaType_enum.Multipart_signed;
-			}
-			else if(contentType.IndexOf("multipart") > -1){
-				return MediaType_enum.Multipart;
-			}
-			//---------------------------------------------//
+            //--- Application/xxx -------------------------//
+            if(contentType.IndexOf("application/octet-stream") > -1){
+                return MediaType_enum.Application_octet_stream;
+            }
+            if(contentType.IndexOf("application") > -1){
+                return MediaType_enum.Application;
+            }
+            //---------------------------------------------//
 
-			//--- Message/xxx -----------------------------//
-			else if(contentType.IndexOf("message/rfc822") > -1){
-				return MediaType_enum.Message_rfc822;
-			}
-			else if(contentType.IndexOf("message") > -1){
-				return MediaType_enum.Message;
-			}
-			//---------------------------------------------//
+            //--- Multipart/xxx ---------------------------//
+            if(contentType.IndexOf("multipart/mixed") > -1){
+                return MediaType_enum.Multipart_mixed;
+            }
+            if(contentType.IndexOf("multipart/alternative") > -1){
+                return MediaType_enum.Multipart_alternative;
+            }
+            if(contentType.IndexOf("multipart/parallel") > -1){
+                return MediaType_enum.Multipart_parallel;
+            }
+            if(contentType.IndexOf("multipart/related") > -1){
+                return MediaType_enum.Multipart_related;
+            }
+            if(contentType.IndexOf("multipart/signed") > -1){
+                return MediaType_enum.Multipart_signed;
+            }
+            if(contentType.IndexOf("multipart") > -1){
+                return MediaType_enum.Multipart;
+            }
+            //---------------------------------------------//
 
-			else{
-				return MediaType_enum.Unknown;
-			}
-		}
+            //--- Message/xxx -----------------------------//
+            if(contentType.IndexOf("message/rfc822") > -1){
+                return MediaType_enum.Message_rfc822;
+            }
+            if(contentType.IndexOf("message") > -1){
+                return MediaType_enum.Message;
+            }
+            //---------------------------------------------//
+            return MediaType_enum.Unknown;
+        }
 
         /// <summary>
 		/// Converts MediaType_enum to string. NOTE: Returns null for MediaType_enum.NotSpecified.
@@ -457,93 +453,91 @@ namespace LumiSoft.Net.Mime
 			if(mediaType == MediaType_enum.Text_plain){
 				return "text/plain";
 			}
-			else if(mediaType == MediaType_enum.Text_html){
-				return "text/html";
-			}
-			else if(mediaType == MediaType_enum.Text_xml){
-				return "text/xml";
-			}
-			else if(mediaType == MediaType_enum.Text_rtf){
-				return "text/rtf";
-			}
-			else if(mediaType == MediaType_enum.Text){
-				return "text";
-			}
-			//---------------------------------------------//
 
-			//--- Image/xxx -------------------------------//
-			else if(mediaType == MediaType_enum.Image_gif){
-				return "image/gif";
-			}
-			else if(mediaType == MediaType_enum.Image_tiff){
-				return "image/tiff";
-			}
-			else if(mediaType == MediaType_enum.Image_jpeg){
-				return "image/jpeg";
-			}
-			else if(mediaType == MediaType_enum.Image){
-				return "image";
-			}
-			//---------------------------------------------//
+            if(mediaType == MediaType_enum.Text_html){
+                return "text/html";
+            }
+            if(mediaType == MediaType_enum.Text_xml){
+                return "text/xml";
+            }
+            if(mediaType == MediaType_enum.Text_rtf){
+                return "text/rtf";
+            }
+            if(mediaType == MediaType_enum.Text){
+                return "text";
+            }
+            //---------------------------------------------//
 
-			//--- Audio/xxx -------------------------------//
-			else if(mediaType == MediaType_enum.Audio){
-				return "audio";
-			}
-			//---------------------------------------------//
+            //--- Image/xxx -------------------------------//
+            if(mediaType == MediaType_enum.Image_gif){
+                return "image/gif";
+            }
+            if(mediaType == MediaType_enum.Image_tiff){
+                return "image/tiff";
+            }
+            if(mediaType == MediaType_enum.Image_jpeg){
+                return "image/jpeg";
+            }
+            if(mediaType == MediaType_enum.Image){
+                return "image";
+            }
+            //---------------------------------------------//
 
-			//--- Video/xxx -------------------------------//
-			else if(mediaType == MediaType_enum.Video){
-				return "video";
-			}
-			//---------------------------------------------//
+            //--- Audio/xxx -------------------------------//
+            if(mediaType == MediaType_enum.Audio){
+                return "audio";
+            }
+            //---------------------------------------------//
 
-			//--- Application/xxx -------------------------//
-			else if(mediaType == MediaType_enum.Application_octet_stream){
-				return "application/octet-stream";
-			}
-			else if(mediaType == MediaType_enum.Application){
-				return "application";
-			}
-			//---------------------------------------------//
+            //--- Video/xxx -------------------------------//
+            if(mediaType == MediaType_enum.Video){
+                return "video";
+            }
+            //---------------------------------------------//
 
-			//--- Multipart/xxx ---------------------------//
-			else if(mediaType == MediaType_enum.Multipart_mixed){
-				return "multipart/mixed";
-			}
-			else if(mediaType == MediaType_enum.Multipart_alternative){
-				return "multipart/alternative";
-			}
-			else if(mediaType == MediaType_enum.Multipart_parallel){
-				return "multipart/parallel";
-			}
-			else if(mediaType == MediaType_enum.Multipart_related){
-				return "multipart/related";
-			}
-			else if(mediaType == MediaType_enum.Multipart_signed){
-				return "multipart/signed";
-			}
-			else if(mediaType == MediaType_enum.Multipart){
-				return "multipart";
-			}
-			//---------------------------------------------//
+            //--- Application/xxx -------------------------//
+            if(mediaType == MediaType_enum.Application_octet_stream){
+                return "application/octet-stream";
+            }
+            if(mediaType == MediaType_enum.Application){
+                return "application";
+            }
+            //---------------------------------------------//
 
-			//--- Message/xxx -----------------------------//
-			else if(mediaType == MediaType_enum.Message_rfc822){
-				return "message/rfc822";
-			}
-			else if(mediaType == MediaType_enum.Message){
-				return "message";
-			}
-			//---------------------------------------------//
+            //--- Multipart/xxx ---------------------------//
+            if(mediaType == MediaType_enum.Multipart_mixed){
+                return "multipart/mixed";
+            }
+            if(mediaType == MediaType_enum.Multipart_alternative){
+                return "multipart/alternative";
+            }
+            if(mediaType == MediaType_enum.Multipart_parallel){
+                return "multipart/parallel";
+            }
+            if(mediaType == MediaType_enum.Multipart_related){
+                return "multipart/related";
+            }
+            if(mediaType == MediaType_enum.Multipart_signed){
+                return "multipart/signed";
+            }
+            if(mediaType == MediaType_enum.Multipart){
+                return "multipart";
+            }
+            //---------------------------------------------//
 
-			else if(mediaType == MediaType_enum.Unknown){
-				return "unknown";
-			}
-			else{
-				return null;
-			}
-		}
+            //--- Message/xxx -----------------------------//
+            if(mediaType == MediaType_enum.Message_rfc822){
+                return "message/rfc822";
+            }
+            if(mediaType == MediaType_enum.Message){
+                return "message";
+            }
+            //---------------------------------------------//
+            if(mediaType == MediaType_enum.Unknown){
+                return "unknown";
+            }
+            return null;
+        }
 
         /// <summary>
 		/// Parses ContentTransferEncoding_enum from <b>Content-Transfer-Encoding:</b> header field value.
@@ -560,22 +554,21 @@ namespace LumiSoft.Net.Mime
 			if(encoding == "7bit"){
 				return ContentTransferEncoding_enum._7bit;
 			}
-			else if(encoding == "quoted-printable"){
-				return ContentTransferEncoding_enum.QuotedPrintable;
-			}
-			else if(encoding == "base64"){
-				return ContentTransferEncoding_enum.Base64;
-			}
-			else if(encoding == "8bit"){
-				return ContentTransferEncoding_enum._8bit;
-			}
-			else if(encoding == "binary"){
-				return ContentTransferEncoding_enum.Binary;
-			}
-			else{
-				return ContentTransferEncoding_enum.Unknown;
-			}
-		}
+
+            if(encoding == "quoted-printable"){
+                return ContentTransferEncoding_enum.QuotedPrintable;
+            }
+            if(encoding == "base64"){
+                return ContentTransferEncoding_enum.Base64;
+            }
+            if(encoding == "8bit"){
+                return ContentTransferEncoding_enum._8bit;
+            }
+            if(encoding == "binary"){
+                return ContentTransferEncoding_enum.Binary;
+            }
+            return ContentTransferEncoding_enum.Unknown;
+        }
 
         /// <summary>
 		/// Converts ContentTransferEncoding_enum to string. NOTE: Returns null for ContentTransferEncoding_enum.NotSpecified.
@@ -587,25 +580,24 @@ namespace LumiSoft.Net.Mime
 			if(encoding == ContentTransferEncoding_enum._7bit){
 				return "7bit";
 			}
-			else if(encoding == ContentTransferEncoding_enum.QuotedPrintable){
-				return "quoted-printable";
-			}
-			else if(encoding == ContentTransferEncoding_enum.Base64){
-				return "base64";
-			}
-			else if(encoding == ContentTransferEncoding_enum._8bit){
-				return "8bit";
-			}
-			else if(encoding == ContentTransferEncoding_enum.Binary){
-				return "binary";
-			}
-			else if(encoding == ContentTransferEncoding_enum.Unknown){
-				return "unknown";
-			}
-			else{
-				return null;
-			}
-		}
+
+            if(encoding == ContentTransferEncoding_enum.QuotedPrintable){
+                return "quoted-printable";
+            }
+            if(encoding == ContentTransferEncoding_enum.Base64){
+                return "base64";
+            }
+            if(encoding == ContentTransferEncoding_enum._8bit){
+                return "8bit";
+            }
+            if(encoding == ContentTransferEncoding_enum.Binary){
+                return "binary";
+            }
+            if(encoding == ContentTransferEncoding_enum.Unknown){
+                return "unknown";
+            }
+            return null;
+        }
 
         /// <summary>
 		/// Parses ContentDisposition_enum from <b>Content-Disposition:</b> header field value.
@@ -622,13 +614,12 @@ namespace LumiSoft.Net.Mime
 			if(disposition.IndexOf("attachment") > -1){
 				return ContentDisposition_enum.Attachment;
 			}
-			else if(disposition.IndexOf("inline") > -1){
-				return ContentDisposition_enum.Inline;
-			}
-			else{
-				return ContentDisposition_enum.Unknown;
-			}
-		}
+
+            if(disposition.IndexOf("inline") > -1){
+                return ContentDisposition_enum.Inline;
+            }
+            return ContentDisposition_enum.Unknown;
+        }
 
         /// <summary>
 		/// Converts ContentDisposition_enum to string. NOTE: Returns null for ContentDisposition_enum.NotSpecified.
@@ -639,17 +630,16 @@ namespace LumiSoft.Net.Mime
 		{			
 			if(disposition == ContentDisposition_enum.Attachment){
 				return "attachment";
-			}				
-			else if(disposition == ContentDisposition_enum.Inline){
-				return "inline";
 			}
-			else if(disposition == ContentDisposition_enum.Unknown){
-				return "unknown";
-			}
-			else{
-				return null;
-			}
-		}
+
+            if(disposition == ContentDisposition_enum.Inline){
+                return "inline";
+            }
+            if(disposition == ContentDisposition_enum.Unknown){
+                return "unknown";
+            }
+            return null;
+        }
 
         /// <summary>
         /// Encodes specified text as "encoded-word" if encode is required. For more information see RFC 2047.
@@ -897,11 +887,10 @@ namespace LumiSoft.Net.Mime
 				if(Core.IsAscii(retVal)){
 					return retVal;
 				}
-				else{
-                    // REMOVE ME:(12.10.2006) Fixed, return Core.CanonicalEncode(retVal,"utf-8");
-					return Core.CanonicalEncode(text,"utf-8");
-				}
-			}
+
+                // REMOVE ME:(12.10.2006) Fixed, return Core.CanonicalEncode(retVal,"utf-8");
+                return Core.CanonicalEncode(text,"utf-8");
+            }
 			
 			return Core.CanonicalEncode(text,"utf-8");
 		}
@@ -961,9 +950,8 @@ namespace LumiSoft.Net.Mime
 
                 return retVal.ToString();
             }
-            else{
-                return data;
-            }
+
+            return data;
         }
     }
 }

@@ -40,9 +40,8 @@ namespace LumiSoft.Net.Mail
             if(string.IsNullOrEmpty(HostName)){
                 return "["  + IP.ToString() + "]";
             }
-            else{
-                return HostName + " [" + IP.ToString() + "]";
-            }
+
+            return HostName + " [" + IP.ToString() + "]";
         }
 
         /// <summary>

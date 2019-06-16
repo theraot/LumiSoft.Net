@@ -120,18 +120,17 @@ namespace LumiSoft.Net.SIP.Stack
                     if(m_pFlows.TryGetValue(flowID,out flow)){
                         return flow;
                     }
-                    else{                    
-                        flow =  new SIP_Flow(m_pOwner.Stack,isServer,localEP,remoteEP,transport);
-                        m_pFlows.Add(flow.ID,flow);
-                        flow.IsDisposing += new EventHandler(delegate(object s,EventArgs e){
-                            lock(m_pLock){
-                                m_pFlows.Remove(flowID);
-                            }
-                        });
-                        flow.Start();
+
+                    flow =  new SIP_Flow(m_pOwner.Stack,isServer,localEP,remoteEP,transport);
+                    m_pFlows.Add(flow.ID,flow);
+                    flow.IsDisposing += new EventHandler(delegate(object s,EventArgs e){
+                        lock(m_pLock){
+                            m_pFlows.Remove(flowID);
+                        }
+                    });
+                    flow.Start();
                     
-                        return flow;
-                    }
+                    return flow;
                 }
             }
 
@@ -223,9 +222,8 @@ namespace LumiSoft.Net.SIP.Stack
                     if(m_pFlows.ContainsKey(flowID)){
                         return m_pFlows[flowID];
                     }
-                    else{
-                        return null; 
-                    }
+
+                    return null;
                 }
             }
 
@@ -420,7 +418,8 @@ namespace LumiSoft.Net.SIP.Stack
                     return;
                 }
                 // We have pong(CRLF), do nothing.
-                else if(message.Length == 2){
+
+                if(message.Length == 2){
                     if(this.Stack.Logger != null){
                         this.Stack.Logger.AddRead("",null,2,"Flow [id='" + flow.ID + "'] received \"pong\"",flow.LocalEP,flow.RemoteEP);
                     }
@@ -801,7 +800,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     break;
                 }
-                else if(flow.Transport == SIP_Transport.TLS && bind.Protocol == BindInfoProtocol.TCP && bind.SslMode == SslMode.SSL){
+
+                if(flow.Transport == SIP_Transport.TLS && bind.Protocol == BindInfoProtocol.TCP && bind.SslMode == SslMode.SSL){
                     if(!string.IsNullOrEmpty(bind.HostName)){
                         sentBy = new HostEndPoint(bind.HostName,bind.Port);
                     }
@@ -810,7 +810,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     break;
                 }
-                else if(flow.Transport == SIP_Transport.TCP && bind.Protocol == BindInfoProtocol.TCP){
+                if(flow.Transport == SIP_Transport.TCP && bind.Protocol == BindInfoProtocol.TCP){
                     if(!string.IsNullOrEmpty(bind.HostName)){
                         sentBy = new HostEndPoint(bind.HostName,bind.Port);
                     }
@@ -1220,7 +1220,8 @@ namespace LumiSoft.Net.SIP.Stack
 
                                 SendResponseToHost(logID,transactionID,localEP,srv.Target,srv.Port,via.ProtocolTransport,response);
                             }
-                            catch{
+                            catch
+                            {
                                 // Generate error, all SRV records has failed.
                                 if(i == (srvRecords.Length - 1)){
                                     if(Stack.Logger != null){
@@ -1230,10 +1231,9 @@ namespace LumiSoft.Net.SIP.Stack
                                     throw new SIP_TransportException("Host '" + via.SentBy.Host + "' is not accessible.");
                                 }
                                 // For loop will try next SRV record.
-                                else{
-                                    if(Stack.Logger != null){
-                                        Stack.Logger.AddText(logID,"Failed to send response to DNS SRV record '" + srv.Target + "', will try next.");
-                                    }
+
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(logID,"Failed to send response to DNS SRV record '" + srv.Target + "', will try next.");
                                 }
                             }
                         }
@@ -1303,7 +1303,8 @@ namespace LumiSoft.Net.SIP.Stack
                         // If we reach so far, send succeeded.
                         return;
                     }
-                    catch{
+                    catch
+                    {
                         // Generate error, all IP addresses has failed.
                         if(i == (targets.Length - 1)){
                             if(Stack.Logger != null){
@@ -1313,10 +1314,9 @@ namespace LumiSoft.Net.SIP.Stack
                             throw new SIP_TransportException("Host '" + host + ":" + port + "' is not accessible.");
                         }
                         // For loop will try next IP address.
-                        else{
-                            if(Stack.Logger != null){
-                                Stack.Logger.AddText(logID,"Failed to send response to host '" + host + "' IP end point '" + remoteEP + "', will try next A record.");
-                            }
+
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText(logID,"Failed to send response to host '" + host + "' IP end point '" + remoteEP + "', will try next A record.");
                         }
                     }
                 }
@@ -1450,10 +1450,11 @@ namespace LumiSoft.Net.SIP.Stack
                     if(bind.Protocol == BindInfoProtocol.TCP && bind.SslMode != SslMode.None && transport == SIP_Transport.TLS){
                         return "<sips:" + bind.HostName + ":" + bind.Port + ";lr>";
                     }
-                    else if(bind.Protocol == BindInfoProtocol.TCP && transport == SIP_Transport.TCP){
+
+                    if(bind.Protocol == BindInfoProtocol.TCP && transport == SIP_Transport.TCP){
                         return "<sip:" + bind.HostName + ":" + bind.Port + ";lr>";
                     }
-                    else if(bind.Protocol == BindInfoProtocol.UDP && transport == SIP_Transport.UDP){
+                    if(bind.Protocol == BindInfoProtocol.UDP && transport == SIP_Transport.UDP){
                         return "<sip:" + bind.HostName + ":" + bind.Port + ";lr>";
                     }
                 }

@@ -46,13 +46,15 @@ namespace LumiSoft.Net.ABNF
 
             StringBuilder ruleName = new StringBuilder();
 
-            while(true){
+            while(true)
+            {
                 // We reached end of string.
                 if(reader.Peek() == -1){
                     break;
                 }
                 // We have valid rule name char.
-                else if(char.IsLetter((char)reader.Peek()) | char.IsDigit((char)reader.Peek()) | (char)reader.Peek() == '-'){
+
+                if(char.IsLetter((char)reader.Peek()) | char.IsDigit((char)reader.Peek()) | (char)reader.Peek() == '-'){
                     ruleName.Append((char)reader.Read());
                 }
                 // Not rule name char, probably readed name.

@@ -108,47 +108,46 @@ namespace LumiSoft.Net.IO
                         throw readLineOP.Error;
                     }
                     // We reached end of stream.
-                    else if(readLineOP.BytesInBuffer == 0){
+
+                    if(readLineOP.BytesInBuffer == 0){
                         return 0;
                     }
                     // Decode quoted-printable line.
-                    else{
-                        // Process bytes.
-                        bool softLineBreak = false;
-                        int lineLength     = readLineOP.LineBytesInBuffer;
-                        for(int i=0;i<readLineOP.LineBytesInBuffer;i++){
-                            byte b = readLineOP.Buffer[i];
-                            // We have soft line-break.
-                            if(b == '=' && i == (lineLength - 1)){
-                                softLineBreak = true;
-                            }
-                            // We should have =XX hex-byte.
-                            else if(b == '='){
-                                byte b1 = readLineOP.Buffer[++i];
-                                byte b2 = readLineOP.Buffer[++i];
+// Process bytes.
+                    bool softLineBreak = false;
+                    int lineLength     = readLineOP.LineBytesInBuffer;
+                    for(int i=0;i<readLineOP.LineBytesInBuffer;i++){
+                        byte b = readLineOP.Buffer[i];
+                        // We have soft line-break.
+                        if(b == '=' && i == (lineLength - 1)){
+                            softLineBreak = true;
+                        }
+                        // We should have =XX hex-byte.
+                        else if(b == '='){
+                            byte b1 = readLineOP.Buffer[++i];
+                            byte b2 = readLineOP.Buffer[++i];
                         
-                                byte b3 = 0;
-                                if(byte.TryParse(new string(new char[]{(char)b1,(char)b2}),System.Globalization.NumberStyles.HexNumber,null,out b3)){
-                                    m_pDecodedBuffer[m_DecodedCount++] = b3;
-                                }
-                                // Not hex number, leave it as it is.
-                                else{
-                                    m_pDecodedBuffer[m_DecodedCount++] = (byte)'=';
-                                    m_pDecodedBuffer[m_DecodedCount++] = b1;
-                                    m_pDecodedBuffer[m_DecodedCount++] = b2;
-                                }
+                            byte b3 = 0;
+                            if(byte.TryParse(new string(new char[]{(char)b1,(char)b2}),System.Globalization.NumberStyles.HexNumber,null,out b3)){
+                                m_pDecodedBuffer[m_DecodedCount++] = b3;
                             }
-                            // Normal char.
+                            // Not hex number, leave it as it is.
                             else{
-                                m_pDecodedBuffer[m_DecodedCount++] = b;
+                                m_pDecodedBuffer[m_DecodedCount++] = (byte)'=';
+                                m_pDecodedBuffer[m_DecodedCount++] = b1;
+                                m_pDecodedBuffer[m_DecodedCount++] = b2;
                             }
                         }
-
-                        // Add hard line break only if there was one in original data.
-                        if(readLineOP.LineBytesInBuffer != readLineOP.BytesInBuffer && !softLineBreak){
-                            m_pDecodedBuffer[m_DecodedCount++] = (byte)'\r';
-                            m_pDecodedBuffer[m_DecodedCount++] = (byte)'\n';
+                        // Normal char.
+                        else{
+                            m_pDecodedBuffer[m_DecodedCount++] = b;
                         }
+                    }
+
+                    // Add hard line break only if there was one in original data.
+                    if(readLineOP.LineBytesInBuffer != readLineOP.BytesInBuffer && !softLineBreak){
+                        m_pDecodedBuffer[m_DecodedCount++] = (byte)'\r';
+                        m_pDecodedBuffer[m_DecodedCount++] = (byte)'\n';
                     }
                 }
 

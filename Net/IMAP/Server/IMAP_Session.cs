@@ -275,30 +275,28 @@ namespace LumiSoft.Net.IMAP.Server
                         if(readLineOP.Error != null){
                             throw readLineOP.Error;
                         }
+
+                        string line = readLineOP.LineUtf8;
+
+                        // Log
+                        m_pSession.LogAddRead(readLineOP.BytesInBuffer,line);
+
+                        // Add command line part to command text.
+                        if(EndsWithLiteralString(line)){
+                            cmdText.Append(RemoveLiteralSpecifier(line));
+                        }
                         else{
-                            string line = readLineOP.LineUtf8;
-
-                            // Log
-                            m_pSession.LogAddRead(readLineOP.BytesInBuffer,line);
-
-                            // Add command line part to command text.
-                            if(EndsWithLiteralString(line)){
-                                cmdText.Append(RemoveLiteralSpecifier(line));
-                            }
-                            else{
-                                cmdText.Append(line);
-                            }
-
-                            // No more literal string, we are done.
-                            if(!EndsWithLiteralString(line)){
-                                break;
-                            }
-                            else{
-                                literalSize = GetLiteralSize(line);
-                            }
+                            cmdText.Append(line);
                         }
 
-                        #endregion
+                        // No more literal string, we are done.
+                        if(!EndsWithLiteralString(line)){
+                            break;
+                        }
+
+                        literalSize = GetLiteralSize(line);
+
+#endregion
                     }
 
                     m_CmdLine = cmdText.ToString();
@@ -328,13 +326,15 @@ namespace LumiSoft.Net.IMAP.Server
                 if(value.EndsWith("}")){
                     int    digitCount = 0;
                     char[] chars      = value.ToCharArray();
-                    for(int i=chars.Length-2;i>=0;i--){
+                    for(int i=chars.Length-2;i>=0;i--)
+                    {
                         // We have literal string start tag.
                         if(chars[i] == '{'){
                             break;
                         }
                         // Literal string length specifier digit.
-                        else if(char.IsDigit(chars[i])){
+
+                        if(char.IsDigit(chars[i])){
                             digitCount++;
                         }
                         // Not IMAP literal string char, so we don't have literal string.
@@ -561,11 +561,10 @@ namespace LumiSoft.Net.IMAP.Server
                         return false;
                     }
                     // Response queued or sending is in progress.
-                    else{
-                        responseItem.IsAsync = true;
 
-                        return true;
-                    }
+                    responseItem.IsAsync = true;
+
+                    return true;
                 }
             }
 
@@ -621,15 +620,14 @@ namespace LumiSoft.Net.IMAP.Server
                         return;
                     }
                     // Response sending completed synchronously.
-                    else{
-                        lock(m_pLock){
-                            responseItem.IsSent = true;
 
-                            // This method(SendResponsesAsync) is called from completedAsyncCallback.
-                            // Response sending has completed asynchronously, call callback.
-                            if(responseItem.IsAsync && responseItem.CompletedAsyncCallback != null){
-                                responseItem.CompletedAsyncCallback(this,new EventArgs<Exception>(null));
-                            }
+                    lock(m_pLock){
+                        responseItem.IsSent = true;
+
+                        // This method(SendResponsesAsync) is called from completedAsyncCallback.
+                        // Response sending has completed asynchronously, call callback.
+                        if(responseItem.IsAsync && responseItem.CompletedAsyncCallback != null){
+                            responseItem.CompletedAsyncCallback(this,new EventArgs<Exception>(null));
                         }
                     }
                 }
@@ -1436,43 +1434,41 @@ namespace LumiSoft.Net.IMAP.Server
                     break;
                 }
                 // Authentication continues.
+
+                // Send server challange.
+                if(serverResponse.Length == 0){
+                    m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus("+",""));
+                }
                 else{
-                    // Send server challange.
-                    if(serverResponse.Length == 0){
-                        m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus("+",""));
-                    }
-                    else{
-                        m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus("+",Convert.ToBase64String(serverResponse)));
-                    }
+                    m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus("+",Convert.ToBase64String(serverResponse)));
+                }
 
-                    // Read client response. 
-                    SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                    this.TcpStream.ReadLine(readLineOP,false);
-                    if(readLineOP.Error != null){
-                        throw readLineOP.Error;
-                    }
-                    // Log
-                    if(this.Server.Logger != null){
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
-                    }
+                // Read client response. 
+                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                this.TcpStream.ReadLine(readLineOP,false);
+                if(readLineOP.Error != null){
+                    throw readLineOP.Error;
+                }
+                // Log
+                if(this.Server.Logger != null){
+                    this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
+                }
 
-                    // Client canceled authentication.
-                    if(readLineOP.LineUtf8 == "*"){
-                        m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication canceled."));
+                // Client canceled authentication.
+                if(readLineOP.LineUtf8 == "*"){
+                    m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication canceled."));
 
-                        return;
-                    }
-                    // We have base64 client response, decode it.
-                    else{
-                        try{
-                            clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
-                        }
-                        catch{
-                            m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Invalid client response '" + clientResponse + "'."));
+                    return;
+                }
+                // We have base64 client response, decode it.
 
-                            return;
-                        }
-                    }
+                try{
+                    clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
+                }
+                catch{
+                    m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Invalid client response '" + clientResponse + "'."));
+
+                    return;
                 }
             }
         }
@@ -4987,7 +4983,8 @@ namespace LumiSoft.Net.IMAP.Server
                         return;
                     }
                     // Remote host closed connection.
-                    else if(readLineOP.BytesInBuffer == 0){
+
+                    if(readLineOP.BytesInBuffer == 0){
                         LogAddText("Remote host(connected client) closed IMAP connection.");
                         timer.Dispose();
                         Dispose();
@@ -5530,37 +5527,36 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
 			// Single part
-			if(message.ContentType == null || message.ContentType.Type.ToLower() != "multipart"){
-				if(Convert.ToInt32(partNumber) == 1){
+			if(message.ContentType == null || message.ContentType.Type.ToLower() != "multipart")
+            {
+                if(Convert.ToInt32(partNumber) == 1){
 					return message;
 				}
-				else{
-					return null;
-				}
-			}
+
+                return null;
+            }
 			// multipart
-			else{                
-				MIME_Entity entity = message;
-				string[] parts = partNumber.Split('.');
-				foreach(string part in parts){
-					int mEntryNo = Convert.ToInt32(part) - 1; // Enitites are zero base, mimeEntitySpecifier is 1 based.
-                    if(entity.Body is MIME_b_Multipart){
-                        MIME_b_Multipart multipart = (MIME_b_Multipart)entity.Body;
-                        if(mEntryNo > -1 && mEntryNo < multipart.BodyParts.Count){
-						    entity = multipart.BodyParts[mEntryNo];
-					    }
-                        else{
-                            return null;
-                        }
+
+            MIME_Entity entity = message;
+            string[] parts = partNumber.Split('.');
+            foreach(string part in parts){
+                int mEntryNo = Convert.ToInt32(part) - 1; // Enitites are zero base, mimeEntitySpecifier is 1 based.
+                if(entity.Body is MIME_b_Multipart){
+                    MIME_b_Multipart multipart = (MIME_b_Multipart)entity.Body;
+                    if(mEntryNo > -1 && mEntryNo < multipart.BodyParts.Count){
+                        entity = multipart.BodyParts[mEntryNo];
                     }
-			        else{
+                    else{
                         return null;
                     }
-				}
+                }
+                else{
+                    return null;
+                }
+            }
 
-				return entity;
-			}			
-		}
+            return entity;
+        }
 
 		#endregion
 
@@ -5573,14 +5569,13 @@ namespace LumiSoft.Net.IMAP.Server
 		/// <param name="bodystructure">Specifies if to construct BODY or BODYSTRUCTURE.</param>
 		/// <returns></returns>
 		public string ConstructBodyStructure(Mail_Message message,bool bodystructure)
-		{			
-			if(bodystructure){
+        {
+            if(bodystructure){
 				return "BODYSTRUCTURE " + ConstructParts(message,bodystructure);
 			}
-			else{
-				return "BODY " + ConstructParts(message,bodystructure);
-			}
-		}
+
+            return "BODY " + ConstructParts(message,bodystructure);
+        }
 
 		/// <summary>
 		/// Constructs specified entity and it's childentities bodystructure string.
@@ -5954,13 +5949,13 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         public string SelectedFolderName
         {
-            get{ 
+            get
+            {
                 if(m_pSelectedFolder == null){
                     return null;
                 }
-                else{
-                    return m_pSelectedFolder.Folder; 
-                }
+
+                return m_pSelectedFolder.Folder;
             }
         }
 

@@ -96,8 +96,6 @@ namespace LumiSoft.Net.RTP
         {            
             if(active){
             }
-            else{
-            }
 
             // TODO:
         }

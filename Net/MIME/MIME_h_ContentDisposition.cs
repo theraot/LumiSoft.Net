@@ -122,9 +122,8 @@ namespace LumiSoft.Net.MIME
             if(reEncode || this.IsModified){
                 return "Content-Disposition: " + DispositionType + Parameters.ToString(parmetersCharset) + "\r\n";
             }
-            else{
-                return m_ParseValue;
-            }
+
+            return m_ParseValue;
         }
 
         /// <summary>
@@ -175,9 +174,8 @@ namespace LumiSoft.Net.MIME
                 if(value == null){
                     return DateTime.MinValue;
                 }
-                else{
-                    return MIME_Utils.ParseRfc2822DateTime(value);
-                }
+
+                return MIME_Utils.ParseRfc2822DateTime(value);
             }
 
             set{ 
@@ -200,9 +198,8 @@ namespace LumiSoft.Net.MIME
                 if(value == null){
                     return DateTime.MinValue;
                 }
-                else{
-                    return MIME_Utils.ParseRfc2822DateTime(value);
-                } 
+
+                return MIME_Utils.ParseRfc2822DateTime(value);
             }
 
             set{ 
@@ -225,9 +222,8 @@ namespace LumiSoft.Net.MIME
                 if(value == null){
                     return DateTime.MinValue;
                 }
-                else{
-                    return MIME_Utils.ParseRfc2822DateTime(value);
-                }
+
+                return MIME_Utils.ParseRfc2822DateTime(value);
             }
 
             set{ 
@@ -250,9 +246,8 @@ namespace LumiSoft.Net.MIME
                 if(value == null){
                     return -1;
                 }
-                else{
-                    return Convert.ToInt64(value);
-                }
+
+                return Convert.ToInt64(value);
             }
 
             set{ 

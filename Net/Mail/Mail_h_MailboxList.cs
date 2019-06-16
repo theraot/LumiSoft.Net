@@ -107,9 +107,8 @@ namespace LumiSoft.Net.Mail
 
                 return retVal.ToString();
             }
-            else{
-                return m_ParseValue;
-            }            
+
+            return m_ParseValue;
         }
 
         /// <summary>

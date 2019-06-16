@@ -42,9 +42,8 @@ namespace LumiSoft.Net
             if(uri is SIP_Uri){
                 return (SIP_Uri)uri;
             }
-            else{
-                throw new ArgumentException("Argument 'value' is not valid SIP or SIPS URI.");
-            }
+
+            throw new ArgumentException("Argument 'value' is not valid SIP or SIPS URI.");
         }
 
         /// <summary>
@@ -268,13 +267,13 @@ namespace LumiSoft.Net
         /// </summary>
         public override string Scheme
         {
-            get{
+            get
+            {
                 if(this.IsSecure){
                     return "sips";
                 }
-                else{
-                    return "sip";
-                }
+
+                return "sip";
             }
         }
 
@@ -322,13 +321,13 @@ namespace LumiSoft.Net
         /// </summary>
         public string HostPort
         {
-            get{
+            get
+            {
                 if(Port == -1){
                     return m_Host;
                 }
-                else{
-                    return m_Host + ":" + Port;
-                }
+
+                return m_Host + ":" + Port;
             }
         }
 
@@ -350,9 +349,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{
@@ -375,9 +373,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -400,9 +397,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -427,9 +423,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{
@@ -455,9 +450,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{
@@ -481,9 +475,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -508,9 +501,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
             }
 
             set{
@@ -536,9 +528,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -561,9 +552,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -589,9 +579,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -613,17 +602,16 @@ namespace LumiSoft.Net
         {
             get{ 
                 SIP_Parameter parameter = this.Parameters["ttl"];
-                if(parameter != null){
+                if(parameter != null)
+                {
                     if(parameter.Value.ToLower() == "forever"){
                         return int.MaxValue;
                     }
-                    else{
-                        return Convert.ToInt32(parameter.Value);
-                    }
+
+                    return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{
@@ -649,9 +637,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -676,9 +663,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -705,9 +691,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
-                else{
-                    return -1;
-                }
+
+                return -1;
             }
 
             set{
@@ -730,9 +715,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{
@@ -755,9 +739,8 @@ namespace LumiSoft.Net
                 if(parameter != null){
                     return parameter.Value;
                 }
-                else{
-                    return null;
-                }
+
+                return null;
             }
 
             set{

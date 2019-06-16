@@ -157,10 +157,9 @@ namespace LumiSoft.Net.Mime
 
 				return retVal;
 			}
-			else{
-				return null;
-			}
-		}
+
+            return null;
+        }
 
         /// <summary>
 		/// Parses header fields from string.

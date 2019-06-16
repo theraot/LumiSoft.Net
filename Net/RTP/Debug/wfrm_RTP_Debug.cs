@@ -270,9 +270,8 @@ namespace LumiSoft.Net.RTP.Debug
                     if(codec == null){
                         return paylaod.ToString();
                     }
-                    else{
-                        return paylaod.ToString() + " - " + codec.Name; 
-                    }
+
+                    return paylaod.ToString() + " - " + codec.Name;
                 }
             }
 
@@ -338,13 +337,13 @@ namespace LumiSoft.Net.RTP.Debug
             /// </summary>
             public string Name
             {
-                get{
+                get
+                {
                     if(m_pParticipant is RTP_Participant_Local){
                         return ((RTP_Participant_Local)m_pParticipant).Name;
                     }
-                    else{
-                        return ((RTP_Participant_Remote)m_pParticipant).Name;
-                    }
+
+                    return ((RTP_Participant_Remote)m_pParticipant).Name;
                 }
             }
 
@@ -353,13 +352,13 @@ namespace LumiSoft.Net.RTP.Debug
             /// </summary>
             public string Email
             {
-                get{
+                get
+                {
                     if(m_pParticipant is RTP_Participant_Local){
                         return ((RTP_Participant_Local)m_pParticipant).Email;
                     }
-                    else{
-                        return ((RTP_Participant_Remote)m_pParticipant).Email;
-                    }
+
+                    return ((RTP_Participant_Remote)m_pParticipant).Email;
                 }
             }
 
@@ -368,13 +367,13 @@ namespace LumiSoft.Net.RTP.Debug
             /// </summary>
             public string Phone
             {
-                get{
+                get
+                {
                     if(m_pParticipant is RTP_Participant_Local){
                         return ((RTP_Participant_Local)m_pParticipant).Phone;
                     }
-                    else{
-                        return ((RTP_Participant_Remote)m_pParticipant).Phone;
-                    }
+
+                    return ((RTP_Participant_Remote)m_pParticipant).Phone;
                 }
             }
 
@@ -384,13 +383,13 @@ namespace LumiSoft.Net.RTP.Debug
             /// </summary>
             public string Location
             {
-                get{
+                get
+                {
                     if(m_pParticipant is RTP_Participant_Local){
                         return ((RTP_Participant_Local)m_pParticipant).Location;
                     }
-                    else{
-                        return ((RTP_Participant_Remote)m_pParticipant).Location;
-                    }
+
+                    return ((RTP_Participant_Remote)m_pParticipant).Location;
                 }
             }
 
@@ -400,13 +399,13 @@ namespace LumiSoft.Net.RTP.Debug
             /// </summary>
             public string Tool
             {
-                get{
+                get
+                {
                     if(m_pParticipant is RTP_Participant_Local){
                         return ((RTP_Participant_Local)m_pParticipant).Tool;
                     }
-                    else{
-                        return ((RTP_Participant_Remote)m_pParticipant).Tool;
-                    }
+
+                    return ((RTP_Participant_Remote)m_pParticipant).Tool;
                 }
             }
 
@@ -416,13 +415,13 @@ namespace LumiSoft.Net.RTP.Debug
             /// </summary>
             public string Note
             {
-                get{
+                get
+                {
                     if(m_pParticipant is RTP_Participant_Local){
                         return ((RTP_Participant_Local)m_pParticipant).Note;
                     }
-                    else{
-                        return ((RTP_Participant_Remote)m_pParticipant).Note;
-                    }
+
+                    return ((RTP_Participant_Remote)m_pParticipant).Note;
                 }
             }
         }

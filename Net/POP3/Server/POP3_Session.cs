@@ -609,41 +609,39 @@ namespace LumiSoft.Net.POP3.Server
                     break;
                 }
                 // Authentication continues.
+
+                // Send server challange.
+                if(serverResponse.Length == 0){
+                    WriteLine("+ ");
+                }
                 else{
-                    // Send server challange.
-                    if(serverResponse.Length == 0){
-                        WriteLine("+ ");
-                    }
-                    else{
-                        WriteLine("+ " + Convert.ToBase64String(serverResponse));
-                    }
+                    WriteLine("+ " + Convert.ToBase64String(serverResponse));
+                }
 
-                    // Read client response. 
-                    SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                    this.TcpStream.ReadLine(readLineOP,false);
-                    if(readLineOP.Error != null){
-                        throw readLineOP.Error;
-                    }
-                    // Log
-                    if(this.Server.Logger != null){
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
-                    }
+                // Read client response. 
+                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                this.TcpStream.ReadLine(readLineOP,false);
+                if(readLineOP.Error != null){
+                    throw readLineOP.Error;
+                }
+                // Log
+                if(this.Server.Logger != null){
+                    this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
+                }
 
-                    // Client canceled authentication.
-                    if(readLineOP.LineUtf8 == "*"){
-                        WriteLine("-ERR Authentication canceled.");
-                        return;
-                    }
-                    // We have base64 client response, decode it.
-                    else{
-                        try{
-                            clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
-                        }
-                        catch{
-                            WriteLine("-ERR Invalid client response '" + clientResponse + "'.");
-                            return;
-                        }
-                    }
+                // Client canceled authentication.
+                if(readLineOP.LineUtf8 == "*"){
+                    WriteLine("-ERR Authentication canceled.");
+                    return;
+                }
+                // We have base64 client response, decode it.
+
+                try{
+                    clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
+                }
+                catch{
+                    WriteLine("-ERR Invalid client response '" + clientResponse + "'.");
+                    return;
                 }
             }
         }

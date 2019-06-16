@@ -317,9 +317,8 @@ namespace LumiSoft.Net.AUTH
 
                 return "rspauth=" + hex(kd(hex(h(a1(userName,password))),Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2))));
             }
-            else{
-                throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
-            }            
+
+            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
         }
 
         /// <summary>
@@ -399,9 +398,8 @@ namespace LumiSoft.Net.AUTH
 
                 return hex(kd(hex(h(a1(userName,password))),Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2()))));
             }
-            else{
-                throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
-            }
+
+            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
         }
 
         /// <summary>
@@ -475,12 +473,11 @@ namespace LumiSoft.Net.AUTH
             if(string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
                 return Encoding.UTF8.GetBytes("AUTHENTICATE:" + this.DigestUri);
             }
-            else if(this.Qop.ToLower() == "auth-int" || this.Qop.ToLower() == "auth-conf"){
+
+            if(this.Qop.ToLower() == "auth-int" || this.Qop.ToLower() == "auth-conf"){
                 return Encoding.UTF8.GetBytes("AUTHENTICATE:" + this.DigestUri + ":00000000000000000000000000000000");
             }
-            else{
-                throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
-            }
+            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
         }
 
         /// <summary>
