@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class ReadWriteControlledStream : Stream
     {
-        private readonly Stream     m_pStream    = null;
+        private readonly Stream     m_pStream;
         private readonly FileAccess m_AccessMode = FileAccess.ReadWrite;
 
         /// <summary>

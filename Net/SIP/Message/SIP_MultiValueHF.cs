@@ -10,7 +10,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_MultiValueHF<T> : SIP_HeaderField where T : SIP_t_Value,new()
     {
-        private readonly List<T> m_pValues = null;
+        private readonly List<T> m_pValues;
 
         /// <summary>
         /// Default constructor.

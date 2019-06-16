@@ -7,11 +7,11 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_SetAcl : EventArgs
     {
-        private IMAP_r_ServerStatus m_pResponse  = null;
-        private readonly string              m_Folder     = null;
-        private readonly string              m_Identifier = null;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly string              m_Folder;
+        private readonly string              m_Identifier;
         private readonly IMAP_Flags_SetType  m_SetType    = IMAP_Flags_SetType.Replace;
-        private readonly string              m_Rights     = null;
+        private readonly string              m_Rights;
 
         /// <summary>
         /// Default constructor.

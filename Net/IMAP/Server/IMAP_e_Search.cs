@@ -10,8 +10,8 @@ namespace LumiSoft.Net.IMAP.Server
     /// by calling <see cref="IMAP_e_Search.AddMessage(long)"/> method.</remarks>
     public class IMAP_e_Search : EventArgs
     {
-        private IMAP_r_ServerStatus m_pResponse = null;
-        private readonly IMAP_Search_Key     m_pCriteria = null;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly IMAP_Search_Key     m_pCriteria;
 
         /// <summary>
         /// Default constructor.
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when new message matches search criteria.
         /// </summary>
-        internal event EventHandler<EventArgs<long>> Matched = null;
+        internal event EventHandler<EventArgs<long>> Matched;
 
         #region method OnMatched
 

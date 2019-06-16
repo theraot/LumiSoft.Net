@@ -9,7 +9,7 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_SDES : RTCP_Packet
     {
         private int                          m_Version = 2;
-        private readonly List<RTCP_Packet_SDES_Chunk> m_pChunks = null;
+        private readonly List<RTCP_Packet_SDES_Chunk> m_pChunks;
 
         /// <summary>
         /// Default constructor.

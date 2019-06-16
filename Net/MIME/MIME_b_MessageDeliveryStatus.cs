@@ -37,8 +37,8 @@ namespace LumiSoft.Net.MIME
     /// </remarks>
     public class MIME_b_MessageDeliveryStatus : MIME_b
     {
-        private readonly MIME_h_Collection       m_pMessageFields   = null;
-        private readonly List<MIME_h_Collection> m_pRecipientBlocks = null;
+        private readonly MIME_h_Collection       m_pMessageFields;
+        private readonly List<MIME_h_Collection> m_pRecipientBlocks;
         
         /// <summary>
         /// Default constructor.

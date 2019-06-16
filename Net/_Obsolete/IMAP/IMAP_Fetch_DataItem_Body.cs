@@ -9,7 +9,7 @@ namespace LumiSoft.Net.IMAP
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Fetch_DataItem_Body : IMAP_Fetch_DataItem
     {
-        private readonly string m_Section  = null;
+        private readonly string m_Section;
         private readonly int    m_Offset   = -1;
         private readonly int    m_MaxCount = -1;
 

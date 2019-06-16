@@ -12,11 +12,11 @@ namespace LumiSoft.Net.IMAP.Client
         private long     m_UidValidity         = -1;
         private string[] m_pFlags              = new string[0];
         private string[] m_pPermanentFlags     = new string[0];
-        private bool     m_IsReadOnly          = false;
+        private bool     m_IsReadOnly;
         private long     m_UidNext             = -1;
         private int      m_FirstUnseen         = -1;
-        private int      m_MessagesCount       = 0;
-        private int      m_RecentMessagesCount = 0;
+        private int      m_MessagesCount;
+        private int      m_RecentMessagesCount;
 
         /// <summary>
         /// Default constructor.

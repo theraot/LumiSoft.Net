@@ -24,24 +24,24 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_Server : IDisposable
     {
-        private bool                                 m_IsDisposed            = false;
-        private bool                                 m_IsRunning             = false;
+        private bool                                 m_IsDisposed;
+        private bool                                 m_IsRunning;
         private IPBindInfo[]                         m_pBindings             = new IPBindInfo[0];
-        private bool                                 m_HasBindingsChanged    = false;
+        private bool                                 m_HasBindingsChanged;
         private Relay_Mode                           m_RelayMode             = Relay_Mode.Dns;
-        private List<Relay_Queue>                    m_pQueues               = null;
+        private List<Relay_Queue>                    m_pQueues;
         private BalanceMode                          m_SmartHostsBalanceMode = BalanceMode.LoadBalance;
-        private CircleCollection<Relay_SmartHost>    m_pSmartHosts           = null;
-        private CircleCollection<IPBindInfo>         m_pLocalEndPointIPv4    = null;
-        private CircleCollection<IPBindInfo>         m_pLocalEndPointIPv6    = null;
-        private long                                 m_MaxConnections        = 0;
-        private long                                 m_MaxConnectionsPerIP   = 0;
-        private Dns_Client                           m_pDsnClient            = null;
-        private TCP_SessionCollection<Relay_Session> m_pSessions             = null;
-        private Dictionary<IPAddress,long>           m_pConnectionsPerIP     = null;
+        private CircleCollection<Relay_SmartHost>    m_pSmartHosts;
+        private CircleCollection<IPBindInfo>         m_pLocalEndPointIPv4;
+        private CircleCollection<IPBindInfo>         m_pLocalEndPointIPv6;
+        private long                                 m_MaxConnections;
+        private long                                 m_MaxConnectionsPerIP;
+        private Dns_Client                           m_pDsnClient;
+        private TCP_SessionCollection<Relay_Session> m_pSessions;
+        private Dictionary<IPAddress,long>           m_pConnectionsPerIP;
         private int                                  m_SessionIdleTimeout    = 30;
-        private TimerEx                              m_pTimerTimeout         = null;
-        private Logger                               m_pLogger               = null;
+        private TimerEx                              m_pTimerTimeout;
+        private Logger                               m_pLogger;
 
         /// <summary>
         /// Default constructor.
@@ -722,7 +722,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// This event is raised when relay session processing completes.
         /// </summary>
-        public event Relay_SessionCompletedEventHandler SessionCompleted = null;
+        public event Relay_SessionCompletedEventHandler SessionCompleted;
 
         #region method OnSessionCompleted
 
@@ -743,7 +743,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// This event is raised when unhandled exception happens.
         /// </summary>
-        public event ErrorEventHandler Error = null;
+        public event ErrorEventHandler Error;
 
         #region method OnError
 

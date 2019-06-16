@@ -7,13 +7,13 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Packet_ReportBlock
     {
-        private uint m_SSRC                  = 0;
-        private uint m_FractionLost          = 0;
-        private uint m_CumulativePacketsLost = 0;
-        private uint m_ExtHighestSeqNumber   = 0;
-        private uint m_Jitter                = 0;
-        private uint m_LastSR                = 0;
-        private uint m_DelaySinceLastSR      = 0;
+        private uint m_SSRC;
+        private uint m_FractionLost;
+        private uint m_CumulativePacketsLost;
+        private uint m_ExtHighestSeqNumber;
+        private uint m_Jitter;
+        private uint m_LastSR;
+        private uint m_DelaySinceLastSR;
 
         /// <summary>
         /// Default constructor.

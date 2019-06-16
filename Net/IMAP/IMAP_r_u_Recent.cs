@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Recent : IMAP_r_u
     {
-        private readonly int m_MessageCount = 0;
+        private readonly int m_MessageCount;
 
         /// <summary>
         /// Default constructor.

@@ -9,9 +9,9 @@ namespace LumiSoft.Net.SMTP.Server
     {
         private readonly string       m_Mailbox = "";
         private readonly int          m_Size    = -1;
-        private readonly string       m_Body    = null;
+        private readonly string       m_Body;
         private readonly SMTP_DSN_Ret m_RET     = SMTP_DSN_Ret.NotSpecified;
-        private readonly string       m_ENVID   = null;
+        private readonly string       m_ENVID;
 
         /// <summary>
         /// Default constructor.

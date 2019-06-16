@@ -418,12 +418,12 @@ namespace LumiSoft.Net.Media
         {
             private readonly IntPtr            m_WavDevHandle = IntPtr.Zero;
             private readonly WAVEHDR           m_Header;
-            private readonly byte[]            m_pBuffer = null;
+            private readonly byte[]            m_pBuffer;
             private GCHandle          m_ThisHandle;
             private GCHandle          m_HeaderHandle;
             private GCHandle          m_DataHandle;
             private readonly int               m_DataSize = 0;  
-            private EventArgs<byte[]> m_pEventArgs = null;
+            private EventArgs<byte[]> m_pEventArgs;
 
             /// <summary>
             /// Default constructor.
@@ -552,17 +552,17 @@ namespace LumiSoft.Net.Media
 
         #endregion
 
-        private bool                         m_IsDisposed    = false;
-        private AudioInDevice                m_pInDevice     = null;
+        private bool                         m_IsDisposed;
+        private AudioInDevice                m_pInDevice;
         private readonly int                          m_SamplesPerSec = 8000;
         private readonly int                          m_BitsPerSample = 8;
         private readonly int                          m_Channels      = 1;
         private readonly int                          m_BufferSize    = 400;
         private IntPtr                       m_pWavDevHandle = IntPtr.Zero;
-        private readonly int                          m_BlockSize     = 0;
-        private readonly Dictionary<long,BufferItem>  m_pBuffers      = null;
-        private readonly waveInProc                   m_pWaveInProc   = null;
-        private bool                         m_IsRecording   = false;
+        private readonly int                          m_BlockSize;
+        private readonly Dictionary<long,BufferItem>  m_pBuffers;
+        private readonly waveInProc                   m_pWaveInProc;
+        private bool                         m_IsRecording;
         private object                       m_pLock         = new object();
             
         /// <summary>
@@ -896,7 +896,7 @@ namespace LumiSoft.Net.Media
         /// <summary>
         /// Is raised when wave-in device has received new audio frame.
         /// </summary>
-        public event EventHandler<EventArgs<byte[]>> AudioFrameReceived = null;
+        public event EventHandler<EventArgs<byte[]>> AudioFrameReceived;
 
         /// <summary>
         /// Raises <b>AudioFrameReceived</b> event.

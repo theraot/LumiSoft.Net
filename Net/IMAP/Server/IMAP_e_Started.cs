@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Started : EventArgs
     {
-        private IMAP_r_u_ServerStatus m_pResponse = null;
+        private IMAP_r_u_ServerStatus m_pResponse;
 
         /// <summary>
         /// Default constructor.

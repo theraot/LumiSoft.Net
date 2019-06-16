@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_ProxyHandler
     {
-        private object m_pTag = null;
+        private object m_pTag;
 
         /// <summary>
         /// Default constructor.

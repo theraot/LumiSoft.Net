@@ -8,10 +8,10 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_APP : RTCP_Packet
     {
         private int    m_Version = 2;
-        private int    m_SubType = 0;
-        private uint   m_Source  = 0;
+        private int    m_SubType;
+        private uint   m_Source;
         private string m_Name    = "";
-        private byte[] m_Data    = null;
+        private byte[] m_Data;
 
         /// <summary>
         /// Default constructor.

@@ -20,8 +20,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private class ListeningPoint
         {
-            private readonly Socket     m_pSocket   = null;
-            private readonly IPBindInfo m_pBindInfo = null;
+            private readonly Socket     m_pSocket;
+            private readonly IPBindInfo m_pBindInfo;
 
             /// <summary>
             /// Default constructor.
@@ -67,11 +67,11 @@ namespace LumiSoft.Net.TCP
         /// <remarks>For higher performance, mutiple acceptors per socket must be created.</remarks>
         private class TCP_Acceptor : IDisposable
         {
-            private bool                      m_IsDisposed  = false;
-            private bool                      m_IsRunning   = false;
-            private Socket                    m_pSocket     = null;
-            private SocketAsyncEventArgs      m_pSocketArgs = null;
-            private Dictionary<string,object> m_pTags       = null;
+            private bool                      m_IsDisposed;
+            private bool                      m_IsRunning;
+            private Socket                    m_pSocket;
+            private SocketAsyncEventArgs      m_pSocketArgs;
+            private Dictionary<string,object> m_pTags;
 
             /// <summary>
             /// Default constructor.
@@ -261,7 +261,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Is raised when new TCP connection was accepted.
             /// </summary>
-            public event EventHandler<EventArgs<Socket>> ConnectionAccepted = null;
+            public event EventHandler<EventArgs<Socket>> ConnectionAccepted;
 
             #region method OnConnectionAccepted
 
@@ -281,7 +281,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Is raised when unhandled error happens.
             /// </summary>
-            public event EventHandler<ExceptionEventArgs> Error = null;
+            public event EventHandler<ExceptionEventArgs> Error;
 
             #region method OnError
 
@@ -303,19 +303,19 @@ namespace LumiSoft.Net.TCP
 
         #endregion
 
-        private bool                                     m_IsDisposed           = false;
-        private bool                                     m_IsRunning            = false;
+        private bool                                     m_IsDisposed;
+        private bool                                     m_IsRunning;
         private IPBindInfo[]                             m_pBindings            = new IPBindInfo[0];
-        private long                                     m_MaxConnections       = 0;
-        private long                                     m_MaxConnectionsPerIP  = 0; 
+        private long                                     m_MaxConnections;
+        private long                                     m_MaxConnectionsPerIP; 
         private int                                      m_SessionIdleTimeout   = 100;
-        private Logger                                   m_pLogger              = null;
+        private Logger                                   m_pLogger;
         private DateTime                                 m_StartTime;
-        private long                                     m_ConnectionsProcessed = 0;
-        private readonly List<TCP_Acceptor>                       m_pConnectionAcceptors = null;
-        private readonly List<ListeningPoint>                     m_pListeningPoints     = null;
-        private TCP_SessionCollection<TCP_ServerSession> m_pSessions            = null;
-        private TimerEx                                  m_pTimer_IdleTimeout   = null;
+        private long                                     m_ConnectionsProcessed;
+        private readonly List<TCP_Acceptor>                       m_pConnectionAcceptors;
+        private readonly List<ListeningPoint>                     m_pListeningPoints;
+        private TCP_SessionCollection<TCP_ServerSession> m_pSessions;
+        private TimerEx                                  m_pTimer_IdleTimeout;
 
         /// <summary>
         /// Default constructor.
@@ -900,7 +900,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when TCP server has started.
         /// </summary>
-        public event EventHandler Started = null;
+        public event EventHandler Started;
 
         #region method OnStarted
 
@@ -919,7 +919,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when TCP server has stopped.
         /// </summary>
-        public event EventHandler Stopped = null;
+        public event EventHandler Stopped;
 
         #region method OnStopped
 
@@ -938,7 +938,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when TCP server has disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 
@@ -957,7 +957,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when TCP server creates new session.
         /// </summary>
-        public event EventHandler<TCP_ServerSessionEventArgs<T>> SessionCreated = null;
+        public event EventHandler<TCP_ServerSessionEventArgs<T>> SessionCreated;
 
         #region method OnSessionCreated
 
@@ -977,7 +977,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when TCP server has unknown unhandled error.
         /// </summary>
-        public event ErrorEventHandler Error = null;
+        public event ErrorEventHandler Error;
 
         #region method OnError
 

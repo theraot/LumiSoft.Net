@@ -8,12 +8,12 @@ namespace LumiSoft.Net
     /// </summary>
     internal class AsyncResultState : IAsyncResult
     {
-        private readonly object        m_pAsyncObject   = null;
-        private readonly Delegate      m_pAsyncDelegate = null;
-        private readonly AsyncCallback m_pCallback      = null;
-        private readonly object        m_pState         = null;
-        private IAsyncResult  m_pAsyncResult   = null;
-        private bool          m_IsEndCalled    = false;
+        private readonly object        m_pAsyncObject;
+        private readonly Delegate      m_pAsyncDelegate;
+        private readonly AsyncCallback m_pCallback;
+        private readonly object        m_pState;
+        private IAsyncResult  m_pAsyncResult;
+        private bool          m_IsEndCalled;
                 
         /// <summary>
         /// Default constructor.

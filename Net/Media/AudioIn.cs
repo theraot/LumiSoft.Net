@@ -140,7 +140,7 @@ namespace LumiSoft.Net.Media
             {
                 private GCHandle m_HeaderHandle;
                 private GCHandle m_DataHandle;
-                private readonly int      m_DataSize = 0;
+                private readonly int      m_DataSize;
 
                 /// <summary>
                 /// Default constructor.
@@ -505,19 +505,19 @@ namespace LumiSoft.Net.Media
 
             #endregion
 
-            private bool                         m_IsDisposed     = false;
-            private AudioInDevice                m_pInDevice      = null;
+            private bool                         m_IsDisposed;
+            private AudioInDevice                m_pInDevice;
             private readonly int                          m_SamplesPerSec  = 8000;
             private readonly int                          m_BitsPerSample  = 8;
             private readonly int                          m_Channels       = 1;
             private readonly int                          m_BufferSize     = 400;
             private IntPtr                       m_pWavDevHandle  = IntPtr.Zero;
-            private readonly int                          m_BlockSize      = 0;
-            private BufferItem                   m_pCurrentBuffer = null;
-            private readonly CircleCollection<BufferItem> m_pBuffers       = null;
-            private readonly waveInProc                   m_pWaveInProc    = null;
-            private bool                         m_IsRecording    = false;
-            private readonly FifoBuffer                   m_pReadBuffer    = null;
+            private readonly int                          m_BlockSize;
+            private BufferItem                   m_pCurrentBuffer;
+            private readonly CircleCollection<BufferItem> m_pBuffers;
+            private readonly waveInProc                   m_pWaveInProc;
+            private bool                         m_IsRecording;
+            private readonly FifoBuffer                   m_pReadBuffer;
             //private Thread                       m_pBufferThread  = null;
             private readonly object                       m_pLock          = new object();
             
@@ -928,12 +928,12 @@ namespace LumiSoft.Net.Media
 
         #endregion
 
-        private bool          m_IsDisposed    = false;
-        private AudioInDevice m_pDevice       = null;
+        private bool          m_IsDisposed;
+        private AudioInDevice m_pDevice;
         private readonly int           m_SamplesPerSec = 8000;
         private readonly int           m_BitsPerSample = 16;
         private readonly int           m_Channels      = 1;
-        private WaveIn        m_pWaveIn       = null;
+        private WaveIn        m_pWaveIn;
 
         /// <summary>
         /// Default constructor.

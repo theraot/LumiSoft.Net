@@ -8,11 +8,11 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class PartialStream : Stream
     {
-        private bool   m_IsDisposed = false;
-        private readonly Stream m_pStream    = null;
-        private readonly long   m_Start      = 0;
-        private readonly long   m_Length     = 0;
-        private long   m_Position   = 0;
+        private bool   m_IsDisposed;
+        private readonly Stream m_pStream;
+        private readonly long   m_Start;
+        private readonly long   m_Length;
+        private long   m_Position;
 
         /// <summary>
         /// Default constructor.

@@ -12,11 +12,11 @@ namespace LumiSoft.Net.DNS
 	{
 		private readonly string m_NameServer = "";
 		private readonly string m_AdminEmail = "";
-		private readonly long   m_Serial     = 0;
-		private readonly long   m_Refresh    = 0;
-		private readonly long   m_Retry      = 0;
-		private readonly long   m_Expire     = 0;
-		private readonly long   m_Minimum    = 0;
+		private readonly long   m_Serial;
+		private readonly long   m_Refresh;
+		private readonly long   m_Retry;
+		private readonly long   m_Expire;
+		private readonly long   m_Minimum;
 		
 		/// <summary>
 		/// Default constructor.

@@ -11,23 +11,23 @@ namespace LumiSoft.Net.SIP.Stack
     {
         private readonly object                 m_pLock            = new object();
         private SIP_DialogState        m_State            = SIP_DialogState.Early;
-        private SIP_Stack              m_pStack           = null;
+        private SIP_Stack              m_pStack;
         private readonly DateTime               m_CreateTime;
         private string                 m_CallID           = "";
         private string                 m_LocalTag         = "";
         private string                 m_RemoteTag        = "";
-        private int                    m_LocalSeqNo       = 0;
-        private int                    m_RemoteSeqNo      = 0;
-        private AbsoluteUri            m_pLocalUri        = null;
-        private AbsoluteUri            m_pRemoteUri       = null;
-        private SIP_Uri                m_pLocalContact    = null;
-        private SIP_Uri                m_pRemoteTarget    = null;
-        private bool                   m_IsSecure         = false;
-        private SIP_t_AddressParam[]   m_pRouteSet        = null;
-        private string[]               m_pRemoteAllow     = null;
-        private string[]               m_pRemoteSupported = null;
-        private SIP_Flow               m_pFlow            = null;
-        private readonly List<SIP_Transaction>  m_pTransactions    = null;
+        private int                    m_LocalSeqNo;
+        private int                    m_RemoteSeqNo;
+        private AbsoluteUri            m_pLocalUri;
+        private AbsoluteUri            m_pRemoteUri;
+        private SIP_Uri                m_pLocalContact;
+        private SIP_Uri                m_pRemoteTarget;
+        private bool                   m_IsSecure;
+        private SIP_t_AddressParam[]   m_pRouteSet;
+        private string[]               m_pRemoteAllow;
+        private string[]               m_pRemoteSupported;
+        private SIP_Flow               m_pFlow;
+        private readonly List<SIP_Transaction>  m_pTransactions;
 
         /// <summary>
         /// Default constructor.
@@ -880,7 +880,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when Dialog state has changed.
         /// </summary>
-        public event EventHandler StateChanged = null;
+        public event EventHandler StateChanged;
 
         #region method OnStateChanged
 
@@ -899,7 +899,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when dialog gets new request.
         /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived = null;
+        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
 
         #region method OnRequestReceived
 

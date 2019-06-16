@@ -9,7 +9,7 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_Prop
     {
-        private readonly List<WebDav_p> m_pProperties = null;
+        private readonly List<WebDav_p> m_pProperties;
 
         /// <summary>
         /// Default constructor.

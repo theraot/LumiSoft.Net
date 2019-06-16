@@ -10,11 +10,11 @@ namespace LumiSoft.Net.DNS.Client
 	public class DnsServerResponse
 	{
 		private readonly bool         m_Success             = true;
-        private readonly int          m_ID                  = 0;
+        private readonly int          m_ID;
 		private readonly DNS_RCode    m_RCODE               = DNS_RCode.NO_ERROR;
-		private readonly List<DNS_rr> m_pAnswers            = null;
-		private readonly List<DNS_rr> m_pAuthoritiveAnswers = null;
-		private readonly List<DNS_rr> m_pAdditionalAnswers  = null;
+		private readonly List<DNS_rr> m_pAnswers;
+		private readonly List<DNS_rr> m_pAuthoritiveAnswers;
+		private readonly List<DNS_rr> m_pAdditionalAnswers;
 		
 		internal DnsServerResponse(bool connectionOk,int id,DNS_RCode rcode,List<DNS_rr> answers,List<DNS_rr> authoritiveAnswers,List<DNS_rr> additionalAnswers)
 		{

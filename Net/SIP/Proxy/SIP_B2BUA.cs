@@ -12,9 +12,9 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_B2BUA : IDisposable
     {
-        private readonly SIP_Proxy            m_pProxy     = null;
-        private readonly List<SIP_B2BUA_Call> m_pCalls     = null;
-        private bool                 m_IsDisposed = false;
+        private readonly SIP_Proxy            m_pProxy;
+        private readonly List<SIP_B2BUA_Call> m_pCalls;
+        private bool                 m_IsDisposed;
 
         /// <summary>
         /// Default constructor.
@@ -272,7 +272,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Is called when new call is created.
         /// </summary>
-        public event EventHandler CallCreated = null;
+        public event EventHandler CallCreated;
 
         /// <summary>
         /// Raises CallCreated event.
@@ -288,7 +288,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Is called when call has terminated.
         /// </summary>
-        public event EventHandler CallTerminated = null;
+        public event EventHandler CallTerminated;
 
         /// <summary>
         /// Raises CallTerminated event.

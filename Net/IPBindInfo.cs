@@ -11,10 +11,10 @@ namespace LumiSoft.Net
     {
         private readonly string           m_HostName     = "";
         private readonly BindInfoProtocol m_Protocol     = BindInfoProtocol.TCP;  
-        private readonly IPEndPoint       m_pEndPoint    = null;
+        private readonly IPEndPoint       m_pEndPoint;
         private readonly SslMode          m_SslMode      = SslMode.None;
-        private readonly X509Certificate2 m_pCertificate = null;
-        private object           m_Tag          = null;
+        private readonly X509Certificate2 m_pCertificate;
+        private object           m_Tag;
 
         /// <summary>
         /// Default constructor.

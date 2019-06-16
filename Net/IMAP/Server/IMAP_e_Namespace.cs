@@ -7,8 +7,8 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Namespace : EventArgs
     {
-        private IMAP_r_u_Namespace  m_pNamespaceResponse = null;
-        private IMAP_r_ServerStatus m_pResponse          = null;
+        private IMAP_r_u_Namespace  m_pNamespaceResponse;
+        private IMAP_r_ServerStatus m_pResponse;
 
         /// <summary>
         /// Default constructor.

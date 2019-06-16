@@ -8,12 +8,12 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Append : EventArgs
     {
-        private IMAP_r_ServerStatus m_pResponse = null;
-        private readonly string              m_Folder    = null;
-        private readonly string[]            m_pFlags    = null;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly string              m_Folder;
+        private readonly string[]            m_pFlags;
         private readonly DateTime            m_Date      = DateTime.MinValue;
-        private readonly int                 m_Size      = 0;
-        private Stream              m_pStream   = null;      
+        private readonly int                 m_Size;
+        private Stream              m_pStream;      
 
         /// <summary>
         /// Default constructor.
@@ -112,7 +112,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// This event is raised when message storing has completed.
         /// </summary>
-        public event EventHandler Completed = null;
+        public event EventHandler Completed;
 
         #region method OnCompleted
 

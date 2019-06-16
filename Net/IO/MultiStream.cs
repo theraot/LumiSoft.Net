@@ -10,8 +10,8 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class MultiStream : Stream
     {
-        private bool          m_IsDisposed = false;
-        private Queue<Stream> m_pStreams   = null;        
+        private bool          m_IsDisposed;
+        private Queue<Stream> m_pStreams;        
 
         /// <summary>
         /// Default constructor.

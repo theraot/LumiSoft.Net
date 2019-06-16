@@ -9,7 +9,7 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_r_u_ServerStatus : IMAP_r_u
     {
         private readonly string     m_ResponseCode      = "";
-        private readonly IMAP_t_orc m_pOptionalResponse = null;
+        private readonly IMAP_t_orc m_pOptionalResponse;
         private readonly string     m_ResponseText      = "";
 
         /// <summary>

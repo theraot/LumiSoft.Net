@@ -8,7 +8,7 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_RequestLine
     {
         private string      m_Method  = "";
-        private AbsoluteUri m_pUri    = null;
+        private AbsoluteUri m_pUri;
         private string      m_Version = "";
 
         /// <summary>

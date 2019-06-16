@@ -15,9 +15,9 @@ namespace LumiSoft.Net.UPnP.NAT
     /// </summary>
     public class UPnP_NAT_Client
     {
-        private static string m_BaseUrl     = null;
-        private static string m_ServiceType = null;
-        private static string m_ControlUrl  = null;
+        private static string m_BaseUrl;
+        private static string m_ServiceType;
+        private static string m_ControlUrl;
 
         /// <summary>
         /// Default constructor.

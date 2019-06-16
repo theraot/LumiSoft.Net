@@ -11,20 +11,20 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_UA_Registration
     {
-        private bool                     m_IsDisposed        = false;
+        private bool                     m_IsDisposed;
         private SIP_UA_RegistrationState m_State             = SIP_UA_RegistrationState.Unregistered;
-        private SIP_Stack                m_pStack            = null;
-        private readonly SIP_Uri                  m_pServer           = null;
+        private SIP_Stack                m_pStack;
+        private readonly SIP_Uri                  m_pServer;
         private readonly string                   m_AOR               = "";
-        private readonly AbsoluteUri              m_pContact          = null;
-        private readonly List<AbsoluteUri>        m_pContacts         = null;
+        private readonly AbsoluteUri              m_pContact;
+        private readonly List<AbsoluteUri>        m_pContacts;
         private readonly int                      m_RefreshInterval   = 300;
-        private TimerEx                  m_pTimer            = null;
-        private SIP_RequestSender        m_pRegisterSender   = null;
-        private SIP_RequestSender        m_pUnregisterSender = null;
+        private TimerEx                  m_pTimer;
+        private SIP_RequestSender        m_pRegisterSender;
+        private SIP_RequestSender        m_pUnregisterSender;
         private bool                     m_AutoRefresh       = true;
-        private bool                     m_AutoDispose       = false;
-        private SIP_Flow                 m_pFlow             = null;
+        private bool                     m_AutoDispose;
+        private SIP_Flow                 m_pFlow;
 
         /// <summary>
         /// Default constructor.
@@ -414,7 +414,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when registration state has changed.
         /// </summary>
-        public event EventHandler StateChanged = null;
+        public event EventHandler StateChanged;
 
         #region method OnStateChanged
 
@@ -433,7 +433,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when REGISTER has completed successfully.
         /// </summary>
-        public event EventHandler Registered = null;
+        public event EventHandler Registered;
 
         #region method OnRegistered
 
@@ -452,7 +452,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when un-REGISTER has completed successfully.
         /// </summary>
-        public event EventHandler Unregistered = null;
+        public event EventHandler Unregistered;
 
         #region method OnUnregistered
 
@@ -471,7 +471,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when REGISTER/un-REGISTER has failed.
         /// </summary>
-        public event EventHandler<SIP_ResponseReceivedEventArgs> Error = null;
+        public event EventHandler<SIP_ResponseReceivedEventArgs> Error;
 
         #region method OnError
 
@@ -491,7 +491,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when registration has disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 

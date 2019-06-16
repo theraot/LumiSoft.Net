@@ -10,12 +10,12 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_B2BUA_Call
     {        
-        private readonly SIP_B2BUA  m_pOwner       = null;
+        private readonly SIP_B2BUA  m_pOwner;
         private readonly DateTime   m_StartTime;
-        private SIP_Dialog m_pCaller      = null;
-        private SIP_Dialog m_pCallee      = null;
+        private SIP_Dialog m_pCaller;
+        private SIP_Dialog m_pCallee;
         private readonly string     m_CallID       = "";
-        private bool       m_IsTerminated = false;
+        private bool       m_IsTerminated;
 
         /// <summary>
         /// Default constructor.

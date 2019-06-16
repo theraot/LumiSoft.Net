@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Bye : IMAP_r_u
     {
-        private readonly string m_Text = null;
+        private readonly string m_Text;
 
         /// <summary>
         /// Default constructor.

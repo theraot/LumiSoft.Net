@@ -8,8 +8,8 @@ namespace LumiSoft.Net
 	/// </summary>
 	public class Error_EventArgs
 	{
-		private readonly Exception  m_pException  = null;
-		private readonly StackTrace m_pStackTrace = null;
+		private readonly Exception  m_pException;
+		private readonly StackTrace m_pStackTrace;
 		private readonly string     m_Text        = "";
 
 		/// <summary>

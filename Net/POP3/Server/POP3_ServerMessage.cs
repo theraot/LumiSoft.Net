@@ -9,9 +9,9 @@ namespace LumiSoft.Net.POP3.Server
     {
         private int    m_SequenceNumber      = -1;
         private readonly string m_UID                 = "";
-        private readonly int    m_Size                = 0;
-        private bool   m_IsMarkedForDeletion = false;
-        private object m_pTag                = null;
+        private readonly int    m_Size;
+        private bool   m_IsMarkedForDeletion;
+        private object m_pTag;
 
         /// <summary>
         /// Default constructor.

@@ -24,11 +24,11 @@ namespace LumiSoft.Net.FTP.Server
         /// </summary>
         private class DataConnection
         {
-            private bool        m_IsDisposed = false;
-            private FTP_Session m_pSession   = null;
-            private Stream      m_pStream    = null;
-            private readonly bool        m_Read_Write = false;
-            private Socket      m_pSocket    = null;
+            private bool        m_IsDisposed;
+            private FTP_Session m_pSession;
+            private Stream      m_pStream;
+            private readonly bool        m_Read_Write;
+            private Socket      m_pSocket;
 
             /// <summary>
             /// Default constructor.
@@ -223,16 +223,16 @@ namespace LumiSoft.Net.FTP.Server
         #endregion
 
         private readonly Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications = null;
-        private bool                                         m_SessionRejected  = false;
-        private int                                          m_BadCommands      = 0;
-        private string                                       m_UserName         = null;
-        private GenericIdentity                              m_pUser            = null;
+        private bool                                         m_SessionRejected;
+        private int                                          m_BadCommands;
+        private string                                       m_UserName;
+        private GenericIdentity                              m_pUser;
 		private string                                       m_CurrentDir       = "/";
 		private string                                       m_RenameFrom       = "";
-        private DataConnection                               m_pDataConnection  = null;
-		private bool                                         m_PassiveMode      = false;
-        private Socket                                       m_pPassiveSocket   = null;
-		private IPEndPoint                                   m_pDataConEndPoint = null;
+        private DataConnection                               m_pDataConnection;
+		private bool                                         m_PassiveMode;
+        private Socket                                       m_pPassiveSocket;
+		private IPEndPoint                                   m_pDataConEndPoint;
 
         /// <summary>
         /// Default constructor.
@@ -1851,7 +1851,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// Is raised when session has started processing and needs to send 220 greeting or 500 error resposne to the connected client.
         /// </summary>
-        public event EventHandler<FTP_e_Started> Started = null;
+        public event EventHandler<FTP_e_Started> Started;
 
         #region method OnStarted
 
@@ -1876,7 +1876,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to authenticate session using USER/PASS FTP authentication.
         /// </summary>
-        public event EventHandler<FTP_e_Authenticate> Authenticate = null;
+        public event EventHandler<FTP_e_Authenticate> Authenticate;
 
         #region method OnAuthenticate
 
@@ -1902,7 +1902,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to get specified file.
         /// </summary>
-        public event EventHandler<FTP_e_GetFile> GetFile = null;
+        public event EventHandler<FTP_e_GetFile> GetFile;
 
         #region method OnGetFile
 
@@ -1922,7 +1922,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete STOR(store file) command.
         /// </summary>
-        public event EventHandler<FTP_e_Stor> Stor = null;
+        public event EventHandler<FTP_e_Stor> Stor;
 
         #region method OnStor
 
@@ -1942,7 +1942,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to get specified file size.
         /// </summary>
-        public event EventHandler<FTP_e_GetFileSize> GetFileSize = null;
+        public event EventHandler<FTP_e_GetFileSize> GetFileSize;
 
         #region method OnGetFileSize
 
@@ -1962,7 +1962,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete DELE(delete file) command.
         /// </summary>
-        public event EventHandler<FTP_e_Dele> Dele = null;
+        public event EventHandler<FTP_e_Dele> Dele;
 
         #region method OnDele
 
@@ -1982,7 +1982,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete APPE(append to file) command.
         /// </summary>
-        public event EventHandler<FTP_e_Appe> Appe = null;
+        public event EventHandler<FTP_e_Appe> Appe;
 
         #region method OnAppe
 
@@ -2002,7 +2002,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete CWD(change working directory) command.
         /// </summary>
-        public event EventHandler<FTP_e_Cwd> Cwd = null;
+        public event EventHandler<FTP_e_Cwd> Cwd;
 
         #region method OnCwd
 
@@ -2022,7 +2022,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete CDUP(change directory up) command.
         /// </summary>
-        public event EventHandler<FTP_e_Cdup> Cdup = null;
+        public event EventHandler<FTP_e_Cdup> Cdup;
 
         #region method OnCdup
 
@@ -2042,7 +2042,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete RMD(remove directory) command.
         /// </summary>
-        public event EventHandler<FTP_e_Rmd> Rmd = null;
+        public event EventHandler<FTP_e_Rmd> Rmd;
 
         #region method OnRmd
 
@@ -2062,7 +2062,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete MKD(make directory) command.
         /// </summary>
-        public event EventHandler<FTP_e_Mkd> Mkd = null;
+        public event EventHandler<FTP_e_Mkd> Mkd;
 
         #region method OnMkd
 
@@ -2082,7 +2082,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to get directory listing.
         /// </summary>
-        public event EventHandler<FTP_e_GetDirListing> GetDirListing = null;
+        public event EventHandler<FTP_e_GetDirListing> GetDirListing;
 
         #region method OnGetDirListing
 
@@ -2102,7 +2102,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// This event is raised when session needs to complete RNTO(rename file/directory to) command.
         /// </summary>
-        public event EventHandler<FTP_e_Rnto> Rnto = null;
+        public event EventHandler<FTP_e_Rnto> Rnto;
 
         #region method OnRnto
 

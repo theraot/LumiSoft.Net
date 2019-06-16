@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Flags : IMAP_t_Fetch_r_i
     {
-        private readonly IMAP_t_MsgFlags m_pFlags = null;
+        private readonly IMAP_t_MsgFlags m_pFlags;
 
         /// <summary>
         /// Default constructor.

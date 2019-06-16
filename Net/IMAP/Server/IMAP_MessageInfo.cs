@@ -8,10 +8,10 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_MessageInfo
     {
-        private readonly string   m_ID     = null;
-        private readonly long     m_UID    = 0;
-        private string[] m_pFlags = null;
-        private readonly int      m_Size   = 0;
+        private readonly string   m_ID;
+        private readonly long     m_UID;
+        private string[] m_pFlags;
+        private readonly int      m_Size;
         private readonly DateTime m_InternalDate;
         private int      m_SeqNo  = 1;
 

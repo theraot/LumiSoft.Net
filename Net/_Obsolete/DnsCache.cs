@@ -52,7 +52,7 @@ namespace LumiSoft.Net.DNS.Client
     [Obsolete("Use DNS_Client.Cache instead.")]
 	public class DnsCache
 	{
-		private static Hashtable m_pCache    = null;
+		private static Hashtable m_pCache;
 		private static long      m_CacheTime = 10000;
 
 		/// <summary>

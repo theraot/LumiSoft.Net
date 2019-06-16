@@ -9,9 +9,9 @@ namespace LumiSoft.Net
     public class ByteBuilder
     {
         private readonly int      m_BlockSize = 1024;
-        private byte[]   m_pBuffer   = null;
-        private int      m_Count     = 0;
-        private Encoding m_pCharset  = null;
+        private byte[]   m_pBuffer;
+        private int      m_Count;
+        private Encoding m_pCharset;
 
         /// <summary>
         /// Default constructor.

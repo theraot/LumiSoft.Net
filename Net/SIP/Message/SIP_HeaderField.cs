@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SIP.Message
     {
         private readonly string m_Name         = "";
         private string m_Value        = "";
-        private bool   m_IsMultiValue = false;
+        private bool   m_IsMultiValue;
 
         /// <summary>
         /// Default constructor.

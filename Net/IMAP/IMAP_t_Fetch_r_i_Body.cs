@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Body : IMAP_t_Fetch_r_i
     {
-        private readonly string m_Section = null;
+        private readonly string m_Section;
         private readonly int    m_Offset  = -1;
-        private Stream m_pStream = null;
+        private Stream m_pStream;
 
         /// <summary>
         /// Default constructor.

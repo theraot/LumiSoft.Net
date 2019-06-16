@@ -12,18 +12,18 @@ namespace LumiSoft.Net.SIP.Debug
     /// </summary>
     public class wfrm_SIP_Debug : Form
     {
-        private TabControl  m_pTab                     = null;
-        private ToolStrip   m_pTabLog_Toolbar          = null;
-        private RichTextBox m_pTabLog_Text             = null;
-        private ToolStrip   m_pTabTransactions_Toolbar = null;
-        private ListView    m_pTabTransactions_List    = null;
-        private ToolStrip   m_pTabDialogs_Toolbar      = null;
-        private ListView    m_pTabDialogs_List         = null;
-        private ToolStrip   m_pTabFlows_Toolbar        = null;
-        private ListView    m_pTabFlows_List           = null;
+        private TabControl  m_pTab;
+        private ToolStrip   m_pTabLog_Toolbar;
+        private RichTextBox m_pTabLog_Text;
+        private ToolStrip   m_pTabTransactions_Toolbar;
+        private ListView    m_pTabTransactions_List;
+        private ToolStrip   m_pTabDialogs_Toolbar;
+        private ListView    m_pTabDialogs_List;
+        private ToolStrip   m_pTabFlows_Toolbar;
+        private ListView    m_pTabFlows_List;
 
-        private readonly SIP_Stack m_pStack      = null;
-        private bool      m_OddLogEntry = false;
+        private readonly SIP_Stack m_pStack;
+        private bool      m_OddLogEntry;
 
         /// <summary>
         /// Default constructor.

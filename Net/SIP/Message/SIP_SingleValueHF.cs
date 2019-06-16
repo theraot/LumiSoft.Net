@@ -8,7 +8,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_SingleValueHF<T> : SIP_HeaderField where T : SIP_t_Value
     {
-        private T m_pValue = null;
+        private T m_pValue;
 
         /// <summary>
         /// Default constructor.

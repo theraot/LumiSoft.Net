@@ -52,11 +52,11 @@ namespace LumiSoft.Net.MIME
     /// </remarks>
     public class MIME_h_ContentType : MIME_h
     {
-        private bool                       m_IsModified  = false;
-        private string                     m_ParseValue  = null;
+        private bool                       m_IsModified;
+        private string                     m_ParseValue;
         private string                     m_Type        = "";
         private string                     m_SubType     = "";
-        private readonly MIME_h_ParameterCollection m_pParameters = null;
+        private readonly MIME_h_ParameterCollection m_pParameters;
 
         /// <summary>
         /// Default constructor.

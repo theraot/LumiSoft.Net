@@ -15,15 +15,15 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Envelope
     {
         private readonly DateTime         m_Date      = DateTime.MinValue;
-        private readonly string           m_Subject   = null;
-        private readonly Mail_t_Address[] m_pFrom     = null;
-        private readonly Mail_t_Address[] m_pSender   = null;
-        private readonly Mail_t_Address[] m_pReplyTo  = null;
-        private readonly Mail_t_Address[] m_pTo       = null;
-        private readonly Mail_t_Address[] m_pCc       = null;
-        private readonly Mail_t_Address[] m_pBcc       = null;
-        private readonly string           m_InReplyTo = null;
-        private readonly string           m_MessageID = null;
+        private readonly string           m_Subject;
+        private readonly Mail_t_Address[] m_pFrom;
+        private readonly Mail_t_Address[] m_pSender;
+        private readonly Mail_t_Address[] m_pReplyTo;
+        private readonly Mail_t_Address[] m_pTo;
+        private readonly Mail_t_Address[] m_pCc;
+        private readonly Mail_t_Address[] m_pBcc;
+        private readonly string           m_InReplyTo;
+        private readonly string           m_MessageID;
 
         /// <summary>
         /// Default constructor.

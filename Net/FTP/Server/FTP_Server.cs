@@ -12,7 +12,7 @@ namespace LumiSoft.Net.FTP.Server
 	{
         private string    m_GreetingText     = "";
         private int       m_MaxBadCommands   = 30;
-        private IPAddress m_pPassivePublicIP = null;
+        private IPAddress m_pPassivePublicIP;
         private int       m_PassiveStartPort = 20000;
 
 		/// <summary>

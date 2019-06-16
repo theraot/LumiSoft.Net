@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_r_u_QuotaRoot : IMAP_r_u
     {
         private readonly string   m_FolderName = "";
-        private readonly string[] m_QuotaRoots = null;
+        private readonly string[] m_QuotaRoots;
 
         /// <summary>
         /// Default constructor.

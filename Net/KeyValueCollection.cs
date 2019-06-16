@@ -8,8 +8,8 @@ namespace LumiSoft.Net
     /// </summary>
     public class KeyValueCollection<K,V> : IEnumerable
     {
-        private readonly Dictionary<K,V> m_pDictionary = null;
-        private readonly List<V>         m_pList       = null;
+        private readonly Dictionary<K,V> m_pDictionary;
+        private readonly List<V>         m_pList;
 
         /// <summary>
         /// Default constructor.

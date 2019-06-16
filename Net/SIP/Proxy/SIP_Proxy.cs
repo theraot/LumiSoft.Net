@@ -35,15 +35,15 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Proxy : IDisposable
     {
-        private  bool                   m_IsDisposed     = false;
-        private  SIP_Stack              m_pStack         = null;
+        private  bool                   m_IsDisposed;
+        private  SIP_Stack              m_pStack;
         private  SIP_ProxyMode          m_ProxyMode      = SIP_ProxyMode.Registrar | SIP_ProxyMode.Statefull;
         private  SIP_ForkingMode        m_ForkingMode    = SIP_ForkingMode.Parallel;
-        private  SIP_Registrar          m_pRegistrar     = null;
-        private  SIP_B2BUA              m_pB2BUA         = null;
+        private  SIP_Registrar          m_pRegistrar;
+        private  SIP_B2BUA              m_pB2BUA;
         private readonly string                 m_Opaque         = "";
-        internal List<SIP_ProxyContext> m_pProxyContexts = null;
-        private readonly List<SIP_ProxyHandler> m_pHandlers      = null;
+        internal List<SIP_ProxyContext> m_pProxyContexts;
+        private readonly List<SIP_ProxyHandler> m_pHandlers;
 
         /// <summary>
         /// Default constructor.
@@ -1079,7 +1079,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when SIP proxy needs to know if specified request URI is local URI or remote URI.
         /// </summary>
-        public event SIP_IsLocalUriEventHandler IsLocalUri = null;
+        public event SIP_IsLocalUriEventHandler IsLocalUri;
 
         #region mehtod OnIsLocalUri
 
@@ -1102,7 +1102,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when SIP proxy or registrar server needs to authenticate user.
         /// </summary>
-        public event SIP_AuthenticateEventHandler Authenticate = null;
+        public event SIP_AuthenticateEventHandler Authenticate;
                 
         #region method OnAuthenticate
 
@@ -1126,7 +1126,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when SIP proxy needs to know if specified local server address exists.
         /// </summary>
-        public event SIP_AddressExistsEventHandler AddressExists = null;
+        public event SIP_AddressExistsEventHandler AddressExists;
                 
         #region method OnAddressExists
 

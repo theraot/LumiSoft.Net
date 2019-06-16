@@ -8,10 +8,10 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_h_Unparsed : MIME_h
     {
-        private readonly string    m_ParseValue = null;
-        private readonly string    m_Name       = null;
-        private readonly string    m_Value      = null;
-        private readonly Exception m_pException = null;
+        private readonly string    m_ParseValue;
+        private readonly string    m_Name;
+        private readonly string    m_Value;
+        private readonly Exception m_pException;
 
         /// <summary>
         /// Default constructor.

@@ -8,8 +8,8 @@ namespace LumiSoft.Net
     /// </summary>
     public class CircleCollection<T>
     {
-        private readonly List<T> m_pItems = null;
-        private int     m_Index  = 0;
+        private readonly List<T> m_pItems;
+        private int     m_Index;
 
         /// <summary>
         /// Default constructor.

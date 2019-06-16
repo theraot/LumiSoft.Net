@@ -8,7 +8,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_h_Unstructured : MIME_h
     {
-        private string m_ParseValue = null;
+        private string m_ParseValue;
         private string m_Name       = "";
         private string m_Value      = "";
 

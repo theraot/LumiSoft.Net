@@ -5,14 +5,14 @@
     /// </summary>
     public class UPnP_NAT_Map
     {
-        private readonly bool   m_Enabled       = false;
+        private readonly bool   m_Enabled;
         private readonly string m_Protocol      = "";
         private readonly string m_RemoteHost    = "";
         private readonly string m_ExternalPort  = "";
         private readonly string m_InternalHost  = "";
-        private readonly int    m_InternalPort  = 0;
+        private readonly int    m_InternalPort;
         private readonly string m_Description   = "";
-        private readonly int    m_LeaseDuration = 0;
+        private readonly int    m_LeaseDuration;
 
         /// <summary>
         /// Default constructor.

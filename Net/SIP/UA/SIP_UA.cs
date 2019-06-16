@@ -10,9 +10,9 @@ namespace LumiSoft.Net.SIP.UA
     [Obsolete("Use SIP stack instead.")]
     public class SIP_UA : IDisposable
     {
-        private bool              m_IsDisposed = false;
-        private SIP_Stack         m_pStack     = null;
-        private readonly List<SIP_UA_Call> m_pCalls     = null;
+        private bool              m_IsDisposed;
+        private SIP_Stack         m_pStack;
+        private readonly List<SIP_UA_Call> m_pCalls;
         private readonly object            m_pLock      = new object();
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Is raised when user agent get new SIP request.
         /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived = null;
+        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
 
         #region method OnRequestReceived
 
@@ -251,7 +251,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Is raised when new incoming call.
         /// </summary>
-        public event EventHandler<SIP_UA_Call_EventArgs> IncomingCall = null;
+        public event EventHandler<SIP_UA_Call_EventArgs> IncomingCall;
 
         #region method OnIncomingCall
 

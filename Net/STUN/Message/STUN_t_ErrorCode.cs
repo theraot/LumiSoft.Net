@@ -5,7 +5,7 @@ namespace LumiSoft.Net.STUN.Message
     /// </summary>
     public class STUN_t_ErrorCode
     {
-        private int    m_Code       = 0;
+        private int    m_Code;
         private string m_ReasonText = "";
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Response_MyRights : IMAP_r_u
     {
         private readonly string m_FolderName = "";
-        private readonly string m_pRights    = null;
+        private readonly string m_pRights;
 
         /// <summary>
         /// Default constructor.

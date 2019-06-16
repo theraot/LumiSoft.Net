@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     {
         private readonly string     m_CommandTag        = "";
         private readonly string     m_ResponseCode      = "";
-        private readonly IMAP_t_orc m_pOptionalResponse = null;
+        private readonly IMAP_t_orc m_pOptionalResponse;
         private readonly string     m_ResponseText      = "";
 
         /// <summary>

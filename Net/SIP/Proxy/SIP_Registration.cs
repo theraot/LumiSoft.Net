@@ -14,7 +14,7 @@ namespace LumiSoft.Net.SIP.Proxy
         private readonly DateTime                      m_CreateTime;
         private readonly string                        m_UserName  = "";
         private readonly string                        m_AOR       = "";
-        private readonly List<SIP_RegistrationBinding> m_pBindings = null;
+        private readonly List<SIP_RegistrationBinding> m_pBindings;
         private readonly object                        m_pLock     = new object();
 
         /// <summary>

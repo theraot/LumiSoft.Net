@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_RegistrationEventArgs : EventArgs
     {
-        private readonly SIP_Registration m_pRegistration = null;
+        private readonly SIP_Registration m_pRegistration;
 
         /// <summary>
         /// Default constructor.

@@ -7,7 +7,7 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Cdup : EventArgs
     {
-        private FTP_t_ReplyLine[] m_pReplyLines = null;
+        private FTP_t_ReplyLine[] m_pReplyLines;
 
         /// <summary>
         /// Default constructor.

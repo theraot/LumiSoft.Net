@@ -45,10 +45,10 @@ namespace LumiSoft.Net.POP3.Client
 	{
         private string                       m_GreetingText       = "";
 		private string                       m_ApopHashKey        = "";
-        private List<string>                 m_pExtCapabilities   = null;
-        private bool                         m_IsUidlSupported    = false;
-        private POP3_ClientMessageCollection m_pMessages          = null;
-        private GenericIdentity              m_pAuthdUserIdentity = null;
+        private List<string>                 m_pExtCapabilities;
+        private bool                         m_IsUidlSupported;
+        private POP3_ClientMessageCollection m_pMessages;
+        private GenericIdentity              m_pAuthdUserIdentity;
 
 		/// <summary>
 		/// Default constructor.
@@ -163,10 +163,10 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock          = new object();
             private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException     = null;
-            private POP3_Client   m_pPop3Client    = null;
-            private bool          m_RiseCompleted  = false;
-            private List<string>  m_pResponseLines = null;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
+            private List<string>  m_pResponseLines;
 
             /// <summary>
             /// Default constructor.
@@ -478,7 +478,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<CapaAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<CapaAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -584,10 +584,10 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object                              m_pLock         = new object();
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
-            private Exception                           m_pException    = null;
-            private POP3_Client                         m_pPop3Client   = null;
-            private bool                                m_RiseCompleted = false;
-            private readonly RemoteCertificateValidationCallback m_pCertCallback = null;
+            private Exception                           m_pException;
+            private POP3_Client                         m_pPop3Client;
+            private bool                                m_RiseCompleted;
+            private readonly RemoteCertificateValidationCallback m_pCertCallback;
 
             /// <summary>
             /// Default constructor.
@@ -857,7 +857,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<StlsAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<StlsAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -974,11 +974,11 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private POP3_Client   m_pPop3Client   = null;
-            private bool          m_RiseCompleted = false;
-            private readonly string        m_User          = null;
-            private readonly string        m_Password      = null;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
+            private readonly string        m_User;
+            private readonly string        m_Password;
 
             /// <summary>
             /// Default constructor.
@@ -1316,7 +1316,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<LoginAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<LoginAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1424,10 +1424,10 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object           m_pLock         = new object();
             private AsyncOP_State    m_State         = AsyncOP_State.WaitingForStart;
-            private Exception        m_pException    = null;
-            private POP3_Client      m_pPop3Client   = null;
-            private readonly AUTH_SASL_Client m_pSASL         = null;
-            private bool             m_RiseCompleted = false;
+            private Exception        m_pException;
+            private POP3_Client      m_pPop3Client;
+            private readonly AUTH_SASL_Client m_pSASL;
+            private bool             m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -1721,7 +1721,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1825,9 +1825,9 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private POP3_Client   m_pPop3Client   = null;
-            private bool          m_RiseCompleted = false;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -2051,7 +2051,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2155,9 +2155,9 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private POP3_Client   m_pPop3Client   = null;
-            private bool          m_RiseCompleted = false;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -2386,7 +2386,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2451,9 +2451,9 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private POP3_Client   m_pPop3Client   = null;
-            private bool          m_RiseCompleted = false;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -2672,7 +2672,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<FillMessagesAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<FillMessagesAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2733,10 +2733,10 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock          = new object();
             private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException     = null;
-            private POP3_Client   m_pPop3Client    = null;
-            private bool          m_RiseCompleted  = false;
-            private List<string>  m_pResponseLines = null;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
+            private List<string>  m_pResponseLines;
 
             /// <summary>
             /// Default constructor.
@@ -3093,7 +3093,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<ListAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<ListAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -3154,10 +3154,10 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object        m_pLock          = new object();
             private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException     = null;
-            private POP3_Client   m_pPop3Client    = null;
-            private bool          m_RiseCompleted  = false;
-            private List<string>  m_pResponseLines = null;
+            private Exception     m_pException;
+            private POP3_Client   m_pPop3Client;
+            private bool          m_RiseCompleted;
+            private List<string>  m_pResponseLines;
 
             /// <summary>
             /// Default constructor.
@@ -3512,7 +3512,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<UidlAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<UidlAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 

@@ -10,7 +10,7 @@ namespace LumiSoft.Net.SIP.Message
 	/// </summary>
 	public class SIP_HeaderFieldCollection : IEnumerable
 	{
-		private readonly List<SIP_HeaderField> m_pHeaderFields = null;
+		private readonly List<SIP_HeaderField> m_pHeaderFields;
 
 		/// <summary>
 		/// Default constructor.

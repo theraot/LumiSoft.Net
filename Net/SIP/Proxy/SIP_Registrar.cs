@@ -23,11 +23,11 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Registrar
     {
-        private bool                       m_IsDisposed     = false;
-        private SIP_Proxy                  m_pProxy         = null;
-        private SIP_Stack                  m_pStack         = null;
-        private SIP_RegistrationCollection m_pRegistrations = null;
-        private Timer                      m_pTimer         = null;
+        private bool                       m_IsDisposed;
+        private SIP_Proxy                  m_pProxy;
+        private SIP_Stack                  m_pStack;
+        private SIP_RegistrationCollection m_pRegistrations;
+        private Timer                      m_pTimer;
 
         /// <summary>
         /// Default constructor.
@@ -460,7 +460,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when SIP registrar need to check if specified user can register specified address.
         /// </summary>
-        public event SIP_CanRegisterEventHandler CanRegister = null;
+        public event SIP_CanRegisterEventHandler CanRegister;
 
         #region method OnCanRegister
 
@@ -484,7 +484,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when new AOR(address of record) has been registered.
         /// </summary>
-        public event EventHandler<SIP_RegistrationEventArgs> AorRegistered = null;
+        public event EventHandler<SIP_RegistrationEventArgs> AorRegistered;
 
         #region method OnAorRegistered
 
@@ -504,7 +504,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when AOR(address of record) has been unregistered.
         /// </summary>
-        public event EventHandler<SIP_RegistrationEventArgs> AorUnregistered = null;
+        public event EventHandler<SIP_RegistrationEventArgs> AorUnregistered;
 
         #region method OnAorUnregistered
 
@@ -524,7 +524,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// This event is raised when AOR(address of record) has been updated.
         /// </summary>
-        public event EventHandler<SIP_RegistrationEventArgs> AorUpdated = null;
+        public event EventHandler<SIP_RegistrationEventArgs> AorUpdated;
 
         #region method OnAorUpdated
 

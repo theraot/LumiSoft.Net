@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IMAP.Client
     /// </summary>
     public class IMAP_Client_e_FetchGetStoreStream : EventArgs
     {
-        private readonly IMAP_r_u_Fetch   m_pFetchResponse = null;
-        private readonly IMAP_t_Fetch_r_i m_pDataItem      = null;
-        private Stream           m_pStream        = null;
+        private readonly IMAP_r_u_Fetch   m_pFetchResponse;
+        private readonly IMAP_t_Fetch_r_i m_pDataItem;
+        private Stream           m_pStream;
 
         /// <summary>
         /// Default constructor.

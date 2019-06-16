@@ -8,7 +8,7 @@ namespace LumiSoft.Net.SIP.UA
     [Obsolete("Use SIP stack instead.")]
     public class SIP_UA_Call_EventArgs : EventArgs
     {
-        private readonly SIP_UA_Call m_pCall = null;
+        private readonly SIP_UA_Call m_pCall;
 
         /// <summary>
         /// Default constructor.

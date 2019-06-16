@@ -9,8 +9,8 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_Response
     {
-        private string                m_HRef       = null;
-        private readonly List<WebDav_PropStat> m_pPropStats = null;
+        private string                m_HRef;
+        private readonly List<WebDav_PropStat> m_pPropStats;
 
         /// <summary>
         /// Default constructor.

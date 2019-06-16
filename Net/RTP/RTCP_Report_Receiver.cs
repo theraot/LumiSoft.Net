@@ -7,12 +7,12 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Report_Receiver
     {
-        private readonly uint m_FractionLost          = 0;
-        private readonly uint  m_CumulativePacketsLost = 0;
-        private readonly uint m_ExtHigestSeqNumber    = 0;
-        private readonly uint m_Jitter                = 0;
-        private readonly uint m_LastSR                = 0;
-        private readonly uint m_DelaySinceLastSR      = 0;
+        private readonly uint m_FractionLost;
+        private readonly uint  m_CumulativePacketsLost;
+        private readonly uint m_ExtHigestSeqNumber;
+        private readonly uint m_Jitter;
+        private readonly uint m_LastSR;
+        private readonly uint m_DelaySinceLastSR;
 
         /// <summary>
         /// Default constructor.

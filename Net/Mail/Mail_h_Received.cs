@@ -52,16 +52,16 @@ namespace LumiSoft.Net.Mail
     /// </remarks>
     public class Mail_h_Received : MIME_h
     {
-        private bool           m_IsModified    = false;
-        private string         m_ParseValue    = null;
+        private bool           m_IsModified;
+        private string         m_ParseValue;
         private string         m_From          = "";
-        private Mail_t_TcpInfo m_pFrom_TcpInfo = null;
+        private Mail_t_TcpInfo m_pFrom_TcpInfo;
         private string         m_By            = "";
-        private Mail_t_TcpInfo m_pBy_TcpInfo   = null;
-        private string         m_Via           = null;
-        private string         m_With          = null;
-        private string         m_ID            = null;
-        private string         m_For           = null;
+        private Mail_t_TcpInfo m_pBy_TcpInfo;
+        private string         m_Via;
+        private string         m_With;
+        private string         m_ID;
+        private string         m_For;
         private DateTime       m_Time;
 
         /// <summary>

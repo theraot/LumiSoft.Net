@@ -8,9 +8,9 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_ValidateRequestEventArgs : EventArgs
     {
-        private readonly SIP_Request m_pRequest        = null;
-        private readonly IPEndPoint  m_pRemoteEndPoint = null;
-        private string      m_ResponseCode    = null;
+        private readonly SIP_Request m_pRequest;
+        private readonly IPEndPoint  m_pRemoteEndPoint;
+        private string      m_ResponseCode;
 
         /// <summary>
         /// Default constructor.

@@ -8,19 +8,19 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_DigestMD5_Response
     {
-        private readonly AUTH_SASL_DigestMD5_Challenge m_pChallenge = null;
-        private string                        m_UserName   = null;
-        private string                        m_Password   = null;
-        private string                        m_Realm      = null;
-        private string                        m_Nonce      = null;
-        private string                        m_Cnonce     = null;
-        private int                           m_NonceCount = 0;
-        private string                        m_Qop        = null;
-        private string                        m_DigestUri  = null;
-        private string                        m_Response   = null;
-        private string                        m_Charset    = null;
-        private string                        m_Cipher     = null;
-        private string                        m_Authzid    = null;
+        private readonly AUTH_SASL_DigestMD5_Challenge m_pChallenge;
+        private string                        m_UserName;
+        private string                        m_Password;
+        private string                        m_Realm;
+        private string                        m_Nonce;
+        private string                        m_Cnonce;
+        private int                           m_NonceCount;
+        private string                        m_Qop;
+        private string                        m_DigestUri;
+        private string                        m_Response;
+        private string                        m_Charset;
+        private string                        m_Cipher;
+        private string                        m_Authzid;
 
         /// <summary>
         /// Default constructor.

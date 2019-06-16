@@ -32,14 +32,14 @@ namespace LumiSoft.Net.SIP.Stack
 
         private object                  m_pLock        = new object();
         private SIP_RequestSenderState  m_State        = SIP_RequestSenderState.Initial;
-        private bool                    m_IsStarted    = false;
-        private SIP_Stack               m_pStack       = null;
-        private SIP_Request             m_pRequest     = null;
-        private List<NetworkCredential> m_pCredentials = null;
-        private Queue<SIP_Hop>          m_pHops        = null;
-        private SIP_ClientTransaction   m_pTransaction = null;
-        private SIP_Flow                m_pFlow        = null;
-        private object                  m_pTag         = null;
+        private bool                    m_IsStarted;
+        private SIP_Stack               m_pStack;
+        private SIP_Request             m_pRequest;
+        private List<NetworkCredential> m_pCredentials;
+        private Queue<SIP_Hop>          m_pHops;
+        private SIP_ClientTransaction   m_pTransaction;
+        private SIP_Flow                m_pFlow;
+        private object                  m_pTag;
         
         /// <summary>
         /// Default constructor.
@@ -716,7 +716,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when this transaction has got response from target end point.
         /// </summary>
-        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived = null;
+        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
 
         #region method OnResponseReceived
 
@@ -750,7 +750,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when sender has finished processing(got final-response or error).
         /// </summary>
-        public event EventHandler Completed = null;
+        public event EventHandler Completed;
 
         #region method OnCompleted
 
@@ -771,7 +771,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when this object has disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 

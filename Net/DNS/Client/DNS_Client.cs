@@ -35,17 +35,17 @@ namespace LumiSoft.Net.DNS.Client
     /// </example>
     public class Dns_Client : IDisposable
     {        
-        private static Dns_Client  m_pDnsClient  = null;
-        private static IPAddress[] m_DnsServers  = null;
+        private static Dns_Client  m_pDnsClient;
+        private static IPAddress[] m_DnsServers;
 		private static bool        m_UseDnsCache = true;
         // 
-        private bool                                  m_IsDisposed    = false;
-        private Dictionary<int,DNS_ClientTransaction> m_pTransactions = null;
-        private Socket                                m_pIPv4Socket   = null;
-        private Socket                                m_pIPv6Socket   = null;
-        private List<UDP_DataReceiver>                m_pReceivers    = null;
-        private Random                                m_pRandom       = null;
-        private DNS_ClientCache                       m_pCache        = null;
+        private bool                                  m_IsDisposed;
+        private Dictionary<int,DNS_ClientTransaction> m_pTransactions;
+        private Socket                                m_pIPv4Socket;
+        private Socket                                m_pIPv6Socket;
+        private List<UDP_DataReceiver>                m_pReceivers;
+        private Random                                m_pRandom;
+        private DNS_ClientCache                       m_pCache;
 
 		/// <summary>
 		/// Static constructor.
@@ -359,12 +359,12 @@ namespace LumiSoft.Net.DNS.Client
         {
             private readonly object          m_pLock          = new object();
             private AsyncOP_State   m_State          = AsyncOP_State.WaitingForStart;
-            private Exception       m_pException     = null;
-            private string          m_HostNameOrIP   = null;
-            private List<IPAddress> m_pIPv4Addresses = null;
-            private List<IPAddress> m_pIPv6Addresses = null;
-            private int             m_Counter        = 0;
-            private bool            m_RiseCompleted  = false;
+            private Exception       m_pException;
+            private string          m_HostNameOrIP;
+            private List<IPAddress> m_pIPv4Addresses;
+            private List<IPAddress> m_pIPv6Addresses;
+            private int             m_Counter;
+            private bool            m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -652,7 +652,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<GetHostAddressesAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<GetHostAddressesAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -766,13 +766,13 @@ namespace LumiSoft.Net.DNS.Client
         {
             private readonly object                                  m_pLock          = new object();
             private AsyncOP_State                           m_State          = AsyncOP_State.WaitingForStart;
-            private Exception                               m_pException     = null;
-            private string[]                                m_pHostNames     = null;
-            private readonly bool                                    m_ResolveAny     = false;
-            private Dictionary<int,GetHostAddressesAsyncOP> m_pIpLookupQueue = null;
-            private HostEntry[]                             m_pHostEntries   = null;
-            private bool                                    m_RiseCompleted  = false;
-            private int                                     m_ResolvedCount  = 0;
+            private Exception                               m_pException;
+            private string[]                                m_pHostNames;
+            private readonly bool                                    m_ResolveAny;
+            private Dictionary<int,GetHostAddressesAsyncOP> m_pIpLookupQueue;
+            private HostEntry[]                             m_pHostEntries;
+            private bool                                    m_RiseCompleted;
+            private int                                     m_ResolvedCount;
 
             /// <summary>
             /// Default constructor.
@@ -1031,7 +1031,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<GetHostsAddressesAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<GetHostsAddressesAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1134,10 +1134,10 @@ namespace LumiSoft.Net.DNS.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private string        m_Domain        = null;
-            private HostEntry[]   m_pHosts        = null;
-            private bool          m_RiseCompleted = false;
+            private Exception     m_pException;
+            private string        m_Domain;
+            private HostEntry[]   m_pHosts;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -1541,7 +1541,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<GetEmailHostsAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<GetEmailHostsAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 

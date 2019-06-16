@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_i_Body : IMAP_t_Fetch_i
     {
-        private readonly string m_Section  = null;
+        private readonly string m_Section;
         private readonly int    m_Offset   = -1;
         private readonly int    m_MaxCount = -1;
 

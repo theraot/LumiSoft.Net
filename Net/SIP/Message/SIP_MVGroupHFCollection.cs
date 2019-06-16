@@ -8,9 +8,9 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_MVGroupHFCollection<T> where T : SIP_t_Value,new()
     {
-        private readonly SIP_Message               m_pMessage  = null;
+        private readonly SIP_Message               m_pMessage;
         private readonly string                    m_FieldName = "";
-        private readonly List<SIP_MultiValueHF<T>> m_pFields   = null;
+        private readonly List<SIP_MultiValueHF<T>> m_pFields;
 
         /// <summary>
         /// Default constructor.

@@ -8,14 +8,14 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Packet_SDES_Chunk
     {
-        private uint   m_Source   = 0;
-        private string m_CName    = null;
-        private string m_Name     = null;
-        private string m_Email    = null;
-        private string m_Phone    = null;
-        private string m_Location = null;
-        private string m_Tool     = null;
-        private string m_Note     = null;
+        private uint   m_Source;
+        private string m_CName;
+        private string m_Name;
+        private string m_Email;
+        private string m_Phone;
+        private string m_Location;
+        private string m_Tool;
+        private string m_Note;
 
         /// <summary>
         /// Default constructor.

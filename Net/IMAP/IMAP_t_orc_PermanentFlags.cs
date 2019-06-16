@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_PermanentFlags : IMAP_t_orc
     {
-        private readonly string[] m_pFlags = null;
+        private readonly string[] m_pFlags;
 
         /// <summary>
         /// Default constructor.

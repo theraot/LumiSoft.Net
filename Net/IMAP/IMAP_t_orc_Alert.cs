@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Alert : IMAP_t_orc
     {
-        private readonly string m_AlertText = null;
+        private readonly string m_AlertText;
 
         /// <summary>
         /// Default constructor.

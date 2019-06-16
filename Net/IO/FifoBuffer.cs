@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IO
     public class FifoBuffer
     {
         private readonly object m_pLock       = new object();
-        private readonly byte[] m_pBuffer     = null;
-        private int    m_ReadOffset  = 0;
-        private int    m_WriteOffset = 0;
+        private readonly byte[] m_pBuffer;
+        private int    m_ReadOffset;
+        private int    m_WriteOffset;
 
         /// <summary>
         /// Default constructor.

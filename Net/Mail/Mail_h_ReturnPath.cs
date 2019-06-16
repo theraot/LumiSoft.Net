@@ -19,7 +19,7 @@ namespace LumiSoft.Net.Mail
     public class Mail_h_ReturnPath : MIME_h
     {
         private readonly bool   m_IsModified = false;
-        private string m_Address    = null;
+        private string m_Address;
 
         /// <summary>
         /// Default constructor.

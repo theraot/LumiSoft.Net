@@ -7,7 +7,7 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Option : ABNF_Element
     {
-        private ABNF_Alternation m_pAlternation = null;
+        private ABNF_Alternation m_pAlternation;
 
         /// <summary>
         /// Default constructor.

@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SMTP.Client
     /// </summary>
     public class SMTP_ClientException : Exception
     {
-        private readonly SMTP_t_ReplyLine[] m_pReplyLines  = null;
+        private readonly SMTP_t_ReplyLine[] m_pReplyLines;
 
         /// <summary>
         /// Default constructor.

@@ -7,12 +7,12 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Origin
     {
-        private readonly string m_UserName       = null;
-        private readonly long   m_SessionID      = 0;
-        private long   m_SessionVersion = 0;
-        private readonly string m_NetType        = null;
-        private readonly string m_AddressType    = null;
-        private readonly string m_UnicastAddress = null;
+        private readonly string m_UserName;
+        private readonly long   m_SessionID;
+        private long   m_SessionVersion;
+        private readonly string m_NetType;
+        private readonly string m_AddressType;
+        private readonly string m_UnicastAddress;
 
         /// <summary>
         /// Default constructor.

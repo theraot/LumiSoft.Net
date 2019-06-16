@@ -9,11 +9,11 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_XOAuth : AUTH_SASL_Client
     {
-        private bool                              m_IsCompleted           = false;
+        private bool                              m_IsCompleted;
         private readonly int                               m_State                 = 0;
-        private readonly string                            m_UserName              = null;
-        private readonly string                            m_RequestUri            = null;
-        private readonly KeyValueCollection<string,string> m_pRequestUriParameters = null;
+        private readonly string                            m_UserName;
+        private readonly string                            m_RequestUri;
+        private readonly KeyValueCollection<string,string> m_pRequestUriParameters;
 
         /// <summary>
         /// Default constructor.

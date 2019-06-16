@@ -9,8 +9,8 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_SessionCollection<T> where T : TCP_Session
     {
-        private readonly Dictionary<string,T>    m_pItems            = null;
-        private readonly Dictionary<string,long> m_pConnectionsPerIP = null;
+        private readonly Dictionary<string,T>    m_pItems;
+        private readonly Dictionary<string,long> m_pConnectionsPerIP;
 
         /// <summary>
         /// Default constructor.

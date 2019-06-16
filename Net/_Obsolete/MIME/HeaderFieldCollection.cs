@@ -14,7 +14,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class HeaderFieldCollection : IEnumerable
 	{
-		private readonly List<HeaderField> m_pHeaderFields = null;
+		private readonly List<HeaderField> m_pHeaderFields;
 
 		/// <summary>
 		/// Default constructor.

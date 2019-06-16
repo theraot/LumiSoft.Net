@@ -9,9 +9,9 @@ namespace LumiSoft.Net.IMAP.Client
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Client_Fetch_Body_EArgs : EventArgs
     {
-        private readonly string m_Section = null;
+        private readonly string m_Section;
         private readonly int    m_Offset  = -1;
-        private Stream m_pStream = null;
+        private Stream m_pStream;
 
         /// <summary>
         /// Defualt constructor.
@@ -60,7 +60,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// This method is called when message storing has completed.
         /// </summary>
-        public event EventHandler StoringCompleted = null;
+        public event EventHandler StoringCompleted;
 
         #region method OnStoringCompleted
 

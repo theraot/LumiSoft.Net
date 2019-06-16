@@ -11,13 +11,13 @@ namespace LumiSoft.Net.UDP
     /// <remarks>NOTE: High performance server applications should create multiple instances of this class per one socket.</remarks>
     public class UDP_DataReceiver : IDisposable
     {
-        private bool                 m_IsDisposed  = false;
-        private bool                 m_IsRunning   = false;
-        private Socket               m_pSocket     = null;
-        private byte[]               m_pBuffer     = null;
+        private bool                 m_IsDisposed;
+        private bool                 m_IsRunning;
+        private Socket               m_pSocket;
+        private byte[]               m_pBuffer;
         private readonly int                  m_BufferSize  = 1400;
-        private SocketAsyncEventArgs m_pSocketArgs = null;
-        private UDP_e_PacketReceived m_pEventArgs  = null;
+        private SocketAsyncEventArgs m_pSocketArgs;
+        private UDP_e_PacketReceived m_pEventArgs;
 
         /// <summary>
         /// Default constructor.
@@ -220,7 +220,7 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// Is raised when when new UDP packet is available.
         /// </summary>
-        public event EventHandler<UDP_e_PacketReceived> PacketReceived = null;
+        public event EventHandler<UDP_e_PacketReceived> PacketReceived;
 
         #region method OnPacketReceived
 
@@ -244,7 +244,7 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// Is raised when unhandled error happens.
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> Error = null;
+        public event EventHandler<ExceptionEventArgs> Error;
 
         #region method OnError
 

@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IMAP
     /// unique identifier set.  Sequence set ranges are permitted.</remarks>
     public class IMAP_Search_Key_Uid : IMAP_Search_Key
     {
-        private readonly IMAP_t_SeqSet m_pSeqSet = null;
+        private readonly IMAP_t_SeqSet m_pSeqSet;
 
         /// <summary>
         /// Default constructor.

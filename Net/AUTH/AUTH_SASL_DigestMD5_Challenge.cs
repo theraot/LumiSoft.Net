@@ -8,14 +8,14 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_DigestMD5_Challenge
     {
-        private string[] m_Realm      = null;
-        private string   m_Nonce      = null;
-        private string[] m_QopOptions = null;
-        private bool     m_Stale      = false;
-        private int      m_Maxbuf     = 0;
-        private string   m_Charset    = null;
-        private string   m_Algorithm  = null;
-        private string   m_CipherOpts = null;
+        private string[] m_Realm;
+        private string   m_Nonce;
+        private string[] m_QopOptions;
+        private bool     m_Stale;
+        private int      m_Maxbuf;
+        private string   m_Charset;
+        private string   m_Algorithm;
+        private string   m_CipherOpts;
 
         /// <summary>
         /// Default constructor.

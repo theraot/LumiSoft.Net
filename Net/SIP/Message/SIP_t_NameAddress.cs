@@ -16,7 +16,7 @@ namespace LumiSoft.Net.SIP.Message
     public class SIP_t_NameAddress
     {
         private string      m_DisplayName = "";
-        private AbsoluteUri m_pUri        = null;
+        private AbsoluteUri m_pUri;
 
         /// <summary>
         /// Default constructor.

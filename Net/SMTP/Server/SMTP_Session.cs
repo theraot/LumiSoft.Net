@@ -16,16 +16,16 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_Session : TCP_ServerSession
     {
-        private Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications = null;
-        private int                                          m_BadCommands      = 0;
-        private int                                          m_Transactions     = 0;
-        private bool                                         m_SessionRejected  = false;
-        private string                                       m_EhloHost         = null;
-        private GenericIdentity                              m_pUser            = null;
-        private SMTP_MailFrom                                m_pFrom            = null;
-        private Dictionary<string,SMTP_RcptTo>               m_pTo              = null;
-        private Stream                                       m_pMessageStream   = null;
-        private int                                          m_BDatReadedCount  = 0;
+        private Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications;
+        private int                                          m_BadCommands;
+        private int                                          m_Transactions;
+        private bool                                         m_SessionRejected;
+        private string                                       m_EhloHost;
+        private GenericIdentity                              m_pUser;
+        private SMTP_MailFrom                                m_pFrom;
+        private Dictionary<string,SMTP_RcptTo>               m_pTo;
+        private Stream                                       m_pMessageStream;
+        private int                                          m_BDatReadedCount;
         private bool                                         m_UseAsyncSockets  = true;
 
         /// <summary>
@@ -402,10 +402,10 @@ namespace LumiSoft.Net.SMTP.Server
         {
             private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
-            private Exception          m_pException    = null;
-            private SMTP_t_ReplyLine[] m_pReplyLines   = null;
-            private SMTP_Session       m_pSession      = null;
-            private bool               m_RiseCompleted = false;
+            private Exception          m_pException;
+            private SMTP_t_ReplyLine[] m_pReplyLines;
+            private SMTP_Session       m_pSession;
+            private bool               m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -593,7 +593,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<SendResponseAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<SendResponseAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -649,10 +649,10 @@ namespace LumiSoft.Net.SMTP.Server
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private SMTP_Session  m_pSession      = null;
+            private Exception     m_pException;
+            private SMTP_Session  m_pSession;
             private DateTime      m_StartTime;
-            private bool          m_RiseCompleted = false;
+            private bool          m_RiseCompleted;
             
             /// <summary>
             /// Default constructor.
@@ -998,7 +998,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<Cmd_DATA>> CompletedAsync = null;
+            public event EventHandler<EventArgs<Cmd_DATA>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2454,7 +2454,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Is raised when session has started processing and needs to send 220 greeting or 554 error resposne to the connected client.
         /// </summary>
-        public event EventHandler<SMTP_e_Started> Started = null;
+        public event EventHandler<SMTP_e_Started> Started;
 
         #region method OnStarted
 
@@ -2480,7 +2480,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Is raised when EHLO command received.
         /// </summary>
-        public event EventHandler<SMTP_e_Ehlo> Ehlo = null;
+        public event EventHandler<SMTP_e_Ehlo> Ehlo;
 
         #region method OnEhlo
 
@@ -2507,7 +2507,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Is raised when MAIL FROM: command received.
         /// </summary>
-        public event EventHandler<SMTP_e_MailFrom> MailFrom = null;
+        public event EventHandler<SMTP_e_MailFrom> MailFrom;
 
         #region method OnMailFrom
 
@@ -2534,7 +2534,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Is raised when RCPT TO: command received.
         /// </summary>
-        public event EventHandler<SMTP_e_RcptTo> RcptTo = null;
+        public event EventHandler<SMTP_e_RcptTo> RcptTo;
 
         #region method OnRcptTo
 
@@ -2561,7 +2561,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Is raised when SMTP server needs to get stream where to store incoming message.
         /// </summary>
-        public event EventHandler<SMTP_e_Message> GetMessageStream = null;
+        public event EventHandler<SMTP_e_Message> GetMessageStream;
 
         #region method OnGetMessageStream
 
@@ -2587,7 +2587,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// Is raised when SMTP server has canceled message storing.
         /// </summary>
         /// <remarks>This can happen on 2 cases: on session timeout and if between BDAT chunks RSET issued.</remarks>
-        public event EventHandler MessageStoringCanceled = null;
+        public event EventHandler MessageStoringCanceled;
 
         #region method OnMessageStoringCanceled
 
@@ -2606,7 +2606,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Is raised when SMTP server has completed message storing.
         /// </summary>
-        public event EventHandler<SMTP_e_MessageStored> MessageStoringCompleted = null;
+        public event EventHandler<SMTP_e_MessageStored> MessageStoringCompleted;
 
         #region method OnMessageStoringCompleted
 

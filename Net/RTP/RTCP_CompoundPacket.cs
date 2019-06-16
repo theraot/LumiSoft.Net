@@ -8,7 +8,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_CompoundPacket
     {
-        private readonly List<RTCP_Packet> m_pPackets = null;
+        private readonly List<RTCP_Packet> m_pPackets;
 
         /// <summary>
         /// Default constructor.

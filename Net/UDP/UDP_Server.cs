@@ -10,20 +10,20 @@ namespace LumiSoft.Net.UDP
     /// </summary>
     public class UDP_Server : IDisposable
     {      
-        private bool                     m_IsDisposed         = false;
-        private bool                     m_IsRunning          = false;
+        private bool                     m_IsDisposed;
+        private bool                     m_IsRunning;
         private int                      m_MTU                = 1400;
-        private IPEndPoint[]             m_pBindings          = null;
+        private IPEndPoint[]             m_pBindings;
         private DateTime                 m_StartTime;
-        private List<Socket>             m_pSockets           = null;
-        private CircleCollection<Socket> m_pSendSocketsIPv4   = null;
-        private CircleCollection<Socket> m_pSendSocketsIPv6   = null;
+        private List<Socket>             m_pSockets;
+        private CircleCollection<Socket> m_pSendSocketsIPv4;
+        private CircleCollection<Socket> m_pSendSocketsIPv6;
         private readonly int                      m_ReceiversPerSocket = 10;
-        private List<UDP_DataReceiver>   m_pDataReceivers     = null;
+        private List<UDP_DataReceiver>   m_pDataReceivers;
         private readonly long                     m_BytesReceived      = 0;
         private readonly long                     m_PacketsReceived    = 0;
-        private long                     m_BytesSent          = 0;
-        private long                     m_PacketsSent        = 0;
+        private long                     m_BytesSent;
+        private long                     m_PacketsSent;
 
         /// <summary>
         /// Default constructor.
@@ -608,7 +608,7 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// This event is raised when new UDP packet received.
         /// </summary>
-        public event EventHandler<UDP_e_PacketReceived> PacketReceived = null;
+        public event EventHandler<UDP_e_PacketReceived> PacketReceived;
 
         #region method OnUdpPacketReceived
 
@@ -628,7 +628,7 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// This event is raised when unexpected error happens.
         /// </summary>
-        public event ErrorEventHandler Error = null;
+        public event ErrorEventHandler Error;
 
         #region method OnError
 

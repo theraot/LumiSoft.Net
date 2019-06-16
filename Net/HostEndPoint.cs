@@ -9,7 +9,7 @@ namespace LumiSoft.Net
     public class HostEndPoint
     {
         private readonly string m_Host = "";
-        private readonly int    m_Port = 0;
+        private readonly int    m_Port;
 
         /// <summary>
         /// Default constructor.

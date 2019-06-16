@@ -7,7 +7,7 @@ namespace LumiSoft.Net.Log
     /// </summary>
     public class WriteLogEventArgs : EventArgs
     {
-        private readonly LogEntry m_pLogEntry = null;
+        private readonly LogEntry m_pLogEntry;
 
         /// <summary>
         /// Default constructor.

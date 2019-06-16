@@ -8,8 +8,8 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class PhoneNumberCollection : IEnumerable
     {
-        private readonly vCard             m_pOwner      = null;
-        private readonly List<PhoneNumber> m_pCollection = null;
+        private readonly vCard             m_pOwner;
+        private readonly List<PhoneNumber> m_pCollection;
 
         /// <summary>
         /// Default constructor.

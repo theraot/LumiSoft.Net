@@ -8,9 +8,9 @@ namespace LumiSoft.Net.FTP
     public class FTP_ListItem
     {
         private readonly string   m_Name      = "";
-        private readonly long     m_Size      = 0;
+        private readonly long     m_Size;
         private readonly DateTime m_Modified;
-        private readonly bool     m_IsDir     = false;
+        private readonly bool     m_IsDir;
 
         /// <summary>
         /// Default constructor.

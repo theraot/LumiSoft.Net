@@ -17,7 +17,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_From : SIP_t_ValueWithParams
     {
-        private readonly SIP_t_NameAddress m_pAddress = null;
+        private readonly SIP_t_NameAddress m_pAddress;
 
         /// <summary>
         /// Default constructor.

@@ -8,13 +8,13 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_DigestMd5 : AUTH_SASL_Client
     {
-        private bool                         m_IsCompleted = false;
-        private int                          m_State       = 0;
-        private readonly string                       m_Protocol    = null;
-        private readonly string                       m_ServerName  = null;
-        private readonly string                       m_UserName    = null;
-        private readonly string                       m_Password    = null;
-        private AUTH_SASL_DigestMD5_Response m_pResponse   = null;
+        private bool                         m_IsCompleted;
+        private int                          m_State;
+        private readonly string                       m_Protocol;
+        private readonly string                       m_ServerName;
+        private readonly string                       m_UserName;
+        private readonly string                       m_Password;
+        private AUTH_SASL_DigestMD5_Response m_pResponse;
 
         /// <summary>
         /// Default constructor.

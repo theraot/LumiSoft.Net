@@ -5,7 +5,7 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class DeliveryAddress
     {
-        private readonly Item                     m_pItem             = null;
+        private readonly Item                     m_pItem;
         private DeliveryAddressType_enum m_Type              = DeliveryAddressType_enum.Ineternational | DeliveryAddressType_enum.Postal | DeliveryAddressType_enum.Parcel | DeliveryAddressType_enum.Work;
         private string                   m_PostOfficeAddress = "";
         private string                   m_ExtendedAddress   = "";

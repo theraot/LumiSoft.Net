@@ -10,8 +10,8 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_RR : RTCP_Packet
     {
         private int                           m_Version       = 2;
-        private uint                          m_SSRC          = 0;
-        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks = null;
+        private uint                          m_SSRC;
+        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks;
 
         /// <summary>
         /// Default constructor.

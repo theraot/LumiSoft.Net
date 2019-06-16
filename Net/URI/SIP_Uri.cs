@@ -20,12 +20,12 @@ namespace LumiSoft.Net
     /// </remarks>
     public class SIP_Uri : AbsoluteUri
     {
-        private bool                    m_IsSecure    = false;
-        private string                  m_User        = null;
+        private bool                    m_IsSecure;
+        private string                  m_User;
         private string                  m_Host        = "";
         private int                     m_Port        = -1;
-        private readonly SIP_ParameterCollection m_pParameters = null;
-        private string                  m_Header      = null;  
+        private readonly SIP_ParameterCollection m_pParameters;
+        private string                  m_Header;  
 
         /// <summary>
         /// Default constructor.

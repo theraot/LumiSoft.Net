@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Uid : IMAP_t_Fetch_r_i
     {
-        private readonly long m_UID = 0;
+        private readonly long m_UID;
 
         /// <summary>
         /// Default constructor.

@@ -10,8 +10,8 @@ namespace LumiSoft.Net.RTP
     /// </remarks>
     public class RTP_Source_Remote : RTP_Source
     {
-        private RTP_Participant_Remote m_pParticipant = null;
-        private RTP_ReceiveStream      m_pStream      = null;
+        private RTP_Participant_Remote m_pParticipant;
+        private RTP_ReceiveStream      m_pStream;
 
         /// <summary>
         /// Default constructor.
@@ -198,7 +198,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when source sends RTCP APP packet.
         /// </summary>
-        public event EventHandler<EventArgs<RTCP_Packet_APP>> ApplicationPacket = null;
+        public event EventHandler<EventArgs<RTCP_Packet_APP>> ApplicationPacket;
 
         #region method OnApplicationPacket
 

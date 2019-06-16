@@ -8,9 +8,9 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Repetition
     {
-        private readonly int          m_Min      = 0;
+        private readonly int          m_Min;
         private readonly int          m_Max      = int.MaxValue;
-        private readonly ABNF_Element m_pElement = null;
+        private readonly ABNF_Element m_pElement;
 
         /// <summary>
         /// Default constructor.

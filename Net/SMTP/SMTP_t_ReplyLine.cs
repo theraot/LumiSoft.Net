@@ -7,8 +7,8 @@ namespace LumiSoft.Net.SMTP
     /// </summary>
     public class SMTP_t_ReplyLine
     {
-        private readonly int    m_ReplyCode  = 0;
-        private readonly string m_Text       = null;
+        private readonly int    m_ReplyCode;
+        private readonly string m_Text;
         private readonly bool   m_IsLastLine = true;
 
         /// <summary>

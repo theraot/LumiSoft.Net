@@ -7,16 +7,16 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_QueueItem
     {
-        private readonly Relay_Queue     m_pQueue            = null;
+        private readonly Relay_Queue     m_pQueue;
         private readonly string          m_From              = "";
-        private readonly string          m_EnvelopeID        = null;
+        private readonly string          m_EnvelopeID;
         private readonly SMTP_DSN_Ret    m_DSN_Ret           = SMTP_DSN_Ret.NotSpecified;
         private readonly string          m_To                = "";
-        private readonly string          m_OriginalRecipient = null;
+        private readonly string          m_OriginalRecipient;
         private readonly SMTP_DSN_Notify m_DSN_Notify        = SMTP_DSN_Notify.NotSpecified;
         private readonly string          m_MessageID         = "";
-        private readonly Stream          m_pMessageStream    = null;
-        private object          m_pTag              = null;
+        private readonly Stream          m_pMessageStream;
+        private object          m_pTag;
 
         /// <summary>
         /// Default constructor.

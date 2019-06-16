@@ -12,10 +12,10 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Request : SIP_Message
     {
-        private readonly SIP_RequestLine m_pRequestLine = null;
-        private SIP_Flow        m_pFlow        = null;
-        private IPEndPoint      m_pLocalEP     = null;
-        private IPEndPoint      m_pRemoteEP    = null;
+        private readonly SIP_RequestLine m_pRequestLine;
+        private SIP_Flow        m_pFlow;
+        private IPEndPoint      m_pLocalEP;
+        private IPEndPoint      m_pRemoteEP;
         
         /// <summary>
         /// Default constructor.

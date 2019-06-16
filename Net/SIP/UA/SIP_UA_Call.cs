@@ -14,19 +14,19 @@ namespace LumiSoft.Net.SIP.UA
     public class SIP_UA_Call : IDisposable
     {
         private SIP_UA_CallState          m_State                     = SIP_UA_CallState.WaitingForStart;
-        private readonly SIP_UA                    m_pUA                       = null;
-        private readonly SIP_Request               m_pInvite                   = null;
-        private SDP_Message               m_pLocalSDP                 = null;
-        private SDP_Message               m_pRemoteSDP                = null;
+        private readonly SIP_UA                    m_pUA;
+        private readonly SIP_Request               m_pInvite;
+        private SDP_Message               m_pLocalSDP;
+        private SDP_Message               m_pRemoteSDP;
         private DateTime                  m_StartTime;
-        private readonly List<SIP_Dialog_Invite>   m_pEarlyDialogs             = null;
-        private SIP_Dialog                m_pDialog                   = null;
+        private readonly List<SIP_Dialog_Invite>   m_pEarlyDialogs;
+        private SIP_Dialog                m_pDialog;
         private readonly bool                      m_IsRedirected              = false;
-        private SIP_RequestSender         m_pInitialInviteSender      = null;
-        private readonly SIP_ServerTransaction     m_pInitialInviteTransaction = null;
-        private readonly AbsoluteUri               m_pLocalUri                 = null;
-        private readonly AbsoluteUri               m_pRemoteUri                = null;
-        private readonly Dictionary<string,object> m_pTags                     = null;
+        private SIP_RequestSender         m_pInitialInviteSender;
+        private readonly SIP_ServerTransaction     m_pInitialInviteTransaction;
+        private readonly AbsoluteUri               m_pLocalUri;
+        private readonly AbsoluteUri               m_pRemoteUri;
+        private readonly Dictionary<string,object> m_pTags;
         private readonly object                    m_pLock                     = "";
 
         /// <summary>
@@ -579,7 +579,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Is raised when call state has changed.
         /// </summary>
-        public event EventHandler StateChanged = null;
+        public event EventHandler StateChanged;
 
         #region method OnStateChanged
 

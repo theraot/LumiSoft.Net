@@ -12,8 +12,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class ParametizedHeaderField
 	{
-		private readonly HeaderField                    m_pHeaderField = null;
-		private readonly HeaderFieldParameterCollection m_pParameters  = null;
+		private readonly HeaderField                    m_pHeaderField;
+		private readonly HeaderFieldParameterCollection m_pParameters;
 
 		/// <summary>
 		/// Default constructor.

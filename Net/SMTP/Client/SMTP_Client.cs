@@ -66,14 +66,14 @@ namespace LumiSoft.Net.SMTP.Client
 	/// </example>
     public class SMTP_Client : TCP_Client
     {
-        private string          m_LocalHostName      = null;
-        private string          m_RemoteHostName     = null;
+        private string          m_LocalHostName;
+        private string          m_RemoteHostName;
         private string          m_GreetingText       = "";
-        private bool            m_IsEsmtpSupported   = false;
-        private List<string>    m_pEsmtpFeatures     = null;
-        private string          m_MailFrom           = null;
-        private List<string>    m_pRecipients        = null;
-        private GenericIdentity m_pAuthdUserIdentity = null;
+        private bool            m_IsEsmtpSupported;
+        private List<string>    m_pEsmtpFeatures;
+        private string          m_MailFrom;
+        private List<string>    m_pRecipients;
+        private GenericIdentity m_pAuthdUserIdentity;
         
         /// <summary>
         /// Default constructor.
@@ -209,11 +209,11 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
-            private Exception          m_pException    = null;
-            private string             m_HostName      = null;
-            private SMTP_Client        m_pSmtpClient   = null;
-            private SMTP_t_ReplyLine[] m_pReplyLines   = null;
-            private bool               m_RiseCompleted = false;
+            private Exception          m_pException;
+            private string             m_HostName;
+            private SMTP_Client        m_pSmtpClient;
+            private SMTP_t_ReplyLine[] m_pReplyLines;
+            private bool               m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -581,7 +581,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<EhloHeloAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<EhloHeloAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -698,10 +698,10 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object                              m_pLock         = new object();
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
-            private Exception                           m_pException    = null;
-            private RemoteCertificateValidationCallback m_pCertCallback = null;
-            private SMTP_Client                         m_pSmtpClient   = null;
-            private bool                                m_RiseCompleted = false;
+            private Exception                           m_pException;
+            private RemoteCertificateValidationCallback m_pCertCallback;
+            private SMTP_Client                         m_pSmtpClient;
+            private bool                                m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -984,7 +984,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<StartTlsAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<StartTlsAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1140,10 +1140,10 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object           m_pLock         = new object();
             private AsyncOP_State    m_State         = AsyncOP_State.WaitingForStart;
-            private Exception        m_pException    = null;
-            private SMTP_Client      m_pSmtpClient   = null;
-            private readonly AUTH_SASL_Client m_pSASL         = null;
-            private bool             m_RiseCompleted = false;
+            private Exception        m_pException;
+            private SMTP_Client      m_pSmtpClient;
+            private readonly AUTH_SASL_Client m_pSASL;
+            private bool             m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -1383,7 +1383,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1504,13 +1504,13 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private string        m_MailFrom      = null;
+            private Exception     m_pException;
+            private string        m_MailFrom;
             private readonly long          m_MessageSize   = -1;
             private readonly SMTP_DSN_Ret  m_DsnRet        = SMTP_DSN_Ret.NotSpecified;
-            private string        m_EnvID         = null;
-            private SMTP_Client   m_pSmtpClient   = null;
-            private bool          m_RiseCompleted = false;
+            private string        m_EnvID;
+            private SMTP_Client   m_pSmtpClient;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -1775,7 +1775,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<MailFromAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<MailFromAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1892,12 +1892,12 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object          m_pLock         = new object();
             private AsyncOP_State   m_State         = AsyncOP_State.WaitingForStart;
-            private Exception       m_pException    = null;
-            private string          m_To            = null;
+            private Exception       m_pException;
+            private string          m_To;
             private readonly SMTP_DSN_Notify m_DsnNotify     = SMTP_DSN_Notify.NotSpecified;
-            private string          m_ORcpt         = null;
-            private SMTP_Client     m_pSmtpClient   = null;
-            private bool            m_RiseCompleted = false;
+            private string          m_ORcpt;
+            private SMTP_Client     m_pSmtpClient;
+            private bool            m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -2178,7 +2178,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<RcptToAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<RcptToAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2292,14 +2292,14 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object        m_pLock             = new object();
             private AsyncOP_State m_State             = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException        = null;
-            private Stream        m_pStream           = null;
-            private readonly bool          m_UseBdat           = false;
-            private SMTP_Client   m_pSmtpClient       = null;
-            private byte[]        m_pBdatBuffer       = null;
-            private int           m_BdatBytesInBuffer = 0;
-            private byte[]        m_BdatSendBuffer    = null;
-            private bool          m_RiseCompleted     = false;
+            private Exception     m_pException;
+            private Stream        m_pStream;
+            private readonly bool          m_UseBdat;
+            private SMTP_Client   m_pSmtpClient;
+            private byte[]        m_pBdatBuffer;
+            private int           m_BdatBytesInBuffer;
+            private byte[]        m_BdatSendBuffer;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -2780,7 +2780,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<SendMessageAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<SendMessageAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2877,9 +2877,9 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private SMTP_Client   m_pSmtpClient   = null;
-            private bool          m_RiseCompleted = false;
+            private Exception     m_pException;
+            private SMTP_Client   m_pSmtpClient;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -3092,7 +3092,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -3189,9 +3189,9 @@ namespace LumiSoft.Net.SMTP.Client
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private SMTP_Client   m_pSmtpClient   = null;
-            private bool          m_RiseCompleted = false;
+            private Exception     m_pException;
+            private SMTP_Client   m_pSmtpClient;
+            private bool          m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -3406,7 +3406,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -3541,9 +3541,9 @@ namespace LumiSoft.Net.SMTP.Client
         private class ReadResponseAsyncOP : IDisposable,IAsyncOP
         {
             private AsyncOP_State          m_State       = AsyncOP_State.WaitingForStart;
-            private Exception              m_pException  = null;
-            private SMTP_Client            m_pSmtpClient = null;
-            private List<SMTP_t_ReplyLine> m_pReplyLines = null;
+            private Exception              m_pException;
+            private SMTP_Client            m_pSmtpClient;
+            private List<SMTP_t_ReplyLine> m_pReplyLines;
 
             /// <summary>
             /// Default constructor.
@@ -3752,7 +3752,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<ReadResponseAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<ReadResponseAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 

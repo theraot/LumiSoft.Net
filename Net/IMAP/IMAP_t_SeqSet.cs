@@ -20,7 +20,7 @@ namespace LumiSoft.Net.IMAP
 	/// </summary>
     public class IMAP_t_SeqSet
     {
-        private readonly List<Range_long> m_pSequenceParts = null;
+        private readonly List<Range_long> m_pSequenceParts;
         private string           m_SequenceString = "";
 
         /// <summary>

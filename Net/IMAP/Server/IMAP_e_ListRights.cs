@@ -7,10 +7,10 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_ListRights : EventArgs
     {
-        private IMAP_r_u_ListRights m_pListRightsResponse = null;
-        private IMAP_r_ServerStatus m_pResponse           = null;
-        private readonly string              m_Folder              = null;
-        private readonly string              m_Identifier          = null;
+        private IMAP_r_u_ListRights m_pListRightsResponse;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly string              m_Folder;
+        private readonly string              m_Identifier;
 
         /// <summary>
         /// Default constructor.

@@ -12,12 +12,12 @@ namespace LumiSoft.Net.POP3.Client
     /// </summary>
     public class POP3_ClientMessage
     {
-        private POP3_Client m_Pop3Client          = null;
+        private POP3_Client m_Pop3Client;
         private readonly int         m_SequenceNumber      = 1;
         private string      m_UID                 = "";
-        private readonly int         m_Size                = 0;
-        private bool        m_IsMarkedForDeletion = false;
-        private bool        m_IsDisposed          = false;
+        private readonly int         m_Size;
+        private bool        m_IsMarkedForDeletion;
+        private bool        m_IsDisposed;
 
         /// <summary>
         /// Default constructor.
@@ -80,10 +80,10 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
-            private Exception          m_pException    = null;
-            private POP3_ClientMessage m_pOwner        = null;
-            private POP3_Client        m_pPop3Client   = null;
-            private bool               m_RiseCompleted = false;
+            private Exception          m_pException;
+            private POP3_ClientMessage m_pOwner;
+            private POP3_Client        m_pPop3Client;
+            private bool               m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -319,7 +319,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<MarkForDeletionAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<MarkForDeletionAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -523,11 +523,11 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
-            private Exception          m_pException    = null;
-            private POP3_ClientMessage m_pOwner        = null;
-            private POP3_Client        m_pPop3Client   = null;
-            private bool               m_RiseCompleted = false;
-            private Stream             m_pStream       = null;
+            private Exception          m_pException;
+            private POP3_ClientMessage m_pOwner;
+            private POP3_Client        m_pPop3Client;
+            private bool               m_RiseCompleted;
+            private Stream             m_pStream;
 
             /// <summary>
             /// Default constructor.
@@ -807,7 +807,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<MessageToStreamAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<MessageToStreamAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -942,12 +942,12 @@ namespace LumiSoft.Net.POP3.Client
         {
             private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
-            private Exception          m_pException    = null;
-            private POP3_ClientMessage m_pOwner        = null;
-            private POP3_Client        m_pPop3Client   = null;
-            private bool               m_RiseCompleted = false;
-            private Stream             m_pStream       = null;
-            private readonly int                m_LineCount     = 0;
+            private Exception          m_pException;
+            private POP3_ClientMessage m_pOwner;
+            private POP3_Client        m_pPop3Client;
+            private bool               m_RiseCompleted;
+            private Stream             m_pStream;
+            private readonly int                m_LineCount;
 
             /// <summary>
             /// Default constructor.
@@ -1245,7 +1245,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<MessageTopLinesToStreamAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<MessageTopLinesToStreamAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 

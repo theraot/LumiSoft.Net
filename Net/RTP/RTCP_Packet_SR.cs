@@ -9,12 +9,12 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_SR : RTCP_Packet
     {
         private int                           m_Version           = 2;
-        private uint                          m_SSRC              = 0;
-        private ulong                         m_NtpTimestamp      = 0;
-        private uint                          m_RtpTimestamp      = 0;
-        private uint                          m_SenderPacketCount = 0;
-        private uint                          m_SenderOctetCount  = 0;
-        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks     = null;
+        private uint                          m_SSRC;
+        private ulong                         m_NtpTimestamp;
+        private uint                          m_RtpTimestamp;
+        private uint                          m_SenderPacketCount;
+        private uint                          m_SenderOctetCount;
+        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks;
 
         /// <summary>
         /// Default constructor.

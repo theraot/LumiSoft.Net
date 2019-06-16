@@ -7,8 +7,8 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Time
     {
-        private readonly long m_StartTime = 0;
-        private long m_StopTime  = 0;
+        private readonly long m_StartTime;
+        private long m_StopTime;
 
         /// <summary>
         /// Default constructor.

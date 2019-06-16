@@ -10,8 +10,8 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that match either search key.</remarks>
     public class IMAP_Search_Key_Or : IMAP_Search_Key
     {
-        private readonly IMAP_Search_Key m_pSearchKey1 = null;
-        private readonly IMAP_Search_Key m_pSearchKey2 = null;
+        private readonly IMAP_Search_Key m_pSearchKey1;
+        private readonly IMAP_Search_Key m_pSearchKey2;
 
         /// <summary>
         /// Default constructor.

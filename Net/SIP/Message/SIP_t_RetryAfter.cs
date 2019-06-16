@@ -16,7 +16,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_RetryAfter : SIP_t_ValueWithParams
     {
-        private int m_Time = 0;
+        private int m_Time;
 
         /// <summary>
         /// Default constructor.

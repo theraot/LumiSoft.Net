@@ -17,16 +17,16 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_Client : TCP_Session
     {
-        private bool                                m_IsDisposed           = false;
-        private bool                                m_IsConnected          = false;
+        private bool                                m_IsDisposed;
+        private bool                                m_IsConnected;
         private string                              m_ID                   = "";
         private DateTime                            m_ConnectTime;
-        private IPEndPoint                          m_pLocalEP             = null;
-        private IPEndPoint                          m_pRemoteEP            = null;
-        private bool                                m_IsSecure             = false;
-        private SmartStream                         m_pTcpStream           = null;
-        private Logger                              m_pLogger              = null;
-        private RemoteCertificateValidationCallback m_pCertificateCallback = null;
+        private IPEndPoint                          m_pLocalEP;
+        private IPEndPoint                          m_pRemoteEP;
+        private bool                                m_IsSecure;
+        private SmartStream                         m_pTcpStream;
+        private Logger                              m_pLogger;
+        private RemoteCertificateValidationCallback m_pCertificateCallback;
         private int                                 m_Timeout              = 61000;
 
         /// <summary>
@@ -198,15 +198,15 @@ namespace LumiSoft.Net.TCP
         {
             private readonly object                              m_pLock         = new object();
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
-            private Exception                           m_pException    = null;
-            private IPEndPoint                          m_pLocalEP      = null;
-            private IPEndPoint                          m_pRemoteEP     = null;
-            private bool                                m_SSL           = false;
-            private RemoteCertificateValidationCallback m_pCertCallback = null;
-            private TCP_Client                          m_pTcpClient    = null;
-            private Socket                              m_pSocket       = null;
-            private Stream                              m_pStream       = null;
-            private bool                                m_RiseCompleted = false;
+            private Exception                           m_pException;
+            private IPEndPoint                          m_pLocalEP;
+            private IPEndPoint                          m_pRemoteEP;
+            private bool                                m_SSL;
+            private RemoteCertificateValidationCallback m_pCertCallback;
+            private TCP_Client                          m_pTcpClient;
+            private Socket                              m_pSocket;
+            private Stream                              m_pStream;
+            private bool                                m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -566,7 +566,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<ConnectAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<ConnectAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -778,12 +778,12 @@ namespace LumiSoft.Net.TCP
         protected class SwitchToSecureAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object                              m_pLock         = new object();
-            private bool                                m_RiseCompleted = false;
+            private bool                                m_RiseCompleted;
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
-            private Exception                           m_pException    = null;
-            private RemoteCertificateValidationCallback m_pCertCallback = null;
-            private TCP_Client                          m_pTcpClient    = null;
-            private SslStream                           m_pSslStream    = null;
+            private Exception                           m_pException;
+            private RemoteCertificateValidationCallback m_pCertCallback;
+            private TCP_Client                          m_pTcpClient;
+            private SslStream                           m_pSslStream;
 
             /// <summary>
             /// Default constructor.
@@ -970,7 +970,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<SwitchToSecureAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<SwitchToSecureAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 

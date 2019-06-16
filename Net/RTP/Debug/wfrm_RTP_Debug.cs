@@ -20,7 +20,7 @@ namespace LumiSoft.Net.RTP.Debug
         private class ComboBoxItem
         {
             private readonly string m_Text = "";
-            private readonly object m_pTag = null;
+            private readonly object m_pTag;
 
             /// <summary>
             /// Default constructor.
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_SessionStatistics
         {
-            private readonly RTP_Session m_pSession = null;
+            private readonly RTP_Session m_pSession;
 
             /// <summary>
             /// Default constructor.
@@ -352,7 +352,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_ParticipantInfo
         {
-            private readonly RTP_Participant m_pParticipant = null;
+            private readonly RTP_Participant m_pParticipant;
 
             /// <summary>
             /// Default constructor.
@@ -476,7 +476,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_SourceInfo
         {
-            private readonly RTP_Source m_pSource = null;
+            private readonly RTP_Source m_pSource;
 
             /// <summary>
             /// Default constructor.
@@ -578,7 +578,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_ReceiveStreamInfo
         {
-            private readonly RTP_ReceiveStream m_pStream = null;
+            private readonly RTP_ReceiveStream m_pStream;
 
             /// <summary>
             /// Default constructor.
@@ -706,7 +706,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_SendStreamInfo
         {
-            private readonly RTP_SendStream m_pStream = null;
+            private readonly RTP_SendStream m_pStream;
 
             /// <summary>
             /// Default constructor.
@@ -802,17 +802,17 @@ namespace LumiSoft.Net.RTP.Debug
 
         #endregion
 
-        private TabControl     m_pTab                  = null;
-        private SplitContainer m_pParticipantsSplitter = null;
-        private TreeView       m_pParticipants         = null;
-        private PropertyGrid   m_pParticipantData      = null;
-        private ComboBox       m_pSessions             = null;
-        private PropertyGrid   m_pGlobalSessionInfo    = null;
-        private ListView       m_pErrors               = null;
+        private TabControl     m_pTab;
+        private SplitContainer m_pParticipantsSplitter;
+        private TreeView       m_pParticipants;
+        private PropertyGrid   m_pParticipantData;
+        private ComboBox       m_pSessions;
+        private PropertyGrid   m_pGlobalSessionInfo;
+        private ListView       m_pErrors;
 
-        private bool                   m_IsDisposed = false;
-        private readonly RTP_MultimediaSession  m_pSession   = null;
-        private readonly Timer                  m_pTimer     = null;
+        private bool                   m_IsDisposed;
+        private readonly RTP_MultimediaSession  m_pSession;
+        private readonly Timer                  m_pTimer;
 
         /// <summary>
         /// Default constructor.

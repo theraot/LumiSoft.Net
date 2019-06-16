@@ -9,12 +9,12 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_ServerTransaction : SIP_Transaction
     {
-        private TimerEx m_pTimer100 = null;
-        private TimerEx m_pTimerG   = null;
-        private TimerEx m_pTimerH   = null;
-        private TimerEx m_pTimerI   = null;
-        private TimerEx m_pTimerJ   = null;
-        private TimerEx m_pTimerL   = null;
+        private TimerEx m_pTimer100;
+        private TimerEx m_pTimerG;
+        private TimerEx m_pTimerH;
+        private TimerEx m_pTimerI;
+        private TimerEx m_pTimerJ;
+        private TimerEx m_pTimerL;
 
         /// <summary>
         /// Default constructor.
@@ -846,7 +846,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when transaction has sent response to remote party.
         /// </summary>
-        public event EventHandler<SIP_ResponseSentEventArgs> ResponseSent = null;
+        public event EventHandler<SIP_ResponseSentEventArgs> ResponseSent;
 
         #region method OnResponseSent
 
@@ -866,7 +866,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when transaction has canceled.
         /// </summary>
-        public event EventHandler Canceled = null;
+        public event EventHandler Canceled;
 
         #region method OnCanceled
 

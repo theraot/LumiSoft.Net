@@ -13,13 +13,13 @@ namespace LumiSoft.Net.RTP
     public class RTP_Packet
     {
         private int    m_Version        = 2;
-        private bool   m_IsMarker       = false;
-        private int    m_PayloadType    = 0;
-        private ushort m_SequenceNumber = 0;
-        private uint   m_Timestamp      = 0;
-        private uint   m_SSRC           = 0;
-        private uint[] m_CSRC           = null;
-        private byte[] m_Data           = null;
+        private bool   m_IsMarker;
+        private int    m_PayloadType;
+        private ushort m_SequenceNumber;
+        private uint   m_Timestamp;
+        private uint   m_SSRC;
+        private uint[] m_CSRC;
+        private byte[] m_Data;
 
         /// <summary>
         /// Default constructor.

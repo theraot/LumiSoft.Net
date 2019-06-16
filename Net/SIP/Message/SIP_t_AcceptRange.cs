@@ -17,8 +17,8 @@ namespace LumiSoft.Net.SIP.Message
     public class SIP_t_AcceptRange : SIP_t_Value
     {
         private string                  m_MediaType        = "";
-        private readonly SIP_ParameterCollection m_pMediaParameters = null;
-        private readonly SIP_ParameterCollection m_pParameters      = null;
+        private readonly SIP_ParameterCollection m_pMediaParameters;
+        private readonly SIP_ParameterCollection m_pParameters;
 
         /// <summary>
         /// Default constructor.

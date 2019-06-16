@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Rfc822Header : IMAP_t_Fetch_r_i
     {
-        private Stream m_pStream = null;
+        private Stream m_pStream;
 
         /// <summary>
         /// Default constructor.

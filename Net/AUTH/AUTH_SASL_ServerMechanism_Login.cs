@@ -8,12 +8,12 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_Login : AUTH_SASL_ServerMechanism
     {
-        private bool   m_IsCompleted     = false;
-        private bool   m_IsAuthenticated = false;
-        private readonly bool   m_RequireSSL      = false;
-        private string m_UserName        = null;
-        private string m_Password        = null;
-        private int    m_State           = 0;
+        private bool   m_IsCompleted;
+        private bool   m_IsAuthenticated;
+        private readonly bool   m_RequireSSL;
+        private string m_UserName;
+        private string m_Password;
+        private int    m_State;
 
         /// <summary>
         /// Default constructor.
@@ -143,7 +143,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Is called when authentication mechanism needs to authenticate specified user.
         /// </summary>
-        public event EventHandler<AUTH_e_Authenticate> Authenticate = null;
+        public event EventHandler<AUTH_e_Authenticate> Authenticate;
 
         #region method OnAuthenticate
 

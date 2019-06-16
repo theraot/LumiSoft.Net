@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Rfc822Size : IMAP_t_Fetch_r_i
     {
-        private readonly int m_Size = 0;
+        private readonly int m_Size;
 
         /// <summary>
         /// Default constructor.

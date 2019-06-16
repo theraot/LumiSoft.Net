@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_GetAcl : EventArgs
     {
-        private readonly List<IMAP_r_u_Acl>  m_pAclResponses = null;
-        private IMAP_r_ServerStatus m_pResponse     = null;
-        private readonly string              m_Folder        = null;
+        private readonly List<IMAP_r_u_Acl>  m_pAclResponses;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly string              m_Folder;
 
         /// <summary>
         /// Default constructor.

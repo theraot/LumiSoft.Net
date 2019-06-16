@@ -8,8 +8,8 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Quota_Entry
     {
         private readonly string m_ResourceName = "";
-        private readonly long   m_CurrentUsage = 0;
-        private readonly long   m_MaxUsage     = 0;
+        private readonly long   m_CurrentUsage;
+        private readonly long   m_MaxUsage;
 
         /// <summary>
         /// Default constructor.

@@ -12,7 +12,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_b_MessageRfc822 : MIME_b
     {
-        private Mail_Message m_pMessage = null;
+        private Mail_Message m_pMessage;
 
         /// <summary>
         /// Default constructor.

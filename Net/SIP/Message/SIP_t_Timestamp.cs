@@ -14,8 +14,8 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_Timestamp : SIP_t_Value
     {
-        private decimal m_Time  = 0;
-        private decimal m_Delay = 0;
+        private decimal m_Time;
+        private decimal m_Delay;
 
         /// <summary>
         /// Default constructor.

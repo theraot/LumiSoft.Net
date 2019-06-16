@@ -9,10 +9,10 @@ namespace LumiSoft.Net.UDP
     /// </summary>
     public class UDP_e_PacketReceived : EventArgs
     {
-        private Socket     m_pSocket   = null;
-        private byte[]     m_pBuffer   = null;
-        private int        m_Count     = 0;
-        private IPEndPoint m_pRemoteEP = null;
+        private Socket     m_pSocket;
+        private byte[]     m_pBuffer;
+        private int        m_Count;
+        private IPEndPoint m_pRemoteEP;
 
         /// <summary>
         /// Default constructor.

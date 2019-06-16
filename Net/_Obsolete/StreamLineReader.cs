@@ -9,7 +9,7 @@ namespace LumiSoft.Net
     //[Obsolete("Use StreamHelper instead !")]
     public class StreamLineReader
 	{
-		private readonly Stream m_StrmSource     = null;
+		private readonly Stream m_StrmSource;
 		private string m_Encoding       = "";
         private bool   m_CRLF_LinesOnly = true;
         private readonly int    m_ReadBufferSize = 1024;

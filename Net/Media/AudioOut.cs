@@ -438,7 +438,7 @@ namespace LumiSoft.Net.Media
             {
                 private GCHandle m_HeaderHandle;
                 private GCHandle m_DataHandle;
-                private readonly int      m_DataSize = 0;
+                private readonly int      m_DataSize;
 
                 /// <summary>
                 /// Default constructor.
@@ -507,18 +507,18 @@ namespace LumiSoft.Net.Media
 
             #endregion
 
-            private AudioOutDevice  m_pOutDevice    = null;
+            private AudioOutDevice  m_pOutDevice;
             private readonly int             m_SamplesPerSec = 8000;
             private readonly int             m_BitsPerSample = 16;
             private readonly int             m_Channels      = 1;
             private readonly int             m_MinBuffer     = 1200;
             private IntPtr          m_pWavDevHandle = IntPtr.Zero;
-            private readonly int             m_BlockSize     = 0;
-            private int             m_BytesBuffered = 0;
-            private bool            m_IsPaused      = false;
-            private List<PlayItem>  m_pPlayItems    = null;
-            private waveOutProc     m_pWaveOutProc  = null;
-            private bool            m_IsDisposed    = false;
+            private readonly int             m_BlockSize;
+            private int             m_BytesBuffered;
+            private bool            m_IsPaused;
+            private List<PlayItem>  m_pPlayItems;
+            private waveOutProc     m_pWaveOutProc;
+            private bool            m_IsDisposed;
         
             /// <summary>
             /// Default constructor.
@@ -832,10 +832,10 @@ namespace LumiSoft.Net.Media
 
         // TODO: Linux WaveOut similar PCM audio player.
 
-        private bool           m_IsDisposed    = false;
-        private readonly AudioOutDevice m_pDevice       = null;
-        private readonly AudioFormat    m_pAudioFormat  = null;
-        private WaveOut        m_pWaveOut      = null;
+        private bool           m_IsDisposed;
+        private readonly AudioOutDevice m_pDevice;
+        private readonly AudioFormat    m_pAudioFormat;
+        private WaveOut        m_pWaveOut;
 
         /// <summary>
         /// Default constructor.

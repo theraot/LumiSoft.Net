@@ -38,7 +38,7 @@ namespace LumiSoft.Net.SIP.Message
         private string       m_ProtocolName      = "";
         private string       m_ProtocolVersion   = "";
         private string       m_ProtocolTransport = "";
-        private HostEndPoint m_pSentBy           = null;
+        private HostEndPoint m_pSentBy;
 
         /// <summary>
         /// Defualt constructor.

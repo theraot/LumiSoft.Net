@@ -25,10 +25,10 @@ namespace LumiSoft.Net.SMTP.Relay
         private class Relay_Target
         {
             private readonly string     m_HostName = "";
-            private readonly IPEndPoint m_pTarget  = null;
+            private readonly IPEndPoint m_pTarget;
             private readonly SslMode    m_SslMode  = SslMode.None;
-            private readonly string     m_UserName = null;
-            private readonly string     m_Password = null;
+            private readonly string     m_UserName;
+            private readonly string     m_Password;
 
             /// <summary>
             /// Default constructor.
@@ -107,17 +107,17 @@ namespace LumiSoft.Net.SMTP.Relay
 
         #endregion
 
-        private bool               m_IsDisposed     = false;
-        private Relay_Server       m_pServer        = null;
-        private IPBindInfo         m_pLocalBindInfo = null;
-        private Relay_QueueItem    m_pRelayItem     = null;
-        private Relay_SmartHost[]  m_pSmartHosts    = null;
+        private bool               m_IsDisposed;
+        private Relay_Server       m_pServer;
+        private IPBindInfo         m_pLocalBindInfo;
+        private Relay_QueueItem    m_pRelayItem;
+        private Relay_SmartHost[]  m_pSmartHosts;
         private readonly Relay_Mode         m_RelayMode      = Relay_Mode.Dns;
         private readonly string             m_SessionID      = "";
         private readonly DateTime           m_SessionCreateTime;
-        private SMTP_Client        m_pSmtpClient    = null;
-        private List<Relay_Target> m_pTargets       = null;
-        private Relay_Target       m_pActiveTarget  = null;
+        private SMTP_Client        m_pSmtpClient;
+        private List<Relay_Target> m_pTargets;
+        private Relay_Target       m_pActiveTarget;
         
         /// <summary>
         /// Dns relay session constructor.

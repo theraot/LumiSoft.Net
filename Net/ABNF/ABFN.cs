@@ -8,7 +8,7 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABFN
     {
-        private readonly List<ABNF_Rule> m_pRules = null;
+        private readonly List<ABNF_Rule> m_pRules;
 
         /// <summary>
         /// Default constructor.

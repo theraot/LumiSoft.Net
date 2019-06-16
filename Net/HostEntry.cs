@@ -8,9 +8,9 @@ namespace LumiSoft.Net
     /// </summary>
     public class HostEntry
     {
-        private readonly string      m_HostName   = null;
-        private readonly IPAddress[] m_pAddresses = null;
-        private readonly string[]    m_pAliases   = null;
+        private readonly string      m_HostName;
+        private readonly IPAddress[] m_pAddresses;
+        private readonly string[]    m_pAliases;
 
         /// <summary>
         /// Default constructor.

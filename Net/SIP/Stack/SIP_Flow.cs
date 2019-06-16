@@ -23,22 +23,22 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_Flow : IDisposable
     {
         private readonly object       m_pLock           = new object();
-        private bool         m_IsDisposed      = false;
-        private readonly bool         m_IsServer        = false;
-        private readonly SIP_Stack    m_pStack          = null;
-        private TCP_Session  m_pTcpSession     = null;
+        private bool         m_IsDisposed;
+        private readonly bool         m_IsServer;
+        private readonly SIP_Stack    m_pStack;
+        private TCP_Session  m_pTcpSession;
         private readonly DateTime     m_CreateTime;
         private readonly string       m_ID              = "";
-        private readonly IPEndPoint   m_pLocalEP        = null;
-        private IPEndPoint   m_pLocalPublicEP  = null;
-        private readonly IPEndPoint   m_pRemoteEP       = null;
+        private readonly IPEndPoint   m_pLocalEP;
+        private IPEndPoint   m_pLocalPublicEP;
+        private readonly IPEndPoint   m_pRemoteEP;
         private readonly string       m_Transport       = "";
         private DateTime     m_LastActivity;
         private DateTime     m_LastPing;
-        private long         m_BytesWritten    = 0;
-        private MemoryStream m_pMessage        = null;
-        private bool         m_LastCRLF        = false;
-        private TimerEx      m_pKeepAliveTimer = null;
+        private long         m_BytesWritten;
+        private MemoryStream m_pMessage;
+        private bool         m_LastCRLF;
+        private TimerEx      m_pKeepAliveTimer;
         
         /// <summary>
         /// Default constructor.
@@ -720,7 +720,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when flow is disposing.
         /// </summary>
-        public event EventHandler IsDisposing = null;
+        public event EventHandler IsDisposing;
 
         #region method OnDisposing
 

@@ -15,8 +15,8 @@ namespace LumiSoft.Net.Mail
     /// </remarks>
     public class Mail_t_TcpInfo
     {
-        private readonly IPAddress m_pIP      = null;
-        private readonly string    m_HostName = null;
+        private readonly IPAddress m_pIP;
+        private readonly string    m_HostName;
 
         /// <summary>
         /// Default constructor.

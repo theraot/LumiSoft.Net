@@ -13,13 +13,13 @@ namespace LumiSoft.Net.DNS.Client
         private readonly object                     m_pLock         = new object();
         private DNS_ClientTransactionState m_State         = DNS_ClientTransactionState.WaitingForStart;
         private readonly DateTime                   m_CreateTime;
-        private Dns_Client                 m_pOwner        = null;
+        private Dns_Client                 m_pOwner;
         private readonly int                        m_ID            = 1;
         private readonly string                     m_QName         = "";
         private readonly DNS_QType                  m_QType         = 0;
-        private TimerEx                    m_pTimeoutTimer = null;
-        private DnsServerResponse          m_pResponse     = null;
-        private int                        m_ResponseCount = 0;
+        private TimerEx                    m_pTimeoutTimer;
+        private DnsServerResponse          m_pResponse;
+        private int                        m_ResponseCount;
 
         /// <summary>
         /// Default constructor.
@@ -397,7 +397,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// This event is raised when DNS transaction state has changed.
         /// </summary>
-        public event EventHandler<EventArgs<DNS_ClientTransaction>> StateChanged = null;
+        public event EventHandler<EventArgs<DNS_ClientTransaction>> StateChanged;
 
         #region method OnStateChanged
 
@@ -416,7 +416,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// This event is raised when DNS transaction times out.
         /// </summary>
-        public event EventHandler Timeout = null;
+        public event EventHandler Timeout;
 
         #region method OnTimeout
 

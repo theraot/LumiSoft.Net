@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_BODY
     {
-        private IMAP_BODY_Entity m_pMainEntity = null;
+        private IMAP_BODY_Entity m_pMainEntity;
 
         /// <summary>
         /// Default constructor.

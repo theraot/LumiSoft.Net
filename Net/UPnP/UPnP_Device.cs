@@ -21,7 +21,7 @@ namespace LumiSoft.Net.UPnP
         private string m_SerialNumber     = "";
         private string m_UDN              = "";
         private string m_PresentationUrl  = "";
-        private string m_DeviceXml        = null;
+        private string m_DeviceXml;
 
         /// <summary>
         /// Default constructor.

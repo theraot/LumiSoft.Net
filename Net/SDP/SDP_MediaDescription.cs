@@ -10,15 +10,15 @@ namespace LumiSoft.Net.SDP
     public class SDP_MediaDescription
     {
         private string                    m_MediaType     = "";
-        private int                       m_Port          = 0;
+        private int                       m_Port;
         private int                       m_NumberOfPorts = 1;
         private string                    m_Protocol      = "";
-        private readonly List<string>              m_pMediaFormats = null;
-        private string                    m_Information   = null;
-        private SDP_Connection            m_pConnection   = null;
-        private string                    m_Bandwidth     = null;
-        private readonly List<SDP_Attribute>       m_pAttributes   = null;
-        private readonly Dictionary<string,object> m_pTags         = null;
+        private readonly List<string>              m_pMediaFormats;
+        private string                    m_Information;
+        private SDP_Connection            m_pConnection;
+        private string                    m_Bandwidth;
+        private readonly List<SDP_Attribute>       m_pAttributes;
+        private readonly Dictionary<string,object> m_pTags;
 
         /// <summary>
         /// Default constructor.

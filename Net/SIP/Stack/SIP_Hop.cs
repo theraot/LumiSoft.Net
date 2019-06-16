@@ -8,7 +8,7 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Hop
     {
-        private readonly IPEndPoint m_pEndPoint = null;
+        private readonly IPEndPoint m_pEndPoint;
         private readonly string     m_Transport = "";
 
         /// <summary>

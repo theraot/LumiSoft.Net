@@ -12,7 +12,7 @@ namespace LumiSoft.Net.DNS
     {
         private readonly int    m_Priority = 1;
         private readonly int    m_Weight   = 1;
-        private readonly int    m_Port     = 0;
+        private readonly int    m_Port;
         private readonly string m_Target   = "";
 
         /// <summary>

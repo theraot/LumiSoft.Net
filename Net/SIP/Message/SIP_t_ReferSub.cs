@@ -16,7 +16,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_ReferSub : SIP_t_ValueWithParams
     {
-        private bool m_Value = false;
+        private bool m_Value;
 
         /// <summary>
         /// Default constructor.

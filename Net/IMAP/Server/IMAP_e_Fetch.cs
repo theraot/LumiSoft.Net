@@ -20,8 +20,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal class e_NewMessageData : EventArgs
         {            
-            private readonly IMAP_MessageInfo m_pMsgInfo = null;
-            private readonly Mail_Message     m_pMsgData = null;
+            private readonly IMAP_MessageInfo m_pMsgInfo;
+            private readonly Mail_Message     m_pMsgData;
 
             /// <summary>
             /// Default constructor.
@@ -63,8 +63,8 @@ namespace LumiSoft.Net.IMAP.Server
 
         #endregion
 
-        private IMAP_r_ServerStatus m_pResponse     = null;
-        private readonly IMAP_MessageInfo[]  m_pMessagesInfo = null;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly IMAP_MessageInfo[]  m_pMessagesInfo;
         private readonly IMAP_Fetch_DataType m_FetchDataType = IMAP_Fetch_DataType.FullMessage;
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// This event is raised when new message-info/message-data is added for FETCH processing.
         /// </summary>
-        internal event EventHandler<IMAP_e_Fetch.e_NewMessageData> NewMessageData = null;
+        internal event EventHandler<IMAP_e_Fetch.e_NewMessageData> NewMessageData;
 
         #region method OnNewMessageData
 

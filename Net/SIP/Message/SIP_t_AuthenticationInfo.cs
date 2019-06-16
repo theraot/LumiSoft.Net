@@ -9,10 +9,10 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_t_AuthenticationInfo : SIP_t_Value
     {  
-        private string m_NextNonce    = null;
-        private string m_Qop          = null;
-        private string m_ResponseAuth = null;
-        private string m_CNonce       = null;
+        private string m_NextNonce;
+        private string m_Qop;
+        private string m_ResponseAuth;
+        private string m_CNonce;
         private int    m_NonceCount   = -1;
       
         /// <summary>

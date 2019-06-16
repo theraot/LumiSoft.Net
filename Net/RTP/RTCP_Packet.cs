@@ -7,7 +7,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public abstract class RTCP_Packet
     {
-        private int m_PaddBytesCount = 0;
+        private int m_PaddBytesCount;
 
         /// <summary>
         /// Default constructor.

@@ -16,20 +16,20 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_ServerSession : TCP_Session
     {
-        private bool                      m_IsDisposed    = false;
-        private bool                      m_IsTerminated  = false;
-        private object                    m_pServer       = null;
+        private bool                      m_IsDisposed;
+        private bool                      m_IsTerminated;
+        private object                    m_pServer;
         private string                    m_ID            = "";
         private DateTime                  m_ConnectTime;
         private string                    m_LocalHostName = "";
-        private IPEndPoint                m_pLocalEP      = null;
-        private IPEndPoint                m_pRemoteEP     = null;
-        private bool                      m_IsSsl         = false;
-        private bool                      m_IsSecure      = false;
-        private X509Certificate           m_pCertificate  = null;
-        private SmartStream               m_pTcpStream    = null;
-        private object                    m_pTag          = null;
-        private Dictionary<string,object> m_pTags         = null;
+        private IPEndPoint                m_pLocalEP;
+        private IPEndPoint                m_pRemoteEP;
+        private bool                      m_IsSsl;
+        private bool                      m_IsSecure;
+        private X509Certificate           m_pCertificate;
+        private SmartStream               m_pTcpStream;
+        private object                    m_pTag;
+        private Dictionary<string,object> m_pTags;
 
         /// <summary>
         /// Default constructor.
@@ -223,11 +223,11 @@ namespace LumiSoft.Net.TCP
         public class SwitchToSecureAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object            m_pLock         = new object();
-            private bool              m_RiseCompleted = false;
+            private bool              m_RiseCompleted;
             private AsyncOP_State     m_State         = AsyncOP_State.WaitingForStart;
-            private Exception         m_pException    = null;
-            private TCP_ServerSession m_pTcpSession   = null;
-            private SslStream         m_pSslStream    = null;
+            private Exception         m_pException;
+            private TCP_ServerSession m_pTcpSession;
+            private SslStream         m_pSslStream;
 
             /// <summary>
             /// Default constructor.
@@ -384,7 +384,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<SwitchToSecureAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<SwitchToSecureAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -775,7 +775,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when session idle(no activity) timeout reached.
         /// </summary>
-        public event EventHandler IdleTimeout = null;
+        public event EventHandler IdleTimeout;
 
         #region method OnIdleTimeout
 
@@ -794,7 +794,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when session has disconnected and will be disposed soon.
         /// </summary>
-        public event EventHandler Disonnected = null;
+        public event EventHandler Disonnected;
 
         #region method OnDisonnected
 
@@ -813,7 +813,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when session has disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 
@@ -832,7 +832,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// This event is raised when TCP server session has unknown unhandled error.
         /// </summary>
-        public event ErrorEventHandler Error = null;
+        public event ErrorEventHandler Error;
 
         #region method OnError
 

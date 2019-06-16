@@ -19,7 +19,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_WarningValue : SIP_t_Value
     {
-        private int    m_Code  = 0;
+        private int    m_Code;
         private string m_Agent = "";
         private string m_Text  = "";
 

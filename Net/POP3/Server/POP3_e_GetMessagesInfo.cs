@@ -8,7 +8,7 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_GetMessagesInfo : EventArgs
     {
-        private readonly List<POP3_ServerMessage> m_pMessages = null;
+        private readonly List<POP3_ServerMessage> m_pMessages;
 
         /// <summary>
         /// Default constructor.

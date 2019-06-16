@@ -54,9 +54,9 @@ namespace LumiSoft.Net.AUTH
 
         #endregion
 
-        private List<NonceEntry> m_pNonces    = null;
+        private List<NonceEntry> m_pNonces;
         private int              m_ExpireTime = 30;
-        private Timer            m_pTimer     = null;
+        private Timer            m_pTimer;
 
         /// <summary>
         /// Default constructor.

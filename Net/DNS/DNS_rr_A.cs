@@ -9,7 +9,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_A : DNS_rr
 	{
-		private readonly IPAddress m_IP  = null;
+		private readonly IPAddress m_IP;
 
 		/// <summary>
 		/// Default constructor.

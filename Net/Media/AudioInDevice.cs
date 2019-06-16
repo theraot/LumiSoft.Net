@@ -5,7 +5,7 @@
     /// </summary>
     public class AudioInDevice
     {
-        private readonly int    m_Index    = 0;
+        private readonly int    m_Index;
         private readonly string m_Name     = "";
         private readonly int    m_Channels = 1;
 

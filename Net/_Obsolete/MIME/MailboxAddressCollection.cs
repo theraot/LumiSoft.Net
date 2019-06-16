@@ -10,8 +10,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class MailboxAddressCollection : IEnumerable
 	{
-		private Address	             m_pOwner     = null;
-        private readonly List<MailboxAddress> m_pMailboxes = null;
+		private Address	             m_pOwner;
+        private readonly List<MailboxAddress> m_pMailboxes;
 
 		/// <summary>
 		/// Default constructor.

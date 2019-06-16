@@ -5,7 +5,7 @@
     /// </summary>
     public class IMAP_t_Fetch_r_i_X_GM_THRID : IMAP_t_Fetch_r_i
     {
-        private readonly ulong m_ThreadID = 0;
+        private readonly ulong m_ThreadID;
 
         /// <summary>
         /// Default constructor.

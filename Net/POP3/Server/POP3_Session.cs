@@ -16,12 +16,12 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_Session : TCP_ServerSession
     {
-        private readonly Dictionary<string,AUTH_SASL_ServerMechanism>  m_pAuthentications = null;
-        private bool                                          m_SessionRejected  = false;
-        private int                                           m_BadCommands      = 0;
-        private string                                        m_UserName         = null;
-        private GenericIdentity                               m_pUser            = null;
-        private readonly KeyValueCollection<string,POP3_ServerMessage> m_pMessages        = null;
+        private readonly Dictionary<string,AUTH_SASL_ServerMechanism>  m_pAuthentications;
+        private bool                                          m_SessionRejected;
+        private int                                           m_BadCommands;
+        private string                                        m_UserName;
+        private GenericIdentity                               m_pUser;
+        private readonly KeyValueCollection<string,POP3_ServerMessage> m_pMessages;
 
         /// <summary>
         /// Default constructor.
@@ -1474,7 +1474,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// Is raised when session has started processing and needs to send +OK greeting or -ERR error resposne to the connected client.
         /// </summary>
-        public event EventHandler<POP3_e_Started> Started = null;
+        public event EventHandler<POP3_e_Started> Started;
 
         #region method OnStarted
 
@@ -1499,7 +1499,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// This event is raised when session needs to authenticate session using USER/PASS POP3 authentication.
         /// </summary>
-        public event EventHandler<POP3_e_Authenticate> Authenticate = null;
+        public event EventHandler<POP3_e_Authenticate> Authenticate;
 
         #region method OnAuthenticate
 
@@ -1525,7 +1525,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// This event is raised when session needs to get mailbox messsages info.
         /// </summary>
-        public event EventHandler<POP3_e_GetMessagesInfo> GetMessagesInfo = null;
+        public event EventHandler<POP3_e_GetMessagesInfo> GetMessagesInfo;
 
         #region method OnGetMessagesInfo
 
@@ -1549,7 +1549,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// This event is raised when session needs to get top of the specified message data.
         /// </summary>
-        public event EventHandler<POP3_e_GetTopOfMessage> GetTopOfMessage = null;
+        public event EventHandler<POP3_e_GetTopOfMessage> GetTopOfMessage;
 
         #region method OnGetTopOfMessage
 
@@ -1575,7 +1575,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// This event is raised when session needs to get specified message stream.
         /// </summary>
-        public event EventHandler<POP3_e_GetMessageStream> GetMessageStream = null;
+        public event EventHandler<POP3_e_GetMessageStream> GetMessageStream;
 
         #region method OnGetMessageStream
 
@@ -1600,7 +1600,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// This event is raised when session needs to delete specified message.
         /// </summary>
-        public event EventHandler<POP3_e_DeleteMessage> DeleteMessage = null;
+        public event EventHandler<POP3_e_DeleteMessage> DeleteMessage;
 
         #region method OnDeleteMessage
 
@@ -1620,7 +1620,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// This event is raised when session is reset by remote user.
         /// </summary>
-        public event EventHandler Reset = null;
+        public event EventHandler Reset;
 
         #region method OnReset
 

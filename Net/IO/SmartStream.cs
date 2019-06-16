@@ -20,16 +20,16 @@ namespace LumiSoft.Net.IO
         /// <remarks>This class can be reused on multiple calls of <see cref="SmartStream.ReadLine(ReadLineAsyncOP,bool)">SmartStream.ReadLine</see> method.</remarks>
         public class ReadLineAsyncOP : AsyncOP,IDisposable
         {
-            private bool               m_IsDisposed      = false;
-            private bool               m_IsCompleted     = false;
-            private bool               m_IsCompletedSync = false;
-            private SmartStream        m_pOwner          = null;
-            private byte[]             m_pBuffer         = null;
+            private bool               m_IsDisposed;
+            private bool               m_IsCompleted;
+            private bool               m_IsCompletedSync;
+            private SmartStream        m_pOwner;
+            private byte[]             m_pBuffer;
             private readonly SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
             private readonly bool               m_CRLFLinesOnly   = true;
-            private int                m_BytesInBuffer   = 0;
+            private int                m_BytesInBuffer;
             private int                m_LastByte        = -1;
-            private Exception          m_pException      = null;
+            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -410,7 +410,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Is raised when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<ReadLineAsyncOP>> Completed = null;
+            public event EventHandler<EventArgs<ReadLineAsyncOP>> Completed;
 
             #region method OnCompleted
 
@@ -440,17 +440,17 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public class ReadPeriodTerminatedAsyncOP : AsyncOP,IDisposable
         {
-            private bool               m_IsDisposed      = false;
-            private bool               m_IsCompleted     = false;
-            private bool               m_IsCompletedSync = false;
-            private SmartStream        m_pOwner          = null;
-            private Stream             m_pStream         = null;
-            private readonly long               m_MaxCount        = 0;
+            private bool               m_IsDisposed;
+            private bool               m_IsCompleted;
+            private bool               m_IsCompletedSync;
+            private SmartStream        m_pOwner;
+            private Stream             m_pStream;
+            private readonly long               m_MaxCount;
             private SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
-            private ReadLineAsyncOP    m_pReadLineOP     = null;
-            private long               m_BytesStored     = 0;
-            private int                m_LinesStored     = 0;
-            private Exception          m_pException      = null;
+            private ReadLineAsyncOP    m_pReadLineOP;
+            private long               m_BytesStored;
+            private int                m_LinesStored;
+            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -744,7 +744,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Is raised when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<ReadPeriodTerminatedAsyncOP>> Completed = null;
+            public event EventHandler<EventArgs<ReadPeriodTerminatedAsyncOP>> Completed;
 
             #region method OnCompleted
 
@@ -774,14 +774,14 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class BufferReadAsyncOP : AsyncOP,IDisposable
         {
-            private bool        m_IsDisposed      = false;
-            private bool        m_IsCompleted     = false;            
-            private bool        m_IsCompletedSync = false;
-            private SmartStream m_pOwner          = null;
-            private byte[]      m_pBuffer         = null;
-            private int         m_MaxCount        = 0;
-            private int         m_BytesInBuffer   = 0;
-            private Exception   m_pException      = null;
+            private bool        m_IsDisposed;
+            private bool        m_IsCompleted;            
+            private bool        m_IsCompletedSync;
+            private SmartStream m_pOwner;
+            private byte[]      m_pBuffer;
+            private int         m_MaxCount;
+            private int         m_BytesInBuffer;
+            private Exception   m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -994,7 +994,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Is raised when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<BufferReadAsyncOP>> Completed = null;
+            public event EventHandler<EventArgs<BufferReadAsyncOP>> Completed;
 
             #region method OnCompleted
 
@@ -1015,17 +1015,17 @@ namespace LumiSoft.Net.IO
 
         #endregion
 
-        private bool              m_IsDisposed       = false;
-        private readonly Stream            m_pStream          = null;
-        private bool              m_IsOwner          = false;
+        private bool              m_IsDisposed;
+        private readonly Stream            m_pStream;
+        private bool              m_IsOwner;
         private DateTime          m_LastActivity;
-        private long              m_BytesReaded      = 0;
-        private long              m_BytesWritten     = 0;
+        private long              m_BytesReaded;
+        private long              m_BytesWritten;
         private readonly int               m_BufferSize       = 32000;
-        private readonly byte[]            m_pReadBuffer      = null;
-        private int               m_ReadBufferOffset = 0;
-        private int               m_ReadBufferCount  = 0;        
-        private readonly BufferReadAsyncOP m_pReadBufferOP    = null;
+        private readonly byte[]            m_pReadBuffer;
+        private int               m_ReadBufferOffset;
+        private int               m_ReadBufferCount;        
+        private readonly BufferReadAsyncOP m_pReadBufferOP;
         private Encoding          m_pEncoding        = Encoding.Default;
 
         /// <summary>
@@ -1598,13 +1598,13 @@ namespace LumiSoft.Net.IO
         {
             private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
-            private Exception     m_pException    = null;
-            private bool          m_RiseCompleted = false;
-            private SmartStream   m_pOwner        = null;
-            private Stream        m_pStream       = null;
-            private readonly long          m_Count         = 0;
-            private byte[]        m_pBuffer       = null;
-            private long          m_BytesWritten  = 0;
+            private Exception     m_pException;
+            private bool          m_RiseCompleted;
+            private SmartStream   m_pOwner;
+            private Stream        m_pStream;
+            private readonly long          m_Count;
+            private byte[]        m_pBuffer;
+            private long          m_BytesWritten;
 
             /// <summary>
             /// Default constructor.
@@ -1876,7 +1876,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<WriteStreamAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<WriteStreamAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -1973,13 +1973,13 @@ namespace LumiSoft.Net.IO
         {
             private readonly object          m_pLock         = new object();
             private AsyncOP_State   m_State         = AsyncOP_State.WaitingForStart;
-            private Exception       m_pException    = null;
-            private SmartStream     m_pStream       = null;
-            private SmartStream     m_pOwner        = null;
-            private ReadLineAsyncOP m_pReadLineOP   = null;
-            private int             m_BytesWritten  = 0;
-            private bool            m_EndsCRLF      = false;
-            private bool            m_RiseCompleted = false;
+            private Exception       m_pException;
+            private SmartStream     m_pStream;
+            private SmartStream     m_pOwner;
+            private ReadLineAsyncOP m_pReadLineOP;
+            private int             m_BytesWritten;
+            private bool            m_EndsCRLF;
+            private bool            m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -2257,7 +2257,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
-            public event EventHandler<EventArgs<WritePeriodTerminatedAsyncOP>> CompletedAsync = null;
+            public event EventHandler<EventArgs<WritePeriodTerminatedAsyncOP>> CompletedAsync;
 
             #region method OnCompletedAsync
 
@@ -2871,20 +2871,20 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadLineAsyncOperation : IAsyncResult
         {
-            private readonly SmartStream        m_pOwner                 = null;
-            private readonly byte[]             m_pBuffer                = null;
-            private int                m_OffsetInBuffer         = 0;
-            private readonly int                m_MaxCount               = 0;
+            private readonly SmartStream        m_pOwner;
+            private readonly byte[]             m_pBuffer;
+            private int                m_OffsetInBuffer;
+            private readonly int                m_MaxCount;
             private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
-            private readonly AsyncCallback      m_pAsyncCallback         = null;
-            private readonly object             m_pAsyncState            = null;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly AsyncCallback      m_pAsyncCallback;
+            private readonly object             m_pAsyncState;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle;
             private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted            = false;
-            private bool               m_IsEndCalled            = false;
-            private int                m_BytesReaded            = 0;
-            private int                m_BytesStored            = 0;
-            private Exception          m_pException             = null;
+            private bool               m_IsCompleted;
+            private bool               m_IsEndCalled;
+            private int                m_BytesReaded;
+            private int                m_BytesStored;
+            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -3126,21 +3126,21 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadToTerminatorAsyncOperation : IAsyncResult
         {
-            private readonly SmartStream        m_pOwner                 = null;
+            private readonly SmartStream        m_pOwner;
             private readonly string             m_Terminator             = "";
-            private readonly byte[]             m_pTerminatorBytes       = null;
-            private readonly Stream             m_pStoreStream           = null;
-            private readonly long               m_MaxCount               = 0;            
+            private readonly byte[]             m_pTerminatorBytes;
+            private readonly Stream             m_pStoreStream;
+            private readonly long               m_MaxCount;            
             private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
-            private readonly AsyncCallback      m_pAsyncCallback         = null;
-            private readonly object             m_pAsyncState            = null;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly AsyncCallback      m_pAsyncCallback;
+            private readonly object             m_pAsyncState;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle;
             private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted            = false;
-            private bool               m_IsEndCalled            = false;
-            private readonly byte[]             m_pLineBuffer            = null;
-            private long               m_BytesStored            = 0;
-            private Exception          m_pException             = null;
+            private bool               m_IsCompleted;
+            private bool               m_IsEndCalled;
+            private readonly byte[]             m_pLineBuffer;
+            private long               m_BytesStored;
+            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -3352,17 +3352,17 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadToStreamAsyncOperation : IAsyncResult
         {
-            private readonly SmartStream        m_pOwner                 = null;
-            private readonly Stream             m_pStoreStream           = null;
-            private readonly long               m_Count                  = 0;
-            private readonly AsyncCallback      m_pAsyncCallback         = null;
-            private readonly object             m_pAsyncState            = null;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly SmartStream        m_pOwner;
+            private readonly Stream             m_pStoreStream;
+            private readonly long               m_Count;
+            private readonly AsyncCallback      m_pAsyncCallback;
+            private readonly object             m_pAsyncState;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle;
             private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted            = false;
-            private bool               m_IsEndCalled            = false;
-            private long               m_BytesStored            = 0;
-            private Exception          m_pException             = null;
+            private bool               m_IsCompleted;
+            private bool               m_IsEndCalled;
+            private long               m_BytesStored;
+            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -3563,18 +3563,18 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadAsyncOperation : IAsyncResult
         {
-            private readonly SmartStream        m_pOwner                 = null;
-            private readonly byte[]             m_pBuffer                = null;
-            private readonly int                m_OffsetInBuffer         = 0;
-            private readonly int                m_MaxSize                = 0;
-            private readonly AsyncCallback      m_pAsyncCallback         = null;
-            private readonly object             m_pAsyncState            = null;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly SmartStream        m_pOwner;
+            private readonly byte[]             m_pBuffer;
+            private readonly int                m_OffsetInBuffer;
+            private readonly int                m_MaxSize;
+            private readonly AsyncCallback      m_pAsyncCallback;
+            private readonly object             m_pAsyncState;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle;
             private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted            = false;
-            private bool               m_IsEndCalled            = false;
-            private int                m_BytesStored            = 0;
-            private Exception          m_pException             = null;
+            private bool               m_IsCompleted;
+            private bool               m_IsEndCalled;
+            private int                m_BytesStored;
+            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.

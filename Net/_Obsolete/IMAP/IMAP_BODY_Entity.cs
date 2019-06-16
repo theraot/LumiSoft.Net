@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_BODY_Entity
     {
         private readonly IMAP_BODY_Entity             m_pParentEntity      = null;
-        private readonly List<IMAP_BODY_Entity>       m_pChildEntities     = null;
+        private readonly List<IMAP_BODY_Entity>       m_pChildEntities;
         private readonly MIME_h_ContentType           m_pContentType       = null;
         private readonly string                       m_ContentID          = null;
         private readonly string                       m_ContentDescription = null;

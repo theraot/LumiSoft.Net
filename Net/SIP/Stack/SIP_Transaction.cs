@@ -11,15 +11,15 @@ namespace LumiSoft.Net.SIP.Stack
     public abstract class SIP_Transaction : IDisposable
     {        
         private SIP_TransactionState m_State;
-        private SIP_Stack            m_pStack      = null;
-        private SIP_Flow             m_pFlow       = null;
-        private SIP_Request          m_pRequest    = null;
+        private SIP_Stack            m_pStack;
+        private SIP_Flow             m_pFlow;
+        private SIP_Request          m_pRequest;
         private readonly string               m_Method      = "";
         private readonly string               m_ID          = "";
         private readonly string               m_Key         = "";
         private readonly DateTime             m_CreateTime;
-        private readonly List<SIP_Response>   m_pResponses  = null;
-        private object               m_pTag        = null;
+        private readonly List<SIP_Response>   m_pResponses;
+        private object               m_pTag;
         private readonly object               m_pLock       = new object();
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when transaction state has changed.
         /// </summary>
-        public event EventHandler StateChanged = null;
+        public event EventHandler StateChanged;
 
         #region method OnStateChanged
 
@@ -404,7 +404,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when transaction is disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 
@@ -423,7 +423,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised if transaction is timed out. 
         /// </summary>
-        public event EventHandler TimedOut = null;
+        public event EventHandler TimedOut;
 
         #region method OnTimedOut
 
@@ -442,7 +442,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when there is transport error. 
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> TransportError = null;
+        public event EventHandler<ExceptionEventArgs> TransportError;
 
         #region method TransportError
 
@@ -468,7 +468,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// Is raised when there is transaction error. For example this is raised when server transaction never
         /// gets ACK.
         /// </summary>
-        public event EventHandler TransactionError = null;
+        public event EventHandler TransactionError;
 
         #region method OnTransactionError
 

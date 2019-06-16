@@ -8,8 +8,8 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class MemoryStreamEx : Stream
     {
-        private bool   m_IsDisposed = false;
-        private Stream m_pStream    = null;
+        private bool   m_IsDisposed;
+        private Stream m_pStream;
         private readonly int    m_MaxMemSize = 32000;
 
         /// <summary>

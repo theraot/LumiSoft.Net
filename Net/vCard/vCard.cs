@@ -11,10 +11,10 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class vCard
     {
-        private readonly ItemCollection            m_pItems          = null;
-        private DeliveryAddressCollection m_pAddresses      = null;
-        private PhoneNumberCollection     m_pPhoneNumbers   = null;
-        private EmailAddressCollection    m_pEmailAddresses = null;
+        private readonly ItemCollection            m_pItems;
+        private DeliveryAddressCollection m_pAddresses;
+        private PhoneNumberCollection     m_pPhoneNumbers;
+        private EmailAddressCollection    m_pEmailAddresses;
 
         /// <summary>
         /// Default constructor.

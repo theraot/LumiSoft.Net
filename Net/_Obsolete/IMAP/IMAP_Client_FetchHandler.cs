@@ -49,7 +49,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// This event is raised when current message changes and next message FETCH data-items will be returned.
         /// </summary>
-        public event EventHandler NextMessage = null;
+        public event EventHandler NextMessage;
 
         #region method OnNextMessage
 
@@ -70,7 +70,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH BODY[] data-item is returned.
         /// </summary>
-        public event EventHandler<IMAP_Client_Fetch_Body_EArgs> Body = null;
+        public event EventHandler<IMAP_Client_Fetch_Body_EArgs> Body;
 
         #region method OnBody
 
@@ -92,7 +92,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH ENVELOPE data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<IMAP_Envelope>> Envelope = null;
+        public event EventHandler<EventArgs<IMAP_Envelope>> Envelope;
 
         #region method OnEnvelope
 
@@ -112,7 +112,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH FLAGS data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<string[]>> Flags = null;
+        public event EventHandler<EventArgs<string[]>> Flags;
 
         #region method OnFlags
 
@@ -132,7 +132,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH INTERNALDATE data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<DateTime>> InternalDate = null;
+        public event EventHandler<EventArgs<DateTime>> InternalDate;
 
         #region method OnInternalDate
 
@@ -152,7 +152,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH RFC822 data-item is returned.
         /// </summary>
-        public event EventHandler<IMAP_Client_Fetch_Rfc822_EArgs> Rfc822 = null;
+        public event EventHandler<IMAP_Client_Fetch_Rfc822_EArgs> Rfc822;
 
         #region method OnRfc822
 
@@ -172,7 +172,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH RFC822.HEADER data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<string>> Rfc822Header = null;
+        public event EventHandler<EventArgs<string>> Rfc822Header;
 
         #region method OnRfc822Header
 
@@ -192,7 +192,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH RFC822.SIZE data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<int>> Rfc822Size = null;
+        public event EventHandler<EventArgs<int>> Rfc822Size;
 
         #region method OnSize
 
@@ -212,7 +212,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH RFC822.TEXT data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<string>> Rfc822Text = null;
+        public event EventHandler<EventArgs<string>> Rfc822Text;
 
         #region method OnRfc822Text
 
@@ -232,7 +232,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH UID data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<long>> UID = null;
+        public event EventHandler<EventArgs<long>> UID;
 
         #region method OnUID
 
@@ -253,7 +253,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH GMail X-GM-MSGID data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<ulong>> X_GM_MSGID = null;
+        public event EventHandler<EventArgs<ulong>> X_GM_MSGID;
 
         #region method OnX_GM_MSGID
 
@@ -273,7 +273,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Is raised when current message FETCH GMail X-GM-THRID data-item is returned.
         /// </summary>
-        public event EventHandler<EventArgs<ulong>> X_GM_THRID = null;
+        public event EventHandler<EventArgs<ulong>> X_GM_THRID;
 
         #region method OnX_GM_THRID
 

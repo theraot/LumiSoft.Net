@@ -16,8 +16,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class AddressList : IEnumerable
 	{
-		private HeaderField   m_HeaderField = null;
-		private readonly List<Address> m_pAddresses  = null;
+		private HeaderField   m_HeaderField;
+		private readonly List<Address> m_pAddresses;
 
 		/// <summary>
 		/// Default constructor.

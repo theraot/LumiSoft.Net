@@ -7,7 +7,7 @@ namespace LumiSoft.Net
     /// </summary>
     public class ExceptionEventArgs : EventArgs
     {
-        private readonly Exception m_pException = null;
+        private readonly Exception m_pException;
 
         /// <summary>
         /// Default constructor.

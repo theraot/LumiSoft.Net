@@ -12,12 +12,12 @@ namespace LumiSoft.Net.Media
     public class AudioOut_RTP : IDisposable
     {
         private readonly bool                       m_IsDisposed      = false;
-        private bool                       m_IsRunning       = false;
-        private AudioOutDevice             m_pAudioOutDevice = null;
-        private RTP_ReceiveStream          m_pRTP_Stream     = null;
-        private Dictionary<int,AudioCodec> m_pAudioCodecs    = null;
-        private AudioOut                   m_pAudioOut       = null;
-        private AudioCodec                 m_pActiveCodec    = null;
+        private bool                       m_IsRunning;
+        private AudioOutDevice             m_pAudioOutDevice;
+        private RTP_ReceiveStream          m_pRTP_Stream;
+        private Dictionary<int,AudioCodec> m_pAudioCodecs;
+        private AudioOut                   m_pAudioOut;
+        private AudioCodec                 m_pActiveCodec;
 
         /// <summary>
         /// Default constructor.
@@ -262,7 +262,7 @@ namespace LumiSoft.Net.Media
         /// <summary>
         /// This method is raised when asynchronous thread Exception happens.
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> Error = null;
+        public event EventHandler<ExceptionEventArgs> Error;
 
         #region method OnError
 

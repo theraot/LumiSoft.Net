@@ -10,7 +10,7 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_Server : TCP_Server<SMTP_Session>
     {
-        private readonly List<string> m_pServiceExtentions = null;
+        private readonly List<string> m_pServiceExtentions;
         private string       m_GreetingText       = "";
         private int          m_MaxBadCommands     = 30;
         private int          m_MaxTransactions    = 10;

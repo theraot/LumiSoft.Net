@@ -7,10 +7,10 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Copy : EventArgs
     {
-        private IMAP_r_ServerStatus m_pResponse     = null;
-        private readonly string              m_SourceFolder  = null;
-        private readonly string              m_TargetFolder  = null;
-        private readonly IMAP_MessageInfo[]  m_pMessagesInfo = null;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly string              m_SourceFolder;
+        private readonly string              m_TargetFolder;
+        private readonly IMAP_MessageInfo[]  m_pMessagesInfo;
 
         /// <summary>
         /// Default constructor.

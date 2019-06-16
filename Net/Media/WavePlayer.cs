@@ -17,7 +17,7 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class RIFF_Chunk
         {
-            private uint   m_ChunkSize = 0;
+            private uint   m_ChunkSize;
             private string m_Format    = "";
 
             /// <summary>
@@ -86,13 +86,13 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class fmt_Chunk
         {
-            private uint m_ChunkSize        = 0;
-            private int  m_AudioFormat      = 0;
-            private int  m_NumberOfChannels = 0;
-            private int  m_SampleRate       = 0;
-            private int  m_AvgBytesPerSec   = 0;
-            private int  m_BlockAlign       = 0;
-            private int  m_BitsPerSample    = 0;
+            private uint m_ChunkSize;
+            private int  m_AudioFormat;
+            private int  m_NumberOfChannels;
+            private int  m_SampleRate;
+            private int  m_AvgBytesPerSec;
+            private int  m_BlockAlign;
+            private int  m_BitsPerSample;
 
             /// <summary>
             /// Default constructor.
@@ -232,7 +232,7 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class data_Chunk
         {
-            private uint m_ChunkSize = 0;
+            private uint m_ChunkSize;
 
             /// <summary>
             /// Default constructor.
@@ -291,7 +291,7 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class WavReader
         {            
-            private readonly BinaryReader m_pBinaryReader = null;
+            private readonly BinaryReader m_pBinaryReader;
 
             /// <summary>
             /// Default constructor.
@@ -394,9 +394,9 @@ namespace LumiSoft.Net.Media
         #endregion
 
 
-        private bool           m_IsPlaying     = false;
-        private bool           m_Stop          = false;
-        private readonly AudioOutDevice m_pOutputDevice = null;
+        private bool           m_IsPlaying;
+        private bool           m_Stop;
+        private readonly AudioOutDevice m_pOutputDevice;
 
         /// <summary>
         /// Default constructor.

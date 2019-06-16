@@ -42,12 +42,12 @@ namespace LumiSoft.Net.FTP.Client
         /// </summary>
         private class DataConnection : IDisposable
         {
-            private FTP_Client       m_pOwner       = null;
-            private Socket           m_pSocket      = null;
+            private FTP_Client       m_pOwner;
+            private Socket           m_pSocket;
             private int              m_ActivePort   = -1;
             private FTP_TransferMode m_TransferMode = FTP_TransferMode.Active;
             private DateTime         m_LastActivity;
-            private bool             m_IsActive     = false;
+            private bool             m_IsActive;
 
             /// <summary>
             /// Default constructor.
@@ -356,12 +356,12 @@ namespace LumiSoft.Net.FTP.Client
         #endregion
 
         private FTP_TransferMode m_TransferMode       = FTP_TransferMode.Passive;
-        private IPAddress        m_pDataConnectionIP  = null;
-        private PortRange        m_pDataPortRange     = null;
+        private IPAddress        m_pDataConnectionIP;
+        private PortRange        m_pDataPortRange;
         private string           m_GreetingText       = "";
-        private List<string>     m_pExtCapabilities   = null;
-        private GenericIdentity  m_pAuthdUserIdentity = null;
-        private DataConnection   m_pDataConnection    = null;
+        private List<string>     m_pExtCapabilities;
+        private GenericIdentity  m_pAuthdUserIdentity;
+        private DataConnection   m_pDataConnection;
 
 		/// <summary>
 		/// Default connection.

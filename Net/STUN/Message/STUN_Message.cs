@@ -48,18 +48,18 @@ namespace LumiSoft.Net.STUN.Message
         #endregion
 
         private STUN_MessageType     m_Type             = STUN_MessageType.BindingRequest;
-        private int                  m_MagicCookie      = 0;
-        private byte[]               m_pTransactionID   = null;
-        private IPEndPoint           m_pMappedAddress   = null;
-        private IPEndPoint           m_pResponseAddress = null;
-        private STUN_t_ChangeRequest m_pChangeRequest   = null;
-        private IPEndPoint           m_pSourceAddress   = null;
-        private IPEndPoint           m_pChangedAddress  = null;
-        private string               m_UserName         = null;
-        private string               m_Password         = null;
-        private STUN_t_ErrorCode     m_pErrorCode       = null;
-        private IPEndPoint           m_pReflectedFrom   = null;
-        private string               m_ServerName       = null;
+        private int                  m_MagicCookie;
+        private byte[]               m_pTransactionID;
+        private IPEndPoint           m_pMappedAddress;
+        private IPEndPoint           m_pResponseAddress;
+        private STUN_t_ChangeRequest m_pChangeRequest;
+        private IPEndPoint           m_pSourceAddress;
+        private IPEndPoint           m_pChangedAddress;
+        private string               m_UserName;
+        private string               m_Password;
+        private STUN_t_ErrorCode     m_pErrorCode;
+        private IPEndPoint           m_pReflectedFrom;
+        private string               m_ServerName;
 
         /// <summary>
         /// Default constructor.

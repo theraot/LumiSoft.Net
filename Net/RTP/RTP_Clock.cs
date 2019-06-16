@@ -7,7 +7,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Clock
     {
-        private readonly int      m_BaseValue = 0;
+        private readonly int      m_BaseValue;
         private readonly int      m_Rate      = 1;
         private readonly DateTime m_CreateTime;
 

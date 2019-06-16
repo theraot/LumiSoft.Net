@@ -7,7 +7,7 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_Started : EventArgs
     {
-        private string m_Response = null;
+        private string m_Response;
 
         /// <summary>
         /// Default constructor.

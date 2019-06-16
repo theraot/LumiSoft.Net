@@ -8,8 +8,8 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_MessagesInfo : EventArgs
     {
-        private readonly string                 m_Folder    = null;
-        private readonly List<IMAP_MessageInfo> m_pMessages = null;
+        private readonly string                 m_Folder;
+        private readonly List<IMAP_MessageInfo> m_pMessages;
 
         /// <summary>
         /// Default constructor.

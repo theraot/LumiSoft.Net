@@ -61,7 +61,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Is raised when NOTIFY request received.
         /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> Notify = null;
+        public event EventHandler<SIP_RequestReceivedEventArgs> Notify;
 
         #region method OnNotify
 

@@ -10,8 +10,8 @@ namespace LumiSoft.Net.Mail
     /// </summary>
     public class Mail_t_Group : Mail_t_Address
     {
-        private string               m_DisplayName = null;
-        private readonly List<Mail_t_Mailbox> m_pList       = null;
+        private string               m_DisplayName;
+        private readonly List<Mail_t_Mailbox> m_pList;
 
         /// <summary>
         /// Default constructor.

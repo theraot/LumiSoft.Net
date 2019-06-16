@@ -17,7 +17,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_Join : SIP_t_ValueWithParams
     {
-        private SIP_t_CallID m_pCallID = null;
+        private SIP_t_CallID m_pCallID;
 
         /// <summary>
         /// Default constructor.

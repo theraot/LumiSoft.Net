@@ -17,8 +17,8 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class MessageType1
         {
-            private readonly string m_Domain = null;
-            private readonly string m_Host   = null;
+            private readonly string m_Domain;
+            private readonly string m_Host;
 
             /// <summary>
             /// Default constructor.
@@ -162,7 +162,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class MessageType2
         {
-            private readonly byte[] m_Nonce = null;
+            private readonly byte[] m_Nonce;
 
             /// <summary>
             /// Default constructor.
@@ -266,11 +266,11 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class MessageType3
         {
-            private readonly string m_Domain = null;
-            private readonly string m_User   = null;
-            private readonly string m_Host   = null;
-            private readonly byte[] m_LM     = null;
-            private readonly byte[] m_NT     = null;
+            private readonly string m_Domain;
+            private readonly string m_User;
+            private readonly string m_Host;
+            private readonly byte[] m_LM;
+            private readonly byte[] m_NT;
 
             /// <summary>
             /// Default constructor.
@@ -666,11 +666,11 @@ namespace LumiSoft.Net.AUTH
 
         #endregion
 
-        private bool   m_IsCompleted = false;
-        private int    m_State       = 0;
-        private readonly string m_Domain      = null;
-        private readonly string m_UserName    = null;
-        private readonly string m_Password    = null;
+        private bool   m_IsCompleted;
+        private int    m_State;
+        private readonly string m_Domain;
+        private readonly string m_UserName;
+        private readonly string m_Password;
 
         /// <summary>
         /// Default constructor.

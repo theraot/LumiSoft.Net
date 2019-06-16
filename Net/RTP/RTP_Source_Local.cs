@@ -11,7 +11,7 @@ namespace LumiSoft.Net.RTP
     /// </remarks>
     public class RTP_Source_Local : RTP_Source
     {
-        private RTP_SendStream m_pStream = null;
+        private RTP_SendStream m_pStream;
 
         /// <summary>
         /// Default constructor.

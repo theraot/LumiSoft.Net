@@ -12,13 +12,13 @@ namespace LumiSoft.Net.Log
         private readonly LogEntryType    m_Type          = LogEntryType.Text;
         private readonly string          m_ID            = "";
         private readonly DateTime        m_Time;
-        private readonly GenericIdentity m_pUserIdentity = null;
-        private readonly long            m_Size          = 0;
+        private readonly GenericIdentity m_pUserIdentity;
+        private readonly long            m_Size;
         private readonly string          m_Text          = "";
-        private readonly Exception       m_pException    = null;
-        private readonly IPEndPoint      m_pLocalEP      = null;
-        private readonly IPEndPoint      m_pRemoteEP     = null;
-        private readonly byte[]          m_pData         = null;
+        private readonly Exception       m_pException;
+        private readonly IPEndPoint      m_pLocalEP;
+        private readonly IPEndPoint      m_pRemoteEP;
+        private readonly byte[]          m_pData;
 
         /// <summary>
         /// Default constructor.

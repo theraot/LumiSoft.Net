@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Login : EventArgs
     {
-        private bool   m_IsAuthenticated = false;
+        private bool   m_IsAuthenticated;
         private readonly string m_User            = "";
         private readonly string m_Password        = "";
 

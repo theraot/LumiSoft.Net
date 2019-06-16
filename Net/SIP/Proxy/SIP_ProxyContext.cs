@@ -22,19 +22,19 @@ namespace LumiSoft.Net.SIP.Proxy
         private class TargetHandler : IDisposable
         {
             private readonly object                m_pLock               = new object();
-            private bool                  m_IsDisposed          = false;
-            private bool                  m_IsStarted           = false;
-            private SIP_ProxyContext      m_pOwner              = null;
-            private SIP_Request           m_pRequest            = null;
-            private readonly SIP_Flow              m_pFlow               = null;
-            private SIP_Uri               m_pTargetUri          = null;
+            private bool                  m_IsDisposed;
+            private bool                  m_IsStarted;
+            private SIP_ProxyContext      m_pOwner;
+            private SIP_Request           m_pRequest;
+            private readonly SIP_Flow              m_pFlow;
+            private SIP_Uri               m_pTargetUri;
             private readonly bool                  m_AddRecordRoute      = true;
-            private readonly bool                  m_IsRecursed          = false;
-            private Queue<SIP_Hop>        m_pHops               = null;
-            private SIP_ClientTransaction m_pTransaction        = null;
-            private TimerEx               m_pTimerC             = null;
-            private bool                  m_HasReceivedResponse = false;
-            private bool                  m_IsCompleted         = false;
+            private readonly bool                  m_IsRecursed;
+            private Queue<SIP_Hop>        m_pHops;
+            private SIP_ClientTransaction m_pTransaction;
+            private TimerEx               m_pTimerC;
+            private bool                  m_HasReceivedResponse;
+            private bool                  m_IsCompleted;
                                     
             /// <summary>
             /// Default constructor.
@@ -795,23 +795,23 @@ namespace LumiSoft.Net.SIP.Proxy
 
         #endregion
         
-        private bool                        m_IsDisposed          = false;
-        private bool                        m_IsStarted           = false;
-        private SIP_Proxy                   m_pProxy              = null;
-        private SIP_ServerTransaction       m_pServerTransaction  = null;
-        private readonly SIP_Request                 m_pRequest            = null;
-        private readonly bool                        m_AddRecordRoute      = false;
+        private bool                        m_IsDisposed;
+        private bool                        m_IsStarted;
+        private SIP_Proxy                   m_pProxy;
+        private SIP_ServerTransaction       m_pServerTransaction;
+        private readonly SIP_Request                 m_pRequest;
+        private readonly bool                        m_AddRecordRoute;
         private readonly SIP_ForkingMode             m_ForkingMode         = SIP_ForkingMode.Parallel;
         private readonly bool                        m_IsB2BUA             = true;
-        private readonly bool                        m_NoCancel            = false;
+        private readonly bool                        m_NoCancel;
         private readonly bool                        m_NoRecurse           = true;
         private readonly string                      m_ID                  = "";
         private readonly DateTime                    m_CreateTime;
-        private List<TargetHandler>         m_pTargetsHandlers    = null;
-        private List<SIP_Response>          m_pResponses          = null;
-        private Queue<TargetHandler>        m_pTargets            = null;
-        private readonly List<NetworkCredential>     m_pCredentials        = null;        
-        private bool                        m_IsFinalResponseSent = false;
+        private List<TargetHandler>         m_pTargetsHandlers;
+        private List<SIP_Response>          m_pResponses;
+        private Queue<TargetHandler>        m_pTargets;
+        private readonly List<NetworkCredential>     m_pCredentials;        
+        private bool                        m_IsFinalResponseSent;
         private readonly object                      m_pLock               = new object();
 
         /// <summary>

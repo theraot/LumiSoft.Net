@@ -7,23 +7,23 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_ReceiveStream
     {
-        private bool                   m_IsDisposed      = false;
-        private RTP_Session            m_pSession        = null;
-        private readonly RTP_Source             m_pSSRC           = null;
-        private RTP_Participant_Remote m_pParticipant    = null;
-        private int                    m_SeqNoWrapCount  = 0;
-        private ushort                 m_MaxSeqNo        = 0;
-        private long                   m_PacketsReceived = 0;
-        private long                   m_PacketsMisorder = 0;
-        private long                   m_BytesReceived   = 0;
-        private double                 m_Jitter          = 0;
-        private RTCP_Report_Sender     m_pLastSR         = null;
-        private uint                   m_BaseSeq         = 0;
-        private long                   m_ReceivedPrior   = 0;
-        private long                   m_ExpectedPrior   = 0;
-        private int                    m_Transit         = 0;
-        private uint                   m_LastBadSeqPlus1 = 0;
-        private int                    m_Probation       = 0;
+        private bool                   m_IsDisposed;
+        private RTP_Session            m_pSession;
+        private readonly RTP_Source             m_pSSRC;
+        private RTP_Participant_Remote m_pParticipant;
+        private int                    m_SeqNoWrapCount;
+        private ushort                 m_MaxSeqNo;
+        private long                   m_PacketsReceived;
+        private long                   m_PacketsMisorder;
+        private long                   m_BytesReceived;
+        private double                 m_Jitter;
+        private RTCP_Report_Sender     m_pLastSR;
+        private uint                   m_BaseSeq;
+        private long                   m_ReceivedPrior;
+        private long                   m_ExpectedPrior;
+        private int                    m_Transit;
+        private uint                   m_LastBadSeqPlus1;
+        private int                    m_Probation;
         private DateTime               m_LastSRTime      = DateTime.MinValue;
         private readonly int                    MAX_DROPOUT       = 3000;
         private readonly int                    MAX_MISORDER      = 100;
@@ -576,7 +576,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when stream is closed by remote party (remote party sent BYE).
         /// </summary>
-        public event EventHandler Closed = null;
+        public event EventHandler Closed;
 
         #region method OnClosed
 
@@ -596,7 +596,7 @@ namespace LumiSoft.Net.RTP
         /// Is raised when receive stream has timed out by RTP session.
         /// </summary>
         /// <remarks>After <b>Timeout</b> event stream will be disposed and has no longer accessible.</remarks>
-        public event EventHandler Timeout = null;
+        public event EventHandler Timeout;
 
         #region method OnTimeout
 
@@ -615,7 +615,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when steam gets new sender report from remote party.
         /// </summary>
-        public event EventHandler SenderReport = null;
+        public event EventHandler SenderReport;
         
         #region method OnSenderReport
 
@@ -634,7 +634,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when new RTP packet received.
         /// </summary>
-        public event EventHandler<RTP_PacketEventArgs> PacketReceived = null;
+        public event EventHandler<RTP_PacketEventArgs> PacketReceived;
 
         #region method OnPacketReceived
 

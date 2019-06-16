@@ -9,8 +9,8 @@ namespace LumiSoft.Net.RTP
     public abstract class RTP_Participant
     {
         private readonly string           m_CNAME    = "";
-        private List<RTP_Source> m_pSources = null;
-        private object           m_pTag     = null;
+        private List<RTP_Source> m_pSources;
+        private object           m_pTag;
 
         /// <summary>
         /// Default constructor.
@@ -118,7 +118,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when participant disjoins(timeout or BYE all sources) the RTP multimedia session.
         /// </summary>
-        public event EventHandler Removed = null;
+        public event EventHandler Removed;
 
         #region method OnRemoved
 
@@ -137,7 +137,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when participant gets new RTP source.
         /// </summary>
-        public event EventHandler<RTP_SourceEventArgs> SourceAdded = null;
+        public event EventHandler<RTP_SourceEventArgs> SourceAdded;
 
         #region method OnSourceAdded
 
@@ -161,7 +161,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when RTP source removed from(Timeout or BYE) participant.
         /// </summary>
-        public event EventHandler<RTP_SourceEventArgs> SourceRemoved = null;
+        public event EventHandler<RTP_SourceEventArgs> SourceRemoved;
 
         #region method OnSourceRemoved
 

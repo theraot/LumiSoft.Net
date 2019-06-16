@@ -10,7 +10,7 @@ namespace LumiSoft.Net.SMTP.Relay
     public class Relay_Queue : IDisposable
     {
         private readonly string                 m_Name   = "";
-        private readonly Queue<Relay_QueueItem> m_pQueue = null;
+        private readonly Queue<Relay_QueueItem> m_pQueue;
 
         /// <summary>
         /// Default constructor.

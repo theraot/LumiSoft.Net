@@ -9,9 +9,9 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Dialog_Invite : SIP_Dialog
     {           
-        private SIP_Transaction m_pActiveInvite             = null;
-        private bool            m_IsTerminatedByRemoteParty = false;
-        private string          m_TerminateReason           = null;
+        private SIP_Transaction m_pActiveInvite;
+        private bool            m_IsTerminatedByRemoteParty;
+        private string          m_TerminateReason;
 
         /// <summary>
         /// Default constructor.
@@ -337,7 +337,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// This event is raised when remote-party terminates dialog with BYE request.
         /// </summary>
         /// <remarks>This event is useful only if the application is interested in processing the headers in the BYE message.</remarks>
-        public event EventHandler<SIP_RequestReceivedEventArgs> TerminatedByRemoteParty = null;
+        public event EventHandler<SIP_RequestReceivedEventArgs> TerminatedByRemoteParty;
 
         #region method OnTerminatedByRemoteParty
 

@@ -9,10 +9,10 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_CramMd5 : AUTH_SASL_Client
     {
-        private bool   m_IsCompleted = false;
-        private int    m_State       = 0;
-        private readonly string m_UserName    = null;
-        private readonly string m_Password    = null;
+        private bool   m_IsCompleted;
+        private int    m_State;
+        private readonly string m_UserName;
+        private readonly string m_Password;
 
         /// <summary>
         /// Default constructor.

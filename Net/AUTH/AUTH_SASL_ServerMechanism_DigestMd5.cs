@@ -8,13 +8,13 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_DigestMd5 : AUTH_SASL_ServerMechanism
     {
-        private bool   m_IsCompleted     = false;
-        private bool   m_IsAuthenticated = false;
-        private readonly bool   m_RequireSSL      = false;
+        private bool   m_IsCompleted;
+        private bool   m_IsAuthenticated;
+        private readonly bool   m_RequireSSL;
         private string m_Realm           = "";
         private readonly string m_Nonce           = "";
         private string m_UserName        = "";
-        private int    m_State           = 0;
+        private int    m_State;
 
         /// <summary>
         /// Default constructor.
@@ -182,7 +182,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Is called when authentication mechanism needs to get user info to complete atuhentication.
         /// </summary>
-        public event EventHandler<AUTH_e_UserInfo> GetUserInfo = null;
+        public event EventHandler<AUTH_e_UserInfo> GetUserInfo;
 
         #region method OnGetUserInfo
 

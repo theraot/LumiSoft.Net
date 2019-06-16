@@ -10,7 +10,7 @@ namespace LumiSoft.Net.WebDav.Client
     /// </summary>
     public class WebDav_Client
     {
-        private NetworkCredential m_pCredentials = null;
+        private NetworkCredential m_pCredentials;
 
         /// <summary>
         /// Default constructor.

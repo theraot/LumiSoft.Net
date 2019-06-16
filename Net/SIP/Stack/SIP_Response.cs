@@ -11,7 +11,7 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Response : SIP_Message
     {
-        private readonly SIP_Request m_pRequest     = null;
+        private readonly SIP_Request m_pRequest;
         private double      m_SipVersion   = 2.0d;
         private int         m_StatusCode   = 100;
         private string      m_ReasonPhrase = "";

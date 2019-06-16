@@ -16,26 +16,26 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_Stack
     {    
         private SIP_StackState               m_State              = SIP_StackState.Stopped;
-        private readonly SIP_TransportLayer           m_pTransportLayer    = null;
-        private readonly SIP_TransactionLayer         m_pTransactionLayer  = null;
-        private string                       m_UserAgent          = null;
-        private readonly Auth_HttpDigest_NonceManager m_pNonceManager      = null;
-        private readonly List<SIP_Uri>                m_pProxyServers      = null;
+        private readonly SIP_TransportLayer           m_pTransportLayer;
+        private readonly SIP_TransactionLayer         m_pTransactionLayer;
+        private string                       m_UserAgent;
+        private readonly Auth_HttpDigest_NonceManager m_pNonceManager;
+        private readonly List<SIP_Uri>                m_pProxyServers;
         private string                       m_Realm              = "";
         private int                          m_CSeq               = 1;
         private int                          m_MaxForwards        = 70;
         private int                          m_MinExpireTime      = 1800;
-        private readonly List<string>                 m_pAllow             = null;
-        private readonly List<string>                 m_pSupported         = null;
-        private int                          m_MaximumConnections = 0;
+        private readonly List<string>                 m_pAllow;
+        private readonly List<string>                 m_pSupported;
+        private int                          m_MaximumConnections;
         private int                          m_MaximumMessageSize = 1000000;
         private int                          m_MinSessionExpires  = 90;
         private int                          m_SessionExpires     = 1800;
-        private readonly List<NetworkCredential>      m_pCredentials       = null;        
-        private readonly List<SIP_UA_Registration>    m_pRegistrations     = null;
-        private readonly SIP_t_CallID                 m_RegisterCallID     = null;
-        private readonly Logger                       m_pLogger            = null;
-        private readonly Dns_Client                   m_pDnsClient         = null;
+        private readonly List<NetworkCredential>      m_pCredentials;        
+        private readonly List<SIP_UA_Registration>    m_pRegistrations;
+        private readonly SIP_t_CallID                 m_RegisterCallID;
+        private readonly Logger                       m_pLogger;
+        private readonly Dns_Client                   m_pDnsClient;
         private readonly int                          MTU                  = 1400;
 
         /// <summary>
@@ -1398,7 +1398,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// This event is raised when new incoming SIP request is received. You can control incoming requests
         /// with that event. For example you can require authentication or send what ever error to request maker user.
         /// </summary>
-        public event EventHandler<SIP_ValidateRequestEventArgs> ValidateRequest = null;
+        public event EventHandler<SIP_ValidateRequestEventArgs> ValidateRequest;
         
         #region mehtod OnValidateRequest
 
@@ -1424,7 +1424,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised when new SIP request is received.
         /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived = null;
+        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
 
         #region method OnRequestReceived
 
@@ -1446,7 +1446,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// This event is raised when new stray SIP response is received.
         /// Stray response means that response doesn't match to any transaction.
         /// </summary>
-        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived = null;
+        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
 
         #region method OnResponseReceived
 
@@ -1467,7 +1467,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// This event is raised by any SIP element when unknown/unhandled error happened.
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> Error = null;
+        public event EventHandler<ExceptionEventArgs> Error;
 
         #region method OnError
 

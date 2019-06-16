@@ -13,16 +13,16 @@ namespace LumiSoft.Net.RTP
     public abstract class RTP_Source
     {        
         private RTP_SourceState      m_State          = RTP_SourceState.Passive;
-        private RTP_Session          m_pSession       = null;
-        private uint                 m_SSRC           = 0;
-        private IPEndPoint           m_pRtcpEP        = null;
-        private IPEndPoint           m_pRtpEP         = null;
+        private RTP_Session          m_pSession;
+        private uint                 m_SSRC;
+        private IPEndPoint           m_pRtcpEP;
+        private IPEndPoint           m_pRtpEP;
         private DateTime             m_LastRtcpPacket = DateTime.MinValue;
         private DateTime             m_LastRtpPacket  = DateTime.MinValue;
         private DateTime             m_LastActivity   = DateTime.Now;
         private readonly DateTime             m_LastRRTime     = DateTime.MinValue;
-        private string               m_CloseReason    = null;
-        private object               m_pTag           = null;
+        private string               m_CloseReason;
+        private object               m_pTag;
 
         /// <summary>
         /// Default constructor.
@@ -387,7 +387,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when source is closed (by BYE).
         /// </summary>
-        public event EventHandler Closed = null;
+        public event EventHandler Closed;
 
         #region method OnClosed
 
@@ -406,7 +406,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when source is disposing.
         /// </summary>
-        public event EventHandler Disposing = null;
+        public event EventHandler Disposing;
 
         #region method OnDisposing
 
@@ -425,7 +425,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when source state has changed.
         /// </summary>
-        public event EventHandler StateChanged = null;
+        public event EventHandler StateChanged;
 
         #region method OnStateChaged
 

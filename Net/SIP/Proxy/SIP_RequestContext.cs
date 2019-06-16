@@ -10,12 +10,12 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_RequestContext
     {
-        private readonly SIP_Proxy             m_pProxy        = null;
-        private readonly SIP_Request           m_pRequest      = null;
-        private readonly SIP_Flow              m_pFlow         = null;
-        private SIP_ServerTransaction m_pTransaction  = null;
-        private readonly List<SIP_ProxyTarget> m_pTargets      = null;
-        private string                m_User          = null;
+        private readonly SIP_Proxy             m_pProxy;
+        private readonly SIP_Request           m_pRequest;
+        private readonly SIP_Flow              m_pFlow;
+        private SIP_ServerTransaction m_pTransaction;
+        private readonly List<SIP_ProxyTarget> m_pTargets;
+        private string                m_User;
         private readonly SIP_ProxyContext      m_pProxyContext = null;
 
         /// <summary>

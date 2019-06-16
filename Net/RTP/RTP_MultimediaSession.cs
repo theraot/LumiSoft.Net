@@ -8,10 +8,10 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_MultimediaSession : IDisposable
     {
-        private bool                                      m_IsDisposed        = false;
-        private RTP_Participant_Local                     m_pLocalParticipant = null;
-        private List<RTP_Session>                         m_pSessions         = null;
-        private Dictionary<string,RTP_Participant_Remote> m_pParticipants     = null;
+        private bool                                      m_IsDisposed;
+        private RTP_Participant_Local                     m_pLocalParticipant;
+        private List<RTP_Session>                         m_pSessions;
+        private Dictionary<string,RTP_Participant_Remote> m_pParticipants;
 
         /// <summary>
         /// Default constructor.
@@ -254,7 +254,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when new session has created.
         /// </summary>
-        public event EventHandler<EventArgs<RTP_Session>> SessionCreated = null;
+        public event EventHandler<EventArgs<RTP_Session>> SessionCreated;
 
         #region method OnSessionCreated
 
@@ -278,7 +278,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when new remote participant has joined to session.
         /// </summary>
-        public event EventHandler<RTP_ParticipantEventArgs> NewParticipant = null;
+        public event EventHandler<RTP_ParticipantEventArgs> NewParticipant;
 
         #region method OnNewParticipant
 
@@ -298,7 +298,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when unknown error has happened.
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> Error = null;
+        public event EventHandler<ExceptionEventArgs> Error;
 
         #region method OnError
 

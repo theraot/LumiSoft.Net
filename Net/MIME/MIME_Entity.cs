@@ -11,11 +11,11 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Entity : IDisposable
     {
-        private bool              m_IsDisposed    = false;
-        private MIME_Entity       m_pParent       = null;
-        private MIME_h_Collection m_pHeader       = null;
-        private MIME_b            m_pBody         = null;
-        private readonly MIME_b_Provider   m_pBodyProvider = null;
+        private bool              m_IsDisposed;
+        private MIME_Entity       m_pParent;
+        private MIME_h_Collection m_pHeader;
+        private MIME_b            m_pBody;
+        private readonly MIME_b_Provider   m_pBodyProvider;
 
         /// <summary>
         /// Default constructor.

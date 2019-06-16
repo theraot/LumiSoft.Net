@@ -10,8 +10,8 @@ namespace LumiSoft.Net.IMAP
     {
         private readonly string m_FolderName     = "";
         private readonly string m_Identifier     = "";
-        private readonly string m_RequiredRights = null;
-        private readonly string m_OptionalRights = null;
+        private readonly string m_RequiredRights;
+        private readonly string m_OptionalRights;
 
         /// <summary>
         /// Default constructor.

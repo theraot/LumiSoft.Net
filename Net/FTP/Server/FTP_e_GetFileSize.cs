@@ -7,9 +7,9 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_GetFileSize : EventArgs
     {
-        private readonly string            m_FileName    = null;
-        private long              m_FileSize    = 0;
-        private FTP_t_ReplyLine[] m_pReplyLines = null;
+        private readonly string            m_FileName;
+        private long              m_FileSize;
+        private FTP_t_ReplyLine[] m_pReplyLines;
 
         /// <summary>
         /// Default constructor.

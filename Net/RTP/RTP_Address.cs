@@ -8,12 +8,12 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Address
     {
-        private readonly IPAddress  m_pIP         = null;
-        private readonly int        m_DataPort    = 0;
-        private readonly int        m_ControlPort = 0;
-        private readonly int        m_TTL         = 0;
-        private readonly IPEndPoint m_pRtpEP      = null;
-        private readonly IPEndPoint m_pRtcpEP     = null;    
+        private readonly IPAddress  m_pIP;
+        private readonly int        m_DataPort;
+        private readonly int        m_ControlPort;
+        private readonly int        m_TTL;
+        private readonly IPEndPoint m_pRtpEP;
+        private readonly IPEndPoint m_pRtcpEP;    
 
         /// <summary>
         /// Unicast constructor.

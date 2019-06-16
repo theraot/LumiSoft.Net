@@ -7,15 +7,15 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_SendStream
     {
-        private bool             m_IsDisposed             = false;
-        private RTP_Source_Local m_pSource                = null;
-        private int              m_SeqNoWrapCount         = 0;
-        private int              m_SeqNo                  = 0;
+        private bool             m_IsDisposed;
+        private RTP_Source_Local m_pSource;
+        private int              m_SeqNoWrapCount;
+        private int              m_SeqNo;
         private DateTime         m_LastPacketTime;
-        private uint             m_LastPacketRtpTimestamp = 0;
-        private long             m_RtpPacketsSent         = 0;
-        private long             m_RtpBytesSent           = 0;
-        private long             m_RtpDataBytesSent       = 0;
+        private uint             m_LastPacketRtpTimestamp;
+        private long             m_RtpPacketsSent;
+        private long             m_RtpBytesSent;
+        private long             m_RtpDataBytesSent;
         private int              m_RtcpCyclesSinceWeSent  = 9999;
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when stream has disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 
@@ -346,7 +346,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when stream is closed.
         /// </summary>
-        public event EventHandler Closed = null;
+        public event EventHandler Closed;
 
         #region method OnClosed
 

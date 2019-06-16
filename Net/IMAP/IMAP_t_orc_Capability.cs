@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Capability : IMAP_t_orc
     {
-        private readonly string[] m_pCapabilities = null;
+        private readonly string[] m_pCapabilities;
 
         /// <summary>
         /// Default constructor.

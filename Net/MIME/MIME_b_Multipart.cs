@@ -59,8 +59,8 @@ namespace LumiSoft.Net.MIME
             /// </summary>
             private class _DataLine
             {
-                private readonly byte[] m_pLineBuffer   = null;
-                private int    m_BytesInBuffer = 0;
+                private readonly byte[] m_pLineBuffer;
+                private int    m_BytesInBuffer;
 
                 /// <summary>
                 /// Default constructor.
@@ -115,12 +115,12 @@ namespace LumiSoft.Net.MIME
             #endregion
 
             private State                       m_State         = State.SeekFirst;
-            private readonly SmartStream                 m_pStream       = null;
+            private readonly SmartStream                 m_pStream;
             private readonly string                      m_Boundary      = "";
-            private _DataLine                   m_pPreviousLine = null;
-            private readonly SmartStream.ReadLineAsyncOP m_pReadLineOP   = null;
-            private readonly StringBuilder               m_pTextPreamble = null;
-            private readonly StringBuilder               m_pTextEpilogue = null;
+            private _DataLine                   m_pPreviousLine;
+            private readonly SmartStream.ReadLineAsyncOP m_pReadLineOP;
+            private readonly StringBuilder               m_pTextPreamble;
+            private readonly StringBuilder               m_pTextEpilogue;
 
             /// <summary>
             /// Default constructor.
@@ -555,8 +555,8 @@ namespace LumiSoft.Net.MIME
 
         #endregion
 
-        private readonly MIME_h_ContentType    m_pContentType = null;
-        private readonly MIME_EntityCollection m_pBodyParts   = null;
+        private readonly MIME_h_ContentType    m_pContentType;
+        private readonly MIME_EntityCollection m_pBodyParts;
         private string                m_TextPreamble = "";
         private string                m_TextEpilogue = "";
         

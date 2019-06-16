@@ -8,8 +8,8 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class EmailAddressCollection : IEnumerable
     {
-        private readonly vCard              m_pOwner      = null;
-        private readonly List<EmailAddress> m_pCollection = null;
+        private readonly vCard              m_pOwner;
+        private readonly List<EmailAddress> m_pCollection;
 
         /// <summary>
         /// Default constructor.

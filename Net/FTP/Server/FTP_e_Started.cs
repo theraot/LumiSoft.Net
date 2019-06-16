@@ -7,7 +7,7 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Started : EventArgs
     {
-        private string m_Response = null;
+        private string m_Response;
 
         /// <summary>
         /// Default constructor.

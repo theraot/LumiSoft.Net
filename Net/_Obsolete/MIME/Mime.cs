@@ -114,7 +114,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class Mime
 	{
-		private readonly MimeEntity m_pMainEntity = null;
+		private readonly MimeEntity m_pMainEntity;
 
 		/// <summary>
 		/// Default constructor.

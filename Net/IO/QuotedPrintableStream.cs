@@ -8,13 +8,13 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class QuotedPrintableStream : Stream
     {
-        private readonly SmartStream m_pStream        = null;
+        private readonly SmartStream m_pStream;
         private readonly FileAccess  m_AccessMode     = FileAccess.ReadWrite;
-        private readonly byte[]      m_pDecodedBuffer = null;
-        private int         m_DecodedOffset  = 0;
-        private int         m_DecodedCount   = 0;
-        private readonly byte[]      m_pEncodedBuffer = null;
-        private int         m_EncodedCount   = 0;
+        private readonly byte[]      m_pDecodedBuffer;
+        private int         m_DecodedOffset;
+        private int         m_DecodedCount;
+        private readonly byte[]      m_pEncodedBuffer;
+        private int         m_EncodedCount;
 
         /// <summary>
         /// Default constructor.

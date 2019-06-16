@@ -21,7 +21,7 @@ namespace LumiSoft.Net.IMAP
     [Obsolete("Use class 'IMAP_t_SeqSet' instead.")]
 	public class IMAP_SequenceSet
     {
-        private readonly List<Range_long> m_pSequenceParts = null;
+        private readonly List<Range_long> m_pSequenceParts;
         private string           m_SequenceString = "";
 
 		/// <summary>

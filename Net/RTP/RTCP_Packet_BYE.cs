@@ -9,7 +9,7 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_BYE : RTCP_Packet
     {
         private int    m_Version       = 2;
-        private uint[] m_Sources       = null;
+        private uint[] m_Sources;
         private string m_LeavingReason = "";
 
         /// <summary>

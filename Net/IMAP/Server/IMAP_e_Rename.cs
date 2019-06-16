@@ -7,10 +7,10 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Rename : EventArgs
     {
-        private IMAP_r_ServerStatus m_pResponse     = null;
-        private readonly string              m_CmdTag        = null;
-        private readonly string              m_CurrentFolder = null;
-        private readonly string              m_NewFolder     = null;
+        private IMAP_r_ServerStatus m_pResponse;
+        private readonly string              m_CmdTag;
+        private readonly string              m_CurrentFolder;
+        private readonly string              m_NewFolder;
 
         /// <summary>
         /// Default constructor.

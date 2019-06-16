@@ -41,10 +41,10 @@ namespace LumiSoft.Net.MIME
     /// </example>
     public class MIME_h_ContentDisposition : MIME_h
     {
-        private readonly bool                       m_IsModified      = false;
-        private string                     m_ParseValue      = null;
+        private readonly bool                       m_IsModified;
+        private string                     m_ParseValue;
         private string                     m_DispositionType = "";
-        private readonly MIME_h_ParameterCollection m_pParameters     = null;
+        private readonly MIME_h_ParameterCollection m_pParameters;
 
         /// <summary>
         /// Default constructor.

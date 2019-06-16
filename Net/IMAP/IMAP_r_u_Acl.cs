@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_r_u_Acl : IMAP_r_u
     {
         private readonly string           m_FolderName = "";
-        private readonly IMAP_Acl_Entry[] m_pEntries   = null;
+        private readonly IMAP_Acl_Entry[] m_pEntries;
 
         /// <summary>
         /// Default constructor.

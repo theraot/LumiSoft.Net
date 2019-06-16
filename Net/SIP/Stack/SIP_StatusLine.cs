@@ -8,7 +8,7 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_StatusLine
     {
         private string m_Version    = "";
-        private int    m_StatusCode = 0;
+        private int    m_StatusCode;
         private string m_Reason     = "";
 
         /// <summary>

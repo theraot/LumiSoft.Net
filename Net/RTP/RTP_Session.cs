@@ -18,44 +18,44 @@ namespace LumiSoft.Net.RTP
     public class RTP_Session : IDisposable
     {
         private object                             m_pLock                      = new object();
-        private bool                               m_IsDisposed                 = false;
-        private bool                               m_IsStarted                  = false;
-        private RTP_MultimediaSession              m_pSession                   = null;
-        private RTP_Address                        m_pLocalEP                   = null;
-        private readonly RTP_Clock                          m_pRtpClock                  = null;
+        private bool                               m_IsDisposed;
+        private bool                               m_IsStarted;
+        private RTP_MultimediaSession              m_pSession;
+        private RTP_Address                        m_pLocalEP;
+        private readonly RTP_Clock                          m_pRtpClock;
         private RTP_StreamMode                     m_StreamMode                 = RTP_StreamMode.SendReceive;
-        private List<RTP_Address>                  m_pTargets                   = null;
-        private int                                m_Payload                    = 0;
+        private List<RTP_Address>                  m_pTargets;
+        private int                                m_Payload;
         private int                                m_Bandwidth                  = 64000;
-        private List<RTP_Source_Local>             m_pLocalSources              = null;
-        private RTP_Source                         m_pRtcpSource                = null;
-        private Dictionary<uint,RTP_Source>        m_pMembers                   = null;
-        private int                                m_PMembersCount              = 0;
-        private Dictionary<uint,RTP_Source>        m_pSenders                   = null;
-        private Dictionary<string,DateTime>        m_pConflictingEPs            = null;
-        private List<UDP_DataReceiver>             m_pUdpDataReceivers          = null;
-        private Socket                             m_pRtpSocket                 = null;
-        private Socket                             m_pRtcpSocket                = null;
-        private long                               m_RtpPacketsSent             = 0;
-        private long                               m_RtpBytesSent               = 0;
-        private long                               m_RtpPacketsReceived         = 0;
-        private long                               m_RtpBytesReceived           = 0;
-        private long                               m_RtpFailedTransmissions     = 0;
-        private long                               m_RtcpPacketsSent            = 0;
-        private long                               m_RtcpBytesSent              = 0;
-        private long                               m_RtcpPacketsReceived        = 0;
-        private long                               m_RtcpBytesReceived          = 0;
-        private double                             m_RtcpAvgPacketSize          = 0;
-        private long                               m_RtcpFailedTransmissions    = 0;
-        private long                               m_RtcpUnknownPacketsReceived = 0;
+        private List<RTP_Source_Local>             m_pLocalSources;
+        private RTP_Source                         m_pRtcpSource;
+        private Dictionary<uint,RTP_Source>        m_pMembers;
+        private int                                m_PMembersCount;
+        private Dictionary<uint,RTP_Source>        m_pSenders;
+        private Dictionary<string,DateTime>        m_pConflictingEPs;
+        private List<UDP_DataReceiver>             m_pUdpDataReceivers;
+        private Socket                             m_pRtpSocket;
+        private Socket                             m_pRtcpSocket;
+        private long                               m_RtpPacketsSent;
+        private long                               m_RtpBytesSent;
+        private long                               m_RtpPacketsReceived;
+        private long                               m_RtpBytesReceived;
+        private long                               m_RtpFailedTransmissions;
+        private long                               m_RtcpPacketsSent;
+        private long                               m_RtcpBytesSent;
+        private long                               m_RtcpPacketsReceived;
+        private long                               m_RtcpBytesReceived;
+        private double                             m_RtcpAvgPacketSize;
+        private long                               m_RtcpFailedTransmissions;
+        private long                               m_RtcpUnknownPacketsReceived;
         private DateTime                           m_RtcpLastTransmission       = DateTime.MinValue;
-        private long                               m_LocalCollisions            = 0;
-        private long                               m_RemoteCollisions           = 0;
-        private long                               m_LocalPacketsLooped         = 0;
-        private long                               m_RemotePacketsLooped        = 0;
+        private long                               m_LocalCollisions;
+        private long                               m_RemoteCollisions;
+        private long                               m_LocalPacketsLooped;
+        private long                               m_RemotePacketsLooped;
         private readonly int                                m_MTU                        = 1400;
-        private TimerEx                            m_pRtcpTimer                 = null;        
-        private readonly KeyValueCollection<int,Codec>      m_pPayloads                  = null;
+        private TimerEx                            m_pRtcpTimer;        
+        private readonly KeyValueCollection<int,Codec>      m_pPayloads;
 
         /// <summary>
         /// Default constructor.
@@ -1841,7 +1841,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when RTP session has disposed.
         /// </summary>
-        public event EventHandler Disposed = null;
+        public event EventHandler Disposed;
 
         #region method OnDisposed
 
@@ -1860,7 +1860,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when RTP session has closed.
         /// </summary>
-        public event EventHandler Closed = null;
+        public event EventHandler Closed;
 
         #region method OnClosed
 
@@ -1879,7 +1879,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when new send stream created.
         /// </summary>
-        public event EventHandler<RTP_SendStreamEventArgs> NewSendStream = null;
+        public event EventHandler<RTP_SendStreamEventArgs> NewSendStream;
 
         #region method OnNewSendStream
 
@@ -1899,7 +1899,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when new recieve stream received from remote target.
         /// </summary>
-        public event EventHandler<RTP_ReceiveStreamEventArgs> NewReceiveStream = null;
+        public event EventHandler<RTP_ReceiveStreamEventArgs> NewReceiveStream;
 
         #region mehtod OnNewReceiveStream
 
@@ -1919,7 +1919,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Is raised when session sending payload has changed.
         /// </summary>
-        public event EventHandler PayloadChanged = null;
+        public event EventHandler PayloadChanged;
 
         #region method OnPayloadChanged
 

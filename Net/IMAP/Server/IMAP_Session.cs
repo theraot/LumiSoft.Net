@@ -25,9 +25,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         private class _SelectedFolder
         {
-            private readonly string                 m_Folder        = null;
-            private readonly bool                   m_IsReadOnly    = false;
-            private readonly List<IMAP_MessageInfo> m_pMessagesInfo = null;
+            private readonly string                 m_Folder;
+            private readonly bool                   m_IsReadOnly;
+            private readonly List<IMAP_MessageInfo> m_pMessagesInfo;
 
             /// <summary>
             /// Default constructor.
@@ -195,10 +195,10 @@ namespace LumiSoft.Net.IMAP.Server
         /// <remarks>Because IMAP command can contain literal strings, then command text can be multiline.</remarks>
         private class _CmdReader
         {
-            private readonly IMAP_Session m_pSession       = null;
-            private readonly string       m_InitialCmdLine = null;
-            private readonly Encoding     m_pCharset       = null;
-            private string       m_CmdLine        = null;
+            private readonly IMAP_Session m_pSession;
+            private readonly string       m_InitialCmdLine;
+            private readonly Encoding     m_pCharset;
+            private string       m_CmdLine;
 
             /// <summary>
             /// Default constructor.
@@ -425,10 +425,10 @@ namespace LumiSoft.Net.IMAP.Server
             /// </summary>
             private class QueueItem
             {
-                private bool                               m_IsSent                  = false;
-                private bool                               m_IsAsync                 = false;
-                private readonly IMAP_r                             m_pResponse               = null;
-                private readonly EventHandler<EventArgs<Exception>> m_pCompletedAsyncCallback = null;
+                private bool                               m_IsSent;
+                private bool                               m_IsAsync;
+                private readonly IMAP_r                             m_pResponse;
+                private readonly EventHandler<EventArgs<Exception>> m_pCompletedAsyncCallback;
 
                 /// <summary>
                 /// Default constructor.
@@ -491,9 +491,9 @@ namespace LumiSoft.Net.IMAP.Server
             #endregion
 
             private readonly object           m_pLock      = new object();
-            private readonly IMAP_Session     m_pImap      = null;
-            private bool             m_IsSending  = false;
-            private readonly Queue<QueueItem> m_pResponses = null;
+            private readonly IMAP_Session     m_pImap;
+            private bool             m_IsSending;
+            private readonly Queue<QueueItem> m_pResponses;
 
             /// <summary>
             /// Default constructor.
@@ -651,15 +651,15 @@ namespace LumiSoft.Net.IMAP.Server
 
         #endregion
 
-        private Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications = null;
-        private bool                                         m_SessionRejected  = false;
-        private int                                          m_BadCommands      = 0;
-        private List<string>                                 m_pCapabilities    = null;
+        private Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications;
+        private bool                                         m_SessionRejected;
+        private int                                          m_BadCommands;
+        private List<string>                                 m_pCapabilities;
         private readonly char                                         m_FolderSeparator  = '/';
-        private GenericIdentity                              m_pUser            = null;
-        private _SelectedFolder                              m_pSelectedFolder  = null;
+        private GenericIdentity                              m_pUser;
+        private _SelectedFolder                              m_pSelectedFolder;
         private IMAP_Mailbox_Encoding                        m_MailboxEncoding  = IMAP_Mailbox_Encoding.ImapUtf7;
-        private readonly ResponseSender                               m_pResponseSender  = null;
+        private readonly ResponseSender                               m_pResponseSender;
 
         /// <summary>
         /// Default constructor.
@@ -5993,7 +5993,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when session has started processing and needs to send "* OK ..." greeting or "* NO ..." error resposne to the connected client.
         /// </summary>
-        public event EventHandler<IMAP_e_Started> Started = null;
+        public event EventHandler<IMAP_e_Started> Started;
 
         #region method OnStarted
 
@@ -6017,7 +6017,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle LOGIN command.
         /// </summary>
-        public event EventHandler<IMAP_e_Login> Login = null;
+        public event EventHandler<IMAP_e_Login> Login;
 
         #region method OnLogin
 
@@ -6043,7 +6043,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle NAMESPACE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Namespace> Namespace = null;
+        public event EventHandler<IMAP_e_Namespace> Namespace;
 
         #region method OnNamespace
 
@@ -6067,7 +6067,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle LIST command.
         /// </summary>
-        public event EventHandler<IMAP_e_List> List = null;
+        public event EventHandler<IMAP_e_List> List;
 
         #region method OnList
 
@@ -6092,7 +6092,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle CREATE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Folder> Create = null;
+        public event EventHandler<IMAP_e_Folder> Create;
 
         #region method OnCreate
 
@@ -6118,7 +6118,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle DELETE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Folder> Delete = null;
+        public event EventHandler<IMAP_e_Folder> Delete;
 
         #region method OnDelete
 
@@ -6144,7 +6144,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle RENAME command.
         /// </summary>
-        public event EventHandler<IMAP_e_Rename> Rename = null;
+        public event EventHandler<IMAP_e_Rename> Rename;
 
         #region method OnRename
 
@@ -6170,7 +6170,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle LSUB command.
         /// </summary>
-        public event EventHandler<IMAP_e_LSub> LSub = null;
+        public event EventHandler<IMAP_e_LSub> LSub;
 
         #region method OnLSub
 
@@ -6195,7 +6195,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle SUBSCRIBE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Folder> Subscribe = null;
+        public event EventHandler<IMAP_e_Folder> Subscribe;
 
         #region method OnSubscribe
 
@@ -6221,7 +6221,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle SUBSCRIBE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Folder> Unsubscribe = null;
+        public event EventHandler<IMAP_e_Folder> Unsubscribe;
 
         #region method OnUnsubscribe
 
@@ -6247,7 +6247,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle SELECT command.
         /// </summary>
-        public event EventHandler<IMAP_e_Select> Select = null;
+        public event EventHandler<IMAP_e_Select> Select;
 
         #region method OnSelect
 
@@ -6272,7 +6272,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to get folder messages info.
         /// </summary>
-        public event EventHandler<IMAP_e_MessagesInfo> GetMessagesInfo = null;
+        public event EventHandler<IMAP_e_MessagesInfo> GetMessagesInfo;
 
         #region method OnGetMessagesInfo
 
@@ -6296,7 +6296,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle APPEND command.
         /// </summary>
-        public event EventHandler<IMAP_e_Append> Append = null;
+        public event EventHandler<IMAP_e_Append> Append;
 
         #region method OnAppend
 
@@ -6324,7 +6324,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle GETQUOTAROOT command.
         /// </summary>
-        public event EventHandler<IMAP_e_GetQuotaRoot> GetQuotaRoot = null;
+        public event EventHandler<IMAP_e_GetQuotaRoot> GetQuotaRoot;
 
         #region method OnGetGuotaRoot
 
@@ -6349,7 +6349,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle GETQUOTA command.
         /// </summary>
-        public event EventHandler<IMAP_e_GetQuota> GetQuota = null;
+        public event EventHandler<IMAP_e_GetQuota> GetQuota;
 
         #region method OnGetQuota
 
@@ -6374,7 +6374,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle GETACL command.
         /// </summary>
-        public event EventHandler<IMAP_e_GetAcl> GetAcl = null;
+        public event EventHandler<IMAP_e_GetAcl> GetAcl;
 
         #region method OnGetAcl
 
@@ -6399,7 +6399,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle SETACL command.
         /// </summary>
-        public event EventHandler<IMAP_e_SetAcl> SetAcl = null;
+        public event EventHandler<IMAP_e_SetAcl> SetAcl;
 
         #region method OnSetAcl
 
@@ -6427,7 +6427,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle DELETEACL command.
         /// </summary>
-        public event EventHandler<IMAP_e_DeleteAcl> DeleteAcl = null;
+        public event EventHandler<IMAP_e_DeleteAcl> DeleteAcl;
 
         #region method OnDeleteAcl
 
@@ -6453,7 +6453,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle LISTRIGHTS command.
         /// </summary>
-        public event EventHandler<IMAP_e_ListRights> ListRights = null;
+        public event EventHandler<IMAP_e_ListRights> ListRights;
 
         #region method OnListRights
 
@@ -6479,7 +6479,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle MYRIGHTS command.
         /// </summary>
-        public event EventHandler<IMAP_e_MyRights> MyRights = null;
+        public event EventHandler<IMAP_e_MyRights> MyRights;
 
         #region method OnMyRights
 
@@ -6504,7 +6504,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle FETCH command.
         /// </summary>
-        public event EventHandler<IMAP_e_Fetch> Fetch = null;
+        public event EventHandler<IMAP_e_Fetch> Fetch;
 
         #region method OnFetch
 
@@ -6524,7 +6524,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle SEARCH command.
         /// </summary>
-        public event EventHandler<IMAP_e_Search> Search = null;
+        public event EventHandler<IMAP_e_Search> Search;
 
         #region method OnSearch
 
@@ -6544,7 +6544,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle STORE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Store> Store = null;
+        public event EventHandler<IMAP_e_Store> Store;
 
         #region method OnStore
 
@@ -6571,7 +6571,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle COPY command.
         /// </summary>
-        public event EventHandler<IMAP_e_Copy> Copy = null;
+        public event EventHandler<IMAP_e_Copy> Copy;
 
         #region method OnCopy
 
@@ -6597,7 +6597,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Is raised when IMAP session needs to handle EXPUNGE command.
         /// </summary>
-        public event EventHandler<IMAP_e_Expunge> Expunge = null;
+        public event EventHandler<IMAP_e_Expunge> Expunge;
 
         #region method OnExpunge
 

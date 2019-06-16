@@ -7,7 +7,7 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_Authenticate : EventArgs
     {
-        private bool   m_IsAuthenticated = false;
+        private bool   m_IsAuthenticated;
         private readonly string m_User            = "";
         private readonly string m_Password        = "";
 

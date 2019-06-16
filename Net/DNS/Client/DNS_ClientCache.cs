@@ -15,7 +15,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private class CacheEntry
         {
-            private readonly DnsServerResponse m_pResponse = null;
+            private readonly DnsServerResponse m_pResponse;
             private readonly DateTime          m_Expires;
 
             /// <summary>
@@ -58,10 +58,10 @@ namespace LumiSoft.Net.DNS.Client
 
         #endregion
 
-        private Dictionary<string,CacheEntry> m_pCache              = null;
+        private Dictionary<string,CacheEntry> m_pCache;
         private int                           m_MaxCacheTtl         = 86400;
         private int                           m_MaxNegativeCacheTtl = 900;
-        private TimerEx                       m_pTimerTimeout       = null;
+        private TimerEx                       m_pTimerTimeout;
 
         /// <summary>
         /// Default constructor.

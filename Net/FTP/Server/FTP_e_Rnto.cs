@@ -7,9 +7,9 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Rnto : EventArgs
     {
-        private FTP_t_ReplyLine[] m_pReplyLines = null;
-        private readonly string            m_SourcePath  = null;
-        private readonly string            m_TargetPath  = null;
+        private FTP_t_ReplyLine[] m_pReplyLines;
+        private readonly string            m_SourcePath;
+        private readonly string            m_TargetPath;
 
         /// <summary>
         /// Default constructor.

@@ -11,7 +11,7 @@ namespace LumiSoft.Net.Mime
 	public class GroupAddress : Address
 	{
 		private string                   m_DisplayName   = "";
-		private readonly MailboxAddressCollection m_pGroupMembers = null;
+		private readonly MailboxAddressCollection m_pGroupMembers;
 
 		/// <summary>
 		/// Default constructor.

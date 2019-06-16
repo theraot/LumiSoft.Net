@@ -9,7 +9,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class HeaderFieldParameterCollection : IEnumerable
 	{
-		private readonly ParametizedHeaderField m_pHeaderField = null;
+		private readonly ParametizedHeaderField m_pHeaderField;
 
 		/// <summary>
 		/// Default constructor.

@@ -5,7 +5,7 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class EmailAddress
     {
-        private readonly Item                  m_pItem        = null;
+        private readonly Item                  m_pItem;
         private EmailAddressType_enum m_Type         = EmailAddressType_enum.Internet;
         private string                m_EmailAddress = "";
                 

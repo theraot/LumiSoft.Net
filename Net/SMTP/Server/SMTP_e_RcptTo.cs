@@ -7,9 +7,9 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_RcptTo : EventArgs
     {
-        private readonly SMTP_Session m_pSession  = null;
-        private readonly SMTP_RcptTo  m_pRcptTo   = null;
-        private SMTP_Reply   m_pReply    = null;
+        private readonly SMTP_Session m_pSession;
+        private readonly SMTP_RcptTo  m_pRcptTo;
+        private SMTP_Reply   m_pReply;
 
         /// <summary>
         /// Default constructor.

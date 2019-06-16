@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IMAP.Client
     internal class IMAP_Client_CmdPart
     {
         private readonly IMAP_Client_CmdPart_Type m_Type  = IMAP_Client_CmdPart_Type.Constant;
-        private readonly string                   m_Value = null;
+        private readonly string                   m_Value;
         
         /// <summary>
         /// Default constructor.

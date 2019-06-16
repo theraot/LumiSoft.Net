@@ -7,7 +7,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_SendStreamEventArgs : EventArgs
     {
-        private readonly RTP_SendStream m_pStream = null;
+        private readonly RTP_SendStream m_pStream;
 
         /// <summary>
         /// Default constructor.
