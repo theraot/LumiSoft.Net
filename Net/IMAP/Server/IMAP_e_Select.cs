@@ -14,7 +14,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="cmdTag">Command tag.</param>
         /// <param name="folder">Folder name with optional path.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>cmdTag</b> or <b>folder</b> is null reference.</exception>
-        internal IMAP_e_Select(string cmdTag,string folder)
+        internal IMAP_e_Select(string cmdTag, string folder)
         {
             CmdTag = cmdTag ?? throw new ArgumentNullException("cmdTag");
             Folder = folder ?? throw new ArgumentNullException("folder");
@@ -23,8 +23,8 @@ namespace LumiSoft.Net.IMAP.Server
             PermanentFlags = new List<string>();
 
             // Add default falgs.
-            Flags.AddRange(new[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
-            PermanentFlags.AddRange(new[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
+            Flags.AddRange(new[] { "\\Answered", "\\Flagged", "\\Deleted", "\\Seen", "\\Draft" });
+            PermanentFlags.AddRange(new[] { "\\Answered", "\\Flagged", "\\Deleted", "\\Seen", "\\Draft" });
         }
 
         /// <summary>
@@ -38,14 +38,14 @@ namespace LumiSoft.Net.IMAP.Server
         public IMAP_r_ServerStatus ErrorResponse { get; set; }
 
         /// <summary>
+        /// Gets folder supported flags collection.
+        /// </summary>
+        public List<string> Flags { get; }
+
+        /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
         public string Folder { get; }
-
-        /// <summary>
-        /// Gets or sets if specified folder is read-only.
-        /// </summary>
-        public bool IsReadOnly { get; set; }
 
         /// <summary>
         /// Gets or sets folder UID value. Value 0 means not specified.
@@ -53,9 +53,9 @@ namespace LumiSoft.Net.IMAP.Server
         public int FolderUID { get; set; }
 
         /// <summary>
-        /// Gets folder supported flags collection.
+        /// Gets or sets if specified folder is read-only.
         /// </summary>
-        public List<string> Flags { get; }
+        public bool IsReadOnly { get; set; }
 
         /// <summary>
         /// Gets folder supported permanent flags collection.

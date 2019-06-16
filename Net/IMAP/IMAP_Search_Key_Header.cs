@@ -22,65 +22,10 @@ namespace LumiSoft.Net.IMAP
         /// <param name="fieldName">Header field name. For example: 'Subject'.</param>
         /// <param name="value">String value.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>fieldName</b> or <b>value</b> is null reference.</exception>
-        public IMAP_Search_Key_Header(string fieldName,string value)
+        public IMAP_Search_Key_Header(string fieldName, string value)
         {
             FieldName = fieldName ?? throw new ArgumentNullException("fieldName");
-            Value     = value ?? throw new ArgumentNullException("value");
-        }
-
-        /// <summary>
-        /// Returns parsed IMAP SEARCH <b>HEADER (field-name) (string)</b> key.
-        /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP SEARCH <b>HEADER (field-name) (string)</b> key.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        internal static IMAP_Search_Key_Header Parse(StringReader r)
-        {
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-
-            var word = r.ReadWord();
-            if (!string.Equals(word,"HEADER",StringComparison.InvariantCultureIgnoreCase)){
-                throw new ParseException("Parse error: Not a SEARCH 'HEADER' key.");
-            }
-            var fieldName = IMAP_Utils.ReadString(r);
-            if (fieldName == null){
-                throw new ParseException("Parse error: Invalid 'HEADER' field-name value.");
-            }
-            var value = IMAP_Utils.ReadString(r);
-            if (value == null){
-                throw new ParseException("Parse error: Invalid 'HEADER' string value.");
-            }
-
-            return new IMAP_Search_Key_Header(fieldName,value);
-        }
-
-        /// <summary>
-        /// Returns this as string.
-        /// </summary>
-        /// <returns>Returns this as string.</returns>
-        public override string ToString()
-        {
-            return "HEADER " + TextUtils.QuoteString(FieldName) + " " + TextUtils.QuoteString(Value);
-        }
-
-        /// <summary>
-        /// Stores IMAP search-key command parts to the specified array.
-        /// </summary>
-        /// <param name="list">Array where to store command parts.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
-        internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
-        {
-            if(list == null){
-                throw new ArgumentNullException("list");
-            }
-
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"HEADER "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,FieldName));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant," "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
+            Value = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
@@ -92,5 +37,65 @@ namespace LumiSoft.Net.IMAP
         /// Gets filter value.
         /// </summary>
         public string Value { get; } = "";
+
+        /// <summary>
+        /// Returns this as string.
+        /// </summary>
+        /// <returns>Returns this as string.</returns>
+        public override string ToString()
+        {
+            return "HEADER " + TextUtils.QuoteString(FieldName) + " " + TextUtils.QuoteString(Value);
+        }
+
+        /// <summary>
+        /// Returns parsed IMAP SEARCH <b>HEADER (field-name) (string)</b> key.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP SEARCH <b>HEADER (field-name) (string)</b> key.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
+        internal static IMAP_Search_Key_Header Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            var word = r.ReadWord();
+            if (!string.Equals(word, "HEADER", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ParseException("Parse error: Not a SEARCH 'HEADER' key.");
+            }
+            var fieldName = IMAP_Utils.ReadString(r);
+            if (fieldName == null)
+            {
+                throw new ParseException("Parse error: Invalid 'HEADER' field-name value.");
+            }
+            var value = IMAP_Utils.ReadString(r);
+            if (value == null)
+            {
+                throw new ParseException("Parse error: Invalid 'HEADER' string value.");
+            }
+
+            return new IMAP_Search_Key_Header(fieldName, value);
+        }
+
+        /// <summary>
+        /// Stores IMAP search-key command parts to the specified array.
+        /// </summary>
+        /// <param name="list">Array where to store command parts.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
+        internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, "HEADER "));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String, FieldName));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, " "));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String, Value));
+        }
     }
 }

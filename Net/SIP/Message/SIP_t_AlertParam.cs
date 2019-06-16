@@ -17,6 +17,24 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Uri = "";
 
         /// <summary>
+        /// Gets or sets uri value.
+        /// </summary>
+        public string Uri
+        {
+            get { return m_Uri; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Uri value can't be null or empty !");
+                }
+
+                m_Uri = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "alert-param" from specified value.
         /// </summary>
         /// <param name="value">SIP "alert-param" value.</param>
@@ -24,7 +42,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -43,14 +62,16 @@ namespace LumiSoft.Net.SIP.Message
                 alert-param = LAQUOT absoluteURI RAQUOT *( SEMI generic-param )
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
-            
+
             // Parse uri
             // Read to LAQUOT
             reader.QuotedReadToDelimiter('<');
-            if(!reader.StartsWith("<")){
+            if (!reader.StartsWith("<"))
+            {
                 throw new SIP_ParseException("Invalid Alert-Info value, Uri not between <> !");
             }
             m_Uri = reader.ReadParenthesized();
@@ -70,22 +91,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets uri value.
-        /// </summary>
-        public string Uri
-        {
-            get{ return m_Uri; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Uri value can't be null or empty !");
-                }
-
-                m_Uri = value;
-            }
         }
     }
 }

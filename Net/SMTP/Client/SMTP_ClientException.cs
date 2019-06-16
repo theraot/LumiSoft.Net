@@ -14,11 +14,12 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>responseLine</b> is null.</exception>
         public SMTP_ClientException(string responseLine) : base(responseLine.TrimEnd())
         {
-            if(responseLine == null){
+            if (responseLine == null)
+            {
                 throw new ArgumentNullException("responseLine");
             }
 
-            ReplyLines = new[]{SMTP_t_ReplyLine.Parse(responseLine)};
+            ReplyLines = new[] { SMTP_t_ReplyLine.Parse(responseLine) };
         }
 
         /// <summary>
@@ -28,31 +29,8 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>replyLines</b> is null reference.</exception>
         public SMTP_ClientException(SMTP_t_ReplyLine[] replyLines) : base(replyLines[0].ToString().TrimEnd())
         {
-            ReplyLines = replyLines ?? throw new ArgumentNullException("replyLines");            
+            ReplyLines = replyLines ?? throw new ArgumentNullException("replyLines");
         }
-
-        /// <summary>
-        /// Gets SMTP status code.
-        /// </summary>
-        [Obsolete("Use property 'ReplyLines' insead.")]
-        public int StatusCode
-        {
-            get{ return ReplyLines[0].ReplyCode; }
-        }
-
-        /// <summary>
-        /// Gets SMTP server response text after status code.
-        /// </summary>
-        [Obsolete("Use property 'ReplyLines' insead.")]
-        public string ResponseText
-        {
-            get{ return ReplyLines[0].Text; }
-        }
-
-        /// <summary>
-        /// Gets SMTP server error reply lines.
-        /// </summary>
-        public SMTP_t_ReplyLine[] ReplyLines { get; }
 
         /// <summary>
         /// Gets if it is permanent SMTP(5xx) error.
@@ -61,12 +39,36 @@ namespace LumiSoft.Net.SMTP.Client
         {
             get
             {
-                if(ReplyLines[0].ReplyCode >= 500 && ReplyLines[0].ReplyCode <= 599){
+                if (ReplyLines[0].ReplyCode >= 500 && ReplyLines[0].ReplyCode <= 599)
+                {
                     return true;
                 }
 
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Gets SMTP server error reply lines.
+        /// </summary>
+        public SMTP_t_ReplyLine[] ReplyLines { get; }
+
+        /// <summary>
+        /// Gets SMTP server response text after status code.
+        /// </summary>
+        [Obsolete("Use property 'ReplyLines' insead.")]
+        public string ResponseText
+        {
+            get { return ReplyLines[0].Text; }
+        }
+
+        /// <summary>
+        /// Gets SMTP status code.
+        /// </summary>
+        [Obsolete("Use property 'ReplyLines' insead.")]
+        public int StatusCode
+        {
+            get { return ReplyLines[0].ReplyCode; }
         }
     }
 }

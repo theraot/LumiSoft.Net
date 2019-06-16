@@ -8,8 +8,8 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_DigestMD5_Response
     {
+        private string m_Password;
         private readonly AUTH_SASL_DigestMD5_Challenge m_pChallenge;
-        private string                        m_Password;
 
         /// <summary>
         /// Default constructor.
@@ -23,19 +23,19 @@ namespace LumiSoft.Net.AUTH
         /// <param name="qop">Indicates what "quality of protection" the client accepted. This must be one value of the challenge QopOptions.</param>
         /// <param name="digestUri">Digest URI.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>challenge</b>,<b>realm</b>,<b>password</b>,<b>nonce</b>,<b>qop</b> or <b>digestUri</b> is null reference.</exception>
-        public AUTH_SASL_DigestMD5_Response(AUTH_SASL_DigestMD5_Challenge challenge,string realm,string userName,string password,string cnonce,int nonceCount,string qop,string digestUri)
+        public AUTH_SASL_DigestMD5_Response(AUTH_SASL_DigestMD5_Challenge challenge, string realm, string userName, string password, string cnonce, int nonceCount, string qop, string digestUri)
         {
             m_pChallenge = challenge ?? throw new ArgumentNullException("challenge");
-            Realm      = realm ?? throw new ArgumentNullException("realm");
-            UserName   = userName ?? throw new ArgumentNullException("userName");
-            m_Password   = password ?? throw new ArgumentNullException("password");
-            Nonce      = m_pChallenge.Nonce;
-            Cnonce     = cnonce ?? throw new ArgumentNullException("cnonce");
+            Realm = realm ?? throw new ArgumentNullException("realm");
+            UserName = userName ?? throw new ArgumentNullException("userName");
+            m_Password = password ?? throw new ArgumentNullException("password");
+            Nonce = m_pChallenge.Nonce;
+            Cnonce = cnonce ?? throw new ArgumentNullException("cnonce");
             NonceCount = nonceCount;
-            Qop        = qop ?? throw new ArgumentNullException("qop");
-            DigestUri  = digestUri ?? throw new ArgumentNullException("digestUri");                        
-            Response   = CalculateResponse(userName,password);
-            Charset    = challenge.Charset;
+            Qop = qop ?? throw new ArgumentNullException("qop");
+            DigestUri = digestUri ?? throw new ArgumentNullException("digestUri");
+            Response = CalculateResponse(userName, password);
+            Charset = challenge.Charset;
         }
 
         /// <summary>
@@ -46,6 +46,61 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
+        /// Gets authorization ID.
+        /// </summary>
+        public string Authzid { get; private set; }
+
+        /// <summary>
+        /// Gets charset value.
+        /// </summary>
+        public string Charset { get; private set; }
+
+        /// <summary>
+        /// Gets cipher value.
+        /// </summary>
+        public string Cipher { get; private set; }
+
+        /// <summary>
+        /// Gets cnonce value.
+        /// </summary>
+        public string Cnonce { get; private set; }
+
+        /// <summary>
+        /// Gets digest URI value.
+        /// </summary>
+        public string DigestUri { get; private set; }
+
+        /// <summary>
+        /// Gets nonce value.
+        /// </summary>
+        public string Nonce { get; private set; }
+
+        /// <summary>
+        /// Gets nonce count.
+        /// </summary>
+        public int NonceCount { get; private set; }
+
+        /// <summary>
+        /// Gets "quality of protection" value.
+        /// </summary>
+        public string Qop { get; private set; }
+
+        /// <summary>
+        /// Gets realm(domain) name.
+        /// </summary>
+        public string Realm { get; private set; }
+
+        /// <summary>
+        /// Gets response value.
+        /// </summary>
+        public string Response { get; private set; }
+
+        /// <summary>
+        /// Gets user name.
+        /// </summary>
+        public string UserName { get; private set; }
+
+        /// <summary>
         /// Parses DIGEST-MD5 response from response-string.
         /// </summary>
         /// <param name="digestResponse">Response string.</param>
@@ -54,7 +109,8 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ParseException">Is raised when response parsing + validation fails.</exception>
         public static AUTH_SASL_DigestMD5_Response Parse(string digestResponse)
         {
-            if(digestResponse == null){
+            if (digestResponse == null)
+            {
                 throw new ArgumentNullException(digestResponse);
             }
 
@@ -89,50 +145,63 @@ namespace LumiSoft.Net.AUTH
                 cipher           = "cipher" "=" cipher-value
                 authzid          = "authzid" "=" <"> authzid-value <">
                 authzid-value    = qdstr-val
-            */    
-            
+            */
+
             var retVal = new AUTH_SASL_DigestMD5_Response();
 
             // Set default values.
             retVal.Realm = "";
 
-            var parameters = TextUtils.SplitQuotedString(digestResponse,',');
-            foreach (string parameter in parameters){
-                var name_value = parameter.Split(new[]{'='},2);
-                var   name       = name_value[0].Trim();
+            var parameters = TextUtils.SplitQuotedString(digestResponse, ',');
+            foreach (string parameter in parameters)
+            {
+                var name_value = parameter.Split(new[] { '=' }, 2);
+                var name = name_value[0].Trim();
 
-                if (name_value.Length == 2){
-                    if(name.ToLower() == "username"){
+                if (name_value.Length == 2)
+                {
+                    if (name.ToLower() == "username")
+                    {
                         retVal.UserName = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "realm"){
+                    else if (name.ToLower() == "realm")
+                    {
                         retVal.Realm = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "nonce"){            
+                    else if (name.ToLower() == "nonce")
+                    {
                         retVal.Nonce = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "cnonce"){
+                    else if (name.ToLower() == "cnonce")
+                    {
                         retVal.Cnonce = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "nc"){
-                        retVal.NonceCount = Int32.Parse(TextUtils.UnQuoteString(name_value[1]),System.Globalization.NumberStyles.HexNumber);
+                    else if (name.ToLower() == "nc")
+                    {
+                        retVal.NonceCount = Int32.Parse(TextUtils.UnQuoteString(name_value[1]), System.Globalization.NumberStyles.HexNumber);
                     }
-                    else if(name.ToLower() == "qop"){
+                    else if (name.ToLower() == "qop")
+                    {
                         retVal.Qop = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "digest-uri"){
+                    else if (name.ToLower() == "digest-uri")
+                    {
                         retVal.DigestUri = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "response"){
+                    else if (name.ToLower() == "response")
+                    {
                         retVal.Response = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "charset"){
+                    else if (name.ToLower() == "charset")
+                    {
                         retVal.Charset = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "cipher"){
+                    else if (name.ToLower() == "cipher")
+                    {
                         retVal.Cipher = TextUtils.UnQuoteString(name_value[1]);
                     }
-                    else if(name.ToLower() == "authzid"){
+                    else if (name.ToLower() == "authzid")
+                    {
                         retVal.Authzid = TextUtils.UnQuoteString(name_value[1]);
                     }
                 }
@@ -141,19 +210,24 @@ namespace LumiSoft.Net.AUTH
             /* Validate required fields.
                 Per RFC 2831 2.1.2. Only [username nonce cnonce nc response] parameters are required.
             */
-            if(string.IsNullOrEmpty(retVal.UserName)){
+            if (string.IsNullOrEmpty(retVal.UserName))
+            {
                 throw new ParseException("The response-string doesn't contain required parameter 'username' value.");
             }
-            if(string.IsNullOrEmpty(retVal.Nonce)){
+            if (string.IsNullOrEmpty(retVal.Nonce))
+            {
                 throw new ParseException("The response-string doesn't contain required parameter 'nonce' value.");
             }
-            if(string.IsNullOrEmpty(retVal.Cnonce)){
+            if (string.IsNullOrEmpty(retVal.Cnonce))
+            {
                 throw new ParseException("The response-string doesn't contain required parameter 'cnonce' value.");
-            }            
-            if(retVal.NonceCount < 1){
+            }
+            if (retVal.NonceCount < 1)
+            {
                 throw new ParseException("The response-string doesn't contain required parameter 'nc' value.");
             }
-            if(string.IsNullOrEmpty(retVal.Response)){
+            if (string.IsNullOrEmpty(retVal.Response))
+            {
                 throw new ParseException("The response-string doesn't contain required parameter 'response' value.");
             }
 
@@ -167,16 +241,19 @@ namespace LumiSoft.Net.AUTH
         /// <param name="password">Password.</param>
         /// <returns>Returns true if user authenticated, otherwise false.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b> or <b>password</b> is null reference.</exception>
-        public bool Authenticate(string userName,string password)
+        public bool Authenticate(string userName, string password)
         {
-            if(userName == null){
+            if (userName == null)
+            {
                 throw new ArgumentNullException("userName");
             }
-            if(password == null){
+            if (password == null)
+            {
                 throw new ArgumentNullException("password");
             }
 
-            if(Response == CalculateResponse(userName,password)){
+            if (Response == CalculateResponse(userName, password))
+            {
                 return true;
             }
 
@@ -231,13 +308,16 @@ namespace LumiSoft.Net.AUTH
             retVal.Append(",qop=" + Qop);
             retVal.Append(",digest-uri=\"" + DigestUri + "\"");
             retVal.Append(",response=" + Response);
-            if(!string.IsNullOrEmpty(Charset)){
+            if (!string.IsNullOrEmpty(Charset))
+            {
                 retVal.Append(",charset=" + Charset);
             }
-            if(!string.IsNullOrEmpty(Cipher)){
+            if (!string.IsNullOrEmpty(Cipher))
+            {
                 retVal.Append(",cipher=\"" + Cipher + "\"");
             }
-            if(!string.IsNullOrEmpty(Authzid)){
+            if (!string.IsNullOrEmpty(Authzid))
+            {
                 retVal.Append(",authzid=\"" + Authzid + "\"");
             }
             // auth-param
@@ -249,7 +329,7 @@ namespace LumiSoft.Net.AUTH
         /// Creates <b>response-auth</b> response for client.
         /// </summary>
         /// <returns>Returns <b>response-auth</b> response.</returns>
-        public string ToRspauthResponse(string userName,string password)
+        public string ToRspauthResponse(string userName, string password)
         {
             /* RFC 2831 2.1.3.
                 The server receives and validates the "digest-response". The server
@@ -282,20 +362,105 @@ namespace LumiSoft.Net.AUTH
             */
 
             byte[] a2 = null;
-            if(string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
+            if (string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth")
+            {
                 a2 = Encoding.UTF8.GetBytes(":" + DigestUri);
             }
-            else if(Qop.ToLower() == "auth-int" || Qop.ToLower() == "auth-conf"){
+            else if (Qop.ToLower() == "auth-int" || Qop.ToLower() == "auth-conf")
+            {
                 a2 = Encoding.UTF8.GetBytes(":" + DigestUri + ":00000000000000000000000000000000");
-            }            
+            }
 
-            if(Qop.ToLower() == "auth"){
+            if (Qop.ToLower() == "auth")
+            {
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return "rspauth=" + hex(kd(hex(h(a1(userName,password))),Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2))));
+                return "rspauth=" + hex(kd(hex(h(a1(userName, password))), Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2))));
             }
 
+            throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
+        }
+
+        /// <summary>
+        /// Calculates A1 value.
+        /// </summary>
+        /// <param name="userName">User name.</param>
+        /// <param name="password">Password.</param>
+        /// <returns>Returns A1 value.</returns>
+        private byte[] a1(string userName, string password)
+        {
+            /* RFC 2831 2.1.2.1.
+                If authzid is specified, then A1 is
+
+                A1 = { H( { username-value, ":", realm-value, ":", passwd } ),
+                      ":", nonce-value, ":", cnonce-value, ":", authzid-value }
+
+                If authzid is not specified, then A1 is
+
+                A1 = { H( { username-value, ":", realm-value, ":", passwd } ),
+                      ":", nonce-value, ":", cnonce-value
+             
+                NOTE: HTTP MD5 RFC 2617 supports more algorithms. SASL requires md5-sess.
+            */
+
+            if (string.IsNullOrEmpty(Authzid))
+            {
+                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
+                var nonce_cnonce = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce);
+
+                var retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
+                Array.Copy(user_realm_pwd, 0, retVal, 0, user_realm_pwd.Length);
+                Array.Copy(nonce_cnonce, 0, retVal, user_realm_pwd.Length, nonce_cnonce.Length);
+
+                return retVal;
+            }
+            else
+            {
+                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
+                var nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce + ":" + Authzid);
+
+                var retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
+                Array.Copy(user_realm_pwd, 0, retVal, 0, user_realm_pwd.Length);
+                Array.Copy(nonce_cnonce_authzid, 0, retVal, user_realm_pwd.Length, nonce_cnonce_authzid.Length);
+
+                return retVal;
+            }
+        }
+
+        /// <summary>
+        /// Calculates A2 value.
+        /// </summary>
+        /// <returns>Returns A2 value.</returns>
+        private byte[] a2()
+        {
+            /* RFC 2831 2.1.2.1.
+                If the "qop" directive's value is "auth", then A2 is:
+
+                    A2       = { "AUTHENTICATE:", digest-uri-value }
+
+                If the "qop" value is "auth-int" or "auth-conf" then A2 is:
+
+                    A2       = { "AUTHENTICATE:", digest-uri-value, ":00000000000000000000000000000000" }
+
+                Note that "AUTHENTICATE:" must be in upper case, and the second
+                string constant is a string with a colon followed by 32 zeros.
+             
+                RFC 2617(HTTP MD5) 3.2.2.3.
+                    A2       = Method ":" digest-uri-value ":" H(entity-body)
+
+                NOTE: In SASL entity-body hash always "00000000000000000000000000000000".
+            */
+
+            if (string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth")
+            {
+                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + DigestUri);
+            }
+
+            if (Qop.ToLower() == "auth-int" || Qop.ToLower() == "auth-conf")
+            {
+                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + DigestUri + ":00000000000000000000000000000000");
+            }
             throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
@@ -305,7 +470,7 @@ namespace LumiSoft.Net.AUTH
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
         /// <returns>Returns digest response.</returns>
-        private string CalculateResponse(string userName,string password)
+        private string CalculateResponse(string userName, string password)
         {
             /* RFC 2831.2.1.2.1.
                 The definition of "response-value" above indicates the encoding for
@@ -369,92 +534,15 @@ namespace LumiSoft.Net.AUTH
                 These directives are not needed when Digest is used as a SASL
                 mechanism (i.e., MUST NOT be sent, and MUST be ignored if received).
             */
-                        
-            if(string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
+
+            if (string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth")
+            {
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return hex(kd(hex(h(a1(userName,password))),Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2()))));
+                return hex(kd(hex(h(a1(userName, password))), Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2()))));
             }
 
-            throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
-        }
-
-        /// <summary>
-        /// Calculates A1 value.
-        /// </summary>
-        /// <param name="userName">User name.</param>
-        /// <param name="password">Password.</param>
-        /// <returns>Returns A1 value.</returns>
-        private byte[] a1(string userName,string password)
-        {   
-            /* RFC 2831 2.1.2.1.
-                If authzid is specified, then A1 is
-
-                A1 = { H( { username-value, ":", realm-value, ":", passwd } ),
-                      ":", nonce-value, ":", cnonce-value, ":", authzid-value }
-
-                If authzid is not specified, then A1 is
-
-                A1 = { H( { username-value, ":", realm-value, ":", passwd } ),
-                      ":", nonce-value, ":", cnonce-value
-             
-                NOTE: HTTP MD5 RFC 2617 supports more algorithms. SASL requires md5-sess.
-            */
-  
-            if(string.IsNullOrEmpty(Authzid)){
-                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
-                var nonce_cnonce   = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce);
-
-                var retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
-                Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
-                Array.Copy(nonce_cnonce,0,retVal,user_realm_pwd.Length,nonce_cnonce.Length);
-
-                return retVal;
-            }
-            else{
-                var user_realm_pwd       = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
-                var nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce + ":" + Authzid);
-
-                var retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
-                Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
-                Array.Copy(nonce_cnonce_authzid,0,retVal,user_realm_pwd.Length,nonce_cnonce_authzid.Length);
-
-                return retVal;
-            }
-        }
-
-        /// <summary>
-        /// Calculates A2 value.
-        /// </summary>
-        /// <returns>Returns A2 value.</returns>
-        private byte[] a2()
-        {
-            /* RFC 2831 2.1.2.1.
-                If the "qop" directive's value is "auth", then A2 is:
-
-                    A2       = { "AUTHENTICATE:", digest-uri-value }
-
-                If the "qop" value is "auth-int" or "auth-conf" then A2 is:
-
-                    A2       = { "AUTHENTICATE:", digest-uri-value, ":00000000000000000000000000000000" }
-
-                Note that "AUTHENTICATE:" must be in upper case, and the second
-                string constant is a string with a colon followed by 32 zeros.
-             
-                RFC 2617(HTTP MD5) 3.2.2.3.
-                    A2       = Method ":" digest-uri-value ":" H(entity-body)
-
-                NOTE: In SASL entity-body hash always "00000000000000000000000000000000".
-            */
-
-            if(string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
-                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + DigestUri);
-            }
-
-            if(Qop.ToLower() == "auth-int" || Qop.ToLower() == "auth-conf"){
-                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + DigestUri + ":00000000000000000000000000000000");
-            }
             throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
@@ -465,16 +553,9 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Return MD5 hash.</returns>
         private byte[] h(byte[] value)
         {
-            System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();			
-			
+            System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+
             return md5.ComputeHash(value);
-        }
-
-        private byte[] kd(string secret,string data)
-        {
-            // KD(secret, data) = H(concat(secret, ":", data))
-
-            return h(Encoding.UTF8.GetBytes(secret + ":" + data));
         }
 
         /// <summary>
@@ -487,59 +568,11 @@ namespace LumiSoft.Net.AUTH
             return Net_Utils.ToHex(value);
         }
 
-        /// <summary>
-        /// Gets user name.
-        /// </summary>
-        public string UserName { get; private set; }
+        private byte[] kd(string secret, string data)
+        {
+            // KD(secret, data) = H(concat(secret, ":", data))
 
-        /// <summary>
-        /// Gets realm(domain) name.
-        /// </summary>
-        public string Realm { get; private set; }
-
-        /// <summary>
-        /// Gets nonce value.
-        /// </summary>
-        public string Nonce { get; private set; }
-
-        /// <summary>
-        /// Gets cnonce value.
-        /// </summary>
-        public string Cnonce { get; private set; }
-
-        /// <summary>
-        /// Gets nonce count.
-        /// </summary>
-        public int NonceCount { get; private set; }
-
-        /// <summary>
-        /// Gets "quality of protection" value.
-        /// </summary>
-        public string Qop { get; private set; }
-
-        /// <summary>
-        /// Gets digest URI value.
-        /// </summary>
-        public string DigestUri { get; private set; }
-
-        /// <summary>
-        /// Gets response value.
-        /// </summary>
-        public string Response { get; private set; }
-
-        /// <summary>
-        /// Gets charset value.
-        /// </summary>
-        public string Charset { get; private set; }
-
-        /// <summary>
-        /// Gets cipher value.
-        /// </summary>
-        public string Cipher { get; private set; }
-
-        /// <summary>
-        /// Gets authorization ID.
-        /// </summary>
-        public string Authzid { get; private set; }
+            return h(Encoding.UTF8.GetBytes(secret + ":" + data));
+        }
     }
 }

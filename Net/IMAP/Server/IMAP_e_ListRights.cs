@@ -16,12 +16,22 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="identifier">ACL identifier (normally user or group name).</param>
         /// <param name="response">Default IMAP server response.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b>,<b>identifier</b> or <b>response</b> is null reference.</exception>
-        internal IMAP_e_ListRights(string folder,string identifier,IMAP_r_ServerStatus response)
+        internal IMAP_e_ListRights(string folder, string identifier, IMAP_r_ServerStatus response)
         {
-            Folder     = folder ?? throw new ArgumentNullException("folder");
+            Folder = folder ?? throw new ArgumentNullException("folder");
             Identifier = identifier ?? throw new ArgumentNullException("identifier");
-            m_pResponse  = response ?? throw new ArgumentNullException("response");
+            m_pResponse = response ?? throw new ArgumentNullException("response");
         }
+
+        /// <summary>
+        /// Gets folder name with optional path.
+        /// </summary>
+        public string Folder { get; }
+
+        /// <summary>
+        /// Gets ACL identifier (normally user or group name).
+        /// </summary>
+        public string Identifier { get; }
 
         /// <summary>
         /// Gets or sets LISTRIGHTS response.
@@ -34,21 +44,12 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
         public IMAP_r_ServerStatus Response
         {
-            get{ return m_pResponse; }
+            get { return m_pResponse; }
 
-            set{
-                m_pResponse = value ?? throw new ArgumentNullException("value"); 
+            set
+            {
+                m_pResponse = value ?? throw new ArgumentNullException("value");
             }
         }
-
-        /// <summary>
-        /// Gets folder name with optional path.
-        /// </summary>
-        public string Folder { get; }
-
-        /// <summary>
-        /// Gets ACL identifier (normally user or group name).
-        /// </summary>
-        public string Identifier { get; }
     }
 }

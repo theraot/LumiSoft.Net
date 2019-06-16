@@ -14,12 +14,18 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public IMAP_r_u_Expunge(int seqNo)
         {
-            if(seqNo < 1){
-                throw new ArgumentException("Arguments 'seqNo' value must be >= 1.","seqNo");
+            if (seqNo < 1)
+            {
+                throw new ArgumentException("Arguments 'seqNo' value must be >= 1.", "seqNo");
             }
 
             SeqNo = seqNo;
         }
+
+        /// <summary>
+        /// Gets message sequence number.
+        /// </summary>
+        public int SeqNo { get; } = 1;
 
         /// <summary>
         /// Parses EXPUNGE response from expunge-response string.
@@ -29,7 +35,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Expunge Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -74,7 +81,7 @@ namespace LumiSoft.Net.IMAP
 
                 Example:    S: * 44 EXPUNGE
             */
-                                               
+
             return new IMAP_r_u_Expunge(Convert.ToInt32(response.Split(' ')[1]));
         }
 
@@ -88,10 +95,5 @@ namespace LumiSoft.Net.IMAP
 
             return "* " + SeqNo.ToString() + " EXPUNGE\r\n";
         }
-
-        /// <summary>
-        /// Gets message sequence number.
-        /// </summary>
-        public int SeqNo { get; } = 1;
     }
 }

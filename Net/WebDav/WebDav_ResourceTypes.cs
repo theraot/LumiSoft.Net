@@ -5,15 +5,6 @@
     /// </summary>
     public class WebDav_ResourceTypes
     {
-        /// <summary>
-        /// This class represents 'DAV:collection' resurce type.
-        /// </summary>
-        public static readonly string collection = "DAV:collection";
-
-        /// <summary>
-        /// This class represents 'DAV:version-history' resurce type.
-        /// </summary>
-        public static readonly string version_history = "DAV:version-history";
 
         /// <summary>
         /// This class represents 'DAV:activity' resurce type.
@@ -24,5 +15,14 @@
         /// This class represents 'DAV:baseline' resurce type.
         /// </summary>
         public static readonly string baseline = "DAV:baseline";
+        /// <summary>
+        /// This class represents 'DAV:collection' resurce type.
+        /// </summary>
+        public static readonly string collection = "DAV:collection";
+
+        /// <summary>
+        /// This class represents 'DAV:version-history' resurce type.
+        /// </summary>
+        public static readonly string version_history = "DAV:version-history";
     }
 }

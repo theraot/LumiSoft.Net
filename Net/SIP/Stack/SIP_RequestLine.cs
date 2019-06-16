@@ -7,9 +7,9 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_RequestLine
     {
-        private string      m_Method  = "";
+        private string m_Method = "";
         private AbsoluteUri m_pUri;
-        private string      m_Version = "";
+        private string m_Version = "";
 
         /// <summary>
         /// Default constructor.
@@ -18,30 +18,20 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="uri">Request URI.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>method</b> or <b>uri</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SIP_RequestLine(string method,AbsoluteUri uri)
+        public SIP_RequestLine(string method, AbsoluteUri uri)
         {
-            if(method == null){
+            if (method == null)
+            {
                 throw new ArgumentNullException("method");
             }
-            if(!SIP_Utils.IsToken(method)){
+            if (!SIP_Utils.IsToken(method))
+            {
                 throw new ArgumentException("Argument 'method' value must be token.");
             }
 
-            m_Method  = method.ToUpper();
-            m_pUri    = uri ?? throw new ArgumentNullException("uri");
+            m_Method = method.ToUpper();
+            m_pUri = uri ?? throw new ArgumentNullException("uri");
             m_Version = "SIP/2.0";
-        }
-
-        /// <summary>
-        /// Returns Request-Line string.
-        /// </summary>
-        /// <returns>Returns Request-Line string.</returns>
-        public override string ToString()
-        {
-            // RFC 3261 25. 
-            //  Request-Line = Method SP Request-URI SP SIP-Version CRLF
-
-            return m_Method + " " + m_pUri.ToString() + " " + m_Version + "\r\n";
         }
 
         /// <summary>
@@ -51,13 +41,16 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when <b>value</b> has invalid value.</exception>
         public string Method
         {
-            get{ return m_Method; }
+            get { return m_Method; }
 
-            set{
-                if(value == null){
+            set
+            {
+                if (value == null)
+                {
                     throw new ArgumentNullException("Method");
                 }
-                if(!SIP_Utils.IsToken(value)){
+                if (!SIP_Utils.IsToken(value))
+                {
                     throw new ArgumentException("Property 'Method' value must be token.");
                 }
 
@@ -71,9 +64,10 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public AbsoluteUri Uri
         {
-            get{ return m_pUri; }
+            get { return m_pUri; }
 
-            set{
+            set
+            {
                 m_pUri = value ?? throw new ArgumentNullException("Uri");
             }
         }
@@ -85,18 +79,33 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when <b>value</b> has invalid value.</exception>
         public string Version
         {
-            get{ return m_Version; }
+            get { return m_Version; }
 
-            set{
-                if(value == null){
+            set
+            {
+                if (value == null)
+                {
                     throw new ArgumentNullException("Version");
                 }
-                if(value == ""){
+                if (value == "")
+                {
                     throw new ArgumentException("Property 'Version' value must be specified.");
                 }
 
                 m_Version = value;
             }
+        }
+
+        /// <summary>
+        /// Returns Request-Line string.
+        /// </summary>
+        /// <returns>Returns Request-Line string.</returns>
+        public override string ToString()
+        {
+            // RFC 3261 25. 
+            //  Request-Line = Method SP Request-URI SP SIP-Version CRLF
+
+            return m_Method + " " + m_pUri.ToString() + " " + m_Version + "\r\n";
         }
     }
 }

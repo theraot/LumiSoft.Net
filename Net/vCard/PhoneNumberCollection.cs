@@ -8,8 +8,8 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class PhoneNumberCollection : IEnumerable
     {
-        private readonly vCard             m_pOwner;
         private readonly List<PhoneNumber> m_pCollection;
+        private readonly vCard m_pOwner;
 
         /// <summary>
         /// Default constructor.
@@ -17,12 +17,21 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="owner">Owner vCard.</param>
         internal PhoneNumberCollection(vCard owner)
         {
-            m_pOwner      = owner;
+            m_pOwner = owner;
             m_pCollection = new List<PhoneNumber>();
 
-            foreach(Item item in owner.Items.Get("TEL")){
+            foreach (Item item in owner.Items.Get("TEL"))
+            {
                 m_pCollection.Add(PhoneNumber.Parse(item));
             }
+        }
+
+        /// <summary>
+        /// Gets number of items in the collection.
+        /// </summary>
+        public int Count
+        {
+            get { return m_pCollection.Count; }
         }
 
         /// <summary>
@@ -30,20 +39,10 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         /// <param name="type">Phone number type. Note: This value can be flagged value !</param>
         /// <param name="number">Phone number.</param>
-        public void Add(PhoneNumberType_enum type,string number)
-        {            
-            var item = m_pOwner.Items.Add("TEL",PhoneNumber.PhoneTypeToString(type),number);
-            m_pCollection.Add(new PhoneNumber(item,type,number));
-        }
-
-        /// <summary>
-        /// Removes specified item from the collection.
-        /// </summary>
-        /// <param name="item">Item to remove.</param>
-        public void Remove(PhoneNumber item)
+        public void Add(PhoneNumberType_enum type, string number)
         {
-            m_pOwner.Items.Remove(item.Item);
-            m_pCollection.Remove(item);
+            var item = m_pOwner.Items.Add("TEL", PhoneNumber.PhoneTypeToString(type), number);
+            m_pCollection.Add(new PhoneNumber(item, type, number));
         }
 
         /// <summary>
@@ -51,7 +50,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public void Clear()
         {
-            foreach(PhoneNumber number in m_pCollection){
+            foreach (PhoneNumber number in m_pCollection)
+            {
                 m_pOwner.Items.Remove(number.Item);
             }
             m_pCollection.Clear();
@@ -62,16 +62,18 @@ namespace LumiSoft.Net.Mime.vCard
 		/// </summary>
 		/// <returns></returns>
 		public IEnumerator GetEnumerator()
-		{
-			return m_pCollection.GetEnumerator();
-		}
+        {
+            return m_pCollection.GetEnumerator();
+        }
 
         /// <summary>
-        /// Gets number of items in the collection.
+        /// Removes specified item from the collection.
         /// </summary>
-        public int Count
+        /// <param name="item">Item to remove.</param>
+        public void Remove(PhoneNumber item)
         {
-            get{ return m_pCollection.Count; }
+            m_pOwner.Items.Remove(item.Item);
+            m_pCollection.Remove(item);
         }
     }
 }

@@ -5,18 +5,18 @@
     /// </summary>
     public abstract class WebDav_p
     {
-        /// <summary>
-        /// Gets property namespace.
-        /// </summary>
-        public abstract string Namespace
-        {
-            get;
-        }
 
         /// <summary>
         /// Gets property name.
         /// </summary>
         public abstract string Name
+        {
+            get;
+        }
+        /// <summary>
+        /// Gets property namespace.
+        /// </summary>
+        public abstract string Namespace
         {
             get;
         }

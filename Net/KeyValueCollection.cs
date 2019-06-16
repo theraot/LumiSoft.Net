@@ -6,18 +6,36 @@ namespace LumiSoft.Net
     /// <summary>
     /// Represents a collection that can be accessed either with the key or with the index. 
     /// </summary>
-    public class KeyValueCollection<K,V> : IEnumerable
+    public class KeyValueCollection<K, V> : IEnumerable
     {
-        private readonly Dictionary<K,V> m_pDictionary;
-        private readonly List<V>         m_pList;
+        private readonly Dictionary<K, V> m_pDictionary;
+        private readonly List<V> m_pList;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public KeyValueCollection()
         {
-            m_pDictionary = new Dictionary<K,V>();
+            m_pDictionary = new Dictionary<K, V>();
             m_pList = new List<V>();
+        }
+
+        /// <summary>
+        /// Gets number of items int he collection.
+        /// </summary>
+        public int Count
+        {
+            get { return m_pList.Count; }
+        }
+
+        /// <summary>
+        /// Gets item with the specified key.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <returns>Returns item with the specified key. If the specified key is not found, a get operation throws a KeyNotFoundException.</returns>
+        public V this[K key]
+        {
+            get { return m_pDictionary[key]; }
         }
 
         /// <summary>
@@ -25,28 +43,10 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="key">Key.</param>
         /// <param name="value">Value.</param>
-        public void Add(K key,V value)
+        public void Add(K key, V value)
         {
-            m_pDictionary.Add(key,value);
+            m_pDictionary.Add(key, value);
             m_pList.Add(value);
-        }
-
-        /// <summary>
-        /// Removes the value with the specified key from the collection.
-        /// </summary>
-        /// <param name="key">Key.</param>
-        /// <returns>Returns if key found and removed, otherwise false.</returns>
-        public bool Remove(K key)
-        {
-            var value = default(V);
-            if (m_pDictionary.TryGetValue(key,out value)){
-                m_pDictionary.Remove(key);
-                m_pList.Remove(value);
-
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -69,28 +69,26 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Gets the value associated with the specified key.
-        /// </summary>
-        /// <param name="key">Key.</param>
-        /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found.</param>
-        /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
-        public bool TryGetValue(K key,out V value)
+		/// Gets enumerator.
+		/// </summary>
+		/// <returns>Returns IEnumerator interface.</returns>
+		public IEnumerator GetEnumerator()
         {
-            return m_pDictionary.TryGetValue(key,out value);
+            return m_pList.GetEnumerator();
         }
 
         /// <summary>
-        /// Gets the value at the specified index.
+        /// Removes the value with the specified key from the collection.
         /// </summary>
-        /// <param name="index">Zero based item index.</param>
-        /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found.</param>
-        /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
-        public bool TryGetValueAt(int index,out V value)
+        /// <param name="key">Key.</param>
+        /// <returns>Returns if key found and removed, otherwise false.</returns>
+        public bool Remove(K key)
         {
-            value = default(V);
-
-            if(m_pList.Count > 0 && index >= 0 && index < m_pList.Count){
-                value = m_pList[index];
+            var value = default(V);
+            if (m_pDictionary.TryGetValue(key, out value))
+            {
+                m_pDictionary.Remove(key);
+                m_pList.Remove(value);
 
                 return true;
             }
@@ -104,36 +102,41 @@ namespace LumiSoft.Net
         /// <returns>Returns elements in a new array.</returns>
         public V[] ToArray()
         {
-            lock(m_pList){
+            lock (m_pList)
+            {
                 return m_pList.ToArray();
             }
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns>Returns IEnumerator interface.</returns>
-		public IEnumerator GetEnumerator()
-		{
-			return m_pList.GetEnumerator();
-		}
-
-        /// <summary>
-        /// Gets number of items int he collection.
+        /// Gets the value associated with the specified key.
         /// </summary>
-        public int Count
+        /// <param name="key">Key.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found.</param>
+        /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
+        public bool TryGetValue(K key, out V value)
         {
-            get{ return m_pList.Count; }
+            return m_pDictionary.TryGetValue(key, out value);
         }
 
         /// <summary>
-        /// Gets item with the specified key.
+        /// Gets the value at the specified index.
         /// </summary>
-        /// <param name="key">Key.</param>
-        /// <returns>Returns item with the specified key. If the specified key is not found, a get operation throws a KeyNotFoundException.</returns>
-        public V this[K key]
+        /// <param name="index">Zero based item index.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found.</param>
+        /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
+        public bool TryGetValueAt(int index, out V value)
         {
-            get{ return m_pDictionary[key]; }
+            value = default(V);
+
+            if (m_pList.Count > 0 && index >= 0 && index < m_pList.Count)
+            {
+                value = m_pList[index];
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

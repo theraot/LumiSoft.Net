@@ -16,9 +16,14 @@ namespace LumiSoft.Net.DNS
         /// <param name="name">DNS domain name that owns a resource record.</param>
         /// <param name="text">SPF text.</param>
 		/// <param name="ttl">TTL (time to live) value in seconds.</param>
-        public DNS_rr_SPF(string name,string text,int ttl) : base(name,DNS_QType.SPF,ttl)
+        public DNS_rr_SPF(string name, string text, int ttl) : base(name, DNS_QType.SPF, ttl)
         {
         }
+
+        /// <summary>
+		/// Gets text.
+		/// </summary>
+		public string Text { get; } = "";
 
         /// <summary>
         /// Parses resource record from reply data.
@@ -28,18 +33,13 @@ namespace LumiSoft.Net.DNS
         /// <param name="offset">Current offset in reply data.</param>
         /// <param name="rdLength">Resource record data length.</param>
         /// <param name="ttl">Time to live in seconds.</param>
-        public static DNS_rr_SPF Parse(string name,byte[] reply,ref int offset,int rdLength,int ttl)
+        public static DNS_rr_SPF Parse(string name, byte[] reply, ref int offset, int rdLength, int ttl)
         {
             // SPF RR
 
-            var text = Dns_Client.ReadCharacterString(reply,ref offset);
+            var text = Dns_Client.ReadCharacterString(reply, ref offset);
 
-            return new DNS_rr_SPF(name,text,ttl);
+            return new DNS_rr_SPF(name, text, ttl);
         }
-
-        /// <summary>
-		/// Gets text.
-		/// </summary>
-		public string Text { get; } = "";
     }
 }

@@ -16,19 +16,31 @@ namespace LumiSoft.Net.IMAP
         /// <param name="rights">Rights values.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_Response_MyRights(string folder,string rights)
+        public IMAP_Response_MyRights(string folder, string rights)
         {
-            if(folder == null){
+            if (folder == null)
+            {
                 throw new ArgumentNullException("folder");
             }
-            if(folder == string.Empty){
-                throw new ArgumentException("Argument 'folder' value must be specified.","folder");
+            if (folder == string.Empty)
+            {
+                throw new ArgumentException("Argument 'folder' value must be specified.", "folder");
             }
 
             FolderName = folder;
-            
+
             Rights = rights;
         }
+
+        /// <summary>
+        /// Gets folder name.
+        /// </summary>
+        public string FolderName { get; } = "";
+
+        /// <summary>
+        /// Gets rights list.
+        /// </summary>
+        public string Rights { get; }
 
         /// <summary>
         /// Parses MYRIGHTS response from MYRIGHTS-response string.
@@ -38,7 +50,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>myRightsResponse</b> is null reference.</exception>
         public static IMAP_Response_MyRights Parse(string myRightsResponse)
         {
-            if(myRightsResponse == null){
+            if (myRightsResponse == null)
+            {
                 throw new ArgumentNullException("myRightsResponse");
             }
 
@@ -67,7 +80,7 @@ namespace LumiSoft.Net.IMAP
             var folder = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
             var rights = r.ReadToEnd().Trim();
 
-            return new IMAP_Response_MyRights(folder,rights);
+            return new IMAP_Response_MyRights(folder, rights);
         }
 
         /// <summary>
@@ -83,15 +96,5 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets folder name.
-        /// </summary>
-        public string FolderName { get; } = "";
-
-        /// <summary>
-        /// Gets rights list.
-        /// </summary>
-        public string Rights { get; }
     }
 }

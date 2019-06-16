@@ -18,27 +18,24 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="flags">Flags.</param>
         /// <param name="response">Default IMAP server response.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b>,<b>msgInfo</b>,<b>flags</b> or <b>response</b> is null reference.</exception>
-        internal IMAP_e_Store(string folder,IMAP_MessageInfo msgInfo,IMAP_Flags_SetType flagsSetType,string[] flags,IMAP_r_ServerStatus response)
+        internal IMAP_e_Store(string folder, IMAP_MessageInfo msgInfo, IMAP_Flags_SetType flagsSetType, string[] flags, IMAP_r_ServerStatus response)
         {
             m_pResponse = response;
-            Folder    = folder ?? throw new ArgumentNullException("folder");
-            MessageInfo  = msgInfo ?? throw new ArgumentNullException("msgInfo");
-            FlagsSetType   = flagsSetType;
-            Flags    = flags ?? throw new ArgumentNullException("flags");
+            Folder = folder ?? throw new ArgumentNullException("folder");
+            MessageInfo = msgInfo ?? throw new ArgumentNullException("msgInfo");
+            FlagsSetType = flagsSetType;
+            Flags = flags ?? throw new ArgumentNullException("flags");
         }
 
         /// <summary>
-        /// Gets or sets IMAP server response to this operation.
+        /// Gets flags.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
-        public IMAP_r_ServerStatus Response
-        {
-            get{ return m_pResponse; }
+        public string[] Flags { get; }
 
-            set{
-                m_pResponse = value ?? throw new ArgumentNullException("value"); 
-            }
-        }
+        /// <summary>
+        /// Gets flags set type.
+        /// </summary>
+        public IMAP_Flags_SetType FlagsSetType { get; } = IMAP_Flags_SetType.Replace;
 
         /// <summary>
         /// Gets folder name with optional path.
@@ -51,13 +48,17 @@ namespace LumiSoft.Net.IMAP.Server
         public IMAP_MessageInfo MessageInfo { get; }
 
         /// <summary>
-        /// Gets flags set type.
+        /// Gets or sets IMAP server response to this operation.
         /// </summary>
-        public IMAP_Flags_SetType FlagsSetType { get; } = IMAP_Flags_SetType.Replace;
+        /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
+        public IMAP_r_ServerStatus Response
+        {
+            get { return m_pResponse; }
 
-        /// <summary>
-        /// Gets flags.
-        /// </summary>
-        public string[] Flags { get; }
+            set
+            {
+                m_pResponse = value ?? throw new ArgumentNullException("value");
+            }
+        }
     }
 }

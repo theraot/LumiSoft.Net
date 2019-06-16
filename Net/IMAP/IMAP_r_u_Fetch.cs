@@ -23,12 +23,14 @@ namespace LumiSoft.Net.IMAP
         /// <param name="dataItems">Fetch response data-items.</param>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>dataItems</b> is null reference.</exception>
-        public IMAP_r_u_Fetch(int msgSeqNo,IMAP_t_Fetch_r_i[] dataItems)
+        public IMAP_r_u_Fetch(int msgSeqNo, IMAP_t_Fetch_r_i[] dataItems)
         {
-            if(msgSeqNo < 1){
-                throw new ArgumentException("Argument 'msgSeqNo' value must be >= 1.","msgSeqNo");
+            if (msgSeqNo < 1)
+            {
+                throw new ArgumentException("Argument 'msgSeqNo' value must be >= 1.", "msgSeqNo");
             }
-            if(dataItems == null){
+            if (dataItems == null)
+            {
                 throw new ArgumentNullException("dataItems");
             }
 
@@ -45,13 +47,128 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal IMAP_r_u_Fetch(int msgSeqNo)
         {
-            if(msgSeqNo < 1){
-                throw new ArgumentException("Argument 'msgSeqNo' value must be >= 1.","msgSeqNo");
+            if (msgSeqNo < 1)
+            {
+                throw new ArgumentException("Argument 'msgSeqNo' value must be >= 1.", "msgSeqNo");
             }
 
             SeqNo = msgSeqNo;
 
             m_pDataItems = new List<IMAP_t_Fetch_r_i>();
+        }
+
+        /// <summary>
+        /// Gets BODY[] values.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Body[] Body
+        {
+            get
+            {
+                var retVal = new List<IMAP_t_Fetch_r_i_Body>();
+                foreach (IMAP_t_Fetch_r_i item in m_pDataItems)
+                {
+                    if (item is IMAP_t_Fetch_r_i_Body)
+                    {
+                        retVal.Add((IMAP_t_Fetch_r_i_Body)item);
+                    }
+                }
+                return retVal.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets fetch response data items.
+        /// </summary>
+        public IMAP_t_Fetch_r_i[] DataItems
+        {
+            get { return m_pDataItems.ToArray(); }
+        }
+
+        // BODYSTRUCTURE
+
+        /// <summary>
+        /// Gets ENVELOPE value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Envelope Envelope
+        {
+            get { return (IMAP_t_Fetch_r_i_Envelope)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Envelope)); }
+        }
+
+        /// <summary>
+        /// Gets FLAGS value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Flags Flags
+        {
+            get { return (IMAP_t_Fetch_r_i_Flags)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Flags)); }
+        }
+
+        /// <summary>
+        /// Gets INTERNALDATE value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_InternalDate InternalDate
+        {
+            get { return (IMAP_t_Fetch_r_i_InternalDate)FilterDataItem(typeof(IMAP_t_Fetch_r_i_InternalDate)); }
+        }
+
+        /// <summary>
+        /// Gets RFC822 value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Rfc822 Rfc822
+        {
+            get { return (IMAP_t_Fetch_r_i_Rfc822)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822)); }
+        }
+
+        /// <summary>
+        /// Gets RFC822.HEADER value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Rfc822Header Rfc822Header
+        {
+            get { return (IMAP_t_Fetch_r_i_Rfc822Header)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Header)); }
+        }
+
+        /// <summary>
+        /// Gets RFC822.SIZE value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Rfc822Size Rfc822Size
+        {
+            get { return (IMAP_t_Fetch_r_i_Rfc822Size)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Size)); }
+        }
+
+        /// <summary>
+        /// Gets RFC822.TEXT value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Rfc822Text Rfc822Text
+        {
+            get { return (IMAP_t_Fetch_r_i_Rfc822Text)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Text)); }
+        }
+
+        /// <summary>
+        /// Gets message 1-based sequence number.
+        /// </summary>
+        public int SeqNo { get; private set; }
+
+        /// <summary>
+        /// Gets UID value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_Uid UID
+        {
+            get { return (IMAP_t_Fetch_r_i_Uid)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Uid)); }
+        }
+
+        /// <summary>
+        /// Gets X-GM-MSGID value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_X_GM_MSGID X_GM_MSGID
+        {
+            get { return (IMAP_t_Fetch_r_i_X_GM_MSGID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_MSGID)); }
+        }
+
+        /// <summary>
+        /// Gets X-GM-THRID value. Returns null if fetch response doesn't contain specified data-item.
+        /// </summary>
+        public IMAP_t_Fetch_r_i_X_GM_THRID X_GM_THRID
+        {
+            get { return (IMAP_t_Fetch_r_i_X_GM_THRID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_THRID)); }
         }
 
         /// <summary>
@@ -61,22 +178,25 @@ namespace LumiSoft.Net.IMAP
         /// <param name="line">Initial FETCH response line.</param>
         /// <param name="callback">Callback to be called when fetch completed.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>imap</b>,<b>line</b> or <b>callback</b> is null reference.</exception>
-        internal void ParseAsync(IMAP_Client imap,string line,EventHandler<EventArgs<Exception>> callback)
+        internal void ParseAsync(IMAP_Client imap, string line, EventHandler<EventArgs<Exception>> callback)
         {
-            if(imap == null){
+            if (imap == null)
+            {
                 throw new ArgumentNullException("imap");
             }
-            if(line == null){
+            if (line == null)
+            {
                 throw new ArgumentNullException("line");
             }
-            if(callback == null){
+            if (callback == null)
+            {
                 throw new ArgumentNullException("callback");
             }
 
             /* RFC 3501 7.4.2. FETCH Response.
                 Example:    S: * 23 FETCH (FLAGS (\Seen) RFC822.SIZE 44827)
             */
-                        
+
             var r = new StringReader(line);
 
             // Eat '*'
@@ -87,11 +207,12 @@ namespace LumiSoft.Net.IMAP
             r.ReadWord();
             // Eat '(', if list of fetch data-items.
             r.ReadToFirstChar();
-            if(r.StartsWith("(")){
+            if (r.StartsWith("("))
+            {
                 r.ReadSpecifiedLength(1);
             }
 
-            ParseDataItems(imap,r,callback);
+            ParseDataItems(imap, r, callback);
         }
 
         /// <summary>
@@ -104,41 +225,48 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns true is method completed asynchronously(the completedAsyncCallback is raised upon completion of the operation).
         /// Returns false if operation completed synchronously.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        protected override bool ToStreamAsync(IMAP_Session session,Stream stream,IMAP_Mailbox_Encoding mailboxEncoding,EventHandler<EventArgs<Exception>> completedAsyncCallback)
+        protected override bool ToStreamAsync(IMAP_Session session, Stream stream, IMAP_Mailbox_Encoding mailboxEncoding, EventHandler<EventArgs<Exception>> completedAsyncCallback)
         {
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
             var buffer = new StringBuilder();
             buffer.Append("* " + SeqNo + " FETCH (");
 
-            for(int i=0;i<m_pDataItems.Count;i++){
+            for (int i = 0; i < m_pDataItems.Count; i++)
+            {
                 var dataItem = m_pDataItems[i];
 
-                if (i > 0){
+                if (i > 0)
+                {
                     buffer.Append(" ");
                 }
 
-                if(dataItem is IMAP_t_Fetch_r_i_Flags){
+                if (dataItem is IMAP_t_Fetch_r_i_Flags)
+                {
                     buffer.Append("FLAGS (" + ((IMAP_t_Fetch_r_i_Flags)dataItem).Flags.ToString() + ")");
                 }
-                else if(dataItem is IMAP_t_Fetch_r_i_Uid){
+                else if (dataItem is IMAP_t_Fetch_r_i_Uid)
+                {
                     buffer.Append("UID " + ((IMAP_t_Fetch_r_i_Uid)dataItem).UID.ToString());
                 }
-                else{
+                else
+                {
                     throw new NotImplementedException("Fetch response data-item '" + dataItem.ToString() + "' not implemented.");
                 }
             }
 
             buffer.Append(")\r\n");
-            
+
             var responseS = buffer.ToString();
-            var response  = Encoding.UTF8.GetBytes(responseS);
+            var response = Encoding.UTF8.GetBytes(responseS);
 
             // Log.
-            if (session != null){
-                session.LogAddWrite(response.Length,responseS.TrimEnd());
+            if (session != null)
+            {
+                session.LogAddWrite(response.Length, responseS.TrimEnd());
             }
 
             // Starts writing response to stream.
@@ -146,28 +274,35 @@ namespace LumiSoft.Net.IMAP
                 response,
                 0,
                 response.Length,
-                delegate(IAsyncResult r){                    
-                    if(r.CompletedSynchronously){
+                delegate (IAsyncResult r)
+                {
+                    if (r.CompletedSynchronously)
+                    {
                         return;
                     }
 
-                    try{
+                    try
+                    {
                         stream.EndWrite(r);
 
-                        if(completedAsyncCallback != null){
-                            completedAsyncCallback(this,new EventArgs<Exception>(null));
+                        if (completedAsyncCallback != null)
+                        {
+                            completedAsyncCallback(this, new EventArgs<Exception>(null));
                         }
                     }
-                    catch(Exception x){
-                        if(completedAsyncCallback != null){
-                            completedAsyncCallback(this,new EventArgs<Exception>(x));
+                    catch (Exception x)
+                    {
+                        if (completedAsyncCallback != null)
+                        {
+                            completedAsyncCallback(this, new EventArgs<Exception>(x));
                         }
                     }
                 },
                 null
             );
             // Completed synchronously, process result.
-            if (ar.CompletedSynchronously){
+            if (ar.CompletedSynchronously)
+            {
                 stream.EndWrite(ar);
 
                 return false;
@@ -178,32 +313,61 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Returns specified data-item or null if no such item.
+        /// </summary>
+        /// <param name="dataItem">Data-item to filter.</param>
+        /// <returns>Returns specified data-item or null if no such item.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>dataItem</b> is null reference.</exception>
+        private IMAP_t_Fetch_r_i FilterDataItem(Type dataItem)
+        {
+            if (dataItem == null)
+            {
+                throw new ArgumentNullException("dataItem");
+            }
+
+            foreach (IMAP_t_Fetch_r_i item in m_pDataItems)
+            {
+                if (item.GetType() == dataItem)
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Starts parsing fetch data-items,
         /// </summary>
         /// <param name="imap">IMAP client.</param>
         /// <param name="r">Fetch line reader.</param>
         /// <param name="callback">Callback to be called when parsing completes.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>imap</b>,<b>r</b> or <b>callback</b> is null reference.</exception>
-        private void ParseDataItems(IMAP_Client imap,StringReader r,EventHandler<EventArgs<Exception>> callback)
+        private void ParseDataItems(IMAP_Client imap, StringReader r, EventHandler<EventArgs<Exception>> callback)
         {
-            if(imap == null){
+            if (imap == null)
+            {
                 throw new ArgumentNullException("imap");
             }
-            if(r == null){
+            if (r == null)
+            {
                 throw new ArgumentNullException("r");
             }
-            if(callback == null){
+            if (callback == null)
+            {
                 throw new ArgumentNullException("callback");
             }
 
             /* RFC 3501 7.4.2. FETCH Response.
                 Example:    S: * 23 FETCH (FLAGS (\Seen) RFC822.SIZE 44827)
             */
-                        
-            while(true){
+
+            while (true)
+            {
                 r.ReadToFirstChar();
 
-                if(r.StartsWith("BODY[",false)){
+                if (r.StartsWith("BODY[", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         BODY[<section>]<<origin octet>>
                          A string expressing the body contents of the specified section.
@@ -244,41 +408,48 @@ namespace LumiSoft.Net.IMAP
 
                     // Read origin if any.
                     int offset = -1;
-                    if(r.StartsWith("<")){
+                    if (r.StartsWith("<"))
+                    {
                         offset = Convert.ToInt32(r.ReadParenthesized().Split(' ')[0]);
-                    }                                                     
-                    
-                    var dataItem = new IMAP_t_Fetch_r_i_Body(section,offset,new MemoryStreamEx(32000));
+                    }
+
+                    var dataItem = new IMAP_t_Fetch_r_i_Body(section, offset, new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
-                                        
+
                     // Raise event, allow user to specify store stream.
-                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this, dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
-                    if(eArgs.Stream != null){                        
+                    if (eArgs.Stream != null)
+                    {
                         dataItem.Stream.Dispose();
                         dataItem.SetStream(eArgs.Stream);
                     }
 
                     // Read data will complete async and will continue data-items parsing, exit this method.
-                    if(ReadData(imap,r,callback,dataItem.Stream)){
+                    if (ReadData(imap, r, callback, dataItem.Stream))
+                    {
                         return;
                     }
                     // Continue processing.
                     //else{
                 }
-                else if(r.StartsWith("BODY ",false)){
+                else if (r.StartsWith("BODY ", false))
+                {
                     //IMAP_t_Fetch_r_i_BodyS
                 }
-                else if(r.StartsWith("BODYSTRUCTURE",false)){
+                else if (r.StartsWith("BODYSTRUCTURE", false))
+                {
                     //IMAP_t_Fetch_r_i_BodyStructure
                 }
-                else if(r.StartsWith("ENVELOPE",false)){
+                else if (r.StartsWith("ENVELOPE", false))
+                {
                     // Envelope can contain string literals, we just try to parse it.
                     // If parse fails, just get string literal and try again as long as all ENVELOPE data has read.
-                                        
+
                     string envelope = null;
-                    while(true){ 
+                    while (true)
+                    {
                         // Create temporary reader(we don't want to read partial ENVELOPE data from reader).
                         var tmpReader = new StringReader(r.SourceString);
 
@@ -286,24 +457,28 @@ namespace LumiSoft.Net.IMAP
                         tmpReader.ReadWord();
                         tmpReader.ReadToFirstChar();
 
-                        try{
+                        try
+                        {
                             envelope = tmpReader.ReadParenthesized();
                             // We got full ENVELOPE, so use tmp reader as reader.
                             r = tmpReader;
-                                                        
+
                             break;
                         }
-                        catch{                            
+                        catch
+                        {
                             // Read completed async, it will continue parsing.
-                            if(ReadStringLiteral(imap,r,callback)){
+                            if (ReadStringLiteral(imap, r, callback))
+                            {
                                 return;
                             }
-                        }                       
+                        }
                     }
 
                     m_pDataItems.Add(IMAP_t_Fetch_r_i_Envelope.Parse(new StringReader(envelope)));
                 }
-                else if(r.StartsWith("FLAGS",false)){
+                else if (r.StartsWith("FLAGS", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         FLAGS
                             A parenthesized list of flags that are set for this message.
@@ -314,7 +489,8 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Flags(IMAP_t_MsgFlags.Parse(r.ReadParenthesized())));
                 }
-                else if(r.StartsWith("INTERNALDATE",false)){
+                else if (r.StartsWith("INTERNALDATE", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         INTERNALDATE
                             A string representing the internal date of the message.
@@ -325,7 +501,8 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_InternalDate(IMAP_Utils.ParseDate(r.ReadWord())));
                 }
-                else if(r.StartsWith("RFC822 ",false)){
+                else if (r.StartsWith("RFC822 ", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822
                             Equivalent to BODY[].
@@ -337,24 +514,27 @@ namespace LumiSoft.Net.IMAP
 
                     var dataItem = new IMAP_t_Fetch_r_i_Rfc822(new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
-                                        
+
                     // Raise event, allow user to specify store stream.
-                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this, dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
-                    if(eArgs.Stream != null){                        
+                    if (eArgs.Stream != null)
+                    {
                         dataItem.Stream.Dispose();
                         dataItem.SetStream(eArgs.Stream);
                     }
 
                     // Read data will complete async and will continue data-items parsing, exit this method.
-                    if(ReadData(imap,r,callback,dataItem.Stream)){
+                    if (ReadData(imap, r, callback, dataItem.Stream))
+                    {
                         return;
                     }
                     // Continue processing.
                     //else{
                 }
-                else if(r.StartsWith("RFC822.HEADER",false)){
+                else if (r.StartsWith("RFC822.HEADER", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.HEADER
                             Equivalent to BODY[HEADER].  Note that this did not result in
@@ -370,24 +550,27 @@ namespace LumiSoft.Net.IMAP
 
                     var dataItem = new IMAP_t_Fetch_r_i_Rfc822Header(new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
-                                        
+
                     // Raise event, allow user to specify store stream.
-                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this, dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
-                    if(eArgs.Stream != null){                        
+                    if (eArgs.Stream != null)
+                    {
                         dataItem.Stream.Dispose();
                         dataItem.SetStream(eArgs.Stream);
                     }
 
                     // Read data will complete async and will continue data-items parsing, exit this method.
-                    if(ReadData(imap,r,callback,dataItem.Stream)){
+                    if (ReadData(imap, r, callback, dataItem.Stream))
+                    {
                         return;
                     }
                     // Continue processing.
                     //else{
                 }
-                else if(r.StartsWith("RFC822.SIZE",false)){
+                else if (r.StartsWith("RFC822.SIZE", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.SIZE
                             A number expressing the [RFC-2822] size of the message.
@@ -398,7 +581,8 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Rfc822Size(Convert.ToInt32(r.ReadWord())));
                 }
-                else if(r.StartsWith("RFC822.TEXT",false)){
+                else if (r.StartsWith("RFC822.TEXT", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.TEXT
                             Equivalent to BODY[TEXT].
@@ -410,24 +594,27 @@ namespace LumiSoft.Net.IMAP
 
                     var dataItem = new IMAP_t_Fetch_r_i_Rfc822Text(new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
-                                        
+
                     // Raise event, allow user to specify store stream.
-                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this, dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
-                    if(eArgs.Stream != null){                        
+                    if (eArgs.Stream != null)
+                    {
                         dataItem.Stream.Dispose();
                         dataItem.SetStream(eArgs.Stream);
                     }
 
                     // Read data will complete async and will continue data-items parsing, exit this method.
-                    if(ReadData(imap,r,callback,dataItem.Stream)){
+                    if (ReadData(imap, r, callback, dataItem.Stream))
+                    {
                         return;
                     }
                     // Continue processing.
                     //else{
                 }
-                else if(r.StartsWith("UID",false)){
+                else if (r.StartsWith("UID", false))
+                {
                     /* RFC 3501 7.4.2. FETCH Response.
                         UID
                             A number expressing the unique identifier of the message.
@@ -438,7 +625,8 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Uid(Convert.ToInt64(r.ReadWord())));
                 }
-                else if(r.StartsWith("X-GM-MSGID",false)){
+                else if (r.StartsWith("X-GM-MSGID", false))
+                {
                     /* http://code.google.com/intl/et/apis/gmail/imap X-GM-MSGID.
                 
                     */
@@ -448,7 +636,8 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_X_GM_MSGID(Convert.ToUInt64(r.ReadWord())));
                 }
-                else if(r.StartsWith("X-GM-THRID",false)){
+                else if (r.StartsWith("X-GM-THRID", false))
+                {
                     /* http://code.google.com/intl/et/apis/gmail/imap X-GM-THRID.
                 
                     */
@@ -458,94 +647,17 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_X_GM_THRID(Convert.ToUInt64(r.ReadWord())));
                 }
-                else if(r.StartsWith(")",false)){
+                else if (r.StartsWith(")", false))
+                {
                     break;
                 }
-                else{
+                else
+                {
                     throw new ParseException("Not supported FETCH data-item '" + r.ReadToEnd() + "'.");
                 }
             }
 
-            callback(this,new EventArgs<Exception>(null));
-        }
-
-        /// <summary>
-        /// Reads string-literal(stores it to reader 'r') and continuing fetch line.
-        /// </summary>
-        /// <param name="imap">IMAP client.</param>
-        /// <param name="r">String reader.</param>
-        /// <param name="callback">Fetch completion callback.</param>
-        /// <returns>Returns true if completed asynchronously or false if completed synchronously.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>imap</b>,<b>r</b> or <b>callback</b> is null reference.</exception>
-        private bool ReadStringLiteral(IMAP_Client imap,StringReader r,EventHandler<EventArgs<Exception>> callback)
-        {
-            if(imap == null){
-                throw new ArgumentNullException("imap");
-            }
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-            if(callback == null){
-                throw new ArgumentNullException("callback");
-            }
-
-            if(r.SourceString.EndsWith("}") && r.SourceString.IndexOf("{") > -1){
-                var stream = new MemoryStream();
-                var size = r.SourceString.Substring(r.SourceString.LastIndexOf("{") + 1,r.SourceString.Length - r.SourceString.LastIndexOf("{") - 2);
-                // Remove {n} from string.
-                r.RemoveFromEnd(r.SourceString.Length - r.SourceString.LastIndexOf('{'));
-                                
-                var op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(size));
-                op.CompletedAsync += delegate(object sender,EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e){
-                    try{
-                        // Read string literal failed.
-                        if(op.Error != null){
-                            callback(this,new EventArgs<Exception>(op.Error));
-                        }
-                        else{
-                            // Append string-literal to fetch reader.
-                            r.AppendString(TextUtils.QuoteString(Encoding.UTF8.GetString(stream.ToArray())));
-
-                            // Read next fetch line completed synchronously.
-                            if(!ReadNextFetchLine(imap,r,callback)){
-                                ParseDataItems(imap,r,callback);
-                            }
-                        }
-                    }
-                    catch(Exception x){
-                        callback(this,new EventArgs<Exception>(x));
-                    }
-                    finally{
-                        op.Dispose();
-                    }
-                };
-
-                // Read string literal completed sync.
-                if(!imap.ReadStringLiteralAsync(op)){
-                    try{
-                        // Read string literal failed.
-                        if(op.Error != null){
-                            callback(this,new EventArgs<Exception>(op.Error));
-
-                            return true;
-                        }
-                        else{
-                            // Append string-literal to fetch reader.
-                            r.AppendString(TextUtils.QuoteString(Encoding.UTF8.GetString(stream.ToArray())));
-
-                            return ReadNextFetchLine(imap,r,callback);
-                        }
-                    }
-                    finally{
-                        op.Dispose();
-                    }
-                }
-                // Read string literal completed async.
-
-                return true;
-            }
-
-            throw new ParseException("No string-literal available '" + r.SourceString + "'.");
+            callback(this, new EventArgs<Exception>(null));
         }
 
         /// <summary>
@@ -557,25 +669,30 @@ namespace LumiSoft.Net.IMAP
         /// <param name="stream">Stream where to store readed data.</param>
         /// <returns>Returns true if completed asynchronously or false if completed synchronously.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>imap</b>,<b>r</b>,<b>callback</b> or <b>stream</b> is null reference.</exception>
-        private bool ReadData(IMAP_Client imap,StringReader r,EventHandler<EventArgs<Exception>> callback,Stream stream)
+        private bool ReadData(IMAP_Client imap, StringReader r, EventHandler<EventArgs<Exception>> callback, Stream stream)
         {
-            if(imap == null){
+            if (imap == null)
+            {
                 throw new ArgumentNullException("imap");
             }
-            if(r == null){
+            if (r == null)
+            {
                 throw new ArgumentNullException("r");
             }
-            if(callback == null){
+            if (callback == null)
+            {
                 throw new ArgumentNullException("callback");
             }
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
             r.ReadToFirstChar();
 
             // We don't have data.
-            if(r.StartsWith("NIL",false)){
+            if (r.StartsWith("NIL", false))
+            {
                 // Eat NIL.
                 r.ReadWord();
 
@@ -583,49 +700,64 @@ namespace LumiSoft.Net.IMAP
             }
             // Data value is returned as string-literal.
 
-            if(r.StartsWith("{",false)){
-                var op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(r.ReadParenthesized()));
-                op.CompletedAsync += delegate(object sender,EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e){
-                    try{
+            if (r.StartsWith("{", false))
+            {
+                var op = new IMAP_Client.ReadStringLiteralAsyncOP(stream, Convert.ToInt32(r.ReadParenthesized()));
+                op.CompletedAsync += delegate (object sender, EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e)
+                {
+                    try
+                    {
                         // Read string literal failed.
-                        if(op.Error != null){
-                            callback(this,new EventArgs<Exception>(op.Error));
+                        if (op.Error != null)
+                        {
+                            callback(this, new EventArgs<Exception>(op.Error));
                         }
-                        else{
+                        else
+                        {
                             // Read next fetch line completed synchronously.
-                            if(!ReadNextFetchLine(imap,r,callback)){
-                                ParseDataItems(imap,r,callback);
+                            if (!ReadNextFetchLine(imap, r, callback))
+                            {
+                                ParseDataItems(imap, r, callback);
                             }
                         }
                     }
-                    catch(Exception x){
-                        callback(this,new EventArgs<Exception>(x));
+                    catch (Exception x)
+                    {
+                        callback(this, new EventArgs<Exception>(x));
                     }
-                    finally{
+                    finally
+                    {
                         op.Dispose();
                     }
                 };
 
                 // Read string literal completed sync.
-                if(!imap.ReadStringLiteralAsync(op)){
-                    try{
+                if (!imap.ReadStringLiteralAsync(op))
+                {
+                    try
+                    {
                         // Read string literal failed.
-                        if(op.Error != null){
-                            callback(this,new EventArgs<Exception>(op.Error));
+                        if (op.Error != null)
+                        {
+                            callback(this, new EventArgs<Exception>(op.Error));
 
                             return true;
                         }
-                        else{
+                        else
+                        {
                             // Read next fetch line completed synchronously.
-                            if(!ReadNextFetchLine(imap,r,callback)){
+                            if (!ReadNextFetchLine(imap, r, callback))
+                            {
                                 return false;
                             }
-                            else{
+                            else
+                            {
                                 return true;
                             }
                         }
                     }
-                    finally{
+                    finally
+                    {
                         op.Dispose();
                     }
                 }
@@ -635,7 +767,7 @@ namespace LumiSoft.Net.IMAP
             }
             // Data is quoted-string.
             var data = Encoding.UTF8.GetBytes(r.ReadWord());
-            stream.Write(data,0,data.Length);
+            stream.Write(data, 0, data.Length);
 
             return false;
         }
@@ -648,55 +780,68 @@ namespace LumiSoft.Net.IMAP
         /// <param name="callback">Fetch completion callback.</param>
         /// <returns>Returns true if completed asynchronously or false if completed synchronously.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>imap</b>,<b>r</b> or <b>callback</b> is null reference.</exception>
-        private bool ReadNextFetchLine(IMAP_Client imap,StringReader r,EventHandler<EventArgs<Exception>> callback)
+        private bool ReadNextFetchLine(IMAP_Client imap, StringReader r, EventHandler<EventArgs<Exception>> callback)
         {
-            if(imap == null){
+            if (imap == null)
+            {
                 throw new ArgumentNullException("imap");
             }
-            if(r == null){
+            if (r == null)
+            {
                 throw new ArgumentNullException("r");
             }
-            if(callback == null){
+            if (callback == null)
+            {
                 throw new ArgumentNullException("callback");
             }
 
-            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[64000],SizeExceededAction.JunkAndThrowException);
-            readLineOP.Completed += delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                try{
+            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[64000], SizeExceededAction.JunkAndThrowException);
+            readLineOP.Completed += delegate (object sender, EventArgs<SmartStream.ReadLineAsyncOP> e)
+            {
+                try
+                {
                     // Read line failed.
-                    if(readLineOP.Error != null){
-                        callback(this,new EventArgs<Exception>(readLineOP.Error));
+                    if (readLineOP.Error != null)
+                    {
+                        callback(this, new EventArgs<Exception>(readLineOP.Error));
                     }
-                    else{
+                    else
+                    {
                         // Log.
-                        imap.LogAddRead(readLineOP.BytesInBuffer,readLineOP.LineUtf8);
-                        
+                        imap.LogAddRead(readLineOP.BytesInBuffer, readLineOP.LineUtf8);
+
                         // Append fetch line to fetch reader.
                         r.AppendString(readLineOP.LineUtf8);
 
-                        ParseDataItems(imap,r,callback);
+                        ParseDataItems(imap, r, callback);
                     }
                 }
-                catch(Exception x){
-                    callback(this,new EventArgs<Exception>(x));
+                catch (Exception x)
+                {
+                    callback(this, new EventArgs<Exception>(x));
                 }
-                finally{
+                finally
+                {
                     readLineOP.Dispose();
                 }
             };
 
             // Read line completed synchronously.
-            if(imap.TcpStream.ReadLine(readLineOP,true)){
-                try{
+            if (imap.TcpStream.ReadLine(readLineOP, true))
+            {
+                try
+                {
                     // Read line failed.
-                    if(readLineOP.Error != null){
-                        callback(this,new EventArgs<Exception>(readLineOP.Error));
+                    if (readLineOP.Error != null)
+                    {
+                        callback(this, new EventArgs<Exception>(readLineOP.Error));
 
                         return true;
                     }
-                    else{
+                    else
+                    {
                         // Log.
-                        imap.LogAddRead(readLineOP.BytesInBuffer,readLineOP.LineUtf8);
+                        imap.LogAddRead(readLineOP.BytesInBuffer, readLineOP.LineUtf8);
 
                         // Append fetch line to fetch reader.
                         r.AppendString(readLineOP.LineUtf8);
@@ -704,7 +849,8 @@ namespace LumiSoft.Net.IMAP
                         return false;
                     }
                 }
-                finally{
+                finally
+                {
                     readLineOP.Dispose();
                 }
             }
@@ -713,135 +859,98 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-        /// Returns specified data-item or null if no such item.
+        /// Reads string-literal(stores it to reader 'r') and continuing fetch line.
         /// </summary>
-        /// <param name="dataItem">Data-item to filter.</param>
-        /// <returns>Returns specified data-item or null if no such item.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>dataItem</b> is null reference.</exception>
-        private IMAP_t_Fetch_r_i FilterDataItem(Type dataItem)
+        /// <param name="imap">IMAP client.</param>
+        /// <param name="r">String reader.</param>
+        /// <param name="callback">Fetch completion callback.</param>
+        /// <returns>Returns true if completed asynchronously or false if completed synchronously.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>imap</b>,<b>r</b> or <b>callback</b> is null reference.</exception>
+        private bool ReadStringLiteral(IMAP_Client imap, StringReader r, EventHandler<EventArgs<Exception>> callback)
         {
-            if(dataItem == null){
-                throw new ArgumentNullException("dataItem");
+            if (imap == null)
+            {
+                throw new ArgumentNullException("imap");
+            }
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+            if (callback == null)
+            {
+                throw new ArgumentNullException("callback");
             }
 
-            foreach(IMAP_t_Fetch_r_i item in m_pDataItems){
-                if(item.GetType() == dataItem){
-                    return item;
-                }
-            }
+            if (r.SourceString.EndsWith("}") && r.SourceString.IndexOf("{") > -1)
+            {
+                var stream = new MemoryStream();
+                var size = r.SourceString.Substring(r.SourceString.LastIndexOf("{") + 1, r.SourceString.Length - r.SourceString.LastIndexOf("{") - 2);
+                // Remove {n} from string.
+                r.RemoveFromEnd(r.SourceString.Length - r.SourceString.LastIndexOf('{'));
 
-            return null;
-        }
+                var op = new IMAP_Client.ReadStringLiteralAsyncOP(stream, Convert.ToInt32(size));
+                op.CompletedAsync += delegate (object sender, EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e)
+                {
+                    try
+                    {
+                        // Read string literal failed.
+                        if (op.Error != null)
+                        {
+                            callback(this, new EventArgs<Exception>(op.Error));
+                        }
+                        else
+                        {
+                            // Append string-literal to fetch reader.
+                            r.AppendString(TextUtils.QuoteString(Encoding.UTF8.GetString(stream.ToArray())));
 
-        /// <summary>
-        /// Gets message 1-based sequence number.
-        /// </summary>
-        public int SeqNo { get; private set; }
+                            // Read next fetch line completed synchronously.
+                            if (!ReadNextFetchLine(imap, r, callback))
+                            {
+                                ParseDataItems(imap, r, callback);
+                            }
+                        }
+                    }
+                    catch (Exception x)
+                    {
+                        callback(this, new EventArgs<Exception>(x));
+                    }
+                    finally
+                    {
+                        op.Dispose();
+                    }
+                };
 
-        /// <summary>
-        /// Gets fetch response data items.
-        /// </summary>
-        public IMAP_t_Fetch_r_i[] DataItems
-        {
-            get{ return m_pDataItems.ToArray(); }
-        }
+                // Read string literal completed sync.
+                if (!imap.ReadStringLiteralAsync(op))
+                {
+                    try
+                    {
+                        // Read string literal failed.
+                        if (op.Error != null)
+                        {
+                            callback(this, new EventArgs<Exception>(op.Error));
 
-        /// <summary>
-        /// Gets BODY[] values.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Body[] Body
-        {
-            get{
-                var retVal = new List<IMAP_t_Fetch_r_i_Body>();
-                foreach (IMAP_t_Fetch_r_i item in m_pDataItems){
-                    if(item is IMAP_t_Fetch_r_i_Body){
-                        retVal.Add((IMAP_t_Fetch_r_i_Body)item);
+                            return true;
+                        }
+                        else
+                        {
+                            // Append string-literal to fetch reader.
+                            r.AppendString(TextUtils.QuoteString(Encoding.UTF8.GetString(stream.ToArray())));
+
+                            return ReadNextFetchLine(imap, r, callback);
+                        }
+                    }
+                    finally
+                    {
+                        op.Dispose();
                     }
                 }
-                return retVal.ToArray(); 
+                // Read string literal completed async.
+
+                return true;
             }
-        }
-        
-        // BODYSTRUCTURE
 
-        /// <summary>
-        /// Gets ENVELOPE value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Envelope Envelope
-        {
-            get{ return (IMAP_t_Fetch_r_i_Envelope)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Envelope)); }
-        }
-
-        /// <summary>
-        /// Gets FLAGS value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Flags Flags
-        {
-            get{ return (IMAP_t_Fetch_r_i_Flags)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Flags)); }
-        }
-
-        /// <summary>
-        /// Gets INTERNALDATE value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_InternalDate InternalDate
-        {
-            get{ return (IMAP_t_Fetch_r_i_InternalDate)FilterDataItem(typeof(IMAP_t_Fetch_r_i_InternalDate)); }
-        }
-
-        /// <summary>
-        /// Gets RFC822 value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822 Rfc822
-        {
-            get{ return (IMAP_t_Fetch_r_i_Rfc822)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822)); }
-        }
-
-        /// <summary>
-        /// Gets RFC822.HEADER value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822Header Rfc822Header
-        {
-            get{ return (IMAP_t_Fetch_r_i_Rfc822Header)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Header)); }
-        }
-
-        /// <summary>
-        /// Gets RFC822.SIZE value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822Size Rfc822Size
-        {
-            get{ return (IMAP_t_Fetch_r_i_Rfc822Size)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Size)); }
-        }
-
-        /// <summary>
-        /// Gets RFC822.TEXT value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Rfc822Text Rfc822Text
-        {
-            get{ return (IMAP_t_Fetch_r_i_Rfc822Text)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Rfc822Text)); }
-        }
-
-        /// <summary>
-        /// Gets UID value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_Uid UID
-        {
-            get{ return (IMAP_t_Fetch_r_i_Uid)FilterDataItem(typeof(IMAP_t_Fetch_r_i_Uid)); }
-        }
-
-        /// <summary>
-        /// Gets X-GM-MSGID value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_X_GM_MSGID X_GM_MSGID
-        {
-            get{ return (IMAP_t_Fetch_r_i_X_GM_MSGID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_MSGID)); }
-        }
-
-        /// <summary>
-        /// Gets X-GM-THRID value. Returns null if fetch response doesn't contain specified data-item.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_X_GM_THRID X_GM_THRID
-        {
-            get{ return (IMAP_t_Fetch_r_i_X_GM_THRID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_THRID)); }
+            throw new ParseException("No string-literal available '" + r.SourceString + "'.");
         }
     }
 }

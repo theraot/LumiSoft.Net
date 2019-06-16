@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets IMAP capabilities.
+        /// </summary>
+        public string[] Capabilities { get; }
+
+        /// <summary>
         /// Parses ENABLE response from enable-response string.
         /// </summary>
         /// <param name="enableResponse">Enable response string.</param>
@@ -26,7 +31,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>enableResponse</b> is null reference.</exception>
         public static IMAP_r_u_Enable Parse(string enableResponse)
         {
-            if(enableResponse == null){
+            if (enableResponse == null)
+            {
                 throw new ArgumentNullException("enableResponse");
             }
 
@@ -66,17 +72,13 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* ENABLED");
-            foreach(string capability in Capabilities){
+            foreach (string capability in Capabilities)
+            {
                 retVal.Append(" " + capability);
             }
             retVal.Append("\r\n");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets IMAP capabilities.
-        /// </summary>
-        public string[] Capabilities { get; }
     }
 }

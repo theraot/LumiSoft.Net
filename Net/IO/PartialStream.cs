@@ -8,11 +8,11 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class PartialStream : Stream
     {
-        private bool   m_IsDisposed;
+        private bool m_IsDisposed;
+        private readonly long m_Length;
+        private long m_Position;
         private readonly Stream m_pStream;
-        private readonly long   m_Start;
-        private readonly long   m_Length;
-        private long   m_Position;
+        private readonly long m_Start;
 
         /// <summary>
         /// Default constructor.
@@ -22,24 +22,128 @@ namespace LumiSoft.Net.IO
         /// <param name="length">Length of stream.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public PartialStream(Stream stream,long start,long length)
+        public PartialStream(Stream stream, long start, long length)
         {
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
-            if(!stream.CanSeek){
+            if (!stream.CanSeek)
+            {
                 throw new ArgumentException("Argument 'stream' does not support seeking.");
             }
-            if(start < 0){
+            if (start < 0)
+            {
                 throw new ArgumentException("Argument 'start' value must be >= 0.");
             }
-            if((start + length) > stream.Length){
+            if ((start + length) > stream.Length)
+            {
                 throw new ArgumentException("Argument 'length' value will exceed source stream length.");
             }
 
             m_pStream = stream;
-            m_Start   = start;
-            m_Length  = length;
+            m_Start = start;
+            m_Length = length;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports reading.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanRead
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports seeking.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanSeek
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports writing.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanWrite
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the length in bytes of the stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="Seek">Is raised when this property is accessed.</exception>
+        public override long Length
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_Length;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the position within the current stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override long Position
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_Position;
+            }
+
+            set
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+                if (value < 0 || value > Length)
+                {
+                    throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
+                }
+
+                m_Position = value;
+            }
         }
 
         /// <summary>
@@ -47,7 +151,8 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public new void Dispose()
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 return;
             }
 
@@ -62,9 +167,35 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
+        }
+
+        /// <summary>
+        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between offset and (offset + count - 1) replaced by the bytes read from the current source.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the current stream.</param>
+        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
+        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("SmartStream");
+            }
+
+            if (m_pStream.Position != (m_Start + m_Position))
+            {
+                m_pStream.Position = m_Start + m_Position;
+            }
+            int readedCount = m_pStream.Read(buffer, offset, Math.Min(count, (int)(Length - m_Position)));
+            m_Position += readedCount;
+
+            return readedCount;
         }
 
         /// <summary>
@@ -74,20 +205,24 @@ namespace LumiSoft.Net.IO
         /// <param name="origin">A value of type SeekOrigin indicating the reference point used to obtain the new position.</param>
         /// <returns>The new position within the current stream.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override long Seek(long offset,SeekOrigin origin)
+        public override long Seek(long offset, SeekOrigin origin)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            if(origin == SeekOrigin.Begin){
+            if (origin == SeekOrigin.Begin)
+            {
                 m_Position = 0;
             }
-            else if(origin == SeekOrigin.Current){
+            else if (origin == SeekOrigin.Current)
+            {
             }
-            else if(origin == SeekOrigin.End){
+            else if (origin == SeekOrigin.End)
+            {
                 m_Position = m_Length;
-            } 
+            }
 
             return m_Position;
         }
@@ -100,34 +235,12 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override void SetLength(long value)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
 
             throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
-        /// </summary>
-        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between offset and (offset + count - 1) replaced by the bytes read from the current source.</param>
-        /// <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the current stream.</param>
-        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
-        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override int Read(byte[] buffer,int offset,int count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
-            
-            if(m_pStream.Position != (m_Start + m_Position)){
-                m_pStream.Position = m_Start + m_Position;
-            }
-            int readedCount = m_pStream.Read(buffer,offset,Math.Min(count,(int)(Length - m_Position)));
-            m_Position += readedCount;
-
-            return readedCount;
         }
 
         /// <summary>
@@ -139,100 +252,14 @@ namespace LumiSoft.Net.IO
         /// <param name="count">The number of bytes to be written to the current stream.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
-        public override void Write(byte[] buffer,int offset,int count)
+        public override void Write(byte[] buffer, int offset, int count)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
- 
+
             throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports reading.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanRead
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return true;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports seeking.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanSeek
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return true;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports writing.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanWrite
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return false;
-            } 
-        }
-
-        /// <summary>
-        /// Gets the length in bytes of the stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="Seek">Is raised when this property is accessed.</exception>
-        public override long Length
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_Length;
-            } 
-        }
-
-        /// <summary>
-        /// Gets or sets the position within the current stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override long Position
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_Position;
-            } 
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-                if(value < 0 || value > Length){
-                    throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
-                }
-
-                m_Position = value;
-            }
         }
     }
 }

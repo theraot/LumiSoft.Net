@@ -19,6 +19,24 @@ namespace LumiSoft.Net.SIP.Message
         private string m_LanguageTag = "";
 
         /// <summary>
+        /// Gets or sets language tag.
+        /// </summary>
+        public string LanguageTag
+        {
+            get { return m_LanguageTag; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property LanguageTag value can't be null or empty !");
+                }
+
+                m_LanguageTag = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "language-tag" from specified value.
         /// </summary>
         /// <param name="value">SIP "language-tag" value.</param>
@@ -26,7 +44,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -48,10 +67,11 @@ namespace LumiSoft.Net.SIP.Message
                 subtag           =  1*8ALPHA
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
-            
+
             // Parse content-coding
             var word = reader.ReadWord();
             m_LanguageTag = word ?? throw new SIP_ParseException("Invalid Content-Language value, language-tag value is missing !");
@@ -78,22 +98,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets language tag.
-        /// </summary>
-        public string LanguageTag
-        {
-            get{ return m_LanguageTag; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property LanguageTag value can't be null or empty !");
-                }
-
-                m_LanguageTag = value;
-            }
         }
     }
 }

@@ -5,27 +5,23 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_HeaderField
     {
-        private string m_Value        = "";
+        private string m_Value = "";
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="name">Header field name.</param>
         /// <param name="value">Header field value.</param>
-        internal SIP_HeaderField(string name,string value)
+        internal SIP_HeaderField(string name, string value)
         {
-            Name  = name;
+            Name = name;
             m_Value = value;
         }
 
         /// <summary>
-        /// Sets property IsMultiValue value.
+        /// Gets if header field is multi value header field.
         /// </summary>
-        /// <param name="value">Value to set.</param>
-        internal void SetMultiValue(bool value)
-        {
-            IsMultiValue = value;
-        }
+        public bool IsMultiValue { get; private set; }
 
         /// <summary>
         /// Gets header field name.
@@ -37,14 +33,18 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public virtual string Value
         {
-            get{ return m_Value; }
+            get { return m_Value; }
 
-            set{ m_Value = value; }
+            set { m_Value = value; }
         }
 
         /// <summary>
-        /// Gets if header field is multi value header field.
+        /// Sets property IsMultiValue value.
         /// </summary>
-        public bool IsMultiValue { get; private set; }
+        /// <param name="value">Value to set.</param>
+        internal void SetMultiValue(bool value)
+        {
+            IsMultiValue = value;
+        }
     }
 }

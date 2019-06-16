@@ -9,8 +9,8 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_MediaDescription
     {
-        private int                       m_NumberOfPorts = 1;
-        private string                    m_Protocol      = "";
+        private int m_NumberOfPorts = 1;
+        private string m_Protocol = "";
 
         /// <summary>
         /// Default constructor.
@@ -22,37 +22,44 @@ namespace LumiSoft.Net.SDP
         /// <param name="mediaFormats">Media formats. See MediaFormats property for more info.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>mediaType</b> or <b>protocol</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SDP_MediaDescription(string mediaType,int port,int ports,string protocol,string[] mediaFormats)
+        public SDP_MediaDescription(string mediaType, int port, int ports, string protocol, string[] mediaFormats)
         {
-            if(mediaType == null){
+            if (mediaType == null)
+            {
                 throw new ArgumentNullException("mediaType");
             }
-            if(mediaType == string.Empty){
+            if (mediaType == string.Empty)
+            {
                 throw new ArgumentException("Argument 'mediaType' value must be specified.");
             }
-            if(port < 0){
+            if (port < 0)
+            {
                 throw new ArgumentException("Argument 'port' value must be >= 0.");
             }
-            if(ports < 0){
+            if (ports < 0)
+            {
                 throw new ArgumentException("Argument 'ports' value must be >= 0.");
             }
-            if(protocol == null){
+            if (protocol == null)
+            {
                 throw new ArgumentNullException("protocol");
             }
-            if(protocol == string.Empty){
+            if (protocol == string.Empty)
+            {
                 throw new ArgumentException("Argument 'protocol' value msut be specified.");
             }
 
-            MediaType     = mediaType;
-            Port          = port;
+            MediaType = mediaType;
+            Port = port;
             m_NumberOfPorts = ports;
-            m_Protocol      = protocol;
+            m_Protocol = protocol;
 
             MediaFormats = new List<string>();
             Attributes = new List<SDP_Attribute>();
-            Tags = new Dictionary<string,object>();
+            Tags = new Dictionary<string, object>();
 
-            if(mediaFormats != null){
+            if (mediaFormats != null)
+            {
                 MediaFormats.AddRange(mediaFormats);
             }
         }
@@ -64,8 +71,96 @@ namespace LumiSoft.Net.SDP
         {
             MediaFormats = new List<string>();
             Attributes = new List<SDP_Attribute>();
-            Tags = new Dictionary<string,object>();
+            Tags = new Dictionary<string, object>();
         }
+
+        /// <summary>
+        /// Gets media attributes collection.
+        /// </summary>
+        public List<SDP_Attribute> Attributes { get; }
+
+        /// <summary>
+        /// Gets or sets bandwidth data. Value null means not specified.
+        /// </summary>
+        public string Bandwidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets per media connection data. Value null means not specified.
+        /// </summary>
+        public SDP_Connection Connection { get; set; }
+
+        /// <summary>
+        /// Gets or sets media information. Value null means not specified.
+        /// </summary>
+        public string Information { get; set; }
+
+        /// <summary>
+        /// Gets media formats collection.
+        /// </summary>
+        /// <remarks>
+        /// <code>
+        /// ; Media Formats: 
+        /// ; If the Transport Protocol is "RTP/AVP" or "RTP/SAVP" the &lt;fmt&gt; 
+        /// ; sub-fields contain RTP payload type numbers, for example: 
+        /// ; - for Audio: 0: PCMU, 4: G723, 8: PCMA, 18: G729 
+        /// ; - for Video: 31: H261, 32: MPV 
+        /// ; If the Transport Protocol is "udp" the &lt;fmt&gt; sub-fields 
+        /// ; must reference a MIME type 
+        /// </code>
+        /// </remarks>
+        public List<string> MediaFormats { get; }
+
+        /// <summary>
+        /// Gets or sets meadia type. Currently defined media are "audio", "video", "text", 
+        /// "application", and "message", although this list may be extended in the future.
+        /// </summary>
+        public string MediaType { get; private set; } = "";
+
+        /// <summary>
+        /// Gets or sets number of continuos media ports.
+        /// </summary>
+        public int NumberOfPorts
+        {
+            get { return m_NumberOfPorts; }
+
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("Property NumberOfPorts must be >= 1 !");
+                }
+
+                m_NumberOfPorts = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the transport port to which the media stream is sent.
+        /// </summary>
+        public int Port { get; set; }
+
+        /// <summary>
+        /// Gets or sets transport protocol. Currently known protocols: UDP;RTP/AVP;RTP/SAVP.
+        /// </summary>
+        public string Protocol
+        {
+            get { return m_Protocol; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Protocol cant be null or empty !");
+                }
+
+                m_Protocol = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets user data items collection.
+        /// </summary>
+        public Dictionary<string, object> Tags { get; }
 
         /// <summary>
         /// Parses media from "m" SDP message field.
@@ -82,36 +177,42 @@ namespace LumiSoft.Net.SDP
 
             //--- <media> ------------------------------------------------------------
             var word = r.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new Exception("SDP message \"m\" field <media> value is missing !");
             }
             media.MediaType = word;
 
             //--- <port>/<number of ports> -------------------------------------------
             word = r.ReadWord();
-            if(word == null){
+            if (word == null)
+            {
                 throw new Exception("SDP message \"m\" field <port> value is missing !");
             }
-            if(word.IndexOf('/') > -1){
+            if (word.IndexOf('/') > -1)
+            {
                 var port_nPorts = word.Split('/');
                 media.Port = Convert.ToInt32(port_nPorts[0]);
                 media.m_NumberOfPorts = Convert.ToInt32(port_nPorts[1]);
             }
-            else{
+            else
+            {
                 media.Port = Convert.ToInt32(word);
                 media.m_NumberOfPorts = 1;
             }
 
             //--- <proto> --------------------------------------------------------------
             word = r.ReadWord();
-            if(word == null){
+            if (word == null)
+            {
                 throw new Exception("SDP message \"m\" field <proto> value is missing !");
             }
             media.m_Protocol = word;
-            
+
             //--- <fmt> ----------------------------------------------------------------
             word = r.ReadWord();
-            while(word != null){
+            while (word != null)
+            {
                 media.MediaFormats.Add(word);
 
                 word = r.ReadWord();
@@ -127,33 +228,40 @@ namespace LumiSoft.Net.SDP
         /// <exception cref="ArgumentNullException">Is raised when <b>streamMode</b> is null reference.</exception>
         public void SetStreamMode(string streamMode)
         {
-            if(streamMode == null){
+            if (streamMode == null)
+            {
                 throw new ArgumentNullException("streamMode");
             }
 
             // Remove all old stream mode attributes.
-            for(int i=0;i<Attributes.Count;i++){
+            for (int i = 0; i < Attributes.Count; i++)
+            {
                 var sdpAttribute = Attributes[i];
-                if (string.Equals(sdpAttribute.Name,"sendrecv",StringComparison.InvariantCultureIgnoreCase)){
+                if (string.Equals(sdpAttribute.Name, "sendrecv", StringComparison.InvariantCultureIgnoreCase))
+                {
                     Attributes.RemoveAt(i);
                     i--;
                 }
-                else if(string.Equals(sdpAttribute.Name,"sendonly",StringComparison.InvariantCultureIgnoreCase)){
+                else if (string.Equals(sdpAttribute.Name, "sendonly", StringComparison.InvariantCultureIgnoreCase))
+                {
                     Attributes.RemoveAt(i);
                     i--;
                 }
-                else if(string.Equals(sdpAttribute.Name,"recvonly",StringComparison.InvariantCultureIgnoreCase)){
+                else if (string.Equals(sdpAttribute.Name, "recvonly", StringComparison.InvariantCultureIgnoreCase))
+                {
                     Attributes.RemoveAt(i);
                     i--;
                 }
-                else if(string.Equals(sdpAttribute.Name,"inactive",StringComparison.InvariantCultureIgnoreCase)){
+                else if (string.Equals(sdpAttribute.Name, "inactive", StringComparison.InvariantCultureIgnoreCase))
+                {
                     Attributes.RemoveAt(i);
                     i--;
                 }
             }
 
-            if(streamMode != ""){
-                Attributes.Add(new SDP_Attribute(streamMode,""));
+            if (streamMode != "")
+            {
+                Attributes.Add(new SDP_Attribute(streamMode, ""));
             }
         }
 
@@ -175,117 +283,40 @@ namespace LumiSoft.Net.SDP
             // m=<media> <port>/<number of ports> <proto> <fmt> ...
 
             var retVal = new StringBuilder();
-            if (NumberOfPorts > 1){
+            if (NumberOfPorts > 1)
+            {
                 retVal.Append("m=" + MediaType + " " + Port + "/" + NumberOfPorts + " " + Protocol);
             }
-            else{
+            else
+            {
                 retVal.Append("m=" + MediaType + " " + Port + " " + Protocol);
             }
-            foreach(string mediaFormat in MediaFormats){
+            foreach (string mediaFormat in MediaFormats)
+            {
                 retVal.Append(" " + mediaFormat);
             }
             retVal.Append("\r\n");
             // i (media title)
-            if(!string.IsNullOrEmpty(Information)){
+            if (!string.IsNullOrEmpty(Information))
+            {
                 retVal.Append("i=" + Information + "\r\n");
             }
             // b (bandwidth information)
-            if(!string.IsNullOrEmpty(Bandwidth)){
+            if (!string.IsNullOrEmpty(Bandwidth))
+            {
                 retVal.Append("b=" + Bandwidth + "\r\n");
             }
             // c (connection information)
-            if(Connection != null){
+            if (Connection != null)
+            {
                 retVal.Append(Connection.ToValue());
             }
-            foreach(SDP_Attribute attribute in Attributes){
+            foreach (SDP_Attribute attribute in Attributes)
+            {
                 retVal.Append(attribute.ToValue());
             }
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets or sets meadia type. Currently defined media are "audio", "video", "text", 
-        /// "application", and "message", although this list may be extended in the future.
-        /// </summary>
-        public string MediaType { get; private set; } = "";
-
-        /// <summary>
-        /// Gets or sets the transport port to which the media stream is sent.
-        /// </summary>
-        public int Port { get; set; }
-
-        /// <summary>
-        /// Gets or sets number of continuos media ports.
-        /// </summary>
-        public int NumberOfPorts
-        {
-            get{ return m_NumberOfPorts; }
-
-            set{
-                if(value < 1){
-                    throw new ArgumentException("Property NumberOfPorts must be >= 1 !");
-                }
- 
-                m_NumberOfPorts = value; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets transport protocol. Currently known protocols: UDP;RTP/AVP;RTP/SAVP.
-        /// </summary>
-        public string Protocol
-        {
-            get{ return m_Protocol; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Protocol cant be null or empty !");
-                }
-
-                m_Protocol = value; 
-            }
-        }
-
-        /// <summary>
-        /// Gets media formats collection.
-        /// </summary>
-        /// <remarks>
-        /// <code>
-        /// ; Media Formats: 
-        /// ; If the Transport Protocol is "RTP/AVP" or "RTP/SAVP" the &lt;fmt&gt; 
-        /// ; sub-fields contain RTP payload type numbers, for example: 
-        /// ; - for Audio: 0: PCMU, 4: G723, 8: PCMA, 18: G729 
-        /// ; - for Video: 31: H261, 32: MPV 
-        /// ; If the Transport Protocol is "udp" the &lt;fmt&gt; sub-fields 
-        /// ; must reference a MIME type 
-        /// </code>
-        /// </remarks>
-        public List<string> MediaFormats { get; }
-
-        /// <summary>
-        /// Gets or sets media information. Value null means not specified.
-        /// </summary>
-        public string Information { get; set; }
-
-        /// <summary>
-        /// Gets or sets per media connection data. Value null means not specified.
-        /// </summary>
-        public SDP_Connection Connection { get; set; }
-
-        /// <summary>
-        /// Gets or sets bandwidth data. Value null means not specified.
-        /// </summary>
-        public string Bandwidth { get; set; }
-
-        /// <summary>
-        /// Gets media attributes collection.
-        /// </summary>
-        public List<SDP_Attribute> Attributes { get; }
-
-        /// <summary>
-        /// Gets user data items collection.
-        /// </summary>
-        public Dictionary<string,object> Tags { get; }
     }
 }

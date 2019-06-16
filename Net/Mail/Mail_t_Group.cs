@@ -22,6 +22,16 @@ namespace LumiSoft.Net.Mail
         }
 
         /// <summary>
+        /// Gets or sets diplay name. Value null means not specified.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets groiup address members collection.
+        /// </summary>
+        public List<Mail_t_Mailbox> Members { get; }
+
+        /// <summary>
         /// Returns mailbox as string.
         /// </summary>
         /// <returns>Returns mailbox as string.</returns>
@@ -38,36 +48,32 @@ namespace LumiSoft.Net.Mail
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder)
         {
             var retVal = new StringBuilder();
-            if (string.IsNullOrEmpty(DisplayName)){
+            if (string.IsNullOrEmpty(DisplayName))
+            {
                 retVal.Append(":");
             }
-            else{
-                if(MIME_Encoding_EncodedWord.MustEncode(DisplayName)){
+            else
+            {
+                if (MIME_Encoding_EncodedWord.MustEncode(DisplayName))
+                {
                     retVal.Append(wordEncoder.Encode(DisplayName) + ":");
                 }
-                else{
+                else
+                {
                     retVal.Append(TextUtils.QuoteString(DisplayName) + ":");
                 }
             }
-            for(int i=0;i<Members.Count;i++){
+            for (int i = 0; i < Members.Count; i++)
+            {
                 retVal.Append(Members[i].ToString(wordEncoder));
-                if(i < (Members.Count - 1)){
+                if (i < (Members.Count - 1))
+                {
                     retVal.Append(",");
                 }
             }
-            retVal.Append(";");            
+            retVal.Append(";");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets or sets diplay name. Value null means not specified.
-        /// </summary>
-        public string DisplayName { get; set; }
-
-        /// <summary>
-        /// Gets groiup address members collection.
-        /// </summary>
-        public List<Mail_t_Mailbox> Members { get; }
     }
 }

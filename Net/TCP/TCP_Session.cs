@@ -11,20 +11,19 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public abstract class TCP_Session : IDisposable
     {
-        /// <summary>
-        /// Cleans up any resources being used.
-        /// </summary>
-        public abstract void Dispose();
 
         /// <summary>
-        /// Disconnects session.
+        /// Gets session authenticated user identity , returns null if not authenticated.
         /// </summary>
-        public abstract void Disconnect();
+        public virtual GenericIdentity AuthenticatedUserIdentity
+        {
+            get { return null; }
+        }
 
         /// <summary>
-        /// Gets if session is connected.
+        /// Gets the time when session was connected.
         /// </summary>
-        public abstract bool IsConnected
+        public abstract DateTime ConnectTime
         {
             get;
         }
@@ -38,11 +37,27 @@ namespace LumiSoft.Net.TCP
         }
 
         /// <summary>
-        /// Gets the time when session was connected.
+        /// Gets if this session is authenticated.
         /// </summary>
-        public abstract DateTime ConnectTime
+        public bool IsAuthenticated
+        {
+            get { return AuthenticatedUserIdentity != null; }
+        }
+
+        /// <summary>
+        /// Gets if session is connected.
+        /// </summary>
+        public abstract bool IsConnected
         {
             get;
+        }
+
+        /// <summary>
+        /// Gets if this session TCP connection is secure connection.
+        /// </summary>
+        public virtual bool IsSecureConnection
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -68,30 +83,6 @@ namespace LumiSoft.Net.TCP
         {
             get;
         }
-        
-        /// <summary>
-        /// Gets if this session TCP connection is secure connection.
-        /// </summary>
-        public virtual bool IsSecureConnection
-        {
-            get{ return false; }
-        }
-        
-        /// <summary>
-        /// Gets if this session is authenticated.
-        /// </summary>
-        public bool IsAuthenticated
-        {
-            get{ return AuthenticatedUserIdentity != null; }
-        }
-
-        /// <summary>
-        /// Gets session authenticated user identity , returns null if not authenticated.
-        /// </summary>
-        public virtual GenericIdentity AuthenticatedUserIdentity 
-        {
-            get{ return null; }
-        }
 
         /// <summary>
         /// Gets TCP stream which must be used to send/receive data through this session.
@@ -100,5 +91,14 @@ namespace LumiSoft.Net.TCP
         {
             get;
         }
+
+        /// <summary>
+        /// Disconnects session.
+        /// </summary>
+        public abstract void Disconnect();
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        public abstract void Dispose();
     }
 }

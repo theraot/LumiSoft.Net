@@ -8,12 +8,12 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_DigestMd5 : AUTH_SASL_ServerMechanism
     {
-        private bool   m_IsCompleted;
-        private bool   m_IsAuthenticated;
-        private string m_Realm           = "";
-        private readonly string m_Nonce           = "";
-        private string m_UserName        = "";
-        private int    m_State;
+        private bool m_IsAuthenticated;
+        private bool m_IsCompleted;
+        private readonly string m_Nonce = "";
+        private string m_Realm = "";
+        private int m_State;
+        private string m_UserName = "";
 
         /// <summary>
         /// Default constructor.
@@ -27,14 +27,63 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Resets any authentication state data.
+        /// Is called when authentication mechanism needs to get user info to complete atuhentication.
         /// </summary>
-        public override void Reset()
+        public event EventHandler<AUTH_e_UserInfo> GetUserInfo;
+
+        /// <summary>
+        /// Gets if user has authenticated sucessfully.
+        /// </summary>
+        public override bool IsAuthenticated
         {
-            m_IsCompleted     = false;
-            m_IsAuthenticated = false;
-            m_UserName        = "";
-            m_State           = 0;
+            get { return m_IsAuthenticated; }
+        }
+
+        /// <summary>
+        /// Gets if the authentication exchange has completed.
+        /// </summary>
+        public override bool IsCompleted
+        {
+            get { return m_IsCompleted; }
+        }
+
+        /// <summary>
+        /// Returns always "DIGEST-MD5".
+        /// </summary>
+        public override string Name
+        {
+            get { return "DIGEST-MD5"; }
+        }
+
+        /// <summary>
+        /// Gets or sets realm value.
+        /// </summary>
+        /// <remarks>Normally this is host or domain name.</remarks>
+        public string Realm
+        {
+            get { return m_Realm; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+                m_Realm = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets if specified SASL mechanism is available only to SSL connection.
+        /// </summary>
+        public override bool RequireSSL { get; }
+
+        /// <summary>
+        /// Gets user login name.
+        /// </summary>
+        public override string UserName
+        {
+            get { return m_UserName; }
         }
 
         /// <summary>
@@ -45,7 +94,8 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>clientResponse</b> is null reference.</exception>
         public override byte[] Continue(byte[] clientResponse)
         {
-            if(clientResponse == null){
+            if (clientResponse == null)
+            {
                 throw new ArgumentNullException("clientResponse");
             }
 
@@ -65,36 +115,43 @@ namespace LumiSoft.Net.AUTH
                 The password in this example was "secret".
             */
 
-            if(m_State == 0){
+            if (m_State == 0)
+            {
                 m_State++;
-                
-                var callenge = new AUTH_SASL_DigestMD5_Challenge(new[]{m_Realm},m_Nonce,new[]{"auth"},false);
+
+                var callenge = new AUTH_SASL_DigestMD5_Challenge(new[] { m_Realm }, m_Nonce, new[] { "auth" }, false);
 
                 return Encoding.UTF8.GetBytes(callenge.ToChallenge());
             }
 
-            if(m_State == 1){
+            if (m_State == 1)
+            {
                 m_State++;
 
-                try{
+                try
+                {
                     var response = AUTH_SASL_DigestMD5_Response.Parse(Encoding.UTF8.GetString(clientResponse));
 
                     // Check realm and nonce value.
-                    if (m_Realm != response.Realm || m_Nonce != response.Nonce){
+                    if (m_Realm != response.Realm || m_Nonce != response.Nonce)
+                    {
                         return Encoding.UTF8.GetBytes("rspauth=\"\"");
                     }
 
                     m_UserName = response.UserName;
                     var result = OnGetUserInfo(response.UserName);
-                    if (result.UserExists){            
-                        if(response.Authenticate(result.UserName,result.Password)){
+                    if (result.UserExists)
+                    {
+                        if (response.Authenticate(result.UserName, result.Password))
+                        {
                             m_IsAuthenticated = true;
 
-                            return Encoding.UTF8.GetBytes(response.ToRspauthResponse(result.UserName,result.Password));
+                            return Encoding.UTF8.GetBytes(response.ToRspauthResponse(result.UserName, result.Password));
                         }
                     }
                 }
-                catch{
+                catch
+                {
                     // Authentication failed, just reject request.
                 }
 
@@ -106,62 +163,15 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Gets if the authentication exchange has completed.
+        /// Resets any authentication state data.
         /// </summary>
-        public override bool IsCompleted
+        public override void Reset()
         {
-            get{ return m_IsCompleted; }
+            m_IsCompleted = false;
+            m_IsAuthenticated = false;
+            m_UserName = "";
+            m_State = 0;
         }
-
-        /// <summary>
-        /// Gets if user has authenticated sucessfully.
-        /// </summary>
-        public override bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
-        }
-
-        /// <summary>
-        /// Returns always "DIGEST-MD5".
-        /// </summary>
-        public override string Name
-        {
-            get { return "DIGEST-MD5"; }
-        }
-
-        /// <summary>
-        /// Gets if specified SASL mechanism is available only to SSL connection.
-        /// </summary>
-        public override bool RequireSSL { get; }
-
-        /// <summary>
-        /// Gets or sets realm value.
-        /// </summary>
-        /// <remarks>Normally this is host or domain name.</remarks>
-        public string Realm
-        {
-            get{ return m_Realm; }
-
-            set{
-                if(value == null){
-                    value = "";
-                }
-                m_Realm = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets user login name.
-        /// </summary>
-        public override string UserName
-        {
-            get{ return m_UserName; }
-        }
-
-        /// <summary>
-        /// Is called when authentication mechanism needs to get user info to complete atuhentication.
-        /// </summary>
-        public event EventHandler<AUTH_e_UserInfo> GetUserInfo;
 
         /// <summary>
         /// Raises <b>GetUserInfo</b> event.
@@ -172,8 +182,9 @@ namespace LumiSoft.Net.AUTH
         {
             var retVal = new AUTH_e_UserInfo(userName);
 
-            if (GetUserInfo != null){
-                GetUserInfo(this,retVal);
+            if (GetUserInfo != null)
+            {
+                GetUserInfo(this, retVal);
             }
 
             return retVal;

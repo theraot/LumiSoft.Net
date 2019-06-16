@@ -42,67 +42,470 @@ namespace LumiSoft.Net.POP3.Client
     /// </code>
     /// </example>
     public class POP3_Client : TCP_Client
-	{
-        private string                       m_GreetingText       = "";
-		private string                       m_ApopHashKey        = "";
-        private List<string>                 m_pExtCapabilities;
-        private bool                         m_IsUidlSupported;
+    {
+        private string m_ApopHashKey = "";
+        private string m_GreetingText = "";
+        private bool m_IsUidlSupported;
+        private GenericIdentity m_pAuthdUserIdentity;
+        private List<string> m_pExtCapabilities;
         private POP3_ClientMessageCollection m_pMessages;
-        private GenericIdentity              m_pAuthdUserIdentity;
-
-		/// <summary>
-		/// Default constructor.
-		/// </summary>
-		public POP3_Client()
-		{
-	        m_pExtCapabilities = new List<string>();
-		}
 
         /// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		public override void Dispose()
-		{
-			base.Dispose();
-		}
+        /// Default constructor.
+        /// </summary>
+        public POP3_Client()
+        {
+            m_pExtCapabilities = new List<string>();
+        }
 
         /// <summary>
-		/// Closes connection to POP3 server.
-		/// </summary>
+        /// Internal helper method for asynchronous Authenticate method.
+        /// </summary>
+        private delegate void AuthenticateDelegate(string userName, string password, bool tryApop);
+
+        /// <summary>
+        /// Internal helper method for asynchronous Noop method.
+        /// </summary>
+        private delegate void NoopDelegate();
+
+        /// <summary>
+        /// Internal helper method for asynchronous Reset method.
+        /// </summary>
+        private delegate void ResetDelegate();
+
+        /// <summary>
+        /// Internal helper method for asynchronous StartTLS method.
+        /// </summary>
+        private delegate void StartTLSDelegate();
+
+        /// <summary>
+        /// Gets session authenticated user identity, returns null if not authenticated.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
+        public override GenericIdentity AuthenticatedUserIdentity
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+
+                return m_pAuthdUserIdentity;
+            }
+        }
+
+        /// <summary>
+        /// Gets POP3 exteneded capabilities supported by POP3 server.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
+        public string[] ExtendedCapabilities
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+
+                return m_pExtCapabilities.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets POP3 exteneded capabilities supported by POP3 server.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
+        [Obsolete("USe ExtendedCapabilities instead !")]
+        public string[] ExtenededCapabilities
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+
+                return m_pExtCapabilities.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets greeting text which was sent by POP3 server.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
+        public string GreetingText
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+
+                return m_GreetingText;
+            }
+        }
+
+        /// <summary>
+        /// Gets if POP3 server supports UIDL command.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and 
+        /// POP3 client is not connected and authenticated.</exception>
+        public bool IsUidlSupported
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+                if (!IsAuthenticated)
+                {
+                    throw new InvalidOperationException("You must authenticate first.");
+                }
+
+                return m_IsUidlSupported;
+            }
+        }
+
+        /// <summary>
+        /// Gets messages collection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and 
+        /// POP3 client is not connected and authenticated.</exception>
+        public POP3_ClientMessageCollection Messages
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+                if (!IsAuthenticated)
+                {
+                    throw new InvalidOperationException("You must authenticate first.");
+                }
+
+                return m_pMessages;
+            }
+        }
+
+        /// <summary>
+        /// Sends AUTH command to POP3 server.
+        /// </summary>
+        /// <param name="sasl">SASL authentication.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
-		public override void Disconnect()
-		{
-            if(IsDisposed){
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        public void Auth(AUTH_SASL_Client sasl)
+        {
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(!IsConnected){
-                throw new InvalidOperationException("POP3 client is not connected.");
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("Connection is already authenticated.");
+            }
+            if (sasl == null)
+            {
+                throw new ArgumentNullException("sasl");
             }
 
-			try{
-                // Send QUIT command to server.                
-                WriteLine("QUIT");
-			}
-			catch{
-			}
+            using (AuthAsyncOP op = new AuthAsyncOP(sasl))
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<AuthAsyncOP> e1)
+                    {
+                        wait.Set();
+                    };
+                    if (!AuthAsync(op))
+                    {
+                        wait.Set();
+                    }
+                    wait.WaitOne();
+                    wait.Close();
 
-            try{
-                base.Disconnect(); 
+                    if (op.Error != null)
+                    {
+                        throw op.Error;
+                    }
+                }
             }
-            catch{
+        }
+
+        /// <summary>
+        /// Starts sending AUTH command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="AuthAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or connection is already authenticated.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool AuthAsync(AuthAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("Connection is already authenticated.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
             }
 
-            m_GreetingText       = "";
-            m_ApopHashKey        = "";
-            m_pExtCapabilities   = new List<string>();
-            m_IsUidlSupported    = false;
-            if(m_pMessages != null){
-                m_pMessages.Dispose();
-                m_pMessages = null;
-            } 
-            m_pAuthdUserIdentity = null;
-		}
+            return op.Start(this);
+        }
+
+        /// <summary>
+		/// Authenticates user.
+		/// </summary>
+		/// <param name="userName">User login name.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        [Obsolete("Use Login/LoginAsync method instead.")]
+        public void Authenticate(string userName, string password, bool tryApop)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("Session is already authenticated.");
+            }
+
+            // Supports APOP, use it.
+            if (tryApop && m_ApopHashKey.Length > 0)
+            {
+                var hexHash = Net_Utils.ComputeMd5(m_ApopHashKey + password, true);
+
+                int countWritten = TcpStream.WriteLine("APOP " + userName + " " + hexHash);
+                LogAddWrite(countWritten, "APOP " + userName + " " + hexHash);
+
+                var line = ReadLine();
+                if (line.StartsWith("+OK"))
+                {
+                    m_pAuthdUserIdentity = new GenericIdentity(userName, "apop");
+                }
+                else
+                {
+                    throw new POP3_ClientException(line);
+                }
+            }
+            // Use normal LOGIN, don't support APOP.
+            else
+            {
+                int countWritten = TcpStream.WriteLine("USER " + userName);
+                LogAddWrite(countWritten, "USER " + userName);
+
+                var line = ReadLine();
+                if (line.StartsWith("+OK"))
+                {
+                    countWritten = TcpStream.WriteLine("PASS " + password);
+                    LogAddWrite(countWritten, "PASS <***REMOVED***>");
+
+                    line = ReadLine();
+                    if (line.StartsWith("+OK"))
+                    {
+                        m_pAuthdUserIdentity = new GenericIdentity(userName, "pop3-user/pass");
+                    }
+                    else
+                    {
+                        throw new POP3_ClientException(line);
+                    }
+                }
+                else
+                {
+                    throw new POP3_ClientException(line);
+                }
+            }
+
+            if (IsAuthenticated)
+            {
+                FillMessages();
+            }
+        }
+
+        /// <summary>
+        /// Starts authentication.
+        /// </summary>
+		/// <param name="userName">User login name.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
+        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
+        [Obsolete("Use Login/LoginAsync method instead.")]
+        public IAsyncResult BeginAuthenticate(string userName, string password, bool tryApop, AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("Session is already authenticated.");
+            }
+
+            var asyncMethod = new AuthenticateDelegate(Authenticate);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(userName, password, tryApop, new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
+        }
+
+        /// <summary>
+        /// Starts sending NOOP command to server. This method can be used for keeping connection alive(not timing out).
+        /// </summary>
+        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
+        [Obsolete("Use Noop/NoopAsync method instead.")]
+        public IAsyncResult BeginNoop(AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+
+            var asyncMethod = new NoopDelegate(Noop);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
+        }
+
+        /// <summary>
+        /// Starts resetting session. Messages marked for deletion will be unmarked.
+        /// </summary>
+        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
+        [Obsolete("Use Rset/RsetAsync method instead.")]
+        public IAsyncResult BeginReset(AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (!IsAuthenticated)
+            {
+                throw new InvalidOperationException("The RSET command is only valid in authenticated state.");
+            }
+
+            var asyncMethod = new ResetDelegate(Reset);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
+        }
+
+        /// <summary>
+        /// Starts switching to SSL.
+        /// </summary>
+        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is authenticated or is already secure connection.</exception>
+        [Obsolete("Use Stls/StlsAsync method instead.")]
+        public IAsyncResult BeginStartTLS(AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
+            }
+            if (IsSecureConnection)
+            {
+                throw new InvalidOperationException("Connection is already secure.");
+            }
+
+            var asyncMethod = new StartTLSDelegate(StartTLS);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
+        }
 
         /// <summary>
         /// Executes CAPA command.
@@ -112,25 +515,32 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         public void Capa()
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
 
-            using(CapaAsyncOP op = new CapaAsyncOP()){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<CapaAsyncOP> e1){
+            using (CapaAsyncOP op = new CapaAsyncOP())
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<CapaAsyncOP> e1)
+                    {
                         wait.Set();
                     };
-                    if(!CapaAsync(op)){
+                    if (!CapaAsync(op))
+                    {
                         wait.Set();
                     }
                     wait.WaitOne();
                     wait.Close();
 
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         throw op.Error;
                     }
                 }
@@ -138,15 +548,1258 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
+        /// Starts sending CAPA command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="CapaAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool CapaAsync(CapaAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+		/// Closes connection to POP3 server.
+		/// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
+		public override void Disconnect()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("POP3 client is not connected.");
+            }
+
+            try
+            {
+                // Send QUIT command to server.                
+                WriteLine("QUIT");
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                base.Disconnect();
+            }
+            catch
+            {
+            }
+
+            m_GreetingText = "";
+            m_ApopHashKey = "";
+            m_pExtCapabilities = new List<string>();
+            m_IsUidlSupported = false;
+            if (m_pMessages != null)
+            {
+                m_pMessages.Dispose();
+                m_pMessages = null;
+            }
+            m_pAuthdUserIdentity = null;
+        }
+
+        /// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		public override void Dispose()
+        {
+            base.Dispose();
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous authentication request.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        [Obsolete("Use Login/LoginAsync method instead.")]
+        public void EndAuthenticate(IAsyncResult asyncResult)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this)
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginAuthenticate method.");
+            }
+            if (castedAsyncResult.IsEndCalled)
+            {
+                throw new InvalidOperationException("BeginAuthenticate was previously called for the asynchronous connection.");
+            }
+
+            castedAsyncResult.IsEndCalled = true;
+            if (castedAsyncResult.AsyncDelegate is AuthenticateDelegate)
+            {
+                ((AuthenticateDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginAuthenticate method.");
+            }
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous Noop request.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        [Obsolete("Use Noop/NoopAsync method instead.")]
+        public void EndNoop(IAsyncResult asyncResult)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this)
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginNoop method.");
+            }
+            if (castedAsyncResult.IsEndCalled)
+            {
+                throw new InvalidOperationException("BeginNoop was previously called for the asynchronous connection.");
+            }
+
+            castedAsyncResult.IsEndCalled = true;
+            if (castedAsyncResult.AsyncDelegate is NoopDelegate)
+            {
+                ((NoopDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginNoop method.");
+            }
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous reset request.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        [Obsolete("Use Rset/RsetAsync method instead.")]
+        public void EndReset(IAsyncResult asyncResult)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this)
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
+            }
+            if (castedAsyncResult.IsEndCalled)
+            {
+                throw new InvalidOperationException("BeginReset was previously called for the asynchronous connection.");
+            }
+
+            castedAsyncResult.IsEndCalled = true;
+            if (castedAsyncResult.AsyncDelegate is ResetDelegate)
+            {
+                ((ResetDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
+            }
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous StartTLS request.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        [Obsolete("Use Stls/StlsAsync method instead.")]
+        public void EndStartTLS(IAsyncResult asyncResult)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this)
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
+            }
+            if (castedAsyncResult.IsEndCalled)
+            {
+                throw new InvalidOperationException("BeginReset was previously called for the asynchronous connection.");
+            }
+
+            castedAsyncResult.IsEndCalled = true;
+            if (castedAsyncResult.AsyncDelegate is StartTLSDelegate)
+            {
+                ((StartTLSDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
+            }
+        }
+
+        /// <summary>
+        /// Executes USER/PASS command.
+        /// </summary>
+        /// <param name="user">User name.</param>
+        /// <param name="password">User password.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        public void Login(string user, string password)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("Session is already authenticated.");
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if (user == string.Empty)
+            {
+                throw new ArgumentException("Argument 'user' value must be specified.", "user");
+            }
+            if (password == null)
+            {
+                throw new ArgumentNullException("password");
+            }
+
+            using (LoginAsyncOP op = new LoginAsyncOP(user, password))
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<LoginAsyncOP> e1)
+                    {
+                        wait.Set();
+                    };
+                    if (!LoginAsync(op))
+                    {
+                        wait.Set();
+                    }
+                    wait.WaitOne();
+                    wait.Close();
+
+                    if (op.Error != null)
+                    {
+                        throw op.Error;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Starts executing USER/PASS command.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="LoginAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool LoginAsync(LoginAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("Session is already authenticated.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Send NOOP command to server. This method can be used for keeping connection alive(not timing out).
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        public void Noop()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (!IsAuthenticated)
+            {
+                throw new InvalidOperationException("The NOOP command is only valid in TRANSACTION state.");
+            }
+
+            using (NoopAsyncOP op = new NoopAsyncOP())
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<NoopAsyncOP> e1)
+                    {
+                        wait.Set();
+                    };
+                    if (!NoopAsync(op))
+                    {
+                        wait.Set();
+                    }
+                    wait.WaitOne();
+                    wait.Close();
+
+                    if (op.Error != null)
+                    {
+                        throw op.Error;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Starts sending NOOP command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="NoopAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool NoopAsync(NoopAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (!IsAuthenticated)
+            {
+                throw new InvalidOperationException("The NOOP command is only valid in TRANSACTION(authenticated) state.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+		/// Resets session. Messages marked for deletion will be unmarked.
+		/// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>        
+        [Obsolete("Use Rset/RsetAsync method instead.")]
+        public void Reset()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (!IsAuthenticated)
+            {
+                throw new InvalidOperationException("The RSET command is only valid in TRANSACTION state.");
+            }
+
+            using (RsetAsyncOP op = new RsetAsyncOP())
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<RsetAsyncOP> e1)
+                    {
+                        wait.Set();
+                    };
+                    if (!RsetAsync(op))
+                    {
+                        wait.Set();
+                    }
+                    wait.WaitOne();
+                    wait.Close();
+
+                    if (op.Error != null)
+                    {
+                        throw op.Error;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+		/// Resets session. Messages marked for deletion will be unmarked.
+		/// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+		public void Rset()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (!IsAuthenticated)
+            {
+                throw new InvalidOperationException("The RSET command is only valid in TRANSACTION state.");
+            }
+
+            using (RsetAsyncOP op = new RsetAsyncOP())
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<RsetAsyncOP> e1)
+                    {
+                        wait.Set();
+                    };
+                    if (!RsetAsync(op))
+                    {
+                        wait.Set();
+                    }
+                    wait.WaitOne();
+                    wait.Close();
+
+                    if (op.Error != null)
+                    {
+                        throw op.Error;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Starts sending RSET command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="RsetAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool RsetAsync(RsetAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (!IsAuthenticated)
+            {
+                throw new InvalidOperationException("The RSET command is only valid in TRANSACTION(authenticated) state.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        //--- Obsolete -------------------------------------------------------------------
+
+        /// <summary>
+        /// Switches POP3 connection to SSL.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is authenticated or is already secure connection.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        [Obsolete("Use Stls/StlsAsync method instead.")]
+        public void StartTLS()
+        {
+            /* RFC 2595 4. POP3 STARTTLS extension.
+                Arguments: none
+
+                Restrictions:
+                    Only permitted in AUTHORIZATION state.
+             
+                Possible Responses:
+                     +OK -ERR
+
+                 Examples:
+                     C: STLS
+                     S: +OK Begin TLS negotiation
+                     <TLS negotiation, further commands are under TLS layer>
+                       ...
+                     C: STLS
+                     S: -ERR Command not permitted when TLS active
+            */
+
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
+            }
+            if (IsSecureConnection)
+            {
+                throw new InvalidOperationException("Connection is already secure.");
+            }
+
+            WriteLine("STLS");
+
+            var line = ReadLine();
+            if (!line.ToUpper().StartsWith("+OK"))
+            {
+                throw new POP3_ClientException(line);
+            }
+
+            SwitchToSecure();
+        }
+
+        /// <summary>
+        /// Executes STLS command.
+        /// </summary>
+        /// <param name="certCallback">SSL server certificate validation callback. Value null means any certificate is accepted.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is authenticated or is already secure connection.</exception>
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
+        public void Stls(RemoteCertificateValidationCallback certCallback)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
+            }
+            if (IsSecureConnection)
+            {
+                throw new InvalidOperationException("Connection is already secure.");
+            }
+
+            using (StlsAsyncOP op = new StlsAsyncOP(certCallback))
+            {
+                using (ManualResetEvent wait = new ManualResetEvent(false))
+                {
+                    op.CompletedAsync += delegate (object s1, EventArgs<StlsAsyncOP> e1)
+                    {
+                        wait.Set();
+                    };
+                    if (!StlsAsync(op))
+                    {
+                        wait.Set();
+                    }
+                    wait.WaitOne();
+                    wait.Close();
+
+                    if (op.Error != null)
+                    {
+                        throw op.Error;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Starts sending STLS command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="StlsAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool StlsAsync(StlsAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsAuthenticated)
+            {
+                throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// This method is called when TCP client has sucessfully connected.
+        /// </summary>
+        /// <param name="callback">Callback to be called to complete connect operation.</param>
+        protected override void OnConnected(CompleteConnectCallback callback)
+        {
+            // Read POP3 server greeting response.
+            var readGreetingOP = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+            readGreetingOP.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+            {
+                ReadServerGreetingCompleted(readGreetingOP, callback);
+            };
+            if (TcpStream.ReadLine(readGreetingOP, true))
+            {
+                ReadServerGreetingCompleted(readGreetingOP, callback);
+            }
+        }
+
+        /// <summary>
+        /// Fills messages info.
+        /// </summary>
+        [Obsolete("deprecated")]
+        private void FillMessages()
+        {
+            m_pMessages = new POP3_ClientMessageCollection(this);
+
+            /*
+                First make messages info, then try to add UIDL if server supports.
+            */
+
+            /* NOTE: If reply is +OK, this is multiline respone and is terminated with '.'.
+			Examples:
+				C: LIST
+				S: +OK 2 messages (320 octets)
+				S: 1 120				
+				S: 2 200
+				S: .
+				...
+				C: LIST 3
+				S: -ERR no such message, only 2 messages in maildrop
+			*/
+
+            WriteLine("LIST");
+
+            // Read first line of reply, check if it's ok.
+            var line = ReadLine();
+            if (line.StartsWith("+OK"))
+            {
+                // Read lines while get only '.' on line itshelf.
+                while (true)
+                {
+                    line = ReadLine();
+
+                    // End of data
+                    if (line.Trim() == ".")
+                    {
+                        break;
+                    }
+
+                    var no_size = line.Trim().Split(new[] { ' ' });
+                    m_pMessages.Add(Convert.ToInt32(no_size[1]));
+                }
+            }
+            else
+            {
+                throw new POP3_ClientException(line);
+            }
+
+            // Try to fill messages UIDs.
+            /* NOTE: If reply is +OK, this is multiline respone and is terminated with '.'.
+			Examples:
+				C: UIDL
+				S: +OK
+				S: 1 whqtswO00WBw418f9t5JxYwZ
+				S: 2 QhdPYR:00WBw1Ph7x7
+				S: .
+				...
+				C: UIDL 3
+				S: -ERR no such message
+			*/
+
+            WriteLine("UIDL");
+
+            // Read first line of reply, check if it's ok
+            line = ReadLine();
+            if (line.StartsWith("+OK"))
+            {
+                m_IsUidlSupported = true;
+
+                // Read lines while get only '.' on line itshelf.
+                while (true)
+                {
+                    line = ReadLine();
+
+                    // End of data
+                    if (line.Trim() == ".")
+                    {
+                        break;
+                    }
+
+                    var no_uid = line.Trim().Split(new[] { ' ' });
+                    m_pMessages[Convert.ToInt32(no_uid[0]) - 1].SetUID(no_uid[1]);
+                }
+            }
+            else
+            {
+                m_IsUidlSupported = false;
+            }
+        }
+
+        /// <summary>
+        /// Starts filling mailbox messages info.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="FillMessagesAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private bool FillMessagesAsync(FillMessagesAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Starts sending LIST command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="ListAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private bool ListAsync(ListAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Is called when POP3 server greeting reading has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <param name="connectCallback">Callback to be called to complete connect operation.</param>
+        private void ReadServerGreetingCompleted(SmartStream.ReadLineAsyncOP op, CompleteConnectCallback connectCallback)
+        {
+            Exception error = null;
+
+            try
+            {
+                // Greeting reading failed, we are done.
+                if (op.Error != null)
+                {
+                    error = op.Error;
+                }
+                // Greeting reading succeded.
+                else
+                {
+                    var line = op.LineUtf8;
+
+                    // Log.
+                    LogAddRead(op.BytesInBuffer, line);
+
+                    // POP3 server accepted connection, get greeting text.
+                    if (op.LineUtf8.StartsWith("+OK", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        m_GreetingText = line.Substring(3).Trim();
+
+                        // Try to read APOP hash key, if supports APOP.
+                        if (line.IndexOf("<") > -1 && line.IndexOf(">") > -1)
+                        {
+                            m_ApopHashKey = line.Substring(line.IndexOf("<"), line.LastIndexOf(">") - line.IndexOf("<") + 1);
+                        }
+                    }
+                    // POP3 server rejected connection.
+                    else
+                    {
+                        error = new POP3_ClientException(line);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                error = x;
+            }
+
+            // Complete TCP_Client connect operation.
+            connectCallback(error);
+        }
+
+        /// <summary>
+        /// Starts sending UIDL command to POP3 server.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="UidlAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private bool UidlAsync(UidlAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// This class represents <see cref="POP3_Client.AuthAsync"/> asynchronous operation.
+        /// </summary>
+        public class AuthAsyncOP : IDisposable, IAsyncOP
+        {
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private readonly AUTH_SASL_Client m_pSASL;
+            private bool m_RiseCompleted;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="sasl">SASL authentication.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>sasl</b> is null reference.</exception>
+            public AuthAsyncOP(AUTH_SASL_Client sasl)
+            {
+                m_pSASL = sasl ?? throw new ArgumentNullException("sasl");
+            }
+
+            /// <summary>
+            /// Cleans up any resource being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pPop3Client = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner POP3 client.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(POP3_Client owner)
+            {
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                try
+                {
+                    /* RFC 5034 4. The AUTH Command.
+
+                        AUTH mechanism [initial-response]
+
+                        Arguments:
+
+                        mechanism: A string identifying a SASL authentication mechanism.
+                        
+                        initial-response: An optional initial client response, as
+                                          defined in Section 3 of [RFC4422].  If present, this response
+                                          MUST be encoded as Base64 (specified in Section 4 of
+                                          [RFC4648]), or consist only of the single character "=", which
+                                          represents an empty initial response.
+                    */
+
+                    if (m_pSASL.SupportsInitialResponse)
+                    {
+                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
+
+                        // Log
+                        m_pPop3Client.LogAddWrite(buffer.Length, Encoding.UTF8.GetString(buffer).TrimEnd());
+
+                        // Start command sending.
+                        m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, AuthCommandSendingCompleted, null);
+                    }
+                    else
+                    {
+                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
+
+                        // Log
+                        m_pPop3Client.LogAddWrite(buffer.Length, "AUTH " + m_pSASL.Name);
+
+                        // Start command sending.
+                        m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, AuthCommandSendingCompleted, null);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
+                }
+            }
+
+            /// <summary>
+            /// Sets operation state.
+            /// </summary>
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Is called when AUTH command sending has finished.
+            /// </summary>
+            /// <param name="ar">Asynchronous result.</param>
+            private void AuthCommandSendingCompleted(IAsyncResult ar)
+            {
+                try
+                {
+                    m_pPop3Client.TcpStream.EndWrite(ar);
+
+                    // Read POP3 server response.
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
+                        AuthReadResponseCompleted(op);
+                    };
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
+                        AuthReadResponseCompleted(op);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+            }
+
+            /// <summary>
+            /// Is called when POP3 server response reading has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void AuthReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
+                        // Authentication succeeded.
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            // Start filling messages info.
+                            var fillOP = new FillMessagesAsyncOP();
+                            fillOP.CompletedAsync += delegate (object sender, EventArgs<FillMessagesAsyncOP> e)
+                            {
+                                FillMessagesCompleted(fillOP);
+                            };
+                            if (!m_pPop3Client.FillMessagesAsync(fillOP))
+                            {
+                                FillMessagesCompleted(fillOP);
+                            }
+                        }
+                        // Continue authenticating.
+                        else if (op.LineUtf8.StartsWith("+"))
+                        {
+                            // + base64Data, we need to decode it.
+                            var serverResponse = Convert.FromBase64String(op.LineUtf8.Split(new[] { ' ' }, 2)[1]);
+
+                            var clientResponse = m_pSASL.Continue(serverResponse);
+
+                            // We need just send SASL returned auth-response as base64.
+                            var buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
+
+                            // Log
+                            m_pPop3Client.LogAddWrite(buffer.Length, Convert.ToBase64String(clientResponse));
+
+                            // Start auth-data sending.
+                            m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, AuthCommandSendingCompleted, null);
+                        }
+                        // Authentication rejected.
+                        else
+                        {
+                            m_pException = new POP3_ClientException(op.LineUtf8);
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Is called when FillMessagesAsync method has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void FillMessagesCompleted(FillMessagesAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        m_pPop3Client.m_pAuthdUserIdentity = new GenericIdentity(m_pSASL.UserName, m_pSASL.Name);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Gets asynchronous operation state.
+            /// </summary>
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
+
+            /// <summary>
+            /// Gets error happened during operation. Returns null if no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is called when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync;
+
+            /// <summary>
+            /// Raises <b>CompletedAsync</b> event.
+            /// </summary>
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<AuthAsyncOP>(this));
+                }
+            }
+        }
+
+        /// <summary>
         /// This class represents <see cref="POP3_Client.CapaAsync"/> asynchronous operation.
         /// </summary>
-        public class CapaAsyncOP : IDisposable,IAsyncOP
+        public class CapaAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object        m_pLock          = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
-            private List<string>  m_pResponseLines;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+            private List<string> m_pResponseLines;
 
             /// <summary>
             /// Default constructor.
@@ -161,13 +1814,14 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
-                
-                m_pException     = null;
-                m_pPop3Client    = null;
+
+                m_pException = null;
+                m_pPop3Client = null;
                 m_pResponseLines = null;
 
                 CompletedAsync = null;
@@ -185,7 +1839,8 @@ namespace LumiSoft.Net.POP3.Client
 
                 SetState(AsyncOP_State.Active);
 
-                try{
+                try
+                {
                     /* RFC 2449 CAPA
                         Arguments:
                             none
@@ -226,20 +1881,22 @@ namespace LumiSoft.Net.POP3.Client
                     var buffer = Encoding.UTF8.GetBytes("CAPA\r\n");
 
                     // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"CAPA");
+                    m_pPop3Client.LogAddWrite(buffer.Length, "CAPA");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,CapaCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, CapaCommandSendingCompleted, null);
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     m_RiseCompleted = true;
 
                     return State == AsyncOP_State.Active;
@@ -252,14 +1909,17 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
 
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     State = state;
 
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
                         OnCompletedAsync();
                     }
                 }
@@ -271,21 +1931,25 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="ar">Asynchronous result.</param>
             private void CapaCommandSendingCompleted(IAsyncResult ar)
             {
-                try{
+                try
+                {
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
                         CapaReadResponseCompleted(op);
                     };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
                         CapaReadResponseCompleted(op);
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -296,52 +1960,63 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void CapaReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
                         // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             // Read capa-list.
-                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                            readLineOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                                try{
+                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                            readLineOP.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                            {
+                                try
+                                {
                                     ReadMultiLineResponseLineCompleted(readLineOP);
 
                                     // Read response lines while we get terminator(.).
-                                    while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                                    while (State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP, true))
+                                    {
                                         ReadMultiLineResponseLineCompleted(readLineOP);
                                     }
                                 }
-                                catch(Exception x){
+                                catch (Exception x)
+                                {
                                     m_pException = x;
-                                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                                     SetState(AsyncOP_State.Completed);
                                 }
                             };
                             // Read response lines while we get terminator(.).
-                            while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                            while (State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP, true))
+                            {
                                 ReadMultiLineResponseLineCompleted(readLineOP);
                             }
                         }
                         // Server returned error response.
-                        else{
+                        else
+                        {
                             m_pException = new POP3_ClientException(op.LineUtf8);
                             SetState(AsyncOP_State.Completed);
                         }
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
@@ -354,39 +2029,46 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void ReadMultiLineResponseLineCompleted(SmartStream.ReadLineAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                         
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
                         // Server closed connection.
-                        if(op.BytesInBuffer == 0){
+                        if (op.BytesInBuffer == 0)
+                        {
                             m_pException = new IOException("POP3 server closed connection unexpectedly.");
                             SetState(AsyncOP_State.Completed);
                         }
                         // We got respone terminator(.).
-                        else if(string.Equals(op.LineUtf8,".",StringComparison.InvariantCultureIgnoreCase)){
+                        else if (string.Equals(op.LineUtf8, ".", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             m_pPop3Client.m_pExtCapabilities.Clear();
                             m_pPop3Client.m_pExtCapabilities.AddRange(m_pResponseLines);
 
                             SetState(AsyncOP_State.Completed);
                         }
                         // We got response line.
-                        else{
+                        else
+                        {
                             m_pResponseLines.Add(op.LineUtf8);
                         }
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -403,15 +2085,18 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Exception Error
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -425,1654 +2110,35 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<CapaAsyncOP>(this));
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<CapaAsyncOP>(this));
                 }
             }
-        }
-
-        /// <summary>
-        /// Starts sending CAPA command to POP3 server.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="CapaAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool CapaAsync(CapaAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Executes STLS command.
-        /// </summary>
-        /// <param name="certCallback">SSL server certificate validation callback. Value null means any certificate is accepted.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is authenticated or is already secure connection.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        public void Stls(RemoteCertificateValidationCallback certCallback)
-        {    
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(IsAuthenticated){
-				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
-			}
-            if(IsSecureConnection){
-                throw new InvalidOperationException("Connection is already secure.");
-            }
-                        
-            using(StlsAsyncOP op = new StlsAsyncOP(certCallback)){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<StlsAsyncOP> e1){
-                        wait.Set();
-                    };
-                    if(!StlsAsync(op)){
-                        wait.Set();
-                    }
-                    wait.WaitOne();
-                    wait.Close();
-
-                    if(op.Error != null){
-                        throw op.Error;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// This class represents <see cref="POP3_Client.StlsAsync"/> asynchronous operation.
-        /// </summary>
-        public class StlsAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object                              m_pLock         = new object();
-            private Exception                           m_pException;
-            private POP3_Client                         m_pPop3Client;
-            private bool                                m_RiseCompleted;
-            private readonly RemoteCertificateValidationCallback m_pCertCallback;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="certCallback">SSL server certificate validation callback. Value null means any certificate is accepted.</param>
-            public StlsAsyncOP(RemoteCertificateValidationCallback certCallback)
-            {
-                m_pCertCallback = certCallback;
-            }
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
-                m_pPop3Client = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner POP3 client.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(POP3_Client owner)
-            {
-                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-
-                try{
-                    /* RFC 2595 4. POP3 STARTTLS extension.
-                        Arguments: none
-
-                        Restrictions:
-                            Only permitted in AUTHORIZATION state.
-                     
-                        Possible Responses:
-                             +OK -ERR
-
-                         Examples:
-                             C: STLS
-                             S: +OK Begin TLS negotiation
-                             <TLS negotiation, further commands are under TLS layer>
-                               ...
-                             C: STLS
-                             S: -ERR Command not permitted when TLS active
-                    */
-
-                    var buffer = Encoding.UTF8.GetBytes("STLS\r\n");
-
-                    // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"STLS");
-
-                    // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,StlsCommandSendingCompleted,null);
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Is called when STLS command sending has finished.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void StlsCommandSendingCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pPop3Client.TcpStream.EndWrite(ar);
-
-                    // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                        StlsReadResponseCompleted(op);
-                    };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
-                        StlsReadResponseCompleted(op);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when POP3 server STLS response reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void StlsReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
-                        // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){                        
-                            // Log
-                            m_pPop3Client.LogAddText("Starting TLS handshake.");
-
-                            var switchSecureOP = new SwitchToSecureAsyncOP(m_pCertCallback);
-                            switchSecureOP.CompletedAsync += delegate(object s,EventArgs<SwitchToSecureAsyncOP> e){
-                                SwitchToSecureCompleted(switchSecureOP);
-                            };
-                            if(!m_pPop3Client.SwitchToSecureAsync(switchSecureOP)){
-                                SwitchToSecureCompleted(switchSecureOP);
-                            }
-                        }
-                        // Server returned error response.
-                        else{
-                            m_pException = new POP3_ClientException(op.LineUtf8);
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Is called when TLS handshake has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-            private void SwitchToSecureCompleted(SwitchToSecureAsyncOP op)
-            {
-                if(op == null){
-                    throw new ArgumentNullException("op");
-                }
-
-                try{
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + m_pException.Message,m_pException);
-                    }
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddText("TLS handshake completed successfully.");
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + m_pException.Message,m_pException);
-                }
-
-                op.Dispose();
-
-                SetState(AsyncOP_State.Completed);
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<StlsAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<StlsAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts sending STLS command to POP3 server.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="StlsAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool StlsAsync(StlsAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-			if(IsAuthenticated){
-				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
-			}
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Executes USER/PASS command.
-        /// </summary>
-        /// <param name="user">User name.</param>
-        /// <param name="password">User password.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        public void Login(string user,string password)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(IsAuthenticated){
-				throw new InvalidOperationException("Session is already authenticated.");
-			}
-            if(user == null){
-                throw new ArgumentNullException("user");
-            }
-            if(user == string.Empty){
-                throw new ArgumentException("Argument 'user' value must be specified.","user");
-            }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
-
-            using(LoginAsyncOP op = new LoginAsyncOP(user,password)){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<LoginAsyncOP> e1){
-                        wait.Set();
-                    };
-                    if(!LoginAsync(op)){
-                        wait.Set();
-                    }
-                    wait.WaitOne();
-                    wait.Close();
-
-                    if(op.Error != null){
-                        throw op.Error;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// This class represents <see cref="POP3_Client.LoginAsync"/> asynchronous operation.
-        /// </summary>
-        public class LoginAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object        m_pLock         = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
-            private readonly string        m_User;
-            private readonly string        m_Password;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="user">User name.</param>
-            /// <param name="password">User password.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
-            /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-            public LoginAsyncOP(string user,string password)
-            {
-                if(user == null){
-                    throw new ArgumentNullException("user");
-                }
-                if(user == string.Empty){
-                    throw new ArgumentException("Argument 'user' value must be specified.","user");
-                }
-
-                m_User     = user;
-                m_Password = password ?? throw new ArgumentNullException("password");
-            }
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
-                m_pPop3Client = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner POP3 client.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(POP3_Client owner)
-            {
-                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-
-                try{
-                    var buffer = Encoding.UTF8.GetBytes("USER " + m_User + "\r\n");
-
-                    // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"USER " + m_User);
-
-                    // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,UserCommandSendingCompleted,null);
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Is called when USER command sending has finished.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void UserCommandSendingCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pPop3Client.TcpStream.EndWrite(ar);
-
-                    // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                        UserReadResponseCompleted(op);
-                    };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
-                        UserReadResponseCompleted(op);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when POP3 server USER response reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void UserReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
-                        // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){                        
-                            var buffer = Encoding.UTF8.GetBytes("PASS " + m_Password + "\r\n");
-
-                            // Log
-                            m_pPop3Client.LogAddWrite(buffer.Length,"PASS <***REMOVED***>");
-
-                            // Start command sending.
-                            m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,PassCommandSendingCompleted,null);
-                        }
-                        // Server returned error response.
-                        else{
-                            m_pException = new POP3_ClientException(op.LineUtf8);
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Is called when PASS command sending has finished.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void PassCommandSendingCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pPop3Client.TcpStream.EndWrite(ar);
-
-                    // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                        PassReadResponseCompleted(op);
-                    };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
-                        PassReadResponseCompleted(op);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when POP3 server PASS response reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void PassReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
-                        // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){                        
-                            // Start filling messages info.
-                            var fillOP = new FillMessagesAsyncOP();
-                            fillOP.CompletedAsync += delegate(object sender,EventArgs<FillMessagesAsyncOP> e){
-                                FillMessagesCompleted(fillOP);
-                            };
-                            if(!m_pPop3Client.FillMessagesAsync(fillOP)){
-                                FillMessagesCompleted(fillOP);
-                            }
-                        }
-                        // Server returned error response.
-                        else{
-                            m_pException = new POP3_ClientException(op.LineUtf8);
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Is called when FillMessagesAsync method has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void FillMessagesCompleted(FillMessagesAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error ;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        m_pPop3Client.m_pAuthdUserIdentity = new GenericIdentity(m_User,"pop3-user/pass");
-                        SetState(AsyncOP_State.Completed);
-                    }
-                }                
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<LoginAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<LoginAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts executing USER/PASS command.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="LoginAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool LoginAsync(LoginAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }            
-			if(IsAuthenticated){
-				throw new InvalidOperationException("Session is already authenticated.");
-			}
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Sends AUTH command to POP3 server.
-        /// </summary>
-        /// <param name="sasl">SASL authentication.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        public void Auth(AUTH_SASL_Client sasl)
-        {            
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-            if(IsAuthenticated){
-                throw new InvalidOperationException("Connection is already authenticated.");
-            }
-            if(sasl == null){
-                throw new ArgumentNullException("sasl");
-            }
-            
-            using(AuthAsyncOP op = new AuthAsyncOP(sasl)){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<AuthAsyncOP> e1){
-                        wait.Set();
-                    };
-                    if(!AuthAsync(op)){
-                        wait.Set();
-                    }
-                    wait.WaitOne();
-                    wait.Close();
-
-                    if(op.Error != null){
-                        throw op.Error;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// This class represents <see cref="POP3_Client.AuthAsync"/> asynchronous operation.
-        /// </summary>
-        public class AuthAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object           m_pLock         = new object();
-            private Exception        m_pException;
-            private POP3_Client      m_pPop3Client;
-            private readonly AUTH_SASL_Client m_pSASL;
-            private bool             m_RiseCompleted;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="sasl">SASL authentication.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>sasl</b> is null reference.</exception>
-            public AuthAsyncOP(AUTH_SASL_Client sasl)
-            {
-                m_pSASL = sasl ?? throw new ArgumentNullException("sasl");
-            }
-
-            /// <summary>
-            /// Cleans up any resource being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
-                m_pPop3Client = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner POP3 client.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(POP3_Client owner)
-            {
-                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-
-                try{
-                    /* RFC 5034 4. The AUTH Command.
-
-                        AUTH mechanism [initial-response]
-
-                        Arguments:
-
-                        mechanism: A string identifying a SASL authentication mechanism.
-                        
-                        initial-response: An optional initial client response, as
-                                          defined in Section 3 of [RFC4422].  If present, this response
-                                          MUST be encoded as Base64 (specified in Section 4 of
-                                          [RFC4648]), or consist only of the single character "=", which
-                                          represents an empty initial response.
-                    */
-
-                    if(m_pSASL.SupportsInitialResponse){
-                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
-
-                        // Log
-                        m_pPop3Client.LogAddWrite(buffer.Length,Encoding.UTF8.GetString(buffer).TrimEnd());
-
-                        // Start command sending.
-                        m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
-                    }
-                    else{
-                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
-
-                        // Log
-                        m_pPop3Client.LogAddWrite(buffer.Length,"AUTH " + m_pSASL.Name);
-
-                        // Start command sending.
-                        m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Is called when AUTH command sending has finished.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void AuthCommandSendingCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pPop3Client.TcpStream.EndWrite(ar);
-
-                    // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                        AuthReadResponseCompleted(op);
-                    };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
-                        AuthReadResponseCompleted(op);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when POP3 server response reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void AuthReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
-                        // Authentication succeeded.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
-                            // Start filling messages info.
-                            var fillOP = new FillMessagesAsyncOP();
-                            fillOP.CompletedAsync += delegate(object sender,EventArgs<FillMessagesAsyncOP> e){
-                                FillMessagesCompleted(fillOP);
-                            };
-                            if(!m_pPop3Client.FillMessagesAsync(fillOP)){
-                                FillMessagesCompleted(fillOP);
-                            }
-                        }
-                        // Continue authenticating.
-                        else if(op.LineUtf8.StartsWith("+")){
-                            // + base64Data, we need to decode it.
-                            var serverResponse = Convert.FromBase64String(op.LineUtf8.Split(new[]{' '},2)[1]);
-
-                            var clientResponse = m_pSASL.Continue(serverResponse);
-
-                            // We need just send SASL returned auth-response as base64.
-                            var buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
-
-                            // Log
-                            m_pPop3Client.LogAddWrite(buffer.Length,Convert.ToBase64String(clientResponse));
-
-                            // Start auth-data sending.
-                            m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
-                        }
-                        // Authentication rejected.
-                        else{
-                            m_pException = new POP3_ClientException(op.LineUtf8);
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Is called when FillMessagesAsync method has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void FillMessagesCompleted(FillMessagesAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error ;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        m_pPop3Client.m_pAuthdUserIdentity = new GenericIdentity(m_pSASL.UserName,m_pSASL.Name);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                }                
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts sending AUTH command to POP3 server.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="AuthAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or connection is already authenticated.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool AuthAsync(AuthAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(IsAuthenticated){
-                throw new InvalidOperationException("Connection is already authenticated.");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Send NOOP command to server. This method can be used for keeping connection alive(not timing out).
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        public void Noop()
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-			if(!IsAuthenticated){
-				throw new InvalidOperationException("The NOOP command is only valid in TRANSACTION state.");
-			}
-
-            using(NoopAsyncOP op = new NoopAsyncOP()){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<NoopAsyncOP> e1){
-                        wait.Set();
-                    };
-                    if(!NoopAsync(op)){
-                        wait.Set();
-                    }
-                    wait.WaitOne();
-                    wait.Close();
-
-                    if(op.Error != null){
-                        throw op.Error;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// This class represents <see cref="POP3_Client.NoopAsync"/> asynchronous operation.
-        /// </summary>
-        public class NoopAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object        m_pLock         = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
-                m_pPop3Client = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner POP3 client.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(POP3_Client owner)
-            {
-                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-
-                try{
-                    /* RFC 1939 5 NOOP.
-                        Arguments: none
-
-                        Restrictions:
-                            may only be given in the TRANSACTION state
-
-                        Discussion:
-                            The POP3 server does nothing, it merely replies with a
-                            positive response.
-
-                        Possible Responses:
-                            +OK
-
-                        Examples:
-                            C: NOOP
-                            S: +OK
-                    */
-
-                    var buffer = Encoding.UTF8.GetBytes("NOOP\r\n");
-
-                    // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"NOOP");
-
-                    // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,NoopCommandSendingCompleted,null);
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Is called when NOOP command sending has finished.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void NoopCommandSendingCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pPop3Client.TcpStream.EndWrite(ar);
-
-                    // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                        NoopReadResponseCompleted(op);
-                    };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
-                        NoopReadResponseCompleted(op);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when POP3 server NOOP response reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void NoopReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
-                        // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){                        
-                            SetState(AsyncOP_State.Completed);
-                        }
-                        // Server returned error response.
-                        else{
-                            m_pException = new POP3_ClientException(op.LineUtf8);
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts sending NOOP command to POP3 server.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="NoopAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool NoopAsync(NoopAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(!IsAuthenticated){
-				throw new InvalidOperationException("The NOOP command is only valid in TRANSACTION(authenticated) state.");
-			}
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-		/// Resets session. Messages marked for deletion will be unmarked.
-		/// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-		public void Rset()
-		{
-			if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(!IsAuthenticated){
-				throw new InvalidOperationException("The RSET command is only valid in TRANSACTION state.");
-			}
-
-            using(RsetAsyncOP op = new RsetAsyncOP()){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<RsetAsyncOP> e1){
-                        wait.Set();
-                    };
-                    if(!RsetAsync(op)){
-                        wait.Set();
-                    }
-                    wait.WaitOne();
-                    wait.Close();
-
-                    if(op.Error != null){
-                        throw op.Error;
-                    }
-                }
-            }
-		}
-
-        /// <summary>
-        /// This class represents <see cref="POP3_Client.RsetAsync"/> asynchronous operation.
-        /// </summary>
-        public class RsetAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object        m_pLock         = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
-                m_pPop3Client = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner POP3 client.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(POP3_Client owner)
-            {
-                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-
-                try{
-                    /* RFC 1939 5. RSET.
-                        Arguments: none
-
-                        Restrictions:
-                            may only be given in the TRANSACTION state
-
-                        Discussion:
-                            If any messages have been marked as deleted by the POP3
-                            server, they are unmarked.  The POP3 server then replies
-                            with a positive response.
-
-                        Possible Responses:
-                            +OK
-
-                        Examples:
-                            C: RSET
-                            S: +OK maildrop has 2 messages (320 octets)
-			        */
-
-                    var buffer = Encoding.UTF8.GetBytes("RSET\r\n");
-
-                    // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"RSET");
-
-                    // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,RsetCommandSendingCompleted,null);
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Is called when RSET command sending has finished.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void RsetCommandSendingCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pPop3Client.TcpStream.EndWrite(ar);
-
-                    // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                        RsetReadResponseCompleted(op);
-                    };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
-                        RsetReadResponseCompleted(op);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when POP3 server RSET response reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void RsetReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
-            {
-                try{
-                    // Operation failed.
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    // Operation succeeded.
-                    else{
-                        // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
-                        // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
-                            foreach(POP3_ClientMessage message in m_pPop3Client.m_pMessages){
-                                message.SetMarkedForDeletion(false);
-                            }
-
-                            SetState(AsyncOP_State.Completed);
-                        }
-                        // Server returned error response.
-                        else{
-                            m_pException = new POP3_ClientException(op.LineUtf8);
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                op.Dispose();
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts sending RSET command to POP3 server.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="RsetAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool RsetAsync(RsetAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(!IsAuthenticated){
-				throw new InvalidOperationException("The RSET command is only valid in TRANSACTION(authenticated) state.");
-			}
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
         }
 
         /// <summary>
         /// This class represents <see cref="POP3_Client.FillMessagesAsync"/> asynchronous operation.
         /// </summary>
-        private class FillMessagesAsyncOP : IDisposable,IAsyncOP
+        private class FillMessagesAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object        m_pLock         = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
 
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
             public void Dispose()
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
+
+                m_pException = null;
                 m_pPop3Client = null;
 
                 CompletedAsync = null;
@@ -2090,25 +2156,30 @@ namespace LumiSoft.Net.POP3.Client
 
                 SetState(AsyncOP_State.Active);
 
-                try{
+                try
+                {
                     // Start executing LIST command.
                     var listOP = new ListAsyncOP();
-                    listOP.CompletedAsync += delegate(object sender,EventArgs<ListAsyncOP> e){
+                    listOP.CompletedAsync += delegate (object sender, EventArgs<ListAsyncOP> e)
+                    {
                         ListCompleted(listOP);
                     };
-                    if(!m_pPop3Client.ListAsync(listOP)){
+                    if (!m_pPop3Client.ListAsync(listOP))
+                    {
                         ListCompleted(listOP);
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     m_RiseCompleted = true;
 
                     return State == AsyncOP_State.Active;
@@ -2121,14 +2192,17 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
 
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     State = state;
 
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
                         OnCompletedAsync();
                     }
                 }
@@ -2140,35 +2214,42 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void ListCompleted(ListAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Fill messages info.
                         m_pPop3Client.m_pMessages = new POP3_ClientMessageCollection(m_pPop3Client);
-                        foreach(string seqNo_Size in op.ResponseLines){
-                            m_pPop3Client.m_pMessages.Add(Convert.ToInt32(seqNo_Size.Trim().Split(new[]{' '})[1]));
+                        foreach (string seqNo_Size in op.ResponseLines)
+                        {
+                            m_pPop3Client.m_pMessages.Add(Convert.ToInt32(seqNo_Size.Trim().Split(new[] { ' ' })[1]));
                         }
 
                         // Try to UID's for messages(If server supports UIDL).
                         // Start executing LIST command.
                         var uidlOP = new UidlAsyncOP();
-                        uidlOP.CompletedAsync += delegate(object sender,EventArgs<UidlAsyncOP> e){
+                        uidlOP.CompletedAsync += delegate (object sender, EventArgs<UidlAsyncOP> e)
+                        {
                             UidlCompleted(uidlOP);
                         };
-                        if(!m_pPop3Client.UidlAsync(uidlOP)){
+                        if (!m_pPop3Client.UidlAsync(uidlOP))
+                        {
                             UidlCompleted(uidlOP);
                         }
                     }
-                }                
-                catch(Exception x){
+                }
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
@@ -2181,28 +2262,33 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void UidlCompleted(UidlAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         // Assume that UIDL not supported, skip error.
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         m_pPop3Client.m_IsUidlSupported = true;
 
                         // Fill messages UID info.
-                        foreach(string responseLine in op.ResponseLines){
-                            var seqNo_Uid = responseLine.Trim().Split(new[]{' '});
+                        foreach (string responseLine in op.ResponseLines)
+                        {
+                            var seqNo_Uid = responseLine.Trim().Split(new[] { ' ' });
                             m_pPop3Client.m_pMessages[Convert.ToInt32(seqNo_Uid[0]) - 1].SetUID(seqNo_Uid[1]);
                         }
 
                         SetState(AsyncOP_State.Completed);
                     }
-                }                
-                catch(Exception x){
+                }
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
@@ -2221,15 +2307,18 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Exception Error
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -2243,49 +2332,23 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<FillMessagesAsyncOP>(this));
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<FillMessagesAsyncOP>(this));
                 }
             }
         }
 
         /// <summary>
-        /// Starts filling mailbox messages info.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="FillMessagesAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private bool FillMessagesAsync(FillMessagesAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
         /// This class represents <see cref="POP3_Client.ListAsync"/> asynchronous operation.
         /// </summary>
-        private class ListAsyncOP : IDisposable,IAsyncOP
+        private class ListAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object        m_pLock          = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
-            private List<string>  m_pResponseLines;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+            private List<string> m_pResponseLines;
 
             /// <summary>
             /// Default constructor.
@@ -2300,13 +2363,14 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
-                
-                m_pException     = null;
-                m_pPop3Client    = null;
+
+                m_pException = null;
+                m_pPop3Client = null;
                 m_pResponseLines = null;
 
                 CompletedAsync = null;
@@ -2324,7 +2388,8 @@ namespace LumiSoft.Net.POP3.Client
 
                 SetState(AsyncOP_State.Active);
 
-                try{
+                try
+                {
                     /* RFC 1935.5. LIST
                          Arguments:
                              a message-number (optional), which, if present, may NOT
@@ -2391,20 +2456,22 @@ namespace LumiSoft.Net.POP3.Client
                     var buffer = Encoding.UTF8.GetBytes("LIST\r\n");
 
                     // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"LIST");
+                    m_pPop3Client.LogAddWrite(buffer.Length, "LIST");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,ListCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, ListCommandSendingCompleted, null);
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     m_RiseCompleted = true;
 
                     return State == AsyncOP_State.Active;
@@ -2417,14 +2484,17 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
 
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     State = state;
 
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
                         OnCompletedAsync();
                     }
                 }
@@ -2436,21 +2506,25 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="ar">Asynchronous result.</param>
             private void ListCommandSendingCompleted(IAsyncResult ar)
             {
-                try{
+                try
+                {
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
                         ListReadResponseCompleted(op);
                     };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
                         ListReadResponseCompleted(op);
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -2461,52 +2535,63 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void ListReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
                         // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             // Read capa-list.
-                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                            readLineOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                                try{
+                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                            readLineOP.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                            {
+                                try
+                                {
                                     ReadMultiLineResponseLineCompleted(readLineOP);
 
                                     // Read response lines while we get terminator(.).
-                                    while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                                    while (State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP, true))
+                                    {
                                         ReadMultiLineResponseLineCompleted(readLineOP);
                                     }
                                 }
-                                catch(Exception x){
+                                catch (Exception x)
+                                {
                                     m_pException = x;
-                                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                                     SetState(AsyncOP_State.Completed);
                                 }
                             };
                             // Read response lines while we get terminator(.).
-                            while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                            while (State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP, true))
+                            {
                                 ReadMultiLineResponseLineCompleted(readLineOP);
                             }
                         }
                         // Server returned error response.
-                        else{
+                        else
+                        {
                             m_pException = new POP3_ClientException(op.LineUtf8);
                             SetState(AsyncOP_State.Completed);
                         }
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
@@ -2519,39 +2604,46 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void ReadMultiLineResponseLineCompleted(SmartStream.ReadLineAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                         
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
                         // Server closed connection.
-                        if(op.BytesInBuffer == 0){
+                        if (op.BytesInBuffer == 0)
+                        {
                             m_pException = new IOException("POP3 server closed connection unexpectedly.");
                             SetState(AsyncOP_State.Completed);
                         }
                         // We got respone terminator(.).
-                        else if(string.Equals(op.LineUtf8,".",StringComparison.InvariantCultureIgnoreCase)){
+                        else if (string.Equals(op.LineUtf8, ".", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             m_pPop3Client.m_pExtCapabilities.Clear();
                             m_pPop3Client.m_pExtCapabilities.AddRange(m_pResponseLines);
 
                             SetState(AsyncOP_State.Completed);
                         }
                         // We got response line.
-                        else{
+                        else
+                        {
                             m_pResponseLines.Add(op.LineUtf8);
                         }
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -2568,15 +2660,18 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Exception Error
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -2587,15 +2682,18 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public string[] ResponseLines
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pResponseLines.ToArray(); 
+                    return m_pResponseLines.ToArray();
                 }
             }
 
@@ -2609,49 +2707,1104 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<ListAsyncOP>(this));
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<ListAsyncOP>(this));
                 }
             }
         }
 
         /// <summary>
-        /// Starts sending LIST command to POP3 server.
+        /// This class represents <see cref="POP3_Client.LoginAsync"/> asynchronous operation.
         /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="ListAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private bool ListAsync(ListAsyncOP op)
+        public class LoginAsyncOP : IDisposable, IAsyncOP
         {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+            private readonly string m_User;
+            private readonly string m_Password;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="user">User name.</param>
+            /// <param name="password">User password.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
+            /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+            public LoginAsyncOP(string user, string password)
+            {
+                if (user == null)
+                {
+                    throw new ArgumentNullException("user");
+                }
+                if (user == string.Empty)
+                {
+                    throw new ArgumentException("Argument 'user' value must be specified.", "user");
+                }
+
+                m_User = user;
+                m_Password = password ?? throw new ArgumentNullException("password");
             }
 
-            return op.Start(this);
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pPop3Client = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner POP3 client.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(POP3_Client owner)
+            {
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                try
+                {
+                    var buffer = Encoding.UTF8.GetBytes("USER " + m_User + "\r\n");
+
+                    // Log
+                    m_pPop3Client.LogAddWrite(buffer.Length, "USER " + m_User);
+
+                    // Start command sending.
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, UserCommandSendingCompleted, null);
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
+                }
+            }
+
+            /// <summary>
+            /// Sets operation state.
+            /// </summary>
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Is called when USER command sending has finished.
+            /// </summary>
+            /// <param name="ar">Asynchronous result.</param>
+            private void UserCommandSendingCompleted(IAsyncResult ar)
+            {
+                try
+                {
+                    m_pPop3Client.TcpStream.EndWrite(ar);
+
+                    // Read POP3 server response.
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
+                        UserReadResponseCompleted(op);
+                    };
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
+                        UserReadResponseCompleted(op);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+            }
+
+            /// <summary>
+            /// Is called when POP3 server USER response reading has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void UserReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
+                        // Server returned success response.
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            var buffer = Encoding.UTF8.GetBytes("PASS " + m_Password + "\r\n");
+
+                            // Log
+                            m_pPop3Client.LogAddWrite(buffer.Length, "PASS <***REMOVED***>");
+
+                            // Start command sending.
+                            m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, PassCommandSendingCompleted, null);
+                        }
+                        // Server returned error response.
+                        else
+                        {
+                            m_pException = new POP3_ClientException(op.LineUtf8);
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Is called when PASS command sending has finished.
+            /// </summary>
+            /// <param name="ar">Asynchronous result.</param>
+            private void PassCommandSendingCompleted(IAsyncResult ar)
+            {
+                try
+                {
+                    m_pPop3Client.TcpStream.EndWrite(ar);
+
+                    // Read POP3 server response.
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
+                        PassReadResponseCompleted(op);
+                    };
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
+                        PassReadResponseCompleted(op);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+            }
+
+            /// <summary>
+            /// Is called when POP3 server PASS response reading has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void PassReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
+                        // Server returned success response.
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            // Start filling messages info.
+                            var fillOP = new FillMessagesAsyncOP();
+                            fillOP.CompletedAsync += delegate (object sender, EventArgs<FillMessagesAsyncOP> e)
+                            {
+                                FillMessagesCompleted(fillOP);
+                            };
+                            if (!m_pPop3Client.FillMessagesAsync(fillOP))
+                            {
+                                FillMessagesCompleted(fillOP);
+                            }
+                        }
+                        // Server returned error response.
+                        else
+                        {
+                            m_pException = new POP3_ClientException(op.LineUtf8);
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Is called when FillMessagesAsync method has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void FillMessagesCompleted(FillMessagesAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        m_pPop3Client.m_pAuthdUserIdentity = new GenericIdentity(m_User, "pop3-user/pass");
+                        SetState(AsyncOP_State.Completed);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Gets asynchronous operation state.
+            /// </summary>
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
+
+            /// <summary>
+            /// Gets error happened during operation. Returns null if no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is called when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<LoginAsyncOP>> CompletedAsync;
+
+            /// <summary>
+            /// Raises <b>CompletedAsync</b> event.
+            /// </summary>
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<LoginAsyncOP>(this));
+                }
+            }
+        }
+
+        /// <summary>
+        /// This class represents <see cref="POP3_Client.NoopAsync"/> asynchronous operation.
+        /// </summary>
+        public class NoopAsyncOP : IDisposable, IAsyncOP
+        {
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pPop3Client = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner POP3 client.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(POP3_Client owner)
+            {
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                try
+                {
+                    /* RFC 1939 5 NOOP.
+                        Arguments: none
+
+                        Restrictions:
+                            may only be given in the TRANSACTION state
+
+                        Discussion:
+                            The POP3 server does nothing, it merely replies with a
+                            positive response.
+
+                        Possible Responses:
+                            +OK
+
+                        Examples:
+                            C: NOOP
+                            S: +OK
+                    */
+
+                    var buffer = Encoding.UTF8.GetBytes("NOOP\r\n");
+
+                    // Log
+                    m_pPop3Client.LogAddWrite(buffer.Length, "NOOP");
+
+                    // Start command sending.
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, NoopCommandSendingCompleted, null);
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
+                }
+            }
+
+            /// <summary>
+            /// Sets operation state.
+            /// </summary>
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Is called when NOOP command sending has finished.
+            /// </summary>
+            /// <param name="ar">Asynchronous result.</param>
+            private void NoopCommandSendingCompleted(IAsyncResult ar)
+            {
+                try
+                {
+                    m_pPop3Client.TcpStream.EndWrite(ar);
+
+                    // Read POP3 server response.
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
+                        NoopReadResponseCompleted(op);
+                    };
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
+                        NoopReadResponseCompleted(op);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+            }
+
+            /// <summary>
+            /// Is called when POP3 server NOOP response reading has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void NoopReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
+                        // Server returned success response.
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            SetState(AsyncOP_State.Completed);
+                        }
+                        // Server returned error response.
+                        else
+                        {
+                            m_pException = new POP3_ClientException(op.LineUtf8);
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Gets asynchronous operation state.
+            /// </summary>
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
+
+            /// <summary>
+            /// Gets error happened during operation. Returns null if no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is called when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync;
+
+            /// <summary>
+            /// Raises <b>CompletedAsync</b> event.
+            /// </summary>
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<NoopAsyncOP>(this));
+                }
+            }
+        }
+
+        /// <summary>
+        /// This class represents <see cref="POP3_Client.RsetAsync"/> asynchronous operation.
+        /// </summary>
+        public class RsetAsyncOP : IDisposable, IAsyncOP
+        {
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pPop3Client = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner POP3 client.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(POP3_Client owner)
+            {
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                try
+                {
+                    /* RFC 1939 5. RSET.
+                        Arguments: none
+
+                        Restrictions:
+                            may only be given in the TRANSACTION state
+
+                        Discussion:
+                            If any messages have been marked as deleted by the POP3
+                            server, they are unmarked.  The POP3 server then replies
+                            with a positive response.
+
+                        Possible Responses:
+                            +OK
+
+                        Examples:
+                            C: RSET
+                            S: +OK maildrop has 2 messages (320 octets)
+			        */
+
+                    var buffer = Encoding.UTF8.GetBytes("RSET\r\n");
+
+                    // Log
+                    m_pPop3Client.LogAddWrite(buffer.Length, "RSET");
+
+                    // Start command sending.
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, RsetCommandSendingCompleted, null);
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
+                }
+            }
+
+            /// <summary>
+            /// Sets operation state.
+            /// </summary>
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Is called when RSET command sending has finished.
+            /// </summary>
+            /// <param name="ar">Asynchronous result.</param>
+            private void RsetCommandSendingCompleted(IAsyncResult ar)
+            {
+                try
+                {
+                    m_pPop3Client.TcpStream.EndWrite(ar);
+
+                    // Read POP3 server response.
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
+                        RsetReadResponseCompleted(op);
+                    };
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
+                        RsetReadResponseCompleted(op);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+            }
+
+            /// <summary>
+            /// Is called when POP3 server RSET response reading has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void RsetReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
+                        // Server returned success response.
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            foreach (POP3_ClientMessage message in m_pPop3Client.m_pMessages)
+                            {
+                                message.SetMarkedForDeletion(false);
+                            }
+
+                            SetState(AsyncOP_State.Completed);
+                        }
+                        // Server returned error response.
+                        else
+                        {
+                            m_pException = new POP3_ClientException(op.LineUtf8);
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Gets asynchronous operation state.
+            /// </summary>
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
+
+            /// <summary>
+            /// Gets error happened during operation. Returns null if no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is called when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync;
+
+            /// <summary>
+            /// Raises <b>CompletedAsync</b> event.
+            /// </summary>
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<RsetAsyncOP>(this));
+                }
+            }
+        }
+
+        /// <summary>
+        /// This class represents <see cref="POP3_Client.StlsAsync"/> asynchronous operation.
+        /// </summary>
+        public class StlsAsyncOP : IDisposable, IAsyncOP
+        {
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+            private readonly RemoteCertificateValidationCallback m_pCertCallback;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="certCallback">SSL server certificate validation callback. Value null means any certificate is accepted.</param>
+            public StlsAsyncOP(RemoteCertificateValidationCallback certCallback)
+            {
+                m_pCertCallback = certCallback;
+            }
+
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pPop3Client = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner POP3 client.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(POP3_Client owner)
+            {
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                try
+                {
+                    /* RFC 2595 4. POP3 STARTTLS extension.
+                        Arguments: none
+
+                        Restrictions:
+                            Only permitted in AUTHORIZATION state.
+                     
+                        Possible Responses:
+                             +OK -ERR
+
+                         Examples:
+                             C: STLS
+                             S: +OK Begin TLS negotiation
+                             <TLS negotiation, further commands are under TLS layer>
+                               ...
+                             C: STLS
+                             S: -ERR Command not permitted when TLS active
+                    */
+
+                    var buffer = Encoding.UTF8.GetBytes("STLS\r\n");
+
+                    // Log
+                    m_pPop3Client.LogAddWrite(buffer.Length, "STLS");
+
+                    // Start command sending.
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, StlsCommandSendingCompleted, null);
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
+                }
+            }
+
+            /// <summary>
+            /// Sets operation state.
+            /// </summary>
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Is called when STLS command sending has finished.
+            /// </summary>
+            /// <param name="ar">Asynchronous result.</param>
+            private void StlsCommandSendingCompleted(IAsyncResult ar)
+            {
+                try
+                {
+                    m_pPop3Client.TcpStream.EndWrite(ar);
+
+                    // Read POP3 server response.
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
+                        StlsReadResponseCompleted(op);
+                    };
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
+                        StlsReadResponseCompleted(op);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+            }
+
+            /// <summary>
+            /// Is called when POP3 server STLS response reading has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            private void StlsReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
+            {
+                try
+                {
+                    // Operation failed.
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    // Operation succeeded.
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
+                        // Server returned success response.
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            // Log
+                            m_pPop3Client.LogAddText("Starting TLS handshake.");
+
+                            var switchSecureOP = new SwitchToSecureAsyncOP(m_pCertCallback);
+                            switchSecureOP.CompletedAsync += delegate (object s, EventArgs<SwitchToSecureAsyncOP> e)
+                            {
+                                SwitchToSecureCompleted(switchSecureOP);
+                            };
+                            if (!m_pPop3Client.SwitchToSecureAsync(switchSecureOP))
+                            {
+                                SwitchToSecureCompleted(switchSecureOP);
+                            }
+                        }
+                        // Server returned error response.
+                        else
+                        {
+                            m_pException = new POP3_ClientException(op.LineUtf8);
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                op.Dispose();
+            }
+
+            /// <summary>
+            /// Is called when TLS handshake has completed.
+            /// </summary>
+            /// <param name="op">Asynchronous operation.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+            private void SwitchToSecureCompleted(SwitchToSecureAsyncOP op)
+            {
+                if (op == null)
+                {
+                    throw new ArgumentNullException("op");
+                }
+
+                try
+                {
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        m_pPop3Client.LogAddException("Exception: " + m_pException.Message, m_pException);
+                    }
+                    else
+                    {
+                        // Log
+                        m_pPop3Client.LogAddText("TLS handshake completed successfully.");
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    m_pPop3Client.LogAddException("Exception: " + m_pException.Message, m_pException);
+                }
+
+                op.Dispose();
+
+                SetState(AsyncOP_State.Completed);
+            }
+
+            /// <summary>
+            /// Gets asynchronous operation state.
+            /// </summary>
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
+
+            /// <summary>
+            /// Gets error happened during operation. Returns null if no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is called when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<StlsAsyncOP>> CompletedAsync;
+
+            /// <summary>
+            /// Raises <b>CompletedAsync</b> event.
+            /// </summary>
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<StlsAsyncOP>(this));
+                }
+            }
         }
 
         /// <summary>
         /// This class represents <see cref="POP3_Client.UidlAsync"/> asynchronous operation.
         /// </summary>
-        private class UidlAsyncOP : IDisposable,IAsyncOP
+        private class UidlAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object        m_pLock          = new object();
-            private Exception     m_pException;
-            private POP3_Client   m_pPop3Client;
-            private bool          m_RiseCompleted;
-            private List<string>  m_pResponseLines;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private POP3_Client m_pPop3Client;
+            private bool m_RiseCompleted;
+            private List<string> m_pResponseLines;
 
             /// <summary>
             /// Default constructor.
@@ -2666,13 +3819,14 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
-                
-                m_pException     = null;
-                m_pPop3Client    = null;
+
+                m_pException = null;
+                m_pPop3Client = null;
                 m_pResponseLines = null;
 
                 CompletedAsync = null;
@@ -2690,7 +3844,8 @@ namespace LumiSoft.Net.POP3.Client
 
                 SetState(AsyncOP_State.Active);
 
-                try{
+                try
+                {
                     /* RFC 1935.7. UIDL
                       Arguments:
                           a message-number (optional), which, if present, may NOT
@@ -2755,20 +3910,22 @@ namespace LumiSoft.Net.POP3.Client
                     var buffer = Encoding.UTF8.GetBytes("UIDL\r\n");
 
                     // Log
-                    m_pPop3Client.LogAddWrite(buffer.Length,"UIDL");
+                    m_pPop3Client.LogAddWrite(buffer.Length, "UIDL");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,UidlCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer, 0, buffer.Length, UidlCommandSendingCompleted, null);
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     m_RiseCompleted = true;
 
                     return State == AsyncOP_State.Active;
@@ -2781,14 +3938,17 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
 
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     State = state;
 
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
                         OnCompletedAsync();
                     }
                 }
@@ -2800,21 +3960,25 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="ar">Asynchronous result.</param>
             private void UidlCommandSendingCompleted(IAsyncResult ar)
             {
-                try{
+                try
+                {
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                    op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                    op.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                    {
                         UidlReadResponseCompleted(op);
                     };
-                    if(m_pPop3Client.TcpStream.ReadLine(op,true)){
+                    if (m_pPop3Client.TcpStream.ReadLine(op, true))
+                    {
                         UidlReadResponseCompleted(op);
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -2825,52 +3989,63 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void UidlReadResponseCompleted(SmartStream.ReadLineAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                                            
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
                         // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
+                        if (string.Equals(op.LineUtf8.Split(new[] { ' ' }, 2)[0], "+OK", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             // Read capa-list.
-                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                            readLineOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                                try{
+                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000], SizeExceededAction.JunkAndThrowException);
+                            readLineOP.Completed += delegate (object s, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                            {
+                                try
+                                {
                                     ReadMultiLineResponseLineCompleted(readLineOP);
 
                                     // Read response lines while we get terminator(.).
-                                    while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                                    while (State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP, true))
+                                    {
                                         ReadMultiLineResponseLineCompleted(readLineOP);
                                     }
                                 }
-                                catch(Exception x){
+                                catch (Exception x)
+                                {
                                     m_pException = x;
-                                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                                     SetState(AsyncOP_State.Completed);
                                 }
                             };
                             // Read response lines while we get terminator(.).
-                            while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                            while (State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP, true))
+                            {
                                 ReadMultiLineResponseLineCompleted(readLineOP);
                             }
                         }
                         // Server returned error response.
-                        else{
+                        else
+                        {
                             m_pException = new POP3_ClientException(op.LineUtf8);
                             SetState(AsyncOP_State.Completed);
                         }
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
 
@@ -2883,39 +4058,46 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="op">Asynchronous operation.</param>
             private void ReadMultiLineResponseLineCompleted(SmartStream.ReadLineAsyncOP op)
             {
-                try{
+                try
+                {
                     // Operation failed.
-                    if(op.Error != null){
+                    if (op.Error != null)
+                    {
                         m_pException = op.Error;
-                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message,op.Error);
+                        m_pPop3Client.LogAddException("Exception: " + op.Error.Message, op.Error);
                         SetState(AsyncOP_State.Completed);
                     }
                     // Operation succeeded.
-                    else{
+                    else
+                    {
                         // Log
-                        m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
-                         
+                        m_pPop3Client.LogAddRead(op.BytesInBuffer, op.LineUtf8);
+
                         // Server closed connection.
-                        if(op.BytesInBuffer == 0){
+                        if (op.BytesInBuffer == 0)
+                        {
                             m_pException = new IOException("POP3 server closed connection unexpectedly.");
                             SetState(AsyncOP_State.Completed);
                         }
                         // We got respone terminator(.).
-                        else if(string.Equals(op.LineUtf8,".",StringComparison.InvariantCultureIgnoreCase)){
+                        else if (string.Equals(op.LineUtf8, ".", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             m_pPop3Client.m_pExtCapabilities.Clear();
                             m_pPop3Client.m_pExtCapabilities.AddRange(m_pResponseLines);
 
                             SetState(AsyncOP_State.Completed);
                         }
                         // We got response line.
-                        else{
+                        else
+                        {
                             m_pResponseLines.Add(op.LineUtf8);
                         }
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    m_pPop3Client.LogAddException("Exception: " + x.Message,x);
+                    m_pPop3Client.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -2932,15 +4114,18 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Exception Error
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -2951,15 +4136,18 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public string[] ResponseLines
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pResponseLines.ToArray(); 
+                    return m_pResponseLines.ToArray();
                 }
             }
 
@@ -2973,731 +4161,11 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<UidlAsyncOP>(this));
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<UidlAsyncOP>(this));
                 }
             }
-        }
-
-        /// <summary>
-        /// Starts sending UIDL command to POP3 server.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="UidlAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not in valid state. For example 'not connected'.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private bool UidlAsync(UidlAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// This method is called when TCP client has sucessfully connected.
-        /// </summary>
-        /// <param name="callback">Callback to be called to complete connect operation.</param>
-        protected override void OnConnected(CompleteConnectCallback callback)
-        {  
-            // Read POP3 server greeting response.
-            var readGreetingOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-            readGreetingOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
-                ReadServerGreetingCompleted(readGreetingOP,callback);
-            };
-            if(TcpStream.ReadLine(readGreetingOP,true)){
-                ReadServerGreetingCompleted(readGreetingOP,callback);
-            }
-        }
-
-        /// <summary>
-        /// Is called when POP3 server greeting reading has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <param name="connectCallback">Callback to be called to complete connect operation.</param>
-        private void ReadServerGreetingCompleted(SmartStream.ReadLineAsyncOP op,CompleteConnectCallback connectCallback)
-        {
-            Exception error = null;
-
-            try{
-                // Greeting reading failed, we are done.
-                if(op.Error != null){
-                    error = op.Error;
-                }
-                // Greeting reading succeded.
-                else{
-                    var line = op.LineUtf8;
-
-                    // Log.
-                    LogAddRead(op.BytesInBuffer,line);
-
-                    // POP3 server accepted connection, get greeting text.
-                    if(op.LineUtf8.StartsWith("+OK",StringComparison.InvariantCultureIgnoreCase)){
-                        m_GreetingText = line.Substring(3).Trim();
-
-			            // Try to read APOP hash key, if supports APOP.
-				        if(line.IndexOf("<") > -1 && line.IndexOf(">") > -1){
-					        m_ApopHashKey = line.Substring(line.IndexOf("<"),line.LastIndexOf(">") - line.IndexOf("<") + 1);
-				        }
-                    }
-                    // POP3 server rejected connection.
-                    else{
-                        error = new POP3_ClientException(line);
-                    }
-                }
-            }
-            catch(Exception x){
-                error = x;
-            }
-
-            // Complete TCP_Client connect operation.
-            connectCallback(error);
-        }
-
-        /// <summary>
-        /// Gets greeting text which was sent by POP3 server.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
-        public string GreetingText
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!IsConnected){
-                    throw new InvalidOperationException("You must connect first.");
-                }
-
-                return m_GreetingText; 
-            }
-        }
-
-        /// <summary>
-        /// Gets POP3 exteneded capabilities supported by POP3 server.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
-        [Obsolete("USe ExtendedCapabilities instead !")]
-        public string[] ExtenededCapabilities
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!IsConnected){
-				    throw new InvalidOperationException("You must connect first.");
-			    }
-
-                return m_pExtCapabilities.ToArray(); 
-            }
-        }
-
-        /// <summary>
-        /// Gets POP3 exteneded capabilities supported by POP3 server.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
-        public string[] ExtendedCapabilities
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!IsConnected){
-				    throw new InvalidOperationException("You must connect first.");
-			    }
-
-                return m_pExtCapabilities.ToArray(); 
-            }
-        }
-
-        /// <summary>
-        /// Gets if POP3 server supports UIDL command.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and 
-        /// POP3 client is not connected and authenticated.</exception>
-        public bool IsUidlSupported
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!IsConnected){
-				    throw new InvalidOperationException("You must connect first.");
-			    }
-                if(!IsAuthenticated){
-				    throw new InvalidOperationException("You must authenticate first.");
-			    }
-
-                return m_IsUidlSupported; 
-            }
-        }
-
-        /// <summary>
-        /// Gets messages collection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and 
-        /// POP3 client is not connected and authenticated.</exception>
-        public POP3_ClientMessageCollection Messages
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!IsConnected){
-				    throw new InvalidOperationException("You must connect first.");
-			    }
-                if(!IsAuthenticated){
-				    throw new InvalidOperationException("You must authenticate first.");
-			    }
-
-                return m_pMessages; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session authenticated user identity, returns null if not authenticated.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and POP3 client is not connected.</exception>
-        public override GenericIdentity AuthenticatedUserIdentity
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!IsConnected){
-				    throw new InvalidOperationException("You must connect first.");
-			    }
-
-                return m_pAuthdUserIdentity; 
-            }
-        }
-
-        //--- Obsolete -------------------------------------------------------------------
-
-        /// <summary>
-        /// Switches POP3 connection to SSL.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is authenticated or is already secure connection.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        [Obsolete("Use Stls/StlsAsync method instead.")]
-        public void StartTLS()
-        {
-            /* RFC 2595 4. POP3 STARTTLS extension.
-                Arguments: none
-
-                Restrictions:
-                    Only permitted in AUTHORIZATION state.
-             
-                Possible Responses:
-                     +OK -ERR
-
-                 Examples:
-                     C: STLS
-                     S: +OK Begin TLS negotiation
-                     <TLS negotiation, further commands are under TLS layer>
-                       ...
-                     C: STLS
-                     S: -ERR Command not permitted when TLS active
-            */
-
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(IsAuthenticated){
-				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
-			}
-            if(IsSecureConnection){
-                throw new InvalidOperationException("Connection is already secure.");
-            }
-                        
-            WriteLine("STLS");
-                        
-            var line = ReadLine();
-            if (!line.ToUpper().StartsWith("+OK")){
-				throw new POP3_ClientException(line);
-			}
-
-            SwitchToSecure();
-        }
-
-        /// <summary>
-        /// Internal helper method for asynchronous StartTLS method.
-        /// </summary>
-        private delegate void StartTLSDelegate();
-
-        /// <summary>
-        /// Starts switching to SSL.
-        /// </summary>
-        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is authenticated or is already secure connection.</exception>
-        [Obsolete("Use Stls/StlsAsync method instead.")]
-        public IAsyncResult BeginStartTLS(AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(IsAuthenticated){
-				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
-			}
-            if(IsSecureConnection){
-                throw new InvalidOperationException("Connection is already secure.");
-            }
-
-            var asyncMethod = new StartTLSDelegate(StartTLS);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Ends a pending asynchronous StartTLS request.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        [Obsolete("Use Stls/StlsAsync method instead.")]
-        public void EndStartTLS(IAsyncResult asyncResult)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-
-            var castedAsyncResult = asyncResult as AsyncResultState;
-            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
-            }
-            if(castedAsyncResult.IsEndCalled){
-                throw new InvalidOperationException("BeginReset was previously called for the asynchronous connection.");
-            }
-             
-            castedAsyncResult.IsEndCalled = true;
-            if(castedAsyncResult.AsyncDelegate is StartTLSDelegate){
-                ((StartTLSDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
-            }
-        }
-
-        /// <summary>
-		/// Authenticates user.
-		/// </summary>
-		/// <param name="userName">User login name.</param>
-		/// <param name="password">Password.</param>
-		/// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        [Obsolete("Use Login/LoginAsync method instead.")]
-		public void Authenticate(string userName,string password,bool tryApop)
-		{
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(IsAuthenticated){
-				throw new InvalidOperationException("Session is already authenticated.");
-			}
-            
-			// Supports APOP, use it.
-			if(tryApop && m_ApopHashKey.Length > 0){
-                var hexHash = Net_Utils.ComputeMd5(m_ApopHashKey + password,true);
-
-                int countWritten = TcpStream.WriteLine("APOP " + userName + " " + hexHash);
-                LogAddWrite(countWritten,"APOP " + userName + " " + hexHash);
-
-                var line = ReadLine();
-                if (line.StartsWith("+OK")){
-					m_pAuthdUserIdentity = new GenericIdentity(userName,"apop");
-				}
-				else{
-					throw new POP3_ClientException(line);
-				}
-			}
-            // Use normal LOGIN, don't support APOP.
-			else{                 
-				int countWritten = TcpStream.WriteLine("USER " + userName);
-                LogAddWrite(countWritten,"USER " + userName);
-
-                var line = ReadLine();
-                if (line.StartsWith("+OK")){                    
-					countWritten = TcpStream.WriteLine("PASS " + password);
-                    LogAddWrite(countWritten,"PASS <***REMOVED***>");
-
-					line = ReadLine();
-					if(line.StartsWith("+OK")){
-						m_pAuthdUserIdentity = new GenericIdentity(userName,"pop3-user/pass");
-					}
-					else{
-						throw new POP3_ClientException(line);
-					}
-				}
-				else{
-					throw new POP3_ClientException(line);
-				}				
-			}
-
-            if(IsAuthenticated){
-                FillMessages();
-            }
-		}
-
-        /// <summary>
-        /// Internal helper method for asynchronous Authenticate method.
-        /// </summary>
-        private delegate void AuthenticateDelegate(string userName,string password,bool tryApop);
-
-        /// <summary>
-        /// Starts authentication.
-        /// </summary>
-		/// <param name="userName">User login name.</param>
-		/// <param name="password">Password.</param>
-		/// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
-        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
-        [Obsolete("Use Login/LoginAsync method instead.")]
-        public IAsyncResult BeginAuthenticate(string userName,string password,bool tryApop,AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(IsAuthenticated){
-				throw new InvalidOperationException("Session is already authenticated.");
-			}
-
-            var asyncMethod = new AuthenticateDelegate(Authenticate);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(userName,password,tryApop,new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Ends a pending asynchronous authentication request.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        [Obsolete("Use Login/LoginAsync method instead.")]
-        public void EndAuthenticate(IAsyncResult asyncResult)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-
-            var castedAsyncResult = asyncResult as AsyncResultState;
-            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginAuthenticate method.");
-            }
-            if(castedAsyncResult.IsEndCalled){
-                throw new InvalidOperationException("BeginAuthenticate was previously called for the asynchronous connection.");
-            }
-             
-            castedAsyncResult.IsEndCalled = true;
-            if(castedAsyncResult.AsyncDelegate is AuthenticateDelegate){
-                ((AuthenticateDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginAuthenticate method.");
-            }
-        }
-
-        /// <summary>
-        /// Internal helper method for asynchronous Noop method.
-        /// </summary>
-        private delegate void NoopDelegate();
-
-        /// <summary>
-        /// Starts sending NOOP command to server. This method can be used for keeping connection alive(not timing out).
-        /// </summary>
-        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
-        [Obsolete("Use Noop/NoopAsync method instead.")]
-        public IAsyncResult BeginNoop(AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-
-            var asyncMethod = new NoopDelegate(Noop);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Ends a pending asynchronous Noop request.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        [Obsolete("Use Noop/NoopAsync method instead.")]
-        public void EndNoop(IAsyncResult asyncResult)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-
-            var castedAsyncResult = asyncResult as AsyncResultState;
-            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginNoop method.");
-            }
-            if(castedAsyncResult.IsEndCalled){
-                throw new InvalidOperationException("BeginNoop was previously called for the asynchronous connection.");
-            }
-             
-            castedAsyncResult.IsEndCalled = true;
-            if(castedAsyncResult.AsyncDelegate is NoopDelegate){
-                ((NoopDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginNoop method.");
-            }
-        }
-
-        /// <summary>
-        /// Internal helper method for asynchronous Reset method.
-        /// </summary>
-        private delegate void ResetDelegate();
-
-        /// <summary>
-        /// Starts resetting session. Messages marked for deletion will be unmarked.
-        /// </summary>
-        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
-        [Obsolete("Use Rset/RsetAsync method instead.")]
-        public IAsyncResult BeginReset(AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(!IsAuthenticated){
-				throw new InvalidOperationException("The RSET command is only valid in authenticated state.");
-			}
-
-            var asyncMethod = new ResetDelegate(Reset);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Ends a pending asynchronous reset request.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-        [Obsolete("Use Rset/RsetAsync method instead.")]
-        public void EndReset(IAsyncResult asyncResult)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-
-            var castedAsyncResult = asyncResult as AsyncResultState;
-            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
-            }
-            if(castedAsyncResult.IsEndCalled){
-                throw new InvalidOperationException("BeginReset was previously called for the asynchronous connection.");
-            }
-             
-            castedAsyncResult.IsEndCalled = true;
-            if(castedAsyncResult.AsyncDelegate is ResetDelegate){
-                ((ResetDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
-            }
-        }
-
-        /// <summary>
-		/// Resets session. Messages marked for deletion will be unmarked.
-		/// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>        
-        [Obsolete("Use Rset/RsetAsync method instead.")]
-		public void Reset()
-		{
-			if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-				throw new InvalidOperationException("You must connect first.");
-			}
-			if(!IsAuthenticated){
-				throw new InvalidOperationException("The RSET command is only valid in TRANSACTION state.");
-			}
-
-            using(RsetAsyncOP op = new RsetAsyncOP()){
-                using(ManualResetEvent wait = new ManualResetEvent(false)){
-                    op.CompletedAsync += delegate(object s1,EventArgs<RsetAsyncOP> e1){
-                        wait.Set();
-                    };
-                    if(!RsetAsync(op)){
-                        wait.Set();
-                    }
-                    wait.WaitOne();
-                    wait.Close();
-
-                    if(op.Error != null){
-                        throw op.Error;
-                    }
-                }
-            }
-		}
-
-        /// <summary>
-        /// Fills messages info.
-        /// </summary>
-        [Obsolete("deprecated")]
-        private void FillMessages()
-        {
-            m_pMessages = new POP3_ClientMessageCollection(this);
-
-            /*
-                First make messages info, then try to add UIDL if server supports.
-            */
-                                   
-			/* NOTE: If reply is +OK, this is multiline respone and is terminated with '.'.
-			Examples:
-				C: LIST
-				S: +OK 2 messages (320 octets)
-				S: 1 120				
-				S: 2 200
-				S: .
-				...
-				C: LIST 3
-				S: -ERR no such message, only 2 messages in maildrop
-			*/
-                        
-            WriteLine("LIST");
-
-			// Read first line of reply, check if it's ok.
-			var line = ReadLine();
-            if (line.StartsWith("+OK")){
-				// Read lines while get only '.' on line itshelf.
-				while(true){
-					line = ReadLine();
-
-					// End of data
-					if(line.Trim() == "."){
-						break;
-					}
-
-                    var no_size = line.Trim().Split(new[]{' '});
-                    m_pMessages.Add(Convert.ToInt32(no_size[1]));
-                }
-			}
-			else{
-				throw new POP3_ClientException(line);
-			}
-
-            // Try to fill messages UIDs.
-            /* NOTE: If reply is +OK, this is multiline respone and is terminated with '.'.
-			Examples:
-				C: UIDL
-				S: +OK
-				S: 1 whqtswO00WBw418f9t5JxYwZ
-				S: 2 QhdPYR:00WBw1Ph7x7
-				S: .
-				...
-				C: UIDL 3
-				S: -ERR no such message
-			*/
-
-            WriteLine("UIDL");
-
-			// Read first line of reply, check if it's ok
-			line = ReadLine();
-			if(line.StartsWith("+OK")){
-                m_IsUidlSupported = true;
-
-				// Read lines while get only '.' on line itshelf.
-				while(true){
-					line = ReadLine();
-
-					// End of data
-					if(line.Trim() == "."){
-						break;
-					}
-
-                    var no_uid = line.Trim().Split(new[]{' '});
-                    m_pMessages[Convert.ToInt32(no_uid[0]) - 1].SetUID(no_uid[1]);
-                }
-			}
-			else{
-				m_IsUidlSupported = false;
-			}
         }
     }
 }

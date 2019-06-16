@@ -10,13 +10,13 @@ namespace LumiSoft.Net.SIP.Stack
     /// Transaction layer manages client,server transactions and dialogs.
     /// </summary>
     public class SIP_TransactionLayer
-    {        
-        private bool                                     m_IsDisposed;
-        private readonly SIP_Stack                                m_pStack;
-        private readonly Dictionary<string,SIP_ClientTransaction> m_pClientTransactions;
-        private readonly Dictionary<string,SIP_ServerTransaction> m_pServerTransactions;
-        private readonly Dictionary<string,SIP_Dialog>            m_pDialogs;
-        
+    {
+        private bool m_IsDisposed;
+        private readonly Dictionary<string, SIP_ClientTransaction> m_pClientTransactions;
+        private readonly Dictionary<string, SIP_Dialog> m_pDialogs;
+        private readonly Dictionary<string, SIP_ServerTransaction> m_pServerTransactions;
+        private readonly SIP_Stack m_pStack;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,43 +26,75 @@ namespace LumiSoft.Net.SIP.Stack
         {
             m_pStack = stack ?? throw new ArgumentNullException("stack");
 
-            m_pClientTransactions = new Dictionary<string,SIP_ClientTransaction>();
-            m_pServerTransactions = new Dictionary<string,SIP_ServerTransaction>();
-            m_pDialogs            = new Dictionary<string,SIP_Dialog>();
+            m_pClientTransactions = new Dictionary<string, SIP_ClientTransaction>();
+            m_pServerTransactions = new Dictionary<string, SIP_ServerTransaction>();
+            m_pDialogs = new Dictionary<string, SIP_Dialog>();
         }
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// Gets all available client transactions. This method is thread-safe.
         /// </summary>
-        internal void Dispose()
+        public SIP_ClientTransaction[] ClientTransactions
         {
-            if(m_IsDisposed){
-                return;
-            }
+            get
+            {
+                lock (m_pClientTransactions)
+                {
+                    var retVal = new SIP_ClientTransaction[m_pClientTransactions.Values.Count];
+                    m_pClientTransactions.Values.CopyTo(retVal, 0);
 
-            foreach(SIP_ClientTransaction tr in ClientTransactions){
-                try{
-                    tr.Dispose();
-                }
-                catch{
+                    return retVal;
                 }
             }
-            foreach(SIP_ServerTransaction tr in ServerTransactions){
-                try{
-                    tr.Dispose();
-                }
-                catch{
-                }
-            }
-            foreach(SIP_Dialog dialog in Dialogs){
-                try{
-                    dialog.Dispose();
-                }
-                catch{
-                }
-            }
+        }
 
-            m_IsDisposed = true;
+        /// <summary>
+        /// Gets active dialogs. This method is thread-safe.
+        /// </summary>
+        public SIP_Dialog[] Dialogs
+        {
+            get
+            {
+                lock (m_pDialogs)
+                {
+                    var retVal = new SIP_Dialog[m_pDialogs.Values.Count];
+                    m_pDialogs.Values.CopyTo(retVal, 0);
+
+                    return retVal;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all available server transactions. This method is thread-safe.
+        /// </summary>
+        public SIP_ServerTransaction[] ServerTransactions
+        {
+            get
+            {
+                lock (m_pServerTransactions)
+                {
+                    var retVal = new SIP_ServerTransaction[m_pServerTransactions.Values.Count];
+                    m_pServerTransactions.Values.CopyTo(retVal, 0);
+
+                    return retVal;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all(clinet + server) active transactions.
+        /// </summary>
+        public SIP_Transaction[] Transactions
+        {
+            get
+            {
+                var retVal = new List<SIP_Transaction>();
+                retVal.AddRange(ClientTransactions);
+                retVal.AddRange(ServerTransactions);
+
+                return retVal.ToArray();
+            }
         }
 
         /// <summary>
@@ -74,43 +106,52 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>flow</b> or <b>request</b> is null reference.</exception>
         /// <returns>Returns created transaction.</returns>
-        public SIP_ClientTransaction CreateClientTransaction(SIP_Flow flow,SIP_Request request,bool addVia)
+        public SIP_ClientTransaction CreateClientTransaction(SIP_Flow flow, SIP_Request request, bool addVia)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(flow == null){
+            if (flow == null)
+            {
                 throw new ArgumentNullException("flow");
             }
-            if(request == null){
+            if (request == null)
+            {
                 throw new ArgumentNullException("request");
             }
 
             // Add Via:
-            if(addVia){
+            if (addVia)
+            {
                 var via = new SIP_t_ViaParm();
                 via.ProtocolName = "SIP";
                 via.ProtocolVersion = "2.0";
                 via.ProtocolTransport = flow.Transport;
-                via.SentBy = new HostEndPoint("transport_layer_will_replace_it",-1);
+                via.SentBy = new HostEndPoint("transport_layer_will_replace_it", -1);
                 via.Branch = SIP_t_ViaParm.CreateBranch();
                 via.RPort = 0;
                 request.Via.AddToTop(via.ToStringValue());
             }
-                        
-            lock(m_pClientTransactions){
-                var transaction = new SIP_ClientTransaction(m_pStack,flow,request);
-                m_pClientTransactions.Add(transaction.Key,transaction);
-                transaction.StateChanged += new EventHandler(delegate(object s,EventArgs e){
-                    if(transaction.State == SIP_TransactionState.Terminated){
-                        lock(m_pClientTransactions){
+
+            lock (m_pClientTransactions)
+            {
+                var transaction = new SIP_ClientTransaction(m_pStack, flow, request);
+                m_pClientTransactions.Add(transaction.Key, transaction);
+                transaction.StateChanged += new EventHandler(delegate (object s, EventArgs e)
+                {
+                    if (transaction.State == SIP_TransactionState.Terminated)
+                    {
+                        lock (m_pClientTransactions)
+                        {
                             m_pClientTransactions.Remove(transaction.Key);
                         }
                     }
                 });
 
                 var dialog = MatchDialog(request);
-                if (dialog != null){
+                if (dialog != null)
+                {
                     dialog.AddTransaction(transaction);
                 }
 
@@ -126,31 +167,39 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns added server transaction.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>flow</b> or <b>request</b> is null reference.</exception>
-        public SIP_ServerTransaction CreateServerTransaction(SIP_Flow flow,SIP_Request request)
+        public SIP_ServerTransaction CreateServerTransaction(SIP_Flow flow, SIP_Request request)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(flow == null){
+            if (flow == null)
+            {
                 throw new ArgumentNullException("flow");
             }
-            if(request == null){
+            if (request == null)
+            {
                 throw new ArgumentNullException("request");
             }
 
-            lock(m_pServerTransactions){
-                var transaction = new SIP_ServerTransaction(m_pStack,flow,request);
-                m_pServerTransactions.Add(transaction.Key,transaction);
-                transaction.StateChanged += new EventHandler(delegate(object s,EventArgs e){
-                    if(transaction.State == SIP_TransactionState.Terminated){
-                        lock(m_pClientTransactions){
+            lock (m_pServerTransactions)
+            {
+                var transaction = new SIP_ServerTransaction(m_pStack, flow, request);
+                m_pServerTransactions.Add(transaction.Key, transaction);
+                transaction.StateChanged += new EventHandler(delegate (object s, EventArgs e)
+                {
+                    if (transaction.State == SIP_TransactionState.Terminated)
+                    {
+                        lock (m_pClientTransactions)
+                        {
                             m_pServerTransactions.Remove(transaction.Key);
                         }
                     }
                 });
 
                 var dialog = MatchDialog(request);
-                if (dialog != null){
+                if (dialog != null)
+                {
                     dialog.AddTransaction(transaction);
                 }
 
@@ -167,15 +216,18 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns matching transaction.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>flow</b> or <b>request</b> is null.</exception>
         /// <exception cref="InvalidOperationException">Is raised when request.Method is ACK request.</exception>
-        public SIP_ServerTransaction EnsureServerTransaction(SIP_Flow flow,SIP_Request request)
+        public SIP_ServerTransaction EnsureServerTransaction(SIP_Flow flow, SIP_Request request)
         {
-            if(flow == null){
+            if (flow == null)
+            {
                 throw new ArgumentNullException("flow");
             }
-            if(request == null){
+            if (request == null)
+            {
                 throw new ArgumentNullException("request");
             }
-            if(request.RequestLine.Method == SIP_Methods.ACK){
+            if (request.RequestLine.Method == SIP_Methods.ACK)
+            {
                 throw new InvalidOperationException("ACK request is transaction less request, can't create transaction for it.");
             }
 
@@ -186,20 +238,161 @@ namespace LumiSoft.Net.SIP.Stack
                 ACK has also same branch, but we won't do transaction for ACK, so it isn't problem.
             */
             var key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
-            if (request.RequestLine.Method == SIP_Methods.CANCEL){
+            if (request.RequestLine.Method == SIP_Methods.CANCEL)
+            {
                 key += "-CANCEL";
             }
 
-            lock(m_pServerTransactions){
+            lock (m_pServerTransactions)
+            {
                 SIP_ServerTransaction retVal = null;
-                m_pServerTransactions.TryGetValue(key,out retVal);
+                m_pServerTransactions.TryGetValue(key, out retVal);
                 // We don't have transaction, create it.
-                if(retVal == null){
-                    retVal = CreateServerTransaction(flow,request);
+                if (retVal == null)
+                {
+                    retVal = CreateServerTransaction(flow, request);
                 }
 
                 return retVal;
             }
+        }
+
+        /// <summary>
+        /// Gets existing or creates new dialog.
+        /// </summary>
+        /// <param name="transaction">Owner transaction what forces to create dialog.</param>
+        /// <param name="response">Response what forces to create dialog.</param>
+        /// <returns>Returns dialog.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>transaction</b> or <b>response</b> is null.</exception>
+        public SIP_Dialog GetOrCreateDialog(SIP_Transaction transaction, SIP_Response response)
+        {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException("transaction");
+            }
+            if (response == null)
+            {
+                throw new ArgumentNullException("response");
+            }
+
+            var dialogID = "";
+            if (transaction is SIP_ServerTransaction)
+            {
+                dialogID = response.CallID + "-" + response.To.Tag + "-" + response.From.Tag;
+            }
+            else
+            {
+                dialogID = response.CallID + "-" + response.From.Tag + "-" + response.To.Tag;
+            }
+
+            lock (m_pDialogs)
+            {
+                SIP_Dialog dialog = null;
+                m_pDialogs.TryGetValue(dialogID, out dialog);
+                // Dialog doesn't exist, create it.
+                if (dialog == null)
+                {
+                    if (response.CSeq.RequestMethod.ToUpper() == SIP_Methods.INVITE)
+                    {
+                        dialog = new SIP_Dialog_Invite();
+                    }
+                    else if (response.CSeq.RequestMethod.ToUpper() == SIP_Methods.REFER)
+                    {
+                        dialog = new SIP_Dialog_Refer();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Method '" + response.CSeq.RequestMethod + "' has no dialog handler.");
+                    }
+
+                    dialog.Init(m_pStack, transaction, response);
+                    dialog.StateChanged += delegate (object s, EventArgs a)
+                    {
+                        if (dialog.State == SIP_DialogState.Terminated)
+                        {
+                            m_pDialogs.Remove(dialog.ID);
+                        }
+                    };
+                    m_pDialogs.Add(dialog.ID, dialog);
+                }
+
+                return dialog;
+            }
+        }
+
+        /// <summary>
+        /// Matches CANCEL requst to SIP server non-CANCEL transaction. Returns null if no match.
+        /// </summary>
+        /// <param name="cancelRequest">SIP CANCEL request.</param>
+        /// <returns>Returns CANCEL matching server transaction or null if no match.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>cancelTransaction</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when <b>cancelTransaction</b> has invalid.</exception>
+        public SIP_ServerTransaction MatchCancelToTransaction(SIP_Request cancelRequest)
+        {
+            if (cancelRequest == null)
+            {
+                throw new ArgumentNullException("cancelRequest");
+            }
+            if (cancelRequest.RequestLine.Method != SIP_Methods.CANCEL)
+            {
+                throw new ArgumentException("Argument 'cancelRequest' is not SIP CANCEL request.");
+            }
+
+            SIP_ServerTransaction retVal = null;
+
+            // NOTE: There we don't add '-CANCEL' because we want to get CANCEL matching transaction, not CANCEL
+            //       transaction itself.
+            var key = cancelRequest.Via.GetTopMostValue().Branch + '-' + cancelRequest.Via.GetTopMostValue().SentBy;
+            lock (m_pServerTransactions)
+            {
+                m_pServerTransactions.TryGetValue(key, out retVal);
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        internal void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                return;
+            }
+
+            foreach (SIP_ClientTransaction tr in ClientTransactions)
+            {
+                try
+                {
+                    tr.Dispose();
+                }
+                catch
+                {
+                }
+            }
+            foreach (SIP_ServerTransaction tr in ServerTransactions)
+            {
+                try
+                {
+                    tr.Dispose();
+                }
+                catch
+                {
+                }
+            }
+            foreach (SIP_Dialog dialog in Dialogs)
+            {
+                try
+                {
+                    dialog.Dispose();
+                }
+                catch
+                {
+                }
+            }
+
+            m_IsDisposed = true;
         }
 
         /// <summary>
@@ -223,11 +416,84 @@ namespace LumiSoft.Net.SIP.Stack
             SIP_ClientTransaction retVal = null;
 
             var transactionID = response.Via.GetTopMostValue().Branch + "-" + response.CSeq.RequestMethod;
-            lock (m_pClientTransactions){
-                m_pClientTransactions.TryGetValue(transactionID,out retVal);
+            lock (m_pClientTransactions)
+            {
+                m_pClientTransactions.TryGetValue(transactionID, out retVal);
             }
-            
+
             return retVal;
+        }
+
+        /// <summary>
+        /// Matches specified SIP request to SIP dialog. If no matching dialog found, returns null.
+        /// </summary>
+        /// <param name="request">SIP request.</param>
+        /// <returns>Returns matched SIP dialog or null in no match found.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null.</exception>
+        internal SIP_Dialog MatchDialog(SIP_Request request)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException("request");
+            }
+
+            SIP_Dialog dialog = null;
+
+            try
+            {
+                var callID = request.CallID;
+                var localTag = request.To.Tag;
+                var remoteTag = request.From.Tag;
+                if (callID != null && localTag != null && remoteTag != null)
+                {
+                    var dialogID = callID + "-" + localTag + "-" + remoteTag;
+                    lock (m_pDialogs)
+                    {
+                        m_pDialogs.TryGetValue(dialogID, out dialog);
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return dialog;
+        }
+
+        /// <summary>
+        /// Matches specified SIP response to SIP dialog. If no matching dialog found, returns null.
+        /// </summary>
+        /// <param name="response">SIP response.</param>
+        /// <returns>Returns matched SIP dialog or null in no match found.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null.</exception>
+        internal SIP_Dialog MatchDialog(SIP_Response response)
+        {
+            if (response == null)
+            {
+                throw new ArgumentNullException("response");
+            }
+
+            SIP_Dialog dialog = null;
+
+            try
+            {
+                var callID = response.CallID;
+                var fromTag = response.From.Tag;
+                var toTag = response.To.Tag;
+                if (callID != null && fromTag != null && toTag != null)
+                {
+                    var dialogID = callID + "-" + fromTag + "-" + toTag;
+                    lock (m_pDialogs)
+                    {
+                        m_pDialogs.TryGetValue(dialogID, out dialog);
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return dialog;
         }
 
         /// <summary>
@@ -264,100 +530,23 @@ namespace LumiSoft.Net.SIP.Stack
                 ACK has also same branch, but we won't do transaction for ACK, so it isn't problem.
             */
             var key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
-            if (request.RequestLine.Method == SIP_Methods.CANCEL){
+            if (request.RequestLine.Method == SIP_Methods.CANCEL)
+            {
                 key += "-CANCEL";
             }
 
-            lock(m_pServerTransactions){
-                m_pServerTransactions.TryGetValue(key,out retVal);
+            lock (m_pServerTransactions)
+            {
+                m_pServerTransactions.TryGetValue(key, out retVal);
             }
 
             // Don't match ACK for terminated transaction, in that case ACK must be passed to "core".
-            if(retVal != null && request.RequestLine.Method == SIP_Methods.ACK && retVal.State == SIP_TransactionState.Terminated){
+            if (retVal != null && request.RequestLine.Method == SIP_Methods.ACK && retVal.State == SIP_TransactionState.Terminated)
+            {
                 retVal = null;
             }
 
             return retVal;
-        }
-
-        /// <summary>
-        /// Matches CANCEL requst to SIP server non-CANCEL transaction. Returns null if no match.
-        /// </summary>
-        /// <param name="cancelRequest">SIP CANCEL request.</param>
-        /// <returns>Returns CANCEL matching server transaction or null if no match.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>cancelTransaction</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when <b>cancelTransaction</b> has invalid.</exception>
-        public SIP_ServerTransaction MatchCancelToTransaction(SIP_Request cancelRequest)
-        {
-            if(cancelRequest == null){
-                throw new ArgumentNullException("cancelRequest");
-            }
-            if(cancelRequest.RequestLine.Method != SIP_Methods.CANCEL){
-                throw new ArgumentException("Argument 'cancelRequest' is not SIP CANCEL request.");
-            }
-
-            SIP_ServerTransaction retVal = null;
-
-            // NOTE: There we don't add '-CANCEL' because we want to get CANCEL matching transaction, not CANCEL
-            //       transaction itself.
-            var key = cancelRequest.Via.GetTopMostValue().Branch + '-' + cancelRequest.Via.GetTopMostValue().SentBy;
-            lock (m_pServerTransactions){
-                m_pServerTransactions.TryGetValue(key,out retVal);
-            }
-
-            return retVal;
-        }
-
-        /// <summary>
-        /// Gets existing or creates new dialog.
-        /// </summary>
-        /// <param name="transaction">Owner transaction what forces to create dialog.</param>
-        /// <param name="response">Response what forces to create dialog.</param>
-        /// <returns>Returns dialog.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>transaction</b> or <b>response</b> is null.</exception>
-        public SIP_Dialog GetOrCreateDialog(SIP_Transaction transaction,SIP_Response response)
-        {
-            if(transaction == null){
-                throw new ArgumentNullException("transaction");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            var dialogID = "";
-            if (transaction is SIP_ServerTransaction){
-                dialogID = response.CallID + "-" + response.To.Tag + "-" + response.From.Tag;
-            }
-            else{
-                dialogID = response.CallID + "-" + response.From.Tag + "-" + response.To.Tag; 
-            }
-
-            lock(m_pDialogs){ 
-                SIP_Dialog dialog = null;
-                m_pDialogs.TryGetValue(dialogID,out dialog);
-                // Dialog doesn't exist, create it.
-                if(dialog == null){
-                    if(response.CSeq.RequestMethod.ToUpper() == SIP_Methods.INVITE){
-                        dialog = new SIP_Dialog_Invite();                        
-                    }
-                    else if(response.CSeq.RequestMethod.ToUpper() == SIP_Methods.REFER){
-                        dialog = new SIP_Dialog_Refer();
-                    }
-                    else{
-                        throw new ArgumentException("Method '" + response.CSeq.RequestMethod + "' has no dialog handler.");
-                    }
-
-                    dialog.Init(m_pStack,transaction,response);
-                    dialog.StateChanged += delegate(object s,EventArgs a){
-                        if(dialog.State == SIP_DialogState.Terminated){
-                            m_pDialogs.Remove(dialog.ID);
-                        }
-                    };
-                    m_pDialogs.Add(dialog.ID,dialog);
-                }
-
-                return dialog;
-            }
         }
 
         /// <summary>
@@ -366,129 +555,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="dialog">SIP dialog to remove.</param>
         internal void RemoveDialog(SIP_Dialog dialog)
         {
-            lock(m_pDialogs){
+            lock (m_pDialogs)
+            {
                 m_pDialogs.Remove(dialog.ID);
-            }
-        }
-
-        /// <summary>
-        /// Matches specified SIP request to SIP dialog. If no matching dialog found, returns null.
-        /// </summary>
-        /// <param name="request">SIP request.</param>
-        /// <returns>Returns matched SIP dialog or null in no match found.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null.</exception>
-        internal SIP_Dialog MatchDialog(SIP_Request request)
-        {
-            if(request == null){
-                throw new ArgumentNullException("request");
-            }
-
-            SIP_Dialog dialog = null;
-
-            try{
-                var callID    = request.CallID;
-                var localTag  = request.To.Tag;
-                var remoteTag = request.From.Tag;
-                if (callID != null && localTag != null && remoteTag != null){
-                    var dialogID = callID + "-" + localTag + "-" + remoteTag;
-                    lock (m_pDialogs){                        
-                        m_pDialogs.TryGetValue(dialogID,out dialog);
-                    }
-                }
-            }
-            catch{
-            }
-
-            return dialog;
-        }
-
-        /// <summary>
-        /// Matches specified SIP response to SIP dialog. If no matching dialog found, returns null.
-        /// </summary>
-        /// <param name="response">SIP response.</param>
-        /// <returns>Returns matched SIP dialog or null in no match found.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null.</exception>
-        internal SIP_Dialog MatchDialog(SIP_Response response)
-        {
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            SIP_Dialog dialog = null;
-
-            try{
-                var callID  = response.CallID;
-                var fromTag = response.From.Tag;
-                var toTag   = response.To.Tag;
-                if (callID != null && fromTag != null && toTag != null){
-                    var dialogID = callID + "-" + fromTag + "-" + toTag;
-                    lock (m_pDialogs){
-                        m_pDialogs.TryGetValue(dialogID,out dialog);
-                    }
-                }
-            }
-            catch{
-            }
-
-            return dialog;
-        }
-
-        /// <summary>
-        /// Gets all(clinet + server) active transactions.
-        /// </summary>
-        public SIP_Transaction[] Transactions
-        {
-            get{
-                var retVal = new List<SIP_Transaction>();
-                retVal.AddRange(ClientTransactions);
-                retVal.AddRange(ServerTransactions);
-
-                return retVal.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets all available client transactions. This method is thread-safe.
-        /// </summary>
-        public SIP_ClientTransaction[] ClientTransactions
-        {
-            get{ 
-                lock(m_pClientTransactions){
-                    var retVal = new SIP_ClientTransaction[m_pClientTransactions.Values.Count];
-                    m_pClientTransactions.Values.CopyTo(retVal,0);
-
-                    return retVal; 
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets all available server transactions. This method is thread-safe.
-        /// </summary>
-        public SIP_ServerTransaction[] ServerTransactions
-        {
-            get{ 
-                lock(m_pServerTransactions){
-                    var retVal = new SIP_ServerTransaction[m_pServerTransactions.Values.Count];
-                    m_pServerTransactions.Values.CopyTo(retVal,0);
-
-                    return retVal; 
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets active dialogs. This method is thread-safe.
-        /// </summary>
-        public SIP_Dialog[] Dialogs
-        {
-            get{ 
-                lock(m_pDialogs){
-                    var retVal = new SIP_Dialog[m_pDialogs.Values.Count];
-                    m_pDialogs.Values.CopyTo(retVal,0);
-
-                    return retVal; 
-                }
             }
         }
     }

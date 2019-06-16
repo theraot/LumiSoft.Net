@@ -10,6 +10,20 @@ namespace LumiSoft.Net.SIP.Message
         private string m_EventType = "";
 
         /// <summary>
+        /// Gets or sets event type.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value passed as value.</exception>
+        public string EventType
+        {
+            get { return m_EventType; }
+
+            set
+            {
+                m_EventType = value ?? throw new ArgumentNullException("EventType");
+            }
+        }
+
+        /// <summary>
         /// Parses "event-type" from specified value.
         /// </summary>
         /// <param name="value">SIP "event-type" value.</param>
@@ -17,7 +31,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -32,7 +47,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public override void Parse(StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -48,19 +64,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_EventType;
-        }
-
-        /// <summary>
-        /// Gets or sets event type.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value passed as value.</exception>
-        public string EventType
-        {
-            get{ return m_EventType; }
-
-            set{
-                m_EventType = value ?? throw new ArgumentNullException("EventType");
-            }
         }
     }
 }

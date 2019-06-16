@@ -17,8 +17,8 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_CSeq : SIP_t_Value
     {
-        private int    m_SequenceNumber = 1;
-        private string m_RequestMethod  = "";
+        private string m_RequestMethod = "";
+        private int m_SequenceNumber = 1;
 
         /// <summary>
         /// Default constructor.
@@ -34,10 +34,46 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         /// <param name="sequenceNumber">Command sequence number.</param>
         /// <param name="requestMethod">Request method.</param>
-        public SIP_t_CSeq(int sequenceNumber,string requestMethod)
+        public SIP_t_CSeq(int sequenceNumber, string requestMethod)
         {
             m_SequenceNumber = sequenceNumber;
-            m_RequestMethod  = requestMethod;
+            m_RequestMethod = requestMethod;
+        }
+
+        /// <summary>
+        /// Gets or sets request method. Note: this value is case-sensitive !
+        /// </summary>
+        public string RequestMethod
+        {
+            get { return m_RequestMethod; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property RequestMethod value can't be null or empty !");
+                }
+
+                m_RequestMethod = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets sequence number.
+        /// </summary>
+        public int SequenceNumber
+        {
+            get { return m_SequenceNumber; }
+
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("Property SequenceNumber value must be >= 1 !");
+                }
+
+                m_SequenceNumber = value;
+            }
         }
 
         /// <summary>
@@ -48,7 +84,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -65,19 +102,23 @@ namespace LumiSoft.Net.SIP.Message
         {
             // CSeq = 1*DIGIT LWS Method
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // Get sequence number
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Invalid 'CSeq' value, sequence number is missing !");
             }
-            try{
+            try
+            {
                 m_SequenceNumber = Convert.ToInt32(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid CSeq 'sequence number' value !");
             }
 
@@ -93,38 +134,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_SequenceNumber + " " + m_RequestMethod;
-        }
-
-        /// <summary>
-        /// Gets or sets sequence number.
-        /// </summary>
-        public int SequenceNumber
-        {
-            get{ return m_SequenceNumber; }
-
-            set{
-                if(value < 1){
-                    throw new ArgumentException("Property SequenceNumber value must be >= 1 !");
-                }
-
-                m_SequenceNumber = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets request method. Note: this value is case-sensitive !
-        /// </summary>
-        public string RequestMethod
-        {
-            get{ return m_RequestMethod; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property RequestMethod value can't be null or empty !");
-                }
-
-                m_RequestMethod = value;
-            }
         }
     }
 }

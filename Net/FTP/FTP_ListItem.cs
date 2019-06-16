@@ -16,19 +16,21 @@ namespace LumiSoft.Net.FTP
         /// <param name="isDir">Specifies if list item is directory or file.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>name</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public FTP_ListItem(string name,long size,DateTime modified,bool isDir)
+        public FTP_ListItem(string name, long size, DateTime modified, bool isDir)
         {
-            if(name == null){
+            if (name == null)
+            {
                 throw new ArgumentNullException("name");
             }
-            if(name == ""){
+            if (name == "")
+            {
                 throw new ArgumentException("Argument 'name' value must be specified.");
             }
 
-            Name     = name;
-            Size     = size;
+            Name = name;
+            Size = size;
             Modified = modified;
-            IsDir    = isDir;
+            IsDir = isDir;
         }
 
         /// <summary>
@@ -41,8 +43,13 @@ namespace LumiSoft.Net.FTP
         /// </summary>
         public bool IsFile
         {
-            get{ return !IsDir; }
+            get { return !IsDir; }
         }
+
+        /// <summary>
+        /// Gets last time file or direcory was modified.
+        /// </summary>
+        public DateTime Modified { get; }
 
         /// <summary>
         /// Gets the name of the file or directory.
@@ -53,10 +60,5 @@ namespace LumiSoft.Net.FTP
         /// Gets file size in bytes.
         /// </summary>
         public long Size { get; }
-
-        /// <summary>
-        /// Gets last time file or direcory was modified.
-        /// </summary>
-        public DateTime Modified { get; }
     }
 }

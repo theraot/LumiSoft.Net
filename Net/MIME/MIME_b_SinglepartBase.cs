@@ -11,7 +11,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public abstract class MIME_b_SinglepartBase : MIME_b
     {
-        private bool   m_IsModified;
+        private bool m_IsModified;
 
         /// <summary>
         /// Default constructor.
@@ -20,7 +20,8 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when <b>contentType</b> is null reference.</exception>
         public MIME_b_SinglepartBase(MIME_h_ContentType contentType) : base(contentType)
         {
-            if(contentType == null){
+            if (contentType == null)
+            {
                 throw new ArgumentNullException("contentType");
             }
 
@@ -32,9 +33,248 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         ~MIME_b_SinglepartBase()
         {
-            if(EncodedStream != null){
+            if (EncodedStream != null)
+            {
                 EncodedStream.Close();
             }
+        }
+
+        /// <summary>
+        /// Gets body decoded data.
+        /// </summary>
+        /// <remarks>NOTE: Use this property with care, because body data may be very big and you may run out of memory.
+        /// For bigger data use <see cref="GetDataStream"/> method instead.</remarks>
+        /// <exception cref="NotSupportedException">Is raised when body contains not supported Content-Transfer-Encoding.</exception>
+        public byte[] Data
+        {
+            get
+            {
+                var ms = new MemoryStream();
+                Net_Utils.StreamCopy(GetDataStream(), ms, 32000);
+
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets body encoded data. 
+        /// </summary>
+        /// <remarks>NOTE: Use this property with care, because body data may be very big and you may run out of memory.
+        /// For bigger data use <see cref="GetEncodedDataStream"/> method instead.</remarks>
+        public byte[] EncodedData
+        {
+            get
+            {
+                var ms = new MemoryStream();
+                Net_Utils.StreamCopy(GetEncodedDataStream(), ms, 32000);
+
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets encoded body data size in bytes.
+        /// </summary>
+        public int EncodedDataSize
+        {
+            get { return (int)EncodedStream.Length; }
+        }
+
+        /// <summary>
+        /// Gets if body has modified.
+        /// </summary>
+        public override bool IsModified
+        {
+            get { return m_IsModified; }
+        }
+
+        /// <summary>
+        /// Gets encoded data stream.
+        /// </summary>
+        protected Stream EncodedStream { get; }
+
+        /// <summary>
+        /// Gets body decoded data stream.
+        /// </summary>
+        /// <returns>Returns body decoded data stream.</returns>
+        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
+        /// <exception cref="NotSupportedException">Is raised when body contains not supported Content-Transfer-Encoding.</exception>
+        /// <remarks>The returned stream should be closed/disposed as soon as it's not needed any more.</remarks>
+        public Stream GetDataStream()
+        {
+            if (Entity == null)
+            {
+                throw new InvalidOperationException("Body must be bounded to some entity first.");
+            }
+
+            /* RFC 2045 6.1.
+                This is the default value -- that is, "Content-Transfer-Encoding: 7BIT" is assumed if the
+                Content-Transfer-Encoding header field is not present.
+            */
+            var transferEncoding = MIME_TransferEncodings.SevenBit;
+            if (Entity.ContentTransferEncoding != null)
+            {
+                transferEncoding = Entity.ContentTransferEncoding.ToLowerInvariant();
+            }
+
+            EncodedStream.Position = 0;
+            if (transferEncoding == MIME_TransferEncodings.QuotedPrintable)
+            {
+                return new QuotedPrintableStream(new SmartStream(EncodedStream, false), FileAccess.Read);
+            }
+
+            if (transferEncoding == MIME_TransferEncodings.Base64)
+            {
+                return new Base64Stream(EncodedStream, false, true, FileAccess.Read);
+            }
+            if (transferEncoding == MIME_TransferEncodings.Binary)
+            {
+                return new ReadWriteControlledStream(EncodedStream, FileAccess.Read);
+            }
+            if (transferEncoding == MIME_TransferEncodings.EightBit)
+            {
+                return new ReadWriteControlledStream(EncodedStream, FileAccess.Read);
+            }
+            if (transferEncoding == MIME_TransferEncodings.SevenBit)
+            {
+                return new ReadWriteControlledStream(EncodedStream, FileAccess.Read);
+            }
+            throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + Entity.ContentTransferEncoding + "'.");
+        }
+
+        /// <summary>
+        /// Gets body encoded data stream.
+        /// </summary>
+        /// <returns>Returns body encoded data stream.</returns>
+        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
+        public Stream GetEncodedDataStream()
+        {
+            if (Entity == null)
+            {
+                throw new InvalidOperationException("Body must be bounded to some entity first.");
+            }
+
+            EncodedStream.Position = 0;
+
+            return EncodedStream;
+        }
+
+        /// <summary>
+        /// Sets body data from the specified stream.
+        /// </summary>
+        /// <param name="stream">Source stream.</param>
+        /// <param name="transferEncoding">Specifies content-transfer-encoding to use to encode data.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> or <b>transferEncoding</b> is null reference.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
+        public void SetData(Stream stream, string transferEncoding)
+        {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+            if (transferEncoding == null)
+            {
+                throw new ArgumentNullException("transferEncoding");
+            }
+
+            if (string.Equals(transferEncoding, MIME_TransferEncodings.QuotedPrintable, StringComparison.InvariantCultureIgnoreCase))
+            {
+                using (MemoryStreamEx fs = new MemoryStreamEx(32000))
+                {
+                    var encoder = new QuotedPrintableStream(new SmartStream(fs, false), FileAccess.ReadWrite);
+                    Net_Utils.StreamCopy(stream, encoder, 32000);
+                    encoder.Flush();
+                    fs.Position = 0;
+                    SetEncodedData(transferEncoding, fs);
+                }
+            }
+            else if (string.Equals(transferEncoding, MIME_TransferEncodings.Base64, StringComparison.InvariantCultureIgnoreCase))
+            {
+                using (MemoryStreamEx fs = new MemoryStreamEx(32000))
+                {
+                    var encoder = new Base64Stream(fs, false, true, FileAccess.ReadWrite);
+                    Net_Utils.StreamCopy(stream, encoder, 32000);
+                    encoder.Finish();
+                    fs.Position = 0;
+                    SetEncodedData(transferEncoding, fs);
+                }
+            }
+            else if (string.Equals(transferEncoding, MIME_TransferEncodings.Binary, StringComparison.InvariantCultureIgnoreCase))
+            {
+                SetEncodedData(transferEncoding, stream);
+            }
+            else if (string.Equals(transferEncoding, MIME_TransferEncodings.EightBit, StringComparison.InvariantCultureIgnoreCase))
+            {
+                SetEncodedData(transferEncoding, stream);
+            }
+            else if (string.Equals(transferEncoding, MIME_TransferEncodings.SevenBit, StringComparison.InvariantCultureIgnoreCase))
+            {
+                SetEncodedData(transferEncoding, stream);
+            }
+            else
+            {
+                throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + transferEncoding + "'.");
+            }
+        }
+
+        /// <summary>
+        /// Sets body data from the specified file.
+        /// </summary>
+        /// <param name="file">File name with optional path.</param>
+        /// <param name="transferEncoding">Specifies content-transfer-encoding to use to encode data.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>file</b> is null reference.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
+        public void SetDataFromFile(string file, string transferEncoding)
+        {
+            if (file == null)
+            {
+                throw new ArgumentNullException("file");
+            }
+
+            using (FileStream fs = File.OpenRead(file))
+            {
+                SetData(fs, transferEncoding);
+            }
+        }
+
+        /// <summary>
+        /// Sets body encoded data from specified stream.
+        /// </summary>
+        /// <param name="contentTransferEncoding">Content-Transfer-Encoding in what encoding <b>stream</b> data is.</param>
+        /// <param name="stream">Stream data to add.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>contentTransferEncoding</b> or <b>stream</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the argumennts has invalid value.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
+        public void SetEncodedData(string contentTransferEncoding, Stream stream)
+        {
+            if (contentTransferEncoding == null)
+            {
+                throw new ArgumentNullException("contentTransferEncoding");
+            }
+            if (contentTransferEncoding == string.Empty)
+            {
+                throw new ArgumentException("Argument 'contentTransferEncoding' value must be specified.");
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+            if (Entity == null)
+            {
+                throw new InvalidOperationException("Body must be bounded to some entity first.");
+            }
+
+            // Owner entity has no content-type or has different content-type, just add/overwrite it.
+            if (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype, MediaType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                Entity.ContentType = new MIME_h_ContentType(MediaType);
+            }
+            Entity.ContentTransferEncoding = contentTransferEncoding;
+
+            EncodedStream.SetLength(0);
+            Net_Utils.StreamCopy(stream, EncodedStream, 32000);
+
+            m_IsModified = true;
         }
 
         /// <summary>
@@ -42,12 +282,13 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <param name="entity">Owner entity.</param>
         /// <param name="setContentType">If true sets entity.ContentType header value.</param>
-        internal override void SetParent(MIME_Entity entity,bool setContentType)
+        internal override void SetParent(MIME_Entity entity, bool setContentType)
         {
-            base.SetParent(entity,setContentType);
+            base.SetParent(entity, setContentType);
 
             // Owner entity has no content-type or has different content-type, just add/overwrite it.
-            if(setContentType && (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase))){
+            if (setContentType && (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype, MediaType, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 Entity.ContentType = new MIME_h_ContentType(MediaType);
             }
         }
@@ -61,13 +302,14 @@ namespace LumiSoft.Net.MIME
         /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        internal protected override void ToStream(Stream stream,MIME_Encoding_EncodedWord headerWordEncoder,Encoding headerParmetersCharset,bool headerReencode)
+        internal protected override void ToStream(Stream stream, MIME_Encoding_EncodedWord headerWordEncoder, Encoding headerParmetersCharset, bool headerReencode)
         {
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
-            Net_Utils.StreamCopy(GetEncodedDataStream(),stream,32000);
+            Net_Utils.StreamCopy(GetEncodedDataStream(), stream, 32000);
         }
 
         /// <summary>
@@ -78,216 +320,5 @@ namespace LumiSoft.Net.MIME
         {
             m_IsModified = isModified;
         }
-
-        /// <summary>
-        /// Gets body encoded data stream.
-        /// </summary>
-        /// <returns>Returns body encoded data stream.</returns>
-        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        public Stream GetEncodedDataStream()
-        {
-            if(Entity == null){
-                throw new InvalidOperationException("Body must be bounded to some entity first.");
-            }
-
-            EncodedStream.Position = 0;
-
-            return EncodedStream;
-        }
-
-        /// <summary>
-        /// Sets body encoded data from specified stream.
-        /// </summary>
-        /// <param name="contentTransferEncoding">Content-Transfer-Encoding in what encoding <b>stream</b> data is.</param>
-        /// <param name="stream">Stream data to add.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>contentTransferEncoding</b> or <b>stream</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the argumennts has invalid value.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        public void SetEncodedData(string contentTransferEncoding,Stream stream)
-        {
-            if(contentTransferEncoding == null){
-                throw new ArgumentNullException("contentTransferEncoding");
-            }
-            if(contentTransferEncoding == string.Empty){
-                throw new ArgumentException("Argument 'contentTransferEncoding' value must be specified.");
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-            if(Entity == null){
-                throw new InvalidOperationException("Body must be bounded to some entity first.");
-            }
-
-            // Owner entity has no content-type or has different content-type, just add/overwrite it.
-            if(Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase)){
-                Entity.ContentType = new MIME_h_ContentType(MediaType);
-            }
-            Entity.ContentTransferEncoding = contentTransferEncoding;
-
-            EncodedStream.SetLength(0);
-            Net_Utils.StreamCopy(stream,EncodedStream,32000);
-       
-            m_IsModified = true;
-        }
-
-        /// <summary>
-        /// Gets body decoded data stream.
-        /// </summary>
-        /// <returns>Returns body decoded data stream.</returns>
-        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        /// <exception cref="NotSupportedException">Is raised when body contains not supported Content-Transfer-Encoding.</exception>
-        /// <remarks>The returned stream should be closed/disposed as soon as it's not needed any more.</remarks>
-        public Stream GetDataStream()
-        {             
-            if(Entity == null){
-                throw new InvalidOperationException("Body must be bounded to some entity first.");
-            }
-
-            /* RFC 2045 6.1.
-                This is the default value -- that is, "Content-Transfer-Encoding: 7BIT" is assumed if the
-                Content-Transfer-Encoding header field is not present.
-            */
-            var transferEncoding = MIME_TransferEncodings.SevenBit;
-            if (Entity.ContentTransferEncoding != null){
-                transferEncoding = Entity.ContentTransferEncoding.ToLowerInvariant();
-            }
-
-            EncodedStream.Position = 0;            
-            if(transferEncoding == MIME_TransferEncodings.QuotedPrintable){                
-                return new QuotedPrintableStream(new SmartStream(EncodedStream,false),FileAccess.Read);
-            }
-
-            if(transferEncoding == MIME_TransferEncodings.Base64){
-                return new Base64Stream(EncodedStream,false,true,FileAccess.Read);
-            }
-            if(transferEncoding == MIME_TransferEncodings.Binary){
-                return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
-            }
-            if(transferEncoding == MIME_TransferEncodings.EightBit){
-                return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
-            }
-            if(transferEncoding == MIME_TransferEncodings.SevenBit){
-                return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
-            }
-            throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + Entity.ContentTransferEncoding + "'.");
-        }
-
-        /// <summary>
-        /// Sets body data from the specified stream.
-        /// </summary>
-        /// <param name="stream">Source stream.</param>
-        /// <param name="transferEncoding">Specifies content-transfer-encoding to use to encode data.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> or <b>transferEncoding</b> is null reference.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        public void SetData(Stream stream,string transferEncoding)
-        {            
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-            if(transferEncoding == null){
-                throw new ArgumentNullException("transferEncoding");
-            }
-
-            if(string.Equals(transferEncoding,MIME_TransferEncodings.QuotedPrintable,StringComparison.InvariantCultureIgnoreCase)){
-                using(MemoryStreamEx fs = new MemoryStreamEx(32000)){
-                    var encoder = new QuotedPrintableStream(new SmartStream(fs,false),FileAccess.ReadWrite);
-                    Net_Utils.StreamCopy(stream,encoder,32000);
-                    encoder.Flush();
-                    fs.Position = 0;
-                    SetEncodedData(transferEncoding,fs);
-                }
-            }
-            else if(string.Equals(transferEncoding,MIME_TransferEncodings.Base64,StringComparison.InvariantCultureIgnoreCase)){
-                using(MemoryStreamEx fs = new MemoryStreamEx(32000)){
-                    var encoder = new Base64Stream(fs,false,true,FileAccess.ReadWrite);
-                    Net_Utils.StreamCopy(stream,encoder,32000);
-                    encoder.Finish();
-                    fs.Position = 0;
-                    SetEncodedData(transferEncoding,fs);
-                }
-            }            
-            else if(string.Equals(transferEncoding,MIME_TransferEncodings.Binary,StringComparison.InvariantCultureIgnoreCase)){
-                SetEncodedData(transferEncoding,stream);
-            }
-            else if(string.Equals(transferEncoding,MIME_TransferEncodings.EightBit,StringComparison.InvariantCultureIgnoreCase)){
-                SetEncodedData(transferEncoding,stream);
-            }
-            else if(string.Equals(transferEncoding,MIME_TransferEncodings.SevenBit,StringComparison.InvariantCultureIgnoreCase)){
-                SetEncodedData(transferEncoding,stream);
-            }
-            else{
-                throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + transferEncoding + "'.");
-            }
-        }
-
-        /// <summary>
-        /// Sets body data from the specified file.
-        /// </summary>
-        /// <param name="file">File name with optional path.</param>
-        /// <param name="transferEncoding">Specifies content-transfer-encoding to use to encode data.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>file</b> is null reference.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        public void SetDataFromFile(string file,string transferEncoding)
-        {
-            if(file == null){
-                throw new ArgumentNullException("file");
-            }
-            
-            using(FileStream fs = File.OpenRead(file)){
-                SetData(fs,transferEncoding);
-            }            
-        }
-
-        /// <summary>
-        /// Gets if body has modified.
-        /// </summary>
-        public override bool IsModified
-        {
-            get{ return m_IsModified; }
-        }
-                
-        /// <summary>
-        /// Gets encoded body data size in bytes.
-        /// </summary>
-        public int EncodedDataSize
-        {
-            get{ return (int)EncodedStream.Length; }
-        }
-
-        /// <summary>
-        /// Gets body encoded data. 
-        /// </summary>
-        /// <remarks>NOTE: Use this property with care, because body data may be very big and you may run out of memory.
-        /// For bigger data use <see cref="GetEncodedDataStream"/> method instead.</remarks>
-        public byte[] EncodedData
-        {
-            get{ 
-                var ms = new MemoryStream();
-                Net_Utils.StreamCopy(GetEncodedDataStream(),ms,32000);
-
-                return ms.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets body decoded data.
-        /// </summary>
-        /// <remarks>NOTE: Use this property with care, because body data may be very big and you may run out of memory.
-        /// For bigger data use <see cref="GetDataStream"/> method instead.</remarks>
-        /// <exception cref="NotSupportedException">Is raised when body contains not supported Content-Transfer-Encoding.</exception>
-        public byte[] Data
-        {
-            get{
-                var ms = new MemoryStream();
-                Net_Utils.StreamCopy(GetDataStream(),ms,32000);
-
-                return ms.ToArray(); 
-            }
-        }
-
-        /// <summary>
-        /// Gets encoded data stream.
-        /// </summary>
-        protected Stream EncodedStream { get; }
     }
 }

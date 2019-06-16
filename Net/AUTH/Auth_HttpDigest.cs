@@ -8,26 +8,26 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class Auth_HttpDigest
     {
-        private string m_Method     = "";
-        private string m_Realm      = "";
-        private string m_Nonce      = "";
-        private string m_UserName   = "";
-        private string m_Password   = "";
-        private string m_Cnonce     = "";
-        private string m_Charset    = "";
+        private string m_Charset = "";
+        private string m_Cnonce = "";
+        private string m_Method = "";
+        private string m_Nonce = "";
+        private string m_Password = "";
+        private string m_Realm = "";
+        private string m_UserName = "";
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="digestResponse">Server/Client returned digest response.</param>
         /// <param name="requestMethod">Request method.</param>
-        public Auth_HttpDigest(string digestResponse,string requestMethod)
+        public Auth_HttpDigest(string digestResponse, string requestMethod)
         {
             m_Method = requestMethod;
 
             Parse(digestResponse);
         }
-                
+
         /// <summary>
         /// Client constructor. This is used to build valid Authorization response to server.
         /// </summary>
@@ -37,18 +37,18 @@ namespace LumiSoft.Net.AUTH
         /// <param name="uri">Request URI.</param>
         /// <param name="digestResponse">Server authenticate resposne.</param>
         /// <param name="requestMethod">Request method.</param>
-        public Auth_HttpDigest(string userName,string password,string cnonce,string uri,string digestResponse,string requestMethod)
-        {            
+        public Auth_HttpDigest(string userName, string password, string cnonce, string uri, string digestResponse, string requestMethod)
+        {
             Parse(digestResponse);
 
-            m_UserName   = userName;
-            m_Password   = password;
-            m_Method     = requestMethod;
-            m_Cnonce     = cnonce;
-            Uri        = uri;            
-            Qop        = "auth";
+            m_UserName = userName;
+            m_Password = password;
+            m_Method = requestMethod;
+            m_Cnonce = cnonce;
+            Uri = uri;
+            Qop = "auth";
             NonceCount = 1;
-            Response   = CalculateResponse(m_UserName,m_Password);
+            Response = CalculateResponse(m_UserName, m_Password);
         }
 
         /// <summary>
@@ -57,11 +57,185 @@ namespace LumiSoft.Net.AUTH
         /// <param name="realm">Realm(domain).</param>
         /// <param name="nonce">Nonce value.</param>
         /// <param name="opaque">Opaque value.</param>
-        public Auth_HttpDigest(string realm,string nonce,string opaque)
+        public Auth_HttpDigest(string realm, string nonce, string opaque)
         {
-            m_Realm  = realm;
-            m_Nonce  = nonce;
+            m_Realm = realm;
+            m_Nonce = nonce;
             Opaque = opaque;
+        }
+
+        /*
+        public bool Stale
+        {
+            get{ return false; }
+        }
+        */
+
+        /// <summary>
+        /// Gets or sets algorithm to use to produce the digest and a checksum.
+        /// This is normally MD5 or MD5-sess.
+        /// </summary>
+        public string Algorithm { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets Client nonce value. This MUST be specified if a qop directive is sent (see above), and
+        /// MUST NOT be specified if the server did not send a qop directive in the WWW-Authenticate header field.
+        /// </summary>
+        public string CNonce
+        {
+            get { return m_Cnonce; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+                m_Cnonce = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a server-specified unique data string. It is recommended that this 
+        /// string be base64 or hexadecimal data. 
+        /// Suggested value: base64(time-stamp hex(time-stamp ":" ETag ":" private-key)).
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
+        public string Nonce
+        {
+            get { return m_Nonce; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Nonce value can't be null or empty !");
+                }
+
+                m_Nonce = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or stets nonce count. This MUST be specified if a qop directive is sent (see above), and
+        /// MUST NOT be specified if the server did not send a qop directive in the WWW-Authenticate 
+        /// header field.  The nc-value is the hexadecimal count of the number of requests.
+        /// </summary>
+        public int NonceCount { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets string of data, specified by the server, which should be returned by the client unchanged.
+        /// It is recommended that this string be base64 or hexadecimal data.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
+        public string Opaque { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets password.
+        /// </summary>
+        public string Password
+        {
+            get { return m_Password; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+                m_Password = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets value what indicates "quality of protection" the client has applied to
+        /// the message. If present, its value MUST be one of the alternatives the server indicated
+        /// it supports in the WWW-Authenticate header. This directive is optional in order to preserve 
+        /// backward compatibility.
+        /// </summary>
+        public string Qop { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets a string to be displayed to users so they know which username and password 
+        /// to use. This string should contain at least the name of the host performing the 
+        /// authentication and might additionally indicate the collection of users who might have access.
+        /// An example might be "registered_users@gotham.news.com".
+        /// </summary>
+        public string Realm
+        {
+            get { return m_Realm; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+                m_Realm = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets request method.
+        /// </summary>
+        public string RequestMethod
+        {
+            get { return m_Method; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+                m_Method = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a string of 32 hex digits computed by HTTP digest algorithm, 
+        /// which proves that the user knows a password.
+        /// </summary>
+        public string Response { get; private set; } = "";
+
+        /// <summary>
+        /// Gets the URI from Request-URI.
+        /// </summary>
+        public string Uri { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets user name.
+        /// </summary>
+        public string UserName
+        {
+            get { return m_UserName; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+                m_UserName = value;
+            }
+        }
+
+        /// <summary>
+        /// Creates valid nonce value.
+        /// </summary>
+        /// <returns>Returns nonce value.</returns>
+        public static string CreateNonce()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "");
+        }
+
+        /// <summary>
+        /// Creates valid opaque value.
+        /// </summary>
+        /// <returns>Renturn opaque value.</returns>
+        public static string CreateOpaque()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "");
         }
 
         /// <summary>
@@ -70,126 +244,15 @@ namespace LumiSoft.Net.AUTH
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
         /// <returns>Returns true if authenticated, otherwise false.</returns>
-        public bool Authenticate(string userName,string password)
+        public bool Authenticate(string userName, string password)
         {
             // Check that our computed digest is same as client provided.
-            if(Response == CalculateResponse(userName,password)){
+            if (Response == CalculateResponse(userName, password))
+            {
                 return true;
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Parses authetication info from client digest response.
-        /// </summary>
-        /// <param name="digestResponse">Client returned digest response.</param>
-        private void Parse(string digestResponse)
-        {
-            var parameters = TextUtils.SplitQuotedString(digestResponse,',');
-            foreach (string parameter in parameters){
-                var name_value = parameter.Split(new[]{'='},2);
-                var   name       = name_value[0].Trim();
-
-                if (name_value.Length == 2){
-                    if(name.ToLower() == "realm"){
-                        m_Realm = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "nonce"){
-                        m_Nonce = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    // RFC bug ?: RFC 2831. digest-uri = "digest-uri" "=" <"> digest-uri-value <">
-                    //            RFC 2617  digest-uri        = "uri" "=" digest-uri-value
-                    else if(name.ToLower() == "uri" || name.ToLower() == "digest-uri"){
-                        Uri = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "qop"){
-                        Qop = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "nc"){
-                        NonceCount = Convert.ToInt32(TextUtils.UnQuoteString(name_value[1]));
-                    }
-                    else if(name.ToLower() == "cnonce"){
-                        m_Cnonce = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "response"){
-                        Response = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "opaque"){
-                        Opaque = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "username"){
-                        m_UserName = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "algorithm"){
-                        Algorithm = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                    else if(name.ToLower() == "charset"){
-                        m_Charset = TextUtils.UnQuoteString(name_value[1]);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Calculates 'rspauth' value.
-        /// </summary>
-        /// <param name="userName">User name.</param>
-        /// <param name="password">Password.</param>
-        /// <returns>Returns 'rspauth' value.</returns>
-        public string CalculateRspAuth(string userName,string password)
-        {
-            /* RFC 2617 3.2.3.
-                The optional response digest in the "response-auth" directive
-                supports mutual authentication -- the server proves that it knows the
-                user's secret, and with qop=auth-int also provides limited integrity
-                protection of the response. The "response-digest" value is calculated
-                as for the "request-digest" in the Authorization header, except that
-                if "qop=auth" or is not specified in the Authorization header for the
-                request, A2 is
-
-                    A2 = ":" digest-uri-value
-
-                and if "qop=auth-int", then A2 is
-
-                    A2 = ":" digest-uri-value ":" H(entity-body) 
-             
-                where "digest-uri-value" is the value of the "uri" directive on the
-                Authorization header in the request. The "cnonce-value" and "nc-
-                value" MUST be the ones for the client request to which this message
-                is the response. The "response-auth", "cnonce", and "nonce-count"
-                directives MUST BE present if "qop=auth" or "qop=auth-int" is
-                specified.
-            */
-
-            var a1 = "";
-            var a2 = "";
-            // Create A1
-            if (Algorithm == "" || Algorithm.ToLower() == "md5"){
-                a1 = userName + ":" + Realm + ":" + password;
-            }
-            else if(Algorithm.ToLower() == "md5-sess"){
-                a1 = Net_Utils.ComputeMd5(userName + ":" + Realm + ":" + password,false) + ":" + Nonce + ":" + CNonce;
-            }
-            else{
-                throw new ArgumentException("Invalid Algorithm value '" + Algorithm + "' !");
-            }
-            // Create A2            
-            if(Qop == "" || Qop.ToLower() == "auth"){
-                a2 = ":" + Uri;
-            }
-            else{
-                throw new ArgumentException("Invalid qop value '" + Qop + "' !");
-            }
-
-            // Calculate response value.
-            // qop present
-            if(!string.IsNullOrEmpty(Qop)){
-                return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + Nonce + ":" + NonceCount.ToString("x8") + ":" + CNonce + ":" + Qop + ":" + Net_Utils.ComputeMd5(a2,true),true);
-            }
-            // qop not present
-
-            return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + Nonce + ":" + Net_Utils.ComputeMd5(a2,true),true);
         }
 
         /// <summary>
@@ -198,7 +261,7 @@ namespace LumiSoft.Net.AUTH
         /// <param name="userName">User name.</param>
         /// <param name="password">User password.</param>
         /// <returns>Returns calculated rsponse value.</returns>
-        public string CalculateResponse(string userName,string password)
+        public string CalculateResponse(string userName, string password)
         {
             /* RFC 2617.
              
@@ -255,92 +318,112 @@ namespace LumiSoft.Net.AUTH
             */
 
             var A1 = "";
-            if (string.IsNullOrEmpty(Algorithm) || Algorithm.ToLower() == "md5"){
+            if (string.IsNullOrEmpty(Algorithm) || Algorithm.ToLower() == "md5")
+            {
                 A1 = userName + ":" + Realm + ":" + password;
             }
-            else if(Algorithm.ToLower() == "md5-sess"){
+            else if (Algorithm.ToLower() == "md5-sess")
+            {
                 A1 = H(userName + ":" + Realm + ":" + password) + ":" + Nonce + ":" + CNonce;
             }
-            else{
+            else
+            {
                 throw new ArgumentException("Invalid 'algorithm' value '" + Algorithm + "'.");
             }
 
             var A2 = "";
-            if (string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
+            if (string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth")
+            {
                 A2 = RequestMethod + ":" + Uri;
             }
-            else{
+            else
+            {
                 throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
             }
 
-            if(Qop.ToLower() == "auth" || Qop.ToLower() == "auth-int"){
+            if (Qop.ToLower() == "auth" || Qop.ToLower() == "auth-int")
+            {
                 // request-digest  = <"> < KD ( H(A1),unq(nonce-value) ":" nc-value ":" unq(cnonce-value) ":" unq(qop-value) ":" H(A2) )> <">
                 // We don't add quoutes here.
 
-                return KD(H(A1),Nonce + ":" + NonceCount.ToString("x8") + ":" + CNonce + ":" + Qop + ":" + H(A2));
+                return KD(H(A1), Nonce + ":" + NonceCount.ToString("x8") + ":" + CNonce + ":" + Qop + ":" + H(A2));
             }
 
-            if(string.IsNullOrEmpty(Qop)){
+            if (string.IsNullOrEmpty(Qop))
+            {
                 // request-digest = <"> < KD ( H(A1), unq(nonce-value) ":" H(A2) ) > <">
                 // We don't add quoutes here.
 
-                return KD(H(A1),Nonce + ":" + H(A2));
+                return KD(H(A1), Nonce + ":" + H(A2));
             }
             throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
         /// <summary>
-        /// Converts this to valid digest string.
+        /// Calculates 'rspauth' value.
         /// </summary>
-        /// <returns>Returns digest string.</returns>
-        public override string ToString()
+        /// <param name="userName">User name.</param>
+        /// <param name="password">Password.</param>
+        /// <returns>Returns 'rspauth' value.</returns>
+        public string CalculateRspAuth(string userName, string password)
         {
-            var retVal = new StringBuilder();
-            retVal.Append("realm=\"" + m_Realm + "\",");
-            retVal.Append("username=\"" + m_UserName + "\",");
-            if(!string.IsNullOrEmpty(Qop)){
-                retVal.Append("qop=\"" + Qop + "\",");
+            /* RFC 2617 3.2.3.
+                The optional response digest in the "response-auth" directive
+                supports mutual authentication -- the server proves that it knows the
+                user's secret, and with qop=auth-int also provides limited integrity
+                protection of the response. The "response-digest" value is calculated
+                as for the "request-digest" in the Authorization header, except that
+                if "qop=auth" or is not specified in the Authorization header for the
+                request, A2 is
+
+                    A2 = ":" digest-uri-value
+
+                and if "qop=auth-int", then A2 is
+
+                    A2 = ":" digest-uri-value ":" H(entity-body) 
+             
+                where "digest-uri-value" is the value of the "uri" directive on the
+                Authorization header in the request. The "cnonce-value" and "nc-
+                value" MUST be the ones for the client request to which this message
+                is the response. The "response-auth", "cnonce", and "nonce-count"
+                directives MUST BE present if "qop=auth" or "qop=auth-int" is
+                specified.
+            */
+
+            var a1 = "";
+            var a2 = "";
+            // Create A1
+            if (Algorithm == "" || Algorithm.ToLower() == "md5")
+            {
+                a1 = userName + ":" + Realm + ":" + password;
             }
-            retVal.Append("nonce=\"" + m_Nonce + "\",");
-            retVal.Append("nc=\"" + NonceCount + "\",");
-            retVal.Append("cnonce=\"" + m_Cnonce + "\",");
-            retVal.Append("response=\"" + Response + "\",");
-            retVal.Append("opaque=\"" + Opaque + "\",");
-            retVal.Append("uri=\"" + Uri + "\"");            
-
-            return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Creates 'Challange' data using this class info. 
-        /// </summary>
-        /// <returns>Returns Challange data.</returns>
-        public string ToChallange()
-        {
-            return ToChallange(true);
-        }
-
-        /// <summary>
-        /// Creates 'Challange' data using this class info. 
-        /// </summary>
-        /// <param name="addAuthMethod">Specifies if 'digest ' authe method string constant is added.</param>
-        /// <returns>Returns Challange data.</returns>
-        public string ToChallange(bool addAuthMethod)
-        {            
-            // digest realm="",qop="",nonce="",opaque=""
-
-            var retVal = new StringBuilder();
-            if (addAuthMethod){
-                retVal.Append("digest ");
+            else if (Algorithm.ToLower() == "md5-sess")
+            {
+                a1 = Net_Utils.ComputeMd5(userName + ":" + Realm + ":" + password, false) + ":" + Nonce + ":" + CNonce;
             }
-            retVal.Append("realm=" + TextUtils.QuoteString(m_Realm) + ",");
-            if(!string.IsNullOrEmpty(Qop)){
-                retVal.Append("qop=" + TextUtils.QuoteString(Qop) + ",");
+            else
+            {
+                throw new ArgumentException("Invalid Algorithm value '" + Algorithm + "' !");
             }
-            retVal.Append("nonce=" + TextUtils.QuoteString(m_Nonce) + ",");
-            retVal.Append("opaque=" + TextUtils.QuoteString(Opaque));
+            // Create A2            
+            if (Qop == "" || Qop.ToLower() == "auth")
+            {
+                a2 = ":" + Uri;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid qop value '" + Qop + "' !");
+            }
 
-            return retVal.ToString();
+            // Calculate response value.
+            // qop present
+            if (!string.IsNullOrEmpty(Qop))
+            {
+                return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1, true) + ":" + Nonce + ":" + NonceCount.ToString("x8") + ":" + CNonce + ":" + Qop + ":" + Net_Utils.ComputeMd5(a2, true), true);
+            }
+            // qop not present
+
+            return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1, true) + ":" + Nonce + ":" + Net_Utils.ComputeMd5(a2, true), true);
         }
 
         /// <summary>
@@ -364,57 +447,124 @@ namespace LumiSoft.Net.AUTH
                           maxbuf | charset | cipher | authzid | auth-param )
             */
 
-            
+
             var response = "";
-            if (string.IsNullOrEmpty(m_Password)){
+            if (string.IsNullOrEmpty(m_Password))
+            {
                 response = Response;
             }
-            else{
-                response = CalculateResponse(m_UserName,m_Password);
+            else
+            {
+                response = CalculateResponse(m_UserName, m_Password);
             }
 
             var authData = new StringBuilder();
-            if (addAuthMethod){
+            if (addAuthMethod)
+            {
                 authData.Append("digest ");
             }
             authData.Append("realm=\"" + m_Realm + "\",");
             authData.Append("username=\"" + m_UserName + "\",");
             authData.Append("nonce=\"" + m_Nonce + "\",");
-            if(!string.IsNullOrEmpty(Uri)){
+            if (!string.IsNullOrEmpty(Uri))
+            {
                 authData.Append("uri=\"" + Uri + "\",");
             }
-            if(!string.IsNullOrEmpty(Qop)){
+            if (!string.IsNullOrEmpty(Qop))
+            {
                 authData.Append("qop=\"" + Qop + "\",");
             }
             // nc value must be specified only if qop is present.
-            if(!string.IsNullOrEmpty(Qop)){
+            if (!string.IsNullOrEmpty(Qop))
+            {
                 authData.Append("nc=" + NonceCount.ToString("x8") + ",");
             }
-            if(!string.IsNullOrEmpty(m_Cnonce)){
+            if (!string.IsNullOrEmpty(m_Cnonce))
+            {
                 authData.Append("cnonce=\"" + m_Cnonce + "\",");
             }
             authData.Append("response=\"" + response + "\",");
-            if(!string.IsNullOrEmpty(Opaque)){
+            if (!string.IsNullOrEmpty(Opaque))
+            {
                 authData.Append("opaque=\"" + Opaque + "\",");
             }
-            if(!string.IsNullOrEmpty(m_Charset)){
+            if (!string.IsNullOrEmpty(m_Charset))
+            {
                 authData.Append("charset=" + m_Charset + ",");
             }
 
             var retVal = authData.ToString().Trim();
-            if (retVal.EndsWith(",")){
-                retVal = retVal.Substring(0,retVal.Length - 1);
+            if (retVal.EndsWith(","))
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
             }
 
             return retVal;
         }
 
-        private string H(string value)
+        /// <summary>
+        /// Creates 'Challange' data using this class info. 
+        /// </summary>
+        /// <returns>Returns Challange data.</returns>
+        public string ToChallange()
         {
-            return Net_Utils.ComputeMd5(value,true);
+            return ToChallange(true);
         }
 
-        private string KD(string key,string data)
+        /// <summary>
+        /// Creates 'Challange' data using this class info. 
+        /// </summary>
+        /// <param name="addAuthMethod">Specifies if 'digest ' authe method string constant is added.</param>
+        /// <returns>Returns Challange data.</returns>
+        public string ToChallange(bool addAuthMethod)
+        {
+            // digest realm="",qop="",nonce="",opaque=""
+
+            var retVal = new StringBuilder();
+            if (addAuthMethod)
+            {
+                retVal.Append("digest ");
+            }
+            retVal.Append("realm=" + TextUtils.QuoteString(m_Realm) + ",");
+            if (!string.IsNullOrEmpty(Qop))
+            {
+                retVal.Append("qop=" + TextUtils.QuoteString(Qop) + ",");
+            }
+            retVal.Append("nonce=" + TextUtils.QuoteString(m_Nonce) + ",");
+            retVal.Append("opaque=" + TextUtils.QuoteString(Opaque));
+
+            return retVal.ToString();
+        }
+
+        /// <summary>
+        /// Converts this to valid digest string.
+        /// </summary>
+        /// <returns>Returns digest string.</returns>
+        public override string ToString()
+        {
+            var retVal = new StringBuilder();
+            retVal.Append("realm=\"" + m_Realm + "\",");
+            retVal.Append("username=\"" + m_UserName + "\",");
+            if (!string.IsNullOrEmpty(Qop))
+            {
+                retVal.Append("qop=\"" + Qop + "\",");
+            }
+            retVal.Append("nonce=\"" + m_Nonce + "\",");
+            retVal.Append("nc=\"" + NonceCount + "\",");
+            retVal.Append("cnonce=\"" + m_Cnonce + "\",");
+            retVal.Append("response=\"" + Response + "\",");
+            retVal.Append("opaque=\"" + Opaque + "\",");
+            retVal.Append("uri=\"" + Uri + "\"");
+
+            return retVal.ToString();
+        }
+
+        private string H(string value)
+        {
+            return Net_Utils.ComputeMd5(value, true);
+        }
+
+        private string KD(string key, string data)
         {
             // KD(secret, data) = H(concat(secret, ":", data))
 
@@ -422,165 +572,67 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Creates valid nonce value.
+        /// Parses authetication info from client digest response.
         /// </summary>
-        /// <returns>Returns nonce value.</returns>
-        public static string CreateNonce()
+        /// <param name="digestResponse">Client returned digest response.</param>
+        private void Parse(string digestResponse)
         {
-            return Guid.NewGuid().ToString().Replace("-","");
-        }
+            var parameters = TextUtils.SplitQuotedString(digestResponse, ',');
+            foreach (string parameter in parameters)
+            {
+                var name_value = parameter.Split(new[] { '=' }, 2);
+                var name = name_value[0].Trim();
 
-        /// <summary>
-        /// Creates valid opaque value.
-        /// </summary>
-        /// <returns>Renturn opaque value.</returns>
-        public static string CreateOpaque()
-        {
-            return Guid.NewGuid().ToString().Replace("-","");
-        }
-
-        /// <summary>
-        /// Gets or sets request method.
-        /// </summary>
-        public string RequestMethod
-        {
-            get{ return m_Method; }
-
-            set{
-                if(value == null){
-                    value = "";
+                if (name_value.Length == 2)
+                {
+                    if (name.ToLower() == "realm")
+                    {
+                        m_Realm = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "nonce")
+                    {
+                        m_Nonce = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    // RFC bug ?: RFC 2831. digest-uri = "digest-uri" "=" <"> digest-uri-value <">
+                    //            RFC 2617  digest-uri        = "uri" "=" digest-uri-value
+                    else if (name.ToLower() == "uri" || name.ToLower() == "digest-uri")
+                    {
+                        Uri = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "qop")
+                    {
+                        Qop = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "nc")
+                    {
+                        NonceCount = Convert.ToInt32(TextUtils.UnQuoteString(name_value[1]));
+                    }
+                    else if (name.ToLower() == "cnonce")
+                    {
+                        m_Cnonce = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "response")
+                    {
+                        Response = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "opaque")
+                    {
+                        Opaque = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "username")
+                    {
+                        m_UserName = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "algorithm")
+                    {
+                        Algorithm = TextUtils.UnQuoteString(name_value[1]);
+                    }
+                    else if (name.ToLower() == "charset")
+                    {
+                        m_Charset = TextUtils.UnQuoteString(name_value[1]);
+                    }
                 }
-                m_Method = value;
             }
         }
-
-        /// <summary>
-        /// Gets or sets a string to be displayed to users so they know which username and password 
-        /// to use. This string should contain at least the name of the host performing the 
-        /// authentication and might additionally indicate the collection of users who might have access.
-        /// An example might be "registered_users@gotham.news.com".
-        /// </summary>
-        public string Realm
-        {
-            get{ return m_Realm; }
-
-            set{
-                if(value == null){
-                    value = "";
-                }
-                m_Realm = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a server-specified unique data string. It is recommended that this 
-        /// string be base64 or hexadecimal data. 
-        /// Suggested value: base64(time-stamp hex(time-stamp ":" ETag ":" private-key)).
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
-        public string Nonce
-        {
-            get{ return m_Nonce; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Nonce value can't be null or empty !");
-                }
-
-                m_Nonce = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets string of data, specified by the server, which should be returned by the client unchanged.
-        /// It is recommended that this string be base64 or hexadecimal data.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
-        public string Opaque { get; set; } = "";
-
-        /*
-        public bool Stale
-        {
-            get{ return false; }
-        }
-        */
-        
-        /// <summary>
-        /// Gets or sets algorithm to use to produce the digest and a checksum.
-        /// This is normally MD5 or MD5-sess.
-        /// </summary>
-        public string Algorithm { get; set; } = "";
-
-        /// <summary>
-        /// Gets a string of 32 hex digits computed by HTTP digest algorithm, 
-        /// which proves that the user knows a password.
-        /// </summary>
-        public string Response { get; private set; } = "";
-
-        /// <summary>
-        /// Gets or sets user name.
-        /// </summary>
-        public string UserName
-        {
-            get{ return m_UserName; }
-
-            set{
-                if(value == null){
-                    value = "";
-                }
-                m_UserName = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets password.
-        /// </summary>
-        public string Password
-        {
-            get{ return m_Password; }
-
-            set{
-                if(value == null){
-                    value = "";
-                }
-                m_Password = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the URI from Request-URI.
-        /// </summary>
-        public string Uri { get; set; } = "";
-
-        /// <summary>
-        /// Gets or sets value what indicates "quality of protection" the client has applied to
-        /// the message. If present, its value MUST be one of the alternatives the server indicated
-        /// it supports in the WWW-Authenticate header. This directive is optional in order to preserve 
-        /// backward compatibility.
-        /// </summary>
-        public string Qop { get; set; } = "";
-
-        /// <summary>
-        /// Gets or sets Client nonce value. This MUST be specified if a qop directive is sent (see above), and
-        /// MUST NOT be specified if the server did not send a qop directive in the WWW-Authenticate header field.
-        /// </summary>
-        public string CNonce
-        {
-            get{ return m_Cnonce; }
-
-            set{
-                if(value == null){
-                    value = "";
-                }
-                m_Cnonce = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or stets nonce count. This MUST be specified if a qop directive is sent (see above), and
-        /// MUST NOT be specified if the server did not send a qop directive in the WWW-Authenticate 
-        /// header field.  The nc-value is the hexadecimal count of the number of requests.
-        /// </summary>
-        public int NonceCount { get; set; } = 1;
     }
 }

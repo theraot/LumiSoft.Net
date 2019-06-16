@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets mailbox supported flags.
+        /// </summary>
+        public string[] Flags { get; }
+
+        /// <summary>
         /// Parses FLAGS response from exists-response string.
         /// </summary>
         /// <param name="response">Exists response string.</param>
@@ -26,7 +31,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Flags Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -44,7 +50,7 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
             */
 
-            var r = new StringReader(response.Split(new[]{' '},3)[2]);
+            var r = new StringReader(response.Split(new[] { ' ' }, 3)[2]);
 
             return new IMAP_r_u_Flags(r.ReadParenthesized().Split(' '));
         }
@@ -59,8 +65,10 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* FLAGS (");
-            for(int i=0;i<Flags.Length;i++){
-                if(i > 0){
+            for (int i = 0; i < Flags.Length; i++)
+            {
+                if (i > 0)
+                {
                     retVal.Append(" ");
                 }
                 retVal.Append(Flags[i]);
@@ -69,10 +77,5 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets mailbox supported flags.
-        /// </summary>
-        public string[] Flags { get; }
     }
 }

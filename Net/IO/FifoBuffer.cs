@@ -7,10 +7,10 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class FifoBuffer
     {
-        private readonly object m_pLock       = new object();
         private readonly byte[] m_pBuffer;
-        private int    m_ReadOffset;
-        private int    m_WriteOffset;
+        private readonly object m_pLock = new object();
+        private int m_ReadOffset;
+        private int m_WriteOffset;
 
         /// <summary>
         /// Default constructor.
@@ -19,11 +19,40 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentException">Is raised when </exception>
         public FifoBuffer(int maxSize)
         {
-            if(maxSize < 1){
+            if (maxSize < 1)
+            {
                 throw new ArgumentException("Argument 'maxSize' value must be >= 1.");
             }
 
             m_pBuffer = new byte[maxSize];
+        }
+
+        /// <summary>
+        /// Gets number of bytes avialable in FIFO.
+        /// </summary>
+        public int Available
+        {
+            get { return m_WriteOffset - m_ReadOffset; }
+        }
+
+        /// <summary>
+        /// Gets maximum number of bytes can buffer in FIFO.
+        /// </summary>
+        public int MaxSize
+        {
+            get { return m_pBuffer.Length; }
+        }
+
+        /// <summary>
+        /// Clears buffer data.
+        /// </summary>
+        public void Clear()
+        {
+            lock (m_pLock)
+            {
+                m_ReadOffset = 0;
+                m_WriteOffset = 0;
+            }
         }
 
         /// <summary>
@@ -35,25 +64,31 @@ namespace LumiSoft.Net.IO
         /// <returns>Returns number of bytes readed. Returns 0 if no data in the buffer.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of allowed range.</exception>
-        public int Read(byte[] buffer,int offset,int count)
+        public int Read(byte[] buffer, int offset, int count)
         {
-            if(buffer == null){
+            if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
-            }           
-            if(offset < 0){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
             }
-            if(count < 0){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' value must be >= 0.");
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
             }
-            if(offset + count > buffer.Length){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' is bigger than than argument 'buffer' can store.");
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' value must be >= 0.");
+            }
+            if (offset + count > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
             }
 
-            lock(m_pLock){
-                int countToRead = Math.Min(count,m_WriteOffset - m_ReadOffset);
-                if(countToRead > 0){
-                    Array.Copy(m_pBuffer,m_ReadOffset,buffer,offset,countToRead);
+            lock (m_pLock)
+            {
+                int countToRead = Math.Min(count, m_WriteOffset - m_ReadOffset);
+                if (countToRead > 0)
+                {
+                    Array.Copy(m_pBuffer, m_ReadOffset, buffer, offset, countToRead);
                     m_ReadOffset += countToRead;
                 }
 
@@ -71,56 +106,54 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of allowed range.</exception>
         /// <exception cref="DataSizeExceededException">Is raised when ignoreBufferFull = false and FIFO buffer has no room to store data.</exception>
-        public void Write(byte[] buffer,int offset,int count,bool ignoreBufferFull)
+        public void Write(byte[] buffer, int offset, int count, bool ignoreBufferFull)
         {
-            if(buffer == null){
+            if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
-            }        
-            if(offset < 0){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
             }
-            if(count < 0 || (count + offset) > buffer.Length){
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+            }
+            if (count < 0 || (count + offset) > buffer.Length)
+            {
                 throw new ArgumentOutOfRangeException("count");
             }
 
-            lock(m_pLock){
+            lock (m_pLock)
+            {
                 int freeSpace = m_pBuffer.Length - m_WriteOffset;
 
                 // We don't have enough room to store data.
-                if(freeSpace < count){
+                if (freeSpace < count)
+                {
                     TrimStart();
 
                     // Recalculate free space.
                     freeSpace = m_pBuffer.Length - m_WriteOffset;
 
                     // After trim we can store data.
-                    if(freeSpace >= count){
-                        Array.Copy(buffer,offset,m_pBuffer,m_WriteOffset,count);
+                    if (freeSpace >= count)
+                    {
+                        Array.Copy(buffer, offset, m_pBuffer, m_WriteOffset, count);
                         m_WriteOffset += count;
                     }
                     // We have not enough space.
-                    else{
-                        if(!ignoreBufferFull){
+                    else
+                    {
+                        if (!ignoreBufferFull)
+                        {
                             throw new DataSizeExceededException();
                         }
                     }
                 }
                 // Store data to buffer.
-                else{
-                    Array.Copy(buffer,offset,m_pBuffer,m_WriteOffset,count);
+                else
+                {
+                    Array.Copy(buffer, offset, m_pBuffer, m_WriteOffset, count);
                     m_WriteOffset += count;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Clears buffer data.
-        /// </summary>
-        public void Clear()
-        {
-            lock(m_pLock){
-                m_ReadOffset  = 0;
-                m_WriteOffset = 0;
             }
         }
 
@@ -128,30 +161,15 @@ namespace LumiSoft.Net.IO
         /// Removes unused space from the buffer beginning.
         /// </summary>
         private void TrimStart()
-        {            
-            if(m_ReadOffset > 0){
+        {
+            if (m_ReadOffset > 0)
+            {
                 var buffer = new byte[Available];
-                Array.Copy(m_pBuffer,m_ReadOffset,buffer,0,buffer.Length);
-                Array.Copy(buffer,m_pBuffer,buffer.Length);
-                m_ReadOffset  = 0;
+                Array.Copy(m_pBuffer, m_ReadOffset, buffer, 0, buffer.Length);
+                Array.Copy(buffer, m_pBuffer, buffer.Length);
+                m_ReadOffset = 0;
                 m_WriteOffset = buffer.Length;
             }
-        }
-
-        /// <summary>
-        /// Gets maximum number of bytes can buffer in FIFO.
-        /// </summary>
-        public int MaxSize
-        {
-            get{ return m_pBuffer.Length; }
-        }
-
-        /// <summary>
-        /// Gets number of bytes avialable in FIFO.
-        /// </summary>
-        public int Available
-        {
-            get{ return m_WriteOffset - m_ReadOffset; }
         }
     }
 }

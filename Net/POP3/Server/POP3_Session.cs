@@ -16,20 +16,214 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_Session : TCP_ServerSession
     {
-        private readonly Dictionary<string,AUTH_SASL_ServerMechanism>  m_pAuthentications;
-        private bool                                          m_SessionRejected;
-        private int                                           m_BadCommands;
-        private string                                        m_UserName;
-        private GenericIdentity                               m_pUser;
-        private readonly KeyValueCollection<string,POP3_ServerMessage> m_pMessages;
+        private int m_BadCommands;
+        private readonly Dictionary<string, AUTH_SASL_ServerMechanism> m_pAuthentications;
+        private readonly KeyValueCollection<string, POP3_ServerMessage> m_pMessages;
+        private GenericIdentity m_pUser;
+        private bool m_SessionRejected;
+        private string m_UserName;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public POP3_Session()
         {
-            m_pAuthentications = new Dictionary<string,AUTH_SASL_ServerMechanism>(StringComparer.CurrentCultureIgnoreCase);
-            m_pMessages = new KeyValueCollection<string,POP3_ServerMessage>();
+            m_pAuthentications = new Dictionary<string, AUTH_SASL_ServerMechanism>(StringComparer.CurrentCultureIgnoreCase);
+            m_pMessages = new KeyValueCollection<string, POP3_ServerMessage>();
+        }
+
+        /// <summary>
+        /// This event is raised when session needs to authenticate session using USER/PASS POP3 authentication.
+        /// </summary>
+        public event EventHandler<POP3_e_Authenticate> Authenticate;
+
+        /// <summary>
+        /// This event is raised when session needs to delete specified message.
+        /// </summary>
+        public event EventHandler<POP3_e_DeleteMessage> DeleteMessage;
+
+        /// <summary>
+        /// This event is raised when session needs to get mailbox messsages info.
+        /// </summary>
+        public event EventHandler<POP3_e_GetMessagesInfo> GetMessagesInfo;
+
+        /// <summary>
+        /// This event is raised when session needs to get specified message stream.
+        /// </summary>
+        public event EventHandler<POP3_e_GetMessageStream> GetMessageStream;
+
+        /// <summary>
+        /// This event is raised when session needs to get top of the specified message data.
+        /// </summary>
+        public event EventHandler<POP3_e_GetTopOfMessage> GetTopOfMessage;
+
+        /// <summary>
+        /// This event is raised when session is reset by remote user.
+        /// </summary>
+        public event EventHandler Reset;
+
+        /// <summary>
+        /// Is raised when session has started processing and needs to send +OK greeting or -ERR error resposne to the connected client.
+        /// </summary>
+        public event EventHandler<POP3_e_Started> Started;
+
+        /// <summary>
+        /// Gets authenticated user identity or null if user has not authenticated.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override GenericIdentity AuthenticatedUserIdentity
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pUser;
+            }
+        }
+
+        /// <summary>
+        /// Gets supported SASL authentication methods collection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public Dictionary<string, AUTH_SASL_ServerMechanism> Authentications
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAuthentications;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of bad commands happened on POP3 session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public int BadCommands
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_BadCommands;
+            }
+        }
+
+        /// <summary>
+        /// Gets session owner POP3 server.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public new POP3_Server Server
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return (POP3_Server)base.Server;
+            }
+        }
+
+        /// <summary>
+        /// Logs specified text.
+        /// </summary>
+        /// <param name="text">text to log.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>text</b> is null reference.</exception>
+        public void LogAddText(string text)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+
+            // Log
+            if (Server.Logger != null)
+            {
+                Server.Logger.AddText(ID, text);
+            }
+        }
+
+        /// <summary>
+        /// Is called when session has processing error.
+        /// </summary>
+        /// <param name="x">Exception happened.</param>
+        protected override void OnError(Exception x)
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+            if (x == null)
+            {
+                return;
+            }
+
+            /* Error handling:
+                IO and Socket exceptions are permanent, so we must end session.
+            */
+
+            try
+            {
+                LogAddText("Exception: " + x.Message);
+
+                // Permanent error.
+                if (x is IOException || x is SocketException)
+                {
+                    Dispose();
+                }
+                // xxx error, may be temporary.
+                else
+                {
+                    // Raise POP3_Server.Error event.
+                    base.OnError(x);
+
+                    // Try to send "-ERR Internal server error."
+                    try
+                    {
+                        WriteLine("-ERR Internal server error.");
+                    }
+                    catch
+                    {
+                        // Error is permanent.
+                        Dispose();
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        /// This method is called when specified session times out.
+        /// </summary>
+        /// <remarks>
+        /// This method allows inhereted classes to report error message to connected client.
+        /// Session will be disconnected after this method completes.
+        /// </remarks>
+        protected override void OnTimeout()
+        {
+            try
+            {
+                // TODO: ? We should close active message stream.
+
+                WriteLine("-ERR Idle timeout, closing connection.");
+            }
+            catch
+            {
+                // Skip errors.
+            }
         }
 
         /// <summary>
@@ -47,410 +241,37 @@ namespace LumiSoft.Net.POP3.Server
                     S:  +OK POP3 server ready
 
             */
-            
-            try{
+
+            try
+            {
                 string reply = null;
-                if(string.IsNullOrEmpty(Server.GreetingText)){
+                if (string.IsNullOrEmpty(Server.GreetingText))
+                {
                     reply = "+OK [" + Net_Utils.GetLocalHostName(LocalHostName) + "] POP3 Service Ready.";
                 }
-                else{
+                else
+                {
                     reply = "+OK " + Server.GreetingText;
                 }
 
                 var e = OnStarted(reply);
 
-                if (!string.IsNullOrEmpty(e.Response)){
+                if (!string.IsNullOrEmpty(e.Response))
+                {
                     WriteLine(reply.ToString());
                 }
 
                 // Setup rejected flag, so we respond "-ERR Session rejected." any command except QUIT.
-                if(string.IsNullOrEmpty(e.Response) || e.Response.ToUpper().StartsWith("-ERR")){
+                if (string.IsNullOrEmpty(e.Response) || e.Response.ToUpper().StartsWith("-ERR"))
+                {
                     m_SessionRejected = true;
                 }
-                               
+
                 BeginReadCmd();
             }
-            catch(Exception x){
+            catch (Exception x)
+            {
                 OnError(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when session has processing error.
-        /// </summary>
-        /// <param name="x">Exception happened.</param>
-        protected override void OnError(Exception x)
-        {
-            if(IsDisposed){
-                return;
-            }
-            if(x == null){
-                return;
-            }
-
-            /* Error handling:
-                IO and Socket exceptions are permanent, so we must end session.
-            */
-
-            try{
-                LogAddText("Exception: " + x.Message);
-
-                // Permanent error.
-                if(x is IOException || x is SocketException){
-                    Dispose();
-                }
-                // xxx error, may be temporary.
-                else{
-                    // Raise POP3_Server.Error event.
-                    base.OnError(x);
-
-                    // Try to send "-ERR Internal server error."
-                    try{
-                        WriteLine("-ERR Internal server error.");
-                    }
-                    catch{
-                        // Error is permanent.
-                        Dispose();
-                    }
-                }
-            }
-            catch{
-            }
-        }
-
-        /// <summary>
-        /// This method is called when specified session times out.
-        /// </summary>
-        /// <remarks>
-        /// This method allows inhereted classes to report error message to connected client.
-        /// Session will be disconnected after this method completes.
-        /// </remarks>
-        protected override void OnTimeout()
-        {
-            try{
-                // TODO: ? We should close active message stream.
-
-                WriteLine("-ERR Idle timeout, closing connection.");
-            }
-            catch{
-                // Skip errors.
-            }
-        }
-
-        /// <summary>
-        /// Starts reading incoming command from the connected client.
-        /// </summary>
-        private void BeginReadCmd()
-        {
-            if(IsDisposed){
-                return;
-            }
-
-            try{
-                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                // This event is raised only when read next coomand completes asynchronously.
-                readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){                
-                    if(ProcessCmd(readLineOP)){
-                        BeginReadCmd();
-                    }
-                });
-                // Process incoming commands while, command reading completes synchronously.
-                while(TcpStream.ReadLine(readLineOP,true)){
-                    if(!ProcessCmd(readLineOP)){
-                        break;
-                    }
-                }
-            }
-            catch(Exception x){
-                OnError(x);
-            }
-        }
-
-        /// <summary>
-        /// Completes command reading operation.
-        /// </summary>
-        /// <param name="op">Operation.</param>
-        /// <returns>Returns true if server should start reading next command.</returns>
-        private bool ProcessCmd(SmartStream.ReadLineAsyncOP op)
-        {
-            bool readNextCommand = true;
-                        
-            try{
-                // We are already disposed.
-                if(IsDisposed){
-                    return false;
-                }
-                // Check errors.
-                if(op.Error != null){
-                    OnError(op.Error);
-                }
-                // Remote host shut-down(Socket.ShutDown) socket.
-                if(op.BytesInBuffer == 0){
-                    LogAddText("The remote host '" + RemoteEndPoint.ToString() + "' shut down socket.");
-                    Dispose();
-                
-                    return false;
-                }
-                                
-                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new[]{' '},2);
-                var   cmd      = cmd_args[0].ToUpperInvariant();
-                var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
-
-                // Log.
-                if (Server.Logger != null){
-                    // Hide password from log.
-                    if(cmd == "PASS"){
-                        Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,"PASS <***REMOVED***>",LocalEndPoint,RemoteEndPoint);
-                    }
-                    else{
-                        Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,LocalEndPoint,RemoteEndPoint);
-                    }
-                }
-
-                if(cmd == "STLS"){
-                    STLS(args);
-                }
-                else if(cmd == "USER"){
-                    USER(args);
-                }
-                else if(cmd == "PASS"){
-                    PASS(args);
-                }
-                else if(cmd == "PASS"){
-                    PASS(args);
-                }
-                else if(cmd == "AUTH"){
-                    AUTH(args);
-                }
-                else if(cmd == "STAT"){
-                    STAT(args);
-                }
-                else if(cmd == "LIST"){
-                    LIST(args);
-                }
-                else if(cmd == "UIDL"){
-                    UIDL(args);
-                }
-                else if(cmd == "TOP"){
-                    TOP(args);
-                }
-                else if(cmd == "RETR"){
-                    RETR(args);
-                }
-                else if(cmd == "DELE"){
-                    DELE(args);
-                }
-                else if(cmd == "NOOP"){
-                    NOOP(args);
-                }
-                else if(cmd == "RSET"){
-                    RSET(args);
-                }
-                else if(cmd == "DELE"){
-                    DELE(args);
-                }
-                else if(cmd == "CAPA"){
-                    CAPA(args);
-                }
-                else if(cmd == "QUIT"){
-                    QUIT(args);
-                }
-                else{
-                     m_BadCommands++;
-
-                     // Maximum allowed bad commands exceeded.
-                     if(Server.MaxBadCommands != 0 && m_BadCommands > Server.MaxBadCommands){
-                         WriteLine("-ERR Too many bad commands, closing transmission channel.");
-                         Disconnect();
-                         return false;
-                     }
-                            
-                     WriteLine("-ERR Error: command '" + cmd + "' not recognized.");
-                 }
-             }
-             catch(Exception x){
-                 OnError(x);
-             }
-
-             return readNextCommand;
-        }
-
-        private void STLS(string cmdText)
-        {
-            /* RFC 2595 4. POP3 STARTTLS extension.
-                 Arguments: none
-
-                 Restrictions:
-                     Only permitted in AUTHORIZATION state.
-
-                 Discussion:
-                     A TLS negotiation begins immediately after the CRLF at the
-                     end of the +OK response from the server.  A -ERR response
-                     MAY result if a security layer is already active.  Once a
-                     client issues a STLS command, it MUST NOT issue further
-                     commands until a server response is seen and the TLS
-                     negotiation is complete.
-
-                     The STLS command is only permitted in AUTHORIZATION state
-                     and the server remains in AUTHORIZATION state, even if
-                     client credentials are supplied during the TLS negotiation.
-                     The AUTH command [POP-AUTH] with the EXTERNAL mechanism
-                     [SASL] MAY be used to authenticate once TLS client
-                     credentials are successfully exchanged, but servers
-                     supporting the STLS command are not required to support the
-                     EXTERNAL mechanism.
-
-                     Once TLS has been started, the client MUST discard cached
-                     information about server capabilities and SHOULD re-issue
-                     the CAPA command.  This is necessary to protect against
-                     man-in-the-middle attacks which alter the capabilities list
-                     prior to STLS.  The server MAY advertise different
-                     capabilities after STLS.
-
-                 Possible Responses:
-                     +OK -ERR
-
-                 Examples:
-                     C: STLS
-                     S: +OK Begin TLS negotiation
-                     <TLS negotiation, further commands are under TLS layer>
-                       ...
-                     C: STLS
-                     S: -ERR Command not permitted when TLS active
-            */
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(IsAuthenticated){
-                TcpStream.WriteLine("-ERR This ommand is only valid in AUTHORIZATION state (RFC 2595 4).");
-
-                return;
-            }
-            if(IsSecureConnection){
-                WriteLine("-ERR Bad sequence of commands: Connection is already secure.");
-
-                return;
-            }
-            if(Certificate == null){
-                WriteLine("-ERR TLS not available: Server has no SSL certificate.");
-
-                return;
-            }
-
-            WriteLine("+OK Ready to start TLS.");
-
-            try{
-                SwitchToSecure();
-
-                // Log
-                LogAddText("TLS negotiation completed successfully.");
-            }
-            catch(Exception x){
-                // Log
-                LogAddText("TLS negotiation failed: " + x.Message + ".");
-
-                Disconnect();
-            }
-        }
-
-        private void USER(string cmdText)
-        {
-            /* RFC 1939 7. USER
-			    Arguments:
-				    a string identifying a mailbox (required), which is of
-				    significance ONLY to the server
-				
-			    NOTE:
-				    If the POP3 server responds with a positive
-				    status indicator ("+OK"), then the client may issue
-				    either the PASS command to complete the authentication,
-				    or the QUIT command to terminate the POP3 session.			 
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(IsAuthenticated){
-                TcpStream.WriteLine("-ERR Re-authentication error.");
-
-                return;
-            }
-            if(m_UserName != null){
-                TcpStream.WriteLine("-ERR User name already specified.");
-
-                return;
-            }
-
-            m_UserName = cmdText;
-
-            TcpStream.WriteLine("+OK User name OK.");
-        }
-
-        private void PASS(string cmdText)
-        {
-            /* RFC 1939 7. PASS
-			Arguments:
-				a server/mailbox-specific password (required)
-				
-			Restrictions:
-				may only be given in the AUTHORIZATION state immediately
-				after a successful USER command
-				
-			NOTE:
-				When the client issues the PASS command, the POP3 server
-				uses the argument pair from the USER and PASS commands to
-				determine if the client should be given access to the
-				appropriate maildrop.
-				
-			Possible Responses:
-				+OK maildrop locked and ready
-				-ERR invalid password
-				-ERR unable to lock maildrop
-						
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(IsAuthenticated){
-                TcpStream.WriteLine("-ERR Re-authentication error.");
-
-                return;
-            }
-            if(m_UserName == null){
-                TcpStream.WriteLine("-ERR Specify user name first.");
-
-                return;
-            }
-            if(string.IsNullOrEmpty(cmdText)){
-                TcpStream.WriteLine("-ERR Error in arguments.");
-
-                return;
-            }
-                        
-            var e = OnAuthenticate(m_UserName,cmdText);
-            if (e.IsAuthenticated){
-                m_pUser = new GenericIdentity(m_UserName,"POP3-USER/PASS");
-
-                // Get mailbox messages.
-                var eMessages = OnGetMessagesInfo();
-                int seqNo = 1;
-                foreach(POP3_ServerMessage message in eMessages.Messages){
-                    message.SequenceNumber = seqNo++;
-                    m_pMessages.Add(message.UID,message);
-                }
-
-                TcpStream.WriteLine("+OK Authenticated successfully.");                
-            }
-            else{
-                TcpStream.WriteLine("-ERR Authentication failed.");
             }
         }
 
@@ -543,12 +364,14 @@ namespace LumiSoft.Net.POP3.Server
 			 
 			*/
 
-            if(m_SessionRejected){
+            if (m_SessionRejected)
+            {
                 WriteLine("-ERR Bad sequence of commands: Session rejected.");
 
                 return;
             }
-            if(IsAuthenticated){
+            if (IsAuthenticated)
+            {
                 TcpStream.WriteLine("-ERR Re-authentication error.");
 
                 return;
@@ -565,10 +388,12 @@ namespace LumiSoft.Net.POP3.Server
                 
                 http://msdn.microsoft.com/en-us/library/cc239199.aspx
             */
-            if (string.IsNullOrEmpty(mechanism)){
+            if (string.IsNullOrEmpty(mechanism))
+            {
                 var resp = new StringBuilder();
                 resp.Append("+OK\r\n");
-                foreach(AUTH_SASL_ServerMechanism m in m_pAuthentications.Values){
+                foreach (AUTH_SASL_ServerMechanism m in m_pAuthentications.Values)
+                {
                     resp.Append(m.Name + "\r\n");
                 }
                 resp.Append(".\r\n");
@@ -578,7 +403,8 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            if(!Authentications.ContainsKey(mechanism)){
+            if (!Authentications.ContainsKey(mechanism))
+            {
                 WriteLine("-ERR Not supported authentication mechanism.");
                 return;
             }
@@ -586,24 +412,29 @@ namespace LumiSoft.Net.POP3.Server
             var clientResponse = new byte[0];
             var auth = Authentications[mechanism];
             auth.Reset();
-            while(true){
+            while (true)
+            {
                 var serverResponse = auth.Continue(clientResponse);
                 // Authentication completed.
-                if (auth.IsCompleted){
-                    if(auth.IsAuthenticated){
-                        m_pUser = new GenericIdentity(auth.UserName,"SASL-" + auth.Name);
+                if (auth.IsCompleted)
+                {
+                    if (auth.IsAuthenticated)
+                    {
+                        m_pUser = new GenericIdentity(auth.UserName, "SASL-" + auth.Name);
 
                         // Get mailbox messages.
                         var eMessages = OnGetMessagesInfo();
                         int seqNo = 1;
-                        foreach(POP3_ServerMessage message in eMessages.Messages){
+                        foreach (POP3_ServerMessage message in eMessages.Messages)
+                        {
                             message.SequenceNumber = seqNo++;
-                            m_pMessages.Add(message.UID,message);
+                            m_pMessages.Add(message.UID, message);
                         }
 
                         WriteLine("+OK Authentication succeeded.");
                     }
-                    else{
+                    else
+                    {
                         WriteLine("-ERR Authentication credentials invalid.");
                     }
                     break;
@@ -611,521 +442,82 @@ namespace LumiSoft.Net.POP3.Server
                 // Authentication continues.
 
                 // Send server challange.
-                if(serverResponse.Length == 0){
+                if (serverResponse.Length == 0)
+                {
                     WriteLine("+ ");
                 }
-                else{
+                else
+                {
                     WriteLine("+ " + Convert.ToBase64String(serverResponse));
                 }
 
                 // Read client response. 
-                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                TcpStream.ReadLine(readLineOP,false);
-                if(readLineOP.Error != null){
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
+                TcpStream.ReadLine(readLineOP, false);
+                if (readLineOP.Error != null)
+                {
                     throw readLineOP.Error;
                 }
                 // Log
-                if(Server.Logger != null){
-                    Server.Logger.AddRead(ID,AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",LocalEndPoint,RemoteEndPoint);
+                if (Server.Logger != null)
+                {
+                    Server.Logger.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
                 }
 
                 // Client canceled authentication.
-                if(readLineOP.LineUtf8 == "*"){
+                if (readLineOP.LineUtf8 == "*")
+                {
                     WriteLine("-ERR Authentication canceled.");
                     return;
                 }
                 // We have base64 client response, decode it.
 
-                try{
+                try
+                {
                     clientResponse = Convert.FromBase64String(readLineOP.LineUtf8);
                 }
-                catch{
+                catch
+                {
                     WriteLine("-ERR Invalid client response '" + clientResponse + "'.");
                     return;
                 }
             }
         }
 
-        private void STAT(string cmdText)
+        /// <summary>
+        /// Starts reading incoming command from the connected client.
+        /// </summary>
+        private void BeginReadCmd()
         {
-            /* RFC 1939 5. STAT
-			NOTE:
-				The positive response consists of "+OK" followed by a single
-				space, the number of messages in the maildrop, a single
-				space, and the size of the maildrop in octets.
-				
-				Note that messages marked as deleted are not counted in
-				either total.
-			 
-			Example:
-				C: STAT
-				S: +OK 2 320
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
+            if (IsDisposed)
+            {
                 return;
             }
 
-            // Calculate count and total size in bytes, exclude marked for deletion messages.
-            int count = 0;
-            int size  = 0;
-            foreach(POP3_ServerMessage msg in m_pMessages){
-                if(!msg.IsMarkedForDeletion){
-                    count++;
-                    size += msg.Size;
-                }
-            }
-
-            WriteLine("+OK " + count + " " + size);
-        }
-
-        private void LIST(string cmdText)
-        {
-            /* RFC 1939 5. LIST
-			Arguments:
-				a message-number (optional), which, if present, may NOT
-				refer to a message marked as deleted
-			 
-			NOTE:
-				If an argument was given and the POP3 server issues a
-				positive response with a line containing information for
-				that message.
-
-				If no argument was given and the POP3 server issues a
-				positive response, then the response given is multi-line.
-				
-				Note that messages marked as deleted are not listed.
-			
-			Examples:
-				C: LIST
-				S: +OK 2 messages (320 octets)
-				S: 1 120				
-				S: 2 200
-				S: .
-				...
-				C: LIST 2
-				S: +OK 2 200
-				...
-				C: LIST 3
-				S: -ERR no such message, only 2 messages in maildrop
-			 
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            var args = cmdText.Split(' ');
-
-            // List whole mailbox.
-            if (string.IsNullOrEmpty(cmdText)){
-                // Calculate count and total size in bytes, exclude marked for deletion messages.
-                int count = 0;
-                int size  = 0;
-                foreach(POP3_ServerMessage msg in m_pMessages){
-                    if(!msg.IsMarkedForDeletion){
-                        count++;
-                        size += msg.Size;
+            try
+            {
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
+                // This event is raised only when read next coomand completes asynchronously.
+                readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate (object sender, EventArgs<SmartStream.ReadLineAsyncOP> e)
+                {
+                    if (ProcessCmd(readLineOP))
+                    {
+                        BeginReadCmd();
                     }
-                }
-
-                var response = new StringBuilder();
-                response.Append("+OK " + count + " messages (" + size + " bytes).\r\n");
-                foreach(POP3_ServerMessage msg in m_pMessages){
-                    response.Append(msg.SequenceNumber + " " + msg.Size + "\r\n");
-                }
-                response.Append(".");
-
-                 WriteLine(response.ToString());
-            }
-            // Single message info listing.
-            else{
-                if(args.Length > 1 || !Net_Utils.IsInteger(args[0])){
-                    WriteLine("-ERR Error in arguments.");
-
-                    return;
-                }
-
-                POP3_ServerMessage msg = null;
-                if(m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1,out msg)){
-                    // Block messages marked for deletion.
-                    if(msg.IsMarkedForDeletion){
-                        WriteLine("-ERR Invalid operation: Message marked for deletion.");
-
-                        return;
-                    }
-
-                    WriteLine("+OK " + msg.SequenceNumber + " " + msg.Size);
-                }
-                else{
-                    WriteLine("-ERR no such message or message marked for deletion.");
-                }
-            }
-        }
-
-        private void UIDL(string cmdText)
-        {
-            /* RFC 1939 UIDL [msg]
-			Arguments:
-			    a message-number (optional), which, if present, may NOT
-				refer to a message marked as deleted
-				
-			NOTE:
-				If an argument was given and the POP3 server issues a positive
-				response with a line containing information for that message.
-
-				If no argument was given and the POP3 server issues a positive
-				response, then the response given is multi-line.  After the
-				initial +OK, for each message in the maildrop, the POP3 server
-				responds with a line containing information for that message.	
-				
-			Examples:
-				C: UIDL
-				S: +OK
-				S: 1 whqtswO00WBw418f9t5JxYwZ
-				S: 2 QhdPYR:00WBw1Ph7x7
-				S: .
-				...
-				C: UIDL 2
-				S: +OK 2 QhdPYR:00WBw1Ph7x7
-				...
-				C: UIDL 3
-				S: -ERR no such message
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            var args = cmdText.Split(' ');
-
-            // List whole mailbox.
-            if (string.IsNullOrEmpty(cmdText)){
-                // Calculate count and total size in bytes, exclude marked for deletion messages.
-                int count = 0;
-                int size  = 0;
-                foreach(POP3_ServerMessage msg in m_pMessages){
-                    if(!msg.IsMarkedForDeletion){
-                        count++;
-                        size += msg.Size;
-                    }
-                }
-
-                var response = new StringBuilder();
-                response.Append("+OK " + count + " messages (" + size + " bytes).\r\n");
-                foreach(POP3_ServerMessage msg in m_pMessages){
-                    response.Append(msg.SequenceNumber + " " + msg.UID + "\r\n");
-                }
-                response.Append(".");
-
-                 WriteLine(response.ToString());
-            }
-            // Single message info listing.
-            else{
-                if(args.Length > 1){
-                    WriteLine("-ERR Error in arguments.");
-
-                    return;
-                }
-
-                POP3_ServerMessage msg = null;
-                if(m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1,out msg)){
-                    // Block messages marked for deletion.
-                    if(msg.IsMarkedForDeletion){
-                        WriteLine("-ERR Invalid operation: Message marked for deletion.");
-
-                        return;
-                    }
-
-                    WriteLine("+OK " + msg.SequenceNumber + " " + msg.UID);
-                }
-                else{
-                    WriteLine("-ERR no such message or message marked for deletion.");
-                }
-            }
-        }
-
-        private void TOP(string cmdText)
-        {
-            /* RFC 1939 7. TOP
-			    Arguments:
-				    a message-number (required) which may NOT refer to to a
-				    message marked as deleted, and a non-negative number
-				    of lines (required)
-		
-			    NOTE:
-				    If the POP3 server issues a positive response, then the
-				    response given is multi-line.  After the initial +OK, the
-				    POP3 server sends the headers of the message, the blank
-				    line separating the headers from the body, and then the
-				    number of lines of the indicated message's body, being
-				    careful to byte-stuff the termination character (as with
-				    all multi-line responses).
-			
-			    Examples:
-				    C: TOP 1 10
-				    S: +OK
-				    S: <the POP3 server sends the headers of the
-					    message, a blank line, and the first 10 lines
-					    of the body of the message>
-				    S: .
-                    ...
-				    C: TOP 100 3
-				    S: -ERR no such message
-			 
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            var args = cmdText.Split(' ');
-
-            if (args.Length != 2 || !Net_Utils.IsInteger(args[0]) || !Net_Utils.IsInteger(args[1])){
-                WriteLine("-ERR Error in arguments.");
-
-                return;
-            }
-
-            POP3_ServerMessage msg = null;
-            if(m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1,out msg)){
-                // Block messages marked for deletion.
-                if(msg.IsMarkedForDeletion){
-                    WriteLine("-ERR Invalid operation: Message marked for deletion.");
-
-                    return;
-                }
-
-                var e = OnGetTopOfMessage(msg,Convert.ToInt32(args[1]));
-
-                // User didn't provide us message stream, assume that message deleted(for example by IMAP during this POP3 session).
-                if (e.Data == null){
-                    WriteLine("-ERR no such message.");
-                }
-                else{
-                    WriteLine("+OK Start sending top of message.");
-
-                    long countWritten = TcpStream.WritePeriodTerminated(new MemoryStream(e.Data));
-
-                    // Log.
-                    if(Server.Logger != null){
-                        Server.Logger.AddWrite(ID,AuthenticatedUserIdentity,countWritten,"Wrote top of message(" + countWritten + " bytes).",LocalEndPoint,RemoteEndPoint);
+                });
+                // Process incoming commands while, command reading completes synchronously.
+                while (TcpStream.ReadLine(readLineOP, true))
+                {
+                    if (!ProcessCmd(readLineOP))
+                    {
+                        break;
                     }
                 }
             }
-            else{
-                WriteLine("-ERR no such message.");
+            catch (Exception x)
+            {
+                OnError(x);
             }
-        }
-
-        private void RETR(string cmdText)
-        {
-            /* RFC 1939 5. RETR
-			    Arguments:
-				    a message-number (required) which may NOT refer to a
-				    message marked as deleted
-			 
-			    NOTE:
-				    If the POP3 server issues a positive response, then the
-				    response given is multi-line.  After the initial +OK, the
-				    POP3 server sends the message corresponding to the given
-				    message-number, being careful to byte-stuff the termination
-				    character (as with all multi-line responses).
-				
-			    Example:
-				    C: RETR 1
-				    S: +OK 120 octets
-				    S: <the POP3 server sends the entire message here>
-				    S: .
-			
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            var args = cmdText.Split(' ');
-
-            if (args.Length != 1 || !Net_Utils.IsInteger(args[0])){
-                WriteLine("-ERR Error in arguments.");
-
-                return;
-            }
-
-            POP3_ServerMessage msg = null;
-            if(m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1,out msg)){
-                // Block messages marked for deletion.
-                if(msg.IsMarkedForDeletion){
-                    WriteLine("-ERR Invalid operation: Message marked for deletion.");
-
-                    return;
-                }
-
-                var e = OnGetMessageStream(msg);
-
-                // User didn't provide us message stream, assume that message deleted(for example by IMAP during this POP3 session).
-                if (e.MessageStream == null){
-                    WriteLine("-ERR no such message.");
-                }
-                else{
-                    try{
-                        WriteLine("+OK Start sending message.");
-
-                        long countWritten = TcpStream.WritePeriodTerminated(e.MessageStream);
-
-                        // Log.
-                        if(Server.Logger != null){
-                            Server.Logger.AddWrite(ID,AuthenticatedUserIdentity,countWritten,"Wrote message(" + countWritten + " bytes).",LocalEndPoint,RemoteEndPoint);
-                        }
-                    }
-                    finally{
-                        // Close message stream if CloseStream = true.
-                        if(e.CloseMessageStream){
-                            e.MessageStream.Dispose();
-                        }
-                    }                    
-                }
-            }
-            else{
-                WriteLine("-ERR no such message.");
-            }
-        }
-
-        private void DELE(string cmdText)
-        {
-            /* RFC 1939 5. DELE
-			    Arguments:
-				    a message-number (required) which may NOT refer to a
-				    message marked as deleted
-			 
-			    NOTE:
-				    The POP3 server marks the message as deleted.  Any future
-				    reference to the message-number associated with the message
-				    in a POP3 command generates an error.  The POP3 server does
-				    not actually delete the message until the POP3 session
-				    enters the UPDATE state.
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            var args = cmdText.Split(' ');
-
-            if (args.Length != 1 || !Net_Utils.IsInteger(args[0])){
-                WriteLine("-ERR Error in arguments.");
-
-                return;
-            }
-
-            POP3_ServerMessage msg = null;
-            if(m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1,out msg)){  
-                if(!msg.IsMarkedForDeletion){
-                    msg.SetIsMarkedForDeletion(true);
-
-                    WriteLine("+OK Message marked for deletion.");
-                }
-                else{
-                    WriteLine("-ERR Message already marked for deletion.");
-                }
-            }
-            else{
-                WriteLine("-ERR no such message.");
-            }
-        }
-
-        private void NOOP(string cmdText)
-        {
-            /* RFC 1939 5. NOOP
-			    NOTE:
-				    The POP3 server does nothing, it merely replies with a
-				    positive response.
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            WriteLine("+OK");
-        }
-
-        private void RSET(string cmdText)
-        {
-            /* RFC 1939 5. RSET
-			Discussion:
-				If any messages have been marked as deleted by the POP3
-				server, they are unmarked.  The POP3 server then replies
-				with a positive response.
-			*/
-
-            if(m_SessionRejected){
-                WriteLine("-ERR Bad sequence of commands: Session rejected.");
-
-                return;
-            }
-            if(!IsAuthenticated){
-                WriteLine("-ERR Authentication required.");
-
-                return;
-            }
-
-            // Unmark messages marked for deletion.
-            foreach(POP3_ServerMessage msg in m_pMessages){
-                msg.SetIsMarkedForDeletion(false);
-            }
-
-            WriteLine("+OK");
-
-            OnReset();
         }
 
         private void CAPA(string cmdText)
@@ -1202,7 +594,8 @@ namespace LumiSoft.Net.POP3.Server
 						S: .
 			*/
 
-            if(m_SessionRejected){
+            if (m_SessionRejected)
+            {
                 WriteLine("-ERR Bad sequence of commands: Session rejected.");
 
                 return;
@@ -1210,27 +603,528 @@ namespace LumiSoft.Net.POP3.Server
 
             var capaResponse = new StringBuilder();
             capaResponse.Append("+OK Capability list follows\r\n");
-			capaResponse.Append("PIPELINING\r\n");
-			capaResponse.Append("UIDL\r\n");
-			capaResponse.Append("TOP\r\n");
+            capaResponse.Append("PIPELINING\r\n");
+            capaResponse.Append("UIDL\r\n");
+            capaResponse.Append("TOP\r\n");
 
             var sasl = new StringBuilder();
-            foreach (AUTH_SASL_ServerMechanism authMechanism in Authentications.Values){
-                if(!authMechanism.RequireSSL || (authMechanism.RequireSSL && IsSecureConnection)){
+            foreach (AUTH_SASL_ServerMechanism authMechanism in Authentications.Values)
+            {
+                if (!authMechanism.RequireSSL || (authMechanism.RequireSSL && IsSecureConnection))
+                {
                     sasl.Append(authMechanism.Name + " ");
                 }
             }
-            if(sasl.Length > 0){
+            if (sasl.Length > 0)
+            {
                 capaResponse.Append("SASL " + sasl.ToString().Trim() + "\r\n");
             }
 
-            if(!IsSecureConnection && Certificate != null){
+            if (!IsSecureConnection && Certificate != null)
+            {
                 capaResponse.Append("STLS\r\n");
             }
 
-			capaResponse.Append(".");
+            capaResponse.Append(".");
 
             WriteLine(capaResponse.ToString());
+        }
+
+        private void DELE(string cmdText)
+        {
+            /* RFC 1939 5. DELE
+			    Arguments:
+				    a message-number (required) which may NOT refer to a
+				    message marked as deleted
+			 
+			    NOTE:
+				    The POP3 server marks the message as deleted.  Any future
+				    reference to the message-number associated with the message
+				    in a POP3 command generates an error.  The POP3 server does
+				    not actually delete the message until the POP3 session
+				    enters the UPDATE state.
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            var args = cmdText.Split(' ');
+
+            if (args.Length != 1 || !Net_Utils.IsInteger(args[0]))
+            {
+                WriteLine("-ERR Error in arguments.");
+
+                return;
+            }
+
+            POP3_ServerMessage msg = null;
+            if (m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1, out msg))
+            {
+                if (!msg.IsMarkedForDeletion)
+                {
+                    msg.SetIsMarkedForDeletion(true);
+
+                    WriteLine("+OK Message marked for deletion.");
+                }
+                else
+                {
+                    WriteLine("-ERR Message already marked for deletion.");
+                }
+            }
+            else
+            {
+                WriteLine("-ERR no such message.");
+            }
+        }
+
+        private void LIST(string cmdText)
+        {
+            /* RFC 1939 5. LIST
+			Arguments:
+				a message-number (optional), which, if present, may NOT
+				refer to a message marked as deleted
+			 
+			NOTE:
+				If an argument was given and the POP3 server issues a
+				positive response with a line containing information for
+				that message.
+
+				If no argument was given and the POP3 server issues a
+				positive response, then the response given is multi-line.
+				
+				Note that messages marked as deleted are not listed.
+			
+			Examples:
+				C: LIST
+				S: +OK 2 messages (320 octets)
+				S: 1 120				
+				S: 2 200
+				S: .
+				...
+				C: LIST 2
+				S: +OK 2 200
+				...
+				C: LIST 3
+				S: -ERR no such message, only 2 messages in maildrop
+			 
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            var args = cmdText.Split(' ');
+
+            // List whole mailbox.
+            if (string.IsNullOrEmpty(cmdText))
+            {
+                // Calculate count and total size in bytes, exclude marked for deletion messages.
+                int count = 0;
+                int size = 0;
+                foreach (POP3_ServerMessage msg in m_pMessages)
+                {
+                    if (!msg.IsMarkedForDeletion)
+                    {
+                        count++;
+                        size += msg.Size;
+                    }
+                }
+
+                var response = new StringBuilder();
+                response.Append("+OK " + count + " messages (" + size + " bytes).\r\n");
+                foreach (POP3_ServerMessage msg in m_pMessages)
+                {
+                    response.Append(msg.SequenceNumber + " " + msg.Size + "\r\n");
+                }
+                response.Append(".");
+
+                WriteLine(response.ToString());
+            }
+            // Single message info listing.
+            else
+            {
+                if (args.Length > 1 || !Net_Utils.IsInteger(args[0]))
+                {
+                    WriteLine("-ERR Error in arguments.");
+
+                    return;
+                }
+
+                POP3_ServerMessage msg = null;
+                if (m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1, out msg))
+                {
+                    // Block messages marked for deletion.
+                    if (msg.IsMarkedForDeletion)
+                    {
+                        WriteLine("-ERR Invalid operation: Message marked for deletion.");
+
+                        return;
+                    }
+
+                    WriteLine("+OK " + msg.SequenceNumber + " " + msg.Size);
+                }
+                else
+                {
+                    WriteLine("-ERR no such message or message marked for deletion.");
+                }
+            }
+        }
+
+        private void NOOP(string cmdText)
+        {
+            /* RFC 1939 5. NOOP
+			    NOTE:
+				    The POP3 server does nothing, it merely replies with a
+				    positive response.
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            WriteLine("+OK");
+        }
+
+        /// <summary>
+        /// Raises <b>Authenticate</b> event.
+        /// </summary>
+        /// <param name="user">User name.</param>
+        /// <param name="password">Password.</param>
+        /// <returns>Returns event args.</returns>
+        private POP3_e_Authenticate OnAuthenticate(string user, string password)
+        {
+            var eArgs = new POP3_e_Authenticate(user, password);
+
+            if (Authenticate != null)
+            {
+                Authenticate(this, eArgs);
+            }
+
+            return eArgs;
+        }
+
+        /// <summary>
+        /// Raises <b>DeleteMessage</b> event.
+        /// </summary>
+        /// <param name="message">Message to delete.</param>
+        private void OnDeleteMessage(POP3_ServerMessage message)
+        {
+            if (DeleteMessage != null)
+            {
+                DeleteMessage(this, new POP3_e_DeleteMessage(message));
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>GetMessagesInfo</b> event.
+        /// </summary>
+        /// <returns>Returns event args.</returns>
+        private POP3_e_GetMessagesInfo OnGetMessagesInfo()
+        {
+            var eArgs = new POP3_e_GetMessagesInfo();
+
+            if (GetMessagesInfo != null)
+            {
+                GetMessagesInfo(this, eArgs);
+            }
+
+            return eArgs;
+        }
+
+        /// <summary>
+        /// Raises <b>GetMessageStream</b> event.
+        /// </summary>
+        /// <param name="message">Message stream to get.</param>
+        /// <returns>Returns event arguments.</returns>
+        private POP3_e_GetMessageStream OnGetMessageStream(POP3_ServerMessage message)
+        {
+            var eArgs = new POP3_e_GetMessageStream(message);
+
+            if (GetMessageStream != null)
+            {
+                GetMessageStream(this, eArgs);
+            }
+
+            return eArgs;
+        }
+
+        /// <summary>
+        /// Raises <b>GetTopOfMessage</b> event.
+        /// </summary>
+        /// <param name="message">Message which top data to get.</param>
+        /// <param name="lines">Number of message-body lines to get.</param>
+        /// <returns>Returns event args.</returns>
+        private POP3_e_GetTopOfMessage OnGetTopOfMessage(POP3_ServerMessage message, int lines)
+        {
+            var eArgs = new POP3_e_GetTopOfMessage(message, lines);
+
+            if (GetTopOfMessage != null)
+            {
+                GetTopOfMessage(this, eArgs);
+            }
+
+            return eArgs;
+        }
+
+        /// <summary>
+        /// Raises <b>Reset</b> event.
+        /// </summary>
+        private void OnReset()
+        {
+            if (Reset != null)
+            {
+                Reset(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>Started</b> event.
+        /// </summary>
+        /// <param name="reply">Default POP3 server reply.</param>
+        /// <returns>Returns event args.</returns>
+        private POP3_e_Started OnStarted(string reply)
+        {
+            var eArgs = new POP3_e_Started(reply);
+
+            if (Started != null)
+            {
+                Started(this, eArgs);
+            }
+
+            return eArgs;
+        }
+
+        private void PASS(string cmdText)
+        {
+            /* RFC 1939 7. PASS
+			Arguments:
+				a server/mailbox-specific password (required)
+				
+			Restrictions:
+				may only be given in the AUTHORIZATION state immediately
+				after a successful USER command
+				
+			NOTE:
+				When the client issues the PASS command, the POP3 server
+				uses the argument pair from the USER and PASS commands to
+				determine if the client should be given access to the
+				appropriate maildrop.
+				
+			Possible Responses:
+				+OK maildrop locked and ready
+				-ERR invalid password
+				-ERR unable to lock maildrop
+						
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (IsAuthenticated)
+            {
+                TcpStream.WriteLine("-ERR Re-authentication error.");
+
+                return;
+            }
+            if (m_UserName == null)
+            {
+                TcpStream.WriteLine("-ERR Specify user name first.");
+
+                return;
+            }
+            if (string.IsNullOrEmpty(cmdText))
+            {
+                TcpStream.WriteLine("-ERR Error in arguments.");
+
+                return;
+            }
+
+            var e = OnAuthenticate(m_UserName, cmdText);
+            if (e.IsAuthenticated)
+            {
+                m_pUser = new GenericIdentity(m_UserName, "POP3-USER/PASS");
+
+                // Get mailbox messages.
+                var eMessages = OnGetMessagesInfo();
+                int seqNo = 1;
+                foreach (POP3_ServerMessage message in eMessages.Messages)
+                {
+                    message.SequenceNumber = seqNo++;
+                    m_pMessages.Add(message.UID, message);
+                }
+
+                TcpStream.WriteLine("+OK Authenticated successfully.");
+            }
+            else
+            {
+                TcpStream.WriteLine("-ERR Authentication failed.");
+            }
+        }
+
+        /// <summary>
+        /// Completes command reading operation.
+        /// </summary>
+        /// <param name="op">Operation.</param>
+        /// <returns>Returns true if server should start reading next command.</returns>
+        private bool ProcessCmd(SmartStream.ReadLineAsyncOP op)
+        {
+            bool readNextCommand = true;
+
+            try
+            {
+                // We are already disposed.
+                if (IsDisposed)
+                {
+                    return false;
+                }
+                // Check errors.
+                if (op.Error != null)
+                {
+                    OnError(op.Error);
+                }
+                // Remote host shut-down(Socket.ShutDown) socket.
+                if (op.BytesInBuffer == 0)
+                {
+                    LogAddText("The remote host '" + RemoteEndPoint.ToString() + "' shut down socket.");
+                    Dispose();
+
+                    return false;
+                }
+
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer, 0, op.LineBytesInBuffer).Split(new[] { ' ' }, 2);
+                var cmd = cmd_args[0].ToUpperInvariant();
+                var args = cmd_args.Length == 2 ? cmd_args[1] : "";
+
+                // Log.
+                if (Server.Logger != null)
+                {
+                    // Hide password from log.
+                    if (cmd == "PASS")
+                    {
+                        Server.Logger.AddRead(ID, AuthenticatedUserIdentity, op.BytesInBuffer, "PASS <***REMOVED***>", LocalEndPoint, RemoteEndPoint);
+                    }
+                    else
+                    {
+                        Server.Logger.AddRead(ID, AuthenticatedUserIdentity, op.BytesInBuffer, op.LineUtf8, LocalEndPoint, RemoteEndPoint);
+                    }
+                }
+
+                if (cmd == "STLS")
+                {
+                    STLS(args);
+                }
+                else if (cmd == "USER")
+                {
+                    USER(args);
+                }
+                else if (cmd == "PASS")
+                {
+                    PASS(args);
+                }
+                else if (cmd == "PASS")
+                {
+                    PASS(args);
+                }
+                else if (cmd == "AUTH")
+                {
+                    AUTH(args);
+                }
+                else if (cmd == "STAT")
+                {
+                    STAT(args);
+                }
+                else if (cmd == "LIST")
+                {
+                    LIST(args);
+                }
+                else if (cmd == "UIDL")
+                {
+                    UIDL(args);
+                }
+                else if (cmd == "TOP")
+                {
+                    TOP(args);
+                }
+                else if (cmd == "RETR")
+                {
+                    RETR(args);
+                }
+                else if (cmd == "DELE")
+                {
+                    DELE(args);
+                }
+                else if (cmd == "NOOP")
+                {
+                    NOOP(args);
+                }
+                else if (cmd == "RSET")
+                {
+                    RSET(args);
+                }
+                else if (cmd == "DELE")
+                {
+                    DELE(args);
+                }
+                else if (cmd == "CAPA")
+                {
+                    CAPA(args);
+                }
+                else if (cmd == "QUIT")
+                {
+                    QUIT(args);
+                }
+                else
+                {
+                    m_BadCommands++;
+
+                    // Maximum allowed bad commands exceeded.
+                    if (Server.MaxBadCommands != 0 && m_BadCommands > Server.MaxBadCommands)
+                    {
+                        WriteLine("-ERR Too many bad commands, closing transmission channel.");
+                        Disconnect();
+                        return false;
+                    }
+
+                    WriteLine("-ERR Error: command '" + cmd + "' not recognized.");
+                }
+            }
+            catch (Exception x)
+            {
+                OnError(x);
+            }
+
+            return readNextCommand;
         }
 
         private void QUIT(string cmdText)
@@ -1259,22 +1153,510 @@ namespace LumiSoft.Net.POP3.Server
 				and closes the TCP connection.
 			*/
 
-            try{                
-                if(IsAuthenticated){
+            try
+            {
+                if (IsAuthenticated)
+                {
                     // Delete messages marked for deletion.
-                    foreach(POP3_ServerMessage msg in m_pMessages){
-                        if(msg.IsMarkedForDeletion){
+                    foreach (POP3_ServerMessage msg in m_pMessages)
+                    {
+                        if (msg.IsMarkedForDeletion)
+                        {
                             OnDeleteMessage(msg);
                         }
                     }
                 }
 
-                WriteLine("+OK <" + Net_Utils.GetLocalHostName(LocalHostName) + "> Service closing transmission channel.");                
+                WriteLine("+OK <" + Net_Utils.GetLocalHostName(LocalHostName) + "> Service closing transmission channel.");
             }
-            catch{
+            catch
+            {
             }
             Disconnect();
             Dispose();
+        }
+
+        private void RETR(string cmdText)
+        {
+            /* RFC 1939 5. RETR
+			    Arguments:
+				    a message-number (required) which may NOT refer to a
+				    message marked as deleted
+			 
+			    NOTE:
+				    If the POP3 server issues a positive response, then the
+				    response given is multi-line.  After the initial +OK, the
+				    POP3 server sends the message corresponding to the given
+				    message-number, being careful to byte-stuff the termination
+				    character (as with all multi-line responses).
+				
+			    Example:
+				    C: RETR 1
+				    S: +OK 120 octets
+				    S: <the POP3 server sends the entire message here>
+				    S: .
+			
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            var args = cmdText.Split(' ');
+
+            if (args.Length != 1 || !Net_Utils.IsInteger(args[0]))
+            {
+                WriteLine("-ERR Error in arguments.");
+
+                return;
+            }
+
+            POP3_ServerMessage msg = null;
+            if (m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1, out msg))
+            {
+                // Block messages marked for deletion.
+                if (msg.IsMarkedForDeletion)
+                {
+                    WriteLine("-ERR Invalid operation: Message marked for deletion.");
+
+                    return;
+                }
+
+                var e = OnGetMessageStream(msg);
+
+                // User didn't provide us message stream, assume that message deleted(for example by IMAP during this POP3 session).
+                if (e.MessageStream == null)
+                {
+                    WriteLine("-ERR no such message.");
+                }
+                else
+                {
+                    try
+                    {
+                        WriteLine("+OK Start sending message.");
+
+                        long countWritten = TcpStream.WritePeriodTerminated(e.MessageStream);
+
+                        // Log.
+                        if (Server.Logger != null)
+                        {
+                            Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, "Wrote message(" + countWritten + " bytes).", LocalEndPoint, RemoteEndPoint);
+                        }
+                    }
+                    finally
+                    {
+                        // Close message stream if CloseStream = true.
+                        if (e.CloseMessageStream)
+                        {
+                            e.MessageStream.Dispose();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                WriteLine("-ERR no such message.");
+            }
+        }
+
+        private void RSET(string cmdText)
+        {
+            /* RFC 1939 5. RSET
+			Discussion:
+				If any messages have been marked as deleted by the POP3
+				server, they are unmarked.  The POP3 server then replies
+				with a positive response.
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            // Unmark messages marked for deletion.
+            foreach (POP3_ServerMessage msg in m_pMessages)
+            {
+                msg.SetIsMarkedForDeletion(false);
+            }
+
+            WriteLine("+OK");
+
+            OnReset();
+        }
+
+        private void STAT(string cmdText)
+        {
+            /* RFC 1939 5. STAT
+			NOTE:
+				The positive response consists of "+OK" followed by a single
+				space, the number of messages in the maildrop, a single
+				space, and the size of the maildrop in octets.
+				
+				Note that messages marked as deleted are not counted in
+				either total.
+			 
+			Example:
+				C: STAT
+				S: +OK 2 320
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            // Calculate count and total size in bytes, exclude marked for deletion messages.
+            int count = 0;
+            int size = 0;
+            foreach (POP3_ServerMessage msg in m_pMessages)
+            {
+                if (!msg.IsMarkedForDeletion)
+                {
+                    count++;
+                    size += msg.Size;
+                }
+            }
+
+            WriteLine("+OK " + count + " " + size);
+        }
+
+        private void STLS(string cmdText)
+        {
+            /* RFC 2595 4. POP3 STARTTLS extension.
+                 Arguments: none
+
+                 Restrictions:
+                     Only permitted in AUTHORIZATION state.
+
+                 Discussion:
+                     A TLS negotiation begins immediately after the CRLF at the
+                     end of the +OK response from the server.  A -ERR response
+                     MAY result if a security layer is already active.  Once a
+                     client issues a STLS command, it MUST NOT issue further
+                     commands until a server response is seen and the TLS
+                     negotiation is complete.
+
+                     The STLS command is only permitted in AUTHORIZATION state
+                     and the server remains in AUTHORIZATION state, even if
+                     client credentials are supplied during the TLS negotiation.
+                     The AUTH command [POP-AUTH] with the EXTERNAL mechanism
+                     [SASL] MAY be used to authenticate once TLS client
+                     credentials are successfully exchanged, but servers
+                     supporting the STLS command are not required to support the
+                     EXTERNAL mechanism.
+
+                     Once TLS has been started, the client MUST discard cached
+                     information about server capabilities and SHOULD re-issue
+                     the CAPA command.  This is necessary to protect against
+                     man-in-the-middle attacks which alter the capabilities list
+                     prior to STLS.  The server MAY advertise different
+                     capabilities after STLS.
+
+                 Possible Responses:
+                     +OK -ERR
+
+                 Examples:
+                     C: STLS
+                     S: +OK Begin TLS negotiation
+                     <TLS negotiation, further commands are under TLS layer>
+                       ...
+                     C: STLS
+                     S: -ERR Command not permitted when TLS active
+            */
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (IsAuthenticated)
+            {
+                TcpStream.WriteLine("-ERR This ommand is only valid in AUTHORIZATION state (RFC 2595 4).");
+
+                return;
+            }
+            if (IsSecureConnection)
+            {
+                WriteLine("-ERR Bad sequence of commands: Connection is already secure.");
+
+                return;
+            }
+            if (Certificate == null)
+            {
+                WriteLine("-ERR TLS not available: Server has no SSL certificate.");
+
+                return;
+            }
+
+            WriteLine("+OK Ready to start TLS.");
+
+            try
+            {
+                SwitchToSecure();
+
+                // Log
+                LogAddText("TLS negotiation completed successfully.");
+            }
+            catch (Exception x)
+            {
+                // Log
+                LogAddText("TLS negotiation failed: " + x.Message + ".");
+
+                Disconnect();
+            }
+        }
+
+        private void TOP(string cmdText)
+        {
+            /* RFC 1939 7. TOP
+			    Arguments:
+				    a message-number (required) which may NOT refer to to a
+				    message marked as deleted, and a non-negative number
+				    of lines (required)
+		
+			    NOTE:
+				    If the POP3 server issues a positive response, then the
+				    response given is multi-line.  After the initial +OK, the
+				    POP3 server sends the headers of the message, the blank
+				    line separating the headers from the body, and then the
+				    number of lines of the indicated message's body, being
+				    careful to byte-stuff the termination character (as with
+				    all multi-line responses).
+			
+			    Examples:
+				    C: TOP 1 10
+				    S: +OK
+				    S: <the POP3 server sends the headers of the
+					    message, a blank line, and the first 10 lines
+					    of the body of the message>
+				    S: .
+                    ...
+				    C: TOP 100 3
+				    S: -ERR no such message
+			 
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            var args = cmdText.Split(' ');
+
+            if (args.Length != 2 || !Net_Utils.IsInteger(args[0]) || !Net_Utils.IsInteger(args[1]))
+            {
+                WriteLine("-ERR Error in arguments.");
+
+                return;
+            }
+
+            POP3_ServerMessage msg = null;
+            if (m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1, out msg))
+            {
+                // Block messages marked for deletion.
+                if (msg.IsMarkedForDeletion)
+                {
+                    WriteLine("-ERR Invalid operation: Message marked for deletion.");
+
+                    return;
+                }
+
+                var e = OnGetTopOfMessage(msg, Convert.ToInt32(args[1]));
+
+                // User didn't provide us message stream, assume that message deleted(for example by IMAP during this POP3 session).
+                if (e.Data == null)
+                {
+                    WriteLine("-ERR no such message.");
+                }
+                else
+                {
+                    WriteLine("+OK Start sending top of message.");
+
+                    long countWritten = TcpStream.WritePeriodTerminated(new MemoryStream(e.Data));
+
+                    // Log.
+                    if (Server.Logger != null)
+                    {
+                        Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, "Wrote top of message(" + countWritten + " bytes).", LocalEndPoint, RemoteEndPoint);
+                    }
+                }
+            }
+            else
+            {
+                WriteLine("-ERR no such message.");
+            }
+        }
+
+        private void UIDL(string cmdText)
+        {
+            /* RFC 1939 UIDL [msg]
+			Arguments:
+			    a message-number (optional), which, if present, may NOT
+				refer to a message marked as deleted
+				
+			NOTE:
+				If an argument was given and the POP3 server issues a positive
+				response with a line containing information for that message.
+
+				If no argument was given and the POP3 server issues a positive
+				response, then the response given is multi-line.  After the
+				initial +OK, for each message in the maildrop, the POP3 server
+				responds with a line containing information for that message.	
+				
+			Examples:
+				C: UIDL
+				S: +OK
+				S: 1 whqtswO00WBw418f9t5JxYwZ
+				S: 2 QhdPYR:00WBw1Ph7x7
+				S: .
+				...
+				C: UIDL 2
+				S: +OK 2 QhdPYR:00WBw1Ph7x7
+				...
+				C: UIDL 3
+				S: -ERR no such message
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (!IsAuthenticated)
+            {
+                WriteLine("-ERR Authentication required.");
+
+                return;
+            }
+
+            var args = cmdText.Split(' ');
+
+            // List whole mailbox.
+            if (string.IsNullOrEmpty(cmdText))
+            {
+                // Calculate count and total size in bytes, exclude marked for deletion messages.
+                int count = 0;
+                int size = 0;
+                foreach (POP3_ServerMessage msg in m_pMessages)
+                {
+                    if (!msg.IsMarkedForDeletion)
+                    {
+                        count++;
+                        size += msg.Size;
+                    }
+                }
+
+                var response = new StringBuilder();
+                response.Append("+OK " + count + " messages (" + size + " bytes).\r\n");
+                foreach (POP3_ServerMessage msg in m_pMessages)
+                {
+                    response.Append(msg.SequenceNumber + " " + msg.UID + "\r\n");
+                }
+                response.Append(".");
+
+                WriteLine(response.ToString());
+            }
+            // Single message info listing.
+            else
+            {
+                if (args.Length > 1)
+                {
+                    WriteLine("-ERR Error in arguments.");
+
+                    return;
+                }
+
+                POP3_ServerMessage msg = null;
+                if (m_pMessages.TryGetValueAt(Convert.ToInt32(args[0]) - 1, out msg))
+                {
+                    // Block messages marked for deletion.
+                    if (msg.IsMarkedForDeletion)
+                    {
+                        WriteLine("-ERR Invalid operation: Message marked for deletion.");
+
+                        return;
+                    }
+
+                    WriteLine("+OK " + msg.SequenceNumber + " " + msg.UID);
+                }
+                else
+                {
+                    WriteLine("-ERR no such message or message marked for deletion.");
+                }
+            }
+        }
+
+        private void USER(string cmdText)
+        {
+            /* RFC 1939 7. USER
+			    Arguments:
+				    a string identifying a mailbox (required), which is of
+				    significance ONLY to the server
+				
+			    NOTE:
+				    If the POP3 server responds with a positive
+				    status indicator ("+OK"), then the client may issue
+				    either the PASS command to complete the authentication,
+				    or the QUIT command to terminate the POP3 session.			 
+			*/
+
+            if (m_SessionRejected)
+            {
+                WriteLine("-ERR Bad sequence of commands: Session rejected.");
+
+                return;
+            }
+            if (IsAuthenticated)
+            {
+                TcpStream.WriteLine("-ERR Re-authentication error.");
+
+                return;
+            }
+            if (m_UserName != null)
+            {
+                TcpStream.WriteLine("-ERR User name already specified.");
+
+                return;
+            }
+
+            m_UserName = cmdText;
+
+            TcpStream.WriteLine("+OK User name OK.");
         }
 
         /// <summary>
@@ -1283,229 +1665,17 @@ namespace LumiSoft.Net.POP3.Server
         /// <param name="line">Line to send.</param>
         private void WriteLine(string line)
         {
-            if(line == null){
+            if (line == null)
+            {
                 throw new ArgumentNullException("line");
             }
 
             int countWritten = TcpStream.WriteLine(line);
 
             // Log.
-            if(Server.Logger != null){
-                Server.Logger.AddWrite(ID,AuthenticatedUserIdentity,countWritten,line,LocalEndPoint,RemoteEndPoint);
-            }
-        }
-
-        /// <summary>
-        /// Logs specified text.
-        /// </summary>
-        /// <param name="text">text to log.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>text</b> is null reference.</exception>
-        public void LogAddText(string text)
-        {
-            if(text == null){
-                throw new ArgumentNullException("text");
-            }
-
-            // Log
-            if(Server.Logger != null){
-                Server.Logger.AddText(ID,text);
-            }
-        }
-
-        /// <summary>
-        /// Gets session owner POP3 server.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public new POP3_Server Server
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return (POP3_Server)base.Server;
-            }
-        }
-
-        /// <summary>
-        /// Gets supported SASL authentication methods collection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public Dictionary<string,AUTH_SASL_ServerMechanism> Authentications
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pAuthentications; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of bad commands happened on POP3 session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public int BadCommands
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_BadCommands; 
-            }
-        }
-
-        /// <summary>
-        /// Gets authenticated user identity or null if user has not authenticated.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override GenericIdentity AuthenticatedUserIdentity
-        {
-	        get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-		        return m_pUser;
-	        }
-        }
-
-        /// <summary>
-        /// Is raised when session has started processing and needs to send +OK greeting or -ERR error resposne to the connected client.
-        /// </summary>
-        public event EventHandler<POP3_e_Started> Started;
-
-        /// <summary>
-        /// Raises <b>Started</b> event.
-        /// </summary>
-        /// <param name="reply">Default POP3 server reply.</param>
-        /// <returns>Returns event args.</returns>
-        private POP3_e_Started OnStarted(string reply)
-        {
-            var eArgs = new POP3_e_Started(reply);
-
-            if (Started != null){                
-                Started(this,eArgs);
-            }
-
-            return eArgs;
-        }
-
-        /// <summary>
-        /// This event is raised when session needs to authenticate session using USER/PASS POP3 authentication.
-        /// </summary>
-        public event EventHandler<POP3_e_Authenticate> Authenticate;
-
-        /// <summary>
-        /// Raises <b>Authenticate</b> event.
-        /// </summary>
-        /// <param name="user">User name.</param>
-        /// <param name="password">Password.</param>
-        /// <returns>Returns event args.</returns>
-        private POP3_e_Authenticate OnAuthenticate(string user,string password)
-        {
-            var eArgs = new POP3_e_Authenticate(user,password);
-
-            if (Authenticate != null){
-                Authenticate(this,eArgs);
-            }
-
-            return eArgs;
-        }
-
-        /// <summary>
-        /// This event is raised when session needs to get mailbox messsages info.
-        /// </summary>
-        public event EventHandler<POP3_e_GetMessagesInfo> GetMessagesInfo;
-
-        /// <summary>
-        /// Raises <b>GetMessagesInfo</b> event.
-        /// </summary>
-        /// <returns>Returns event args.</returns>
-        private POP3_e_GetMessagesInfo OnGetMessagesInfo()
-        {
-            var eArgs = new POP3_e_GetMessagesInfo();
-
-            if (GetMessagesInfo != null){
-                GetMessagesInfo(this,eArgs);
-            }
-
-            return eArgs;
-        }
-
-        /// <summary>
-        /// This event is raised when session needs to get top of the specified message data.
-        /// </summary>
-        public event EventHandler<POP3_e_GetTopOfMessage> GetTopOfMessage;
-
-        /// <summary>
-        /// Raises <b>GetTopOfMessage</b> event.
-        /// </summary>
-        /// <param name="message">Message which top data to get.</param>
-        /// <param name="lines">Number of message-body lines to get.</param>
-        /// <returns>Returns event args.</returns>
-        private POP3_e_GetTopOfMessage OnGetTopOfMessage(POP3_ServerMessage message,int lines)
-        {
-            var eArgs = new POP3_e_GetTopOfMessage(message,lines);
-
-            if (GetTopOfMessage != null){
-                GetTopOfMessage(this,eArgs);
-            }
-
-            return eArgs;
-        }
-
-        /// <summary>
-        /// This event is raised when session needs to get specified message stream.
-        /// </summary>
-        public event EventHandler<POP3_e_GetMessageStream> GetMessageStream;
-
-        /// <summary>
-        /// Raises <b>GetMessageStream</b> event.
-        /// </summary>
-        /// <param name="message">Message stream to get.</param>
-        /// <returns>Returns event arguments.</returns>
-        private POP3_e_GetMessageStream OnGetMessageStream(POP3_ServerMessage message)
-        {
-            var eArgs = new POP3_e_GetMessageStream(message);
-
-            if (GetMessageStream != null){
-                GetMessageStream(this,eArgs);
-            }
-
-            return eArgs;
-        }
-
-        /// <summary>
-        /// This event is raised when session needs to delete specified message.
-        /// </summary>
-        public event EventHandler<POP3_e_DeleteMessage> DeleteMessage;
-
-        /// <summary>
-        /// Raises <b>DeleteMessage</b> event.
-        /// </summary>
-        /// <param name="message">Message to delete.</param>
-        private void OnDeleteMessage(POP3_ServerMessage message)
-        {
-            if(DeleteMessage != null){
-                DeleteMessage(this,new POP3_e_DeleteMessage(message));
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when session is reset by remote user.
-        /// </summary>
-        public event EventHandler Reset;
-
-        /// <summary>
-        /// Raises <b>Reset</b> event.
-        /// </summary>
-        private void OnReset()
-        {
-            if(Reset != null){
-                Reset(this,new EventArgs());
+            if (Server.Logger != null)
+            {
+                Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line, LocalEndPoint, RemoteEndPoint);
             }
         }
     }

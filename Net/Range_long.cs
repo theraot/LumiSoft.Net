@@ -12,7 +12,7 @@
         public Range_long(long value)
         {
             Start = value;
-            End   = value;
+            End = value;
         }
 
         /// <summary>
@@ -20,11 +20,21 @@
         /// </summary>
         /// <param name="start">Range start value.</param>
         /// <param name="end">Range end value.</param>
-        public Range_long(long start,long end)
+        public Range_long(long start, long end)
         {
             Start = start;
-            End   = end;
+            End = end;
         }
+
+        /// <summary>
+        /// Gets range end.
+        /// </summary>
+        public long End { get; }
+
+        /// <summary>
+        /// Gets range start.
+        /// </summary>
+        public long Start { get; }
 
         /// <summary>
         /// Gets if the specified value is within range.
@@ -33,21 +43,12 @@
         /// <returns>Returns true if specified value is within range, otherwise false.</returns>
         public bool Contains(long value)
         {
-            if(value >= Start && value <= End){
+            if (value >= Start && value <= End)
+            {
                 return true;
             }
 
             return false;
         }
-
-        /// <summary>
-        /// Gets range start.
-        /// </summary>
-        public long Start { get; }
-
-        /// <summary>
-        /// Gets range end.
-        /// </summary>
-        public long End { get; }
     }
 }

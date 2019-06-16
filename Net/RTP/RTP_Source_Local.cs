@@ -19,17 +19,65 @@ namespace LumiSoft.Net.RTP
         /// <param name="rtcpEP">RTCP end point.</param>
         /// <param name="rtpEP">RTP end point.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b>,<b>rtcpEP</b> or <b>rtpEP</b> is null reference.</exception>
-        internal RTP_Source_Local(RTP_Session session,uint ssrc,IPEndPoint rtcpEP,IPEndPoint rtpEP) : base(session,ssrc)
+        internal RTP_Source_Local(RTP_Session session, uint ssrc, IPEndPoint rtcpEP, IPEndPoint rtpEP) : base(session, ssrc)
         {
-            if(rtcpEP == null){
+            if (rtcpEP == null)
+            {
                 throw new ArgumentNullException("rtcpEP");
             }
-            if(rtpEP == null){
+            if (rtpEP == null)
+            {
                 throw new ArgumentNullException("rtpEP");
             }
 
             SetRtcpEP(rtcpEP);
             SetRtpEP(rtpEP);
+        }
+
+        /// <summary>
+        /// Returns true.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public override bool IsLocal
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets local participant. 
+        /// </summary>
+        public RTP_Participant_Local Participant
+        {
+            get { return Session.Session.LocalParticipant; }
+        }
+
+        /// <summary>
+        /// Gets the stream we send. Value null means that source is passive and doesn't send any RTP data.
+        /// </summary>
+        public RTP_SendStream Stream { get; private set; }
+
+        /// <summary>
+        /// Gets source CNAME. Value null means that source not binded to participant.
+        /// </summary>
+        internal override string CName
+        {
+            get
+            {
+                if (Participant != null)
+                {
+                    return null;
+                }
+
+                return Participant.CNAME;
+            }
         }
 
         /// <summary>
@@ -39,10 +87,12 @@ namespace LumiSoft.Net.RTP
         /// <param name="packet">Is raised when <b>packet</b> is null reference.</param>
         public void SendApplicationPacket(RTCP_Packet_APP packet)
         {
-            if(State == RTP_SourceState.Disposed){
+            if (State == RTP_SourceState.Disposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(packet == null){
+            if (packet == null)
+            {
                 throw new ArgumentNullException("packet");
             }
 
@@ -64,7 +114,8 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         internal override void Close(string closeReason)
         {
-            if(State == RTP_SourceState.Disposed){
+            if (State == RTP_SourceState.Disposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
 
@@ -73,8 +124,9 @@ namespace LumiSoft.Net.RTP
             rr.SSRC = SSRC;
             packet.Packets.Add(rr);
             var bye = new RTCP_Packet_BYE();
-            bye.Sources = new[]{SSRC};
-            if(!string.IsNullOrEmpty(closeReason)){
+            bye.Sources = new[] { SSRC };
+            if (!string.IsNullOrEmpty(closeReason))
+            {
                 bye.LeavingReason = closeReason;
             }
             packet.Packets.Add(bye);
@@ -91,12 +143,14 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="InvalidOperationException">Is raised when this method is called more than 1 times(source already created).</exception>
         internal void CreateStream()
         {
-            if(Stream != null){
+            if (Stream != null)
+            {
                 throw new InvalidOperationException("Stream is already created.");
             }
 
             Stream = new RTP_SendStream(this);
-            Stream.Disposed += new EventHandler(delegate(object s,EventArgs e){
+            Stream.Disposed += new EventHandler(delegate (object s, EventArgs e)
+            {
                 Stream = null;
                 Dispose();
             });
@@ -114,60 +168,19 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="InvalidOperationException">Is raised when <b>CreateStream</b> method has been not called.</exception>
         internal int SendRtpPacket(RTP_Packet packet)
         {
-            if(packet == null){
+            if (packet == null)
+            {
                 throw new ArgumentNullException("packet");
             }
-            if(Stream == null){
+            if (Stream == null)
+            {
                 throw new InvalidOperationException("RTP stream is not created by CreateStream method.");
             }
 
             SetLastRtpPacket(DateTime.Now);
             SetState(RTP_SourceState.Active);
-                        
-            return Session.SendRtpPacket(Stream,packet);
-        }
 
-        /// <summary>
-        /// Returns true.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public override bool IsLocal
-        {
-            get{ 
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return true; 
-            }
-        }
-
-        /// <summary>
-        /// Gets local participant. 
-        /// </summary>
-        public RTP_Participant_Local Participant
-        {
-            get{ return Session.Session.LocalParticipant; }
-        }
-
-        /// <summary>
-        /// Gets the stream we send. Value null means that source is passive and doesn't send any RTP data.
-        /// </summary>
-        public RTP_SendStream Stream { get; private set; }
-
-        /// <summary>
-        /// Gets source CNAME. Value null means that source not binded to participant.
-        /// </summary>
-        internal override string CName
-        {
-            get
-            {
-                if(Participant != null){
-                    return null;
-                }
-
-                return Participant.CNAME;
-            }
+            return Session.SendRtpPacket(Stream, packet);
         }
     }
 }

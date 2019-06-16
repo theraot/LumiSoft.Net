@@ -15,11 +15,21 @@ namespace LumiSoft.Net.IMAP
         /// <param name="quotaRootName">Qouta root name.</param>
         /// <param name="entries">Resource limit entries.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>quotaRootName</b> or <b>entries</b> is null reference.</exception>
-        public IMAP_r_u_Quota(string quotaRootName,IMAP_Quota_Entry[] entries)
+        public IMAP_r_u_Quota(string quotaRootName, IMAP_Quota_Entry[] entries)
         {
             QuotaRootName = quotaRootName ?? throw new ArgumentNullException("quotaRootName");
-            Entries      = entries ?? throw new ArgumentNullException("entries");
+            Entries = entries ?? throw new ArgumentNullException("entries");
         }
+
+        /// <summary>
+        /// Gets resource limit entries.
+        /// </summary>
+        public IMAP_Quota_Entry[] Entries { get; }
+
+        /// <summary>
+        /// Gets quota root name.
+        /// </summary>
+        public string QuotaRootName { get; } = "";
 
         /// <summary>
         /// Parses QUOTA response from quota-response string.
@@ -29,7 +39,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Quota Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -59,14 +70,15 @@ namespace LumiSoft.Net.IMAP
             // Eat "QUOTA"
             r.ReadWord();
 
-            var                 name    = r.ReadWord();
-            var               items   = r.ReadParenthesized().Split(' ');
+            var name = r.ReadWord();
+            var items = r.ReadParenthesized().Split(' ');
             var entries = new List<IMAP_Quota_Entry>();
-            for (int i=0;i<items.Length;i+=3){
-                entries.Add(new IMAP_Quota_Entry(items[i],Convert.ToInt64(items[i + 1]),Convert.ToInt64(items[i + 2])));
+            for (int i = 0; i < items.Length; i += 3)
+            {
+                entries.Add(new IMAP_Quota_Entry(items[i], Convert.ToInt64(items[i + 1]), Convert.ToInt64(items[i + 2])));
             }
 
-            return new IMAP_r_u_Quota(name,entries.ToArray());
+            return new IMAP_r_u_Quota(name, entries.ToArray());
         }
 
         /// <summary>
@@ -79,8 +91,10 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* QUOTA \"" + QuotaRootName + "\" (");
-            for(int i=0;i<Entries.Length;i++){
-                if(i > 0){
+            for (int i = 0; i < Entries.Length; i++)
+            {
+                if (i > 0)
+                {
                     retVal.Append(" ");
                 }
                 retVal.Append(Entries[i].ResourceName + " " + Entries[i].CurrentUsage + " " + Entries[i].MaxUsage);
@@ -89,15 +103,5 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets quota root name.
-        /// </summary>
-        public string QuotaRootName { get; } = "";
-
-        /// <summary>
-        /// Gets resource limit entries.
-        /// </summary>
-        public IMAP_Quota_Entry[] Entries { get; }
     }
 }

@@ -17,61 +17,19 @@ namespace LumiSoft.Net.SDP
         /// seconds since 1900, 0 value means not specified.</param>
         /// <param name="stopTime">Stop time when session must end.Network Time Protocol (NTP) time values in 
         /// seconds since 1900, 0 value means not specified.</param>
-        public SDP_Time(long startTime,long stopTime)
+        public SDP_Time(long startTime, long stopTime)
         {
-            if(startTime < 0){
+            if (startTime < 0)
+            {
                 throw new ArgumentException("Argument 'startTime' value must be >= 0.");
             }
-            if(stopTime < 0){
+            if (stopTime < 0)
+            {
                 throw new ArgumentException("Argument 'stopTime' value must be >= 0.");
             }
 
             m_StartTime = startTime;
-            m_StopTime  = stopTime;
-        }
-
-        /// <summary>
-        /// Parses media from "t" SDP message field.
-        /// </summary>
-        /// <param name="tValue">"t" SDP message field.</param>
-        /// <returns></returns>
-        public static SDP_Time Parse(string tValue)
-        {
-            // t=<start-time> <stop-time>
-            
-            long startTime = 0;
-            long endTime   = 0;
- 
-            // Remove t=
-            var r = new StringReader(tValue);
-            r.QuotedReadToDelimiter('=');
-
-            //--- <start-time> ------------------------------------------------------------
-            var word = r.ReadWord();
-            if (word == null){
-                throw new Exception("SDP message \"t\" field <start-time> value is missing !");
-            }
-            startTime = Convert.ToInt64(word);
-
-            //--- <stop-time> -------------------------------------------------------------
-            word = r.ReadWord();
-            if(word == null){
-                throw new Exception("SDP message \"t\" field <stop-time> value is missing !");
-            }
-            endTime = Convert.ToInt64(word);
-
-            return new SDP_Time(startTime,endTime);
-        }
-
-        /// <summary>
-        /// Converts this to valid "t" string.
-        /// </summary>
-        /// <returns></returns>
-        public string ToValue()
-        {
-            // t=<start-time> <stop-time>
-
-            return "t=" + StartTime + " " + StopTime + "\r\n";
+            m_StopTime = stopTime;
         }
 
         /// <summary>
@@ -80,10 +38,12 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public long StartTime
         {
-            get{ return m_StartTime; }
+            get { return m_StartTime; }
 
-            set{
-                if(value < 0){
+            set
+            {
+                if (value < 0)
+                {
                     throw new ArgumentException("Property StartTime value must be >= 0 !");
                 }
 
@@ -97,15 +57,63 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         public long StopTime
         {
-            get{ return m_StopTime; }
+            get { return m_StopTime; }
 
-            set{
-                if(value < 0){
+            set
+            {
+                if (value < 0)
+                {
                     throw new ArgumentException("Property StopTime value must be >= 0 !");
                 }
 
                 m_StopTime = value;
             }
+        }
+
+        /// <summary>
+        /// Parses media from "t" SDP message field.
+        /// </summary>
+        /// <param name="tValue">"t" SDP message field.</param>
+        /// <returns></returns>
+        public static SDP_Time Parse(string tValue)
+        {
+            // t=<start-time> <stop-time>
+
+            long startTime = 0;
+            long endTime = 0;
+
+            // Remove t=
+            var r = new StringReader(tValue);
+            r.QuotedReadToDelimiter('=');
+
+            //--- <start-time> ------------------------------------------------------------
+            var word = r.ReadWord();
+            if (word == null)
+            {
+                throw new Exception("SDP message \"t\" field <start-time> value is missing !");
+            }
+            startTime = Convert.ToInt64(word);
+
+            //--- <stop-time> -------------------------------------------------------------
+            word = r.ReadWord();
+            if (word == null)
+            {
+                throw new Exception("SDP message \"t\" field <stop-time> value is missing !");
+            }
+            endTime = Convert.ToInt64(word);
+
+            return new SDP_Time(startTime, endTime);
+        }
+
+        /// <summary>
+        /// Converts this to valid "t" string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToValue()
+        {
+            // t=<start-time> <stop-time>
+
+            return "t=" + StartTime + " " + StopTime + "\r\n";
         }
     }
 }

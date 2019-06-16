@@ -17,6 +17,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets mailbox(folder) UID value.
+        /// </summary>
+        public long Uid { get; }
+
+        /// <summary>
         /// Parses UIDVALIDITY optional response from string.
         /// </summary>
         /// <param name="value">UIDVALIDITY optional response string.</param>
@@ -24,16 +29,19 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_UidValidity Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new[]{' '},2);
-            if (!string.Equals("UIDVALIDITY",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid UIDVALIDITY response value.","value");
+            var code_value = value.Split(new[] { ' ' }, 2);
+            if (!string.Equals("UIDVALIDITY", code_value[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid UIDVALIDITY response value.", "value");
             }
-            if(code_value.Length != 2){
-                throw new ArgumentException("Invalid UIDVALIDITY response value.","value");
+            if (code_value.Length != 2)
+            {
+                throw new ArgumentException("Invalid UIDVALIDITY response value.", "value");
             }
 
             return new IMAP_t_orc_UidValidity(Convert.ToInt64(code_value[1]));
@@ -47,10 +55,5 @@ namespace LumiSoft.Net.IMAP
         {
             return "UIDVALIDITY " + Uid;
         }
-
-        /// <summary>
-        /// Gets mailbox(folder) UID value.
-        /// </summary>
-        public long Uid { get; }
     }
 }

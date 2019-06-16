@@ -9,25 +9,34 @@ namespace LumiSoft.Net.STUN.Message
     /// </summary>
     public class STUN_Message
     {
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public STUN_Message()
+        {
+            TransactionID = new byte[12];
+            new Random().NextBytes(TransactionID);
+        }
         /// <summary>
         /// Specifies STUN attribute type.
         /// </summary>
         private enum AttributeType
         {
-            MappedAddress    = 0x0001,
-            ResponseAddress  = 0x0002,
-            ChangeRequest    = 0x0003,
-            SourceAddress    = 0x0004,
-            ChangedAddress   = 0x0005,
-            Username         = 0x0006,
-            Password         = 0x0007,
+            MappedAddress = 0x0001,
+            ResponseAddress = 0x0002,
+            ChangeRequest = 0x0003,
+            SourceAddress = 0x0004,
+            ChangedAddress = 0x0005,
+            Username = 0x0006,
+            Password = 0x0007,
             MessageIntegrity = 0x0008,
-            ErrorCode        = 0x0009,
+            ErrorCode = 0x0009,
             UnknownAttribute = 0x000A,
-            ReflectedFrom    = 0x000B,
+            ReflectedFrom = 0x000B,
             XorMappedAddress = 0x8020,
-            XorOnly          = 0x0021,
-            ServerName       = 0x8022,
+            XorOnly = 0x0021,
+            ServerName = 0x8022,
         }
 
         /// <summary>
@@ -40,13 +49,76 @@ namespace LumiSoft.Net.STUN.Message
         }
 
         /// <summary>
-        /// Default constructor.
+        /// Gets or sets IP end point where STUN server will send response back to STUN client 
+        /// if the "change IP" and "change port" flags had been set in the ChangeRequest.
         /// </summary>
-        public STUN_Message()
-        {
-            TransactionID = new byte[12];
-            new Random().NextBytes(TransactionID);
-        }
+        public IPEndPoint ChangedAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets how and where STUN server must send response back to STUN client.
+        /// Value null means not specified.
+        /// </summary>
+        public STUN_t_ChangeRequest ChangeRequest { get; set; }
+
+        //public MessageIntegrity
+
+        /// <summary>
+        /// Gets or sets error info. Returns null if not specified.
+        /// </summary>
+        public STUN_t_ErrorCode ErrorCode { get; set; }
+
+        /// <summary>
+        /// Gets magic cookie value. This is always 0x2112A442.
+        /// </summary>
+        public int MagicCookie { get; private set; }
+
+        /// <summary>
+        /// Gets or sets IP end point what was actually connected to STUN server. Returns null if not specified.
+        /// </summary>
+        public IPEndPoint MappedAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets password. Value null means not specified.
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Gets or sets IP endpoint from which IP end point STUN server got STUN client request.
+        /// Value null means not specified.
+        /// </summary>
+        public IPEndPoint ReflectedFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets IP end point where to STUN client likes to receive response.
+        /// Value null means not specified.
+        /// </summary>
+        public IPEndPoint ResponseAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets server name.
+        /// </summary>
+        public string ServerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets STUN server IP end point what sent response to STUN client. Value null
+        /// means not specified.
+        /// </summary>
+        public IPEndPoint SourceAddress { get; set; }
+
+        /// <summary>
+        /// Gets transaction ID.
+        /// </summary>
+        public byte[] TransactionID { get; private set; }
+
+        /// <summary>
+        /// Gets STUN message type.
+        /// </summary>
+        public STUN_MessageType Type { get; set; } = STUN_MessageType.BindingRequest;
+
+        /// <summary>
+        /// Gets or sets user name. Value null means not specified.
+        /// </summary>          
+        public string UserName { get; set; }
 
         /// <summary>
         /// Parses STUN message from raw data packet.
@@ -55,7 +127,8 @@ namespace LumiSoft.Net.STUN.Message
         /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
         public void Parse(byte[] data)
         {
-            if(data == null){
+            if (data == null)
+            {
                 throw new ArgumentNullException("data");
             }
 
@@ -80,7 +153,8 @@ namespace LumiSoft.Net.STUN.Message
                message, not including the 20 byte header.
             */
 
-            if(data.Length < 20){
+            if (data.Length < 20)
+            {
                 throw new ArgumentException("Invalid STUN message value !");
             }
 
@@ -90,25 +164,32 @@ namespace LumiSoft.Net.STUN.Message
 
             // STUN Message Type
             int messageType = (data[offset++] << 8 | data[offset++]);
-            if(messageType == (int)STUN_MessageType.BindingErrorResponse){
+            if (messageType == (int)STUN_MessageType.BindingErrorResponse)
+            {
                 Type = STUN_MessageType.BindingErrorResponse;
             }
-            else if(messageType == (int)STUN_MessageType.BindingRequest){
+            else if (messageType == (int)STUN_MessageType.BindingRequest)
+            {
                 Type = STUN_MessageType.BindingRequest;
             }
-            else if(messageType == (int)STUN_MessageType.BindingResponse){
+            else if (messageType == (int)STUN_MessageType.BindingResponse)
+            {
                 Type = STUN_MessageType.BindingResponse;
             }
-            else if(messageType == (int)STUN_MessageType.SharedSecretErrorResponse){
+            else if (messageType == (int)STUN_MessageType.SharedSecretErrorResponse)
+            {
                 Type = STUN_MessageType.SharedSecretErrorResponse;
             }
-            else if(messageType == (int)STUN_MessageType.SharedSecretRequest){
+            else if (messageType == (int)STUN_MessageType.SharedSecretRequest)
+            {
                 Type = STUN_MessageType.SharedSecretRequest;
             }
-            else if(messageType == (int)STUN_MessageType.SharedSecretResponse){
+            else if (messageType == (int)STUN_MessageType.SharedSecretResponse)
+            {
                 Type = STUN_MessageType.SharedSecretResponse;
             }
-            else{
+            else
+            {
                 throw new ArgumentException("Invalid STUN message type value !");
             }
 
@@ -120,12 +201,13 @@ namespace LumiSoft.Net.STUN.Message
 
             // Transaction ID
             TransactionID = new byte[12];
-            Array.Copy(data,offset,TransactionID,0,12);
+            Array.Copy(data, offset, TransactionID, 0, 12);
             offset += 12;
 
             //--- Message attributes ---------------------------------------------
-            while((offset - 20) < messageLength){
-                ParseAttribute(data,ref offset);
+            while ((offset - 20) < messageLength)
+            {
+                ParseAttribute(data, ref offset);
             }
         }
 
@@ -174,15 +256,15 @@ namespace LumiSoft.Net.STUN.Message
             // Magic Cookie           
             msg[offset++] = (byte)((MagicCookie >> 24) & 0xFF);
             msg[offset++] = (byte)((MagicCookie >> 16) & 0xFF);
-            msg[offset++] = (byte)((MagicCookie >> 8)  & 0xFF);
-            msg[offset++] = (byte)((MagicCookie >> 0)  & 0xFF);
+            msg[offset++] = (byte)((MagicCookie >> 8) & 0xFF);
+            msg[offset++] = (byte)((MagicCookie >> 0) & 0xFF);
 
             // Transaction ID (16 bytes)
-            Array.Copy(TransactionID,0,msg,offset,12);
+            Array.Copy(TransactionID, 0, msg, offset, 12);
             offset += 12;
 
             //--- Message attributes ------------------------------------
-      
+
             /* RFC 3489 11.2.
                 After the header are 0 or more attributes.  Each attribute is TLV
                 encoded, with a 16 bit type, 16 bit length, and variable value:
@@ -195,14 +277,17 @@ namespace LumiSoft.Net.STUN.Message
                |                             Value                             ....
                +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             */
-            
-            if(MappedAddress != null){
-                StoreEndPoint(AttributeType.MappedAddress,MappedAddress,msg,ref offset);
+
+            if (MappedAddress != null)
+            {
+                StoreEndPoint(AttributeType.MappedAddress, MappedAddress, msg, ref offset);
             }
-            else if(ResponseAddress != null){
-                StoreEndPoint(AttributeType.ResponseAddress,ResponseAddress,msg,ref offset);
+            else if (ResponseAddress != null)
+            {
+                StoreEndPoint(AttributeType.ResponseAddress, ResponseAddress, msg, ref offset);
             }
-            else if(ChangeRequest != null){
+            else if (ChangeRequest != null)
+            {
                 /*
                     The CHANGE-REQUEST attribute is used by the client to request that
                     the server use a different address and/or port when sending the
@@ -225,7 +310,7 @@ namespace LumiSoft.Net.STUN.Message
                        server to send the Binding Response with a different port than the
                        one the Binding Request was received on.
                 */
-               
+
                 // Attribute header
                 msg[offset++] = (int)AttributeType.ChangeRequest >> 8;
                 msg[offset++] = (int)AttributeType.ChangeRequest & 0xFF;
@@ -235,15 +320,18 @@ namespace LumiSoft.Net.STUN.Message
                 msg[offset++] = 0;
                 msg[offset++] = 0;
                 msg[offset++] = 0;
-                msg[offset++] = (byte)(Convert.ToInt32(ChangeRequest.ChangeIP) << 2 | Convert.ToInt32(ChangeRequest.ChangePort) << 1);               
+                msg[offset++] = (byte)(Convert.ToInt32(ChangeRequest.ChangeIP) << 2 | Convert.ToInt32(ChangeRequest.ChangePort) << 1);
             }
-            else if(SourceAddress != null){
-                StoreEndPoint(AttributeType.SourceAddress,SourceAddress,msg,ref offset);
+            else if (SourceAddress != null)
+            {
+                StoreEndPoint(AttributeType.SourceAddress, SourceAddress, msg, ref offset);
             }
-            else if(ChangedAddress != null){
-                StoreEndPoint(AttributeType.ChangedAddress,ChangedAddress,msg,ref offset);
+            else if (ChangedAddress != null)
+            {
+                StoreEndPoint(AttributeType.ChangedAddress, ChangedAddress, msg, ref offset);
             }
-            else if(UserName != null){
+            else if (UserName != null)
+            {
                 var userBytes = Encoding.ASCII.GetBytes(UserName);
 
                 // Attribute header
@@ -252,10 +340,11 @@ namespace LumiSoft.Net.STUN.Message
                 msg[offset++] = (byte)(userBytes.Length >> 8);
                 msg[offset++] = (byte)(userBytes.Length & 0xFF);
 
-                Array.Copy(userBytes,0,msg,offset,userBytes.Length);
+                Array.Copy(userBytes, 0, msg, offset, userBytes.Length);
                 offset += userBytes.Length;
             }
-            else if(Password != null){
+            else if (Password != null)
+            {
                 var userBytes = Encoding.ASCII.GetBytes(UserName);
 
                 // Attribute header
@@ -264,10 +353,11 @@ namespace LumiSoft.Net.STUN.Message
                 msg[offset++] = (byte)(userBytes.Length >> 8);
                 msg[offset++] = (byte)(userBytes.Length & 0xFF);
 
-                Array.Copy(userBytes,0,msg,offset,userBytes.Length);
+                Array.Copy(userBytes, 0, msg, offset, userBytes.Length);
                 offset += userBytes.Length;
             }
-            else if(ErrorCode != null){
+            else if (ErrorCode != null)
+            {
                 /* 3489 11.2.9.
                     0                   1                   2                   3
                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -294,11 +384,12 @@ namespace LumiSoft.Net.STUN.Message
                 // Number
                 msg[offset++] = (byte)(ErrorCode.Code & 0xFF);
                 // ReasonPhrase
-                Array.Copy(reasonBytes,msg,reasonBytes.Length);
+                Array.Copy(reasonBytes, msg, reasonBytes.Length);
                 offset += reasonBytes.Length;
             }
-            else if(ReflectedFrom != null){
-                StoreEndPoint(AttributeType.ReflectedFrom,ReflectedFrom,msg,ref offset);
+            else if (ReflectedFrom != null)
+            {
+                StoreEndPoint(AttributeType.ReflectedFrom, ReflectedFrom, msg, ref offset);
             }
 
             // Update Message Length. NOTE: 20 bytes header not included.
@@ -307,8 +398,8 @@ namespace LumiSoft.Net.STUN.Message
 
             // Make reatval with actual size.
             var retVal = new byte[offset];
-            Array.Copy(msg,retVal,retVal.Length);
-        
+            Array.Copy(msg, retVal, retVal.Length);
+
             return retVal;
         }
 
@@ -317,7 +408,7 @@ namespace LumiSoft.Net.STUN.Message
         /// </summary>
         /// <param name="data">SIP message data.</param>
         /// <param name="offset">Offset in data.</param>
-        private void ParseAttribute(byte[] data,ref int offset)
+        private void ParseAttribute(byte[] data, ref int offset)
         {
             /* RFC 3489 11.2.
                 Each attribute is TLV encoded, with a 16 bit type, 16 bit length, and variable value:
@@ -338,15 +429,18 @@ namespace LumiSoft.Net.STUN.Message
             int length = (data[offset++] << 8 | data[offset++]);
 
             // MAPPED-ADDRESS
-            if(type == AttributeType.MappedAddress){
-                MappedAddress = ParseEndPoint(data,ref offset);
+            if (type == AttributeType.MappedAddress)
+            {
+                MappedAddress = ParseEndPoint(data, ref offset);
             }
             // RESPONSE-ADDRESS
-            else if(type == AttributeType.ResponseAddress){
-                ResponseAddress = ParseEndPoint(data,ref offset);
+            else if (type == AttributeType.ResponseAddress)
+            {
+                ResponseAddress = ParseEndPoint(data, ref offset);
             }
             // CHANGE-REQUEST
-            else if(type == AttributeType.ChangeRequest){
+            else if (type == AttributeType.ChangeRequest)
+            {
                 /*
                     The CHANGE-REQUEST attribute is used by the client to request that
                     the server use a different address and/or port when sending the
@@ -372,34 +466,40 @@ namespace LumiSoft.Net.STUN.Message
 
                 // Skip 3 bytes
                 offset += 3;
-                                
-                ChangeRequest = new STUN_t_ChangeRequest((data[offset] & 4) != 0,(data[offset] & 2) != 0);
+
+                ChangeRequest = new STUN_t_ChangeRequest((data[offset] & 4) != 0, (data[offset] & 2) != 0);
                 offset++;
             }
             // SOURCE-ADDRESS
-            else if(type == AttributeType.SourceAddress){
-                SourceAddress = ParseEndPoint(data,ref offset);
+            else if (type == AttributeType.SourceAddress)
+            {
+                SourceAddress = ParseEndPoint(data, ref offset);
             }
             // CHANGED-ADDRESS
-            else if(type == AttributeType.ChangedAddress){
-                ChangedAddress = ParseEndPoint(data,ref offset);
+            else if (type == AttributeType.ChangedAddress)
+            {
+                ChangedAddress = ParseEndPoint(data, ref offset);
             }
             // USERNAME
-            else if(type == AttributeType.Username){
-                UserName = Encoding.Default.GetString(data,offset,length);
+            else if (type == AttributeType.Username)
+            {
+                UserName = Encoding.Default.GetString(data, offset, length);
                 offset += length;
             }
             // PASSWORD
-            else if(type == AttributeType.Password){
-                Password = Encoding.Default.GetString(data,offset,length);
+            else if (type == AttributeType.Password)
+            {
+                Password = Encoding.Default.GetString(data, offset, length);
                 offset += length;
             }
             // MESSAGE-INTEGRITY
-            else if(type == AttributeType.MessageIntegrity){
+            else if (type == AttributeType.MessageIntegrity)
+            {
                 offset += length;
             }
             // ERROR-CODE
-            else if(type == AttributeType.ErrorCode){
+            else if (type == AttributeType.ErrorCode)
+            {
                 /* 3489 11.2.9.
                     0                   1                   2                   3
                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -412,26 +512,30 @@ namespace LumiSoft.Net.STUN.Message
 
                 int errorCode = (data[offset + 2] & 0x7) * 100 + (data[offset + 3] & 0xFF);
 
-                ErrorCode = new STUN_t_ErrorCode(errorCode,Encoding.Default.GetString(data,offset + 4,length - 4));
+                ErrorCode = new STUN_t_ErrorCode(errorCode, Encoding.Default.GetString(data, offset + 4, length - 4));
                 offset += length;
             }
             // UNKNOWN-ATTRIBUTES
-            else if(type == AttributeType.UnknownAttribute){
+            else if (type == AttributeType.UnknownAttribute)
+            {
                 offset += length;
             }
             // REFLECTED-FROM
-            else if(type == AttributeType.ReflectedFrom){
-                ReflectedFrom = ParseEndPoint(data,ref offset);
+            else if (type == AttributeType.ReflectedFrom)
+            {
+                ReflectedFrom = ParseEndPoint(data, ref offset);
             }
             // XorMappedAddress
             // XorOnly
             // ServerName
-            else if(type == AttributeType.ServerName){
-                ServerName = Encoding.Default.GetString(data,offset,length);
+            else if (type == AttributeType.ServerName)
+            {
+                ServerName = Encoding.Default.GetString(data, offset, length);
                 offset += length;
             }
             // Unknown
-            else{
+            else
+            {
                 offset += length;
             }
         }
@@ -442,7 +546,7 @@ namespace LumiSoft.Net.STUN.Message
         /// <param name="data">STUN message data.</param>
         /// <param name="offset">Offset in data.</param>
         /// <returns>Returns parsed IP end point.</returns>
-        private IPEndPoint ParseEndPoint(byte[] data,ref int offset)
+        private IPEndPoint ParseEndPoint(byte[] data, ref int offset)
         {
             /*
                 It consists of an eight bit address family, and a sixteen bit
@@ -460,7 +564,7 @@ namespace LumiSoft.Net.STUN.Message
             // Skip family
             offset++;
             offset++;
-            
+
             // Port
             int port = (data[offset++] << 8 | data[offset++]);
 
@@ -470,8 +574,8 @@ namespace LumiSoft.Net.STUN.Message
             ip[1] = data[offset++];
             ip[2] = data[offset++];
             ip[3] = data[offset++];
-            
-            return new IPEndPoint(new IPAddress(ip),port);
+
+            return new IPEndPoint(new IPAddress(ip), port);
         }
 
         /// <summary>
@@ -481,7 +585,7 @@ namespace LumiSoft.Net.STUN.Message
         /// <param name="endPoint">IP end point.</param>
         /// <param name="message">Buffer where to store.</param>
         /// <param name="offset">Offset in buffer.</param>
-        private void StoreEndPoint(AttributeType type,IPEndPoint endPoint,byte[] message,ref int offset)
+        private void StoreEndPoint(AttributeType type, IPEndPoint endPoint, byte[] message, ref int offset)
         {
             /*
                 It consists of an eight bit address family, and a sixteen bit
@@ -498,10 +602,10 @@ namespace LumiSoft.Net.STUN.Message
 
             // Header
             message[offset++] = (byte)((int)type >> 8);
-            message[offset++] = (byte)((int)type & 0xFF); 
+            message[offset++] = (byte)((int)type & 0xFF);
             message[offset++] = 0;
             message[offset++] = 8;
-                   
+
             // Unused
             message[offset++] = 0;
             // Family
@@ -516,77 +620,5 @@ namespace LumiSoft.Net.STUN.Message
             message[offset++] = ipBytes[2];
             message[offset++] = ipBytes[3];
         }
-
-        /// <summary>
-        /// Gets STUN message type.
-        /// </summary>
-        public STUN_MessageType Type { get; set; } = STUN_MessageType.BindingRequest;
-
-        /// <summary>
-        /// Gets magic cookie value. This is always 0x2112A442.
-        /// </summary>
-        public int MagicCookie { get; private set; }
-
-        /// <summary>
-        /// Gets transaction ID.
-        /// </summary>
-        public byte[] TransactionID { get; private set; }
-
-        /// <summary>
-        /// Gets or sets IP end point what was actually connected to STUN server. Returns null if not specified.
-        /// </summary>
-        public IPEndPoint MappedAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets IP end point where to STUN client likes to receive response.
-        /// Value null means not specified.
-        /// </summary>
-        public IPEndPoint ResponseAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets how and where STUN server must send response back to STUN client.
-        /// Value null means not specified.
-        /// </summary>
-        public STUN_t_ChangeRequest ChangeRequest { get; set; }
-
-        /// <summary>
-        /// Gets or sets STUN server IP end point what sent response to STUN client. Value null
-        /// means not specified.
-        /// </summary>
-        public IPEndPoint SourceAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets IP end point where STUN server will send response back to STUN client 
-        /// if the "change IP" and "change port" flags had been set in the ChangeRequest.
-        /// </summary>
-        public IPEndPoint ChangedAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets user name. Value null means not specified.
-        /// </summary>          
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// Gets or sets password. Value null means not specified.
-        /// </summary>
-        public string Password { get; set; }
-
-        //public MessageIntegrity
-
-        /// <summary>
-        /// Gets or sets error info. Returns null if not specified.
-        /// </summary>
-        public STUN_t_ErrorCode ErrorCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets IP endpoint from which IP end point STUN server got STUN client request.
-        /// Value null means not specified.
-        /// </summary>
-        public IPEndPoint ReflectedFrom { get; set; }
-
-        /// <summary>
-        /// Gets or sets server name.
-        /// </summary>
-        public string ServerName { get; set; }
     }
 }

@@ -10,15 +10,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_OptionTags
     {
-        /// <summary>
-        /// This option tag is for reliability of provisional responses. When present in a 
-        /// Supported header, it indicates that the UA can send or receive reliable provisional
-        /// responses. When present in a Require header in a request it indicates that the UAS MUST 
-        /// send all provisional responses reliably. When present in a Require header in a
-        /// reliable provisional response, it indicates that the response is to be sent reliably.
-        /// Defined in rfc 3262.
-        /// </summary>
-        public const string x100rel = "100rel";
 
         /// <summary>
         /// A UA adding the early-session option tag to a message indicates that it understands the 
@@ -128,5 +119,14 @@ namespace LumiSoft.Net.SIP.Message
         /// Session-Expires header field in the response, and process accordingly. Defined in rfc 4028.
         /// </summary>
         public const string timer = "timer";
+        /// <summary>
+        /// This option tag is for reliability of provisional responses. When present in a 
+        /// Supported header, it indicates that the UA can send or receive reliable provisional
+        /// responses. When present in a Require header in a request it indicates that the UAS MUST 
+        /// send all provisional responses reliably. When present in a Require header in a
+        /// reliable provisional response, it indicates that the response is to be sent reliably.
+        /// Defined in rfc 3262.
+        /// </summary>
+        public const string x100rel = "100rel";
     }
 }

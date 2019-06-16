@@ -15,15 +15,22 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public AUTH_e_UserInfo(string userName)
         {
-            if(userName == null){
+            if (userName == null)
+            {
                 throw new ArgumentNullException("userName");
             }
-            if(userName == string.Empty){
-                throw new ArgumentException("Argument 'userName' value must be specified.","userName");
+            if (userName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'userName' value must be specified.", "userName");
             }
 
             UserName = userName;
         }
+
+        /// <summary>
+        /// Gets or sets user password.
+        /// </summary>
+        public string Password { get; set; } = "";
 
         /// <summary>
         /// Gets or sets if specified user exists.
@@ -34,10 +41,5 @@ namespace LumiSoft.Net.AUTH
         /// Gets user name.
         /// </summary>
         public string UserName { get; } = "";
-
-        /// <summary>
-        /// Gets or sets user password.
-        /// </summary>
-        public string Password { get; set; } = "";
     }
 }

@@ -20,6 +20,63 @@ namespace LumiSoft.Net.SIP.Message
         private string m_ContentEncoding = "";
 
         /// <summary>
+        /// Gets or sets content encoding. Value *(STAR) means all content encodings.
+        /// </summary>
+        public string ContentEncoding
+        {
+            get { return m_ContentEncoding; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property ContentEncoding value can't be null or empty !");
+                }
+                if (!TextUtils.IsToken(value))
+                {
+                    throw new ArgumentException("Property ContentEncoding value may be 'token' only !");
+                }
+
+                m_ContentEncoding = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
+        /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
+        /// </summary>
+        public double QValue
+        {
+            get
+            {
+                var parameter = Parameters["qvalue"];
+                if (parameter != null)
+                {
+                    return Convert.ToDouble(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value < 0 || value > 1)
+                {
+                    throw new ArgumentException("Property QValue value must be between 0.0 and 1.0 !");
+                }
+
+                if (value < 0)
+                {
+                    Parameters.Remove("qvalue");
+                }
+                else
+                {
+                    Parameters.Set("qvalue", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "encoding" from specified value.
         /// </summary>
         /// <param name="value">Accept-Encoding value.</param>
@@ -27,7 +84,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -48,10 +106,11 @@ namespace LumiSoft.Net.SIP.Message
                 content-coding = token
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
-            
+
             // Parse content-coding
             var word = reader.ReadWord();
             m_ContentEncoding = word ?? throw new SIP_ParseException("Invalid 'encoding' value is missing !");
@@ -78,54 +137,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets content encoding. Value *(STAR) means all content encodings.
-        /// </summary>
-        public string ContentEncoding
-        {
-            get{ return m_ContentEncoding; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property ContentEncoding value can't be null or empty !");
-                }
-                if(!TextUtils.IsToken(value)){
-                    throw new ArgumentException("Property ContentEncoding value may be 'token' only !");
-                }
-
-                m_ContentEncoding = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
-        /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
-        /// </summary>
-        public double QValue
-        {
-            get{
-                var parameter = Parameters["qvalue"];
-                if (parameter != null){
-                    return Convert.ToDouble(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value < 0 || value > 1){
-                    throw new ArgumentException("Property QValue value must be between 0.0 and 1.0 !");
-                }
-
-                if(value < 0){
-                    Parameters.Remove("qvalue");
-                }
-                else{
-                    Parameters.Set("qvalue",value.ToString());
-                }
-            }
         }
     }
 }

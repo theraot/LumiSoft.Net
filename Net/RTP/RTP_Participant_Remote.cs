@@ -17,6 +17,46 @@ namespace LumiSoft.Net.RTP
         {
         }
 
+        // TODO: PRIV
+
+        /// <summary>
+        /// Is raised when participant data changed.
+        /// </summary>
+        public event EventHandler<RTP_ParticipantEventArgs> Changed;
+
+        /// <summary>
+        /// Gets email address. For example "John.Doe@example.com". Value null means not specified.
+        /// </summary>
+        public string Email { get; private set; }
+
+        /// <summary>
+        /// Gets location string. It may be geographic address or for example chat room name.
+        /// Value null means not specified.
+        /// </summary>
+        public string Location { get; private set; }
+
+        /// <summary>
+        /// Gets the real name, eg. "John Doe". Value null means not specified.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets note text. The NOTE item is intended for transient messages describing the current state
+        /// of the source, e.g., "on the phone, can't talk". Value null means not specified.
+        /// </summary>
+        public string Note { get; private set; }
+
+        /// <summary>
+        /// Gets phone number. For example "+1 908 555 1212". Value null means not specified.
+        /// </summary>
+        public string Phone { get; private set; }
+
+        /// <summary>
+        /// Gets streaming application name/version.
+        /// Value null means not specified.
+        /// </summary>
+        public string Tool { get; private set; }
+
         /// <summary>
         /// Returns participant as string.
         /// </summary>
@@ -25,23 +65,29 @@ namespace LumiSoft.Net.RTP
         {
             var retVal = new StringBuilder();
 
-            retVal.AppendLine("CNAME: " + CNAME);            
-            if(!string.IsNullOrEmpty(Name)){
+            retVal.AppendLine("CNAME: " + CNAME);
+            if (!string.IsNullOrEmpty(Name))
+            {
                 retVal.AppendLine("Name: " + Name);
             }
-            if(!string.IsNullOrEmpty(Email)){
+            if (!string.IsNullOrEmpty(Email))
+            {
                 retVal.AppendLine("Email: " + Email);
             }
-            if(!string.IsNullOrEmpty(Phone)){
+            if (!string.IsNullOrEmpty(Phone))
+            {
                 retVal.AppendLine("Phone: " + Phone);
             }
-            if(!string.IsNullOrEmpty(Location)){
+            if (!string.IsNullOrEmpty(Location))
+            {
                 retVal.AppendLine("Location: " + Location);
             }
-            if(!string.IsNullOrEmpty(Tool)){
+            if (!string.IsNullOrEmpty(Tool))
+            {
                 retVal.AppendLine("Tool: " + Tool);
             }
-            if(!string.IsNullOrEmpty(Note)){
+            if (!string.IsNullOrEmpty(Note))
+            {
                 retVal.AppendLine("Note: " + Note);
             }
 
@@ -55,88 +101,57 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>sdes</b> is null reference value.</exception>
         internal void Update(RTCP_Packet_SDES_Chunk sdes)
         {
-            if(sdes == null){
+            if (sdes == null)
+            {
                 throw new ArgumentNullException("sdes");
             }
 
             bool changed = false;
-            if(!string.IsNullOrEmpty(sdes.Name) && !string.Equals(Name,sdes.Name)){
+            if (!string.IsNullOrEmpty(sdes.Name) && !string.Equals(Name, sdes.Name))
+            {
                 Name = sdes.Name;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Email) && !string.Equals(Email,sdes.Email)){
+            if (!string.IsNullOrEmpty(sdes.Email) && !string.Equals(Email, sdes.Email))
+            {
                 Email = sdes.Email;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Phone) && !string.Equals(Phone,sdes.Phone)){
+            if (!string.IsNullOrEmpty(sdes.Phone) && !string.Equals(Phone, sdes.Phone))
+            {
                 Phone = sdes.Phone;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Location) && !string.Equals(Location,sdes.Location)){
+            if (!string.IsNullOrEmpty(sdes.Location) && !string.Equals(Location, sdes.Location))
+            {
                 Location = sdes.Location;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Tool) && !string.Equals(Tool,sdes.Tool)){
+            if (!string.IsNullOrEmpty(sdes.Tool) && !string.Equals(Tool, sdes.Tool))
+            {
                 Tool = sdes.Tool;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Note) && !string.Equals(Note,sdes.Note)){
+            if (!string.IsNullOrEmpty(sdes.Note) && !string.Equals(Note, sdes.Note))
+            {
                 Note = sdes.Note;
                 changed = true;
             }
 
-            if(changed){
+            if (changed)
+            {
                 OnChanged();
             }
         }
-
-        /// <summary>
-        /// Gets the real name, eg. "John Doe". Value null means not specified.
-        /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// Gets email address. For example "John.Doe@example.com". Value null means not specified.
-        /// </summary>
-        public string Email { get; private set; }
-
-        /// <summary>
-        /// Gets phone number. For example "+1 908 555 1212". Value null means not specified.
-        /// </summary>
-        public string Phone { get; private set; }
-
-        /// <summary>
-        /// Gets location string. It may be geographic address or for example chat room name.
-        /// Value null means not specified.
-        /// </summary>
-        public string Location { get; private set; }
-
-        /// <summary>
-        /// Gets streaming application name/version.
-        /// Value null means not specified.
-        /// </summary>
-        public string Tool { get; private set; }
-
-        /// <summary>
-        /// Gets note text. The NOTE item is intended for transient messages describing the current state
-        /// of the source, e.g., "on the phone, can't talk". Value null means not specified.
-        /// </summary>
-        public string Note { get; private set; }
-
-        // TODO: PRIV
-
-        /// <summary>
-        /// Is raised when participant data changed.
-        /// </summary>
-        public event EventHandler<RTP_ParticipantEventArgs> Changed;
 
         /// <summary>
         /// Raises <b>Changed</b> event.
         /// </summary>
         private void OnChanged()
         {
-            if(Changed != null){
-                Changed(this,new RTP_ParticipantEventArgs(this));
+            if (Changed != null)
+            {
+                Changed(this, new RTP_ParticipantEventArgs(this));
             }
         }
     }

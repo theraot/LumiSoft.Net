@@ -15,24 +15,21 @@ namespace LumiSoft.Net
         /// <param name="ipAddresses">Host IP addresses.</param>
         /// <param name="aliases">Host aliases(CNAME).</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>hostName</b> or <b>ipAddresses</b> is null reference.</exception>
-        public HostEntry(string hostName,IPAddress[] ipAddresses,string[] aliases)
+        public HostEntry(string hostName, IPAddress[] ipAddresses, string[] aliases)
         {
-            if(hostName == null){
+            if (hostName == null)
+            {
                 throw new ArgumentNullException("hostName");
             }
-            if(hostName == string.Empty){
-                throw new ArgumentException("Argument 'hostName' value must be specified.","hostName");
+            if (hostName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'hostName' value must be specified.", "hostName");
             }
 
-            HostName   = hostName;
+            HostName = hostName;
             Addresses = ipAddresses ?? throw new ArgumentNullException("ipAddresses");
-            Aliases   = (aliases == null ? new string[0] : aliases);
+            Aliases = (aliases == null ? new string[0] : aliases);
         }
-
-        /// <summary>
-        /// Gets DNS host name.
-        /// </summary>
-        public string HostName { get; }
 
         /// <summary>
         /// Gets list of IP addresses that are associated with a host.
@@ -43,5 +40,10 @@ namespace LumiSoft.Net
         /// Gets list of aliases(CNAME) that are associated with a host.
         /// </summary>
         public string[] Aliases { get; }
+
+        /// <summary>
+        /// Gets DNS host name.
+        /// </summary>
+        public string HostName { get; }
     }
 }

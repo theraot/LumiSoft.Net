@@ -9,10 +9,10 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_XOAuth : AUTH_SASL_Client
     {
-        private bool                              m_IsCompleted;
-        private readonly int                               m_State                 = 0;
-        private readonly string                            m_RequestUri;
-        private readonly KeyValueCollection<string,string> m_pRequestUriParameters;
+        private bool m_IsCompleted;
+        private readonly KeyValueCollection<string, string> m_pRequestUriParameters;
+        private readonly string m_RequestUri;
+        private readonly int m_State = 0;
 
         /// <summary>
         /// Default constructor.
@@ -21,12 +21,41 @@ namespace LumiSoft.Net.AUTH
         /// <param name="requestUri">OAuth request URI.</param>
         /// <param name="requestUriParameters">OAuth request URI parameters.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b>,<b>requestUri</b> or <b>requestUriParameters</b> is null reference.</exception>
-        public AUTH_SASL_Client_XOAuth(string userName,string requestUri,KeyValueCollection<string,string> requestUriParameters)
+        public AUTH_SASL_Client_XOAuth(string userName, string requestUri, KeyValueCollection<string, string> requestUriParameters)
         {
-            UserName              = userName ?? throw new ArgumentNullException("userName");
-            m_RequestUri            = requestUri ?? throw new ArgumentNullException("requestUri");
+            UserName = userName ?? throw new ArgumentNullException("userName");
+            m_RequestUri = requestUri ?? throw new ArgumentNullException("requestUri");
             m_pRequestUriParameters = requestUriParameters ?? throw new ArgumentNullException("requestUriParameters");
         }
+
+        /// <summary>
+        /// Gets if the authentication exchange has completed.
+        /// </summary>
+        public override bool IsCompleted
+        {
+            get { return m_IsCompleted; }
+        }
+
+        /// <summary>
+        /// Returns always "LOGIN".
+        /// </summary>
+        public override string Name
+        {
+            get { return "XOAUTH"; }
+        }
+
+        /// <summary>
+        /// Returns always true, because XOAUTH authentication method supports SASL client "inital response".
+        /// </summary>
+        public override bool SupportsInitialResponse
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Gets user login name.
+        /// </summary>
+        public override string UserName { get; }
 
         /// <summary>
         /// Continues authentication process.
@@ -36,24 +65,29 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>serverResponse</b> is null reference.</exception>
         /// <exception cref="InvalidOperationException">Is raised when this method is called when authentication is completed.</exception>
         public override byte[] Continue(byte[] serverResponse)
-        {            
-            if(m_IsCompleted){
+        {
+            if (m_IsCompleted)
+            {
                 throw new InvalidOperationException("Authentication is completed.");
             }
 
-            if(m_State == 0){
+            if (m_State == 0)
+            {
                 m_IsCompleted = true;
 
                 var retVal = new StringBuilder();
                 retVal.Append("GET " + m_RequestUri + " ");
                 bool first = true;
-                foreach(KeyValuePair<string,string> p in m_pRequestUriParameters){
-                    if(first){
+                foreach (KeyValuePair<string, string> p in m_pRequestUriParameters)
+                {
+                    if (first)
+                    {
                         first = false;
 
                         retVal.Append(EncodeParamter(p.Key) + "=\"" + EncodeParamter(p.Value) + "\"");
                     }
-                    else{
+                    else
+                    {
                         retVal.Append("," + EncodeParamter(p.Key) + "=\"" + EncodeParamter(p.Value) + "\"");
                     }
                 }
@@ -72,7 +106,8 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference value.</exception>
         private string EncodeParamter(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -86,47 +121,21 @@ namespace LumiSoft.Net.AUTH
             var valueUtf8 = Encoding.UTF8.GetBytes(value);
 
             var retVal = new StringBuilder();
-            foreach (byte b in valueUtf8){
+            foreach (byte b in valueUtf8)
+            {
                 // unreserverd
-                if((b >= 65 && b <= 90) || (b >= 97 && b <= 122)|| (b >= 48 && b <= 57) || b == '-' || b == '.' || b == '_' || b == '~'){
+                if ((b >= 65 && b <= 90) || (b >= 97 && b <= 122) || (b >= 48 && b <= 57) || b == '-' || b == '.' || b == '_' || b == '~')
+                {
                     retVal.Append((char)b);
                 }
                 // Encoding needed.
-                else{
+                else
+                {
                     retVal.Append(b.ToString("X2"));
                 }
             }
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets if the authentication exchange has completed.
-        /// </summary>
-        public override bool IsCompleted
-        {
-            get{ return m_IsCompleted; }
-        }
-
-        /// <summary>
-        /// Returns always "LOGIN".
-        /// </summary>
-        public override string Name
-        {
-            get { return "XOAUTH"; }
-        }
-
-        /// <summary>
-        /// Gets user login name.
-        /// </summary>
-        public override string UserName { get; }
-
-        /// <summary>
-        /// Returns always true, because XOAUTH authentication method supports SASL client "inital response".
-        /// </summary>
-        public override bool SupportsInitialResponse
-        {
-            get{ return true; }
         }
     }
 }

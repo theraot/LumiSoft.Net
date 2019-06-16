@@ -16,7 +16,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_AcceptRange : SIP_t_Value
     {
-        private string                  m_MediaType        = "";
+        private string m_MediaType = "";
 
         /// <summary>
         /// Default constructor.
@@ -24,7 +24,76 @@ namespace LumiSoft.Net.SIP.Message
         public SIP_t_AcceptRange()
         {
             MediaParameters = new SIP_ParameterCollection();
-            Parameters      = new SIP_ParameterCollection();
+            Parameters = new SIP_ParameterCollection();
+        }
+
+        /// <summary>
+        /// Gets media parameters collection.
+        /// </summary>
+        /// <returns></returns>
+        public SIP_ParameterCollection MediaParameters { get; }
+
+        /// <summary>
+        /// Gets or sets media type. Value *(STAR) means all values. Syntax: mediaType / mediaSubType.
+        /// Examples: */*,video/*,text/html.
+        /// </summary>
+        public string MediaType
+        {
+            get { return m_MediaType; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property MediaType value can't be null or empty !");
+                }
+                if (value.IndexOf('/') == -1)
+                {
+                    throw new ArgumentException("Invalid roperty MediaType value, syntax: mediaType / mediaSubType !");
+                }
+
+                m_MediaType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets accept value parameters.
+        /// </summary>
+        public SIP_ParameterCollection Parameters { get; }
+
+        /// <summary>
+        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
+        /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
+        /// </summary>
+        public double QValue
+        {
+            get
+            {
+                var parameter = Parameters["qvalue"];
+                if (parameter != null)
+                {
+                    return Convert.ToDouble(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value < 0 || value > 1)
+                {
+                    throw new ArgumentException("Property QValue value must be between 0.0 and 1.0 !");
+                }
+
+                if (value < 0)
+                {
+                    Parameters.Remove("qvalue");
+                }
+                else
+                {
+                    Parameters.Set("qvalue", value.ToString());
+                }
+            }
         }
 
         /// <summary>
@@ -35,7 +104,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -49,14 +119,15 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Raised when <b>reader</b> is null.</exception>
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public override void Parse(StringReader reader)
-        {            
+        {
             /*
                 accept-range  = media-range [ accept-params ] 
                 media-range   = ("*//*" / (m-type SLASH "*") / (m-type SLASH m-subtype)) *(SEMI m-parameter)
                 accept-params = SEMI "q" EQUAL qvalue *(SEMI generic-param)
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -66,41 +137,50 @@ namespace LumiSoft.Net.SIP.Message
 
             // Parse media and accept parameters !!! thats confusing part, RFC invalid.
             bool media_accept = true;
-            while(reader.Available > 0){
+            while (reader.Available > 0)
+            {
                 reader.ReadToFirstChar();
 
                 // We have 'next' value, so we are done here.
-                if(reader.SourceString.StartsWith(",")){
+                if (reader.SourceString.StartsWith(","))
+                {
                     break;
                 }
                 // We have parameter
 
-                if(reader.SourceString.StartsWith(";")){
+                if (reader.SourceString.StartsWith(";"))
+                {
                     reader.ReadSpecifiedLength(1);
-                    var paramString = reader.QuotedReadToDelimiter(new[]{';',','},false);
-                    if (paramString != ""){
-                        var name_value = paramString.Split(new[]{'='},2);
-                        var name  = name_value[0].Trim();
+                    var paramString = reader.QuotedReadToDelimiter(new[] { ';', ',' }, false);
+                    if (paramString != "")
+                    {
+                        var name_value = paramString.Split(new[] { '=' }, 2);
+                        var name = name_value[0].Trim();
                         var value = "";
-                        if (name_value.Length == 2){
+                        if (name_value.Length == 2)
+                        {
                             value = name_value[1];
                         }
 
                         // If q, then accept parameters begin
-                        if(name.ToLower() == "q"){
+                        if (name.ToLower() == "q")
+                        {
                             media_accept = false;
                         }
 
-                        if(media_accept){
-                            MediaParameters.Add(name,value);
+                        if (media_accept)
+                        {
+                            MediaParameters.Add(name, value);
                         }
-                        else{
-                            Parameters.Add(name,value);
+                        else
+                        {
+                            Parameters.Add(name, value);
                         }
                     }
                 }
                 // Unknown data
-                else{
+                else
+                {
                     throw new SIP_ParseException("SIP_t_AcceptRange unexpected prarameter value !");
                 }
             }
@@ -121,84 +201,30 @@ namespace LumiSoft.Net.SIP.Message
 
             var retVal = new StringBuilder();
             retVal.Append(m_MediaType);
-            foreach(SIP_Parameter parameter in MediaParameters){
-                if(parameter.Value != null){
+            foreach (SIP_Parameter parameter in MediaParameters)
+            {
+                if (parameter.Value != null)
+                {
                     retVal.Append(";" + parameter.Name + "=" + parameter.Value);
                 }
-                else{
+                else
+                {
                     retVal.Append(";" + parameter.Name);
                 }
             }
-            foreach(SIP_Parameter parameter in Parameters){
-                if(parameter.Value != null){
+            foreach (SIP_Parameter parameter in Parameters)
+            {
+                if (parameter.Value != null)
+                {
                     retVal.Append(";" + parameter.Name + "=" + parameter.Value);
                 }
-                else{
+                else
+                {
                     retVal.Append(";" + parameter.Name);
                 }
             }
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets media type. Value *(STAR) means all values. Syntax: mediaType / mediaSubType.
-        /// Examples: */*,video/*,text/html.
-        /// </summary>
-        public string MediaType
-        {
-            get{ return m_MediaType; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property MediaType value can't be null or empty !");
-                }
-                if(value.IndexOf('/') == -1){
-                    throw new ArgumentException("Invalid roperty MediaType value, syntax: mediaType / mediaSubType !");
-                }
-
-                m_MediaType = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets media parameters collection.
-        /// </summary>
-        /// <returns></returns>
-        public SIP_ParameterCollection MediaParameters { get; }
-
-        /// <summary>
-        /// Gets accept value parameters.
-        /// </summary>
-        public SIP_ParameterCollection Parameters { get; }
-
-        /// <summary>
-        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
-        /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
-        /// </summary>
-        public double QValue
-        {
-            get{
-                var parameter = Parameters["qvalue"];
-                if (parameter != null){
-                    return Convert.ToDouble(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value < 0 || value > 1){
-                    throw new ArgumentException("Property QValue value must be between 0.0 and 1.0 !");
-                }
-
-                if(value < 0){
-                    Parameters.Remove("qvalue");
-                }
-                else{
-                    Parameters.Set("qvalue",value.ToString());
-                }
-            }
         }
     }
 }

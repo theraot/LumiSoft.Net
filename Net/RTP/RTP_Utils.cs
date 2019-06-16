@@ -7,25 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Utils
     {
-        /// <summary>
-        /// Generates random SSRC value.
-        /// </summary>
-        /// <returns>Returns random SSRC value.</returns>
-        public static uint GenerateSSRC()
-        {
-            return (uint)new Random().Next(100000,int.MaxValue);
-        }
-
-        /// <summary>
-        /// Generates random CNAME value.
-        /// </summary>
-        /// <returns></returns>
-        public static string GenerateCNAME()
-        {
-            // user@host.randomTag
-
-            return Environment.UserName + "@" + System.Net.Dns.GetHostName() + "." + Guid.NewGuid().ToString().Substring(0,8);
-        }
 
         /// <summary>
         /// Converts specified DateTime value to short NTP time. Note: NTP time is in UTC.
@@ -65,9 +46,28 @@ namespace LumiSoft.Net.RTP
                 independently.
             */
 
-            var ts = ((TimeSpan)(value.ToUniversalTime() - new DateTime(1900,1,1,0,0,0)));
+            var ts = ((TimeSpan)(value.ToUniversalTime() - new DateTime(1900, 1, 1, 0, 0, 0)));
 
             return ((ulong)(ts.TotalMilliseconds % 1000) << 32) | (uint)(ts.Milliseconds << 22);
+        }
+
+        /// <summary>
+        /// Generates random CNAME value.
+        /// </summary>
+        /// <returns></returns>
+        public static string GenerateCNAME()
+        {
+            // user@host.randomTag
+
+            return Environment.UserName + "@" + System.Net.Dns.GetHostName() + "." + Guid.NewGuid().ToString().Substring(0, 8);
+        }
+        /// <summary>
+        /// Generates random SSRC value.
+        /// </summary>
+        /// <returns>Returns random SSRC value.</returns>
+        public static uint GenerateSSRC()
+        {
+            return (uint)new Random().Next(100000, int.MaxValue);
         }
     }
 }

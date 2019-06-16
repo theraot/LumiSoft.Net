@@ -20,6 +20,35 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets parameters count in the collection.
+        /// </summary>
+        public int Count
+        {
+            get { return m_pCollection.Count; }
+        }
+
+        /// <summary>
+        /// Gets specified parameter from collection. Returns null if parameter with specified name doesn't exist.
+        /// </summary>
+        /// <param name="name">Parameter name.</param>
+        /// <returns>Returns parameter with specified name or null if not found.</returns>
+        public SIP_Parameter this[string name]
+        {
+            get
+            {
+                foreach (SIP_Parameter parameter in m_pCollection)
+                {
+                    if (parameter.Name.ToLower() == name.ToLower())
+                    {
+                        return parameter;
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Adds new parameter to the collection.
         /// </summary>
         /// <param name="name">Parameter name.</param>
@@ -27,31 +56,18 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when <b>name</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when 'name' is '' or parameter with specified name 
         /// already exists in the collection.</exception>
-        public void Add(string name,string value)
+        public void Add(string name, string value)
         {
-            if(name == null){
+            if (name == null)
+            {
                 throw new ArgumentNullException("name");
             }
-            if(Contains(name)){
+            if (Contains(name))
+            {
                 throw new ArgumentException("Prameter '' with specified name already exists in the collection !");
             }
 
-            m_pCollection.Add(new SIP_Parameter(name,value));
-        }
-
-        /// <summary>
-        /// Adds or updates specified parameter value.
-        /// </summary>
-        /// <param name="name">Parameter name.</param>
-        /// <param name="value">Parameter value.</param>
-        public void Set(string name,string value)
-        {
-            if(Contains(name)){
-                this[name].Value = value;
-            }
-            else{
-                Add(name,value);
-            }
+            m_pCollection.Add(new SIP_Parameter(name, value));
         }
 
         /// <summary>
@@ -63,18 +79,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Removes specified parameter from the collection.
-        /// </summary>
-        /// <param name="name">Parameter name.</param>
-        public void Remove(string name)
-        {
-            var parameter = this[name];
-            if (parameter != null){
-                m_pCollection.Remove(parameter);
-            }
-        }
-
-        /// <summary>
         /// Checks if the collection contains parameter with the specified name.
         /// </summary>
         /// <param name="name">Parameter name.</param>
@@ -82,7 +86,8 @@ namespace LumiSoft.Net.SIP.Message
         public bool Contains(string name)
         {
             var parameter = this[name];
-            if (parameter != null){
+            if (parameter != null)
+            {
                 return true;
             }
 
@@ -94,33 +99,37 @@ namespace LumiSoft.Net.SIP.Message
 		/// </summary>
 		/// <returns></returns>
 		public IEnumerator GetEnumerator()
-		{
-			return m_pCollection.GetEnumerator();
-		}
-
-        /// <summary>
-        /// Gets parameters count in the collection.
-        /// </summary>
-        public int Count
         {
-            get{ return m_pCollection.Count; }
+            return m_pCollection.GetEnumerator();
         }
 
         /// <summary>
-        /// Gets specified parameter from collection. Returns null if parameter with specified name doesn't exist.
+        /// Removes specified parameter from the collection.
         /// </summary>
         /// <param name="name">Parameter name.</param>
-        /// <returns>Returns parameter with specified name or null if not found.</returns>
-        public SIP_Parameter this[string name]
+        public void Remove(string name)
         {
-            get{ 
-                foreach(SIP_Parameter parameter in m_pCollection){
-                    if(parameter.Name.ToLower() == name.ToLower()){
-                        return parameter;
-                    }
-                }
+            var parameter = this[name];
+            if (parameter != null)
+            {
+                m_pCollection.Remove(parameter);
+            }
+        }
 
-                return null; 
+        /// <summary>
+        /// Adds or updates specified parameter value.
+        /// </summary>
+        /// <param name="name">Parameter name.</param>
+        /// <param name="value">Parameter value.</param>
+        public void Set(string name, string value)
+        {
+            if (Contains(name))
+            {
+                this[name].Value = value;
+            }
+            else
+            {
+                Add(name, value);
             }
         }
     }

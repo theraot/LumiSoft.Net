@@ -8,14 +8,14 @@ namespace LumiSoft.Net.SIP.Message
     /// Implements generic multi value SIP header field.
     /// This is used by header fields like Via,Contact, ... .
     /// </summary>
-    public class SIP_MultiValueHF<T> : SIP_HeaderField where T : SIP_t_Value,new()
+    public class SIP_MultiValueHF<T> : SIP_HeaderField where T : SIP_t_Value, new()
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="name">Header field name.</param>
         /// <param name="value">Header field value.</param>
-        public SIP_MultiValueHF(string name,string value) : base(name,value)
+        public SIP_MultiValueHF(string name, string value) : base(name, value)
         {
             Values = new List<T>();
 
@@ -25,47 +25,37 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Parses multi value header field values.
+        /// Gets values count.
         /// </summary>
-        /// <param name="value">Header field value.</param>
-        private void Parse(string value)
+        public int Count
         {
-            Values.Clear();
-            
-            var r = new StringReader(value);
-            while (r.Available > 0){
-                r.ReadToFirstChar();
-                // If we have COMMA, just consume it, it last value end.
-                if(r.StartsWith(",")){
-                    r.ReadSpecifiedLength(1);
+            get { return Values.Count; }
+        }
+
+        /// <summary>
+        /// Gets or sets header field value.
+        /// </summary>
+        public override string Value
+        {
+            get { return ToStringValue(); }
+
+            set
+            {
+                if (value != null)
+                {
+                    throw new ArgumentNullException("Property Value value may not be null !");
                 }
 
-                // Allow xxx-param to pasre 1 value from reader.
-                var param = new T();
-                param.Parse(r);
-                Values.Add(param);                
+                Parse(value);
+
+                base.Value = value;
             }
         }
 
         /// <summary>
-        /// Converts to valid mutli value header field value.
+        /// Gets header field values.
         /// </summary>
-        /// <returns></returns>
-        private string ToStringValue()
-        {
-            var retVal = new StringBuilder();
-            // Syntax: xxx-parm *(COMMA xxx-parm)
-            for (int i=0;i<Values.Count;i++){
-                retVal.Append(Values[i].ToStringValue());
-
-                // Don't add comma for last item.
-                if(i < Values.Count - 1){
-                    retVal.Append(',');
-                }
-            }
-
-            return retVal.ToString();
-        }
+        public List<T> Values { get; }
 
         /// <summary>
         /// Gets header field values.
@@ -82,40 +72,57 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="index">Index of value to remove.</param>
         public void Remove(int index)
         {
-            if(index > -1 && index < Values.Count){
+            if (index > -1 && index < Values.Count)
+            {
                 Values.RemoveAt(index);
             }
         }
 
         /// <summary>
-        /// Gets or sets header field value.
+        /// Parses multi value header field values.
         /// </summary>
-        public override string Value
+        /// <param name="value">Header field value.</param>
+        private void Parse(string value)
         {
-            get{ return ToStringValue(); }
+            Values.Clear();
 
-            set{
-                if(value != null){
-                    throw new ArgumentNullException("Property Value value may not be null !");
+            var r = new StringReader(value);
+            while (r.Available > 0)
+            {
+                r.ReadToFirstChar();
+                // If we have COMMA, just consume it, it last value end.
+                if (r.StartsWith(","))
+                {
+                    r.ReadSpecifiedLength(1);
                 }
 
-                Parse(value);
-
-                base.Value = value;
+                // Allow xxx-param to pasre 1 value from reader.
+                var param = new T();
+                param.Parse(r);
+                Values.Add(param);
             }
         }
 
         /// <summary>
-        /// Gets header field values.
+        /// Converts to valid mutli value header field value.
         /// </summary>
-        public List<T> Values { get; }
-
-        /// <summary>
-        /// Gets values count.
-        /// </summary>
-        public int Count
+        /// <returns></returns>
+        private string ToStringValue()
         {
-            get{ return Values.Count; }
+            var retVal = new StringBuilder();
+            // Syntax: xxx-parm *(COMMA xxx-parm)
+            for (int i = 0; i < Values.Count; i++)
+            {
+                retVal.Append(Values[i].ToStringValue());
+
+                // Don't add comma for last item.
+                if (i < Values.Count - 1)
+                {
+                    retVal.Append(',');
+                }
+            }
+
+            return retVal.ToString();
         }
     }
 }

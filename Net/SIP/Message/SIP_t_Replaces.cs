@@ -21,6 +21,106 @@ namespace LumiSoft.Net.SIP.Message
         private string m_CallID = "";
 
         /// <summary>
+        /// Gets or sets call id.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
+        public string CallID
+        {
+            get { return m_CallID; }
+
+            set
+            {
+                m_CallID = value ?? throw new ArgumentNullException("CallID");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Replaces 'early-flag' parameter.
+        /// </summary>
+        public bool EarlyFlag
+        {
+            get
+            {
+                if (Parameters.Contains("early-only"))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (!value)
+                {
+                    Parameters.Remove("early-only");
+                }
+                else
+                {
+                    Parameters.Set("early-only", null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Replaces 'from-tag' parameter. Value null means not specified.
+        /// </summary>
+        public string FromTag
+        {
+            get
+            {
+                var parameter = Parameters["from-tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("from-tag");
+                }
+                else
+                {
+                    Parameters.Set("from-tag", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Replaces 'to-tag' parameter. Value null means not specified.
+        /// </summary>
+        public string ToTag
+        {
+            get
+            {
+                var parameter = Parameters["to-tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("to-tag");
+                }
+                else
+                {
+                    Parameters.Set("to-tag", value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "Replaces" from specified value.
         /// </summary>
         /// <param name="value">SIP "Replaces" value.</param>
@@ -28,7 +128,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -51,7 +152,8 @@ namespace LumiSoft.Net.SIP.Message
                 early-flag      = "early-only"    
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -86,91 +188,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets call id.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-        public string CallID
-        {
-            get{ return m_CallID; }
-
-            set{
-                m_CallID = value ?? throw new ArgumentNullException("CallID");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets Replaces 'to-tag' parameter. Value null means not specified.
-        /// </summary>
-        public string ToTag
-        {
-            get{ 
-                var parameter = Parameters["to-tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("to-tag");
-                }
-                else{
-                    Parameters.Set("to-tag",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets Replaces 'from-tag' parameter. Value null means not specified.
-        /// </summary>
-        public string FromTag
-        {
-            get{ 
-                var parameter = Parameters["from-tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("from-tag");
-                }
-                else{
-                    Parameters.Set("from-tag",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets Replaces 'early-flag' parameter.
-        /// </summary>
-        public bool EarlyFlag
-        {                                    
-            get
-            {
-                if(Parameters.Contains("early-only")){
-                    return true;
-                }
-
-                return false;
-            }
-
-            set{
-                if(!value){
-                    Parameters.Remove("early-only");
-                }
-                else{
-                    Parameters.Set("early-only",null);
-                }
-            }
         }
     }
 }

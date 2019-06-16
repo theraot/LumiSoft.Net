@@ -13,6 +13,354 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioIn : Stream
     {
+        private readonly int m_BitsPerSample = 16;
+        private readonly int m_Channels = 1;
+
+        private bool m_IsDisposed;
+        private AudioInDevice m_pDevice;
+        private WaveIn m_pWaveIn;
+        private readonly int m_SamplesPerSec = 8000;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="device">Audio input device.</param>
+        /// <param name="samplesPerSec">Sample rate, in samples per second (hertz).</param>
+        /// <param name="bitsPerSample">Bits per sample. For PCM 8 or 16 are the only valid values.</param>
+        /// <param name="channels">Number of channels.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>device</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public AudioIn(AudioInDevice device, int samplesPerSec, int bitsPerSample, int channels)
+        {
+            if (samplesPerSec < 1)
+            {
+                throw new ArgumentException("Argument 'samplesPerSec' value must be >= 1.", "samplesPerSec");
+            }
+            if (bitsPerSample < 8)
+            {
+                throw new ArgumentException("Argument 'bitsPerSample' value must be >= 8.", "bitsPerSample");
+            }
+            if (channels < 1)
+            {
+                throw new ArgumentException("Argument 'channels' value must be >= 1.", "channels");
+            }
+
+            m_pDevice = device ?? throw new ArgumentNullException("device");
+            m_SamplesPerSec = samplesPerSec;
+            m_BitsPerSample = bitsPerSample;
+            m_Channels = channels;
+
+            m_pWaveIn = new WaveIn(device, samplesPerSec, bitsPerSample, channels, 320);
+            m_pWaveIn.Start();
+        }
+
+        /// <summary>
+        /// Gets all available audio input devices.
+        /// </summary>
+        public static AudioInDevice[] Devices
+        {
+            get { return WaveIn.Devices; }
+        }
+
+        /// <summary>
+        /// Gets number of bytes available for reading.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int Available
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pWaveIn.ReadBuffer.Available;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of bits per sample.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int BitsPerSample
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_BitsPerSample;
+            }
+        }
+
+        /// <summary>
+        /// Gets one sample block size in bytes (nChannels * (bitsPerSample / 8)).
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int BlockSize
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_Channels * (m_BitsPerSample / 8);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports reading.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanRead
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports seeking.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanSeek
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports writing.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanWrite
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of channels.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int Channels
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_Channels;
+            }
+        }
+
+        /// <summary>
+        /// This property is not supported and always throws a NotSupportedException.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
+        public override long Length
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="NotSupportedException">Is raised when this property is accessed.</exception>
+        public override long Position
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                throw new NotSupportedException();
+            }
+
+            set
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// Gets number of samples per second.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int SamplesPerSec
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_SamplesPerSec;
+            }
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        public new void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                return;
+            }
+            m_IsDisposed = true;
+
+            m_pWaveIn.Dispose();
+            m_pWaveIn = null;
+        }
+
+        /// <summary>
+        /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override void Flush()
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("Base64Stream");
+            }
+        }
+
+        /// <summary>
+        /// Reads up to specified count of bytes from the audion in device.
+        /// </summary>
+        /// <param name="buffer">Data buffer.</param>
+        /// <param name="offset">Index in the buffer.</param>
+        /// <param name="count">Maximum number of bytes to read.</param>
+        /// <returns>Returns number of bytes readed. Returns 0 if no data in the buffer.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of allowed range.</exception>
+        /// <remarks>The implementation will block until at least one audio sample block can be read.</remarks>
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+            }
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' value must be >= 0.");
+            }
+            if (offset + count > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
+            }
+
+            // Wait while data available.
+            while (m_pWaveIn.ReadBuffer.Available == 0)
+            {
+                Thread.Sleep(1);
+            }
+
+            return m_pWaveIn.ReadBuffer.Read(buffer, offset, count - (count % m_pWaveIn.BlockSize));
+        }
+
+        /// <summary>
+        /// Sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
+        /// </summary>
+        /// <param name="offset">A byte offset relative to the <b>origin</b> parameter.</param>
+        /// <param name="origin">A value of type SeekOrigin indicating the reference point used to obtain the new position.</param>
+        /// <returns>The new position within the current stream.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("Base64Stream");
+            }
+
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
+        /// </summary>
+        /// <param name="value">The desired length of the current stream in bytes.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="Seek">Is raised when this method is accessed.</exception>
+        public override void SetLength(long value)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("Base64Stream");
+            }
+
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+        /// This method is not supported and always throws a NotSupportedException.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("SmartStream");
+            }
+
+            throw new NotSupportedException();
+        }
         /// <summary>
         /// This class implements streaming microphone wav data receiver.
         /// </summary>
@@ -26,7 +374,7 @@ namespace LumiSoft.Net.Media
             /// <param name="dwUser">User-instance data specified with waveOutOpen.</param>
             /// <param name="dwParam1">Message parameter.</param>
             /// <param name="dwParam2">Message parameter.</param>
-            private delegate void waveInProc(IntPtr hdrvr,int uMsg,int dwUser,int dwParam1,int dwParam2);
+            private delegate void waveInProc(IntPtr hdrvr, int uMsg, int dwUser, int dwParam1, int dwParam2);
 
             /// <summary>
             /// The waveInAddBuffer function sends an input buffer to the given waveform-audio input device. When the buffer is filled, the application is notified.
@@ -36,7 +384,7 @@ namespace LumiSoft.Net.Media
             /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
 		    [DllImport("winmm.dll")]
-		    private static extern int waveInAddBuffer(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
+            private static extern int waveInAddBuffer(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
             /// <summary>
             /// Closes the specified waveform input device.
@@ -44,7 +392,7 @@ namespace LumiSoft.Net.Media
             /// <param name="hWaveOut">Handle to the waveform-audio input device. If the function succeeds, the handle is no longer valid after this call.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
             [DllImport("winmm.dll")]
-		    private static extern int waveInClose(IntPtr hWaveOut);
+            private static extern int waveInClose(IntPtr hWaveOut);
 
             /// <summary>
             /// Queries a specified waveform device to determine its capabilities.
@@ -54,7 +402,7 @@ namespace LumiSoft.Net.Media
             /// <param name="cbwoc">Size, in bytes, of the WAVEOUTCAPS structure.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
             [DllImport("winmm.dll")]
-            private static extern uint waveInGetDevCaps(uint hwo,ref WAVEOUTCAPS pwoc,int cbwoc);
+            private static extern uint waveInGetDevCaps(uint hwo, ref WAVEOUTCAPS pwoc, int cbwoc);
 
             /// <summary>
             /// Get the waveInGetNumDevs function returns the number of waveform-audio input devices present in the system.
@@ -78,7 +426,7 @@ namespace LumiSoft.Net.Media
             /// <param name="dwFlags">Flags for opening the device.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
 		    [DllImport("winmm.dll")]
-		    private static extern int waveInOpen(out IntPtr hWaveOut,int uDeviceID,WAVEFORMATEX lpFormat,waveInProc dwCallback,int dwInstance,int dwFlags);
+            private static extern int waveInOpen(out IntPtr hWaveOut, int uDeviceID, WAVEFORMATEX lpFormat, waveInProc dwCallback, int dwInstance, int dwFlags);
 
             /// <summary>
             /// Prepares a waveform data block for recording.
@@ -89,7 +437,7 @@ namespace LumiSoft.Net.Media
             /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
 		    [DllImport("winmm.dll")]
-		    private static extern int waveInPrepareHeader(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
+            private static extern int waveInPrepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
             /// <summary>
             /// Stops input on a specified waveform output device and resets the current position to 0.
@@ -97,7 +445,7 @@ namespace LumiSoft.Net.Media
             /// <param name="hWaveOut">Handle to the waveform-audio input device.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
             [DllImport("winmm.dll")]
-		    private static extern int waveInReset(IntPtr hWaveOut);
+            private static extern int waveInReset(IntPtr hWaveOut);
 
             /// <summary>
             /// Starts input on the given waveform-audio input device.
@@ -105,7 +453,7 @@ namespace LumiSoft.Net.Media
             /// <param name="hWaveOut">Handle to the waveform-audio input device.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
             [DllImport("winmm.dll")]
-		    private static extern int waveInStart(IntPtr hWaveOut);
+            private static extern int waveInStart(IntPtr hWaveOut);
 
             /// <summary>
             /// Stops input on the given waveform-audio input device.
@@ -113,7 +461,7 @@ namespace LumiSoft.Net.Media
             /// <param name="hWaveOut">Handle to the waveform-audio input device.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
             [DllImport("winmm.dll")]
-		    private static extern int waveInStop(IntPtr hWaveOut);
+            private static extern int waveInStop(IntPtr hWaveOut);
 
             /// <summary>
             /// Cleans up the preparation performed by waveInPrepareHeader.
@@ -123,7 +471,7 @@ namespace LumiSoft.Net.Media
             /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
             /// <returns>Returns value of MMSYSERR.</returns>
 		    [DllImport("winmm.dll")]
-		    private static extern int waveInUnprepareHeader(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
+            private static extern int waveInUnprepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
             /// <summary>
             /// This class holds queued recording buffer.
@@ -139,11 +487,11 @@ namespace LumiSoft.Net.Media
                 /// <param name="headerHandle">Header handle.</param>
                 /// <param name="dataHandle">Wav header data handle.</param>
                 /// <param name="dataSize">Data size in bytes.</param>
-                public BufferItem(ref GCHandle headerHandle,ref GCHandle dataHandle,int dataSize)
+                public BufferItem(ref GCHandle headerHandle, ref GCHandle dataHandle, int dataSize)
                 {
                     m_HeaderHandle = headerHandle;
-                    m_DataHandle   = dataHandle;
-                    DataSize     = dataSize;
+                    m_DataHandle = dataHandle;
+                    DataSize = dataSize;
                 }
 
                 /// <summary>
@@ -160,7 +508,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public GCHandle HeaderHandle
                 {
-                    get{ return m_HeaderHandle; }
+                    get { return m_HeaderHandle; }
                 }
 
                 /// <summary>
@@ -168,7 +516,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public WAVEHDR Header
                 {
-                    get{ return (WAVEHDR)m_HeaderHandle.Target; }
+                    get { return (WAVEHDR)m_HeaderHandle.Target; }
                 }
 
                 /// <summary>
@@ -176,7 +524,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public GCHandle DataHandle
                 {
-                    get{ return m_DataHandle; }
+                    get { return m_DataHandle; }
                 }
 
                 /// <summary>
@@ -184,7 +532,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public byte[] Data
                 {
-                    get{ return (byte[])m_DataHandle.Target; }
+                    get { return (byte[])m_DataHandle.Target; }
                 }
 
                 /// <summary>
@@ -294,14 +642,14 @@ namespace LumiSoft.Net.Media
             private class WavConstants
             {
                 public const int MM_WOM_OPEN = 0x3BB;
-		        public const int MM_WOM_CLOSE = 0x3BC;
-		        public const int MM_WOM_DONE = 0x3BD;
+                public const int MM_WOM_CLOSE = 0x3BC;
+                public const int MM_WOM_DONE = 0x3BD;
 
-                public const int MM_WIM_OPEN = 0x3BE;   
+                public const int MM_WIM_OPEN = 0x3BE;
                 public const int MM_WIM_CLOSE = 0x3BF;
                 public const int MM_WIM_DATA = 0x3C0;
 
-		        public const int CALLBACK_FUNCTION = 0x00030000;
+                public const int CALLBACK_FUNCTION = 0x00030000;
 
                 public const int WAVERR_STILLPLAYING = 0x21;
 
@@ -377,7 +725,7 @@ namespace LumiSoft.Net.Media
                 /// <summary>
                 /// Product name in a null-terminated string.
                 /// </summary>
-                [MarshalAs(UnmanagedType.ByValTStr,SizeConst = 32)]
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
                 public readonly string szPname;
                 /// <summary>
                 /// Standard formats that are supported.
@@ -456,21 +804,21 @@ namespace LumiSoft.Net.Media
                 public const int G729A = 0x0083;*/
             }
 
-            private AudioInDevice                m_pInDevice;
-            private readonly int                          m_SamplesPerSec  = 8000;
-            private readonly int                          m_BitsPerSample  = 8;
-            private readonly int                          m_Channels       = 1;
-            private readonly int                          m_BufferSize     = 400;
-            private IntPtr                       m_pWavDevHandle  = IntPtr.Zero;
-            private readonly int                          m_BlockSize;
-            private BufferItem                   m_pCurrentBuffer;
+            private AudioInDevice m_pInDevice;
+            private readonly int m_SamplesPerSec = 8000;
+            private readonly int m_BitsPerSample = 8;
+            private readonly int m_Channels = 1;
+            private readonly int m_BufferSize = 400;
+            private IntPtr m_pWavDevHandle = IntPtr.Zero;
+            private readonly int m_BlockSize;
+            private BufferItem m_pCurrentBuffer;
             private readonly CircleCollection<BufferItem> m_pBuffers;
-            private readonly waveInProc                   m_pWaveInProc;
-            private bool                         m_IsRecording;
-            private readonly FifoBuffer                   m_pReadBuffer;
+            private readonly waveInProc m_pWaveInProc;
+            private bool m_IsRecording;
+            private readonly FifoBuffer m_pReadBuffer;
             //private Thread                       m_pBufferThread  = null;
-            private readonly object                       m_pLock          = new object();
-            
+            private readonly object m_pLock = new object();
+
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -482,46 +830,50 @@ namespace LumiSoft.Net.Media
             /// <param name="bufferSize">Specifies recording buffer size.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>outputDevice</b> is null.</exception>
             /// <exception cref="ArgumentException">Is raised when any of the aruments has invalid value.</exception>
-            public WaveIn(AudioInDevice device,int samplesPerSec,int bitsPerSample,int channels,int bufferSize)
+            public WaveIn(AudioInDevice device, int samplesPerSec, int bitsPerSample, int channels, int bufferSize)
             {
-                if(samplesPerSec < 8000){
+                if (samplesPerSec < 8000)
+                {
                     throw new ArgumentException("Argument 'samplesPerSec' value must be >= 8000.");
                 }
-                if(bitsPerSample < 8){
+                if (bitsPerSample < 8)
+                {
                     throw new ArgumentException("Argument 'bitsPerSample' value must be >= 8.");
                 }
-                if(channels < 1){
+                if (channels < 1)
+                {
                     throw new ArgumentException("Argument 'channels' value must be >= 1.");
                 }
 
-                m_pInDevice     = device ?? throw new ArgumentNullException("device");
+                m_pInDevice = device ?? throw new ArgumentNullException("device");
                 m_SamplesPerSec = samplesPerSec;
                 m_BitsPerSample = bitsPerSample;
-                m_Channels      = channels;
-                m_BufferSize    = bufferSize;
-                m_BlockSize     = m_Channels * (m_BitsPerSample / 8);
-                m_pBuffers      = new CircleCollection<BufferItem>();
-                m_pReadBuffer   = new FifoBuffer(32000);
+                m_Channels = channels;
+                m_BufferSize = bufferSize;
+                m_BlockSize = m_Channels * (m_BitsPerSample / 8);
+                m_pBuffers = new CircleCollection<BufferItem>();
+                m_pReadBuffer = new FifoBuffer(32000);
 
                 // Try to open wav device.            
                 var format = new WAVEFORMATEX();
-                format.wFormatTag      = WavFormat.PCM;
-                format.nChannels       = (ushort)m_Channels;
-                format.nSamplesPerSec  = (uint)samplesPerSec;                        
+                format.wFormatTag = WavFormat.PCM;
+                format.nChannels = (ushort)m_Channels;
+                format.nSamplesPerSec = (uint)samplesPerSec;
                 format.nAvgBytesPerSec = (uint)(m_SamplesPerSec * m_Channels * (m_BitsPerSample / 8));
-                format.nBlockAlign     = (ushort)m_BlockSize;
-                format.wBitsPerSample  = (ushort)m_BitsPerSample;
-                format.cbSize          = 0; 
+                format.nBlockAlign = (ushort)m_BlockSize;
+                format.wBitsPerSample = (ushort)m_BitsPerSample;
+                format.cbSize = 0;
                 // We must delegate reference, otherwise GC will collect it.
                 m_pWaveInProc = new waveInProc(OnWaveInProc);
-                int result = waveInOpen(out m_pWavDevHandle,m_pInDevice.Index,format,m_pWaveInProc,0,WavConstants.CALLBACK_FUNCTION);
-                if(result != MMSYSERR.NOERROR){
+                int result = waveInOpen(out m_pWavDevHandle, m_pInDevice.Index, format, m_pWaveInProc, 0, WavConstants.CALLBACK_FUNCTION);
+                if (result != MMSYSERR.NOERROR)
+                {
                     throw new Exception("Failed to open wav device, error: " + result.ToString() + ".");
                 }
 
                 CreateBuffers();
             }
-        
+
             /// <summary>
             /// Default destructor.
             /// </summary>
@@ -535,28 +887,32 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Dispose()
             {
-                if(IsDisposed){
+                if (IsDisposed)
+                {
                     return;
                 }
                 IsDisposed = true;
 
-                try{
+                try
+                {
                     // If recording, we need to reset wav device first.
                     waveInReset(m_pWavDevHandle);
-                
+
                     // If there are unprepared wav headers, we need to unprepare these.
-                    foreach(BufferItem item in m_pBuffers.ToArray()){
-                        waveInUnprepareHeader(m_pWavDevHandle,item.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(item.Header));
+                    foreach (BufferItem item in m_pBuffers.ToArray())
+                    {
+                        waveInUnprepareHeader(m_pWavDevHandle, item.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(item.Header));
                         item.Dispose();
                     }
-                
+
                     // Close input device.
                     waveInClose(m_pWavDevHandle);
 
-                    m_pInDevice     = null;
+                    m_pInDevice = null;
                     m_pWavDevHandle = IntPtr.Zero;
                 }
-                catch{                
+                catch
+                {
                 }
             }
 
@@ -565,13 +921,15 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Start()
             {
-                if(m_IsRecording){
+                if (m_IsRecording)
+                {
                     return;
                 }
                 m_IsRecording = true;
 
                 int result = waveInStart(m_pWavDevHandle);
-                if(result != MMSYSERR.NOERROR){
+                if (result != MMSYSERR.NOERROR)
+                {
                     throw new Exception("Failed to start wav device, error: " + result + ".");
                 }
             }
@@ -581,13 +939,15 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Stop()
             {
-                if(!m_IsRecording){
+                if (!m_IsRecording)
+                {
                     return;
                 }
                 m_IsRecording = false;
-            
+
                 int result = waveInStop(m_pWavDevHandle);
-                if(result != MMSYSERR.NOERROR){
+                if (result != MMSYSERR.NOERROR)
+                {
                     throw new Exception("Failed to stop wav device, error: " + result + ".");
                 }
             }
@@ -600,47 +960,56 @@ namespace LumiSoft.Net.Media
             /// <param name="dwUser">User-instance data specified with waveOutOpen.</param>
             /// <param name="dwParam1">Message parameter.</param>
             /// <param name="dwParam2">Message parameter.</param>
-            private void OnWaveInProc(IntPtr hdrvr,int uMsg,int dwUser,int dwParam1,int dwParam2)
-            {   
+            private void OnWaveInProc(IntPtr hdrvr, int uMsg, int dwUser, int dwParam1, int dwParam2)
+            {
                 // NOTE: MSDN warns, we may not call any wav related methods here.
                 // This will cause deadlock.
 
-                if(IsDisposed){
+                if (IsDisposed)
+                {
                     return;
                 }
 
                 // Do we need to lock here ? OnWaveInProc may be called for another buffer same time when we are here ?
 
-                lock(m_pLock){
-                    try{
-                        if(uMsg == WavConstants.MM_WIM_DATA){
+                lock (m_pLock)
+                {
+                    try
+                    {
+                        if (uMsg == WavConstants.MM_WIM_DATA)
+                        {
                             // Queue data for reading.
-                            m_pReadBuffer.Write(m_pCurrentBuffer.Data,0,m_pCurrentBuffer.Data.Length,true);
+                            m_pReadBuffer.Write(m_pCurrentBuffer.Data, 0, m_pCurrentBuffer.Data.Length, true);
 
                             var buffer = m_pCurrentBuffer;
 
                             m_pCurrentBuffer = m_pBuffers.Next();
 
                             // Free buffer and queue it for reuse.
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){
-                                try{
-                                    if(IsDisposed){
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(delegate (object state)
+                            {
+                                try
+                                {
+                                    if (IsDisposed)
+                                    {
                                         return;
                                     }
 
                                     // Prepare buffer for reuse.
-                                    waveInUnprepareHeader(m_pWavDevHandle,buffer.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(buffer.Header));
+                                    waveInUnprepareHeader(m_pWavDevHandle, buffer.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(buffer.Header));
                                     // Prepare new buffer.
-                                    waveInPrepareHeader(m_pWavDevHandle,buffer.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(buffer.Header));
+                                    waveInPrepareHeader(m_pWavDevHandle, buffer.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(buffer.Header));
                                     // Append buffer for recording.
-                                    waveInAddBuffer(m_pWavDevHandle,buffer.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(buffer.Header));
+                                    waveInAddBuffer(m_pWavDevHandle, buffer.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(buffer.Header));
                                 }
-                                catch{
+                                catch
+                                {
                                 }
                             }));
                         }
                     }
-                    catch{
+                    catch
+                    {
                     }
                 }
             }
@@ -651,22 +1020,25 @@ namespace LumiSoft.Net.Media
             /// <param name="state">User data.</param>
             private void ProcessActiveBuffer(object state)
             {
-                try{            
-                    lock(m_pBuffers){
+                try
+                {
+                    lock (m_pBuffers)
+                    {
                         // Queue data for reading.
                         //m_pReadBuffer.Write(m_pCurrentBuffer.Data,0,m_pCurrentBuffer.Data.Length,true);
 
                         // Prepare buffer for reuse.
-                        waveInUnprepareHeader(m_pWavDevHandle,m_pCurrentBuffer.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_pCurrentBuffer.Header));
+                        waveInUnprepareHeader(m_pWavDevHandle, m_pCurrentBuffer.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(m_pCurrentBuffer.Header));
                         // Prepare new buffer.
-                        waveInPrepareHeader(m_pWavDevHandle,m_pCurrentBuffer.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_pCurrentBuffer.Header));
+                        waveInPrepareHeader(m_pWavDevHandle, m_pCurrentBuffer.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(m_pCurrentBuffer.Header));
                         // Append buffer for recording.
-                        waveInAddBuffer(m_pWavDevHandle,m_pCurrentBuffer.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_pCurrentBuffer.Header));
-                                          
+                        waveInAddBuffer(m_pWavDevHandle, m_pCurrentBuffer.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(m_pCurrentBuffer.Header));
+
                         //m_pCurrentBuffer = m_pBuffers.Next();
                     }
                 }
-                catch{                    
+                catch
+                {
                 }
             }
 
@@ -674,35 +1046,38 @@ namespace LumiSoft.Net.Media
             /// Fills recording buffers.
             /// </summary>
             private void CreateBuffers()
-            {               
-                while(m_pBuffers.Count < 10){
-                    var   data       = new byte[m_BufferSize];
-                    var dataHandle = GCHandle.Alloc(data,GCHandleType.Pinned);
+            {
+                while (m_pBuffers.Count < 10)
+                {
+                    var data = new byte[m_BufferSize];
+                    var dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
 
                     var wavHeader = new WAVEHDR();
-                    wavHeader.lpData          = dataHandle.AddrOfPinnedObject();
-                    wavHeader.dwBufferLength  = (uint)data.Length;
+                    wavHeader.lpData = dataHandle.AddrOfPinnedObject();
+                    wavHeader.dwBufferLength = (uint)data.Length;
                     wavHeader.dwBytesRecorded = 0;
-                    wavHeader.dwUser          = IntPtr.Zero;
-                    wavHeader.dwFlags         = 0;
-                    wavHeader.dwLoops         = 0;
-                    wavHeader.lpNext          = IntPtr.Zero;
-                    wavHeader.reserved        = 0;
-                    var headerHandle = GCHandle.Alloc(wavHeader,GCHandleType.Pinned);
-                    int result = 0;        
-                    result = waveInPrepareHeader(m_pWavDevHandle,headerHandle.AddrOfPinnedObject(),Marshal.SizeOf(wavHeader));                    
-                    if(result != MMSYSERR.NOERROR){
+                    wavHeader.dwUser = IntPtr.Zero;
+                    wavHeader.dwFlags = 0;
+                    wavHeader.dwLoops = 0;
+                    wavHeader.lpNext = IntPtr.Zero;
+                    wavHeader.reserved = 0;
+                    var headerHandle = GCHandle.Alloc(wavHeader, GCHandleType.Pinned);
+                    int result = 0;
+                    result = waveInPrepareHeader(m_pWavDevHandle, headerHandle.AddrOfPinnedObject(), Marshal.SizeOf(wavHeader));
+                    if (result != MMSYSERR.NOERROR)
+                    {
                         throw new Exception("Error preparing wave in buffer, error: " + result + ".");
                     }
 
-                    m_pBuffers.Add(new BufferItem(ref headerHandle,ref dataHandle,m_BufferSize));
+                    m_pBuffers.Add(new BufferItem(ref headerHandle, ref dataHandle, m_BufferSize));
 
-                    result = waveInAddBuffer(m_pWavDevHandle,headerHandle.AddrOfPinnedObject(),Marshal.SizeOf(wavHeader));
-                    if(result != MMSYSERR.NOERROR){
+                    result = waveInAddBuffer(m_pWavDevHandle, headerHandle.AddrOfPinnedObject(), Marshal.SizeOf(wavHeader));
+                    if (result != MMSYSERR.NOERROR)
+                    {
                         throw new Exception("Error adding wave in buffer, error: " + result + ".");
                     }
-                } 
-               
+                }
+
                 m_pCurrentBuffer = m_pBuffers[0];
             }
 
@@ -711,14 +1086,17 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public static AudioInDevice[] Devices
             {
-                get{
+                get
+                {
                     var retVal = new List<AudioInDevice>();
                     // Get all available output devices and their info.                
                     int devicesCount = waveInGetNumDevs();
-                    for(int i=0;i<devicesCount;i++){
+                    for (int i = 0; i < devicesCount; i++)
+                    {
                         var pwoc = new WAVEOUTCAPS();
-                        if (waveInGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
-                            retVal.Add(new AudioInDevice(i,pwoc.szPname,pwoc.wChannels));
+                        if (waveInGetDevCaps((uint)i, ref pwoc, Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR)
+                        {
+                            retVal.Add(new AudioInDevice(i, pwoc.szPname, pwoc.wChannels));
                         }
                     }
 
@@ -737,12 +1115,14 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public AudioInDevice InputDevice
             {
-                get{
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
-                    return m_pInDevice; 
+                    return m_pInDevice;
                 }
             }
 
@@ -752,12 +1132,14 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public int SamplesPerSec
             {
-                get{                 
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
-                    return m_SamplesPerSec; 
+                    return m_SamplesPerSec;
                 }
             }
 
@@ -767,12 +1149,14 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public int BitsPerSample
             {
-                get{ 
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
-                
-                    return m_BitsPerSample; 
+
+                    return m_BitsPerSample;
                 }
             }
 
@@ -782,12 +1166,14 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public int Channels
             {
-                get{ 
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
-                
-                    return m_Channels; 
+
+                    return m_Channels;
                 }
             }
 
@@ -797,12 +1183,14 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public int BufferSize
             {
-                get{ 
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
-                
-                    return m_BufferSize; 
+
+                    return m_BufferSize;
                 }
             }
 
@@ -812,12 +1200,14 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public int BlockSize
             {
-                get{ 
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
-                    return m_BlockSize; 
+                    return m_BlockSize;
                 }
             }
 
@@ -827,326 +1217,15 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public FifoBuffer ReadBuffer
             {
-                get{ 
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
-                    return m_pReadBuffer; 
+                    return m_pReadBuffer;
                 }
-            }
-        }
-
-        private bool          m_IsDisposed;
-        private AudioInDevice m_pDevice;
-        private readonly int           m_SamplesPerSec = 8000;
-        private readonly int           m_BitsPerSample = 16;
-        private readonly int           m_Channels      = 1;
-        private WaveIn        m_pWaveIn;
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="device">Audio input device.</param>
-        /// <param name="samplesPerSec">Sample rate, in samples per second (hertz).</param>
-        /// <param name="bitsPerSample">Bits per sample. For PCM 8 or 16 are the only valid values.</param>
-        /// <param name="channels">Number of channels.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>device</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public AudioIn(AudioInDevice device,int samplesPerSec,int bitsPerSample,int channels)
-        {
-            if(samplesPerSec < 1){
-                throw new ArgumentException("Argument 'samplesPerSec' value must be >= 1.","samplesPerSec");
-            }
-            if(bitsPerSample < 8){
-                throw new ArgumentException("Argument 'bitsPerSample' value must be >= 8.","bitsPerSample");
-            }
-            if(channels < 1){
-                throw new ArgumentException("Argument 'channels' value must be >= 1.","channels");
-            }
-            
-            m_pDevice       = device ?? throw new ArgumentNullException("device");
-            m_SamplesPerSec = samplesPerSec;
-            m_BitsPerSample = bitsPerSample;
-            m_Channels      = channels;
-
-            m_pWaveIn = new WaveIn(device,samplesPerSec,bitsPerSample,channels,320);
-            m_pWaveIn.Start();
-        }
-
-        /// <summary>
-        /// Cleans up any resources being used.
-        /// </summary>
-        public new void Dispose()
-        {
-            if(m_IsDisposed){
-                return;
-            }
-            m_IsDisposed = true;
-
-            m_pWaveIn.Dispose();
-            m_pWaveIn = null;
-        }
-
-        /// <summary>
-        /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override void Flush()
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("Base64Stream");
-            }
-        }
-
-        /// <summary>
-        /// Sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
-        /// </summary>
-        /// <param name="offset">A byte offset relative to the <b>origin</b> parameter.</param>
-        /// <param name="origin">A value of type SeekOrigin indicating the reference point used to obtain the new position.</param>
-        /// <returns>The new position within the current stream.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
-        public override long Seek(long offset,SeekOrigin origin)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("Base64Stream");
-            }
-
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
-        /// </summary>
-        /// <param name="value">The desired length of the current stream in bytes.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="Seek">Is raised when this method is accessed.</exception>
-        public override void SetLength(long value)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("Base64Stream");
-            }
-
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Reads up to specified count of bytes from the audion in device.
-        /// </summary>
-        /// <param name="buffer">Data buffer.</param>
-        /// <param name="offset">Index in the buffer.</param>
-        /// <param name="count">Maximum number of bytes to read.</param>
-        /// <returns>Returns number of bytes readed. Returns 0 if no data in the buffer.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of allowed range.</exception>
-        /// <remarks>The implementation will block until at least one audio sample block can be read.</remarks>
-        public override int Read(byte[] buffer,int offset,int count)
-        {
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }          
-            if(offset < 0){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
-            }
-            if(count < 0){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' value must be >= 0.");
-            }
-            if(offset + count > buffer.Length){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' is bigger than than argument 'buffer' can store.");
-            }
-
-            // Wait while data available.
-            while(m_pWaveIn.ReadBuffer.Available == 0){
-                Thread.Sleep(1);
-            }
-
-            return m_pWaveIn.ReadBuffer.Read(buffer,offset,count - (count % m_pWaveIn.BlockSize));
-        }
-
-        /// <summary>
-        /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
-        /// This method is not supported and always throws a NotSupportedException.
-        /// </summary>
-        /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
-        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
-        /// <param name="count">The number of bytes to be written to the current stream.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
-        public override void Write(byte[] buffer,int offset,int count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
- 
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Gets all available audio input devices.
-        /// </summary>
-        public static AudioInDevice[] Devices
-        {
-            get{ return WaveIn.Devices; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports reading.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanRead
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return true;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports seeking.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanSeek
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return false;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports writing.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanWrite
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return false;
-            } 
-        }
-
-        /// <summary>
-        /// This property is not supported and always throws a NotSupportedException.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
-        public override long Length
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                throw new NotSupportedException();
-            } 
-        }
-
-        /// <summary>
-        /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="NotSupportedException">Is raised when this property is accessed.</exception>
-        public override long Position
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                throw new NotSupportedException();
-            } 
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                throw new NotSupportedException();
-            }
-        }
-
-        /// <summary>
-        /// Gets number of samples per second.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int SamplesPerSec
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
- 
-                return m_SamplesPerSec; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of bits per sample.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int BitsPerSample
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-            
-                return m_BitsPerSample; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of channels.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int Channels
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-             
-                return m_Channels; 
-            }
-        }
-
-        /// <summary>
-        /// Gets one sample block size in bytes (nChannels * (bitsPerSample / 8)).
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int BlockSize
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_Channels * (m_BitsPerSample / 8); 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of bytes available for reading.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int Available
-        {
-            get{ 
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pWaveIn.ReadBuffer.Available; 
             }
         }
     }

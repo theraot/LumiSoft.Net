@@ -17,22 +17,23 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
         /// <summary>
-        /// Gets or sets stream where RFC822 message is stored.
-        /// </summary>
-        public Stream Stream { get; set; }
-
-        /// <summary>
         /// This method is called when message storing has completed.
         /// </summary>
         public event EventHandler StoringCompleted;
+
+        /// <summary>
+        /// Gets or sets stream where RFC822 message is stored.
+        /// </summary>
+        public Stream Stream { get; set; }
 
         /// <summary>
         /// Raises <b>StoringCompleted</b> event.
         /// </summary>
         internal void OnStoringCompleted()
         {
-            if(StoringCompleted != null){
-                StoringCompleted(this,new EventArgs());
+            if (StoringCompleted != null)
+            {
+                StoringCompleted(this, new EventArgs());
             }
         }
     }

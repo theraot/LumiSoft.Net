@@ -18,6 +18,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets list of supported charsets.
+        /// </summary>
+        public string[] Charsets { get; }
+
+        /// <summary>
         /// Parses BADCHARSET optional response from string.
         /// </summary>
         /// <param name="value">BADCHARSET optional response string.</param>
@@ -25,13 +30,15 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_BadCharset Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new[]{' '},2);
-            if (!string.Equals("BADCHARSET",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid BADCHARSET response value.","value");
+            var code_value = value.Split(new[] { ' ' }, 2);
+            if (!string.Equals("BADCHARSET", code_value[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid BADCHARSET response value.", "value");
             }
 
             return new IMAP_t_orc_BadCharset(code_value[1].Trim().Split(' '));
@@ -43,12 +50,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "BADCHARSET " + Net_Utils.ArrayToString(Charsets," ");
+            return "BADCHARSET " + Net_Utils.ArrayToString(Charsets, " ");
         }
-
-        /// <summary>
-        /// Gets list of supported charsets.
-        /// </summary>
-        public string[] Charsets { get; }
     }
 }

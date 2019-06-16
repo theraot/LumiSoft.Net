@@ -28,53 +28,9 @@ namespace LumiSoft.Net.Mail
         }
 
         /// <summary>
-        /// Parses header field from the specified value.
+        /// Gets mailbox address. Value null means null-path.
         /// </summary>
-        /// <param name="value">Header field value. Header field name must be included. For example: 'Return-Path: &lt;jhon.doe@domain.com&gt;'.</param>
-        /// <returns>Returns parsed header field.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
-        public static Mail_h_ReturnPath Parse(string value)
-        {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            var name_value = value.Split(new[]{':'},2);
-            if (name_value.Length != 2){
-                throw new ParseException("Invalid header field value '" + value + "'.");
-            }
-
-            var retVal = new Mail_h_ReturnPath(null);
-
-            var r = new MIME_Reader(name_value[1].Trim());
-            r.ToFirstChar();
-            // Return-Path missing <>, some server won't be honor RFC.
-            if(!r.StartsWith("<")){
-                retVal.Address = r.ToEnd();
-            }
-            else{
-                retVal.Address = r.ReadParenthesized();
-            }
-
-            return retVal;
-        }
-
-        /// <summary>
-        /// Returns header field as string.
-        /// </summary>
-        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
-        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.</param>
-        /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
-        /// <returns>Returns header field as string.</returns>
-        public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
-        {
-            if(string.IsNullOrEmpty(Address)){
-                return "Return-Path: <>\r\n";
-            }
-
-            return "Return-Path: <" + Address + ">\r\n";
-        }
+        public string Address { get; private set; }
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -88,12 +44,61 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         public override string Name
         {
-            get{ return "Return-Path"; }
+            get { return "Return-Path"; }
         }
 
         /// <summary>
-        /// Gets mailbox address. Value null means null-path.
+        /// Parses header field from the specified value.
         /// </summary>
-        public string Address { get; private set; }
+        /// <param name="value">Header field value. Header field name must be included. For example: 'Return-Path: &lt;jhon.doe@domain.com&gt;'.</param>
+        /// <returns>Returns parsed header field.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
+        public static Mail_h_ReturnPath Parse(string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            var name_value = value.Split(new[] { ':' }, 2);
+            if (name_value.Length != 2)
+            {
+                throw new ParseException("Invalid header field value '" + value + "'.");
+            }
+
+            var retVal = new Mail_h_ReturnPath(null);
+
+            var r = new MIME_Reader(name_value[1].Trim());
+            r.ToFirstChar();
+            // Return-Path missing <>, some server won't be honor RFC.
+            if (!r.StartsWith("<"))
+            {
+                retVal.Address = r.ToEnd();
+            }
+            else
+            {
+                retVal.Address = r.ReadParenthesized();
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Returns header field as string.
+        /// </summary>
+        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
+        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.</param>
+        /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
+        /// <returns>Returns header field as string.</returns>
+        public override string ToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset, bool reEncode)
+        {
+            if (string.IsNullOrEmpty(Address))
+            {
+                return "Return-Path: <>\r\n";
+            }
+
+            return "Return-Path: <" + Address + ">\r\n";
+        }
     }
 }

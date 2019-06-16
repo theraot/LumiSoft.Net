@@ -5,10 +5,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Transport
     {
-        /// <summary>
-        /// UDP protocol.
-        /// </summary>
-        public const string UDP = "UDP";
 
         /// <summary>
         /// TCP protocol.
@@ -19,5 +15,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// TCP + SSL protocol.
         /// </summary>
         public const string TLS = "TLS";
+        /// <summary>
+        /// UDP protocol.
+        /// </summary>
+        public const string UDP = "UDP";
     }
 }

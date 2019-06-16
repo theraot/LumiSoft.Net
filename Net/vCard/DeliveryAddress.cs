@@ -5,15 +5,15 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class DeliveryAddress
     {
-        private DeliveryAddressType_enum m_Type              = DeliveryAddressType_enum.Ineternational | DeliveryAddressType_enum.Postal | DeliveryAddressType_enum.Parcel | DeliveryAddressType_enum.Work;
-        private string                   m_PostOfficeAddress = "";
-        private string                   m_ExtendedAddress   = "";
-        private string                   m_Street            = "";
-        private string                   m_Locality          = "";
-        private string                   m_Region            = "";
-        private string                   m_PostalCode        = "";
-        private string                   m_Country           = "";
-                
+        private string m_Country = "";
+        private string m_ExtendedAddress = "";
+        private string m_Locality = "";
+        private string m_PostalCode = "";
+        private string m_PostOfficeAddress = "";
+        private string m_Region = "";
+        private string m_Street = "";
+        private DeliveryAddressType_enum m_Type = DeliveryAddressType_enum.Ineternational | DeliveryAddressType_enum.Postal | DeliveryAddressType_enum.Parcel | DeliveryAddressType_enum.Work;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,35 +26,178 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="region">Region.</param>
         /// <param name="postalCode">Postal code.</param>
         /// <param name="country">Country.</param>
-        internal DeliveryAddress(Item item,DeliveryAddressType_enum addressType,string postOfficeAddress,string extendedAddress,string street,string locality,string region,string postalCode,string country)
+        internal DeliveryAddress(Item item, DeliveryAddressType_enum addressType, string postOfficeAddress, string extendedAddress, string street, string locality, string region, string postalCode, string country)
         {
-            Item             = item;
-            m_Type              = addressType;
+            Item = item;
+            m_Type = addressType;
             m_PostOfficeAddress = postOfficeAddress;
-            m_ExtendedAddress   = extendedAddress;
-            m_Street            = street;
-            m_Locality          = locality;
-            m_Region            = region;
-            m_PostalCode        = postalCode;
-            m_Country           = country;
+            m_ExtendedAddress = extendedAddress;
+            m_Street = street;
+            m_Locality = locality;
+            m_Region = region;
+            m_PostalCode = postalCode;
+            m_Country = country;
         }
 
         /// <summary>
-        /// This method is called when some property has changed, we need to update underlaying vCard item.
+        /// Gets or sets address type. Note: This property can be flagged value !
         /// </summary>
-        private void Changed()
+        public DeliveryAddressType_enum AddressType
         {
-            var value = "" +
-                m_PostOfficeAddress + ";" +
-                m_ExtendedAddress + ";" +
-                m_Street + ";" +
-                m_Locality + ";" +
-                m_Region + ";" +
-                m_PostalCode + ";" +
-                m_Country;
+            get { return m_Type; }
 
-            Item.ParametersString = AddressTypeToString(m_Type);
-            Item.SetDecodedValue(value);
+            set
+            {
+                m_Type = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets country.
+        /// </summary>
+        public string Country
+        {
+            get { return m_Country; }
+
+            set
+            {
+                m_Country = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gests or sets extended address.
+        /// </summary>
+        public string ExtendedAddress
+        {
+            get { return m_ExtendedAddress; }
+
+            set
+            {
+                m_ExtendedAddress = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets underlaying vCrad item.
+        /// </summary>
+        public Item Item { get; }
+
+        /// <summary>
+        /// Gets or sets locality(city).
+        /// </summary>
+        public string Locality
+        {
+            get { return m_Locality; }
+
+            set
+            {
+                m_Locality = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets postal code.
+        /// </summary>
+        public string PostalCode
+        {
+            get { return m_PostalCode; }
+
+            set
+            {
+                m_PostalCode = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets post office address.
+        /// </summary>
+        public string PostOfficeAddress
+        {
+            get { return m_PostOfficeAddress; }
+
+            set
+            {
+                m_PostOfficeAddress = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets region.
+        /// </summary>
+        public string Region
+        {
+            get { return m_Region; }
+
+            set
+            {
+                m_Region = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets street.
+        /// </summary>
+        public string Street
+        {
+            get { return m_Street; }
+
+            set
+            {
+                m_Street = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Converts DeliveryAddressType_enum to vCard item parameters string.
+        /// </summary>
+        /// <param name="type">Value to convert.</param>
+        /// <returns></returns>
+        internal static string AddressTypeToString(DeliveryAddressType_enum type)
+        {
+            var retVal = "";
+            if ((type & DeliveryAddressType_enum.Domestic) != 0)
+            {
+                retVal += "DOM,";
+            }
+            if ((type & DeliveryAddressType_enum.Home) != 0)
+            {
+                retVal += "HOME,";
+            }
+            if ((type & DeliveryAddressType_enum.Ineternational) != 0)
+            {
+                retVal += "INTL,";
+            }
+            if ((type & DeliveryAddressType_enum.Parcel) != 0)
+            {
+                retVal += "PARCEL,";
+            }
+            if ((type & DeliveryAddressType_enum.Postal) != 0)
+            {
+                retVal += "POSTAL,";
+            }
+            if ((type & DeliveryAddressType_enum.Preferred) != 0)
+            {
+                retVal += "Preferred,";
+            }
+            if ((type & DeliveryAddressType_enum.Work) != 0)
+            {
+                retVal += "Work,";
+            }
+            if (retVal.EndsWith(","))
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
+            }
+
+            return retVal;
         }
 
         /// <summary>
@@ -64,25 +207,32 @@ namespace LumiSoft.Net.Mime.vCard
         internal static DeliveryAddress Parse(Item item)
         {
             var type = DeliveryAddressType_enum.NotSpecified;
-            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1)
+            {
                 type |= DeliveryAddressType_enum.Preferred;
             }
-            if(item.ParametersString.ToUpper().IndexOf("DOM") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("DOM") != -1)
+            {
                 type |= DeliveryAddressType_enum.Domestic;
             }
-            if(item.ParametersString.ToUpper().IndexOf("INTL") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("INTL") != -1)
+            {
                 type |= DeliveryAddressType_enum.Ineternational;
             }
-            if(item.ParametersString.ToUpper().IndexOf("POSTAL") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("POSTAL") != -1)
+            {
                 type |= DeliveryAddressType_enum.Postal;
             }
-            if(item.ParametersString.ToUpper().IndexOf("PARCEL") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("PARCEL") != -1)
+            {
                 type |= DeliveryAddressType_enum.Parcel;
             }
-            if(item.ParametersString.ToUpper().IndexOf("HOME") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("HOME") != -1)
+            {
                 type |= DeliveryAddressType_enum.Home;
             }
-            if(item.ParametersString.ToUpper().IndexOf("WORK") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("WORK") != -1)
+            {
                 type |= DeliveryAddressType_enum.Work;
             }
 
@@ -101,148 +251,21 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
         /// <summary>
-        /// Converts DeliveryAddressType_enum to vCard item parameters string.
+        /// This method is called when some property has changed, we need to update underlaying vCard item.
         /// </summary>
-        /// <param name="type">Value to convert.</param>
-        /// <returns></returns>
-        internal static string AddressTypeToString(DeliveryAddressType_enum type)
+        private void Changed()
         {
-            var retVal = "";
-            if ((type & DeliveryAddressType_enum.Domestic) != 0){
-                retVal += "DOM,";
-            }
-            if((type & DeliveryAddressType_enum.Home) != 0){
-                retVal += "HOME,";
-            }
-            if((type & DeliveryAddressType_enum.Ineternational) != 0){
-                retVal += "INTL,";
-            }
-            if((type & DeliveryAddressType_enum.Parcel) != 0){
-                retVal += "PARCEL,";
-            }
-            if((type & DeliveryAddressType_enum.Postal) != 0){
-                retVal += "POSTAL,";
-            }
-            if((type & DeliveryAddressType_enum.Preferred) != 0){
-                retVal += "Preferred,";
-            }            
-            if((type & DeliveryAddressType_enum.Work) != 0){
-                retVal += "Work,";
-            }
-            if(retVal.EndsWith(",")){
-                retVal = retVal.Substring(0,retVal.Length - 1);
-            }
+            var value = "" +
+                m_PostOfficeAddress + ";" +
+                m_ExtendedAddress + ";" +
+                m_Street + ";" +
+                m_Locality + ";" +
+                m_Region + ";" +
+                m_PostalCode + ";" +
+                m_Country;
 
-            return retVal;
-        }
-
-        /// <summary>
-        /// Gets underlaying vCrad item.
-        /// </summary>
-        public Item Item { get; }
-
-        /// <summary>
-        /// Gets or sets address type. Note: This property can be flagged value !
-        /// </summary>
-        public DeliveryAddressType_enum AddressType
-        {
-            get{ return m_Type; }
-
-            set{ 
-                m_Type = value; 
-                Changed();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets post office address.
-        /// </summary>
-        public string PostOfficeAddress
-        {
-            get{ return m_PostOfficeAddress; }
-            
-            set{ 
-                m_PostOfficeAddress = value; 
-                Changed();
-            }
-        }
-
-        /// <summary>
-        /// Gests or sets extended address.
-        /// </summary>
-        public string ExtendedAddress
-        {
-            get{ return m_ExtendedAddress; }
-            
-            set{ 
-                m_ExtendedAddress = value; 
-                Changed();
-            }
-        }
-        
-        /// <summary>
-        /// Gets or sets street.
-        /// </summary>
-        public string Street
-        {
-            get{ return m_Street; }
-            
-            set{ 
-                m_Street = value; 
-                Changed();
-            }
-        }
-        
-        /// <summary>
-        /// Gets or sets locality(city).
-        /// </summary>
-        public string Locality
-        {
-            get{ return m_Locality; }
-
-            set{ 
-                m_Locality = value; 
-                Changed();
-            }
-        }
-        
-        /// <summary>
-        /// Gets or sets region.
-        /// </summary>
-        public string Region
-        {
-            get{ return m_Region; }
-            
-            set{ 
-                m_Region = value; 
-                Changed();
-            }
-        }
-        
-        /// <summary>
-        /// Gets or sets postal code.
-        /// </summary>
-        public string PostalCode
-        {
-            get{ return m_PostalCode; }
-            
-            set{ 
-                m_PostalCode = value; 
-                Changed();
-            }
-        }
-        
-        /// <summary>
-        /// Gets or sets country.
-        /// </summary>
-        public string Country
-        {
-            get{ return m_Country; }
-            
-            set{ 
-                m_Country = value; 
-                Changed();
-            }
+            Item.ParametersString = AddressTypeToString(m_Type);
+            Item.SetDecodedValue(value);
         }
     }
 }

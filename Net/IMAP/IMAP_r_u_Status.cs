@@ -19,22 +19,54 @@ namespace LumiSoft.Net.IMAP
         /// <param name="unseenCount">Unseen messages count. Value -1 means not specified.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_r_u_Status(string folder,int messagesCount,int recentCount,long uidNext,long folderUid,int unseenCount)
+        public IMAP_r_u_Status(string folder, int messagesCount, int recentCount, long uidNext, long folderUid, int unseenCount)
         {
-            if(folder == null){
+            if (folder == null)
+            {
                 throw new ArgumentNullException("folder");
             }
-            if(folder == string.Empty){
-                throw new ArgumentException("Argument 'folder' value must be specified.","folder");
+            if (folder == string.Empty)
+            {
+                throw new ArgumentException("Argument 'folder' value must be specified.", "folder");
             }
 
-            FolderName   = folder;
+            FolderName = folder;
             MessagesCount = messagesCount;
-            RecentCount  = recentCount;
-            UidNext      = uidNext;
-            FolderUid    = folderUid;
-            UnseenCount  = unseenCount;
+            RecentCount = recentCount;
+            UidNext = uidNext;
+            FolderUid = folderUid;
+            UnseenCount = unseenCount;
         }
+
+        /// <summary>
+        /// Gets folder name.
+        /// </summary>
+        public string FolderName { get; } = "";
+
+        /// <summary>
+        /// Gets folder UID value.
+        /// </summary>
+        public long FolderUid { get; }
+
+        /// <summary>
+        /// Gets messages count.
+        /// </summary>
+        public int MessagesCount { get; }
+
+        /// <summary>
+        /// Gets "recent" flag set messages count.
+        /// </summary>
+        public int RecentCount { get; }
+
+        /// <summary>
+        /// Gets next message predictable UID value.
+        /// </summary>
+        public long UidNext { get; }
+
+        /// <summary>
+        /// Gets unseen messages count.
+        /// </summary>
+        public int UnseenCount { get; }
 
         /// <summary>
         /// Parses STATUS response from status-response string.
@@ -44,7 +76,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Status Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -64,34 +97,40 @@ namespace LumiSoft.Net.IMAP
             r.ReadWord();
             // Eat "STATUS"
             r.ReadWord();
-            
-            int  messages  = 0;
-            int  recent    = 0;
-            long uidNext   = 0;
-            long folderUid = 0;
-            int  unseen    = 0;
 
-            var   folder = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
-            var items  = r.ReadParenthesized().Split(' ');
-            for (int i=0;i<items.Length;i+=2){
-                if(items[i].Equals("MESSAGES",StringComparison.InvariantCultureIgnoreCase)){
+            int messages = 0;
+            int recent = 0;
+            long uidNext = 0;
+            long folderUid = 0;
+            int unseen = 0;
+
+            var folder = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
+            var items = r.ReadParenthesized().Split(' ');
+            for (int i = 0; i < items.Length; i += 2)
+            {
+                if (items[i].Equals("MESSAGES", StringComparison.InvariantCultureIgnoreCase))
+                {
                     messages = Convert.ToInt32(items[i + 1]);
                 }
-                else if(items[i].Equals("RECENT",StringComparison.InvariantCultureIgnoreCase)){
+                else if (items[i].Equals("RECENT", StringComparison.InvariantCultureIgnoreCase))
+                {
                     recent = Convert.ToInt32(items[i + 1]);
                 }
-                else if(items[i].Equals("UIDNEXT",StringComparison.InvariantCultureIgnoreCase)){
+                else if (items[i].Equals("UIDNEXT", StringComparison.InvariantCultureIgnoreCase))
+                {
                     uidNext = Convert.ToInt64(items[i + 1]);
                 }
-                else if(items[i].Equals("UIDVALIDITY",StringComparison.InvariantCultureIgnoreCase)){
+                else if (items[i].Equals("UIDVALIDITY", StringComparison.InvariantCultureIgnoreCase))
+                {
                     folderUid = Convert.ToInt64(items[i + 1]);
                 }
-                else if(items[i].Equals("UNSEEN",StringComparison.InvariantCultureIgnoreCase)){
+                else if (items[i].Equals("UNSEEN", StringComparison.InvariantCultureIgnoreCase))
+                {
                     unseen = Convert.ToInt32(items[i + 1]);
                 }
             }
 
-            return new IMAP_r_u_Status(folder,messages,recent,uidNext,folderUid,unseen);
+            return new IMAP_r_u_Status(folder, messages, recent, uidNext, folderUid, unseen);
         }
 
         /// <summary>
@@ -114,74 +153,53 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* STATUS");
-            retVal.Append(" " + IMAP_Utils.EncodeMailbox(FolderName,encoding));
+            retVal.Append(" " + IMAP_Utils.EncodeMailbox(FolderName, encoding));
             retVal.Append(" (");
             bool firstItem = true;
-            if(MessagesCount >= 0){ 
-                retVal.Append("MESSAGES " + MessagesCount);   
+            if (MessagesCount >= 0)
+            {
+                retVal.Append("MESSAGES " + MessagesCount);
                 firstItem = false;
             }
-            if(RecentCount >= 0){ 
-                if(!firstItem){
+            if (RecentCount >= 0)
+            {
+                if (!firstItem)
+                {
                     retVal.Append(' ');
                 }
-                retVal.Append("RECENT " + RecentCount);  
+                retVal.Append("RECENT " + RecentCount);
                 firstItem = false;
             }
-            if(UidNext >= 0){ 
-                if(!firstItem){
+            if (UidNext >= 0)
+            {
+                if (!firstItem)
+                {
                     retVal.Append(' ');
                 }
-                retVal.Append("UIDNEXT " + UidNext);  
+                retVal.Append("UIDNEXT " + UidNext);
                 firstItem = false;
             }
-            if(FolderUid >= 0){  
-                if(!firstItem){
+            if (FolderUid >= 0)
+            {
+                if (!firstItem)
+                {
                     retVal.Append(' ');
                 }
-                retVal.Append("UIDVALIDITY " + FolderUid); 
+                retVal.Append("UIDVALIDITY " + FolderUid);
                 firstItem = false;
             }
-            if(UnseenCount >= 0){
-                if(!firstItem){
+            if (UnseenCount >= 0)
+            {
+                if (!firstItem)
+                {
                     retVal.Append(' ');
                 }
-                retVal.Append("UNSEEN " + UnseenCount);   
+                retVal.Append("UNSEEN " + UnseenCount);
                 firstItem = false;
             }
             retVal.Append(")\r\n");
-            
+
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets folder name.
-        /// </summary>
-        public string FolderName { get; } = "";
-
-        /// <summary>
-        /// Gets messages count.
-        /// </summary>
-        public int MessagesCount { get; }
-
-        /// <summary>
-        /// Gets "recent" flag set messages count.
-        /// </summary>
-        public int RecentCount { get; }
-
-        /// <summary>
-        /// Gets next message predictable UID value.
-        /// </summary>
-        public long UidNext { get; }
-
-        /// <summary>
-        /// Gets folder UID value.
-        /// </summary>
-        public long FolderUid { get; }
-
-        /// <summary>
-        /// Gets unseen messages count.
-        /// </summary>
-        public int UnseenCount { get; }
     }
 }

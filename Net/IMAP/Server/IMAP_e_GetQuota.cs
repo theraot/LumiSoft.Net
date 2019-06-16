@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_GetQuota : EventArgs
     {
-        private IMAP_r_ServerStatus  m_pResponse;
+        private IMAP_r_ServerStatus m_pResponse;
 
         /// <summary>
         /// Default constructor.
@@ -16,7 +16,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="quotaRoot">Quota root name.</param>
         /// <param name="response">Default IMAP server response.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>quotaRoot</b> is null reference.</exception>
-        internal IMAP_e_GetQuota(string quotaRoot,IMAP_r_ServerStatus response)
+        internal IMAP_e_GetQuota(string quotaRoot, IMAP_r_ServerStatus response)
         {
             QuotaRoot = quotaRoot ?? throw new ArgumentNullException("quotaRoot");
             m_pResponse = response;
@@ -30,21 +30,22 @@ namespace LumiSoft.Net.IMAP.Server
         public List<IMAP_r_u_Quota> QuotaResponses { get; }
 
         /// <summary>
+        /// Gets quopta root name.
+        /// </summary>
+        public string QuotaRoot { get; }
+
+        /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>
         /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
         public IMAP_r_ServerStatus Response
         {
-            get{ return m_pResponse; }
+            get { return m_pResponse; }
 
-            set{
-                m_pResponse = value ?? throw new ArgumentNullException("value"); 
+            set
+            {
+                m_pResponse = value ?? throw new ArgumentNullException("value");
             }
         }
-
-        /// <summary>
-        /// Gets quopta root name.
-        /// </summary>
-        public string QuotaRoot { get; }
     }
 }

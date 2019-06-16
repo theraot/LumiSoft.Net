@@ -14,7 +14,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="port">Smart host port.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>host</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public Relay_SmartHost(string host,int port) : this(host,port,SslMode.None,null,null)
+        public Relay_SmartHost(string host, int port) : this(host, port, SslMode.None, null, null)
         {
         }
 
@@ -28,73 +28,37 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="password">Smart host password.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>host</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public Relay_SmartHost(string host,int port,SslMode sslMode,string userName,string password)
+        public Relay_SmartHost(string host, int port, SslMode sslMode, string userName, string password)
         {
-            if(host == null){
+            if (host == null)
+            {
                 throw new ArgumentNullException("host");
             }
-            if(host == ""){
+            if (host == "")
+            {
                 throw new ArgumentException("Argument 'host' value must be specified.");
             }
-            if(port < 1){
+            if (port < 1)
+            {
                 throw new ArgumentException("Argument 'port' value is invalid.");
             }
 
-            Host     = host;
-            Port     = port;
-            SslMode  = sslMode;
+            Host = host;
+            Port = port;
+            SslMode = sslMode;
             UserName = userName;
             Password = password;
-        }
-
-        /// <summary>
-        /// Compares the current instance with another object of the same type.
-        /// </summary>
-        /// <param name="obj">An object to compare with this instance.</param>
-        /// <returns>Returns true if two objects are equal.</returns>
-        public override bool Equals(object obj)
-        {
-            if(obj == null){
-                return false;
-            }
-            if(!(obj is Relay_SmartHost)){
-                return false;
-            }
-
-            var smartHost = (Relay_SmartHost)obj;
-            if (Host != smartHost.Host){
-                return false;
-            }
-
-            if(Port != smartHost.Port){
-                return false;
-            }
-            if(SslMode != smartHost.SslMode){
-                return false;
-            }
-            if(UserName != smartHost.UserName){
-                return false;
-            }
-            if(Password != smartHost.Password){
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Returns the hash code.
-        /// </summary>
-        /// <returns>Returns the hash code.</returns>
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
 
         /// <summary>
         /// Gets smart host name or IP address.
         /// </summary>
         public string Host { get; } = "";
+
+        /// <summary>
+        /// Gets smart host password.
+        /// </summary>
+        public string Password { get; }
 
         /// <summary>
         /// Gets smart host port.
@@ -112,8 +76,54 @@ namespace LumiSoft.Net.SMTP.Relay
         public string UserName { get; }
 
         /// <summary>
-        /// Gets smart host password.
+        /// Compares the current instance with another object of the same type.
         /// </summary>
-        public string Password { get; }
+        /// <param name="obj">An object to compare with this instance.</param>
+        /// <returns>Returns true if two objects are equal.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (!(obj is Relay_SmartHost))
+            {
+                return false;
+            }
+
+            var smartHost = (Relay_SmartHost)obj;
+            if (Host != smartHost.Host)
+            {
+                return false;
+            }
+
+            if (Port != smartHost.Port)
+            {
+                return false;
+            }
+            if (SslMode != smartHost.SslMode)
+            {
+                return false;
+            }
+            if (UserName != smartHost.UserName)
+            {
+                return false;
+            }
+            if (Password != smartHost.Password)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns the hash code.
+        /// </summary>
+        /// <returns>Returns the hash code.</returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_Ehlo : EventArgs
     {
-        private SMTP_Reply   m_pReply;
+        private SMTP_Reply m_pReply;
 
         /// <summary>
         /// Default constructor.
@@ -17,24 +17,21 @@ namespace LumiSoft.Net.SMTP.Server
         /// <param name="reply">SMTP server reply.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b>, <b>domain</b> or <b>reply</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SMTP_e_Ehlo(SMTP_Session session,string domain,SMTP_Reply reply)
+        public SMTP_e_Ehlo(SMTP_Session session, string domain, SMTP_Reply reply)
         {
-            if(domain == null){
+            if (domain == null)
+            {
                 throw new ArgumentNullException("domain");
             }
-            if(domain == string.Empty){
-                throw new ArgumentException("Argument 'domain' value must be sepcified.","domain");
+            if (domain == string.Empty)
+            {
+                throw new ArgumentException("Argument 'domain' value must be sepcified.", "domain");
             }
 
             Session = session ?? throw new ArgumentNullException("session");
-            Domain   = domain;
-            m_pReply   = reply ?? throw new ArgumentNullException("reply");
+            Domain = domain;
+            m_pReply = reply ?? throw new ArgumentNullException("reply");
         }
-
-        /// <summary>
-        /// Gets owner SMTP session.
-        /// </summary>
-        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets connected client reported domain name.
@@ -47,11 +44,17 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
         public SMTP_Reply Reply
         {
-            get{ return m_pReply; }
+            get { return m_pReply; }
 
-            set{
+            set
+            {
                 m_pReply = value ?? throw new ArgumentNullException("Reply");
             }
         }
+
+        /// <summary>
+        /// Gets owner SMTP session.
+        /// </summary>
+        public SMTP_Session Session { get; }
     }
 }

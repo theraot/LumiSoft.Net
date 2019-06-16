@@ -10,8 +10,8 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class MultiStream : Stream
     {
-        private bool          m_IsDisposed;
-        private Queue<Stream> m_pStreams;        
+        private bool m_IsDisposed;
+        private Queue<Stream> m_pStreams;
 
         /// <summary>
         /// Default constructor.
@@ -22,18 +22,106 @@ namespace LumiSoft.Net.IO
         }
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
-        public new void Dispose()
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanRead
         {
-            if(m_IsDisposed){
-                return;
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports seeking.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanSeek
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports writing.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanWrite
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the length in bytes of the stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="NotSupportedException">Is raised when one of the source streams won't support <b>Length</b> property.</exception>
+        public override long Length
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                long length = 0;
+                foreach (Stream stream in m_pStreams.ToArray())
+                {
+                    length += stream.Length;
+                }
+
+                return length;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="NotSupportedException">Is raised when this property is accessed.</exception>
+        public override long Position
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                throw new NotSupportedException();
             }
 
-            m_IsDisposed = true;
-            m_pStreams = null;
+            set
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
 
-            base.Dispose();
+                throw new NotSupportedException();
+            }
         }
 
         /// <summary>
@@ -44,14 +132,32 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
         public void AppendStream(Stream stream)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
             m_pStreams.Enqueue(stream);
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        public new void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                return;
+            }
+
+            m_IsDisposed = true;
+            m_pStreams = null;
+
+            base.Dispose();
         }
 
         /// <summary>
@@ -60,8 +166,48 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
+            }
+        }
+
+        /// <summary>
+        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between offset and (offset + count - 1) replaced by the bytes read from the current source.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the current stream.</param>
+        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
+        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("SmartStream");
+            }
+
+            while (true)
+            {
+                // We have readed all streams data, no data left.
+                if (m_pStreams.Count == 0)
+                {
+                    return 0;
+                }
+
+                int readedCount = m_pStreams.Peek().Read(buffer, offset, count);
+                // We have readed all current stream data.
+                if (readedCount == 0)
+                {
+                    // Move to next stream .
+                    m_pStreams.Dequeue();
+
+                    // Next while loop will process "read".
+                }
+                else
+                {
+                    return readedCount;
+                }
             }
         }
 
@@ -73,9 +219,10 @@ namespace LumiSoft.Net.IO
         /// <returns>The new position within the current stream.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
-        public override long Seek(long offset,SeekOrigin origin)
+        public override long Seek(long offset, SeekOrigin origin)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
 
@@ -90,45 +237,12 @@ namespace LumiSoft.Net.IO
         /// <exception cref="Seek">Is raised when this method is accessed.</exception>
         public override void SetLength(long value)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
 
             throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
-        /// </summary>
-        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between offset and (offset + count - 1) replaced by the bytes read from the current source.</param>
-        /// <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the current stream.</param>
-        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
-        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override int Read(byte[] buffer,int offset,int count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
-
-            while(true){
-                // We have readed all streams data, no data left.
-                if(m_pStreams.Count == 0){
-                    return 0;
-                }
-
-                int readedCount = m_pStreams.Peek().Read(buffer,offset,count);
-                // We have readed all current stream data.
-                if(readedCount == 0){
-                    // Move to next stream .
-                    m_pStreams.Dequeue();
-
-                    // Next while loop will process "read".
-                }
-                else{
-                    return readedCount;
-                }
-            }
         }
 
         /// <summary>
@@ -140,103 +254,14 @@ namespace LumiSoft.Net.IO
         /// <param name="count">The number of bytes to be written to the current stream.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
-        public override void Write(byte[] buffer,int offset,int count)
+        public override void Write(byte[] buffer, int offset, int count)
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 throw new ObjectDisposedException("SmartStream");
             }
- 
+
             throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports reading.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanRead
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return true;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports seeking.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanSeek
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return false;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports writing.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanWrite
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return false;
-            } 
-        }
-
-        /// <summary>
-        /// Gets the length in bytes of the stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="NotSupportedException">Is raised when one of the source streams won't support <b>Length</b> property.</exception>
-        public override long Length
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                long length = 0;
-                foreach(Stream stream in m_pStreams.ToArray()){
-                    length += stream.Length;
-                }
-
-                return length;
-            } 
-        }
-
-        /// <summary>
-        /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="NotSupportedException">Is raised when this property is accessed.</exception>
-        public override long Position
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                throw new NotSupportedException();
-            } 
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                throw new NotSupportedException();
-            }
         }
     }
 }

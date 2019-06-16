@@ -17,6 +17,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets first unseen message sequence number.
+        /// </summary>
+        public int SeqNo { get; }
+
+        /// <summary>
         /// Parses UNSEEN optional response from string.
         /// </summary>
         /// <param name="value">UNSEEN optional response string.</param>
@@ -24,16 +29,19 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_Unseen Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new[]{' '},2);
-            if (!string.Equals("UNSEEN",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid UNSEEN response value.","value");
+            var code_value = value.Split(new[] { ' ' }, 2);
+            if (!string.Equals("UNSEEN", code_value[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid UNSEEN response value.", "value");
             }
-            if(code_value.Length != 2){
-                throw new ArgumentException("Invalid UNSEEN response value.","value");
+            if (code_value.Length != 2)
+            {
+                throw new ArgumentException("Invalid UNSEEN response value.", "value");
             }
 
             return new IMAP_t_orc_Unseen(Convert.ToInt32(code_value[1]));
@@ -47,10 +55,5 @@ namespace LumiSoft.Net.IMAP
         {
             return "UNSEEN " + SeqNo;
         }
-
-        /// <summary>
-        /// Gets first unseen message sequence number.
-        /// </summary>
-        public int SeqNo { get; }
     }
 }

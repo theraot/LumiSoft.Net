@@ -9,94 +9,34 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_SessionCollection<T> where T : TCP_Session
     {
-        private readonly Dictionary<string,T>    m_pItems;
-        private readonly Dictionary<string,long> m_pConnectionsPerIP;
+        private readonly Dictionary<string, long> m_pConnectionsPerIP;
+        private readonly Dictionary<string, T> m_pItems;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal TCP_SessionCollection()
         {
-            m_pItems = new Dictionary<string,T>();
-            m_pConnectionsPerIP = new Dictionary<string,long>();
+            m_pItems = new Dictionary<string, T>();
+            m_pConnectionsPerIP = new Dictionary<string, long>();
         }
 
         /// <summary>
-        /// Adds specified TCP session to the colletion.
+        /// Gets number of items in the collection.
         /// </summary>
-        /// <param name="session">TCP server session to add.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null.</exception>
-        internal void Add(T session)
+        public int Count
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            lock(m_pItems){
-                m_pItems.Add(session.ID,session);
-
-                if(session.IsConnected && session.RemoteEndPoint != null){
-                    // Increase connections per IP.
-                    if(m_pConnectionsPerIP.ContainsKey(session.RemoteEndPoint.Address.ToString())){
-                        m_pConnectionsPerIP[session.RemoteEndPoint.Address.ToString()]++;
-                    }
-                    // Just add new entry for that IP address.
-                    else{
-                        m_pConnectionsPerIP.Add(session.RemoteEndPoint.Address.ToString(),1);
-                    }
-                }
-            }
+            get { return m_pItems.Count; }
         }
 
         /// <summary>
-        /// Removes specified TCP server session from the collection.
+        /// Gets TCP session with the specified ID.
         /// </summary>
-        /// <param name="session">TCP server session to remove.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null.</exception>
-        internal void Remove(T session)
+        /// <param name="id">Session ID.</param>
+        /// <returns>Returns TCP session with the specified ID.</returns>
+        public T this[string id]
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            lock(m_pItems){
-                m_pItems.Remove(session.ID);
-
-                // Decrease connections per IP.
-                if(session.IsConnected && m_pConnectionsPerIP.ContainsKey(session.RemoteEndPoint.Address.ToString())){
-                    m_pConnectionsPerIP[session.RemoteEndPoint.Address.ToString()]--;
-
-                    // Last IP, so remove that IP entry.
-                    if(m_pConnectionsPerIP[session.RemoteEndPoint.Address.ToString()] == 0){
-                        m_pConnectionsPerIP.Remove(session.RemoteEndPoint.Address.ToString());
-                    }
-                }                
-            }
-        }
-
-        /// <summary>
-        /// Removes all items from the collection.
-        /// </summary>
-        internal void Clear()
-        {
-            lock(m_pItems){
-                m_pItems.Clear();
-                m_pConnectionsPerIP.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Copies all TCP server session to new array. This method is thread-safe.
-        /// </summary>
-        /// <returns>Returns TCP sessions array.</returns>
-        public T[] ToArray()
-        {
-            lock(m_pItems){
-                var retVal = new T[m_pItems.Count];
-                m_pItems.Values.CopyTo(retVal,0);
-
-                return retVal;
-            }
+            get { return m_pItems[id]; }
         }
 
         /// <summary>
@@ -107,32 +47,104 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
         public long GetConnectionsPerIP(IPAddress ip)
         {
-            if(ip == null){
+            if (ip == null)
+            {
                 throw new ArgumentNullException("ip");
             }
 
             long retVal = 0;
-            m_pConnectionsPerIP.TryGetValue(ip.ToString(),out retVal);
+            m_pConnectionsPerIP.TryGetValue(ip.ToString(), out retVal);
 
             return retVal;
         }
 
         /// <summary>
-        /// Gets number of items in the collection.
+        /// Copies all TCP server session to new array. This method is thread-safe.
         /// </summary>
-        public int Count
+        /// <returns>Returns TCP sessions array.</returns>
+        public T[] ToArray()
         {
-            get{ return m_pItems.Count; }
+            lock (m_pItems)
+            {
+                var retVal = new T[m_pItems.Count];
+                m_pItems.Values.CopyTo(retVal, 0);
+
+                return retVal;
+            }
         }
 
         /// <summary>
-        /// Gets TCP session with the specified ID.
+        /// Adds specified TCP session to the colletion.
         /// </summary>
-        /// <param name="id">Session ID.</param>
-        /// <returns>Returns TCP session with the specified ID.</returns>
-        public T this[string id]
+        /// <param name="session">TCP server session to add.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null.</exception>
+        internal void Add(T session)
         {
-            get{ return m_pItems[id]; }
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+
+            lock (m_pItems)
+            {
+                m_pItems.Add(session.ID, session);
+
+                if (session.IsConnected && session.RemoteEndPoint != null)
+                {
+                    // Increase connections per IP.
+                    if (m_pConnectionsPerIP.ContainsKey(session.RemoteEndPoint.Address.ToString()))
+                    {
+                        m_pConnectionsPerIP[session.RemoteEndPoint.Address.ToString()]++;
+                    }
+                    // Just add new entry for that IP address.
+                    else
+                    {
+                        m_pConnectionsPerIP.Add(session.RemoteEndPoint.Address.ToString(), 1);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes all items from the collection.
+        /// </summary>
+        internal void Clear()
+        {
+            lock (m_pItems)
+            {
+                m_pItems.Clear();
+                m_pConnectionsPerIP.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Removes specified TCP server session from the collection.
+        /// </summary>
+        /// <param name="session">TCP server session to remove.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null.</exception>
+        internal void Remove(T session)
+        {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+
+            lock (m_pItems)
+            {
+                m_pItems.Remove(session.ID);
+
+                // Decrease connections per IP.
+                if (session.IsConnected && m_pConnectionsPerIP.ContainsKey(session.RemoteEndPoint.Address.ToString()))
+                {
+                    m_pConnectionsPerIP[session.RemoteEndPoint.Address.ToString()]--;
+
+                    // Last IP, so remove that IP entry.
+                    if (m_pConnectionsPerIP[session.RemoteEndPoint.Address.ToString()] == 0)
+                    {
+                        m_pConnectionsPerIP.Remove(session.RemoteEndPoint.Address.ToString());
+                    }
+                }
+            }
         }
     }
 }

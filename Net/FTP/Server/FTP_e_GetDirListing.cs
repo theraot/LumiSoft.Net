@@ -26,13 +26,13 @@ namespace LumiSoft.Net.FTP.Server
         public FTP_t_ReplyLine[] Error { get; set; }
 
         /// <summary>
-        /// Gets path which list items to get.
-        /// </summary>
-        public string Path { get; }
-
-        /// <summary>
         /// Gets directory list items.
         /// </summary>
         public List<FTP_ListItem> Items { get; }
+
+        /// <summary>
+        /// Gets path which list items to get.
+        /// </summary>
+        public string Path { get; }
     }
 }

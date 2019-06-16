@@ -5,13 +5,6 @@
     /// </summary>
     public abstract class AsyncOP
     {
-        /// <summary>
-        /// Gets if this object is disposed.
-        /// </summary>
-        public abstract bool IsDisposed
-        {
-            get;
-        }
 
         /// <summary>
         /// Gets if asynchronous operation has completed.
@@ -25,6 +18,13 @@
         /// Gets if operation completed synchronously.
         /// </summary>
         public abstract bool IsCompletedSynchronously
+        {
+            get;
+        }
+        /// <summary>
+        /// Gets if this object is disposed.
+        /// </summary>
+        public abstract bool IsDisposed
         {
             get;
         }

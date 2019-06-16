@@ -15,24 +15,21 @@ namespace LumiSoft.Net.IMAP
         /// <param name="maxUsage">Maximum allowed resource usage.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>resourceName</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_Quota_Entry(string resourceName,long currentUsage,long maxUsage)
+        public IMAP_Quota_Entry(string resourceName, long currentUsage, long maxUsage)
         {
-            if(resourceName == null){
+            if (resourceName == null)
+            {
                 throw new ArgumentNullException("resourceName");
             }
-            if(resourceName == string.Empty){
-                throw new ArgumentException("Argument 'resourceName' value must be specified.","resourceName");
+            if (resourceName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'resourceName' value must be specified.", "resourceName");
             }
 
             ResourceName = resourceName;
             CurrentUsage = currentUsage;
-            MaxUsage     = maxUsage;
+            MaxUsage = maxUsage;
         }
-
-        /// <summary>
-        /// Gets resource limit name.
-        /// </summary>
-        public string ResourceName { get; } = "";
 
         /// <summary>
         /// Gets current resource usage.
@@ -43,5 +40,10 @@ namespace LumiSoft.Net.IMAP
         /// Gets maximum allowed resource usage.
         /// </summary>
         public long MaxUsage { get; }
+
+        /// <summary>
+        /// Gets resource limit name.
+        /// </summary>
+        public string ResourceName { get; } = "";
     }
 }

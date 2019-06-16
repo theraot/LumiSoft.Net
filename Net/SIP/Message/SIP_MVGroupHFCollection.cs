@@ -6,19 +6,19 @@ namespace LumiSoft.Net.SIP.Message
     /// Implements same multi value header fields group. Group can contain one type header fields only.
     /// This is class is used by Via:,Route:, ... .
     /// </summary>
-    public class SIP_MVGroupHFCollection<T> where T : SIP_t_Value,new()
+    public class SIP_MVGroupHFCollection<T> where T : SIP_t_Value, new()
     {
-        private readonly SIP_Message               m_pMessage;
         private readonly List<SIP_MultiValueHF<T>> m_pFields;
+        private readonly SIP_Message m_pMessage;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="owner">Owner message that owns this group.</param>
         /// <param name="fieldName">Header field name what group holds.</param>
-        public SIP_MVGroupHFCollection(SIP_Message owner,string fieldName)
+        public SIP_MVGroupHFCollection(SIP_Message owner, string fieldName)
         {
-            m_pMessage  = owner;
+            m_pMessage = owner;
             FieldName = fieldName;
 
             m_pFields = new List<SIP_MultiValueHF<T>>();
@@ -27,27 +27,24 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Refreshes header fields in group from actual header.
+        /// Gets number of header fields in this group.
         /// </summary>
-        private void Refresh()
+        public int Count
         {
-            m_pFields.Clear();
-           
-            foreach(SIP_HeaderField h in m_pMessage.Header){
-                if(h.Name.ToLower() == FieldName.ToLower()){                
-                    m_pFields.Add((SIP_MultiValueHF<T>)h);
-                }
-            }
+            get { return m_pFields.Count; }
         }
 
         /// <summary>
-        /// Add new header field on the top of the whole header.
+        /// Gets header field name what this group holds.
         /// </summary>
-        /// <param name="value">Header field value.</param>
-        public void AddToTop(string value)
-        {            
-            m_pMessage.Header.Insert(0,FieldName,value);
-            Refresh();
+        public string FieldName { get; } = "";
+
+        /// <summary>
+        /// Gets header fields what are in this group.
+        /// </summary>
+        public SIP_MultiValueHF<T>[] HeaderFields
+        {
+            get { return m_pFields.ToArray(); }
         }
 
         /// <summary>
@@ -55,9 +52,50 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         /// <param name="value">Header field value.</param>
         public void Add(string value)
-        {            
-            m_pMessage.Header.Add(FieldName,value);
+        {
+            m_pMessage.Header.Add(FieldName, value);
             Refresh();
+        }
+
+        /// <summary>
+        /// Add new header field on the top of the whole header.
+        /// </summary>
+        /// <param name="value">Header field value.</param>
+        public void AddToTop(string value)
+        {
+            m_pMessage.Header.Insert(0, FieldName, value);
+            Refresh();
+        }
+
+        /// <summary>
+        /// Gets all header field values.
+        /// </summary>
+        /// <returns></returns>
+        public T[] GetAllValues()
+        {
+            var retVal = new List<T>();
+            foreach (SIP_MultiValueHF<T> h in m_pFields)
+            {
+                foreach (SIP_t_Value v in h.Values)
+                {
+                    retVal.Add((T)v);
+                }
+            }
+
+            return retVal.ToArray();
+        }
+
+        /// <summary>
+        /// Gets top most header field first value. 
+        /// </summary>
+        public T GetTopMostValue()
+        {
+            if (m_pFields.Count > 0)
+            {
+                return m_pFields[0].Values[0];
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -70,15 +108,20 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets top most header field first value. 
+        /// Removes last value. If value is the last value n header field, the whole header field will be removed.
         /// </summary>
-        public T GetTopMostValue()
+        public void RemoveLastValue()
         {
-            if(m_pFields.Count > 0){
-                return m_pFields[0].Values[0];
+            var h = m_pFields[m_pFields.Count - 1];
+            if (h.Count > 1)
+            {
+                h.Remove(h.Count - 1);
             }
-
-            return null;
+            else
+            {
+                m_pMessage.Header.Remove(m_pFields[0]);
+                m_pFields.Remove(h);
+            }
         }
 
         /// <summary>
@@ -87,12 +130,15 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public void RemoveTopMostValue()
         {
-            if(m_pFields.Count > 0){                
+            if (m_pFields.Count > 0)
+            {
                 var h = m_pFields[0];
-                if (h.Count > 1){
+                if (h.Count > 1)
+                {
                     h.Remove(0);
                 }
-                else{
+                else
+                {
                     m_pMessage.Header.Remove(m_pFields[0]);
                     m_pFields.Remove(m_pFields[0]);
                 }
@@ -100,55 +146,19 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Removes last value. If value is the last value n header field, the whole header field will be removed.
+        /// Refreshes header fields in group from actual header.
         /// </summary>
-        public void RemoveLastValue()
+        private void Refresh()
         {
-            var h = m_pFields[m_pFields.Count - 1];
-            if (h.Count > 1){
-                h.Remove(h.Count - 1);
-            }
-            else{
-                m_pMessage.Header.Remove(m_pFields[0]);
-                m_pFields.Remove(h);
-            }
-        }
+            m_pFields.Clear();
 
-        /// <summary>
-        /// Gets all header field values.
-        /// </summary>
-        /// <returns></returns>
-        public T[] GetAllValues()
-        {
-            var retVal = new List<T>();
-            foreach (SIP_MultiValueHF<T> h in m_pFields){
-                foreach(SIP_t_Value v in h.Values){
-                    retVal.Add((T)v);
+            foreach (SIP_HeaderField h in m_pMessage.Header)
+            {
+                if (h.Name.ToLower() == FieldName.ToLower())
+                {
+                    m_pFields.Add((SIP_MultiValueHF<T>)h);
                 }
             }
-
-            return retVal.ToArray();
-        }
-
-        /// <summary>
-        /// Gets header field name what this group holds.
-        /// </summary>
-        public string FieldName { get; } = "";
-
-        /// <summary>
-        /// Gets number of header fields in this group.
-        /// </summary>
-        public int Count
-        {
-            get{ return m_pFields.Count; }
-        }
-
-        /// <summary>
-        /// Gets header fields what are in this group.
-        /// </summary>
-        public SIP_MultiValueHF<T>[] HeaderFields
-        {
-            get{ return m_pFields.ToArray(); }
         }
     }
 }

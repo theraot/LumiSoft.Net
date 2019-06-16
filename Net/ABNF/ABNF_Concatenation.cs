@@ -17,13 +17,19 @@ namespace LumiSoft.Net.ABNF
         }
 
         /// <summary>
+        /// Gets concatenation items.
+        /// </summary>
+        public List<ABNF_Repetition> Items { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
         public static ABNF_Concatenation Parse(System.IO.StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -32,31 +38,31 @@ namespace LumiSoft.Net.ABNF
 
             var retVal = new ABNF_Concatenation();
 
-            while (true){
+            while (true)
+            {
                 var item = ABNF_Repetition.Parse(reader);
-                if (item != null){
+                if (item != null)
+                {
                     retVal.Items.Add(item);
                 }
                 // We reached end of string.
-                else if(reader.Peek() == -1){
+                else if (reader.Peek() == -1)
+                {
                     break;
                 }
                 // We have next concatenation item.
-                else if(reader.Peek() == ' '){
+                else if (reader.Peek() == ' ')
+                {
                     reader.Read();
                 }
                 // We have unexpected value, probably concatenation ends.
-                else{
+                else
+                {
                     break;
                 }
             }
 
             return retVal;
         }
-
-        /// <summary>
-        /// Gets concatenation items.
-        /// </summary>
-        public List<ABNF_Repetition> Items { get; }
     }
 }

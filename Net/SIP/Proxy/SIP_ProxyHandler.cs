@@ -7,6 +7,41 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_ProxyHandler
     {
+
+        /// <summary>
+        /// Gets a value indicating whether another request can use this handler.
+        /// </summary>
+        public virtual bool IsReusable
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets or stets user data.
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void GetRegistrarContacts()
+        {
+        }
+
+        /*
+        public virtual bool OnResponseReceived()
+        {
+        }
+        */
+
+        /// <summary>
+        /// Gets if the specified URI is local URI.
+        /// </summary>
+        /// <returns>Returns true if the specified uri is local URI.</returns>
+        public bool IsLocalUri()
+        {
+            return false;
+        }
         /// <summary>
         /// This method is called when new SIP request received.
         /// </summary>
@@ -28,16 +63,19 @@ namespace LumiSoft.Net.SIP.Proxy
             // TODO: ACK
 
             // This is not URI we want.
-            if(requestContext.Request.RequestLine.Uri.Scheme.ToLower() != "tel" && !(requestContext.Request.RequestLine.Uri is SIP_Uri)){
+            if (requestContext.Request.RequestLine.Uri.Scheme.ToLower() != "tel" && !(requestContext.Request.RequestLine.Uri is SIP_Uri))
+            {
                 return false;
             }
 
             var requestUri = (SIP_Uri)requestContext.Request.RequestLine.Uri;
 
             long dummy = 0;
-            if(requestUri.User.StartsWith("+") || Int64.TryParse(requestUri.User,out dummy)){
+            if (requestUri.User.StartsWith("+") || Int64.TryParse(requestUri.User, out dummy))
+            {
                 // Not authenticated, send authentication challenge.
-                if(requestContext.User == null){
+                if (requestContext.User == null)
+                {
                     requestContext.ChallengeRequest();
 
                     return true;
@@ -54,44 +92,9 @@ namespace LumiSoft.Net.SIP.Proxy
                 proxyContext.Start();
 
                 return true;
-            }            
+            }
 
             return false;
         }
-
-        /*
-        public virtual bool OnResponseReceived()
-        {
-        }
-        */
-
-        /// <summary>
-        /// Gets if the specified URI is local URI.
-        /// </summary>
-        /// <returns>Returns true if the specified uri is local URI.</returns>
-        public bool IsLocalUri()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void GetRegistrarContacts()
-        {
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether another request can use this handler.
-        /// </summary>
-        public virtual bool IsReusable
-        {
-            get{ return false; }
-        }
-
-        /// <summary>
-        /// Gets or stets user data.
-        /// </summary>
-        public object Tag { get; set; }
     }
 }

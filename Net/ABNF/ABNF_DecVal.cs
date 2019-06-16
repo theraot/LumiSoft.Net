@@ -9,12 +9,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_DecVal : ABNF_Element
     {
-        private enum ValueType
-        {
-            Single = 0,
-            Concated = 1,
-            Range  = 2,
-        }
 
         /// <summary>
         /// Default 'range' value constructor.
@@ -22,12 +16,14 @@ namespace LumiSoft.Net.ABNF
         /// <param name="start">Range start value.</param>
         /// <param name="end">Range end value.</param>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public ABNF_DecVal(int start,int end)
+        public ABNF_DecVal(int start, int end)
         {
-            if(start < 0){
+            if (start < 0)
+            {
                 throw new ArgumentException("Argument 'start' value must be >= 0.");
             }
-            if(end < 0){
+            if (end < 0)
+            {
                 throw new ArgumentException("Argument 'end' value must be >= 0.");
             }
 
@@ -42,14 +38,22 @@ namespace LumiSoft.Net.ABNF
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public ABNF_DecVal(int[] values)
         {
-            if(values == null){
+            if (values == null)
+            {
                 throw new ArgumentNullException("values");
             }
-            if(values.Length < 1){
+            if (values.Length < 1)
+            {
                 throw new ArgumentException("Argument 'values' must contain at least 1 value.");
             }
 
             // TODO:
+        }
+        private enum ValueType
+        {
+            Single = 0,
+            Concated = 1,
+            Range = 2,
         }
 
         /// <summary>
@@ -59,47 +63,56 @@ namespace LumiSoft.Net.ABNF
         /// <returns></returns>
         public static ABNF_DecVal Parse(System.IO.StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // dec-val =  "d" 1*DIGIT [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
 
-            if(reader.Peek() != 'd'){
+            if (reader.Peek() != 'd')
+            {
                 throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
             }
 
             // Eat 'd'.
             reader.Read();
 
-            if(!char.IsNumber((char)reader.Peek())){
+            if (!char.IsNumber((char)reader.Peek()))
+            {
                 throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
             }
 
-            var     valueType = ValueType.Single;
-            var     values    = new List<int>();
-            var b         = new StringBuilder();
+            var valueType = ValueType.Single;
+            var values = new List<int>();
+            var b = new StringBuilder();
             while (true)
             {
                 // We reached end of string.
-                if(reader.Peek() == -1){
+                if (reader.Peek() == -1)
+                {
                     // - or . without required 1 DIGIT.
-                    if(b.Length == 0){
+                    if (b.Length == 0)
+                    {
                         throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
                     }
                     break;
                 }
 
-                if(char.IsNumber((char)reader.Peek())){
+                if (char.IsNumber((char)reader.Peek()))
+                {
                     b.Append((char)reader.Read());
                 }
                 // Concated value.
-                else if(reader.Peek() == '.'){
+                else if (reader.Peek() == '.')
+                {
                     // Range and conacted is not allowed to mix.
-                    if(valueType == ValueType.Range){
+                    if (valueType == ValueType.Range)
+                    {
                         throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
                     }
-                    if(b.Length == 0){
+                    if (b.Length == 0)
+                    {
                         throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
                     }
 
@@ -111,9 +124,11 @@ namespace LumiSoft.Net.ABNF
                     reader.Read();
                 }
                 // Value range.
-                else if(reader.Peek() == '-'){
+                else if (reader.Peek() == '-')
+                {
                     // Range and conacted is not allowed to mix. Also multiple ranges not allowed.
-                    if(valueType != ValueType.Single){
+                    if (valueType != ValueType.Single)
+                    {
                         throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
                     }
                     values.Add(Convert.ToInt32(b.ToString()));
@@ -124,9 +139,11 @@ namespace LumiSoft.Net.ABNF
                     reader.Read();
                 }
                 // Not dec-val char, value reading completed.
-                else{
+                else
+                {
                     // - or . without required 1 DIGIT.
-                    if(b.Length == 0){
+                    if (b.Length == 0)
+                    {
                         throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
                     }
                     break;
@@ -134,14 +151,16 @@ namespace LumiSoft.Net.ABNF
             }
             values.Add(Convert.ToInt32(b.ToString()));
 
-            if(valueType == ValueType.Single){
-                return new ABNF_DecVal(values[0],values[0]);
+            if (valueType == ValueType.Single)
+            {
+                return new ABNF_DecVal(values[0], values[0]);
             }
 
-            if(valueType == ValueType.Concated){
+            if (valueType == ValueType.Concated)
+            {
                 return new ABNF_DecVal(values.ToArray());
             }
-            return new ABNF_DecVal(values[0],values[1]);
+            return new ABNF_DecVal(values[0], values[1]);
         }
     }
 }

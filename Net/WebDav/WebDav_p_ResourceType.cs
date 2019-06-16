@@ -21,14 +21,64 @@ namespace LumiSoft.Net.WebDav
         }
 
         /// <summary>
+        /// Gets property name.
+        /// </summary>
+        public override string Name
+        {
+            get { return "resourcetype"; }
+        }
+
+        /// <summary>
+        /// Gets property namespace.
+        /// </summary>
+        public override string Namespace
+        {
+            get { return "DAV:"; }
+        }
+
+        /// <summary>
+        /// Gets resource types.
+        /// </summary>
+        public string[] ResourceTypes
+        {
+            get { return m_pItems.ToArray(); }
+        }
+
+        /// <summary>
+        /// Gets property value.
+        /// </summary>
+        public override string Value
+        {
+            get
+            {
+                var retVal = new StringBuilder();
+                for (int i = 0; i < m_pItems.Count; i++)
+                {
+                    if (i == (m_pItems.Count - 1))
+                    {
+                        retVal.Append(m_pItems[i]);
+                    }
+                    else
+                    {
+                        retVal.Append(m_pItems[i] + ";");
+                    }
+                }
+
+                return retVal.ToString();
+            }
+        }
+
+        /// <summary>
         /// Checks if this 'resourcetype' property contains the specified resource type.
         /// </summary>
         /// <param name="resourceType">Resource type to check.</param>
         /// <returns>Retruns true if the colletion contains specified resource type.</returns>
         public bool Contains(string resourceType)
         {
-            foreach(string item in m_pItems){
-                if(string.Equals(resourceType,item,StringComparison.InvariantCultureIgnoreCase)){
+            foreach (string item in m_pItems)
+            {
+                if (string.Equals(resourceType, item, StringComparison.InvariantCultureIgnoreCase))
+                {
                     return true;
                 }
             }
@@ -45,66 +95,25 @@ namespace LumiSoft.Net.WebDav
         /// <exception cref="ParseException">Is raised when there are any parsing error.</exception>
         internal static WebDav_p_ResourceType Parse(XmlNode resourcetypeNode)
         {
-            if(resourcetypeNode == null){
+            if (resourcetypeNode == null)
+            {
                 throw new ArgumentNullException("resourcetypeNode");
             }
 
             // Invalid response.
-            if(!string.Equals(resourcetypeNode.NamespaceURI + resourcetypeNode.LocalName,"DAV:resourcetype",StringComparison.InvariantCultureIgnoreCase)){
+            if (!string.Equals(resourcetypeNode.NamespaceURI + resourcetypeNode.LocalName, "DAV:resourcetype", StringComparison.InvariantCultureIgnoreCase))
+            {
                 throw new ParseException("Invalid DAV:resourcetype value.");
             }
 
             var retVal = new WebDav_p_ResourceType();
 
-            foreach (XmlNode node in resourcetypeNode.ChildNodes){
+            foreach (XmlNode node in resourcetypeNode.ChildNodes)
+            {
                 retVal.m_pItems.Add(node.NamespaceURI + node.LocalName);
             }
 
             return retVal;
-        }
-
-        /// <summary>
-        /// Gets property namespace.
-        /// </summary>
-        public override string Namespace
-        {
-            get{ return "DAV:"; }
-        }
-
-        /// <summary>
-        /// Gets property name.
-        /// </summary>
-        public override string Name
-        {
-            get{ return "resourcetype"; }
-        }
-
-        /// <summary>
-        /// Gets property value.
-        /// </summary>
-        public override string Value
-        {
-            get{ 
-                var retVal = new StringBuilder();
-                for (int i=0;i<m_pItems.Count;i++){
-                    if(i == (m_pItems.Count - 1)){
-                        retVal.Append(m_pItems[i]);
-                    }
-                    else{
-                        retVal.Append(m_pItems[i] + ";");
-                    }
-                }
-                
-                return retVal.ToString(); 
-            }
-        }
-
-        /// <summary>
-        /// Gets resource types.
-        /// </summary>
-        public string[] ResourceTypes
-        {
-            get{ return m_pItems.ToArray(); }
         }
     }
 }

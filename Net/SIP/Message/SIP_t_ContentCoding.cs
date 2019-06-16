@@ -16,6 +16,28 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Encoding = "";
 
         /// <summary>
+        /// Gets or sets content encoding.
+        /// </summary>
+        public string Encoding
+        {
+            get { return m_Encoding; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Encoding value may not be null or empty !");
+                }
+                if (!TextUtils.IsToken(value))
+                {
+                    throw new ArgumentException("Encoding value may be 'token' only !");
+                }
+
+                m_Encoding = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "content-coding" from specified value.
         /// </summary>
         /// <param name="value">SIP "content-coding" value.</param>
@@ -23,7 +45,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -42,7 +65,8 @@ namespace LumiSoft.Net.SIP.Message
                 content-coding = token
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -58,25 +82,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_Encoding;
-        }
-
-        /// <summary>
-        /// Gets or sets content encoding.
-        /// </summary>
-        public string Encoding
-        {
-            get{ return m_Encoding; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Encoding value may not be null or empty !");
-                }
-                if(!TextUtils.IsToken(value)){
-                    throw new ArgumentException("Encoding value may be 'token' only !");
-                }
-
-                m_Encoding = value;
-            }
         }
     }
 }

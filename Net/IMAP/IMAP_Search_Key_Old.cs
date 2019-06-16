@@ -11,26 +11,6 @@ namespace LumiSoft.Net.IMAP
     /// functionally equivalent to "NOT RECENT" (as opposed to "NOT NEW").</remarks>
     public class IMAP_Search_Key_Old : IMAP_Search_Key
     {
-        /// <summary>
-        /// Returns parsed IMAP SEARCH <b>OLD</b> key.
-        /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP SEARCH <b>OLD</b> key.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        internal static IMAP_Search_Key_Old Parse(StringReader r)
-        {
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-
-            var word = r.ReadWord();
-            if (!string.Equals(word,"OLD",StringComparison.InvariantCultureIgnoreCase)){
-                throw new ParseException("Parse error: Not a SEARCH 'OLD' key.");
-            }
-
-            return new IMAP_Search_Key_Old();
-        }
 
         /// <summary>
         /// Returns this as string.
@@ -40,6 +20,28 @@ namespace LumiSoft.Net.IMAP
         {
             return "OLD";
         }
+        /// <summary>
+        /// Returns parsed IMAP SEARCH <b>OLD</b> key.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP SEARCH <b>OLD</b> key.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
+        internal static IMAP_Search_Key_Old Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            var word = r.ReadWord();
+            if (!string.Equals(word, "OLD", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ParseException("Parse error: Not a SEARCH 'OLD' key.");
+            }
+
+            return new IMAP_Search_Key_Old();
+        }
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -48,11 +50,12 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
         {
-            if(list == null){
+            if (list == null)
+            {
                 throw new ArgumentNullException("list");
             }
 
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, ToString()));
         }
     }
 }

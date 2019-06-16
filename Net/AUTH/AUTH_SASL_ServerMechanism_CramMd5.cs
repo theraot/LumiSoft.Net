@@ -9,11 +9,11 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_CramMd5 : AUTH_SASL_ServerMechanism
     {
-        private bool   m_IsCompleted;
-        private bool   m_IsAuthenticated;
-        private string m_UserName        = "";
-        private int    m_State;
-        private string m_Key             = "";
+        private bool m_IsAuthenticated;
+        private bool m_IsCompleted;
+        private string m_Key = "";
+        private int m_State;
+        private string m_UserName = "";
 
         /// <summary>
         /// Default constructor.
@@ -25,15 +25,45 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Resets any authentication state data.
+        /// Is called when authentication mechanism needs to get user info to complete atuhentication.
         /// </summary>
-        public override void Reset()
+        public event EventHandler<AUTH_e_UserInfo> GetUserInfo;
+
+        /// <summary>
+        /// Gets if user has authenticated sucessfully.
+        /// </summary>
+        public override bool IsAuthenticated
         {
-            m_IsCompleted     = false;
-            m_IsAuthenticated = false;
-            m_UserName        = "";
-            m_State           = 0;
-            m_Key             = "";
+            get { return m_IsAuthenticated; }
+        }
+
+        /// <summary>
+        /// Gets if the authentication exchange has completed.
+        /// </summary>
+        public override bool IsCompleted
+        {
+            get { return m_IsCompleted; }
+        }
+
+        /// <summary>
+        /// Returns always "CRAM-MD5".
+        /// </summary>
+        public override string Name
+        {
+            get { return "CRAM-MD5"; }
+        }
+
+        /// <summary>
+        /// Gets if specified SASL mechanism is available only to SSL connection.
+        /// </summary>
+        public override bool RequireSSL { get; }
+
+        /// <summary>
+        /// Gets user login name.
+        /// </summary>
+        public override string UserName
+        {
+            get { return m_UserName; }
         }
 
         /// <summary>
@@ -44,7 +74,8 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>clientResponse</b> is null reference.</exception>
         public override byte[] Continue(byte[] clientResponse)
         {
-            if(clientResponse == null){
+            if (clientResponse == null)
+            {
                 throw new ArgumentNullException("clientResponse");
             }
 
@@ -113,7 +144,8 @@ namespace LumiSoft.Net.AUTH
                     dGltIGI5MTNhNjAyYzdlZGE3YTQ5NWI0ZTZlNzMzNGQzODkw
             */
 
-            if(m_State == 0){
+            if (m_State == 0)
+            {
                 m_State++;
                 m_Key = "<" + Guid.NewGuid().ToString() + "@host" + ">";
 
@@ -122,13 +154,16 @@ namespace LumiSoft.Net.AUTH
 
             // Parse client response. response = userName SP hash.
             var user_hash = Encoding.UTF8.GetString(clientResponse).Split(' ');
-            if (user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0])){
+            if (user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0]))
+            {
                 m_UserName = user_hash[0];
                 var result = OnGetUserInfo(user_hash[0]);
-                if (result.UserExists){
+                if (result.UserExists)
+                {
                     // hash = Hex(HmacMd5(hashKey,password))
-                    var hash = Net_Utils.ToHex(HmacMd5(m_Key,result.Password));
-                    if (hash == user_hash[1]){
+                    var hash = Net_Utils.ToHex(HmacMd5(m_Key, result.Password));
+                    if (hash == user_hash[1])
+                    {
                         m_IsAuthenticated = true;
                     }
                 }
@@ -140,59 +175,29 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
+        /// Resets any authentication state data.
+        /// </summary>
+        public override void Reset()
+        {
+            m_IsCompleted = false;
+            m_IsAuthenticated = false;
+            m_UserName = "";
+            m_State = 0;
+            m_Key = "";
+        }
+
+        /// <summary>
 		/// Calculates keyed md5 hash from specifieed text and with specified hash key.
 		/// </summary>
 		/// <param name="hashKey">MD5 key.</param>
 		/// <param name="text">Text to hash.</param>
 		/// <returns>Returns MD5 hash.</returns>
-		private byte[] HmacMd5(string hashKey,string text)
-		{
-			var kMd5 = new HMACMD5(Encoding.Default.GetBytes(text));
+		private byte[] HmacMd5(string hashKey, string text)
+        {
+            var kMd5 = new HMACMD5(Encoding.Default.GetBytes(text));
 
             return kMd5.ComputeHash(Encoding.ASCII.GetBytes(hashKey));
-		}
-
-        /// <summary>
-        /// Gets if the authentication exchange has completed.
-        /// </summary>
-        public override bool IsCompleted
-        {
-            get{ return m_IsCompleted; }
         }
-
-        /// <summary>
-        /// Gets if user has authenticated sucessfully.
-        /// </summary>
-        public override bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
-        }
-
-        /// <summary>
-        /// Returns always "CRAM-MD5".
-        /// </summary>
-        public override string Name
-        {
-            get { return "CRAM-MD5"; }
-        }
-
-        /// <summary>
-        /// Gets if specified SASL mechanism is available only to SSL connection.
-        /// </summary>
-        public override bool RequireSSL { get; }
-
-        /// <summary>
-        /// Gets user login name.
-        /// </summary>
-        public override string UserName
-        {
-            get{ return m_UserName; }
-        }
-
-        /// <summary>
-        /// Is called when authentication mechanism needs to get user info to complete atuhentication.
-        /// </summary>
-        public event EventHandler<AUTH_e_UserInfo> GetUserInfo;
 
         /// <summary>
         /// Raises <b>GetUserInfo</b> event.
@@ -203,8 +208,9 @@ namespace LumiSoft.Net.AUTH
         {
             var retVal = new AUTH_e_UserInfo(userName);
 
-            if (GetUserInfo != null){
-                GetUserInfo(this,retVal);
+            if (GetUserInfo != null)
+            {
+                GetUserInfo(this, retVal);
             }
 
             return retVal;

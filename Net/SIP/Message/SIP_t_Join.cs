@@ -29,6 +29,76 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets call ID value.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised ´when null value passed.</exception>
+        public SIP_t_CallID CallID
+        {
+            get { return m_pCallID; }
+
+            set
+            {
+                m_pCallID = value ?? throw new ArgumentNullException("CallID");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets from-tag parameter value. This value is mandatory.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when invalid FromTag value is passed.</exception>
+        public string FromTag
+        {
+            get
+            {
+                var parameter = Parameters["from-tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("FromTag is mandatory and cant be null or empty !");
+                }
+
+                Parameters.Set("from-tag", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets to-tag parameter value. This value is mandatory.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when invalid ToTag value is passed.</exception>
+        public string ToTag
+        {
+            get
+            {
+                var parameter = Parameters["to-tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("ToTag is mandatory and cant be null or empty !");
+                }
+
+                Parameters.Set("to-tag", value);
+            }
+        }
+
+        /// <summary>
         /// Parses "Join" from specified value.
         /// </summary>
         /// <param name="value">SIP "Join" value.</param>
@@ -36,7 +106,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -61,7 +132,8 @@ namespace LumiSoft.Net.SIP.Message
                 tag, as they are required for unique dialog matching.
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -74,12 +146,14 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
 
             // Check that to and from tags exist.
-            if(Parameters["to-tag"] == null){
+            if (Parameters["to-tag"] == null)
+            {
                 throw new SIP_ParseException("Join value mandatory to-tag value is missing !");
             }
-            if(Parameters["from-tag"] == null){
+            if (Parameters["from-tag"] == null)
+            {
                 throw new SIP_ParseException("Join value mandatory from-tag value is missing !");
-            }            
+            }
         }
 
         /// <summary>
@@ -104,69 +178,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets call ID value.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised ´when null value passed.</exception>
-        public SIP_t_CallID CallID
-        {
-            get{ return m_pCallID; }
-
-            set{
-                m_pCallID = value ?? throw new ArgumentNullException("CallID");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets to-tag parameter value. This value is mandatory.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when invalid ToTag value is passed.</exception>
-        public string ToTag
-        {
-            get{ 
-                var parameter = Parameters["to-tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set
-            {
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("ToTag is mandatory and cant be null or empty !");
-                }
-
-                Parameters.Set("to-tag",value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets from-tag parameter value. This value is mandatory.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when invalid FromTag value is passed.</exception>
-        public string FromTag
-        {
-            get{ 
-                var parameter = Parameters["from-tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set
-            {
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("FromTag is mandatory and cant be null or empty !");
-                }
-
-                Parameters.Set("from-tag",value);
-            }
         }
     }
 }

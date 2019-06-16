@@ -29,6 +29,88 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets call ID.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid CallID value is passed.</exception>
+        public string CallID
+        {
+            get { return m_CallID; }
+
+            set
+            {
+                if (m_CallID == null)
+                {
+                    throw new ArgumentNullException("CallID");
+                }
+                if (m_CallID == "")
+                {
+                    throw new ArgumentException("Property 'CallID' may not be '' !");
+                }
+
+                m_CallID = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'local-tag' parameter value. Value null means not specified.
+        /// </summary>
+        public string LocalTag
+        {
+            get
+            {
+                var parameter = Parameters["local-tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("local-tag");
+                }
+                else
+                {
+                    Parameters.Set("local-tag", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'remote-tag' parameter value. Value null means not specified.
+        /// </summary>
+        public string RemoteTag
+        {
+            get
+            {
+                var parameter = Parameters["remote-tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("remote-tag");
+                }
+                else
+                {
+                    Parameters.Set("remote-tag", value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "Target-Dialog" from specified value.
         /// </summary>
         /// <param name="value">SIP "Target-Dialog" value.</param>
@@ -36,7 +118,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -58,7 +141,8 @@ namespace LumiSoft.Net.SIP.Message
                 local-param   = "local-tag" EQUAL token
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -92,75 +176,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets call ID.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid CallID value is passed.</exception>
-        public string CallID
-        {
-            get{ return m_CallID; }
-
-            set{
-                if(m_CallID == null){
-                    throw new ArgumentNullException("CallID");
-                }
-                if(m_CallID == ""){
-                    throw new ArgumentException("Property 'CallID' may not be '' !");
-                }
-
-                m_CallID = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'remote-tag' parameter value. Value null means not specified.
-        /// </summary>
-        public string RemoteTag
-        {
-            get{ 
-                var parameter = Parameters["remote-tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("remote-tag");
-                }
-                else{
-                    Parameters.Set("remote-tag",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'local-tag' parameter value. Value null means not specified.
-        /// </summary>
-        public string LocalTag
-        {
-            get{ 
-                var parameter = Parameters["local-tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("local-tag");
-                }
-                else{
-                    Parameters.Set("local-tag",value);
-                }
-            }
         }
     }
 }

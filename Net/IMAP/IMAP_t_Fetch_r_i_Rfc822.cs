@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets message stream.
+        /// </summary>
+        public Stream Stream { get; private set; }
+
+        /// <summary>
         /// Sets Stream property value.
         /// </summary>
         /// <param name="stream">Stream.</param>
@@ -27,10 +32,5 @@ namespace LumiSoft.Net.IMAP
         {
             Stream = stream ?? throw new ArgumentNullException("stream");
         }
-
-        /// <summary>
-        /// Gets message stream.
-        /// </summary>
-        public Stream Stream { get; private set; }
     }
 }

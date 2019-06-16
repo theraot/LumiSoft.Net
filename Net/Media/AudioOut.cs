@@ -10,6 +10,261 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioOut : IDisposable
     {
+
+        // TODO: Linux WaveOut similar PCM audio player.
+
+        private bool m_IsDisposed;
+        private readonly AudioFormat m_pAudioFormat;
+        private readonly AudioOutDevice m_pDevice;
+        private WaveOut m_pWaveOut;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="device">Audio output device.</param>
+        /// <param name="format">Audio output format.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>device</b> or <b>format</b> is null reference.</exception>
+        public AudioOut(AudioOutDevice device, AudioFormat format)
+        {
+            m_pDevice = device ?? throw new ArgumentNullException("device");
+            m_pAudioFormat = format ?? throw new ArgumentNullException("format");
+
+            m_pWaveOut = new WaveOut(device, format.SamplesPerSecond, format.BitsPerSample, format.Channels);
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="device">Audio output device.</param>
+        /// <param name="samplesPerSec">Sample rate, in samples per second (hertz).</param>
+        /// <param name="bitsPerSample">Bits per sample. For PCM 8 or 16 are the only valid values.</param>
+        /// <param name="channels">Number of channels.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>device</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public AudioOut(AudioOutDevice device, int samplesPerSec, int bitsPerSample, int channels)
+        {
+            if (samplesPerSec < 1)
+            {
+                throw new ArgumentException("Argument 'samplesPerSec' value must be >= 1.", "samplesPerSec");
+            }
+            if (bitsPerSample < 8)
+            {
+                throw new ArgumentException("Argument 'bitsPerSample' value must be >= 8.", "bitsPerSample");
+            }
+            if (channels < 1)
+            {
+                throw new ArgumentException("Argument 'channels' value must be >= 1.", "channels");
+            }
+
+            m_pDevice = device ?? throw new ArgumentNullException("device");
+            m_pAudioFormat = new AudioFormat(samplesPerSec, bitsPerSample, channels);
+
+            m_pWaveOut = new WaveOut(device, samplesPerSec, bitsPerSample, channels);
+        }
+
+        /// <summary>
+        /// Gets all available audio output devices.
+        /// </summary>
+        public static AudioOutDevice[] Devices
+        {
+            get { return WaveOut.Devices; }
+        }
+
+        /// <summary>
+        /// Gets audio format.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public AudioFormat AudioFormat
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAudioFormat;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of bits per sample.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int BitsPerSample
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAudioFormat.BitsPerSample;
+            }
+        }
+
+        /// <summary>
+        /// Gets one sample block size in bytes (nChannels * (bitsPerSample / 8)).
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int BlockSize
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAudioFormat.Channels * (m_pAudioFormat.BitsPerSample / 8);
+            }
+        }
+
+        /// <summary>
+        /// Gets number of bytes buffered for playing.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int BytesBuffered
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pWaveOut.BytesBuffered;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of channels.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int Channels
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAudioFormat.Channels;
+            }
+        }
+
+        /// <summary>
+        /// Gets audio output device where audio is outputed.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public AudioOutDevice OutputDevice
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pDevice;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of samples per second.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int SamplesPerSec
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAudioFormat.SamplesPerSecond;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets volume level. Value 0 is mute and value 100 is maximum.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
+        public int Volume
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pWaveOut.Volume;
+            }
+
+            set
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 0 || value > 100)
+                {
+                    throw new ArgumentException("Property 'Volume' value must be >=0 and <= 100.");
+                }
+
+                m_pWaveOut.Volume = value;
+            }
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                return;
+            }
+            m_IsDisposed = true;
+
+            m_pWaveOut.Dispose();
+            m_pWaveOut = null;
+        }
+
+        /// <summary>
+        /// Writes specified audio data bytes to the active audio device. If player is currently playing, data will be queued for playing.
+        /// </summary>
+        /// <param name="buffer">Data buffer.</param>
+        /// <param name="offset">Offset int the <b>buffer</b>.</param>
+        /// <param name="count">Number of bytes available in the <b>buffer</b>. Data boundary must n * BlockSize.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the argument value is out of allowed range.</exception>
+        public void Write(byte[] buffer, int offset, int count)
+        {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (offset < 0 || offset > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("offset");
+            }
+            if (count < 0 || count > (buffer.Length + offset))
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+            if ((count % BlockSize) != 0)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' is not n * BlockSize.");
+            }
+
+            m_pWaveOut.Play(buffer, offset, count);
+        }
         /// <summary>
         /// This class provides windows native waveOut implementation.
         /// </summary>
@@ -23,7 +278,7 @@ namespace LumiSoft.Net.Media
             /// <param name="dwUser">User-instance data specified with waveOutOpen.</param>
             /// <param name="dwParam1">Message parameter.</param>
             /// <param name="dwParam2">Message parameter.</param>
-            private delegate void waveOutProc(IntPtr hdrvr,int uMsg,int dwUser,int dwParam1,int dwParam2);
+            private delegate void waveOutProc(IntPtr hdrvr, int uMsg, int dwUser, int dwParam1, int dwParam2);
 
             /// <summary>
             /// This class holds MMSYSERR errors.
@@ -126,14 +381,14 @@ namespace LumiSoft.Net.Media
             private class WavConstants
             {
                 public const int MM_WOM_OPEN = 0x3BB;
-		        public const int MM_WOM_CLOSE = 0x3BC;
-		        public const int MM_WOM_DONE = 0x3BD;
+                public const int MM_WOM_CLOSE = 0x3BC;
+                public const int MM_WOM_DONE = 0x3BD;
 
-                public const int MM_WIM_OPEN = 0x3BE;   
+                public const int MM_WIM_OPEN = 0x3BE;
                 public const int MM_WIM_CLOSE = 0x3BF;
                 public const int MM_WIM_DATA = 0x3C0;
 
-		        public const int CALLBACK_FUNCTION = 0x00030000;
+                public const int CALLBACK_FUNCTION = 0x00030000;
 
                 public const int WAVERR_STILLPLAYING = 0x21;
 
@@ -155,8 +410,8 @@ namespace LumiSoft.Net.Media
                 /// <param name="hWaveOut">Handle to the waveform-audio output device. If the function succeeds, the handle is no longer valid after this call.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutClose(IntPtr hWaveOut);
-                
+                public static extern int waveOutClose(IntPtr hWaveOut);
+
                 /// <summary>
                 /// Queries a specified waveform device to determine its capabilities.
                 /// </summary>
@@ -165,15 +420,15 @@ namespace LumiSoft.Net.Media
                 /// <param name="cbwoc">Size, in bytes, of the WAVEOUTCAPS structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-                public static extern uint waveOutGetDevCaps(uint hwo,ref WAVEOUTCAPS pwoc,int cbwoc);
+                public static extern uint waveOutGetDevCaps(uint hwo, ref WAVEOUTCAPS pwoc, int cbwoc);
 
                 /// <summary>
                 /// Retrieves the number of waveform output devices present in the system.
                 /// </summary>
                 /// <returns>The number of devices indicates success. Zero indicates that no devices are present or that an error occurred.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutGetNumDevs();
-        
+                public static extern int waveOutGetNumDevs();
+
                 /// <summary>
                 /// Retrieves the current playback position of the specified waveform output device.
                 /// </summary>
@@ -182,7 +437,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="uSize">Size, in bytes, of the MMTIME structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutGetPosition(IntPtr hWaveOut,out int lpInfo,int uSize);
+                public static extern int waveOutGetPosition(IntPtr hWaveOut, out int lpInfo, int uSize);
 
                 /// <summary>
                 /// Queries the current volume setting of a waveform output device.
@@ -194,7 +449,7 @@ namespace LumiSoft.Net.Media
                 /// value of 0x0000 is silence.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutGetVolume(IntPtr hWaveOut,out int dwVolume);
+                public static extern int waveOutGetVolume(IntPtr hWaveOut, out int dwVolume);
 
                 /// <summary>
                 /// The waveOutOpen function opens the given waveform-audio output device for playback.
@@ -207,15 +462,15 @@ namespace LumiSoft.Net.Media
                 /// <param name="dwFlags">Flags for opening the device.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
 		        [DllImport("winmm.dll")]
-		        public static extern int waveOutOpen(out IntPtr hWaveOut,int uDeviceID,WAVEFORMATEX lpFormat,waveOutProc dwCallback,int dwInstance,int dwFlags);
-        
+                public static extern int waveOutOpen(out IntPtr hWaveOut, int uDeviceID, WAVEFORMATEX lpFormat, waveOutProc dwCallback, int dwInstance, int dwFlags);
+
                 /// <summary>
                 /// Pauses playback on a specified waveform output device.
                 /// </summary>
                 /// <param name="hWaveOut">Handle to the waveform-audio output device.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutPause(IntPtr hWaveOut);
+                public static extern int waveOutPause(IntPtr hWaveOut);
 
                 /// <summary>
                 /// Prepares a waveform data block for playback.
@@ -225,7 +480,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
 		        [DllImport("winmm.dll")]
-		        public static extern int waveOutPrepareHeader(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
+                public static extern int waveOutPrepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
                 /// <summary>
                 /// Stops playback on a specified waveform output device and resets the current position to 0.
@@ -233,7 +488,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="hWaveOut">Handle to the waveform-audio output device.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutReset(IntPtr hWaveOut);
+                public static extern int waveOutReset(IntPtr hWaveOut);
 
                 /// <summary>
                 /// Restarts a paused waveform output device.
@@ -241,7 +496,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="hWaveOut">Handle to the waveform-audio output device.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutRestart(IntPtr hWaveOut);
+                public static extern int waveOutRestart(IntPtr hWaveOut);
 
                 /// <summary>
                 /// Sets the volume of a waveform output device.
@@ -252,7 +507,7 @@ namespace LumiSoft.Net.Media
                 /// represents full volume, and a value of 0x0000 is silence.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
-		        public static extern int waveOutSetVolume(IntPtr hWaveOut,int dwVolume);
+                public static extern int waveOutSetVolume(IntPtr hWaveOut, int dwVolume);
 
                 /// <summary>
                 /// Cleans up the preparation performed by waveOutPrepareHeader.
@@ -262,7 +517,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
 		        [DllImport("winmm.dll")]
-		        public static extern int waveOutUnprepareHeader(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
+                public static extern int waveOutUnprepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
                 /// <summary>
                 /// Sends a data block to the specified waveform output device.
@@ -272,7 +527,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
 		        [DllImport("winmm.dll")]
-		        public static extern int waveOutWrite(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
+                public static extern int waveOutWrite(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
             }
 
             /// <summary>
@@ -296,7 +551,7 @@ namespace LumiSoft.Net.Media
                 /// <summary>
                 /// Product name in a null-terminated string.
                 /// </summary>
-                [MarshalAs(UnmanagedType.ByValTStr,SizeConst = 32)]
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
                 public readonly string szPname;
                 /// <summary>
                 /// Standard formats that are supported.
@@ -415,11 +670,11 @@ namespace LumiSoft.Net.Media
                 /// <param name="headerHandle">Header handle.</param>
                 /// <param name="dataHandle">Wav header data handle.</param>
                 /// <param name="dataSize">Data size in bytes.</param>
-                public PlayItem(ref GCHandle headerHandle,ref GCHandle dataHandle,int dataSize)
+                public PlayItem(ref GCHandle headerHandle, ref GCHandle dataHandle, int dataSize)
                 {
                     m_HeaderHandle = headerHandle;
-                    m_DataHandle   = dataHandle;
-                    DataSize     = dataSize;
+                    m_DataHandle = dataHandle;
+                    DataSize = dataSize;
                 }
 
                 /// <summary>
@@ -436,7 +691,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public GCHandle HeaderHandle
                 {
-                    get{ return m_HeaderHandle; }
+                    get { return m_HeaderHandle; }
                 }
 
                 /// <summary>
@@ -444,7 +699,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public WAVEHDR Header
                 {
-                    get{ return (WAVEHDR)m_HeaderHandle.Target; }
+                    get { return (WAVEHDR)m_HeaderHandle.Target; }
                 }
 
                 /// <summary>
@@ -452,7 +707,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public GCHandle DataHandle
                 {
-                    get{ return m_DataHandle; }
+                    get { return m_DataHandle; }
                 }
 
                 /// <summary>
@@ -461,16 +716,16 @@ namespace LumiSoft.Net.Media
                 public int DataSize { get; }
             }
 
-            private AudioOutDevice  m_pOutDevice;
-            private readonly int             m_SamplesPerSec = 8000;
-            private readonly int             m_BitsPerSample = 16;
-            private readonly int             m_Channels      = 1;
-            private readonly int             m_MinBuffer     = 1200;
-            private IntPtr          m_pWavDevHandle = IntPtr.Zero;
-            private readonly int             m_BlockSize;
-            private bool            m_IsPaused;
-            private List<PlayItem>  m_pPlayItems;
-            private waveOutProc     m_pWaveOutProc;
+            private AudioOutDevice m_pOutDevice;
+            private readonly int m_SamplesPerSec = 8000;
+            private readonly int m_BitsPerSample = 16;
+            private readonly int m_Channels = 1;
+            private readonly int m_MinBuffer = 1200;
+            private IntPtr m_pWavDevHandle = IntPtr.Zero;
+            private readonly int m_BlockSize;
+            private bool m_IsPaused;
+            private List<PlayItem> m_pPlayItems;
+            private waveOutProc m_pWaveOutProc;
 
             /// <summary>
             /// Default constructor.
@@ -482,38 +737,42 @@ namespace LumiSoft.Net.Media
             /// <param name="channels">Number of channels.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>outputDevice</b> is null.</exception>
             /// <exception cref="ArgumentException">Is raised when any of the aruments has invalid value.</exception>
-            public WaveOut(AudioOutDevice outputDevice,int samplesPerSec,int bitsPerSample,int channels)
+            public WaveOut(AudioOutDevice outputDevice, int samplesPerSec, int bitsPerSample, int channels)
             {
-                if(samplesPerSec < 8000){
+                if (samplesPerSec < 8000)
+                {
                     throw new ArgumentException("Argument 'samplesPerSec' value must be >= 8000.");
                 }
-                if(bitsPerSample < 8){
+                if (bitsPerSample < 8)
+                {
                     throw new ArgumentException("Argument 'bitsPerSample' value must be >= 8.");
                 }
-                if(channels < 1){
+                if (channels < 1)
+                {
                     throw new ArgumentException("Argument 'channels' value must be >= 1.");
                 }
 
-                m_pOutDevice    = outputDevice ?? throw new ArgumentNullException("outputDevice");
+                m_pOutDevice = outputDevice ?? throw new ArgumentNullException("outputDevice");
                 m_SamplesPerSec = samplesPerSec;
                 m_BitsPerSample = bitsPerSample;
-                m_Channels      = channels;
-                m_BlockSize     = m_Channels * (m_BitsPerSample / 8);
-                m_pPlayItems    = new List<PlayItem>();
-            
+                m_Channels = channels;
+                m_BlockSize = m_Channels * (m_BitsPerSample / 8);
+                m_pPlayItems = new List<PlayItem>();
+
                 // Try to open wav device.            
                 var format = new WAVEFORMATEX();
-                format.wFormatTag      = 0x0001; // PCM - 0x0001
-                format.nChannels       = (ushort)m_Channels;
-                format.nSamplesPerSec  = (uint)samplesPerSec;                        
+                format.wFormatTag = 0x0001; // PCM - 0x0001
+                format.nChannels = (ushort)m_Channels;
+                format.nSamplesPerSec = (uint)samplesPerSec;
                 format.nAvgBytesPerSec = (uint)(m_SamplesPerSec * m_Channels * (m_BitsPerSample / 8));
-                format.nBlockAlign     = (ushort)m_BlockSize;
-                format.wBitsPerSample  = (ushort)m_BitsPerSample;
-                format.cbSize          = 0; 
+                format.nBlockAlign = (ushort)m_BlockSize;
+                format.wBitsPerSample = (ushort)m_BitsPerSample;
+                format.cbSize = 0;
                 // We must delegate reference, otherwise GC will collect it.
                 m_pWaveOutProc = new waveOutProc(OnWaveOutProc);
-                int result = WavMethods.waveOutOpen(out m_pWavDevHandle,m_pOutDevice.Index,format,m_pWaveOutProc,0,WavConstants.CALLBACK_FUNCTION);
-                if(result != MMSYSERR.NOERROR){
+                int result = WavMethods.waveOutOpen(out m_pWavDevHandle, m_pOutDevice.Index, format, m_pWaveOutProc, 0, WavConstants.CALLBACK_FUNCTION);
+                if (result != MMSYSERR.NOERROR)
+                {
                     throw new Exception("Failed to open wav device, error: " + result.ToString() + ".");
                 }
             }
@@ -531,31 +790,35 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Dispose()
             {
-                if(IsDisposed){
+                if (IsDisposed)
+                {
                     return;
                 }
                 IsDisposed = true;
 
-                try{
+                try
+                {
                     // If playing, we need to reset wav device first.
                     WavMethods.waveOutReset(m_pWavDevHandle);
                     WavMethods.waveOutClose(m_pWavDevHandle);
 
                     // If there are unprepared wav headers, we need to unprepare these.
-                    foreach(PlayItem item in m_pPlayItems){
-                        WavMethods.waveOutUnprepareHeader(m_pWavDevHandle,item.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(item.Header));
+                    foreach (PlayItem item in m_pPlayItems)
+                    {
+                        WavMethods.waveOutUnprepareHeader(m_pWavDevHandle, item.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(item.Header));
                         item.Dispose();
                     }
-                
+
                     // Close output device.
                     WavMethods.waveOutClose(m_pWavDevHandle);
 
-                    m_pOutDevice    = null;
+                    m_pOutDevice = null;
                     m_pWavDevHandle = IntPtr.Zero;
-                    m_pPlayItems    = null;
-                    m_pWaveOutProc  = null;
+                    m_pPlayItems = null;
+                    m_pWaveOutProc = null;
                 }
-                catch{
+                catch
+                {
                 }
             }
 
@@ -567,16 +830,19 @@ namespace LumiSoft.Net.Media
             /// <param name="dwUser">User-instance data specified with waveOutOpen.</param>
             /// <param name="dwParam1">Message parameter.</param>
             /// <param name="dwParam2">Message parameter.</param>
-            private void OnWaveOutProc(IntPtr hdrvr,int uMsg,int dwUser,int dwParam1,int dwParam2)
-            {   
+            private void OnWaveOutProc(IntPtr hdrvr, int uMsg, int dwUser, int dwParam1, int dwParam2)
+            {
                 // NOTE: MSDN warns, we may not call any wav related methods here.
 
-                try{
-                    if(uMsg == WavConstants.MM_WOM_DONE){ 
+                try
+                {
+                    if (uMsg == WavConstants.MM_WOM_DONE)
+                    {
                         ThreadPool.QueueUserWorkItem(new WaitCallback(OnCleanUpFirstBlock));
                     }
                 }
-                catch{
+                catch
+                {
                 }
             }
 
@@ -586,20 +852,24 @@ namespace LumiSoft.Net.Media
             /// <param name="state">User data.</param>
             private void OnCleanUpFirstBlock(object state)
             {
-                if(IsDisposed){
+                if (IsDisposed)
+                {
                     return;
                 }
 
-                try{            
-                    lock(m_pPlayItems){
+                try
+                {
+                    lock (m_pPlayItems)
+                    {
                         var item = m_pPlayItems[0];
-                        WavMethods.waveOutUnprepareHeader(m_pWavDevHandle,item.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(item.Header));                    
+                        WavMethods.waveOutUnprepareHeader(m_pWavDevHandle, item.HeaderHandle.AddrOfPinnedObject(), Marshal.SizeOf(item.Header));
                         m_pPlayItems.Remove(item);
                         BytesBuffered -= item.DataSize;
                         item.Dispose();
                     }
                 }
-                catch{
+                catch
+                {
                 }
             }
 
@@ -612,57 +882,65 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
             /// <exception cref="ArgumentNullException">Is raised when <b>audioData</b> is null.</exception>
             /// <exception cref="ArgumentException">Is raised when <b>audioData</b> is with invalid length.</exception>
-            public void Play(byte[] audioData,int offset,int count)
+            public void Play(byte[] audioData, int offset, int count)
             {
-                if(IsDisposed){
+                if (IsDisposed)
+                {
                     throw new ObjectDisposedException("WaveOut");
                 }
-                if(audioData == null){
+                if (audioData == null)
+                {
                     throw new ArgumentNullException("audioData");
                 }
-                if((count % m_BlockSize) != 0){
+                if ((count % m_BlockSize) != 0)
+                {
                     throw new ArgumentException("Audio data is not n * BlockSize.");
                 }
 
                 //--- Queue specified audio block for play. --------------------------------------------------------
-                var   data       = new byte[count];
-                Array.Copy(audioData,offset,data,0,count);
-                var dataHandle = GCHandle.Alloc(data,GCHandleType.Pinned);
+                var data = new byte[count];
+                Array.Copy(audioData, offset, data, 0, count);
+                var dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
 
                 var wavHeader = new WAVEHDR();
-                wavHeader.lpData          = dataHandle.AddrOfPinnedObject();
-                wavHeader.dwBufferLength  = (uint)data.Length;
+                wavHeader.lpData = dataHandle.AddrOfPinnedObject();
+                wavHeader.dwBufferLength = (uint)data.Length;
                 wavHeader.dwBytesRecorded = 0;
-                wavHeader.dwUser          = IntPtr.Zero;
-                wavHeader.dwFlags         = 0;
-                wavHeader.dwLoops         = 0;
-                wavHeader.lpNext          = IntPtr.Zero;
-                wavHeader.reserved        = 0;
-                var headerHandle = GCHandle.Alloc(wavHeader,GCHandleType.Pinned);
-                int result = 0;        
-                result = WavMethods.waveOutPrepareHeader(m_pWavDevHandle,headerHandle.AddrOfPinnedObject(),Marshal.SizeOf(wavHeader));
-                if(result == MMSYSERR.NOERROR){
-                    var item = new PlayItem(ref headerHandle,ref dataHandle,data.Length);
+                wavHeader.dwUser = IntPtr.Zero;
+                wavHeader.dwFlags = 0;
+                wavHeader.dwLoops = 0;
+                wavHeader.lpNext = IntPtr.Zero;
+                wavHeader.reserved = 0;
+                var headerHandle = GCHandle.Alloc(wavHeader, GCHandleType.Pinned);
+                int result = 0;
+                result = WavMethods.waveOutPrepareHeader(m_pWavDevHandle, headerHandle.AddrOfPinnedObject(), Marshal.SizeOf(wavHeader));
+                if (result == MMSYSERR.NOERROR)
+                {
+                    var item = new PlayItem(ref headerHandle, ref dataHandle, data.Length);
                     m_pPlayItems.Add(item);
 
                     BytesBuffered += data.Length;
 
                     // We ran out of minimum buffer, we must pause playing while min buffer filled.
-                    if(BytesBuffered < 1000){
-                        if(!m_IsPaused){
+                    if (BytesBuffered < 1000)
+                    {
+                        if (!m_IsPaused)
+                        {
                             WavMethods.waveOutPause(m_pWavDevHandle);
                             m_IsPaused = true;
                         }
                     }
                     // Buffering completed,we may resume playing.
-                    else if(m_IsPaused && BytesBuffered > m_MinBuffer){
+                    else if (m_IsPaused && BytesBuffered > m_MinBuffer)
+                    {
                         WavMethods.waveOutRestart(m_pWavDevHandle);
                         m_IsPaused = false;
                     }
-                                        
-                    result = WavMethods.waveOutWrite(m_pWavDevHandle,headerHandle.AddrOfPinnedObject(),Marshal.SizeOf(wavHeader));
+
+                    result = WavMethods.waveOutWrite(m_pWavDevHandle, headerHandle.AddrOfPinnedObject(), Marshal.SizeOf(wavHeader));
                 }
-                else{
+                else
+                {
                     dataHandle.Free();
                     headerHandle.Free();
                 }
@@ -674,18 +952,21 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public static AudioOutDevice[] Devices
             {
-                get{
+                get
+                {
                     var retVal = new List<AudioOutDevice>();
                     // Get all available output devices and their info.
                     int devicesCount = WavMethods.waveOutGetNumDevs();
-                    for(int i=0;i<devicesCount;i++){
+                    for (int i = 0; i < devicesCount; i++)
+                    {
                         var pwoc = new WAVEOUTCAPS();
-                        if (WavMethods.waveOutGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
-                            retVal.Add(new AudioOutDevice(i,pwoc.szPname,pwoc.wChannels));
+                        if (WavMethods.waveOutGetDevCaps((uint)i, ref pwoc, Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR)
+                        {
+                            retVal.Add(new AudioOutDevice(i, pwoc.szPname, pwoc.wChannels));
                         }
                     }
 
-                    return retVal.ToArray(); 
+                    return retVal.ToArray();
                 }
             }
 
@@ -700,12 +981,15 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public bool IsPlaying
             {
-                get{
-                    if(IsDisposed){
+                get
+                {
+                    if (IsDisposed)
+                    {
                         throw new ObjectDisposedException("WaveOut");
                     }
-                
-                    if(m_pPlayItems.Count > 0){
+
+                    if (m_pPlayItems.Count > 0)
+                    {
                         return true;
                     }
 
@@ -719,24 +1003,27 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
             public int Volume
             {
-                get{ 
+                get
+                {
                     int volume = 0;
-                    WavMethods.waveOutGetVolume(m_pWavDevHandle,out volume);
+                    WavMethods.waveOutGetVolume(m_pWavDevHandle, out volume);
 
-                    ushort left  = (ushort)(volume & 0x0000ffff);
+                    ushort left = (ushort)(volume & 0x0000ffff);
                     ushort right = (ushort)(volume >> 16);
 
                     return (int)(left / (0xFFFF / 100.0));
                 }
 
-                set{
-                    if(value < 0 || value > 100){
+                set
+                {
+                    if (value < 0 || value > 100)
+                    {
                         throw new ArgumentException("Property 'Volume' value must be >=0 and <= 100.");
                     }
 
                     int level = (int)(value * (0xFFFF / 100.0));
 
-                    WavMethods.waveOutSetVolume(m_pWavDevHandle,(level << 16 | level & 0xFFFF));
+                    WavMethods.waveOutSetVolume(m_pWavDevHandle, (level << 16 | level & 0xFFFF));
                 }
             }
 
@@ -744,234 +1031,6 @@ namespace LumiSoft.Net.Media
             /// Gets number of bytes buffered for playing.
             /// </summary>
             public int BytesBuffered { get; private set; }
-        }
-
-        // TODO: Linux WaveOut similar PCM audio player.
-
-        private bool           m_IsDisposed;
-        private readonly AudioOutDevice m_pDevice;
-        private readonly AudioFormat    m_pAudioFormat;
-        private WaveOut        m_pWaveOut;
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="device">Audio output device.</param>
-        /// <param name="format">Audio output format.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>device</b> or <b>format</b> is null reference.</exception>
-        public AudioOut(AudioOutDevice device,AudioFormat format)
-        {
-            m_pDevice      = device ?? throw new ArgumentNullException("device");
-            m_pAudioFormat = format ?? throw new ArgumentNullException("format");
-
-            m_pWaveOut = new WaveOut(device,format.SamplesPerSecond,format.BitsPerSample,format.Channels);
-        }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="device">Audio output device.</param>
-        /// <param name="samplesPerSec">Sample rate, in samples per second (hertz).</param>
-        /// <param name="bitsPerSample">Bits per sample. For PCM 8 or 16 are the only valid values.</param>
-        /// <param name="channels">Number of channels.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>device</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public AudioOut(AudioOutDevice device,int samplesPerSec,int bitsPerSample,int channels)
-        {
-            if(samplesPerSec < 1){
-                throw new ArgumentException("Argument 'samplesPerSec' value must be >= 1.","samplesPerSec");
-            }
-            if(bitsPerSample < 8){
-                throw new ArgumentException("Argument 'bitsPerSample' value must be >= 8.","bitsPerSample");
-            }
-            if(channels < 1){
-                throw new ArgumentException("Argument 'channels' value must be >= 1.","channels");
-            }
-
-            m_pDevice      = device ?? throw new ArgumentNullException("device");
-            m_pAudioFormat = new AudioFormat(samplesPerSec,bitsPerSample,channels);
-
-            m_pWaveOut = new WaveOut(device,samplesPerSec,bitsPerSample,channels);
-        }
-
-        /// <summary>
-        /// Cleans up any resources being used.
-        /// </summary>
-        public void Dispose()
-        {
-            if(m_IsDisposed){
-                return;
-            }
-            m_IsDisposed = true;
-
-            m_pWaveOut.Dispose();
-            m_pWaveOut = null;
-        }
-
-        /// <summary>
-        /// Writes specified audio data bytes to the active audio device. If player is currently playing, data will be queued for playing.
-        /// </summary>
-        /// <param name="buffer">Data buffer.</param>
-        /// <param name="offset">Offset int the <b>buffer</b>.</param>
-        /// <param name="count">Number of bytes available in the <b>buffer</b>. Data boundary must n * BlockSize.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the argument value is out of allowed range.</exception>
-        public void Write(byte[] buffer,int offset,int count)
-        {
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }
-            if(offset < 0 || offset > buffer.Length){
-                throw new ArgumentOutOfRangeException("offset");
-            }
-            if(count < 0 || count > (buffer.Length + offset)){
-                throw new ArgumentOutOfRangeException("count");
-            }
-            if((count % BlockSize) != 0){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' is not n * BlockSize.");
-            }
-
-            m_pWaveOut.Play(buffer,offset,count);
-        }
-
-        /// <summary>
-        /// Gets all available audio output devices.
-        /// </summary>
-        public static AudioOutDevice[] Devices
-        {
-            get{ return WaveOut.Devices; }
-        }
-
-        /// <summary>
-        /// Gets audio output device where audio is outputed.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public AudioOutDevice OutputDevice
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pDevice; 
-            }
-        }
-
-        /// <summary>
-        /// Gets audio format.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public AudioFormat AudioFormat
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
- 
-                return m_pAudioFormat; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of samples per second.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int SamplesPerSec
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
- 
-                return m_pAudioFormat.SamplesPerSecond; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of bits per sample.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int BitsPerSample
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-            
-                return m_pAudioFormat.BitsPerSample; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of channels.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int Channels
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-             
-                return m_pAudioFormat.Channels; 
-            }
-        }
-
-        /// <summary>
-        /// Gets one sample block size in bytes (nChannels * (bitsPerSample / 8)).
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int BlockSize
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pAudioFormat.Channels * (m_pAudioFormat.BitsPerSample / 8); 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets volume level. Value 0 is mute and value 100 is maximum.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
-        public int Volume
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
- 
-                return m_pWaveOut.Volume; 
-            }
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 0 || value > 100){
-                    throw new ArgumentException("Property 'Volume' value must be >=0 and <= 100.");
-                }
-
-                m_pWaveOut.Volume = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets number of bytes buffered for playing.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int BytesBuffered
-        {
-            get{ 
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pWaveOut.BytesBuffered; 
-            }
         }
     }
 }

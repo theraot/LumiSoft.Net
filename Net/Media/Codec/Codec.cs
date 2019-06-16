@@ -5,23 +5,6 @@
     /// </summary>
     public abstract class Codec
     {
-        /// <summary>
-        /// Encodes specified data block.
-        /// </summary>
-        /// <param name="buffer">Data to encode.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="count">Number of bytes to encode.</param>
-        /// <returns>Returns encoded block.</returns>
-        public abstract byte[] Encode(byte[] buffer,int offset,int count);
-
-        /// <summary>
-        /// Decodes specified data block.
-        /// </summary>
-        /// <param name="buffer">Data to encode.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="count">Number of bytes to decode.</param>
-        /// <returns>Returns encoded data.</returns>
-        public abstract byte[] Decode(byte[] buffer,int offset,int count);
 
         /// <summary>
         /// Gets codec name.
@@ -30,5 +13,22 @@
         {
             get;
         }
+
+        /// <summary>
+        /// Decodes specified data block.
+        /// </summary>
+        /// <param name="buffer">Data to encode.</param>
+        /// <param name="offset">Offset in the buffer.</param>
+        /// <param name="count">Number of bytes to decode.</param>
+        /// <returns>Returns encoded data.</returns>
+        public abstract byte[] Decode(byte[] buffer, int offset, int count);
+        /// <summary>
+        /// Encodes specified data block.
+        /// </summary>
+        /// <param name="buffer">Data to encode.</param>
+        /// <param name="offset">Offset in the buffer.</param>
+        /// <param name="count">Number of bytes to encode.</param>
+        /// <returns>Returns encoded block.</returns>
+        public abstract byte[] Encode(byte[] buffer, int offset, int count);
     }
 }

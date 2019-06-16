@@ -8,10 +8,10 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_Plain : AUTH_SASL_Client
     {
-        private bool   m_IsCompleted;
-        private int    m_State;
-        private readonly string m_UserName;
+        private bool m_IsCompleted;
         private readonly string m_Password;
+        private int m_State;
+        private readonly string m_UserName;
 
         /// <summary>
         /// Default constructor.
@@ -20,17 +20,51 @@ namespace LumiSoft.Net.AUTH
         /// <param name="password">User password.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b> or <b>password</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public AUTH_SASL_Client_Plain(string userName,string password)
+        public AUTH_SASL_Client_Plain(string userName, string password)
         {
-            if(userName == null){
+            if (userName == null)
+            {
                 throw new ArgumentNullException("userName");
             }
-            if(userName == string.Empty){
-                throw new ArgumentException("Argument 'username' value must be specified.","userName");
+            if (userName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'username' value must be specified.", "userName");
             }
 
             m_UserName = userName;
             m_Password = password ?? throw new ArgumentNullException("password");
+        }
+
+        /// <summary>
+        /// Gets if the authentication exchange has completed.
+        /// </summary>
+        public override bool IsCompleted
+        {
+            get { return m_IsCompleted; }
+        }
+
+        /// <summary>
+        /// Returns always "PLAIN".
+        /// </summary>
+        public override string Name
+        {
+            get { return "PLAIN"; }
+        }
+
+        /// <summary>
+        /// Gets if the authentication method supports SASL client "inital response".
+        /// </summary>
+        public override bool SupportsInitialResponse
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Gets user login name.
+        /// </summary>
+        public override string UserName
+        {
+            get { return m_UserName; }
         }
 
         /// <summary>
@@ -41,7 +75,8 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="InvalidOperationException">Is raised when this method is called when authentication is completed.</exception>
         public override byte[] Continue(byte[] serverResponse)
         {
-            if(m_IsCompleted){
+            if (m_IsCompleted)
+            {
                 throw new InvalidOperationException("Authentication is completed.");
             }
 
@@ -66,7 +101,8 @@ namespace LumiSoft.Net.AUTH
                     S: a002 OK "Authenticated"
             */
 
-            if(m_State == 0){
+            if (m_State == 0)
+            {
                 m_State++;
                 m_IsCompleted = true;
 
@@ -74,38 +110,6 @@ namespace LumiSoft.Net.AUTH
             }
 
             throw new InvalidOperationException("Authentication is completed.");
-        }
-
-        /// <summary>
-        /// Gets if the authentication exchange has completed.
-        /// </summary>
-        public override bool IsCompleted
-        {
-            get{ return m_IsCompleted; }
-        }
-
-        /// <summary>
-        /// Returns always "PLAIN".
-        /// </summary>
-        public override string Name
-        {
-            get { return "PLAIN"; }
-        }
-
-        /// <summary>
-        /// Gets user login name.
-        /// </summary>
-        public override string UserName
-        {
-            get{ return m_UserName; }
-        }
-
-        /// <summary>
-        /// Gets if the authentication method supports SASL client "inital response".
-        /// </summary>
-        public override bool SupportsInitialResponse
-        {
-            get{ return true; }
         }
     }
 }

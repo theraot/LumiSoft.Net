@@ -16,15 +16,22 @@ namespace LumiSoft.Net.ABNF
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public ABNF_RuleName(string ruleName)
         {
-            if(ruleName == null){
+            if (ruleName == null)
+            {
                 throw new ArgumentNullException("ruleName");
             }
-            if(!ValidateName(ruleName)){
+            if (!ValidateName(ruleName))
+            {
                 throw new ArgumentException("Invalid argument 'ruleName' value. Value must be 'rulename =  ALPHA *(ALPHA / DIGIT / \"-\")'.");
             }
 
             RuleName = ruleName;
         }
+
+        /// <summary>
+        /// Gets rule name.
+        /// </summary>
+        public string RuleName { get; }
 
         /// <summary>
         /// 
@@ -33,14 +40,16 @@ namespace LumiSoft.Net.ABNF
         /// <returns></returns>
         public static ABNF_RuleName Parse(System.IO.StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // RFC 5234 4.
             //  rulename =  ALPHA *(ALPHA / DIGIT / "-")
 
-            if(!char.IsLetter((char)reader.Peek())){
+            if (!char.IsLetter((char)reader.Peek()))
+            {
                 throw new ParseException("Invalid ABNF 'rulename' value '" + reader.ReadToEnd() + "'.");
             }
 
@@ -49,16 +58,19 @@ namespace LumiSoft.Net.ABNF
             while (true)
             {
                 // We reached end of string.
-                if(reader.Peek() == -1){
+                if (reader.Peek() == -1)
+                {
                     break;
                 }
                 // We have valid rule name char.
 
-                if(char.IsLetter((char)reader.Peek()) | char.IsDigit((char)reader.Peek()) | (char)reader.Peek() == '-'){
+                if (char.IsLetter((char)reader.Peek()) | char.IsDigit((char)reader.Peek()) | (char)reader.Peek() == '-')
+                {
                     ruleName.Append((char)reader.Read());
                 }
                 // Not rule name char, probably readed name.
-                else{
+                else
+                {
                     break;
                 }
             }
@@ -73,32 +85,32 @@ namespace LumiSoft.Net.ABNF
         /// <returns>Returns true if rule name is valid, otherwise false.</returns>
         private bool ValidateName(string name)
         {
-            if(name == null){
+            if (name == null)
+            {
                 return false;
             }
-            if(name == string.Empty){
+            if (name == string.Empty)
+            {
                 return false;
             }
 
             // RFC 5234 4.
             //  rulename =  ALPHA *(ALPHA / DIGIT / "-")
 
-            if(!char.IsLetter(name[0])){
+            if (!char.IsLetter(name[0]))
+            {
                 return false;
             }
-            for(int i=1;i<name.Length;i++){
+            for (int i = 1; i < name.Length; i++)
+            {
                 char c = name[i];
-                if(!(char.IsLetter(c) | char.IsDigit(c) | c == '-')){
+                if (!(char.IsLetter(c) | char.IsDigit(c) | c == '-'))
+                {
                     return false;
                 }
             }
 
             return true;
         }
-
-        /// <summary>
-        /// Gets rule name.
-        /// </summary>
-        public string RuleName { get; }
     }
 }

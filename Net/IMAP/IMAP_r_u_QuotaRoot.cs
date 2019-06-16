@@ -16,18 +16,30 @@ namespace LumiSoft.Net.IMAP
         /// <param name="quotaRoots">Quota roots.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> or <b>quotaRoots</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_r_u_QuotaRoot(string folder,string[] quotaRoots)
+        public IMAP_r_u_QuotaRoot(string folder, string[] quotaRoots)
         {
-            if(folder == null){
+            if (folder == null)
+            {
                 throw new ArgumentNullException("folder");
             }
-            if(folder == string.Empty){
-                throw new ArgumentException("Argument 'folder' name must be specified.","folder");
+            if (folder == string.Empty)
+            {
+                throw new ArgumentException("Argument 'folder' name must be specified.", "folder");
             }
 
             FolderName = folder;
             QuotaRoots = quotaRoots ?? throw new ArgumentNullException("quotaRoots");
         }
+
+        /// <summary>
+        /// Gets folder name.
+        /// </summary>
+        public string FolderName { get; } = "";
+
+        /// <summary>
+        /// Gets quota roots.
+        /// </summary>
+        public string[] QuotaRoots { get; }
 
         /// <summary>
         /// Parses QUOTAROOT response from quotaRoot-response string.
@@ -37,7 +49,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_QuotaRoot Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -61,17 +74,20 @@ namespace LumiSoft.Net.IMAP
 
             var folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
             var quotaRoots = new List<string>();
-            while (r.Available > 0){
+            while (r.Available > 0)
+            {
                 var quotaRoot = r.ReadWord();
-                if (quotaRoot != null){
+                if (quotaRoot != null)
+                {
                     quotaRoots.Add(quotaRoot);
                 }
-                else{
+                else
+                {
                     break;
                 }
             }
 
-            return new IMAP_r_u_QuotaRoot(folderName,quotaRoots.ToArray());
+            return new IMAP_r_u_QuotaRoot(folderName, quotaRoots.ToArray());
         }
 
         /// <summary>
@@ -93,23 +109,14 @@ namespace LumiSoft.Net.IMAP
             // Example:    S: * QUOTAROOT INBOX ""
 
             var retVal = new StringBuilder();
-            retVal.Append("* QUOTAROOT " + IMAP_Utils.EncodeMailbox(FolderName,encoding));
-            foreach(string root in QuotaRoots){
+            retVal.Append("* QUOTAROOT " + IMAP_Utils.EncodeMailbox(FolderName, encoding));
+            foreach (string root in QuotaRoots)
+            {
                 retVal.Append(" \"" + root + "\"");
             }
             retVal.Append("\r\n");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets folder name.
-        /// </summary>
-        public string FolderName { get; } = "";
-
-        /// <summary>
-        /// Gets quota roots.
-        /// </summary>
-        public string[] QuotaRoots { get; }
     }
 }

@@ -31,6 +31,58 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets disposition type. Known values: "render","session","icon","alert".
+        /// </summary>
+        public string DispositionType
+        {
+            get { return m_DispositionType; }
+
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("DispositionType");
+                }
+                if (!TextUtils.IsToken(value))
+                {
+                    throw new ArgumentException("Invalid DispositionType value, value must be 'token' !");
+                }
+
+                m_DispositionType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'handling' parameter value. Value null means not specified. 
+        /// Known value: "optional","required".
+        /// </summary>
+        public string Handling
+        {
+            get
+            {
+                var parameter = Parameters["handling"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("handling");
+                }
+                else
+                {
+                    Parameters.Set("handling", value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "Content-Disposition" from specified value.
         /// </summary>
         /// <param name="value">SIP "Content-Disposition" value.</param>
@@ -38,7 +90,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -62,10 +115,11 @@ namespace LumiSoft.Net.SIP.Message
                 disp-extension-token = token
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
-            
+
             // disp-type
             var word = reader.ReadWord();
             m_DispositionType = word ?? throw new SIP_ParseException("SIP Content-Disposition 'disp-type' value is missing !");
@@ -85,50 +139,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets disposition type. Known values: "render","session","icon","alert".
-        /// </summary>
-        public string DispositionType
-        {
-            get{ return m_DispositionType; }
-
-            set{
-                if(value == null){
-                    throw new ArgumentNullException("DispositionType");
-                }
-                if(!TextUtils.IsToken(value)){
-                    throw new ArgumentException("Invalid DispositionType value, value must be 'token' !");
-                }
-
-                m_DispositionType = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'handling' parameter value. Value null means not specified. 
-        /// Known value: "optional","required".
-        /// </summary>
-        public string Handling
-        {
-            get{ 
-                var parameter = Parameters["handling"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("handling");
-                }
-                else{
-                    Parameters.Set("handling",value);
-                }
-            }
         }
     }
 }

@@ -18,6 +18,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets alert text.
+        /// </summary>
+        public string AlertText { get; }
+
+        /// <summary>
         /// Parses ALERT optional response from string.
         /// </summary>
         /// <param name="value">ALERT optional response string.</param>
@@ -25,13 +30,15 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_Alert Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new[]{' '},2);
-            if (!string.Equals("ALERT",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid ALERT response value.","value");
+            var code_value = value.Split(new[] { ' ' }, 2);
+            if (!string.Equals("ALERT", code_value[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid ALERT response value.", "value");
             }
 
             return new IMAP_t_orc_Alert(code_value.Length == 2 ? code_value[1] : "");
@@ -45,10 +52,5 @@ namespace LumiSoft.Net.IMAP
         {
             return "ALERT " + AlertText;
         }
-
-        /// <summary>
-        /// Gets alert text.
-        /// </summary>
-        public string AlertText { get; }
     }
 }

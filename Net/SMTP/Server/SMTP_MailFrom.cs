@@ -16,32 +16,32 @@ namespace LumiSoft.Net.SMTP.Server
         /// <param name="ret">DSN RET parameter value.</param>
         /// <param name="envid">DSN ENVID parameter value.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>mailbox</b> is null reference.</exception>
-        public SMTP_MailFrom(string mailbox,int size,string body,SMTP_DSN_Ret ret,string envid)
+        public SMTP_MailFrom(string mailbox, int size, string body, SMTP_DSN_Ret ret, string envid)
         {
             Mailbox = mailbox ?? throw new ArgumentNullException("mailbox");
-            Size    = size;
-            Body    = body;
-            RET     = ret;
-            ENVID   = envid;
+            Size = size;
+            Body = body;
+            RET = ret;
+            ENVID = envid;
         }
-
-        /// <summary>
-        /// Gets SMTP "mailbox" value. Actually this is just email address.
-        /// This value can be "" if "null reverse-path".
-        /// </summary>
-        public string Mailbox { get; } = "";
-
-        /// <summary>
-        /// Gets MAIL FROM: SIZE parameter value. Value -1 means not specified.
-        /// Defined in RFC 1870.
-        /// </summary>
-        public int Size { get; } = -1;
 
         /// <summary>
         /// Gets MAIL FROM: BODY parameter value. Value null means not specified.
         /// Defined in RFC 1652.
         /// </summary>
         public string Body { get; }
+
+        /// <summary>
+        /// Gets DSN ENVID parameter value. Value null means not specified.
+        /// Defined in RFC 1891.
+        /// </summary>
+        public string ENVID { get; }
+
+        /// <summary>
+        /// Gets SMTP "mailbox" value. Actually this is just email address.
+        /// This value can be "" if "null reverse-path".
+        /// </summary>
+        public string Mailbox { get; } = "";
 
         /// <summary>
         /// Gets DSN RET parameter value. Value null means not specified.
@@ -51,9 +51,9 @@ namespace LumiSoft.Net.SMTP.Server
         public SMTP_DSN_Ret RET { get; } = SMTP_DSN_Ret.NotSpecified;
 
         /// <summary>
-        /// Gets DSN ENVID parameter value. Value null means not specified.
-        /// Defined in RFC 1891.
+        /// Gets MAIL FROM: SIZE parameter value. Value -1 means not specified.
+        /// Defined in RFC 1870.
         /// </summary>
-        public string ENVID { get; }
+        public int Size { get; } = -1;
     }
 }

@@ -21,25 +21,9 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-        /// Returns parsed IMAP SEARCH <b>NOT (search-key)</b> key.
+        /// Gets search KEY.
         /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP SEARCH <b>NOT (search-key)</b> key.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        internal static IMAP_Search_Key_Not Parse(StringReader r)
-        {
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-
-            var word = r.ReadWord();
-            if (!string.Equals(word,"NOT",StringComparison.InvariantCultureIgnoreCase)){
-                throw new ParseException("Parse error: Not a SEARCH 'NOT' key.");
-            }
-
-            return new IMAP_Search_Key_Not(ParseKey(r));
-        }
+        public IMAP_Search_Key SearchKey { get; }
 
         /// <summary>
         /// Returns this as string.
@@ -51,23 +35,42 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Returns parsed IMAP SEARCH <b>NOT (search-key)</b> key.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP SEARCH <b>NOT (search-key)</b> key.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
+        internal static IMAP_Search_Key_Not Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            var word = r.ReadWord();
+            if (!string.Equals(word, "NOT", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ParseException("Parse error: Not a SEARCH 'NOT' key.");
+            }
+
+            return new IMAP_Search_Key_Not(ParseKey(r));
+        }
+
+        /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
         /// </summary>
         /// <param name="list">Array where to store command parts.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
         {
-            if(list == null){
+            if (list == null)
+            {
                 throw new ArgumentNullException("list");
             }
 
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"NOT "));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, "NOT "));
             SearchKey.ToCmdParts(list);
         }
-
-        /// <summary>
-        /// Gets search KEY.
-        /// </summary>
-        public IMAP_Search_Key SearchKey { get; }
     }
 }

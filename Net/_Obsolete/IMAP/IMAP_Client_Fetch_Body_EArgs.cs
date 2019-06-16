@@ -14,11 +14,16 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         /// <param name="bodySection">Body section value.</param>
         /// <param name="offset">Body data offset.</param>
-        internal IMAP_Client_Fetch_Body_EArgs(string bodySection,int offset)
+        internal IMAP_Client_Fetch_Body_EArgs(string bodySection, int offset)
         {
             BodySection = bodySection;
-            Offset  = offset;
+            Offset = offset;
         }
+
+        /// <summary>
+        /// This method is called when message storing has completed.
+        /// </summary>
+        public event EventHandler StoringCompleted;
 
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).
@@ -36,17 +41,13 @@ namespace LumiSoft.Net.IMAP.Client
         public Stream Stream { get; set; }
 
         /// <summary>
-        /// This method is called when message storing has completed.
-        /// </summary>
-        public event EventHandler StoringCompleted;
-
-        /// <summary>
         /// Raises <b>StoringCompleted</b> event.
         /// </summary>
         internal void OnStoringCompleted()
         {
-            if(StoringCompleted != null){
-                StoringCompleted(this,new EventArgs());
+            if (StoringCompleted != null)
+            {
+                StoringCompleted(this, new EventArgs());
             }
         }
     }

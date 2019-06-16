@@ -17,6 +17,28 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Method = "";
 
         /// <summary>
+        /// Gets or sets SIP method what is allowed.
+        /// </summary>
+        public string Method
+        {
+            get { return m_Method; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Method value can't be null or empty !");
+                }
+                if (TextUtils.IsToken(value))
+                {
+                    throw new ArgumentException("Property Method value must be 'token' !");
+                }
+
+                m_Method = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "Method" from specified value.
         /// </summary>
         /// <param name="value">SIP "Method" value.</param>
@@ -24,7 +46,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -44,7 +67,8 @@ namespace LumiSoft.Net.SIP.Message
                extension-method = token
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -60,25 +84,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_Method;
-        }
-
-        /// <summary>
-        /// Gets or sets SIP method what is allowed.
-        /// </summary>
-        public string Method
-        {
-            get{ return m_Method; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Method value can't be null or empty !");
-                }
-                if(TextUtils.IsToken(value)){
-                    throw new ArgumentException("Property Method value must be 'token' !");
-                }
-
-                m_Method = value;
-            }
         }
     }
 }

@@ -18,40 +18,79 @@ namespace LumiSoft.Net.SDP
         /// <param name="unicastAddress">Host name.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b>, <b>netType</b>, <b>addressType</b> or <b>unicastAddress</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SDP_Origin(string userName,long sessionID,long sessionVersion,string netType,string addressType,string unicastAddress)
+        public SDP_Origin(string userName, long sessionID, long sessionVersion, string netType, string addressType, string unicastAddress)
         {
-            if(userName == null){
+            if (userName == null)
+            {
                 throw new ArgumentNullException("userName");
             }
-            if(userName == string.Empty){
+            if (userName == string.Empty)
+            {
                 throw new ArgumentException("Argument 'userName' value must be specified.");
             }
-            if(netType == null){
+            if (netType == null)
+            {
                 throw new ArgumentNullException("netType");
             }
-            if(netType == string.Empty){
+            if (netType == string.Empty)
+            {
                 throw new ArgumentException("Argument 'netType' value must be specified.");
             }
-            if(addressType == null){
+            if (addressType == null)
+            {
                 throw new ArgumentNullException("addressType");
             }
-            if(addressType == string.Empty){
+            if (addressType == string.Empty)
+            {
                 throw new ArgumentException("Argument 'addressType' value must be specified.");
             }
-            if(unicastAddress == null){
+            if (unicastAddress == null)
+            {
                 throw new ArgumentNullException("unicastAddress");
             }
-            if(unicastAddress == string.Empty){
+            if (unicastAddress == string.Empty)
+            {
                 throw new ArgumentException("Argument 'unicastAddress' value must be specified.");
             }
 
-            UserName       = userName;
-            SessionID      = sessionID;
+            UserName = userName;
+            SessionID = sessionID;
             SessionVersion = sessionVersion;
-            NetType        = netType;
-            AddressType    = addressType;
+            NetType = netType;
+            AddressType = addressType;
             UnicastAddress = unicastAddress;
         }
+
+        /// <summary>
+        /// Gets address type. Currently "IP4" and "IP6" are only defined values.
+        /// </summary>
+        public string AddressType { get; }
+
+        /// <summary>
+        /// Gets network type. Currently "IN" is only defined value.
+        /// </summary>
+        public string NetType { get; }
+
+        /// <summary>
+        /// Gets session ID.
+        /// </summary>
+        public long SessionID { get; }
+
+        /// <summary>
+        /// Gets session version.
+        /// </summary>
+        /// <remarks>This value should be increased each time when session data has modified.</remarks>
+        public long SessionVersion { get; set; }
+
+        /// <summary>
+        /// Gets address(DNS host name or IP address). 
+        /// </summary>
+        public string UnicastAddress { get; }
+
+        /// <summary>
+        /// Gets user name.
+        /// </summary>
+        public string UserName { get; }
 
         /// <summary>
         /// Parses SDP Origin("o=") from specified value.
@@ -61,7 +100,8 @@ namespace LumiSoft.Net.SDP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public static SDP_Origin Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -70,13 +110,15 @@ namespace LumiSoft.Net.SDP
             /* o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>
             */
 
-            if(!value.ToLower().StartsWith("o=")){
+            if (!value.ToLower().StartsWith("o="))
+            {
                 throw new ParseException("Invalid SDP Origin('o=') value '" + value + "'.");
             }
             value = value.Substring(2);
 
             var values = value.Split(' ');
-            if (values.Length != 6){
+            if (values.Length != 6)
+            {
                 throw new ParseException("Invalid SDP Origin('o=') value '" + value + "'.");
             }
 
@@ -96,38 +138,7 @@ namespace LumiSoft.Net.SDP
         /// <returns>Returns origin as SDP string.</returns>
         public override string ToString()
         {
-            return "o=" + UserName + " " + SessionID +  " " + SessionVersion + " " + NetType + " " + AddressType + " " + UnicastAddress + "\r\n";
+            return "o=" + UserName + " " + SessionID + " " + SessionVersion + " " + NetType + " " + AddressType + " " + UnicastAddress + "\r\n";
         }
-
-        /// <summary>
-        /// Gets user name.
-        /// </summary>
-        public string UserName { get; }
-
-        /// <summary>
-        /// Gets session ID.
-        /// </summary>
-        public long SessionID { get; }
-
-        /// <summary>
-        /// Gets session version.
-        /// </summary>
-        /// <remarks>This value should be increased each time when session data has modified.</remarks>
-        public long SessionVersion { get; set; }
-
-        /// <summary>
-        /// Gets network type. Currently "IN" is only defined value.
-        /// </summary>
-        public string NetType { get; }
-
-        /// <summary>
-        /// Gets address type. Currently "IP4" and "IP6" are only defined values.
-        /// </summary>
-        public string AddressType { get; }
-
-        /// <summary>
-        /// Gets address(DNS host name or IP address). 
-        /// </summary>
-        public string UnicastAddress { get; }
     }
 }

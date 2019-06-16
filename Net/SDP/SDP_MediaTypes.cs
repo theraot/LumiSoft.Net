@@ -5,15 +5,20 @@
     /// </summary>
     public class SDP_MediaTypes
     {
+
+        /// <summary>
+        /// Application.
+        /// </summary>
+        public static readonly string application = "application";
         /// <summary>
         /// Audio.
         /// </summary>
         public static readonly string audio = "audio";
 
         /// <summary>
-        /// Video.
+        /// Message.
         /// </summary>
-        public static readonly string video = "video";
+        public static readonly string message = "message";
 
         /// <summary>
         /// Text.
@@ -21,13 +26,8 @@
         public static readonly string text = "text";
 
         /// <summary>
-        /// Application.
+        /// Video.
         /// </summary>
-        public static readonly string application = "application";
-
-        /// <summary>
-        /// Message.
-        /// </summary>
-        public static readonly string message = "message";
+        public static readonly string video = "video";
     }
 }

@@ -8,57 +8,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public abstract class MIME_h
     {
-        /// <summary>
-        /// Returns header field as string.
-        /// </summary>
-        /// <returns>Returns header field as string.</returns>
-        public override string ToString()
-        {
-            return ToString(null,null,false);
-        }
-
-        /// <summary>
-        /// Returns header field as string.
-        /// </summary>
-        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
-        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.
-        /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
-        /// <returns>Returns header field as string.</returns>
-        public string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset)
-        {
-            return ToString(wordEncoder,parmetersCharset,false);
-        }
-
-        /// <summary>
-        /// Returns header field as string.
-        /// </summary>
-        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
-        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded. 
-        /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
-        /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
-        /// <returns>Returns header field as string.</returns>
-        public abstract string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode);
-
-        /// <summary>
-        /// Returns header field value as string.
-        /// </summary>
-        /// <returns>Returns header field value as string.</returns>
-        public string ValueToString()
-        {
-            return ValueToString(null,null);
-        }
-
-        /// <summary>
-        /// Returns header field value as string.
-        /// </summary>
-        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
-        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.
-        /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
-        /// <returns>Returns header field value as string.</returns>
-        public string ValueToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset)
-        {
-            return ToString(wordEncoder,parmetersCharset).Split(new[]{':'},2)[1].TrimStart();
-        }
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -76,6 +25,57 @@ namespace LumiSoft.Net.MIME
         public abstract string Name
         {
             get;
+        }
+        /// <summary>
+        /// Returns header field as string.
+        /// </summary>
+        /// <returns>Returns header field as string.</returns>
+        public override string ToString()
+        {
+            return ToString(null, null, false);
+        }
+
+        /// <summary>
+        /// Returns header field as string.
+        /// </summary>
+        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
+        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.
+        /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
+        /// <returns>Returns header field as string.</returns>
+        public string ToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset)
+        {
+            return ToString(wordEncoder, parmetersCharset, false);
+        }
+
+        /// <summary>
+        /// Returns header field as string.
+        /// </summary>
+        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
+        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded. 
+        /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
+        /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
+        /// <returns>Returns header field as string.</returns>
+        public abstract string ToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset, bool reEncode);
+
+        /// <summary>
+        /// Returns header field value as string.
+        /// </summary>
+        /// <returns>Returns header field value as string.</returns>
+        public string ValueToString()
+        {
+            return ValueToString(null, null);
+        }
+
+        /// <summary>
+        /// Returns header field value as string.
+        /// </summary>
+        /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
+        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.
+        /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
+        /// <returns>Returns header field value as string.</returns>
+        public string ValueToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset)
+        {
+            return ToString(wordEncoder, parmetersCharset).Split(new[] { ':' }, 2)[1].TrimStart();
         }
     }
 }

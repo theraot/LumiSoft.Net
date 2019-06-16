@@ -12,17 +12,17 @@ namespace LumiSoft.Net.SIP.Proxy
     /// <param name="userName">Authenticated user name.</param>
     /// <param name="address">Address to be registered.</param>
     /// <returns>Returns true if specified user can register specified address, otherwise false.</returns>
-    public delegate bool SIP_CanRegisterEventHandler(string userName,string address);
+    public delegate bool SIP_CanRegisterEventHandler(string userName, string address);
 
     /// <summary>
     /// This class implements SIP registrar server. Defined in RFC 3261 10.3.
     /// </summary>
     public class SIP_Registrar
     {
-        private bool                       m_IsDisposed;
-        private SIP_Stack                  m_pStack;
+        private bool m_IsDisposed;
         private SIP_RegistrationCollection m_pRegistrations;
-        private Timer                      m_pTimer;
+        private SIP_Stack m_pStack;
+        private Timer m_pTimer;
 
         /// <summary>
         /// Default constructor.
@@ -42,32 +42,54 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// This event is raised when new AOR(address of record) has been registered.
         /// </summary>
-        internal void Dispose()
+        public event EventHandler<SIP_RegistrationEventArgs> AorRegistered;
+
+        /// <summary>
+        /// This event is raised when AOR(address of record) has been unregistered.
+        /// </summary>
+        public event EventHandler<SIP_RegistrationEventArgs> AorUnregistered;
+
+        /// <summary>
+        /// This event is raised when AOR(address of record) has been updated.
+        /// </summary>
+        public event EventHandler<SIP_RegistrationEventArgs> AorUpdated;
+
+        /// <summary>
+        /// This event is raised when SIP registrar need to check if specified user can register specified address.
+        /// </summary>
+        public event SIP_CanRegisterEventHandler CanRegister;
+
+        /// <summary>
+        /// Gets owner proxy core.
+        /// </summary>
+        public SIP_Proxy Proxy { get; private set; }
+
+        /// <summary>
+        /// Gets current SIP registrations.
+        /// </summary>
+        public SIP_Registration[] Registrations
         {
-            if(m_IsDisposed){
-                return;
-            }
-            m_IsDisposed = true;
+            get
+            {
+                lock (m_pRegistrations)
+                {
+                    var retVal = new SIP_Registration[m_pRegistrations.Count];
+                    m_pRegistrations.Values.CopyTo(retVal, 0);
 
-            CanRegister     = null;
-            AorRegistered   = null;
-            AorUnregistered = null;
-            AorUpdated      = null;
-
-            Proxy = null;
-            m_pStack = null;
-            m_pRegistrations = null;
-            if(m_pTimer != null){
-                m_pTimer.Dispose();
-                m_pTimer = null;
+                    return retVal;
+                }
             }
         }
 
-        private void m_pTimer_Elapsed(object sender,ElapsedEventArgs e)
+        /// <summary>
+        /// Deletes specified registration and all it's contacts.
+        /// </summary>
+        /// <param name="addressOfRecord">Registration address of record what to remove.</param>
+        public void DeleteRegistration(string addressOfRecord)
         {
-            m_pRegistrations.RemoveExpired();
+            m_pRegistrations.Remove(addressOfRecord);
         }
 
         /// <summary>
@@ -85,9 +107,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         /// <param name="aor">Registration address of record.</param>
         /// <param name="contacts">Registration address of record contacts to update.</param>
-        public void SetRegistration(string aor,SIP_t_ContactParam[] contacts)
+        public void SetRegistration(string aor, SIP_t_ContactParam[] contacts)
         {
-            SetRegistration(aor,contacts,null);
+            SetRegistration(aor, contacts, null);
         }
 
         /// <summary>
@@ -96,27 +118,62 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="aor">Registration address of record.</param>
         /// <param name="contacts">Registration address of record contacts to update.</param>
         /// <param name="flow">SIP proxy local data flow what accpeted this contact registration.</param>
-        public void SetRegistration(string aor,SIP_t_ContactParam[] contacts,SIP_Flow flow)
+        public void SetRegistration(string aor, SIP_t_ContactParam[] contacts, SIP_Flow flow)
         {
-            lock(m_pRegistrations){
+            lock (m_pRegistrations)
+            {
                 var registration = m_pRegistrations[aor];
-                if (registration == null){
-                    registration = new SIP_Registration("system",aor);
+                if (registration == null)
+                {
+                    registration = new SIP_Registration("system", aor);
                     m_pRegistrations.Add(registration);
                     OnAorRegistered(registration);
                 }
 
-                registration.AddOrUpdateBindings(flow,"",1,contacts);
+                registration.AddOrUpdateBindings(flow, "", 1, contacts);
             }
         }
 
         /// <summary>
-        /// Deletes specified registration and all it's contacts.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="addressOfRecord">Registration address of record what to remove.</param>
-        public void DeleteRegistration(string addressOfRecord)
+        internal void Dispose()
         {
-            m_pRegistrations.Remove(addressOfRecord);
+            if (m_IsDisposed)
+            {
+                return;
+            }
+            m_IsDisposed = true;
+
+            CanRegister = null;
+            AorRegistered = null;
+            AorUnregistered = null;
+            AorUpdated = null;
+
+            Proxy = null;
+            m_pStack = null;
+            m_pRegistrations = null;
+            if (m_pTimer != null)
+            {
+                m_pTimer.Dispose();
+                m_pTimer = null;
+            }
+        }
+
+        /// <summary>
+        /// Is called by SIP registrar if it needs to check if specified user can register specified address.
+        /// </summary>
+        /// <param name="userName">Authenticated user name.</param>
+        /// <param name="address">Address to be registered.</param>
+        /// <returns>Returns true if specified user can register specified address, otherwise false.</returns>
+        internal bool OnCanRegister(string userName, string address)
+        {
+            if (CanRegister != null)
+            {
+                return CanRegister(userName, address);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -225,78 +282,93 @@ namespace LumiSoft.Net.SIP.Proxy
             */
 
             var transaction = e.ServerTransaction;
-            var           request     = e.Request;
-            SIP_Uri               to          = null;
-            var                userName    = "";
+            var request = e.Request;
+            SIP_Uri to = null;
+            var userName = "";
 
             // Probably we need to do validate in SIP stack.
 
-            if (SIP_Utils.IsSipOrSipsUri(request.To.Address.Uri.ToString())){
+            if (SIP_Utils.IsSipOrSipsUri(request.To.Address.Uri.ToString()))
+            {
                 to = (SIP_Uri)request.To.Address.Uri;
             }
-            else{
-                transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": To: value must be SIP or SIPS URI.",request));
+            else
+            {
+                transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": To: value must be SIP or SIPS URI.", request));
                 return;
             }
 
-// if(m_pProxy.OnIsLocalUri(e.Request.Uri)){
+            // if(m_pProxy.OnIsLocalUri(e.Request.Uri)){
             // }
             // TODO:
 
-            if(!Proxy.AuthenticateRequest(e,out userName)){
+            if (!Proxy.AuthenticateRequest(e, out userName))
+            {
                 return;
             }
 
             // We do this in next step(5.).
 
-            if(!Proxy.OnAddressExists(to.Address)){
-                transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found,request));
+            if (!Proxy.OnAddressExists(to.Address))
+            {
+                transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found, request));
                 return;
             }
 
-            if(!OnCanRegister(userName,to.Address)){
-                transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x403_Forbidden,request));
+            if (!OnCanRegister(userName, to.Address))
+            {
+                transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x403_Forbidden, request));
                 return;
             }
 
             // Check if we have star contact.
             SIP_t_ContactParam starContact = null;
-            foreach(SIP_t_ContactParam c in request.Contact.GetAllValues()){
-                if(c.IsStarContact){
+            foreach (SIP_t_ContactParam c in request.Contact.GetAllValues())
+            {
+                if (c.IsStarContact)
+                {
                     starContact = c;
                     break;
                 }
             }
 
             // We have star contact.
-            if(starContact != null){
-                if(request.Contact.GetAllValues().Length > 1){
-                    transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": RFC 3261 10.3.6 -> If star(*) present, only 1 contact allowed.",request));
+            if (starContact != null)
+            {
+                if (request.Contact.GetAllValues().Length > 1)
+                {
+                    transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": RFC 3261 10.3.6 -> If star(*) present, only 1 contact allowed.", request));
                     return;
                 }
 
-                if(starContact.Expires != 0){
-                    transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": RFC 3261 10.3.6 -> star(*) contact parameter 'expires' value must be always '0'.",request));
+                if (starContact.Expires != 0)
+                {
+                    transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": RFC 3261 10.3.6 -> star(*) contact parameter 'expires' value must be always '0'.", request));
                     return;
                 }
 
                 // Remove bindings.
                 var reg = m_pRegistrations[to.Address];
-                if (reg != null){
-                    foreach(SIP_RegistrationBinding b in reg.Bindings){
-                        if(request.CallID != b.CallID || request.CSeq.SequenceNumber > b.CSeqNo){
+                if (reg != null)
+                {
+                    foreach (SIP_RegistrationBinding b in reg.Bindings)
+                    {
+                        if (request.CallID != b.CallID || request.CSeq.SequenceNumber > b.CSeqNo)
+                        {
                             b.Remove();
                         }
                     }
                 }
             }
 
-            if(starContact == null){
-                bool             newReg = false;
-                var reg    = m_pRegistrations[to.Address];
-                if (reg == null){
+            if (starContact == null)
+            {
+                bool newReg = false;
+                var reg = m_pRegistrations[to.Address];
+                if (reg == null)
+                {
                     newReg = true;
-                    reg    = new SIP_Registration(userName,to.Address);
+                    reg = new SIP_Registration(userName, to.Address);
                     m_pRegistrations.Add(reg);
                 }
 
@@ -304,48 +376,58 @@ namespace LumiSoft.Net.SIP.Proxy
                 // We just validate all values then do update(this ensures that update doesn't fail).
 
                 // Check expires and CSeq.
-                foreach(SIP_t_ContactParam c in request.Contact.GetAllValues()){
-                    if(c.Expires == -1){
+                foreach (SIP_t_ContactParam c in request.Contact.GetAllValues())
+                {
+                    if (c.Expires == -1)
+                    {
                         c.Expires = request.Expires;
                     }
-                    if(c.Expires == -1){
+                    if (c.Expires == -1)
+                    {
                         c.Expires = Proxy.Stack.MinimumExpireTime;
                     }
                     // We must accept 0 values - means remove contact.
-                    if(c.Expires != 0 && c.Expires < Proxy.Stack.MinimumExpireTime){
-                        var resp = m_pStack.CreateResponse(SIP_ResponseCodes.x423_Interval_Too_Brief,request);
+                    if (c.Expires != 0 && c.Expires < Proxy.Stack.MinimumExpireTime)
+                    {
+                        var resp = m_pStack.CreateResponse(SIP_ResponseCodes.x423_Interval_Too_Brief, request);
                         resp.MinExpires = Proxy.Stack.MinimumExpireTime;
                         transaction.SendResponse(resp);
                         return;
                     }
 
                     var currentBinding = reg.GetBinding(c.Address.Uri);
-                    if (currentBinding != null && currentBinding.CallID == request.CallID && request.CSeq.SequenceNumber < currentBinding.CSeqNo){
-                        transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": CSeq value out of order.",request));
+                    if (currentBinding != null && currentBinding.CallID == request.CallID && request.CSeq.SequenceNumber < currentBinding.CSeqNo)
+                    {
+                        transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": CSeq value out of order.", request));
                         return;
-                    }                    
+                    }
                 }
 
                 // Do binding updates.
-                reg.AddOrUpdateBindings(e.ServerTransaction.Flow,request.CallID,request.CSeq.SequenceNumber,request.Contact.GetAllValues());
+                reg.AddOrUpdateBindings(e.ServerTransaction.Flow, request.CallID, request.CSeq.SequenceNumber, request.Contact.GetAllValues());
 
                 // Raise AOR change events.
-                if(newReg){
+                if (newReg)
+                {
                     OnAorRegistered(reg);
                 }
-                else{
+                else
+                {
                     OnAorUpdated(reg);
                 }
             }
 
-            var response = m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,request);
+            var response = m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok, request);
             response.Date = DateTime.Now;
             var registration = m_pRegistrations[to.Address];
-            if (registration != null){
-                foreach(SIP_RegistrationBinding b in registration.Bindings){
+            if (registration != null)
+            {
+                foreach (SIP_RegistrationBinding b in registration.Bindings)
+                {
                     // Don't list expired bindings what wait to be disposed.
-                    if(b.TTL > 1){
-                        response.Header.Add("Contact:",b.ToContactValue());
+                    if (b.TTL > 1)
+                    {
+                        response.Header.Add("Contact:", b.ToContactValue());
                     }
                 }
             }
@@ -354,50 +436,10 @@ namespace LumiSoft.Net.SIP.Proxy
             transaction.SendResponse(response);
         }
 
-        /// <summary>
-        /// Gets owner proxy core.
-        /// </summary>
-        public SIP_Proxy Proxy { get; private set; }
-
-        /// <summary>
-        /// Gets current SIP registrations.
-        /// </summary>
-        public SIP_Registration[] Registrations
+        private void m_pTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            get{
-                lock(m_pRegistrations){
-                    var retVal = new SIP_Registration[m_pRegistrations.Count];
-                    m_pRegistrations.Values.CopyTo(retVal,0);
-
-                    return retVal;
-                }
-            }
+            m_pRegistrations.RemoveExpired();
         }
-
-        /// <summary>
-        /// This event is raised when SIP registrar need to check if specified user can register specified address.
-        /// </summary>
-        public event SIP_CanRegisterEventHandler CanRegister;
-
-        /// <summary>
-        /// Is called by SIP registrar if it needs to check if specified user can register specified address.
-        /// </summary>
-        /// <param name="userName">Authenticated user name.</param>
-        /// <param name="address">Address to be registered.</param>
-        /// <returns>Returns true if specified user can register specified address, otherwise false.</returns>
-        internal bool OnCanRegister(string userName,string address)
-        {
-            if(CanRegister != null){
-                return CanRegister(userName,address);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// This event is raised when new AOR(address of record) has been registered.
-        /// </summary>
-        public event EventHandler<SIP_RegistrationEventArgs> AorRegistered;
 
         /// <summary>
         /// Raises <b>AorRegistered</b> event.
@@ -405,15 +447,11 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorRegistered(SIP_Registration registration)
         {
-            if(AorRegistered != null){
-                AorRegistered(this,new SIP_RegistrationEventArgs(registration));
+            if (AorRegistered != null)
+            {
+                AorRegistered(this, new SIP_RegistrationEventArgs(registration));
             }
         }
-
-        /// <summary>
-        /// This event is raised when AOR(address of record) has been unregistered.
-        /// </summary>
-        public event EventHandler<SIP_RegistrationEventArgs> AorUnregistered;
 
         /// <summary>
         /// Raises <b>AorUnregistered</b> event.
@@ -421,15 +459,11 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorUnregistered(SIP_Registration registration)
         {
-            if(AorUnregistered != null){
-                AorUnregistered(this,new SIP_RegistrationEventArgs(registration));
+            if (AorUnregistered != null)
+            {
+                AorUnregistered(this, new SIP_RegistrationEventArgs(registration));
             }
         }
-
-        /// <summary>
-        /// This event is raised when AOR(address of record) has been updated.
-        /// </summary>
-        public event EventHandler<SIP_RegistrationEventArgs> AorUpdated;
 
         /// <summary>
         /// Raises <b>AorUpdated</b> event.
@@ -437,8 +471,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorUpdated(SIP_Registration registration)
         {
-            if(AorUpdated != null){
-                AorUpdated(this,new SIP_RegistrationEventArgs(registration));
+            if (AorUpdated != null)
+            {
+                AorUpdated(this, new SIP_RegistrationEventArgs(registration));
             }
         }
     }

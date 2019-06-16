@@ -11,12 +11,12 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioOut_RTP : IDisposable
     {
-        private bool                       m_IsRunning;
-        private AudioOutDevice             m_pAudioOutDevice;
-        private RTP_ReceiveStream          m_pRTP_Stream;
-        private Dictionary<int,AudioCodec> m_pAudioCodecs;
-        private AudioOut                   m_pAudioOut;
-        private AudioCodec                 m_pActiveCodec;
+        private bool m_IsRunning;
+        private AudioCodec m_pActiveCodec;
+        private Dictionary<int, AudioCodec> m_pAudioCodecs;
+        private AudioOut m_pAudioOut;
+        private AudioOutDevice m_pAudioOutDevice;
+        private RTP_ReceiveStream m_pRTP_Stream;
 
         /// <summary>
         /// Default constructor.
@@ -25,111 +25,84 @@ namespace LumiSoft.Net.Media
         /// <param name="stream">RTP receive stream which audio to play.</param>
         /// <param name="codecs">Audio codecs with RTP payload number. For example: 0-PCMU,8-PCMA.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>audioOutDevice</b>,<b>stream</b> or <b>codecs</b> is null reference.</exception>
-        public AudioOut_RTP(AudioOutDevice audioOutDevice,RTP_ReceiveStream stream,Dictionary<int,AudioCodec> codecs)
+        public AudioOut_RTP(AudioOutDevice audioOutDevice, RTP_ReceiveStream stream, Dictionary<int, AudioCodec> codecs)
         {
             m_pAudioOutDevice = audioOutDevice ?? throw new ArgumentNullException("audioOutDevice");
-            m_pRTP_Stream     = stream ?? throw new ArgumentNullException("stream");
-            m_pAudioCodecs    = codecs ?? throw new ArgumentNullException("codecs");
+            m_pRTP_Stream = stream ?? throw new ArgumentNullException("stream");
+            m_pAudioCodecs = codecs ?? throw new ArgumentNullException("codecs");
         }
 
         /// <summary>
-        /// Cleans up any resource being used.
+        /// This method is raised when asynchronous thread Exception happens.
         /// </summary>
-        public void Dispose()
+        public event EventHandler<ExceptionEventArgs> Error;
+
+        /// <summary>
+        /// Gets active audio codec. This value may be null if yet no data received from RTP.
+        /// </summary>
+        /// <remarks>Audio codec may change during RTP session, if remote-party(sender) changes it.</remarks>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public AudioCodec ActiveCodec
         {
-            if(IsDisposed){
-                return;
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pActiveCodec;
             }
-
-            Stop();
-
-            Error        = null;
-            m_pAudioOutDevice = null;
-            m_pRTP_Stream     = null;
-            m_pAudioCodecs    = null;
-            m_pActiveCodec    = null;
         }
 
         /// <summary>
-        /// This method is called when new RTP packet received.
+        /// Gets audio-out device is used to play out sound.
         /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void m_pRTP_Stream_PacketReceived(object sender,RTP_PacketEventArgs e)
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
+        public AudioOutDevice AudioOutDevice
         {
-            if(IsDisposed){
-                return;
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pAudioOutDevice;
             }
 
-            try{
-                AudioCodec codec = null;
-                if(!m_pAudioCodecs.TryGetValue(e.Packet.PayloadType,out codec)){
-                    // Unknown codec(payload value), skip it.
-
-                    return;
-                }
-                m_pActiveCodec = codec;
-
-                // Audio-out not created yet, create it.
-                if(m_pAudioOut == null){
-                    m_pAudioOut = new AudioOut(m_pAudioOutDevice,codec.AudioFormat);
-                }
-                // Audio-out audio format not compatible to codec, recreate it.
-                else if(!m_pAudioOut.AudioFormat.Equals(codec.AudioFormat)){
-                    m_pAudioOut.Dispose();
-                    m_pAudioOut = new AudioOut(m_pAudioOutDevice,codec.AudioFormat);
+            set
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                // Decode RTP audio frame and queue it for play out.
-                var decodedData = codec.Decode(e.Packet.Data,0,e.Packet.Data.Length);
-                m_pAudioOut.Write(decodedData,0,decodedData.Length);
-            }
-            catch(Exception x){
-                if(!IsDisposed){
-                    // Raise error event(We can't throw expection directly, we are on threadpool thread).
-                    OnError(x);
+                m_pAudioOutDevice = value ?? throw new ArgumentNullException("AudioOutDevice");
+
+                if (IsRunning)
+                {
+                    Stop();
+                    Start();
                 }
             }
         }
 
         /// <summary>
-        /// Starts receiving RTP audio and palying it out.
+        /// Audio codecs with RTP payload number. For example: 0-PCMU,8-PCMA.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public void Start()
-        {   
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(m_IsRunning){
-                return;
-            }
-
-            m_IsRunning = true;
-      
-            m_pRTP_Stream.PacketReceived += new EventHandler<RTP_PacketEventArgs>(m_pRTP_Stream_PacketReceived);
-        }
-
-        /// <summary>
-        /// Stops receiving RTP audio and palying it out.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public void Stop()
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public Dictionary<int, AudioCodec> Codecs
         {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!m_IsRunning){
-                return;
-            }
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
 
-            m_IsRunning = false;
-
-            m_pRTP_Stream.PacketReceived -= new EventHandler<RTP_PacketEventArgs>(m_pRTP_Stream_PacketReceived);
-
-            if(m_pAudioOut != null){
-                m_pAudioOut.Dispose();
-                m_pAudioOut = null;
+                return m_pAudioCodecs;
             }
         }
 
@@ -144,79 +117,130 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public bool IsRunning
         {
-            get{
-                if(IsDisposed){
+            get
+            {
+                if (IsDisposed)
+                {
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_IsRunning; 
+                return m_IsRunning;
             }
         }
 
         /// <summary>
-        /// Gets audio-out device is used to play out sound.
+        /// Cleans up any resource being used.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
-        public AudioOutDevice AudioOutDevice
+        public void Dispose()
         {
-            get{   
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pAudioOutDevice; 
+            if (IsDisposed)
+            {
+                return;
             }
 
-            set{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+            Stop();
 
-                m_pAudioOutDevice = value ?? throw new ArgumentNullException("AudioOutDevice");
-
-                if(IsRunning){
-                    Stop();
-                    Start();
-                }
-            }
+            Error = null;
+            m_pAudioOutDevice = null;
+            m_pRTP_Stream = null;
+            m_pAudioCodecs = null;
+            m_pActiveCodec = null;
         }
 
         /// <summary>
-        /// Audio codecs with RTP payload number. For example: 0-PCMU,8-PCMA.
+        /// Starts receiving RTP audio and palying it out.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public Dictionary<int,AudioCodec> Codecs
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public void Start()
         {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pAudioCodecs; 
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
             }
+            if (m_IsRunning)
+            {
+                return;
+            }
+
+            m_IsRunning = true;
+
+            m_pRTP_Stream.PacketReceived += new EventHandler<RTP_PacketEventArgs>(m_pRTP_Stream_PacketReceived);
         }
 
         /// <summary>
-        /// Gets active audio codec. This value may be null if yet no data received from RTP.
+        /// Stops receiving RTP audio and palying it out.
         /// </summary>
-        /// <remarks>Audio codec may change during RTP session, if remote-party(sender) changes it.</remarks>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public AudioCodec ActiveCodec
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public void Stop()
         {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!m_IsRunning)
+            {
+                return;
+            }
 
-                return m_pActiveCodec; 
+            m_IsRunning = false;
+
+            m_pRTP_Stream.PacketReceived -= new EventHandler<RTP_PacketEventArgs>(m_pRTP_Stream_PacketReceived);
+
+            if (m_pAudioOut != null)
+            {
+                m_pAudioOut.Dispose();
+                m_pAudioOut = null;
             }
         }
 
         /// <summary>
-        /// This method is raised when asynchronous thread Exception happens.
+        /// This method is called when new RTP packet received.
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> Error;
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void m_pRTP_Stream_PacketReceived(object sender, RTP_PacketEventArgs e)
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            try
+            {
+                AudioCodec codec = null;
+                if (!m_pAudioCodecs.TryGetValue(e.Packet.PayloadType, out codec))
+                {
+                    // Unknown codec(payload value), skip it.
+
+                    return;
+                }
+                m_pActiveCodec = codec;
+
+                // Audio-out not created yet, create it.
+                if (m_pAudioOut == null)
+                {
+                    m_pAudioOut = new AudioOut(m_pAudioOutDevice, codec.AudioFormat);
+                }
+                // Audio-out audio format not compatible to codec, recreate it.
+                else if (!m_pAudioOut.AudioFormat.Equals(codec.AudioFormat))
+                {
+                    m_pAudioOut.Dispose();
+                    m_pAudioOut = new AudioOut(m_pAudioOutDevice, codec.AudioFormat);
+                }
+
+                // Decode RTP audio frame and queue it for play out.
+                var decodedData = codec.Decode(e.Packet.Data, 0, e.Packet.Data.Length);
+                m_pAudioOut.Write(decodedData, 0, decodedData.Length);
+            }
+            catch (Exception x)
+            {
+                if (!IsDisposed)
+                {
+                    // Raise error event(We can't throw expection directly, we are on threadpool thread).
+                    OnError(x);
+                }
+            }
+        }
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -224,8 +248,9 @@ namespace LumiSoft.Net.Media
         /// <param name="x">Error what happened.</param>
         private void OnError(Exception x)
         {
-            if(Error != null){
-                Error(this,new ExceptionEventArgs(x));
+            if (Error != null)
+            {
+                Error(this, new ExceptionEventArgs(x));
             }
         }
     }

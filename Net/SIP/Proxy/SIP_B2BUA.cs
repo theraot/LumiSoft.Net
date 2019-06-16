@@ -12,9 +12,9 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_B2BUA : IDisposable
     {
-        private readonly SIP_Proxy            m_pProxy;
+        private bool m_IsDisposed;
         private readonly List<SIP_B2BUA_Call> m_pCalls;
-        private bool                 m_IsDisposed;
+        private readonly SIP_Proxy m_pProxy;
 
         /// <summary>
         /// Default constructor.
@@ -22,8 +22,34 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="owner">Onwer SIP proxy.</param>
         internal SIP_B2BUA(SIP_Proxy owner)
         {
-            m_pProxy = owner; 
+            m_pProxy = owner;
             m_pCalls = new List<SIP_B2BUA_Call>();
+        }
+
+        /// <summary>
+        /// Is called when new call is created.
+        /// </summary>
+        public event EventHandler CallCreated;
+
+        /// <summary>
+        /// Is called when call has terminated.
+        /// </summary>
+        public event EventHandler CallTerminated;
+
+        /// <summary>
+        /// Gets active calls.
+        /// </summary>
+        public SIP_B2BUA_Call[] Calls
+        {
+            get { return m_pCalls.ToArray(); }
+        }
+
+        /// <summary>
+        /// Gets B2BUA owner SIP stack.
+        /// </summary>
+        public SIP_Stack Stack
+        {
+            get { return m_pProxy.Stack; }
         }
 
         /// <summary>
@@ -31,14 +57,50 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if (m_IsDisposed)
+            {
                 return;
             }
             m_IsDisposed = true;
 
             // Terminate all calls.
-            foreach(SIP_B2BUA_Call call in m_pCalls){
+            foreach (SIP_B2BUA_Call call in m_pCalls)
+            {
                 call.Terminate();
+            }
+        }
+
+        /// <summary>
+        /// Gets call by call ID.
+        /// </summary>
+        /// <param name="callID">Call ID.</param>
+        /// <returns>Returns call with specified ID or null if no call with specified ID.</returns>
+        public SIP_B2BUA_Call GetCallByID(string callID)
+        {
+            foreach (SIP_B2BUA_Call call in m_pCalls.ToArray())
+            {
+                if (call.CallID == callID)
+                {
+                    return call;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Adds specified call to calls list.
+        /// </summary>
+        /// <param name="caller">Caller side dialog.</param>
+        /// <param name="calee">Calee side dialog.</param>
+        internal void AddCall(SIP_Dialog caller, SIP_Dialog calee)
+        {
+            lock (m_pCalls)
+            {
+                var call = new SIP_B2BUA_Call(this, caller, calee);
+                m_pCalls.Add(call);
+
+                OnCallCreated(call);
             }
         }
 
@@ -50,7 +112,8 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             var request = e.Request;
 
-            if (request.RequestLine.Method == SIP_Methods.CANCEL){
+            if (request.RequestLine.Method == SIP_Methods.CANCEL)
+            {
                 /* RFC 3261 9.2.
                     If the UAS did not find a matching transaction for the CANCEL
                     according to the procedure above, it SHOULD respond to the CANCEL
@@ -62,13 +125,15 @@ namespace LumiSoft.Net.SIP.Proxy
                 */
 
                 var trToCancel = m_pProxy.Stack.TransactionLayer.MatchCancelToTransaction(e.Request);
-                if (trToCancel != null){
+                if (trToCancel != null)
+                {
                     trToCancel.Cancel();
                     //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x200_Ok));
                 }
             }
             // We never should ge BYE here, because transport layer must match it to dialog.
-            else if(request.RequestLine.Method == SIP_Methods.BYE){
+            else if (request.RequestLine.Method == SIP_Methods.BYE)
+            {
                 /* RFC 3261 15.1.2.
                     If the BYE does not match an existing dialog, the UAS core SHOULD generate a 481
                     (Call/Transaction Does Not Exist) response and pass that to the server transaction.
@@ -76,11 +141,13 @@ namespace LumiSoft.Net.SIP.Proxy
                 //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x481_Call_Transaction_Does_Not_Exist));
             }
             // We never should ge ACK here, because transport layer must match it to dialog.
-            else if(request.RequestLine.Method == SIP_Methods.ACK){
+            else if (request.RequestLine.Method == SIP_Methods.ACK)
+            {
                 // ACK is response less request, so we may not return error to it.
             }
             // B2BUA must respond to OPTIONS request, not to forward it.
-            else if(request.RequestLine.Method == SIP_Methods.OPTIONS){     /*          
+            else if (request.RequestLine.Method == SIP_Methods.OPTIONS)
+            {     /*          
                 SIP_Response response = e.Request.CreateResponse(SIP_ResponseCodes.x200_Ok);                
                 // Add Allow to non ACK response.
                 if(e.Request.RequestLine.Method != SIP_Methods.ACK){
@@ -93,14 +160,17 @@ namespace LumiSoft.Net.SIP.Proxy
                 e.ServerTransaction.SendResponse(response);*/
             }
             // We never should get PRACK here, because transport layer must match it to dialog.
-            else if(request.RequestLine.Method == SIP_Methods.PRACK){
+            else if (request.RequestLine.Method == SIP_Methods.PRACK)
+            {
                 //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x481_Call_Transaction_Does_Not_Exist));
             }
             // We never should get UPDATE here, because transport layer must match it to dialog.
-            else if(request.RequestLine.Method == SIP_Methods.UPDATE){
+            else if (request.RequestLine.Method == SIP_Methods.UPDATE)
+            {
                 //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x481_Call_Transaction_Does_Not_Exist));
             }
-            else{
+            else
+            {
                 /* draft-marjou-sipping-b2bua-00 4.1.3.
                     When the UAS of the B2BUA receives an upstream SIP request, its
                     associated UAC generates a new downstream SIP request with its new
@@ -116,25 +186,30 @@ namespace LumiSoft.Net.SIP.Proxy
 
                 var b2buaRequest = e.Request.Copy();
                 b2buaRequest.Via.RemoveAll();
-                b2buaRequest.MaxForwards = 70;                
+                b2buaRequest.MaxForwards = 70;
                 b2buaRequest.CallID = SIP_t_CallID.CreateCallID().CallID;
                 b2buaRequest.CSeq.SequenceNumber = 1;
                 b2buaRequest.Contact.RemoveAll();
                 // b2buaRequest.Contact.Add(m_pProxy.CreateContact(b2buaRequest.To.Address).ToStringValue());
-                if(b2buaRequest.Route.Count > 0 && m_pProxy.IsLocalRoute(SIP_Uri.Parse(b2buaRequest.Route.GetTopMostValue().Address.Uri.ToString()))){
+                if (b2buaRequest.Route.Count > 0 && m_pProxy.IsLocalRoute(SIP_Uri.Parse(b2buaRequest.Route.GetTopMostValue().Address.Uri.ToString())))
+                {
                     b2buaRequest.Route.RemoveTopMostValue();
-                }                
+                }
                 b2buaRequest.RecordRoute.RemoveAll();
 
                 // Remove our Authorization header if it's there.
-                foreach(SIP_SingleValueHF<SIP_t_Credentials> header in b2buaRequest.ProxyAuthorization.HeaderFields){
-                    try{
-                        var digest = new Auth_HttpDigest(header.ValueX.AuthData,b2buaRequest.RequestLine.Method);
-                        if (m_pProxy.Stack.Realm == digest.Realm){
+                foreach (SIP_SingleValueHF<SIP_t_Credentials> header in b2buaRequest.ProxyAuthorization.HeaderFields)
+                {
+                    try
+                    {
+                        var digest = new Auth_HttpDigest(header.ValueX.AuthData, b2buaRequest.RequestLine.Method);
+                        if (m_pProxy.Stack.Realm == digest.Realm)
+                        {
                             b2buaRequest.ProxyAuthorization.Remove(header);
                         }
                     }
-                    catch{
+                    catch
+                    {
                         // We don't care errors here. This can happen if remote server xxx auth method here and
                         // we don't know how to parse it, so we leave it as is.
                     }
@@ -144,19 +219,22 @@ namespace LumiSoft.Net.SIP.Proxy
                 b2buaRequest.Allow.RemoveAll();
                 b2buaRequest.Supported.RemoveAll();
                 // Accept to non ACK,BYE request.
-                if(request.RequestLine.Method != SIP_Methods.ACK && request.RequestLine.Method != SIP_Methods.BYE){
+                if (request.RequestLine.Method != SIP_Methods.ACK && request.RequestLine.Method != SIP_Methods.BYE)
+                {
                     b2buaRequest.Allow.Add("INVITE,ACK,OPTIONS,CANCEL,BYE,PRACK");
                 }
                 // Supported to non ACK request. 
-                if(request.RequestLine.Method != SIP_Methods.ACK){
+                if (request.RequestLine.Method != SIP_Methods.ACK)
+                {
                     b2buaRequest.Supported.Add("100rel,timer");
                 }
                 // Remove Require: header.
                 b2buaRequest.Require.RemoveAll();
 
                 // RFC 4028 7.4. For re-INVITE and UPDATE we need to add Session-Expires and Min-SE: headers.
-                if(request.RequestLine.Method == SIP_Methods.INVITE || request.RequestLine.Method == SIP_Methods.UPDATE){
-                    b2buaRequest.SessionExpires = new SIP_t_SessionExpires(m_pProxy.Stack.SessionExpries,"uac");
+                if (request.RequestLine.Method == SIP_Methods.INVITE || request.RequestLine.Method == SIP_Methods.UPDATE)
+                {
+                    b2buaRequest.SessionExpires = new SIP_t_SessionExpires(m_pProxy.Stack.SessionExpries, "uac");
                     b2buaRequest.MinSE = new SIP_t_MinSE(m_pProxy.Stack.MinimumSessionExpries);
                 }
 
@@ -176,21 +254,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// Adds specified call to calls list.
-        /// </summary>
-        /// <param name="caller">Caller side dialog.</param>
-        /// <param name="calee">Calee side dialog.</param>
-        internal void AddCall(SIP_Dialog caller,SIP_Dialog calee)
-        {
-            lock(m_pCalls){
-                var call = new SIP_B2BUA_Call(this,caller,calee);
-                m_pCalls.Add(call);
-
-                OnCallCreated(call);
-            }            
-        }
-
-        /// <summary>
         /// Removes specified call from calls list.
         /// </summary>
         /// <param name="call">Call to remove.</param>
@@ -198,61 +261,8 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             m_pCalls.Remove(call);
 
-            OnCallTerminated(call);            
+            OnCallTerminated(call);
         }
-
-        /// <summary>
-        /// Gets call by call ID.
-        /// </summary>
-        /// <param name="callID">Call ID.</param>
-        /// <returns>Returns call with specified ID or null if no call with specified ID.</returns>
-        public SIP_B2BUA_Call GetCallByID(string callID)
-        {
-            foreach(SIP_B2BUA_Call call in m_pCalls.ToArray()){
-                if(call.CallID == callID){
-                    return call;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets B2BUA owner SIP stack.
-        /// </summary>
-        public SIP_Stack Stack
-        {
-            get{ return m_pProxy.Stack; }
-        }
-
-        /// <summary>
-        /// Gets active calls.
-        /// </summary>
-        public SIP_B2BUA_Call[] Calls
-        {
-            get{ return m_pCalls.ToArray(); }
-        }
-
-        /// <summary>
-        /// Is called when new call is created.
-        /// </summary>
-        public event EventHandler CallCreated;
-
-        /// <summary>
-        /// Raises CallCreated event.
-        /// </summary>
-        /// <param name="call">Call created.</param>
-        protected void OnCallCreated(SIP_B2BUA_Call call)
-        {
-            if(CallCreated != null){
-                CallCreated(call,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// Is called when call has terminated.
-        /// </summary>
-        public event EventHandler CallTerminated;
 
         /// <summary>
         /// Raises CallTerminated event.
@@ -260,8 +270,21 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="call">Call terminated.</param>
         internal protected void OnCallTerminated(SIP_B2BUA_Call call)
         {
-            if(CallTerminated != null){
-                CallTerminated(call,new EventArgs());
+            if (CallTerminated != null)
+            {
+                CallTerminated(call, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Raises CallCreated event.
+        /// </summary>
+        /// <param name="call">Call created.</param>
+        protected void OnCallCreated(SIP_B2BUA_Call call)
+        {
+            if (CallCreated != null)
+            {
+                CallCreated(call, new EventArgs());
             }
         }
     }

@@ -20,39 +20,13 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Parses body from the specified stream
-        /// </summary>
-        /// <param name="owner">Owner MIME entity.</param>
-        /// <param name="defaultContentType">Default content-type for this body.</param>
-        /// <param name="stream">Stream from where to read body.</param>
-        /// <returns>Returns parsed body.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b>, <b>defaultContentType</b> or <b>strean</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when any parsing errors.</exception>
-        protected static new MIME_b Parse(MIME_Entity owner,MIME_h_ContentType defaultContentType,SmartStream stream)
-        {
-            if(owner == null){
-                throw new ArgumentNullException("owner");
-            }
-            if(defaultContentType == null){
-                throw new ArgumentNullException("defaultContentType");
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            var retVal = new MIME_b_ApplicationPkcs7Mime();
-            Net_Utils.StreamCopy(stream,retVal.EncodedStream,32000);
-
-            return retVal;
-        }
-
-        /// <summary>
         /// Gets certificates contained in pkcs 7.
         /// </summary>
         /// <returns>Returns certificates contained in pkcs 7. Returns null if no certificates.</returns>
         public X509Certificate2Collection GetCertificates()
         {
-            if(Data == null){
+            if (Data == null)
+            {
                 return null;
             }
 
@@ -60,58 +34,6 @@ namespace LumiSoft.Net.MIME
             signedCms.Decode(Data);
 
             return signedCms.Certificates;
-        }
-
-        /// <summary>
-        /// Checks if signature is valid and data not altered.
-        /// </summary>
-        /// <returns>Returns true if signature is valid, otherwise false.</returns>
-        /// <remarks>This method is valid only if <b>Content-Type</b> parameter <b>smime-type=signed-data</b>.</remarks>
-        /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != signed-data</b>.</exception>
-        public bool VerifySignature()
-        {
-            if(!string.Equals(Entity.ContentType.Parameters["smime-type"],"signed-data",StringComparison.InvariantCultureIgnoreCase)){
-                throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=signed-data.");
-            }
-
-            // Check this.Data exists.
-            if(Data == null){
-               return false;
-            }
-
-            try{
-                var signedCms = new SignedCms();
-                signedCms.Decode(Data);
-                signedCms.CheckSignature(true);
-
-                return true;
-            }
-            catch{                
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets signed mime content. Value null means no content.
-        /// </summary>
-        /// <returns>Returns signed mime content. Value null means no content.</returns>
-        /// <remarks>This method is valid only if <b>Content-Type</b> parameter <b>smime-type=signed-data</b>.</remarks>
-        /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != signed-data</b>.</exception>
-        public MIME_Message GetSignedMime()
-        {
-            if(!string.Equals(Entity.ContentType.Parameters["smime-type"],"signed-data",StringComparison.InvariantCultureIgnoreCase)){
-                throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=signed-data.");
-            }
-
-            if(Data != null){
-                var signedCms = new SignedCms();
-                signedCms.Decode(Data);
-
-                return MIME_Message.ParseFromStream(new MemoryStream(signedCms.ContentInfo.Content));
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -123,10 +45,12 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != enveloped-data</b>.</exception>
         public MIME_Message GetEnvelopedMime(X509Certificate2 cert)
         {
-            if(cert == null){
+            if (cert == null)
+            {
                 throw new ArgumentNullException("cert");
             }
-            if(!string.Equals(Entity.ContentType.Parameters["smime-type"],"enveloped-data",StringComparison.InvariantCultureIgnoreCase)){
+            if (!string.Equals(Entity.ContentType.Parameters["smime-type"], "enveloped-data", StringComparison.InvariantCultureIgnoreCase))
+            {
                 throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=enveloped-data.");
             }
 
@@ -137,6 +61,94 @@ namespace LumiSoft.Net.MIME
             envelopedCms.Decrypt(certificates);
 
             return MIME_Message.ParseFromStream(new MemoryStream(envelopedCms.Encode()));
+        }
+
+        /// <summary>
+        /// Gets signed mime content. Value null means no content.
+        /// </summary>
+        /// <returns>Returns signed mime content. Value null means no content.</returns>
+        /// <remarks>This method is valid only if <b>Content-Type</b> parameter <b>smime-type=signed-data</b>.</remarks>
+        /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != signed-data</b>.</exception>
+        public MIME_Message GetSignedMime()
+        {
+            if (!string.Equals(Entity.ContentType.Parameters["smime-type"], "signed-data", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=signed-data.");
+            }
+
+            if (Data != null)
+            {
+                var signedCms = new SignedCms();
+                signedCms.Decode(Data);
+
+                return MIME_Message.ParseFromStream(new MemoryStream(signedCms.ContentInfo.Content));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Checks if signature is valid and data not altered.
+        /// </summary>
+        /// <returns>Returns true if signature is valid, otherwise false.</returns>
+        /// <remarks>This method is valid only if <b>Content-Type</b> parameter <b>smime-type=signed-data</b>.</remarks>
+        /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != signed-data</b>.</exception>
+        public bool VerifySignature()
+        {
+            if (!string.Equals(Entity.ContentType.Parameters["smime-type"], "signed-data", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=signed-data.");
+            }
+
+            // Check this.Data exists.
+            if (Data == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                var signedCms = new SignedCms();
+                signedCms.Decode(Data);
+                signedCms.CheckSignature(true);
+
+                return true;
+            }
+            catch
+            {
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Parses body from the specified stream
+        /// </summary>
+        /// <param name="owner">Owner MIME entity.</param>
+        /// <param name="defaultContentType">Default content-type for this body.</param>
+        /// <param name="stream">Stream from where to read body.</param>
+        /// <returns>Returns parsed body.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b>, <b>defaultContentType</b> or <b>strean</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when any parsing errors.</exception>
+        protected static new MIME_b Parse(MIME_Entity owner, MIME_h_ContentType defaultContentType, SmartStream stream)
+        {
+            if (owner == null)
+            {
+                throw new ArgumentNullException("owner");
+            }
+            if (defaultContentType == null)
+            {
+                throw new ArgumentNullException("defaultContentType");
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            var retVal = new MIME_b_ApplicationPkcs7Mime();
+            Net_Utils.StreamCopy(stream, retVal.EncodedStream, 32000);
+
+            return retVal;
         }
 
         // public void CreateSigned(X509Certificate2 cert,MIME_Entity entity)

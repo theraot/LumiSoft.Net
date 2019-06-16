@@ -15,24 +15,21 @@ namespace LumiSoft.Net.AUTH
         /// <param name="password">Password.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the argumnets has invalid value.</exception>
-        public AUTH_e_Authenticate(string authorizationID,string userName,string password)
+        public AUTH_e_Authenticate(string authorizationID, string userName, string password)
         {
-            if(userName == null){
+            if (userName == null)
+            {
                 throw new ArgumentNullException("userName");
             }
-            if(userName == string.Empty){
-                throw new ArgumentException("Argument 'userName' value must be specified.","userName");
+            if (userName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'userName' value must be specified.", "userName");
             }
 
             AuthorizationID = authorizationID;
-            UserName        = userName;
-            Password        = password;
+            UserName = userName;
+            Password = password;
         }
-
-        /// <summary>
-        /// Gets or sets if specified user is authenticated.
-        /// </summary>
-        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Gets authorization ID.
@@ -40,13 +37,18 @@ namespace LumiSoft.Net.AUTH
         public string AuthorizationID { get; } = "";
 
         /// <summary>
-        /// Gets user name.
+        /// Gets or sets if specified user is authenticated.
         /// </summary>
-        public string UserName { get; } = "";
+        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Gets password.
         /// </summary>
         public string Password { get; } = "";
+
+        /// <summary>
+        /// Gets user name.
+        /// </summary>
+        public string UserName { get; } = "";
     }
 }

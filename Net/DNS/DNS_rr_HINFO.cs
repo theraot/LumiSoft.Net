@@ -7,7 +7,7 @@ namespace LumiSoft.Net.DNS
     /// HINFO record.
     /// </summary>
     public class DNS_rr_HINFO : DNS_rr
-	{
+    {
         /// <summary>
 		/// Default constructor.
 		/// </summary>
@@ -15,11 +15,21 @@ namespace LumiSoft.Net.DNS
 		/// <param name="cpu">Host CPU.</param>
 		/// <param name="os">Host OS.</param>
 		/// <param name="ttl">TTL value.</param>
-		public DNS_rr_HINFO(string name,string cpu,string os,int ttl) : base(name,DNS_QType.HINFO,ttl)
-		{
-			CPU = cpu;
-			OS  = os;
-		}
+		public DNS_rr_HINFO(string name, string cpu, string os, int ttl) : base(name, DNS_QType.HINFO, ttl)
+        {
+            CPU = cpu;
+            OS = os;
+        }
+
+        /// <summary>
+		/// Gets host's CPU.
+		/// </summary>
+		public string CPU { get; } = "";
+
+        /// <summary>
+		/// Gets host's OS.
+		/// </summary>
+		public string OS { get; } = "";
 
         /// <summary>
         /// Parses resource record from reply data.
@@ -29,7 +39,7 @@ namespace LumiSoft.Net.DNS
         /// <param name="offset">Current offset in reply data.</param>
         /// <param name="rdLength">Resource record data length.</param>
         /// <param name="ttl">Time to live in seconds.</param>
-        public static DNS_rr_HINFO Parse(string name,byte[] reply,ref int offset,int rdLength,int ttl)
+        public static DNS_rr_HINFO Parse(string name, byte[] reply, ref int offset, int rdLength, int ttl)
         {
             /* RFC 1035 3.3.2. HINFO RDATA format
 
@@ -48,23 +58,13 @@ namespace LumiSoft.Net.DNS
 
 			*/
 
-			// CPU
-			var cpu = Dns_Client.ReadCharacterString(reply,ref offset);
+            // CPU
+            var cpu = Dns_Client.ReadCharacterString(reply, ref offset);
 
             // OS
-            var os = Dns_Client.ReadCharacterString(reply,ref offset);
+            var os = Dns_Client.ReadCharacterString(reply, ref offset);
 
-            return new DNS_rr_HINFO(name,cpu,os,ttl);
+            return new DNS_rr_HINFO(name, cpu, os, ttl);
         }
-
-        /// <summary>
-		/// Gets host's CPU.
-		/// </summary>
-		public string CPU { get; } = "";
-
-        /// <summary>
-		/// Gets host's OS.
-		/// </summary>
-		public string OS { get; } = "";
     }
 }

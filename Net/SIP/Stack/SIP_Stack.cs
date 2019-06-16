@@ -15,33 +15,33 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Stack
     {
-        private readonly SIP_TransportLayer           m_pTransportLayer;
-        private readonly SIP_TransactionLayer         m_pTransactionLayer;
-        private string                       m_UserAgent;
+        private int m_CSeq = 1;
+        private int m_MaxForwards = 70;
+        private int m_MaximumConnections;
+        private int m_MaximumMessageSize = 1000000;
+        private int m_MinExpireTime = 1800;
+        private int m_MinSessionExpires = 90;
+        private readonly List<string> m_pAllow;
+        private readonly List<NetworkCredential> m_pCredentials;
+        private readonly Dns_Client m_pDnsClient;
+        private readonly Logger m_pLogger;
         private readonly Auth_HttpDigest_NonceManager m_pNonceManager;
-        private readonly List<SIP_Uri>                m_pProxyServers;
-        private string                       m_Realm              = "";
-        private int                          m_CSeq               = 1;
-        private int                          m_MaxForwards        = 70;
-        private int                          m_MinExpireTime      = 1800;
-        private readonly List<string>                 m_pAllow;
-        private readonly List<string>                 m_pSupported;
-        private int                          m_MaximumConnections;
-        private int                          m_MaximumMessageSize = 1000000;
-        private int                          m_MinSessionExpires  = 90;
-        private int                          m_SessionExpires     = 1800;
-        private readonly List<NetworkCredential>      m_pCredentials;        
-        private readonly List<SIP_UA_Registration>    m_pRegistrations;
-        private readonly SIP_t_CallID                 m_RegisterCallID;
-        private readonly Logger                       m_pLogger;
-        private readonly Dns_Client                   m_pDnsClient;
-        private readonly int                          MTU                  = 1400;
+        private readonly List<SIP_Uri> m_pProxyServers;
+        private readonly List<SIP_UA_Registration> m_pRegistrations;
+        private readonly List<string> m_pSupported;
+        private readonly SIP_TransactionLayer m_pTransactionLayer;
+        private readonly SIP_TransportLayer m_pTransportLayer;
+        private string m_Realm = "";
+        private readonly SIP_t_CallID m_RegisterCallID;
+        private int m_SessionExpires = 1800;
+        private string m_UserAgent;
+        private readonly int MTU = 1400;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SIP_Stack()
-        {            
+        {
             m_pTransportLayer = new SIP_TransportLayer(this);
             m_pTransactionLayer = new SIP_TransactionLayer(this);
             m_pNonceManager = new Auth_HttpDigest_NonceManager();
@@ -49,132 +49,562 @@ namespace LumiSoft.Net.SIP.Stack
             m_pRegistrations = new List<SIP_UA_Registration>();
             m_pCredentials = new List<NetworkCredential>();
             m_RegisterCallID = SIP_t_CallID.CreateCallID();
-            
+
             m_pAllow = new List<string>();
-            m_pAllow.AddRange(new[]{"INVITE","ACK","CANCEL","BYE","MESSAGE"});
+            m_pAllow.AddRange(new[] { "INVITE", "ACK", "CANCEL", "BYE", "MESSAGE" });
 
             m_pSupported = new List<string>();
-                       
+
             m_pLogger = new Logger();
 
             m_pDnsClient = new Dns_Client();
         }
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// This event is raised by any SIP element when unknown/unhandled error happened.
         /// </summary>
-        public void Dispose()
+        public event EventHandler<ExceptionEventArgs> Error;
+
+        /// <summary>
+        /// This event is raised when new SIP request is received.
+        /// </summary>
+        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
+
+        /// <summary>
+        /// This event is raised when new stray SIP response is received.
+        /// Stray response means that response doesn't match to any transaction.
+        /// </summary>
+        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
+
+        /// <summary>
+        /// This event is raised when new incoming SIP request is received. You can control incoming requests
+        /// with that event. For example you can require authentication or send what ever error to request maker user.
+        /// </summary>
+        public event EventHandler<SIP_ValidateRequestEventArgs> ValidateRequest;
+
+        /// <summary>
+        /// Gets stack supported methods list.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        /// <remarks>This value is appended to <see cref="CreateRequest"/> created request <b>Allow:</b> header.</remarks>
+        public List<string> Allow
         {
-            if(State == SIP_StackState.Disposed){
-                return;
-            }
-            
-            Stop();
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
 
-            State = SIP_StackState.Disposed;
-
-            // TODO: "clean" clean up with disposing state, wait some time transaction/dialogs to die, block new ones.
-
-            // TODO: Currently stack switched Disposed state before all transactions has disposed, so some active 
-            // transaction which accesses stack will get disposed exception.
-                        
-            // Release events.
-            RequestReceived = null;
-            ResponseReceived = null;
-            Error = null;                      
-            
-            if(m_pTransactionLayer != null){
-                m_pTransactionLayer.Dispose();
+                return m_pAllow;
             }
-            if(m_pTransportLayer != null){
-                m_pTransportLayer.Dispose();
-            }
-            if(m_pNonceManager != null){
-                m_pNonceManager.Dispose();
-            }
-            if(m_pLogger != null){
-                m_pLogger.Dispose();
-            }            
         }
 
         /// <summary>
-        /// Starts SIP stack.
+        /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server 
+        /// listnes and also if connections is SSL.
         /// </summary>
-        public void Start()
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public IPBindInfo[] BindInfo
         {
-            if(State == SIP_StackState.Started){
-                return;
-            }
-            State = SIP_StackState.Started;
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
 
-            m_pTransportLayer.Start();            
+                return m_pTransportLayer.BindInfo;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                m_pTransportLayer.BindInfo = value;
+            }
         }
 
         /// <summary>
-        /// Stops SIP stack.
+        /// Gets credentials collection.
         /// </summary>
-        public void Stop()
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public List<NetworkCredential> Credentials
         {
-            if(State != SIP_StackState.Started){
-                return;
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pCredentials;
             }
-            State = SIP_StackState.Stopping;
+        }
 
-            /* Cleanup order:             
-                *) Unregister registrations.
-                *) Terminate dialogs.
-                *) Wait while all active transactions has terminated or timeout reaches.
-            */
+        /// <summary>
+        /// Gets digest authentication nonce manager.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public Auth_HttpDigest_NonceManager DigestNonceManager
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
 
-            // Unregister registrations.
-            foreach(SIP_UA_Registration reg in m_pRegistrations.ToArray()){
-                reg.BeginUnregister(true);
+                return m_pNonceManager;
+            }
+        }
+
+        /// <summary>
+        /// Gets stack DNS client.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public Dns_Client Dns
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pDnsClient;
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP logger.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public Logger Logger
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pLogger;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets maximum forwards SIP request may have.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when value contains invalid value.</exception>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public int MaxForwards
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_MaxForwards;
             }
 
-            // Terminate dialogs.
-            foreach(SIP_Dialog dialog in m_pTransactionLayer.Dialogs){
-                dialog.Terminate();
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 1)
+                {
+                    throw new ArgumentException("Value must be > 0.");
+                }
+
+                m_MaxForwards = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets how many cunncurent connections allowed. Value 0 means not limited. This is used only for TCP based connections.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int MaximumConnections
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_MaximumConnections;
             }
 
-            // Wait while all active transactions has completed.
-            var start = DateTime.Now;
-            while (true){
-                bool activeTransactions = false;
-                foreach(SIP_Transaction tr in m_pTransactionLayer.Transactions){
-                    // We have active transactions.
-                    if(tr.State == SIP_TransactionState.WaitingToStart || tr.State == SIP_TransactionState.Calling || tr.State == SIP_TransactionState.Proceeding || tr.State == SIP_TransactionState.Trying){
-                        activeTransactions = true;
-                
-                        break;
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 1)
+                {
+                    m_MaximumConnections = 0;
+                }
+                else
+                {
+                    m_MaximumConnections = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets maximum allowed SIP message size in bytes. This is used only for TCP based connections.
+        /// Value 0 means unlimited.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int MaximumMessageSize
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_MaximumMessageSize;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 1)
+                {
+                    m_MaximumMessageSize = 0;
+                }
+                else
+                {
+                    m_MaximumMessageSize = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets minimum expire time in seconds what server allows.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int MinimumExpireTime
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_MinExpireTime;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 10)
+                {
+                    throw new ArgumentException("Property MinimumExpireTime value must be >= 10 !");
+                }
+
+                m_MinExpireTime = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets minimum session expires value in seconds. NOTE: Minimum value is 90 !
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
+        public int MinimumSessionExpries
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_MinSessionExpires;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 90)
+                {
+                    throw new ArgumentException("Minimum session expires value must be >= 90 !");
+                }
+
+                m_MinSessionExpires = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP outbound proxy servers collection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public List<SIP_Uri> ProxyServers
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pProxyServers;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets SIP <b>realm</b> value. Mostly this value is used by <b>digest</b> authentication.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when null reference is passed.</exception>
+        public string Realm
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_Realm;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                m_Realm = value ?? throw new ArgumentNullException();
+            }
+        }
+
+        /// <summary>
+        /// Gets current registrations.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_UA_Registration[] Registrations
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRegistrations.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets session expires value in seconds. NOTE: This value can't be smaller than MinimumSessionExpries.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
+        public int SessionExpries
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_SessionExpires;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 90)
+                {
+                    throw new ArgumentException("Session expires value can't be < MinimumSessionExpries value !");
+                }
+
+                m_SessionExpires = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets stack state.
+        /// </summary>
+        public SIP_StackState State { get; private set; } = SIP_StackState.Stopped;
+
+        /// <summary>
+        /// Gets or sets STUN server name or IP address. This value must be filled if SIP stack is running behind a NAT.
+        /// </summary>
+        public string StunServer
+        {
+            get { return m_pTransportLayer.StunServer; }
+
+            set
+            {
+                m_pTransportLayer.StunServer = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets stack supported extentions list.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        /// <remarks>This value is appended to <see cref="CreateRequest"/> created request <b>Supported:</b> header.</remarks>
+        public List<string> Supported
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSupported;
+            }
+        }
+
+        /// <summary>
+        /// Gets transaction layer.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_TransactionLayer TransactionLayer
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pTransactionLayer;
+            }
+        }
+
+        /// <summary>
+        /// Gets transport layer what is used to receive and send requests and responses.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_TransportLayer TransportLayer
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pTransportLayer;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets User-Agent value. Value null menas not specified.
+        /// </summary>
+        public string UserAgent
+        {
+            get
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_UserAgent;
+            }
+
+            set
+            {
+                if (State == SIP_StackState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                m_UserAgent = value;
+            }
+        }
+
+        /// <summary>
+        /// Consumes current CSeq number and increments it by 1.
+        /// </summary>
+        /// <returns>Returns CSeq number.</returns>
+        public int ConsumeCSeq()
+        {
+            return m_CSeq++;
+        }
+
+        /// <summary>
+        /// Creates new registration.
+        /// </summary>
+        /// <param name="server">Registrar server URI. For example: sip:domain.com.</param>
+        /// <param name="aor">Registration address of record. For example: user@domain.com.</param>
+        /// <param name="contact">Contact URI.</param>
+        /// <param name="expires">Gets after how many seconds reigisration expires.</param>
+        /// <returns>Returns created registration.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>server</b>,<b>aor</b> or <b>contact</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public SIP_UA_Registration CreateRegistration(SIP_Uri server, string aor, AbsoluteUri contact, int expires)
+        {
+            if (State == SIP_StackState.Disposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (server == null)
+            {
+                throw new ArgumentNullException("server");
+            }
+            if (aor == null)
+            {
+                throw new ArgumentNullException("aor");
+            }
+            if (aor == string.Empty)
+            {
+                throw new ArgumentException("Argument 'aor' value must be specified.");
+            }
+            if (contact == null)
+            {
+                throw new ArgumentNullException("contact");
+            }
+
+            lock (m_pRegistrations)
+            {
+                var registration = new SIP_UA_Registration(this, server, aor, contact, expires);
+                registration.Disposed += new EventHandler(delegate (object s, EventArgs e)
+                {
+                    if (State != SIP_StackState.Disposed)
+                    {
+                        m_pRegistrations.Remove(registration);
                     }
-                }
+                });
+                m_pRegistrations.Add(registration);
 
-                if(activeTransactions){
-                    System.Threading.Thread.Sleep(500);
-
-                    // Timeout.
-                    if(((TimeSpan)(DateTime.Now - start)).Seconds > 10){
-                        break;
-                    }
-                }
-                else{
-                    break;
-                }
+                return registration;
             }
-            
-            // REMOVE ME: Dispose Transaction layer instead.
-            foreach(SIP_Transaction tr in m_pTransactionLayer.Transactions){
-                try{
-                    tr.Dispose();
-                }
-                catch{
-                }
-            }
-
-            
-            m_pTransportLayer.Stop();
-
-            State = SIP_StackState.Stopped;            
         }
 
         /// <summary>
@@ -187,21 +617,26 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>method</b>,<b>to</b> or <b>from</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SIP_Request CreateRequest(string method,SIP_t_NameAddress to,SIP_t_NameAddress from)
+        public SIP_Request CreateRequest(string method, SIP_t_NameAddress to, SIP_t_NameAddress from)
         {
-            if(State == SIP_StackState.Disposed){
+            if (State == SIP_StackState.Disposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(method == null){
+            if (method == null)
+            {
                 throw new ArgumentNullException("method");
             }
-            if(method == ""){
+            if (method == "")
+            {
                 throw new ArgumentException("Argument 'method' value must be specified.");
             }
-            if(to == null){
+            if (to == null)
+            {
                 throw new ArgumentNullException("to");
             }
-            if(from == null){
+            if (from == null)
+            {
                 throw new ArgumentNullException("from");
             }
 
@@ -274,10 +709,12 @@ namespace LumiSoft.Net.SIP.Stack
                 in each registration from a UA.
             */
 
-            if(method == SIP_Methods.REGISTER){
+            if (method == SIP_Methods.REGISTER)
+            {
                 request.CallID = m_RegisterCallID.ToStringValue();
             }
-            else{
+            else
+            {
                 request.CallID = SIP_t_CallID.CreateCallID().ToStringValue();
             }
 
@@ -292,7 +729,7 @@ namespace LumiSoft.Net.SIP.Stack
                 CSeq header field values.
             */
 
-            request.CSeq = new SIP_t_CSeq(ConsumeCSeq(),method);
+            request.CSeq = new SIP_t_CSeq(ConsumeCSeq(), method);
 
             request.MaxForwards = m_MaxForwards;
 
@@ -301,17 +738,20 @@ namespace LumiSoft.Net.SIP.Stack
 
             request.Allow.Add(SIP_Utils.ListToString(m_pAllow));
 
-            if(m_pSupported.Count > 0){
+            if (m_pSupported.Count > 0)
+            {
                 request.Supported.Add(SIP_Utils.ListToString(m_pAllow));
             }
 
-// section 8.1.2 suggests to use pre-configured route for proxy.
+            // section 8.1.2 suggests to use pre-configured route for proxy.
 
-            foreach(SIP_Uri proxy in m_pProxyServers){
+            foreach (SIP_Uri proxy in m_pProxyServers)
+            {
                 request.Route.Add(proxy.ToString());
             }
 
-            if(!string.IsNullOrEmpty(m_UserAgent)){
+            if (!string.IsNullOrEmpty(m_UserAgent))
+            {
                 request.UserAgent = m_UserAgent;
             }
 
@@ -326,38 +766,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null reference.</exception>
         public SIP_RequestSender CreateRequestSender(SIP_Request request)
         {
-            return CreateRequestSender(request,null);
-        }
-
-        /// <summary>
-        /// Creates SIP request sender for the specified request.
-        /// </summary>
-        /// <param name="request">SIP request.</param>
-        /// <param name="flow">Data flow.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null reference.</exception>
-        internal SIP_RequestSender CreateRequestSender(SIP_Request request,SIP_Flow flow)
-        {
-            if(State == SIP_StackState.Disposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(request == null){
-                throw new ArgumentNullException("request");
-            }
-
-            var sender = new SIP_RequestSender(this,request,flow);
-            sender.Credentials.AddRange(m_pCredentials);
-
-            return sender;
-        }
-
-        /// <summary>
-        /// Consumes current CSeq number and increments it by 1.
-        /// </summary>
-        /// <returns>Returns CSeq number.</returns>
-        public int ConsumeCSeq()
-        {
-            return m_CSeq++;
+            return CreateRequestSender(request, null);
         }
 
         /// <summary>
@@ -368,9 +777,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns created response.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>statusCode_reasonText</b> or <b>request</b> is null reference.</exception>
         /// <exception cref="InvalidOperationException">Is raised when request is ACK-request. ACK request is response less.</exception>
-        public SIP_Response CreateResponse(string statusCode_reasonText,SIP_Request request)
+        public SIP_Response CreateResponse(string statusCode_reasonText, SIP_Request request)
         {
-            return CreateResponse(statusCode_reasonText,request,null);
+            return CreateResponse(statusCode_reasonText, request, null);
         }
 
         /// <summary>
@@ -383,12 +792,14 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns created response.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>statusCode_reasonText</b> or <b>request</b> is null reference.</exception>
         /// <exception cref="InvalidOperationException">Is raised when request is ACK-request. ACK request is response less.</exception>
-        public SIP_Response CreateResponse(string statusCode_reasonText,SIP_Request request,SIP_Flow flow)
+        public SIP_Response CreateResponse(string statusCode_reasonText, SIP_Request request, SIP_Flow flow)
         {
-            if(request == null){
+            if (request == null)
+            {
                 throw new ArgumentNullException("request");
             }
-            if(request.RequestLine.Method == SIP_Methods.ACK){
+            if (request.RequestLine.Method == SIP_Methods.ACK)
+            {
                 throw new InvalidOperationException("ACK is responseless request !");
             }
 
@@ -428,42 +839,91 @@ namespace LumiSoft.Net.SIP.Stack
 
             var response = new SIP_Response(request);
             response.StatusCode_ReasonPhrase = statusCode_reasonText;
-            foreach(SIP_t_ViaParm via in request.Via.GetAllValues()){
+            foreach (SIP_t_ViaParm via in request.Via.GetAllValues())
+            {
                 response.Via.Add(via.ToStringValue());
             }
-            response.From   = request.From;
-            response.To     = request.To;
-            if(request.To.Tag == null){
+            response.From = request.From;
+            response.To = request.To;
+            if (request.To.Tag == null)
+            {
                 response.To.Tag = SIP_Utils.CreateTag();
             }
             response.CallID = request.CallID;
-            response.CSeq   = request.CSeq;
+            response.CSeq = request.CSeq;
 
             // RFC requires these headers for dialog establishing requests only.
             // We just add these to every request - this is won't violate RFC.
 
             response.Allow.Add(SIP_Utils.ListToString(m_pAllow));
 
-            if(m_pSupported.Count > 0){
+            if (m_pSupported.Count > 0)
+            {
                 response.Supported.Add(SIP_Utils.ListToString(m_pAllow));
             }
 
-            if(!string.IsNullOrEmpty(m_UserAgent)){
+            if (!string.IsNullOrEmpty(m_UserAgent))
+            {
                 request.UserAgent = m_UserAgent;
             }
 
-            if(SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method)){
-                foreach(SIP_t_AddressParam route in request.RecordRoute.GetAllValues()){
+            if (SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method))
+            {
+                foreach (SIP_t_AddressParam route in request.RecordRoute.GetAllValues())
+                {
                     response.RecordRoute.Add(route.ToStringValue());
                 }
-                
-                if(response.Contact.GetTopMostValue() ==  null && flow != null){
+
+                if (response.Contact.GetTopMostValue() == null && flow != null)
+                {
                     var user = ((SIP_Uri)response.To.Address.Uri).User;
                     response.Contact.Add((flow.IsSecure ? "sips:" : "sip:") + user + "@" + flow.LocalPublicEP.ToString());
                 }
             }
-                        
+
             return response;
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        public void Dispose()
+        {
+            if (State == SIP_StackState.Disposed)
+            {
+                return;
+            }
+
+            Stop();
+
+            State = SIP_StackState.Disposed;
+
+            // TODO: "clean" clean up with disposing state, wait some time transaction/dialogs to die, block new ones.
+
+            // TODO: Currently stack switched Disposed state before all transactions has disposed, so some active 
+            // transaction which accesses stack will get disposed exception.
+
+            // Release events.
+            RequestReceived = null;
+            ResponseReceived = null;
+            Error = null;
+
+            if (m_pTransactionLayer != null)
+            {
+                m_pTransactionLayer.Dispose();
+            }
+            if (m_pTransportLayer != null)
+            {
+                m_pTransportLayer.Dispose();
+            }
+            if (m_pNonceManager != null)
+            {
+                m_pNonceManager.Dispose();
+            }
+            if (m_pLogger != null)
+            {
+                m_pLogger.Dispose();
+            }
         }
 
         /// <summary>
@@ -474,16 +934,17 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="forceTLS">If true only TLS hops are returned.</param>
         /// <returns>Returns target hops(address,port,transport) of the specified URI.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
-        public SIP_Hop[] GetHops(SIP_Uri uri,int messageSize,bool forceTLS)
+        public SIP_Hop[] GetHops(SIP_Uri uri, int messageSize, bool forceTLS)
         {
-            if(uri == null){
+            if (uri == null)
+            {
                 throw new ArgumentNullException("uri");
             }
 
-            var    retVal                 = new List<SIP_Hop>();
-            var           transport              = "";
-            bool             transportSetExplicitly = false;
-            var targetSRV              = new List<DNS_rr_SRV>();
+            var retVal = new List<SIP_Hop>();
+            var transport = "";
+            bool transportSetExplicitly = false;
+            var targetSRV = new List<DNS_rr_SRV>();
 
             /* 4.1 Selecting a Transport Protocol
 
@@ -607,12 +1068,14 @@ namespace LumiSoft.Net.SIP.Stack
              */
 
             // TLS usage demanded explicitly.
-            if (forceTLS){
+            if (forceTLS)
+            {
                 transportSetExplicitly = true;
                 transport = SIP_Transport.TLS;
             }
             // If the URI specifies a transport protocol in the transport parameter, that transport protocol SHOULD be used.
-            else if(uri.Param_Transport != null){
+            else if (uri.Param_Transport != null)
+            {
                 transportSetExplicitly = true;
                 transport = uri.Param_Transport;
             }
@@ -624,18 +1087,23 @@ namespace LumiSoft.Net.SIP.Stack
                 the guidelines of SIP mandate it for this particular request. That is the case, 
                 for example, for requests that exceed the path MTU.
             */
-            else if(Net_Utils.IsIPAddress(uri.Host) || uri.Port != -1){
-                if(uri.IsSecure){
+            else if (Net_Utils.IsIPAddress(uri.Host) || uri.Port != -1)
+            {
+                if (uri.IsSecure)
+                {
                     transport = SIP_Transport.TLS;
                 }
-                else if(messageSize > MTU){
+                else if (messageSize > MTU)
+                {
                     transport = SIP_Transport.TCP;
                 }
-                else{
-                   transport = SIP_Transport.UDP;
+                else
+                {
+                    transport = SIP_Transport.UDP;
                 }
             }
-            else{
+            else
+            {
                 DnsServerResponse response = null;
                 /*
                 DnsServerResponse response = m_pDnsClient.Query(uri.Host,QTYPE.NAPTR);
@@ -656,78 +1124,95 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 }
                 else{*/
-                    var supportedTransports = new Dictionary<string,DNS_rr_SRV[]>();
-                bool                            srvRecordsAvailable = false;
+                var supportedTransports = new Dictionary<string, DNS_rr_SRV[]>();
+                bool srvRecordsAvailable = false;
 
-                    // Query SRV to see what protocols are supported.
-                    response = m_pDnsClient.Query("_sips._tcp." + uri.Host,DNS_QType.SRV);
-                    if(response.GetSRVRecords().Length > 0){
-                        srvRecordsAvailable = true;
-                        supportedTransports.Add(SIP_Transport.TLS,response.GetSRVRecords());
-                    }
-                    response = m_pDnsClient.Query("_sip._tcp." + uri.Host,DNS_QType.SRV);
-                    if(response.GetSRVRecords().Length > 0){
-                        srvRecordsAvailable = true;
-                        supportedTransports.Add(SIP_Transport.TCP,response.GetSRVRecords());
-                    }
-                    response = m_pDnsClient.Query("_sip._udp." + uri.Host,DNS_QType.SRV);
-                    if(response.GetSRVRecords().Length > 0){
-                        srvRecordsAvailable = true;
-                        supportedTransports.Add(SIP_Transport.UDP,response.GetSRVRecords());
-                    }
+                // Query SRV to see what protocols are supported.
+                response = m_pDnsClient.Query("_sips._tcp." + uri.Host, DNS_QType.SRV);
+                if (response.GetSRVRecords().Length > 0)
+                {
+                    srvRecordsAvailable = true;
+                    supportedTransports.Add(SIP_Transport.TLS, response.GetSRVRecords());
+                }
+                response = m_pDnsClient.Query("_sip._tcp." + uri.Host, DNS_QType.SRV);
+                if (response.GetSRVRecords().Length > 0)
+                {
+                    srvRecordsAvailable = true;
+                    supportedTransports.Add(SIP_Transport.TCP, response.GetSRVRecords());
+                }
+                response = m_pDnsClient.Query("_sip._udp." + uri.Host, DNS_QType.SRV);
+                if (response.GetSRVRecords().Length > 0)
+                {
+                    srvRecordsAvailable = true;
+                    supportedTransports.Add(SIP_Transport.UDP, response.GetSRVRecords());
+                }
 
-                    // SRV records available.
-                    if(srvRecordsAvailable){
-                        if(uri.IsSecure){
-                            if(supportedTransports.ContainsKey(SIP_Transport.TLS)){
-                                transport = SIP_Transport.TLS;
-                                targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
-                            }
-                            // Target won't support SIPS.
-                        }
-                        else if(messageSize > MTU){
-                            if(supportedTransports.ContainsKey(SIP_Transport.TCP)){
-                                transport = SIP_Transport.TCP;
-                                targetSRV.AddRange(supportedTransports[SIP_Transport.TCP]);
-                            }
-                            else if(supportedTransports.ContainsKey(SIP_Transport.TLS)){
-                                transport = SIP_Transport.TLS;
-                                targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
-                            }
-                            // Target support UDP only, but TCP is required.
-                        }
-                        else{
-                            if(supportedTransports.ContainsKey(SIP_Transport.UDP)){
-                                transport = SIP_Transport.UDP;
-                                targetSRV.AddRange(supportedTransports[SIP_Transport.UDP]);
-                            }
-                            else if(supportedTransports.ContainsKey(SIP_Transport.TCP)){
-                                transport = SIP_Transport.TCP;
-                                targetSRV.AddRange(supportedTransports[SIP_Transport.TCP]);
-                            }
-                            else{
-                                transport = SIP_Transport.TLS;
-                                targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
-                            }
-                        }
-                    }
-                    /*  If no SRV records are found, the client SHOULD use TCP for a SIPS
-                        URI, and UDP for a SIP URI.  However, another transport protocol,
-                        such as TCP, MAY be used if the guidelines of SIP mandate it for this
-                        particular request.  That is the case, for example, for requests that
-                        exceed the path MTU.
-                    */
-                    else{
-                        if(uri.IsSecure){
+                // SRV records available.
+                if (srvRecordsAvailable)
+                {
+                    if (uri.IsSecure)
+                    {
+                        if (supportedTransports.ContainsKey(SIP_Transport.TLS))
+                        {
                             transport = SIP_Transport.TLS;
+                            targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
                         }
-                        else if(messageSize > MTU){
+                        // Target won't support SIPS.
+                    }
+                    else if (messageSize > MTU)
+                    {
+                        if (supportedTransports.ContainsKey(SIP_Transport.TCP))
+                        {
                             transport = SIP_Transport.TCP;
+                            targetSRV.AddRange(supportedTransports[SIP_Transport.TCP]);
                         }
-                        else{
+                        else if (supportedTransports.ContainsKey(SIP_Transport.TLS))
+                        {
+                            transport = SIP_Transport.TLS;
+                            targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
+                        }
+                        // Target support UDP only, but TCP is required.
+                    }
+                    else
+                    {
+                        if (supportedTransports.ContainsKey(SIP_Transport.UDP))
+                        {
                             transport = SIP_Transport.UDP;
+                            targetSRV.AddRange(supportedTransports[SIP_Transport.UDP]);
+                        }
+                        else if (supportedTransports.ContainsKey(SIP_Transport.TCP))
+                        {
+                            transport = SIP_Transport.TCP;
+                            targetSRV.AddRange(supportedTransports[SIP_Transport.TCP]);
+                        }
+                        else
+                        {
+                            transport = SIP_Transport.TLS;
+                            targetSRV.AddRange(supportedTransports[SIP_Transport.TLS]);
                         }
                     }
+                }
+                /*  If no SRV records are found, the client SHOULD use TCP for a SIPS
+                    URI, and UDP for a SIP URI.  However, another transport protocol,
+                    such as TCP, MAY be used if the guidelines of SIP mandate it for this
+                    particular request.  That is the case, for example, for requests that
+                    exceed the path MTU.
+                */
+                else
+                {
+                    if (uri.IsSecure)
+                    {
+                        transport = SIP_Transport.TLS;
+                    }
+                    else if (messageSize > MTU)
+                    {
+                        transport = SIP_Transport.TCP;
+                    }
+                    else
+                    {
+                        transport = SIP_Transport.UDP;
+                    }
+                }
                 //}
             }
 
@@ -775,63 +1260,82 @@ namespace LumiSoft.Net.SIP.Stack
                 explicit port once the A or AAAA records have been looked up.
             */
 
-            if(Net_Utils.IsIPAddress(uri.Host)){
-                if(uri.Port != -1){
-                    retVal.Add(new SIP_Hop(IPAddress.Parse(uri.Host),uri.Port,transport));
+            if (Net_Utils.IsIPAddress(uri.Host))
+            {
+                if (uri.Port != -1)
+                {
+                    retVal.Add(new SIP_Hop(IPAddress.Parse(uri.Host), uri.Port, transport));
                 }
-                else if(forceTLS || uri.IsSecure){
-                    retVal.Add(new SIP_Hop(IPAddress.Parse(uri.Host),5061,transport));
+                else if (forceTLS || uri.IsSecure)
+                {
+                    retVal.Add(new SIP_Hop(IPAddress.Parse(uri.Host), 5061, transport));
                 }
-                else{
-                    retVal.Add(new SIP_Hop(IPAddress.Parse(uri.Host),5060,transport));
+                else
+                {
+                    retVal.Add(new SIP_Hop(IPAddress.Parse(uri.Host), 5060, transport));
                 }
             }
-            else if(uri.Port != -1){
-                foreach(IPAddress ip in m_pDnsClient.GetHostAddresses(uri.Host)){
-                    retVal.Add(new SIP_Hop(ip,uri.Port,transport));
+            else if (uri.Port != -1)
+            {
+                foreach (IPAddress ip in m_pDnsClient.GetHostAddresses(uri.Host))
+                {
+                    retVal.Add(new SIP_Hop(ip, uri.Port, transport));
                 }
             }
-            else{
+            else
+            {
                 //if(naptrRecords){
-                    // We need to get (IP:Port)'s foreach SRV record.
-                    //DnsServerResponse response = m_pDnsClient.Query("??? need NAPTR value here",QTYPE.SRV);
+                // We need to get (IP:Port)'s foreach SRV record.
+                //DnsServerResponse response = m_pDnsClient.Query("??? need NAPTR value here",QTYPE.SRV);
                 //}    
-                if(transportSetExplicitly){
+                if (transportSetExplicitly)
+                {
                     DnsServerResponse response = null;
-                    if(transport == SIP_Transport.TLS){
-                        response = m_pDnsClient.Query("_sips._tcp." + uri.Host,DNS_QType.SRV);
+                    if (transport == SIP_Transport.TLS)
+                    {
+                        response = m_pDnsClient.Query("_sips._tcp." + uri.Host, DNS_QType.SRV);
                     }
-                    else if(transport == SIP_Transport.TCP){
-                        response = m_pDnsClient.Query("_sip._tcp." + uri.Host,DNS_QType.SRV);
+                    else if (transport == SIP_Transport.TCP)
+                    {
+                        response = m_pDnsClient.Query("_sip._tcp." + uri.Host, DNS_QType.SRV);
                     }
-                    else{
-                        response = m_pDnsClient.Query("_sip._udp." + uri.Host,DNS_QType.SRV);
+                    else
+                    {
+                        response = m_pDnsClient.Query("_sip._udp." + uri.Host, DNS_QType.SRV);
                     }
                     targetSRV.AddRange(response.GetSRVRecords());
-                }                         
+                }
 
                 // We have SRV records, resovle them to (IP:Port)'s.
-                if(targetSRV.Count > 0){
-                    foreach(DNS_rr_SRV record in targetSRV){
-                        if(Net_Utils.IsIPAddress(record.Target)){
-                            retVal.Add(new SIP_Hop(IPAddress.Parse(record.Target),record.Port,transport));
+                if (targetSRV.Count > 0)
+                {
+                    foreach (DNS_rr_SRV record in targetSRV)
+                    {
+                        if (Net_Utils.IsIPAddress(record.Target))
+                        {
+                            retVal.Add(new SIP_Hop(IPAddress.Parse(record.Target), record.Port, transport));
                         }
-                        else{
-                            foreach(IPAddress ip in m_pDnsClient.GetHostAddresses(record.Target)){
-                                retVal.Add(new SIP_Hop(ip,record.Port,transport));
+                        else
+                        {
+                            foreach (IPAddress ip in m_pDnsClient.GetHostAddresses(record.Target))
+                            {
+                                retVal.Add(new SIP_Hop(ip, record.Port, transport));
                             }
                         }
                     }
                 }
                 // No SRV recors, just use A and AAAA records.
-                else{
+                else
+                {
                     int port = 5060;
-                    if(transport == SIP_Transport.TLS){
+                    if (transport == SIP_Transport.TLS)
+                    {
                         port = 5061;
                     }
 
-                    foreach(IPAddress ip in m_pDnsClient.GetHostAddresses(uri.Host)){
-                        retVal.Add(new SIP_Hop(ip,port,transport));
+                    foreach (IPAddress ip in m_pDnsClient.GetHostAddresses(uri.Host))
+                    {
+                        retVal.Add(new SIP_Hop(ip, port, transport));
                     }
                 }
             }
@@ -840,507 +1344,121 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Creates new registration.
+        /// Starts SIP stack.
         /// </summary>
-        /// <param name="server">Registrar server URI. For example: sip:domain.com.</param>
-        /// <param name="aor">Registration address of record. For example: user@domain.com.</param>
-        /// <param name="contact">Contact URI.</param>
-        /// <param name="expires">Gets after how many seconds reigisration expires.</param>
-        /// <returns>Returns created registration.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>server</b>,<b>aor</b> or <b>contact</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SIP_UA_Registration CreateRegistration(SIP_Uri server,string aor,AbsoluteUri contact,int expires)
+        public void Start()
         {
-            if(State == SIP_StackState.Disposed){
+            if (State == SIP_StackState.Started)
+            {
+                return;
+            }
+            State = SIP_StackState.Started;
+
+            m_pTransportLayer.Start();
+        }
+
+        /// <summary>
+        /// Stops SIP stack.
+        /// </summary>
+        public void Stop()
+        {
+            if (State != SIP_StackState.Started)
+            {
+                return;
+            }
+            State = SIP_StackState.Stopping;
+
+            /* Cleanup order:             
+                *) Unregister registrations.
+                *) Terminate dialogs.
+                *) Wait while all active transactions has terminated or timeout reaches.
+            */
+
+            // Unregister registrations.
+            foreach (SIP_UA_Registration reg in m_pRegistrations.ToArray())
+            {
+                reg.BeginUnregister(true);
+            }
+
+            // Terminate dialogs.
+            foreach (SIP_Dialog dialog in m_pTransactionLayer.Dialogs)
+            {
+                dialog.Terminate();
+            }
+
+            // Wait while all active transactions has completed.
+            var start = DateTime.Now;
+            while (true)
+            {
+                bool activeTransactions = false;
+                foreach (SIP_Transaction tr in m_pTransactionLayer.Transactions)
+                {
+                    // We have active transactions.
+                    if (tr.State == SIP_TransactionState.WaitingToStart || tr.State == SIP_TransactionState.Calling || tr.State == SIP_TransactionState.Proceeding || tr.State == SIP_TransactionState.Trying)
+                    {
+                        activeTransactions = true;
+
+                        break;
+                    }
+                }
+
+                if (activeTransactions)
+                {
+                    System.Threading.Thread.Sleep(500);
+
+                    // Timeout.
+                    if (((TimeSpan)(DateTime.Now - start)).Seconds > 10)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // REMOVE ME: Dispose Transaction layer instead.
+            foreach (SIP_Transaction tr in m_pTransactionLayer.Transactions)
+            {
+                try
+                {
+                    tr.Dispose();
+                }
+                catch
+                {
+                }
+            }
+
+
+            m_pTransportLayer.Stop();
+
+            State = SIP_StackState.Stopped;
+        }
+
+        /// <summary>
+        /// Creates SIP request sender for the specified request.
+        /// </summary>
+        /// <param name="request">SIP request.</param>
+        /// <param name="flow">Data flow.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null reference.</exception>
+        internal SIP_RequestSender CreateRequestSender(SIP_Request request, SIP_Flow flow)
+        {
+            if (State == SIP_StackState.Disposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(server == null){
-                throw new ArgumentNullException("server");
-            }
-            if(aor == null){
-                throw new ArgumentNullException("aor");
-            }
-            if(aor == string.Empty){
-                throw new ArgumentException("Argument 'aor' value must be specified.");
-            }
-            if(contact == null){
-                throw new ArgumentNullException("contact");
+            if (request == null)
+            {
+                throw new ArgumentNullException("request");
             }
 
-            lock(m_pRegistrations){
-                var registration = new SIP_UA_Registration(this,server,aor,contact,expires);
-                registration.Disposed += new EventHandler(delegate(object s,EventArgs e){
-                    if(State != SIP_StackState.Disposed){
-                        m_pRegistrations.Remove(registration);
-                    }
-                });
-                m_pRegistrations.Add(registration);
+            var sender = new SIP_RequestSender(this, request, flow);
+            sender.Credentials.AddRange(m_pCredentials);
 
-                return registration;
-            }
+            return sender;
         }
-
-        /// <summary>
-        /// Gets stack state.
-        /// </summary>
-        public SIP_StackState State { get; private set; } = SIP_StackState.Stopped;
-
-        /// <summary>
-        /// Gets transport layer what is used to receive and send requests and responses.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_TransportLayer TransportLayer
-        {
-            get{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pTransportLayer; 
-            }
-        }
-
-        /// <summary>
-        /// Gets transaction layer.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_TransactionLayer TransactionLayer
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pTransactionLayer; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets User-Agent value. Value null menas not specified.
-        /// </summary>
-        public string UserAgent
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_UserAgent; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                m_UserAgent = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets digest authentication nonce manager.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public Auth_HttpDigest_NonceManager DigestNonceManager
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pNonceManager; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets STUN server name or IP address. This value must be filled if SIP stack is running behind a NAT.
-        /// </summary>
-        public string StunServer
-        {
-            get{ return m_pTransportLayer.StunServer; }
-
-            set{
-                m_pTransportLayer.StunServer = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP outbound proxy servers collection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public List<SIP_Uri> ProxyServers
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pProxyServers; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets SIP <b>realm</b> value. Mostly this value is used by <b>digest</b> authentication.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when null reference is passed.</exception>
-        public string Realm
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_Realm; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                m_Realm = value ?? throw new ArgumentNullException();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets maximum forwards SIP request may have.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when value contains invalid value.</exception>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public int MaxForwards
-        {
-            get{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_MaxForwards; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 1){
-                    throw new ArgumentException("Value must be > 0.");
-                }
-
-                m_MaxForwards = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets minimum expire time in seconds what server allows.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int MinimumExpireTime
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_MinExpireTime; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 10){
-                    throw new ArgumentException("Property MinimumExpireTime value must be >= 10 !");
-                }
-
-                m_MinExpireTime = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets stack supported methods list.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        /// <remarks>This value is appended to <see cref="CreateRequest"/> created request <b>Allow:</b> header.</remarks>
-        public List<string> Allow
-        {
-            get{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pAllow; 
-            }
-        }
-
-        /// <summary>
-        /// Gets stack supported extentions list.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        /// <remarks>This value is appended to <see cref="CreateRequest"/> created request <b>Supported:</b> header.</remarks>
-        public List<string> Supported
-        {
-            get{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSupported; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets how many cunncurent connections allowed. Value 0 means not limited. This is used only for TCP based connections.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int MaximumConnections
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_MaximumConnections; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 1){
-                    m_MaximumConnections = 0;
-                }
-                else{
-                    m_MaximumConnections = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets maximum allowed SIP message size in bytes. This is used only for TCP based connections.
-        /// Value 0 means unlimited.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int MaximumMessageSize
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_MaximumMessageSize; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 1){
-                    m_MaximumMessageSize = 0;
-                }
-                else{
-                    m_MaximumMessageSize = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets minimum session expires value in seconds. NOTE: Minimum value is 90 !
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
-        public int MinimumSessionExpries
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_MinSessionExpires; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 90){
-                    throw new ArgumentException("Minimum session expires value must be >= 90 !");
-                }
-
-                m_MinSessionExpires = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets session expires value in seconds. NOTE: This value can't be smaller than MinimumSessionExpries.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
-        public int SessionExpries
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_SessionExpires; 
-            }
-
-            set{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 90){
-                    throw new ArgumentException("Session expires value can't be < MinimumSessionExpries value !");
-                }
-
-                m_SessionExpires = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets credentials collection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public List<NetworkCredential> Credentials
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pCredentials; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server 
-        /// listnes and also if connections is SSL.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public IPBindInfo[] BindInfo
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pTransportLayer.BindInfo;
-            }
-
-            set{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                m_pTransportLayer.BindInfo = value; 
-            }
-        }
-
-        /// <summary>
-        /// Gets stack DNS client.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public Dns_Client Dns
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pDnsClient; 
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP logger.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public Logger Logger
-        {
-            get{ 
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pLogger; 
-            }
-        }
-
-        /// <summary>
-        /// Gets current registrations.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_UA_Registration[] Registrations
-        {
-            get{
-                if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRegistrations.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when new incoming SIP request is received. You can control incoming requests
-        /// with that event. For example you can require authentication or send what ever error to request maker user.
-        /// </summary>
-        public event EventHandler<SIP_ValidateRequestEventArgs> ValidateRequest;
-
-        /// <summary>
-        /// Is called by Transport layer when new incoming SIP request is received.
-        /// </summary>
-        /// <param name="request">Incoming SIP request.</param>
-        /// <param name="remoteEndPoint">Request maker IP end point.</param>
-        /// <returns></returns>
-        internal SIP_ValidateRequestEventArgs OnValidateRequest(SIP_Request request,IPEndPoint remoteEndPoint)
-        {
-            var eArgs = new SIP_ValidateRequestEventArgs(request,remoteEndPoint);
-            if (ValidateRequest != null){
-                ValidateRequest(this,eArgs);
-            }
-
-            return eArgs;
-        }
-
-        /// <summary>
-        /// This event is raised when new SIP request is received.
-        /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
-
-        /// <summary>
-        /// Raises <b>RequestReceived</b> event.
-        /// </summary>
-        /// <param name="e">Event data.</param>
-        internal void OnRequestReceived(SIP_RequestReceivedEventArgs e)
-        {
-            if(RequestReceived != null){
-                RequestReceived(this,e);
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when new stray SIP response is received.
-        /// Stray response means that response doesn't match to any transaction.
-        /// </summary>
-        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
-
-        /// <summary>
-        /// Raises <b>ResponseReceived</b> event.
-        /// </summary>
-        /// <param name="e">Event data.</param>
-        internal void OnResponseReceived(SIP_ResponseReceivedEventArgs e)
-        {
-            if(ResponseReceived != null){
-                ResponseReceived(this,e);
-            }
-        }
-
-        /// <summary>
-        /// This event is raised by any SIP element when unknown/unhandled error happened.
-        /// </summary>
-        public event EventHandler<ExceptionEventArgs> Error;
 
         /// <summary>
         /// Is called when ever unknown error happens.
@@ -1348,9 +1466,51 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="x">Exception happened.</param>
         internal void OnError(Exception x)
         {
-            if(Error != null){
-                Error(this,new ExceptionEventArgs(x));
+            if (Error != null)
+            {
+                Error(this, new ExceptionEventArgs(x));
             }
+        }
+
+        /// <summary>
+        /// Raises <b>RequestReceived</b> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        internal void OnRequestReceived(SIP_RequestReceivedEventArgs e)
+        {
+            if (RequestReceived != null)
+            {
+                RequestReceived(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>ResponseReceived</b> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        internal void OnResponseReceived(SIP_ResponseReceivedEventArgs e)
+        {
+            if (ResponseReceived != null)
+            {
+                ResponseReceived(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Is called by Transport layer when new incoming SIP request is received.
+        /// </summary>
+        /// <param name="request">Incoming SIP request.</param>
+        /// <param name="remoteEndPoint">Request maker IP end point.</param>
+        /// <returns></returns>
+        internal SIP_ValidateRequestEventArgs OnValidateRequest(SIP_Request request, IPEndPoint remoteEndPoint)
+        {
+            var eArgs = new SIP_ValidateRequestEventArgs(request, remoteEndPoint);
+            if (ValidateRequest != null)
+            {
+                ValidateRequest(this, eArgs);
+            }
+
+            return eArgs;
         }
     }
 }

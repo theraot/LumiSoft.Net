@@ -13,10 +13,35 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         /// <param name="name">Header field name.</param>
         /// <param name="value">Header field value.</param>
-        public SIP_SingleValueHF(string name,T value) : base(name,"")
+        public SIP_SingleValueHF(string name, T value) : base(name, "")
         {
             ValueX = value;
         }
+
+        // FIX ME: Change base class Value property or this to new name
+
+        /// <summary>
+        /// Gets or sets header field value.
+        /// </summary>
+        public override string Value
+        {
+            get { return ToStringValue(); }
+
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Property Value value may not be null !");
+                }
+
+                Parse(new StringReader(value));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets header field value.
+        /// </summary>
+        public T ValueX { get; set; }
 
         /// <summary>
         /// Parses single value from specified reader.
@@ -35,28 +60,5 @@ namespace LumiSoft.Net.SIP.Message
         {
             return ValueX.ToStringValue();
         }
-
-// FIX ME: Change base class Value property or this to new name
-
-        /// <summary>
-        /// Gets or sets header field value.
-        /// </summary>
-        public override string Value
-        {
-            get{ return ToStringValue(); }
-
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("Property Value value may not be null !");
-                }
-
-                Parse(new StringReader(value)); 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets header field value.
-        /// </summary>
-        public T ValueX { get; set; }
     }
 }

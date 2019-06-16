@@ -17,13 +17,18 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="messagesInfo">Messages info.</param>
         /// <param name="response">Default IMAP server response.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceFolder</b>,<b>targetFolder</b>,<b>messagesInfo</b> or <b>response</b> is null reference.</exception>
-        internal IMAP_e_Copy(string sourceFolder,string targetFolder,IMAP_MessageInfo[] messagesInfo,IMAP_r_ServerStatus response)
+        internal IMAP_e_Copy(string sourceFolder, string targetFolder, IMAP_MessageInfo[] messagesInfo, IMAP_r_ServerStatus response)
         {
-            m_pResponse     = response ?? throw new ArgumentNullException("response");
-            SourceFolder  = sourceFolder ?? throw new ArgumentNullException("sourceFolder");
-            TargetFolder  = targetFolder ?? throw new ArgumentNullException("targetFolder");
+            m_pResponse = response ?? throw new ArgumentNullException("response");
+            SourceFolder = sourceFolder ?? throw new ArgumentNullException("sourceFolder");
+            TargetFolder = targetFolder ?? throw new ArgumentNullException("targetFolder");
             MessagesInfo = messagesInfo ?? throw new ArgumentNullException("messagesInfo");
         }
+
+        /// <summary>
+        /// Gets messages info.
+        /// </summary>
+        public IMAP_MessageInfo[] MessagesInfo { get; }
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -31,10 +36,11 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
         public IMAP_r_ServerStatus Response
         {
-            get{ return m_pResponse; }
+            get { return m_pResponse; }
 
-            set{
-                m_pResponse = value ?? throw new ArgumentNullException("value"); 
+            set
+            {
+                m_pResponse = value ?? throw new ArgumentNullException("value");
             }
         }
 
@@ -47,10 +53,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets target folder name with optional path.
         /// </summary>
         public string TargetFolder { get; }
-
-        /// <summary>
-        /// Gets messages info.
-        /// </summary>
-        public IMAP_MessageInfo[] MessagesInfo { get; }
     }
 }

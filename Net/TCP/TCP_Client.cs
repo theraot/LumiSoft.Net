@@ -17,30 +17,361 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_Client : TCP_Session
     {
-        private bool                                m_IsConnected;
-        private string                              m_ID                   = "";
-        private DateTime                            m_ConnectTime;
-        private IPEndPoint                          m_pLocalEP;
-        private IPEndPoint                          m_pRemoteEP;
-        private bool                                m_IsSecure;
-        private SmartStream                         m_pTcpStream;
+        private DateTime m_ConnectTime;
+        private string m_ID = "";
+        private bool m_IsConnected;
+        private bool m_IsSecure;
+        private IPEndPoint m_pLocalEP;
+        private IPEndPoint m_pRemoteEP;
+        private SmartStream m_pTcpStream;
 
         /// <summary>
-        /// Cleans up any resources being used. This method is thread-safe.
+        /// Represents callback to be called when to complete connect operation.
         /// </summary>
-        public override void Dispose()
+        /// <param name="error">Exception happened or null if no errors.</param>
+        protected delegate void CompleteConnectCallback(Exception error);
+
+        /// <summary>
+        /// Internal helper method for asynchronous Connect method.
+        /// </summary>
+        /// <param name="localEP">Local IP end point to use for connect.</param>
+        /// <param name="remoteEP">Remote IP end point where to connect.</param>
+        /// <param name="ssl">Specifies if connects to SSL end point.</param>
+        private delegate void BeginConnectEPDelegate(IPEndPoint localEP, IPEndPoint remoteEP, bool ssl);
+
+        // OBSOLETE
+
+        /// <summary>
+        /// Internal helper method for asynchronous Connect method.
+        /// </summary>
+        /// <param name="host">Host name or IP address.</param>
+        /// <param name="port">Port to connect.</param>
+        /// <param name="ssl">Specifies if connects to SSL end point.</param>
+        private delegate void BeginConnectHostDelegate(string host, int port, bool ssl);
+
+        /// <summary>
+        /// Internal helper method for asynchronous Disconnect method.
+        /// </summary>
+        private delegate void DisconnectDelegate();
+
+        /// <summary>
+        /// Gets the time when session was connected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override DateTime ConnectTime
         {
-            lock(this){
-                if(IsDisposed){
-                    return;
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
                 }
-                try{
-                    Disconnect();
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
                 }
-                catch{
-                }
-                IsDisposed = true;
+
+                return m_ConnectTime;
             }
+        }
+
+        /// <summary>
+        /// Gets session ID.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override string ID
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
+                }
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
+                }
+
+                return m_ID;
+            }
+        }
+
+        /// <summary>
+        /// Gets if TCP client is connected.
+        /// </summary>
+        public override bool IsConnected
+        {
+            get { return m_IsConnected; }
+        }
+
+        /// <summary>
+        /// Gets if this object is disposed.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Gets if this session TCP connection is secure connection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override bool IsSecureConnection
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
+                }
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
+                }
+
+                return m_IsSecure;
+            }
+        }
+
+        /// <summary>
+        /// Gets the last time when data was sent or received.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override DateTime LastActivity
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
+                }
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
+                }
+
+                return m_pTcpStream.LastActivity;
+            }
+        }
+
+        /// <summary>
+        /// Gets session local IP end point.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override IPEndPoint LocalEndPoint
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
+                }
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
+                }
+
+                return m_pLocalEP;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets TCP client logger. Value null means no logging.
+        /// </summary>
+        public Logger Logger { get; set; }
+
+        /// <summary>
+        /// Gets session remote IP end point.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override IPEndPoint RemoteEndPoint
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
+                }
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
+                }
+
+                return m_pRemoteEP;
+            }
+        }
+
+        /// <summary>
+        /// Gets TCP stream which must be used to send/receive data through this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override SmartStream TcpStream
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException("TCP_Client");
+                }
+                if (!m_IsConnected)
+                {
+                    throw new InvalidOperationException("TCP client is not connected.");
+                }
+
+                return m_pTcpStream;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets default TCP read/write timeout.
+        /// </summary>
+        /// <remarks>This timeout applies only synchronous TCP read/write operations.</remarks>
+        public int Timeout { get; set; } = 61000;
+
+        /// <summary>
+        /// Gets or stes remote callback which is called when remote server certificate needs to be validated.
+        /// Value null means not sepcified.
+        /// </summary>
+        public RemoteCertificateValidationCallback ValidateCertificateCallback { get; set; }
+
+        /// <summary>
+        /// Starts connection to the specified host.
+        /// </summary>
+        /// <param name="host">Host name or IP address.</param>
+        /// <param name="port">Port to connect.</param>
+        /// <param name="callback">Callback to call when the connect operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        [Obsolete("Use method ConnectAsync instead.")]
+        public IAsyncResult BeginConnect(string host, int port, AsyncCallback callback, object state)
+        {
+            return BeginConnect(host, port, false, callback, state);
+        }
+
+        /// <summary>
+        /// Starts connection to the specified host.
+        /// </summary>
+        /// <param name="host">Host name or IP address.</param>
+        /// <param name="port">Port to connect.</param>
+        /// <param name="ssl">Specifies if connects to SSL end point.</param>
+        /// <param name="callback">Callback to call when the connect operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        [Obsolete("Use method ConnectAsync instead.")]
+        public IAsyncResult BeginConnect(string host, int port, bool ssl, AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (m_IsConnected)
+            {
+                throw new InvalidOperationException("TCP client is already connected.");
+            }
+            if (string.IsNullOrEmpty(host))
+            {
+                throw new ArgumentException("Argument 'host' value may not be null or empty.");
+            }
+            if (port < 1)
+            {
+                throw new ArgumentException("Argument 'port' value must be >= 1.");
+            }
+
+            var asyncMethod = new BeginConnectHostDelegate(Connect);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(host, port, ssl, new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
+        }
+
+        /// <summary>
+        /// Starts connection to the specified remote end point.
+        /// </summary>
+        /// <param name="remoteEP">Remote IP end point where to connect.</param>
+        /// <param name="ssl">Specifies if connects to SSL end point.</param>
+        /// <param name="callback">Callback to call when the connect operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        [Obsolete("Use method ConnectAsync instead.")]
+        public IAsyncResult BeginConnect(IPEndPoint remoteEP, bool ssl, AsyncCallback callback, object state)
+        {
+            return BeginConnect(null, remoteEP, ssl, callback, state);
+        }
+
+        /// <summary>
+        /// Starts connection to the specified remote end point.
+        /// </summary>
+        /// <param name="localEP">Local IP end point to use for connect.</param>
+        /// <param name="remoteEP">Remote IP end point where to connect.</param>
+        /// <param name="ssl">Specifies if connects to SSL end point.</param>
+        /// <param name="callback">Callback to call when the connect operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        [Obsolete("Use method ConnectAsync instead.")]
+        public IAsyncResult BeginConnect(IPEndPoint localEP, IPEndPoint remoteEP, bool ssl, AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (m_IsConnected)
+            {
+                throw new InvalidOperationException("TCP client is already connected.");
+            }
+            if (remoteEP == null)
+            {
+                throw new ArgumentNullException("remoteEP");
+            }
+
+            var asyncMethod = new BeginConnectEPDelegate(Connect);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(localEP, remoteEP, ssl, new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
+        }
+
+        /// <summary>
+        /// Starts disconnecting connection.
+        /// </summary>
+        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
+        /// <param name="state">User data.</param>
+        /// <returns>An IAsyncResult that references the asynchronous disconnect.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public IAsyncResult BeginDisconnect(AsyncCallback callback, object state)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!m_IsConnected)
+            {
+                throw new InvalidOperationException("TCP client is not connected.");
+            }
+
+            var asyncMethod = new DisconnectDelegate(Disconnect);
+            var asyncState = new AsyncResultState(this, asyncMethod, callback, state);
+            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback), null));
+
+            return asyncState;
         }
 
         /// <summary>
@@ -52,9 +383,9 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void Connect(string host,int port)
+        public void Connect(string host, int port)
         {
-            Connect(host,port,false);
+            Connect(host, port, false);
         }
 
         /// <summary>
@@ -67,35 +398,43 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void Connect(string host,int port,bool ssl)
-        {            
-            if(IsDisposed){
+        public void Connect(string host, int port, bool ssl)
+        {
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException("TCP_Client");
             }
-            if(m_IsConnected){
+            if (m_IsConnected)
+            {
                 throw new InvalidOperationException("TCP client is already connected.");
             }
-            if(string.IsNullOrEmpty(host)){
+            if (string.IsNullOrEmpty(host))
+            {
                 throw new ArgumentException("Argument 'host' value may not be null or empty.");
             }
-            if(port < 1){
+            if (port < 1)
+            {
                 throw new ArgumentException("Argument 'port' value must be >= 1.");
             }
 
             var ips = Dns.GetHostAddresses(host);
-            for (int i=0;i<ips.Length;i++){
-                try{
-                    Connect(null,new IPEndPoint(ips[i],port),ssl);
+            for (int i = 0; i < ips.Length; i++)
+            {
+                try
+                {
+                    Connect(null, new IPEndPoint(ips[i], port), ssl);
                     break;
                 }
-                catch(Exception x)
+                catch (Exception x)
                 {
-                    if(IsConnected){
+                    if (IsConnected)
+                    {
                         throw x;
                     }
                     // Connect failed for specified IP address, if there are some more IPs left, try next, otherwise forward exception.
 
-                    if(i == (ips.Length - 1)){
+                    if (i == (ips.Length - 1))
+                    {
                         throw x;
                     }
                 }
@@ -111,9 +450,9 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void Connect(IPEndPoint remoteEP,bool ssl)
+        public void Connect(IPEndPoint remoteEP, bool ssl)
         {
-            Connect(null,remoteEP,ssl);
+            Connect(null, remoteEP, ssl);
         }
 
         /// <summary>
@@ -125,9 +464,9 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null reference.</exception>
-        public void Connect(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl)
+        public void Connect(IPEndPoint localEP, IPEndPoint remoteEP, bool ssl)
         {
-            Connect(localEP,remoteEP,ssl,null);
+            Connect(localEP, remoteEP, ssl, null);
         }
 
         /// <summary>
@@ -140,50 +479,495 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null reference.</exception>
-        public void Connect(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl,RemoteCertificateValidationCallback certCallback)
+        public void Connect(IPEndPoint localEP, IPEndPoint remoteEP, bool ssl, RemoteCertificateValidationCallback certCallback)
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(m_IsConnected){
+            if (m_IsConnected)
+            {
                 throw new InvalidOperationException("TCP client is already connected.");
             }
-            if(remoteEP == null){
+            if (remoteEP == null)
+            {
                 throw new ArgumentNullException("remoteEP");
             }
 
             var wait = new ManualResetEvent(false);
-            using (ConnectAsyncOP op = new ConnectAsyncOP(localEP,remoteEP,ssl,certCallback)){
-                op.CompletedAsync += delegate(object s1,EventArgs<ConnectAsyncOP> e1){
+            using (ConnectAsyncOP op = new ConnectAsyncOP(localEP, remoteEP, ssl, certCallback))
+            {
+                op.CompletedAsync += delegate (object s1, EventArgs<ConnectAsyncOP> e1)
+                {
                     wait.Set();
                 };
-                if(!ConnectAsync(op)){
+                if (!ConnectAsync(op))
+                {
                     wait.Set();
                 }
                 wait.WaitOne();
                 wait.Close();
 
-                if(op.Error != null){
+                if (op.Error != null)
+                {
                     throw op.Error;
                 }
             }
         }
 
         /// <summary>
+        /// Starts connecting to remote end point.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="ConnectAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool ConnectAsync(ConnectAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Disconnects connection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
+        public override void Disconnect()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException("TCP_Client");
+            }
+            if (!m_IsConnected)
+            {
+                throw new InvalidOperationException("TCP client is not connected.");
+            }
+            m_IsConnected = false;
+
+            m_pLocalEP = null;
+            m_pRemoteEP = null;
+            m_pTcpStream.Dispose();
+            m_IsSecure = false;
+            m_pTcpStream = null;
+
+            LogAddText("Disconnected.");
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used. This method is thread-safe.
+        /// </summary>
+        public override void Dispose()
+        {
+            lock (this)
+            {
+                if (IsDisposed)
+                {
+                    return;
+                }
+                try
+                {
+                    Disconnect();
+                }
+                catch
+                {
+                }
+                IsDisposed = true;
+            }
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous connection request.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when argument <b>asyncResult</b> was not returned by a call to the <b>BeginConnect</b> method.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when <b>EndConnect</b> was previously called for the asynchronous connection.</exception>
+        [Obsolete("Use method ConnectAsync instead.")]
+        public void EndConnect(IAsyncResult asyncResult)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this)
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginConnect method.");
+            }
+            if (castedAsyncResult.IsEndCalled)
+            {
+                throw new InvalidOperationException("EndConnect was previously called for the asynchronous operation.");
+            }
+
+            castedAsyncResult.IsEndCalled = true;
+            if (castedAsyncResult.AsyncDelegate is BeginConnectHostDelegate)
+            {
+                ((BeginConnectHostDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else if (castedAsyncResult.AsyncDelegate is BeginConnectEPDelegate)
+            {
+                ((BeginConnectEPDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginConnect method.");
+            }
+        }
+
+        /// <summary>
+        /// Ends a pending asynchronous disconnect request.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when argument <b>asyncResult</b> was not returned by a call to the <b>BeginDisconnect</b> method.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when <b>EndDisconnect</b> was previously called for the asynchronous connection.</exception>
+        public void EndDisconnect(IAsyncResult asyncResult)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this)
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginDisconnect method.");
+            }
+            if (castedAsyncResult.IsEndCalled)
+            {
+                throw new InvalidOperationException("EndDisconnect was previously called for the asynchronous connection.");
+            }
+
+            castedAsyncResult.IsEndCalled = true;
+            if (castedAsyncResult.AsyncDelegate is DisconnectDelegate)
+            {
+                ((DisconnectDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
+            }
+            else
+            {
+                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginDisconnect method.");
+            }
+        }
+
+        /// <summary>
+        /// Logs exception.
+        /// </summary>
+        /// <param name="text">Log text.</param>
+        /// <param name="x">Exception happened.</param>
+        internal protected void LogAddException(string text, Exception x)
+        {
+            try
+            {
+                if (Logger != null)
+                {
+                    Logger.AddException(
+                        IsConnected ? ID : "",
+                        IsConnected ? AuthenticatedUserIdentity : null,
+                        text,
+                        IsConnected ? LocalEndPoint : null,
+                        IsConnected ? RemoteEndPoint : null,
+                        x
+                    );
+                }
+            }
+            catch
+            {
+                // We skip all logging errors, normally there shouldn't be any.
+            }
+        }
+
+        /// <summary>
+        /// Logs read operation.
+        /// </summary>
+        /// <param name="size">Number of bytes readed.</param>
+        /// <param name="text">Log text.</param>
+        internal protected void LogAddRead(long size, string text)
+        {
+            try
+            {
+                if (Logger != null)
+                {
+                    Logger.AddRead(
+                        ID,
+                        AuthenticatedUserIdentity,
+                        size,
+                        text,
+                        LocalEndPoint,
+                        RemoteEndPoint
+                    );
+                }
+            }
+            catch
+            {
+                // We skip all logging errors, normally there shouldn't be any.
+            }
+        }
+
+        /// <summary>
+        /// Logs free text entry.
+        /// </summary>
+        /// <param name="text">Log text.</param>
+        internal protected void LogAddText(string text)
+        {
+            try
+            {
+                if (Logger != null)
+                {
+                    Logger.AddText(
+                        IsConnected ? ID : "",
+                        IsConnected ? AuthenticatedUserIdentity : null,
+                        text,
+                        IsConnected ? LocalEndPoint : null,
+                        IsConnected ? RemoteEndPoint : null
+                    );
+                }
+            }
+            catch
+            {
+                // We skip all logging errors, normally there shouldn't be any.
+            }
+        }
+
+        /// <summary>
+        /// Logs write operation.
+        /// </summary>
+        /// <param name="size">Number of bytes written.</param>
+        /// <param name="text">Log text.</param>
+        internal protected void LogAddWrite(long size, string text)
+        {
+            try
+            {
+                if (Logger != null)
+                {
+                    Logger.AddWrite(
+                        ID,
+                        AuthenticatedUserIdentity,
+                        size,
+                        text,
+                        LocalEndPoint,
+                        RemoteEndPoint
+                    );
+                }
+            }
+            catch
+            {
+                // We skip all logging errors, normally there shouldn't be any.
+            }
+        }
+
+        /// <summary>
+        /// This method is called after TCP client has sucessfully connected.
+        /// </summary>
+        protected virtual void OnConnected()
+        {
+        }
+
+        /// <summary>
+        /// This method is called when TCP client has sucessfully connected.
+        /// </summary>
+        /// <param name="callback">Callback to be called to complete connect operation.</param>
+        protected virtual void OnConnected(CompleteConnectCallback callback)
+        {
+            try
+            {
+                OnConnected();
+
+                callback(null);
+            }
+            catch (Exception x)
+            {
+                callback(x);
+            }
+        }
+
+        /// <summary>
+        /// This must be called when unexpected error happens. When inheriting <b>TCP_Client</b> class, be sure that you call <b>OnError</b>
+        /// method for each unexpected error.
+        /// </summary>
+        /// <param name="x">Exception happened.</param>
+        [Obsolete("Don't use this method.")]
+        protected void OnError(Exception x)
+        {
+            try
+            {
+                if (Logger != null)
+                {
+                    //m_pLogger.AddException(x);
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        /// Reads and logs specified line from connected host.
+        /// </summary>
+        /// <returns>Returns readed line.</returns>
+        protected string ReadLine()
+        {
+            var args = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
+            TcpStream.ReadLine(args, false);
+            if (args.Error != null)
+            {
+                throw args.Error;
+            }
+            var line = args.LineUtf8;
+            if (args.BytesInBuffer > 0)
+            {
+                LogAddRead(args.BytesInBuffer, line);
+            }
+            else
+            {
+                LogAddText("Remote host closed connection.");
+            }
+
+            return line;
+        }
+
+        /// <summary>
+        /// Switches session to secure connection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected or is already secure.</exception>
+        protected void SwitchToSecure()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException("TCP_Client");
+            }
+            if (!m_IsConnected)
+            {
+                throw new InvalidOperationException("TCP client is not connected.");
+            }
+            if (m_IsSecure)
+            {
+                throw new InvalidOperationException("TCP client is already secure.");
+            }
+
+            LogAddText("Switching to SSL.");
+
+            // FIX ME: if ssl switching fails, it closes source stream or otherwise if ssl successful, source stream leaks.
+
+            var sslStream = new SslStream(m_pTcpStream.SourceStream, true, RemoteCertificateValidationCallback);
+            sslStream.AuthenticateAsClient("dummy");
+
+            // Close old stream, but leave source stream open.
+            m_pTcpStream.IsOwner = false;
+            m_pTcpStream.Dispose();
+
+            m_IsSecure = true;
+            m_pTcpStream = new SmartStream(sslStream, true);
+        }
+
+        /// <summary>
+        /// Starts switching connection to secure.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="SwitchToSecureAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected or connection is already secure.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        protected bool SwitchToSecureAsync(SwitchToSecureAsyncOP op)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect first.");
+            }
+            if (IsSecureConnection)
+            {
+                throw new InvalidOperationException("Connection is already secure.");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Sends and logs specified line to connected host.
+        /// </summary>
+        /// <param name="line">Line to send.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>line</b> is null reference.</exception>
+        protected void WriteLine(string line)
+        {
+            if (line == null)
+            {
+                throw new ArgumentNullException("line");
+            }
+
+            int countWritten = TcpStream.WriteLine(line);
+            LogAddWrite(countWritten, line);
+        }
+
+        private bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            // User will handle it.
+            if (ValidateCertificateCallback != null)
+            {
+                return ValidateCertificateCallback(sender, certificate, chain, sslPolicyErrors);
+            }
+
+            if (sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0))
+            {
+                return true;
+            }
+
+            // Do not allow this client to communicate with unauthenticated servers.
+            return false;
+        }
+
+        /// <summary>
         /// This class represents <see cref="TCP_Client.ConnectAsync"/> asynchronous operation.
         /// </summary>
-        public class ConnectAsyncOP : IDisposable,IAsyncOP
+        public class ConnectAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object                              m_pLock         = new object();
-            private Exception                           m_pException;
-            private IPEndPoint                          m_pLocalEP;
-            private IPEndPoint                          m_pRemoteEP;
-            private bool                                m_SSL;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private IPEndPoint m_pLocalEP;
+            private IPEndPoint m_pRemoteEP;
+            private bool m_SSL;
             private RemoteCertificateValidationCallback m_pCertCallback;
-            private TCP_Client                          m_pTcpClient;
-            private Socket                              m_pSocket;
-            private Stream                              m_pStream;
-            private bool                                m_RiseCompleted;
+            private TCP_Client m_pTcpClient;
+            private Socket m_pSocket;
+            private Stream m_pStream;
+            private bool m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -193,11 +977,11 @@ namespace LumiSoft.Net.TCP
             /// <param name="ssl">Specifies if connection switches to SSL affter connect.</param>
             /// <param name="certCallback">SSL server certificate validation callback. Value null means any certificate is accepted.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null reference.</exception>
-            public ConnectAsyncOP(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl,RemoteCertificateValidationCallback certCallback)
+            public ConnectAsyncOP(IPEndPoint localEP, IPEndPoint remoteEP, bool ssl, RemoteCertificateValidationCallback certCallback)
             {
-                m_pLocalEP      = localEP;
-                m_pRemoteEP     = remoteEP ?? throw new ArgumentNullException("localEP");
-                m_SSL           = ssl;
+                m_pLocalEP = localEP;
+                m_pRemoteEP = remoteEP ?? throw new ArgumentNullException("localEP");
+                m_SSL = ssl;
                 m_pCertCallback = certCallback;
             }
 
@@ -206,19 +990,20 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             public void Dispose()
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
 
-                m_pException    = null;
-                m_pLocalEP      = null;
-                m_pRemoteEP     = null;
-                m_SSL           = false;
+                m_pException = null;
+                m_pLocalEP = null;
+                m_pRemoteEP = null;
+                m_SSL = false;
                 m_pCertCallback = null;
-                m_pTcpClient    = null;
-                m_pSocket       = null;
-                m_pStream       = null;
+                m_pTcpClient = null;
+                m_pSocket = null;
+                m_pStream = null;
 
                 CompletedAsync = null;
             }
@@ -235,32 +1020,37 @@ namespace LumiSoft.Net.TCP
 
                 SetState(AsyncOP_State.Active);
 
-                try{
+                try
+                {
                     // Create socket.
-                    if(m_pRemoteEP.AddressFamily == AddressFamily.InterNetwork){
-                        m_pSocket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
+                    if (m_pRemoteEP.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        m_pSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         m_pSocket.ReceiveTimeout = m_pTcpClient.Timeout;
                         m_pSocket.SendTimeout = m_pTcpClient.Timeout;
                     }
-                    else if(m_pRemoteEP.AddressFamily == AddressFamily.InterNetworkV6){
-                        m_pSocket = new Socket(AddressFamily.InterNetworkV6,SocketType.Stream,ProtocolType.Tcp);
+                    else if (m_pRemoteEP.AddressFamily == AddressFamily.InterNetworkV6)
+                    {
+                        m_pSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
                         m_pSocket.ReceiveTimeout = m_pTcpClient.Timeout;
                         m_pSocket.SendTimeout = m_pTcpClient.Timeout;
                     }
                     // Bind socket to the specified end point.
-                    if(m_pLocalEP != null){
+                    if (m_pLocalEP != null)
+                    {
                         m_pSocket.Bind(m_pLocalEP);
                     }
 
                     m_pTcpClient.LogAddText("Connecting to " + m_pRemoteEP.ToString() + ".");
 
                     // Start connecting.
-                    m_pSocket.BeginConnect(m_pRemoteEP,BeginConnectCompleted,null);
+                    m_pSocket.BeginConnect(m_pRemoteEP, BeginConnectCompleted, null);
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
                     CleanupSocketRelated();
-                    m_pTcpClient.LogAddException("Exception: " + x.Message,x);
+                    m_pTcpClient.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
 
                     return false;
@@ -268,7 +1058,8 @@ namespace LumiSoft.Net.TCP
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     m_RiseCompleted = true;
 
                     return State == AsyncOP_State.Active;
@@ -281,14 +1072,17 @@ namespace LumiSoft.Net.TCP
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
 
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     State = state;
 
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
                         OnCompletedAsync();
                     }
                 }
@@ -300,29 +1094,33 @@ namespace LumiSoft.Net.TCP
             /// <param name="ar">Asynchronous result.</param>
             private void BeginConnectCompleted(IAsyncResult ar)
             {
-                try{
+                try
+                {
                     m_pSocket.EndConnect(ar);
 
                     m_pTcpClient.LogAddText("Connected, localEP='" + m_pSocket.LocalEndPoint.ToString() + "'; remoteEP='" + m_pSocket.RemoteEndPoint.ToString() + "'.");
 
                     // Start SSL handshake.
-                    if(m_SSL){
+                    if (m_SSL)
+                    {
                         m_pTcpClient.LogAddText("Starting SSL handshake.");
 
-                        m_pStream = new SslStream(new NetworkStream(m_pSocket,true),false,RemoteCertificateValidationCallback);
-                        ((SslStream)m_pStream).BeginAuthenticateAsClient("dummy",BeginAuthenticateAsClientCompleted,null);
+                        m_pStream = new SslStream(new NetworkStream(m_pSocket, true), false, RemoteCertificateValidationCallback);
+                        ((SslStream)m_pStream).BeginAuthenticateAsClient("dummy", BeginAuthenticateAsClientCompleted, null);
                     }
                     // We are done.
-                    else{
-                        m_pStream = new NetworkStream(m_pSocket,true);
+                    else
+                    {
+                        m_pStream = new NetworkStream(m_pSocket, true);
 
                         InternalConnectCompleted();
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
                     CleanupSocketRelated();
-                    m_pTcpClient.LogAddException("Exception: " + x.Message,x);
+                    m_pTcpClient.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -333,17 +1131,19 @@ namespace LumiSoft.Net.TCP
             /// <param name="ar">Asynchronous result.</param>
             private void BeginAuthenticateAsClientCompleted(IAsyncResult ar)
             {
-                try{
+                try
+                {
                     ((SslStream)m_pStream).EndAuthenticateAsClient(ar);
 
                     m_pTcpClient.LogAddText("SSL handshake completed sucessfully.");
 
                     InternalConnectCompleted();
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
                     CleanupSocketRelated();
-                    m_pTcpClient.LogAddException("Exception: " + x.Message,x);
+                    m_pTcpClient.LogAddException("Exception: " + x.Message, x);
                     SetState(AsyncOP_State.Completed);
                 }
             }
@@ -356,14 +1156,16 @@ namespace LumiSoft.Net.TCP
             /// <param name="chain">Certificate chain.</param>
             /// <param name="sslPolicyErrors">SSL policy errors.</param>
             /// <returns>Returns true if certificate validated, otherwise false.</returns>
-            private bool RemoteCertificateValidationCallback(object sender,X509Certificate certificate,X509Chain chain,SslPolicyErrors sslPolicyErrors)
+            private bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
             {
                 // User will handle it.
-                if(m_pCertCallback != null){
-                    return m_pCertCallback(sender,certificate,chain,sslPolicyErrors);
+                if (m_pCertCallback != null)
+                {
+                    return m_pCertCallback(sender, certificate, chain, sslPolicyErrors);
                 }
 
-                if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
+                if (sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0))
+                {
                     return true;
                 }
 
@@ -376,15 +1178,19 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void CleanupSocketRelated()
             {
-                try{                    
-                    if(m_pStream != null){
+                try
+                {
+                    if (m_pStream != null)
+                    {
                         m_pStream.Dispose();
                     }
-                    if(m_pSocket != null){
+                    if (m_pSocket != null)
+                    {
                         m_pSocket.Close();
                     }
                 }
-                catch{
+                catch
+                {
                 }
             }
 
@@ -394,11 +1200,11 @@ namespace LumiSoft.Net.TCP
             private void InternalConnectCompleted()
             {
                 m_pTcpClient.m_IsConnected = true;
-                m_pTcpClient.m_ID          = Guid.NewGuid().ToString();
+                m_pTcpClient.m_ID = Guid.NewGuid().ToString();
                 m_pTcpClient.m_ConnectTime = DateTime.Now;
-                m_pTcpClient.m_pLocalEP    = (IPEndPoint)m_pSocket.LocalEndPoint;
-                m_pTcpClient.m_pRemoteEP   = (IPEndPoint)m_pSocket.RemoteEndPoint;
-                m_pTcpClient.m_pTcpStream  = new SmartStream(m_pStream,true);
+                m_pTcpClient.m_pLocalEP = (IPEndPoint)m_pSocket.LocalEndPoint;
+                m_pTcpClient.m_pRemoteEP = (IPEndPoint)m_pSocket.RemoteEndPoint;
+                m_pTcpClient.m_pTcpStream = new SmartStream(m_pStream, true);
                 m_pTcpClient.m_pTcpStream.Encoding = Encoding.UTF8;
 
                 m_pTcpClient.OnConnected(CompleteConnectCallback);
@@ -411,7 +1217,7 @@ namespace LumiSoft.Net.TCP
             private void CompleteConnectCallback(Exception error)
             {
                 m_pException = error;
-                                
+
                 SetState(AsyncOP_State.Completed);
             }
 
@@ -427,15 +1233,18 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Exception Error
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -446,18 +1255,22 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Socket Socket
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
-                    if(m_pException != null){
+                    if (m_pException != null)
+                    {
                         throw m_pException;
                     }
 
-                    return m_pSocket; 
+                    return m_pSocket;
                 }
             }
 
@@ -468,18 +1281,22 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Stream Stream
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Stream' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
-                    if(m_pException != null){
+                    if (m_pException != null)
+                    {
                         throw m_pException;
                     }
 
-                    return m_pStream; 
+                    return m_pStream;
                 }
             }
 
@@ -493,180 +1310,24 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<ConnectAsyncOP>(this));
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<ConnectAsyncOP>(this));
                 }
             }
         }
 
         /// <summary>
-        /// Starts connecting to remote end point.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="ConnectAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool ConnectAsync(ConnectAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Disconnects connection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override void Disconnect()
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException("TCP_Client");
-            }
-            if(!m_IsConnected){
-                throw new InvalidOperationException("TCP client is not connected.");
-            }
-            m_IsConnected = false;
-
-            m_pLocalEP = null;
-            m_pRemoteEP = null;
-            m_pTcpStream.Dispose();
-            m_IsSecure = false;
-            m_pTcpStream = null;
-
-            LogAddText("Disconnected.");
-        }
-
-        /// <summary>
-        /// Internal helper method for asynchronous Disconnect method.
-        /// </summary>
-        private delegate void DisconnectDelegate();
-
-        /// <summary>
-        /// Starts disconnecting connection.
-        /// </summary>
-        /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous disconnect.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public IAsyncResult BeginDisconnect(AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!m_IsConnected){
-                throw new InvalidOperationException("TCP client is not connected.");
-            }
-
-            var asyncMethod = new DisconnectDelegate(Disconnect);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Ends a pending asynchronous disconnect request.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when argument <b>asyncResult</b> was not returned by a call to the <b>BeginDisconnect</b> method.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when <b>EndDisconnect</b> was previously called for the asynchronous connection.</exception>
-        public void EndDisconnect(IAsyncResult asyncResult)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-            
-            var castedAsyncResult = asyncResult as AsyncResultState;
-            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginDisconnect method.");
-            }
-            if(castedAsyncResult.IsEndCalled){
-                throw new InvalidOperationException("EndDisconnect was previously called for the asynchronous connection.");
-            }
-             
-            castedAsyncResult.IsEndCalled = true;
-            if(castedAsyncResult.AsyncDelegate is DisconnectDelegate){
-                ((DisconnectDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginDisconnect method.");
-            }
-        }
-
-        /// <summary>
-        /// Switches session to secure connection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected or is already secure.</exception>
-        protected void SwitchToSecure()
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException("TCP_Client");
-            }
-            if(!m_IsConnected){
-                throw new InvalidOperationException("TCP client is not connected.");
-            }
-            if(m_IsSecure){
-                throw new InvalidOperationException("TCP client is already secure.");
-            }
-
-            LogAddText("Switching to SSL.");
-
-            // FIX ME: if ssl switching fails, it closes source stream or otherwise if ssl successful, source stream leaks.
-
-            var sslStream = new SslStream(m_pTcpStream.SourceStream,true,RemoteCertificateValidationCallback);
-            sslStream.AuthenticateAsClient("dummy");
-
-            // Close old stream, but leave source stream open.
-            m_pTcpStream.IsOwner = false;
-            m_pTcpStream.Dispose();
-
-            m_IsSecure = true;
-            m_pTcpStream = new SmartStream(sslStream,true);
-        }
-
-        private bool RemoteCertificateValidationCallback(object sender,X509Certificate certificate,X509Chain chain,SslPolicyErrors sslPolicyErrors)
-        {
-            // User will handle it.
-            if(ValidateCertificateCallback != null){
-                return ValidateCertificateCallback(sender,certificate,chain,sslPolicyErrors);
-            }
-
-            if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
-                return true;
-            }
-
-            // Do not allow this client to communicate with unauthenticated servers.
-            return false;
-        }
-
-        /// <summary>
         /// This class represents <see cref="TCP_Client.SwitchToSecureAsync"/> asynchronous operation.
         /// </summary>
-        protected class SwitchToSecureAsyncOP : IDisposable,IAsyncOP
+        protected class SwitchToSecureAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object                              m_pLock         = new object();
-            private bool                                m_RiseCompleted;
-            private Exception                           m_pException;
+            private readonly object m_pLock = new object();
+            private bool m_RiseCompleted;
+            private Exception m_pException;
             private RemoteCertificateValidationCallback m_pCertCallback;
-            private TCP_Client                          m_pTcpClient;
-            private SslStream                           m_pSslStream;
+            private TCP_Client m_pTcpClient;
+            private SslStream m_pSslStream;
 
             /// <summary>
             /// Default constructor.
@@ -682,14 +1343,15 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             public void Dispose()
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
-                
-                m_pException    = null;
+
+                m_pException = null;
                 m_pCertCallback = null;
-                m_pSslStream    = null;
+                m_pSslStream = null;
 
                 CompletedAsync = null;
             }
@@ -706,18 +1368,21 @@ namespace LumiSoft.Net.TCP
 
                 SetState(AsyncOP_State.Active);
 
-                try{
-                    m_pSslStream = new SslStream(m_pTcpClient.m_pTcpStream.SourceStream,false,RemoteCertificateValidationCallback);
-                    m_pSslStream.BeginAuthenticateAsClient("dummy",BeginAuthenticateAsClientCompleted,null);                  
+                try
+                {
+                    m_pSslStream = new SslStream(m_pTcpClient.m_pTcpStream.SourceStream, false, RemoteCertificateValidationCallback);
+                    m_pSslStream.BeginAuthenticateAsClient("dummy", BeginAuthenticateAsClientCompleted, null);
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
                     SetState(AsyncOP_State.Completed);
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     m_RiseCompleted = true;
 
                     return State == AsyncOP_State.Active;
@@ -730,14 +1395,17 @@ namespace LumiSoft.Net.TCP
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(State == AsyncOP_State.Disposed){
+                if (State == AsyncOP_State.Disposed)
+                {
                     return;
                 }
 
-                lock(m_pLock){
+                lock (m_pLock)
+                {
                     State = state;
 
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
                         OnCompletedAsync();
                     }
                 }
@@ -751,14 +1419,16 @@ namespace LumiSoft.Net.TCP
             /// <param name="chain">Certificate chain.</param>
             /// <param name="sslPolicyErrors">SSL policy errors.</param>
             /// <returns>Returns true if certificate validated, otherwise false.</returns>
-            private bool RemoteCertificateValidationCallback(object sender,X509Certificate certificate,X509Chain chain,SslPolicyErrors sslPolicyErrors)
+            private bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
             {
                 // User will handle it.
-                if(m_pCertCallback != null){
-                    return m_pCertCallback(sender,certificate,chain,sslPolicyErrors);
+                if (m_pCertCallback != null)
+                {
+                    return m_pCertCallback(sender, certificate, chain, sslPolicyErrors);
                 }
 
-                if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
+                if (sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0))
+                {
                     return true;
                 }
 
@@ -772,7 +1442,8 @@ namespace LumiSoft.Net.TCP
             /// <param name="ar">Asynchronous result.</param>
             private void BeginAuthenticateAsClientCompleted(IAsyncResult ar)
             {
-                try{
+                try
+                {
                     m_pSslStream.EndAuthenticateAsClient(ar);
 
                     // Close old stream, but leave source stream open.
@@ -780,10 +1451,11 @@ namespace LumiSoft.Net.TCP
                     m_pTcpClient.m_pTcpStream.Dispose();
 
                     m_pTcpClient.m_IsSecure = true;
-                    m_pTcpClient.m_pTcpStream = new SmartStream(m_pSslStream,true);
+                    m_pTcpClient.m_pTcpStream = new SmartStream(m_pSslStream, true);
                 }
-                catch(Exception x){
-                    m_pException = x;                    
+                catch (Exception x)
+                {
+                    m_pException = x;
                 }
 
                 SetState(AsyncOP_State.Completed);
@@ -801,15 +1473,18 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
             public Exception Error
             {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
-                    if(State != AsyncOP_State.Completed){
+                    if (State != AsyncOP_State.Completed)
+                    {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -823,538 +1498,10 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<SwitchToSecureAsyncOP>(this));
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<SwitchToSecureAsyncOP>(this));
                 }
-            }
-        }
-
-        /// <summary>
-        /// Starts switching connection to secure.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="SwitchToSecureAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected or connection is already secure.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        protected bool SwitchToSecureAsync(SwitchToSecureAsyncOP op)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                throw new InvalidOperationException("You must connect first.");
-            }
-            if(IsSecureConnection){
-                throw new InvalidOperationException("Connection is already secure.");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// This method is called after TCP client has sucessfully connected.
-        /// </summary>
-        protected virtual void OnConnected()
-        {
-        }
-
-        /// <summary>
-        /// Represents callback to be called when to complete connect operation.
-        /// </summary>
-        /// <param name="error">Exception happened or null if no errors.</param>
-        protected delegate void CompleteConnectCallback(Exception error);
-
-        /// <summary>
-        /// This method is called when TCP client has sucessfully connected.
-        /// </summary>
-        /// <param name="callback">Callback to be called to complete connect operation.</param>
-        protected virtual void OnConnected(CompleteConnectCallback callback)
-        {
-            try{
-                OnConnected();
-
-                callback(null);
-            }
-            catch(Exception x){
-                callback(x);
-            }
-        }
-
-        /// <summary>
-        /// Reads and logs specified line from connected host.
-        /// </summary>
-        /// <returns>Returns readed line.</returns>
-        protected string ReadLine()
-        {
-            var args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-            TcpStream.ReadLine(args,false);
-            if(args.Error != null){
-                throw args.Error;
-            }
-            var line = args.LineUtf8;
-            if (args.BytesInBuffer > 0){
-                LogAddRead(args.BytesInBuffer,line);
-            }
-            else{
-                LogAddText("Remote host closed connection.");
-            }
-
-            return line;
-        }
-
-        /// <summary>
-        /// Sends and logs specified line to connected host.
-        /// </summary>
-        /// <param name="line">Line to send.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>line</b> is null reference.</exception>
-        protected void WriteLine(string line)
-        {
-            if(line == null){
-                throw new ArgumentNullException("line");
-            }
-
-            int countWritten = TcpStream.WriteLine(line);
-            LogAddWrite(countWritten,line);
-        }
-
-        /// <summary>
-        /// Logs read operation.
-        /// </summary>
-        /// <param name="size">Number of bytes readed.</param>
-        /// <param name="text">Log text.</param>
-        internal protected void LogAddRead(long size,string text)
-        {
-            try{
-                if(Logger != null){
-                    Logger.AddRead(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,                        
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
-            }
-            catch{
-                // We skip all logging errors, normally there shouldn't be any.
-            }
-        }
-
-        /// <summary>
-        /// Logs write operation.
-        /// </summary>
-        /// <param name="size">Number of bytes written.</param>
-        /// <param name="text">Log text.</param>
-        internal protected void LogAddWrite(long size,string text)
-        {
-            try{
-                if(Logger != null){
-                    Logger.AddWrite(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,                        
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
-            }
-            catch{
-                // We skip all logging errors, normally there shouldn't be any.
-            }
-        }
-
-        /// <summary>
-        /// Logs free text entry.
-        /// </summary>
-        /// <param name="text">Log text.</param>
-        internal protected void LogAddText(string text)
-        {
-            try{
-                if(Logger != null){
-                    Logger.AddText(
-                        IsConnected ? ID : "",
-                        IsConnected ? AuthenticatedUserIdentity : null,
-                        text,                        
-                        IsConnected ? LocalEndPoint : null,
-                        IsConnected ? RemoteEndPoint : null
-                    );
-                }
-            }
-            catch{
-                // We skip all logging errors, normally there shouldn't be any.
-            }
-        }
-
-        /// <summary>
-        /// Logs exception.
-        /// </summary>
-        /// <param name="text">Log text.</param>
-        /// <param name="x">Exception happened.</param>
-        internal protected void LogAddException(string text,Exception x)
-        {
-            try{
-                if(Logger != null){
-                    Logger.AddException(
-                        IsConnected ? ID : "",
-                        IsConnected ? AuthenticatedUserIdentity : null,
-                        text,                        
-                        IsConnected ? LocalEndPoint : null,
-                        IsConnected ? RemoteEndPoint : null,
-                        x
-                    );
-                }
-            }
-            catch{
-                // We skip all logging errors, normally there shouldn't be any.
-            }
-        }
-
-        /// <summary>
-        /// Gets if this object is disposed.
-        /// </summary>
-        public bool IsDisposed { get; private set; }
-
-        /// <summary>
-        /// Gets or sets TCP client logger. Value null means no logging.
-        /// </summary>
-        public Logger Logger { get; set; }
-
-        /// <summary>
-        /// Gets if TCP client is connected.
-        /// </summary>
-        public override bool IsConnected
-        {
-            get{ return m_IsConnected; }
-        }
-
-        /// <summary>
-        /// Gets session ID.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override string ID
-        {
-            get{                
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_ID; 
-            }
-        }
-
-        /// <summary>
-        /// Gets the time when session was connected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override DateTime ConnectTime
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_ConnectTime; 
-            }
-        }
-
-        /// <summary>
-        /// Gets the last time when data was sent or received.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override DateTime LastActivity
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_pTcpStream.LastActivity; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session local IP end point.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override IPEndPoint LocalEndPoint
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_pLocalEP; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session remote IP end point.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override IPEndPoint RemoteEndPoint
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_pRemoteEP; 
-            }
-        }
-        
-        /// <summary>
-        /// Gets if this session TCP connection is secure connection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override bool IsSecureConnection
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_IsSecure; 
-            }
-        }
-
-        /// <summary>
-        /// Gets TCP stream which must be used to send/receive data through this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
-        public override SmartStream TcpStream
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException("TCP_Client");
-                }
-                if(!m_IsConnected){
-                    throw new InvalidOperationException("TCP client is not connected.");
-                }
-
-                return m_pTcpStream; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or stes remote callback which is called when remote server certificate needs to be validated.
-        /// Value null means not sepcified.
-        /// </summary>
-        public RemoteCertificateValidationCallback ValidateCertificateCallback { get; set; }
-
-        /// <summary>
-        /// Gets or sets default TCP read/write timeout.
-        /// </summary>
-        /// <remarks>This timeout applies only synchronous TCP read/write operations.</remarks>
-        public int Timeout { get; set; } = 61000;
-
-        // OBSOLETE
-
-        /// <summary>
-        /// Internal helper method for asynchronous Connect method.
-        /// </summary>
-        /// <param name="host">Host name or IP address.</param>
-        /// <param name="port">Port to connect.</param>
-        /// <param name="ssl">Specifies if connects to SSL end point.</param>
-        private delegate void BeginConnectHostDelegate(string host,int port,bool ssl);
-
-        /// <summary>
-        /// Internal helper method for asynchronous Connect method.
-        /// </summary>
-        /// <param name="localEP">Local IP end point to use for connect.</param>
-        /// <param name="remoteEP">Remote IP end point where to connect.</param>
-        /// <param name="ssl">Specifies if connects to SSL end point.</param>
-        private delegate void BeginConnectEPDelegate(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl);
-
-        /// <summary>
-        /// Starts connection to the specified host.
-        /// </summary>
-        /// <param name="host">Host name or IP address.</param>
-        /// <param name="port">Port to connect.</param>
-        /// <param name="callback">Callback to call when the connect operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        [Obsolete("Use method ConnectAsync instead.")]
-        public IAsyncResult BeginConnect(string host,int port,AsyncCallback callback,object state)
-        {            
-            return BeginConnect(host,port,false,callback,state);
-        }
-                
-        /// <summary>
-        /// Starts connection to the specified host.
-        /// </summary>
-        /// <param name="host">Host name or IP address.</param>
-        /// <param name="port">Port to connect.</param>
-        /// <param name="ssl">Specifies if connects to SSL end point.</param>
-        /// <param name="callback">Callback to call when the connect operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        [Obsolete("Use method ConnectAsync instead.")]
-        public IAsyncResult BeginConnect(string host,int port,bool ssl,AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(m_IsConnected){
-                throw new InvalidOperationException("TCP client is already connected.");
-            }
-            if(string.IsNullOrEmpty(host)){
-                throw new ArgumentException("Argument 'host' value may not be null or empty.");
-            }
-            if(port < 1){
-                throw new ArgumentException("Argument 'port' value must be >= 1.");
-            }
-
-            var asyncMethod = new BeginConnectHostDelegate(Connect);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(host,port,ssl,new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Starts connection to the specified remote end point.
-        /// </summary>
-        /// <param name="remoteEP">Remote IP end point where to connect.</param>
-        /// <param name="ssl">Specifies if connects to SSL end point.</param>
-        /// <param name="callback">Callback to call when the connect operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        [Obsolete("Use method ConnectAsync instead.")]
-        public IAsyncResult BeginConnect(IPEndPoint remoteEP,bool ssl,AsyncCallback callback,object state)
-        {
-            return BeginConnect(null,remoteEP,ssl,callback,state);
-        }
-
-        /// <summary>
-        /// Starts connection to the specified remote end point.
-        /// </summary>
-        /// <param name="localEP">Local IP end point to use for connect.</param>
-        /// <param name="remoteEP">Remote IP end point where to connect.</param>
-        /// <param name="ssl">Specifies if connects to SSL end point.</param>
-        /// <param name="callback">Callback to call when the connect operation is complete.</param>
-        /// <param name="state">User data.</param>
-        /// <returns>An IAsyncResult that references the asynchronous connection.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when TCP client is already connected.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        [Obsolete("Use method ConnectAsync instead.")]
-        public IAsyncResult BeginConnect(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl,AsyncCallback callback,object state)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(m_IsConnected){
-                throw new InvalidOperationException("TCP client is already connected.");
-            }
-            if(remoteEP == null){
-                throw new ArgumentNullException("remoteEP");
-            }
-            
-            var asyncMethod = new BeginConnectEPDelegate(Connect);
-            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
-            asyncState.SetAsyncResult(asyncMethod.BeginInvoke(localEP,remoteEP,ssl,new AsyncCallback(asyncState.CompletedCallback),null));
-
-            return asyncState;
-        }
-
-        /// <summary>
-        /// Ends a pending asynchronous connection request.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when argument <b>asyncResult</b> was not returned by a call to the <b>BeginConnect</b> method.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when <b>EndConnect</b> was previously called for the asynchronous connection.</exception>
-        [Obsolete("Use method ConnectAsync instead.")]
-        public void EndConnect(IAsyncResult asyncResult)
-        {   
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-                        
-            var castedAsyncResult = asyncResult as AsyncResultState;
-            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){                
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginConnect method.");
-            }
-            if(castedAsyncResult.IsEndCalled){
-                throw new InvalidOperationException("EndConnect was previously called for the asynchronous operation.");
-            }
-             
-            castedAsyncResult.IsEndCalled = true;
-            if(castedAsyncResult.AsyncDelegate is BeginConnectHostDelegate){
-                ((BeginConnectHostDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else if(castedAsyncResult.AsyncDelegate is BeginConnectEPDelegate){
-                ((BeginConnectEPDelegate)castedAsyncResult.AsyncDelegate).EndInvoke(castedAsyncResult.AsyncResult);
-            }
-            else{
-                throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginConnect method.");
-            }
-        }
-
-        /// <summary>
-        /// This must be called when unexpected error happens. When inheriting <b>TCP_Client</b> class, be sure that you call <b>OnError</b>
-        /// method for each unexpected error.
-        /// </summary>
-        /// <param name="x">Exception happened.</param>
-        [Obsolete("Don't use this method.")]
-        protected void OnError(Exception x)
-        {
-            try{
-                if(Logger != null){
-                    //m_pLogger.AddException(x);
-                }
-            }
-            catch{
             }
         }
     }

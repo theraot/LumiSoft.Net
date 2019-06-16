@@ -9,23 +9,23 @@ namespace LumiSoft.Net.DNS.Client
     /// Dns cache entry.
     /// </summary>
     [Serializable]
-	internal struct DnsCacheEntry
-	{
+    internal struct DnsCacheEntry
+    {
         /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="answers">Dns answers.</param>
 		/// <param name="addTime">Entry add time.</param>
-		public DnsCacheEntry(DnsServerResponse answers,DateTime addTime)
-		{
-			Answers = answers;
-			Time      = addTime;
-		}
+		public DnsCacheEntry(DnsServerResponse answers, DateTime addTime)
+        {
+            Answers = answers;
+            Time = addTime;
+        }
 
-		/// <summary>
-		/// Gets dns answers.
-		/// </summary>
-		public DnsServerResponse Answers { get; }
+        /// <summary>
+        /// Gets dns answers.
+        /// </summary>
+        public DnsServerResponse Answers { get; }
 
         /// <summary>
 		/// Gets entry add time.
@@ -37,41 +37,22 @@ namespace LumiSoft.Net.DNS.Client
 	/// This class implements dns query cache.
 	/// </summary>
     [Obsolete("Use DNS_Client.Cache instead.")]
-	public class DnsCache
-	{
-		private static Hashtable m_pCache;
+    public class DnsCache
+    {
+        private static Hashtable m_pCache;
 
         /// <summary>
 		/// Default constructor.
 		/// </summary>
 		static DnsCache()
-		{
-			m_pCache = new Hashtable();
-		}
+        {
+            m_pCache = new Hashtable();
+        }
 
         /// <summary>
-		/// Tries to get dns records from cache, if any.
+		/// Gets or sets how long(seconds) to cache dns query.
 		/// </summary>
-		/// <param name="qname"></param>
-		/// <param name="qtype"></param>
-		/// <returns>Returns null if not in cache.</returns>
-		public static DnsServerResponse GetFromCache(string qname,int qtype)
-		{
-			try{
-				if(m_pCache.Contains(qname + qtype)){
-					var entry = (DnsCacheEntry)m_pCache[qname + qtype];
-
-                    // If cache object isn't expired
-                    if (entry.Time.AddSeconds(CacheTime) > DateTime.Now){
-						return entry.Answers;
-					}
-				}
-			}
-			catch{
-			}
-			
-			return null;
-		}
+		public static long CacheTime { get; set; } = 10000;
 
         /// <summary>
 		/// Adds dns records to cache. If old entry exists, it is replaced.
@@ -79,68 +60,99 @@ namespace LumiSoft.Net.DNS.Client
 		/// <param name="qname"></param>
 		/// <param name="qtype"></param>
 		/// <param name="answers"></param>
-		public static void AddToCache(string qname,int qtype,DnsServerResponse answers)
-		{
-			if(answers == null){
-				return;
-			}
+		public static void AddToCache(string qname, int qtype, DnsServerResponse answers)
+        {
+            if (answers == null)
+            {
+                return;
+            }
 
-			try{
-				lock(m_pCache){
-					// Remove old cache entry, if any.
-					if(m_pCache.Contains(qname + qtype)){
-						m_pCache.Remove(qname + qtype);
-					}
-					m_pCache.Add(qname + qtype,new DnsCacheEntry(answers,DateTime.Now));
-				}
-			}
-			catch{
-			}
-		}
+            try
+            {
+                lock (m_pCache)
+                {
+                    // Remove old cache entry, if any.
+                    if (m_pCache.Contains(qname + qtype))
+                    {
+                        m_pCache.Remove(qname + qtype);
+                    }
+                    m_pCache.Add(qname + qtype, new DnsCacheEntry(answers, DateTime.Now));
+                }
+            }
+            catch
+            {
+            }
+        }
 
         /// <summary>
 		/// Clears DNS cache.
 		/// </summary>
 		public static void ClearCache()
-		{
-			lock(m_pCache){
-				m_pCache.Clear();
-			}
-		}
-
-        /// <summary>
-		/// Serializes current cache.
-		/// </summary>
-		/// <returns>Return serialized cache.</returns>
-		public static byte[] SerializeCache()
-		{
-            lock(m_pCache){
-			    var retVal = new MemoryStream();
-
-                var b = new BinaryFormatter();
-                b.Serialize(retVal,m_pCache);
-
-			    return retVal.ToArray();
+        {
+            lock (m_pCache)
+            {
+                m_pCache.Clear();
             }
-		}
+        }
 
         /// <summary>
 		/// DeSerializes stored cache.
 		/// </summary>
 		/// <param name="cacheData">This value must be DnsCache.SerializeCache() method value.</param>
 		public static void DeSerializeCache(byte[] cacheData)
-		{
-            lock(m_pCache){
-			    var retVal = new MemoryStream(cacheData);
+        {
+            lock (m_pCache)
+            {
+                var retVal = new MemoryStream(cacheData);
 
                 var b = new BinaryFormatter();
                 m_pCache = (Hashtable)b.Deserialize(retVal);
             }
-		}
+        }
 
         /// <summary>
-		/// Gets or sets how long(seconds) to cache dns query.
+		/// Tries to get dns records from cache, if any.
 		/// </summary>
-		public static long CacheTime { get; set; } = 10000;
+		/// <param name="qname"></param>
+		/// <param name="qtype"></param>
+		/// <returns>Returns null if not in cache.</returns>
+		public static DnsServerResponse GetFromCache(string qname, int qtype)
+        {
+            try
+            {
+                if (m_pCache.Contains(qname + qtype))
+                {
+                    var entry = (DnsCacheEntry)m_pCache[qname + qtype];
+
+                    // If cache object isn't expired
+                    if (entry.Time.AddSeconds(CacheTime) > DateTime.Now)
+                    {
+                        return entry.Answers;
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
+
+        /// <summary>
+		/// Serializes current cache.
+		/// </summary>
+		/// <returns>Return serialized cache.</returns>
+		public static byte[] SerializeCache()
+        {
+            lock (m_pCache)
+            {
+                var retVal = new MemoryStream();
+
+                var b = new BinaryFormatter();
+                b.Serialize(retVal, m_pCache);
+
+                return retVal.ToArray();
+            }
+        }
     }
 }

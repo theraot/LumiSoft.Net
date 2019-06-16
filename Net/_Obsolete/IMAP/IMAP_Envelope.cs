@@ -27,255 +27,69 @@ namespace LumiSoft.Net.IMAP
         /// <param name="bcc">Message <b>Bcc</b> header value.</param>
         /// <param name="inReplyTo">Message <b>In-Reply-To</b> header value.</param>
         /// <param name="messageID">Message <b>Message-ID</b> header value.</param>
-        public IMAP_Envelope(DateTime date,string subject,Mail_t_Address[] from,Mail_t_Address[] sender,Mail_t_Address[] replyTo,Mail_t_Address[] to,Mail_t_Address[] cc,Mail_t_Address[] bcc,string inReplyTo,string messageID)
+        public IMAP_Envelope(DateTime date, string subject, Mail_t_Address[] from, Mail_t_Address[] sender, Mail_t_Address[] replyTo, Mail_t_Address[] to, Mail_t_Address[] cc, Mail_t_Address[] bcc, string inReplyTo, string messageID)
         {
-            Date      = date;
-            Subject   = subject;
-            From     = from;
-            Sender   = sender;
-            ReplyTo  = replyTo;
-            To       = to;
-            Cc       = cc;
-            Bcc      = bcc;
+            Date = date;
+            Subject = subject;
+            From = from;
+            Sender = sender;
+            ReplyTo = replyTo;
+            To = to;
+            Cc = cc;
+            Bcc = bcc;
             InReplyTo = inReplyTo;
             MessageID = messageID;
         }
 
         /// <summary>
-        /// Parses IMAP ENVELOPE from string.
+        /// Gets message <b>Bcc</b> header field value. Value null means no <b>Bcc</b> header field.
         /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP ENVELOPE string.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        public static IMAP_Envelope Parse(StringReader r)
-        {
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-
-            /* RFC 3501 7.4.2 ENVELOPE.
-                A parenthesized list that describes the envelope structure of a
-                message.  This is computed by the server by parsing the
-                [RFC-2822] header into the component parts, defaulting various
-                fields as necessary.
-
-                The fields of the envelope structure are in the following
-                order: date, subject, from, sender, reply-to, to, cc, bcc,
-                in-reply-to, and message-id.  The date, subject, in-reply-to,
-                and message-id fields are strings.  The from, sender, reply-to,
-                to, cc, and bcc fields are parenthesized lists of address
-                structures.
-
-                An address structure is a parenthesized list that describes an
-                electronic mail address.  The fields of an address structure
-                are in the following order: personal name, [SMTP]
-                at-domain-list (source route), mailbox name, and host name.
-
-                [RFC-2822] group syntax is indicated by a special form of
-                address structure in which the host name field is NIL.  If the
-                mailbox name field is also NIL, this is an end of group marker
-                (semi-colon in RFC 822 syntax).  If the mailbox name field is
-                non-NIL, this is a start of group marker, and the mailbox name
-                field holds the group name phrase.
-
-                If the Date, Subject, In-Reply-To, and Message-ID header lines
-                are absent in the [RFC-2822] header, the corresponding member
-                of the envelope is NIL; if these header lines are present but
-                empty the corresponding member of the envelope is the empty
-                string.
-
-                    Note: some servers may return a NIL envelope member in the
-                    "present but empty" case.  Clients SHOULD treat NIL and
-                    empty string as identical.
-
-                    Note: [RFC-2822] requires that all messages have a valid
-                    Date header.  Therefore, the date member in the envelope can
-                    not be NIL or the empty string.
-
-                    Note: [RFC-2822] requires that the In-Reply-To and
-                    Message-ID headers, if present, have non-empty content.
-                    Therefore, the in-reply-to and message-id members in the
-                    envelope can not be the empty string.
-
-                If the From, To, cc, and bcc header lines are absent in the
-                [RFC-2822] header, or are present but empty, the corresponding
-                member of the envelope is NIL.
-
-                If the Sender or Reply-To lines are absent in the [RFC-2822]
-                header, or are present but empty, the server sets the
-                corresponding member of the envelope to be the same value as
-                the from member (the client is not expected to know to do
-                this).
-
-                    Note: [RFC-2822] requires that all messages have a valid
-                    From header.  Therefore, the from, sender, and reply-to
-                    members in the envelope can not be NIL.
-            */
-
-            // Eat "ENVELOPE".
-            r.ReadWord();             
-            r.ReadToFirstChar();
-            // Eat starting "(".
-            r.ReadSpecifiedLength(1);
-
-            // Read "date".
-            var date = DateTime.MinValue;
-            var dateS = r.ReadWord();
-            if (dateS != null){
-                date = MIME_Utils.ParseRfc2822DateTime(dateS);
-            }
-
-            // Read "subject".
-            var subject = ReadAndDecodeWord(r.ReadWord());
-
-            // Read "from"
-            var from = ReadAddresses(r);
-
-            //Read "sender"
-            var sender = ReadAddresses(r);
-
-            // Read "reply-to"
-            var replyTo = ReadAddresses(r);
-
-            // Read "to"
-            var to = ReadAddresses(r);
-
-            // Read "cc"
-            var cc = ReadAddresses(r);
-
-            // Read "bcc"
-            var bcc = ReadAddresses(r);
-
-            // Read "in-reply-to"
-            var inReplyTo = r.ReadWord();
-
-            // Read "message-id"
-            var messageID = r.ReadWord();
-
-            // Eat ending ")".
-            r.ReadToFirstChar();
-            r.ReadSpecifiedLength(1);
-
-            return new IMAP_Envelope(date,subject,from,sender,replyTo,to,cc,bcc,inReplyTo,messageID);
-        }
+        public Mail_t_Address[] Bcc { get; }
 
         /// <summary>
-        /// Parses IMAP FETCH ENVELOPE data-item.
+        /// Gets message <b>Cc</b> header field value. Value null means no <b>Cc</b> header field.
         /// </summary>
-        /// <param name="fetchReader">Fetch reader.</param>
-        /// <returns>Returns parsed IMAP FETCH ENVELOPE data-item.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>fetchReader</b> is null reference.</exception>
-        internal static IMAP_Envelope Parse(IMAP_Client._FetchResponseReader fetchReader)
-        {
-            if(fetchReader == null){
-                throw new ArgumentNullException("fetchReader");
-            }
+        public Mail_t_Address[] Cc { get; }
 
-            /* RFC 3501 7.4.2 ENVELOPE.
-                A parenthesized list that describes the envelope structure of a
-                message.  This is computed by the server by parsing the
-                [RFC-2822] header into the component parts, defaulting various
-                fields as necessary.
+        /// <summary>
+        /// Gets message <b>Date</b> header field value. Value DateTime.Min means no <b>Date</b> header field.
+        /// </summary>
+        public DateTime Date { get; } = DateTime.MinValue;
 
-                The fields of the envelope structure are in the following
-                order: date, subject, from, sender, reply-to, to, cc, bcc,
-                in-reply-to, and message-id.  The date, subject, in-reply-to,
-                and message-id fields are strings.  The from, sender, reply-to,
-                to, cc, and bcc fields are parenthesized lists of address
-                structures.
+        /// <summary>
+        /// Gets message <b>From</b> header field value. Value null means no <b>From</b> header field.
+        /// </summary>
+        public Mail_t_Address[] From { get; }
 
-                An address structure is a parenthesized list that describes an
-                electronic mail address.  The fields of an address structure
-                are in the following order: personal name, [SMTP]
-                at-domain-list (source route), mailbox name, and host name.
+        /// <summary>
+        /// Gets message <b>In-Reply-To</b> header field value. Value null means no <b>In-Reply-To</b> header field.
+        /// </summary>
+        public string InReplyTo { get; }
 
-                [RFC-2822] group syntax is indicated by a special form of
-                address structure in which the host name field is NIL.  If the
-                mailbox name field is also NIL, this is an end of group marker
-                (semi-colon in RFC 822 syntax).  If the mailbox name field is
-                non-NIL, this is a start of group marker, and the mailbox name
-                field holds the group name phrase.
+        /// <summary>
+        /// Gets message <b>Message-ID</b> header field value. Value null means no <b>Message-ID</b> header field.
+        /// </summary>
+        public string MessageID { get; }
 
-                If the Date, Subject, In-Reply-To, and Message-ID header lines
-                are absent in the [RFC-2822] header, the corresponding member
-                of the envelope is NIL; if these header lines are present but
-                empty the corresponding member of the envelope is the empty
-                string.
+        /// <summary>
+        /// Gets message <b>Reply-To</b> header field value. Value null means no <b>Reply-To</b> header field.
+        /// </summary>
+        public Mail_t_Address[] ReplyTo { get; }
 
-                    Note: some servers may return a NIL envelope member in the
-                    "present but empty" case.  Clients SHOULD treat NIL and
-                    empty string as identical.
+        /// <summary>
+        /// Gets message <b>Sender</b> header field value. Value null means no <b>Sender</b> header field.
+        /// </summary>
+        public Mail_t_Address[] Sender { get; }
 
-                    Note: [RFC-2822] requires that all messages have a valid
-                    Date header.  Therefore, the date member in the envelope can
-                    not be NIL or the empty string.
+        /// <summary>
+        /// Gets message <b>Subject</b> header field value. Value null means no <b>Subject</b> header field.
+        /// </summary>
+        public string Subject { get; }
 
-                    Note: [RFC-2822] requires that the In-Reply-To and
-                    Message-ID headers, if present, have non-empty content.
-                    Therefore, the in-reply-to and message-id members in the
-                    envelope can not be the empty string.
-
-                If the From, To, cc, and bcc header lines are absent in the
-                [RFC-2822] header, or are present but empty, the corresponding
-                member of the envelope is NIL.
-
-                If the Sender or Reply-To lines are absent in the [RFC-2822]
-                header, or are present but empty, the server sets the
-                corresponding member of the envelope to be the same value as
-                the from member (the client is not expected to know to do
-                this).
-
-                    Note: [RFC-2822] requires that all messages have a valid
-                    From header.  Therefore, the from, sender, and reply-to
-                    members in the envelope can not be NIL.
-            */
-
-            // Eat "ENVELOPE".
-            fetchReader.GetReader().ReadWord();             
-            fetchReader.GetReader().ReadToFirstChar();
-            // Eat starting "(".
-            fetchReader.GetReader().ReadSpecifiedLength(1);
-
-            // Read "date".
-            var date = DateTime.MinValue;
-            var dateS = fetchReader.ReadString();
-            if (dateS != null){
-                date = MIME_Utils.ParseRfc2822DateTime(dateS);
-            }
-
-            // Read "subject".
-            var subject =  ReadAndDecodeWord(fetchReader.ReadString());
-
-            // Read "from"
-            var from = ReadAddresses(fetchReader);
-
-            //Read "sender"
-            var sender = ReadAddresses(fetchReader);
-
-            // Read "reply-to"
-            var replyTo = ReadAddresses(fetchReader);
-
-            // Read "to"
-            var to = ReadAddresses(fetchReader);
-
-            // Read "cc"
-            var cc = ReadAddresses(fetchReader);
-
-            // Read "bcc"
-            var bcc = ReadAddresses(fetchReader);
-
-            // Read "in-reply-to"
-            var inReplyTo = fetchReader.ReadString();
-
-            // Read "message-id"
-            var messageID = fetchReader.ReadString();
-
-            // Eat ending ")".
-            fetchReader.GetReader().ReadToFirstChar();
-            fetchReader.GetReader().ReadSpecifiedLength(1);
-
-            return new IMAP_Envelope(date,subject,from,sender,replyTo,to,cc,bcc,inReplyTo,messageID);
-        }
+        /// <summary>
+        /// Gets message <b>To</b> header field value. Value null means no <b>To</b> header field.
+        /// </summary>
+        public Mail_t_Address[] To { get; }
 
         /// <summary>
 		/// Construct secified mime entity ENVELOPE string.
@@ -283,8 +97,8 @@ namespace LumiSoft.Net.IMAP
 		/// <param name="entity">Mail message.</param>
 		/// <returns></returns>
 		public static string ConstructEnvelope(Mail_Message entity)
-		{
-			/* RFC 3501 7.4.2
+        {
+            /* RFC 3501 7.4.2
 				ENVELOPE
 					A parenthesized list that describes the envelope structure of a
 					message.  This is computed by the server by parsing the
@@ -346,110 +160,443 @@ namespace LumiSoft.Net.IMAP
 					ENVELOPE ("date" "subject" from sender reply-to to cc bcc "in-reply-to" "messageID")
 			*/
 
-			// NOTE: all header fields and parameters must in ENCODED form !!!
+            // NOTE: all header fields and parameters must in ENCODED form !!!
 
-            var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
+            var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8);
             wordEncoder.Split = false;
 
-			var retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("ENVELOPE (");
 
-			// date
-            try{
-			    if(entity.Date != DateTime.MinValue){
-				    retVal.Append(TextUtils.QuoteString(MIME_Utils.DateTimeToRfc2822(entity.Date)));
-		    	}
-			    else{
-				    retVal.Append("NIL");
-			    }
+            // date
+            try
+            {
+                if (entity.Date != DateTime.MinValue)
+                {
+                    retVal.Append(TextUtils.QuoteString(MIME_Utils.DateTimeToRfc2822(entity.Date)));
+                }
+                else
+                {
+                    retVal.Append("NIL");
+                }
             }
-            catch{
+            catch
+            {
                 retVal.Append("NIL");
             }
 
-			// subject
-			if(entity.Subject != null){
-				//retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.Subject)));
+            // subject
+            if (entity.Subject != null)
+            {
+                //retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.Subject)));
                 var val = wordEncoder.Encode(entity.Subject);
                 retVal.Append(" {" + val.Length + "}\r\n" + val);
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// from
-			if(entity.From != null && entity.From.Count > 0){
-				retVal.Append(" " + ConstructAddresses(entity.From.ToArray(),wordEncoder));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // from
+            if (entity.From != null && entity.From.Count > 0)
+            {
+                retVal.Append(" " + ConstructAddresses(entity.From.ToArray(), wordEncoder));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// sender	
-			//	NOTE: There is confusing part, according rfc 2822 Sender: is MailboxAddress and not AddressList.
-			if(entity.Sender != null){
-				retVal.Append(" (");
+            // sender	
+            //	NOTE: There is confusing part, according rfc 2822 Sender: is MailboxAddress and not AddressList.
+            if (entity.Sender != null)
+            {
+                retVal.Append(" (");
 
-				retVal.Append(ConstructAddress(entity.Sender,wordEncoder));
+                retVal.Append(ConstructAddress(entity.Sender, wordEncoder));
 
-				retVal.Append(")");
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+                retVal.Append(")");
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// reply-to
-			if(entity.ReplyTo != null){
-				retVal.Append(" " + ConstructAddresses(entity.ReplyTo.Mailboxes,wordEncoder));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // reply-to
+            if (entity.ReplyTo != null)
+            {
+                retVal.Append(" " + ConstructAddresses(entity.ReplyTo.Mailboxes, wordEncoder));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// to
-			if(entity.To != null && entity.To.Count > 0){
-				retVal.Append(" " + ConstructAddresses(entity.To.Mailboxes,wordEncoder));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // to
+            if (entity.To != null && entity.To.Count > 0)
+            {
+                retVal.Append(" " + ConstructAddresses(entity.To.Mailboxes, wordEncoder));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// cc
-			if(entity.Cc != null && entity.Cc.Count > 0){
-				retVal.Append(" " + ConstructAddresses(entity.Cc.Mailboxes,wordEncoder));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // cc
+            if (entity.Cc != null && entity.Cc.Count > 0)
+            {
+                retVal.Append(" " + ConstructAddresses(entity.Cc.Mailboxes, wordEncoder));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// bcc
-			if(entity.Bcc != null && entity.Bcc.Count > 0){
-				retVal.Append(" " + ConstructAddresses(entity.Bcc.Mailboxes,wordEncoder));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // bcc
+            if (entity.Bcc != null && entity.Bcc.Count > 0)
+            {
+                retVal.Append(" " + ConstructAddresses(entity.Bcc.Mailboxes, wordEncoder));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// in-reply-to			
-			if(entity.InReplyTo != null){
-				retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.InReplyTo)));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // in-reply-to			
+            if (entity.InReplyTo != null)
+            {
+                retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.InReplyTo)));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			// message-id
-			if(entity.MessageID != null){
-				retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.MessageID)));
-			}
-			else{
-				retVal.Append(" NIL");
-			}
+            // message-id
+            if (entity.MessageID != null)
+            {
+                retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.MessageID)));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
 
-			retVal.Append(")");
+            retVal.Append(")");
 
-			return retVal.ToString();			
-		}
+            return retVal.ToString();
+        }
+
+        /// <summary>
+        /// Parses IMAP ENVELOPE from string.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP ENVELOPE string.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        public static IMAP_Envelope Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            /* RFC 3501 7.4.2 ENVELOPE.
+                A parenthesized list that describes the envelope structure of a
+                message.  This is computed by the server by parsing the
+                [RFC-2822] header into the component parts, defaulting various
+                fields as necessary.
+
+                The fields of the envelope structure are in the following
+                order: date, subject, from, sender, reply-to, to, cc, bcc,
+                in-reply-to, and message-id.  The date, subject, in-reply-to,
+                and message-id fields are strings.  The from, sender, reply-to,
+                to, cc, and bcc fields are parenthesized lists of address
+                structures.
+
+                An address structure is a parenthesized list that describes an
+                electronic mail address.  The fields of an address structure
+                are in the following order: personal name, [SMTP]
+                at-domain-list (source route), mailbox name, and host name.
+
+                [RFC-2822] group syntax is indicated by a special form of
+                address structure in which the host name field is NIL.  If the
+                mailbox name field is also NIL, this is an end of group marker
+                (semi-colon in RFC 822 syntax).  If the mailbox name field is
+                non-NIL, this is a start of group marker, and the mailbox name
+                field holds the group name phrase.
+
+                If the Date, Subject, In-Reply-To, and Message-ID header lines
+                are absent in the [RFC-2822] header, the corresponding member
+                of the envelope is NIL; if these header lines are present but
+                empty the corresponding member of the envelope is the empty
+                string.
+
+                    Note: some servers may return a NIL envelope member in the
+                    "present but empty" case.  Clients SHOULD treat NIL and
+                    empty string as identical.
+
+                    Note: [RFC-2822] requires that all messages have a valid
+                    Date header.  Therefore, the date member in the envelope can
+                    not be NIL or the empty string.
+
+                    Note: [RFC-2822] requires that the In-Reply-To and
+                    Message-ID headers, if present, have non-empty content.
+                    Therefore, the in-reply-to and message-id members in the
+                    envelope can not be the empty string.
+
+                If the From, To, cc, and bcc header lines are absent in the
+                [RFC-2822] header, or are present but empty, the corresponding
+                member of the envelope is NIL.
+
+                If the Sender or Reply-To lines are absent in the [RFC-2822]
+                header, or are present but empty, the server sets the
+                corresponding member of the envelope to be the same value as
+                the from member (the client is not expected to know to do
+                this).
+
+                    Note: [RFC-2822] requires that all messages have a valid
+                    From header.  Therefore, the from, sender, and reply-to
+                    members in the envelope can not be NIL.
+            */
+
+            // Eat "ENVELOPE".
+            r.ReadWord();
+            r.ReadToFirstChar();
+            // Eat starting "(".
+            r.ReadSpecifiedLength(1);
+
+            // Read "date".
+            var date = DateTime.MinValue;
+            var dateS = r.ReadWord();
+            if (dateS != null)
+            {
+                date = MIME_Utils.ParseRfc2822DateTime(dateS);
+            }
+
+            // Read "subject".
+            var subject = ReadAndDecodeWord(r.ReadWord());
+
+            // Read "from"
+            var from = ReadAddresses(r);
+
+            //Read "sender"
+            var sender = ReadAddresses(r);
+
+            // Read "reply-to"
+            var replyTo = ReadAddresses(r);
+
+            // Read "to"
+            var to = ReadAddresses(r);
+
+            // Read "cc"
+            var cc = ReadAddresses(r);
+
+            // Read "bcc"
+            var bcc = ReadAddresses(r);
+
+            // Read "in-reply-to"
+            var inReplyTo = r.ReadWord();
+
+            // Read "message-id"
+            var messageID = r.ReadWord();
+
+            // Eat ending ")".
+            r.ReadToFirstChar();
+            r.ReadSpecifiedLength(1);
+
+            return new IMAP_Envelope(date, subject, from, sender, replyTo, to, cc, bcc, inReplyTo, messageID);
+        }
+
+        /// <summary>
+        /// Parses IMAP FETCH ENVELOPE data-item.
+        /// </summary>
+        /// <param name="fetchReader">Fetch reader.</param>
+        /// <returns>Returns parsed IMAP FETCH ENVELOPE data-item.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>fetchReader</b> is null reference.</exception>
+        internal static IMAP_Envelope Parse(IMAP_Client._FetchResponseReader fetchReader)
+        {
+            if (fetchReader == null)
+            {
+                throw new ArgumentNullException("fetchReader");
+            }
+
+            /* RFC 3501 7.4.2 ENVELOPE.
+                A parenthesized list that describes the envelope structure of a
+                message.  This is computed by the server by parsing the
+                [RFC-2822] header into the component parts, defaulting various
+                fields as necessary.
+
+                The fields of the envelope structure are in the following
+                order: date, subject, from, sender, reply-to, to, cc, bcc,
+                in-reply-to, and message-id.  The date, subject, in-reply-to,
+                and message-id fields are strings.  The from, sender, reply-to,
+                to, cc, and bcc fields are parenthesized lists of address
+                structures.
+
+                An address structure is a parenthesized list that describes an
+                electronic mail address.  The fields of an address structure
+                are in the following order: personal name, [SMTP]
+                at-domain-list (source route), mailbox name, and host name.
+
+                [RFC-2822] group syntax is indicated by a special form of
+                address structure in which the host name field is NIL.  If the
+                mailbox name field is also NIL, this is an end of group marker
+                (semi-colon in RFC 822 syntax).  If the mailbox name field is
+                non-NIL, this is a start of group marker, and the mailbox name
+                field holds the group name phrase.
+
+                If the Date, Subject, In-Reply-To, and Message-ID header lines
+                are absent in the [RFC-2822] header, the corresponding member
+                of the envelope is NIL; if these header lines are present but
+                empty the corresponding member of the envelope is the empty
+                string.
+
+                    Note: some servers may return a NIL envelope member in the
+                    "present but empty" case.  Clients SHOULD treat NIL and
+                    empty string as identical.
+
+                    Note: [RFC-2822] requires that all messages have a valid
+                    Date header.  Therefore, the date member in the envelope can
+                    not be NIL or the empty string.
+
+                    Note: [RFC-2822] requires that the In-Reply-To and
+                    Message-ID headers, if present, have non-empty content.
+                    Therefore, the in-reply-to and message-id members in the
+                    envelope can not be the empty string.
+
+                If the From, To, cc, and bcc header lines are absent in the
+                [RFC-2822] header, or are present but empty, the corresponding
+                member of the envelope is NIL.
+
+                If the Sender or Reply-To lines are absent in the [RFC-2822]
+                header, or are present but empty, the server sets the
+                corresponding member of the envelope to be the same value as
+                the from member (the client is not expected to know to do
+                this).
+
+                    Note: [RFC-2822] requires that all messages have a valid
+                    From header.  Therefore, the from, sender, and reply-to
+                    members in the envelope can not be NIL.
+            */
+
+            // Eat "ENVELOPE".
+            fetchReader.GetReader().ReadWord();
+            fetchReader.GetReader().ReadToFirstChar();
+            // Eat starting "(".
+            fetchReader.GetReader().ReadSpecifiedLength(1);
+
+            // Read "date".
+            var date = DateTime.MinValue;
+            var dateS = fetchReader.ReadString();
+            if (dateS != null)
+            {
+                date = MIME_Utils.ParseRfc2822DateTime(dateS);
+            }
+
+            // Read "subject".
+            var subject = ReadAndDecodeWord(fetchReader.ReadString());
+
+            // Read "from"
+            var from = ReadAddresses(fetchReader);
+
+            //Read "sender"
+            var sender = ReadAddresses(fetchReader);
+
+            // Read "reply-to"
+            var replyTo = ReadAddresses(fetchReader);
+
+            // Read "to"
+            var to = ReadAddresses(fetchReader);
+
+            // Read "cc"
+            var cc = ReadAddresses(fetchReader);
+
+            // Read "bcc"
+            var bcc = ReadAddresses(fetchReader);
+
+            // Read "in-reply-to"
+            var inReplyTo = fetchReader.ReadString();
+
+            // Read "message-id"
+            var messageID = fetchReader.ReadString();
+
+            // Eat ending ")".
+            fetchReader.GetReader().ReadToFirstChar();
+            fetchReader.GetReader().ReadSpecifiedLength(1);
+
+            return new IMAP_Envelope(date, subject, from, sender, replyTo, to, cc, bcc, inReplyTo, messageID);
+        }
+
+        /// <summary>
+		/// Constructs ENVELOPE address structure.
+		/// </summary>
+		/// <param name="address">Mailbox address.</param>
+        /// <param name="wordEncoder">Unicode words encoder.</param>
+		/// <returns></returns>
+		private static string ConstructAddress(Mail_t_Mailbox address, MIME_Encoding_EncodedWord wordEncoder)
+        {
+            /* An address structure is a parenthesized list that describes an
+			   electronic mail address.  The fields of an address structure
+			   are in the following order: personal name, [SMTP]
+			   at-domain-list (source route), mailbox name, and host name.
+			*/
+
+            // NOTE: all header fields and parameters must in ENCODED form !!!
+
+            var retVal = new StringBuilder();
+            retVal.Append("(");
+
+            // personal name
+            if (address.DisplayName != null)
+            {
+                retVal.Append(TextUtils.QuoteString(wordEncoder.Encode(RemoveCrlf(address.DisplayName))));
+            }
+            else
+            {
+                retVal.Append("NIL");
+            }
+
+            // source route, always NIL (not used nowdays)
+            retVal.Append(" NIL");
+
+            // mailbox name
+            retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(RemoveCrlf(address.LocalPart))));
+
+            // host name
+            if (address.Domain != null)
+            {
+                retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(RemoveCrlf(address.Domain))));
+            }
+            else
+            {
+                retVal.Append(" NIL");
+            }
+
+            retVal.Append(")");
+
+            return retVal.ToString();
+        }
+
+        /// <summary>
+		/// Constructs ENVELOPE addresses structure.
+		/// </summary>
+		/// <param name="mailboxes">Mailboxes.</param>
+        /// <param name="wordEncoder">Unicode words encoder.</param>
+		/// <returns></returns>
+		private static string ConstructAddresses(Mail_t_Mailbox[] mailboxes, MIME_Encoding_EncodedWord wordEncoder)
+        {
+            var retVal = new StringBuilder();
+            retVal.Append("(");
+
+            foreach (Mail_t_Mailbox address in mailboxes)
+            {
+                retVal.Append(ConstructAddress(address, wordEncoder));
+            }
+
+            retVal.Append(")");
+
+            return retVal.ToString();
+        }
 
         /// <summary>
         /// Reads parenthesized list of addresses.
@@ -459,7 +606,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
         private static Mail_t_Address[] ReadAddresses(StringReader r)
         {
-            if(r == null){
+            if (r == null)
+            {
                 throw new ArgumentNullException("r");
             }
 
@@ -476,9 +624,10 @@ namespace LumiSoft.Net.IMAP
                 non-NIL, this is a start of group marker, and the mailbox name
                 field holds the group name phrase.
             */
-            
+
             r.ReadToFirstChar();
-            if(r.StartsWith("NIL",false)){
+            if (r.StartsWith("NIL", false))
+            {
                 r.ReadWord();
 
                 return null;
@@ -488,9 +637,11 @@ namespace LumiSoft.Net.IMAP
             // Eat addresses starting "(".
             r.ReadSpecifiedLength(1);
 
-            while(r.Available > 0){
+            while (r.Available > 0)
+            {
                 // We have addresses ending ")".
-                if(r.StartsWith(")")){
+                if (r.StartsWith(")"))
+                {
                     r.ReadSpecifiedLength(1);
                     break;
                 }
@@ -500,10 +651,10 @@ namespace LumiSoft.Net.IMAP
 
                 var personalName = ReadAndDecodeWord(r.ReadWord());
                 var atDomainList = r.ReadWord();
-                var mailboxName  = r.ReadWord();
-                var hostName     = r.ReadWord();
+                var mailboxName = r.ReadWord();
+                var hostName = r.ReadWord();
 
-                retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
+                retVal.Add(new Mail_t_Mailbox(personalName, mailboxName + "@" + hostName));
 
                 // Eat address ending ")".
                 r.ReadSpecifiedLength(1);
@@ -520,7 +671,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>fetchReader</b> is null reference.</exception>
         private static Mail_t_Address[] ReadAddresses(IMAP_Client._FetchResponseReader fetchReader)
         {
-            if(fetchReader == null){
+            if (fetchReader == null)
+            {
                 throw new ArgumentNullException("fetchReader");
             }
 
@@ -537,9 +689,10 @@ namespace LumiSoft.Net.IMAP
                 non-NIL, this is a start of group marker, and the mailbox name
                 field holds the group name phrase.
             */
-            
+
             fetchReader.GetReader().ReadToFirstChar();
-            if(fetchReader.GetReader().StartsWith("NIL",false)){
+            if (fetchReader.GetReader().StartsWith("NIL", false))
+            {
                 fetchReader.GetReader().ReadWord();
 
                 return null;
@@ -549,9 +702,11 @@ namespace LumiSoft.Net.IMAP
             // Eat addresses starting "(".
             fetchReader.GetReader().ReadSpecifiedLength(1);
 
-            while(fetchReader.GetReader().Available > 0){
+            while (fetchReader.GetReader().Available > 0)
+            {
                 // We have addresses ending ")".
-                if(fetchReader.GetReader().StartsWith(")")){
+                if (fetchReader.GetReader().StartsWith(")"))
+                {
                     fetchReader.GetReader().ReadSpecifiedLength(1);
                     break;
                 }
@@ -561,10 +716,10 @@ namespace LumiSoft.Net.IMAP
 
                 var personalName = ReadAndDecodeWord(fetchReader.ReadString());
                 var atDomainList = fetchReader.ReadString();
-                var mailboxName  = fetchReader.ReadString();
-                var hostName     = fetchReader.ReadString();
+                var mailboxName = fetchReader.ReadString();
+                var hostName = fetchReader.ReadString();
 
-                retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
+                retVal.Add(new Mail_t_Mailbox(personalName, mailboxName + "@" + hostName));
 
                 // Eat address ending ")".
                 fetchReader.GetReader().ReadSpecifiedLength(1);
@@ -575,70 +730,23 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Constructs ENVELOPE addresses structure.
-		/// </summary>
-		/// <param name="mailboxes">Mailboxes.</param>
-        /// <param name="wordEncoder">Unicode words encoder.</param>
-		/// <returns></returns>
-		private static string ConstructAddresses(Mail_t_Mailbox[] mailboxes,MIME_Encoding_EncodedWord wordEncoder)
-		{
-			var retVal = new StringBuilder();
-            retVal.Append("(");
-
-			foreach(Mail_t_Mailbox address in mailboxes){                
-				retVal.Append(ConstructAddress(address,wordEncoder));
-			}
-
-			retVal.Append(")");
-
-			return retVal.ToString();
-		}
-
-        /// <summary>
-		/// Constructs ENVELOPE address structure.
-		/// </summary>
-		/// <param name="address">Mailbox address.</param>
-        /// <param name="wordEncoder">Unicode words encoder.</param>
-		/// <returns></returns>
-		private static string ConstructAddress(Mail_t_Mailbox address,MIME_Encoding_EncodedWord wordEncoder)
-		{
-			/* An address structure is a parenthesized list that describes an
-			   electronic mail address.  The fields of an address structure
-			   are in the following order: personal name, [SMTP]
-			   at-domain-list (source route), mailbox name, and host name.
-			*/
-
-			// NOTE: all header fields and parameters must in ENCODED form !!!
-
-			var retVal = new StringBuilder();
-            retVal.Append("(");
-
-			// personal name
-            if(address.DisplayName != null){
-			    retVal.Append(TextUtils.QuoteString(wordEncoder.Encode(RemoveCrlf(address.DisplayName))));
-            }
-            else{
-                retVal.Append("NIL");
+        /// Decodes word from reader.
+        /// </summary>
+        /// <param name="text">Text.</param>
+        /// <returns>Returns decoded word.</returns>
+        private static string ReadAndDecodeWord(string text)
+        {
+            if (text == null)
+            {
+                return null;
             }
 
-			// source route, always NIL (not used nowdays)
-			retVal.Append(" NIL");
-
-			// mailbox name
-			retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(RemoveCrlf(address.LocalPart))));
-
-			// host name
-            if(address.Domain != null){
-			    retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(RemoveCrlf(address.Domain))));
+            if (string.Equals(text, "NIL", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return "";
             }
-            else{
-                retVal.Append(" NIL");
-            }
-
-			retVal.Append(")");
-
-			return retVal.ToString();
-		}
+            return MIME_Encoding_EncodedWord.DecodeTextS(text);
+        }
 
         /// <summary>
         /// Removes CR and LF chars from the specified string.
@@ -647,78 +755,12 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Reurns string.</returns>
         private static string RemoveCrlf(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            return value.Replace("\r","").Replace("\n","");
+            return value.Replace("\r", "").Replace("\n", "");
         }
-
-        /// <summary>
-        /// Decodes word from reader.
-        /// </summary>
-        /// <param name="text">Text.</param>
-        /// <returns>Returns decoded word.</returns>
-        private static string ReadAndDecodeWord(string text)
-        {            
-            if(text == null){
-                return null;
-            }
-
-            if(string.Equals(text,"NIL",StringComparison.InvariantCultureIgnoreCase)){
-                return "";
-            }
-            return MIME_Encoding_EncodedWord.DecodeTextS(text);
-        }
-
-        /// <summary>
-        /// Gets message <b>Date</b> header field value. Value DateTime.Min means no <b>Date</b> header field.
-        /// </summary>
-        public DateTime Date { get; } = DateTime.MinValue;
-
-        /// <summary>
-        /// Gets message <b>Subject</b> header field value. Value null means no <b>Subject</b> header field.
-        /// </summary>
-        public string Subject { get; }
-
-        /// <summary>
-        /// Gets message <b>From</b> header field value. Value null means no <b>From</b> header field.
-        /// </summary>
-        public Mail_t_Address[] From { get; }
-
-        /// <summary>
-        /// Gets message <b>Sender</b> header field value. Value null means no <b>Sender</b> header field.
-        /// </summary>
-        public Mail_t_Address[] Sender { get; }
-
-        /// <summary>
-        /// Gets message <b>Reply-To</b> header field value. Value null means no <b>Reply-To</b> header field.
-        /// </summary>
-        public Mail_t_Address[] ReplyTo { get; }
-
-        /// <summary>
-        /// Gets message <b>To</b> header field value. Value null means no <b>To</b> header field.
-        /// </summary>
-        public Mail_t_Address[] To { get; }
-
-        /// <summary>
-        /// Gets message <b>Cc</b> header field value. Value null means no <b>Cc</b> header field.
-        /// </summary>
-        public Mail_t_Address[] Cc { get; }
-
-        /// <summary>
-        /// Gets message <b>Bcc</b> header field value. Value null means no <b>Bcc</b> header field.
-        /// </summary>
-        public Mail_t_Address[] Bcc { get; }
-
-        /// <summary>
-        /// Gets message <b>In-Reply-To</b> header field value. Value null means no <b>In-Reply-To</b> header field.
-        /// </summary>
-        public string InReplyTo { get; }
-
-        /// <summary>
-        /// Gets message <b>Message-ID</b> header field value. Value null means no <b>Message-ID</b> header field.
-        /// </summary>
-        public string MessageID { get; }
     }
 }

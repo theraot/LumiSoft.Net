@@ -13,7 +13,7 @@ namespace LumiSoft.Net.DNS
         /// <param name="qtype">Query type.</param>
         /// <param name="qname">Query text. It depends on query type.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>qname</b> is null reference.</exception>
-        public DNS_Query(DNS_QType qtype,string qname) : this(DNS_QClass.IN,qtype,qname)
+        public DNS_Query(DNS_QType qtype, string qname) : this(DNS_QClass.IN, qtype, qname)
         {
         }
 
@@ -24,11 +24,11 @@ namespace LumiSoft.Net.DNS
         /// <param name="qtype">Query type.</param>
         /// <param name="qname">Query text. It depends on query type.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>qname</b> is null reference.</exception>
-        public DNS_Query(DNS_QClass qclass,DNS_QType qtype,string qname)
+        public DNS_Query(DNS_QClass qclass, DNS_QType qtype, string qname)
         {
             QueryClass = qclass;
-            QueryType  = qtype;
-            QueryName  = qname ?? throw new ArgumentNullException("qname");
+            QueryType = qtype;
+            QueryName = qname ?? throw new ArgumentNullException("qname");
         }
 
         /// <summary>
@@ -37,13 +37,13 @@ namespace LumiSoft.Net.DNS
         public DNS_QClass QueryClass { get; } = DNS_QClass.IN;
 
         /// <summary>
-        /// Gets DNS query type.
-        /// </summary>
-        public DNS_QType QueryType { get; } = DNS_QType.ANY;
-
-        /// <summary>
         /// Gets query text.
         /// </summary>
         public string QueryName { get; } = "";
+
+        /// <summary>
+        /// Gets DNS query type.
+        /// </summary>
+        public DNS_QType QueryType { get; } = DNS_QType.ANY;
     }
 }

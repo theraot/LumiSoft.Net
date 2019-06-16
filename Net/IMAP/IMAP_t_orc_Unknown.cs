@@ -18,6 +18,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Optional response value.
+        /// </summary>
+        public string Value { get; }
+
+        /// <summary>
         /// Parses unknown optional response from string.
         /// </summary>
         /// <param name="value">Unknown optional response string.</param>
@@ -25,7 +30,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_Unknown Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -40,10 +46,5 @@ namespace LumiSoft.Net.IMAP
         {
             return Value;
         }
-
-        /// <summary>
-        /// Optional response value.
-        /// </summary>
-        public string Value { get; }
     }
 }

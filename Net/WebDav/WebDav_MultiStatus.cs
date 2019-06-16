@@ -19,6 +19,11 @@ namespace LumiSoft.Net.WebDav
         }
 
         /// <summary>
+        /// Gets responses collection.
+        /// </summary>
+        public List<WebDav_Response> Responses { get; }
+
+        /// <summary>
         /// Parses WebDav_MultiResponse from 'DAV:multistatus' element.
         /// </summary>
         /// <param name="stream">DAV:multistatus response stream.</param>
@@ -27,31 +32,29 @@ namespace LumiSoft.Net.WebDav
         /// <exception cref="ParseException">Is raised when there are any parsing error.</exception>
         internal static WebDav_MultiStatus Parse(Stream stream)
         {
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
-            }            
-           
+            }
+
             var response = new XmlDocument();
             response.Load(stream);
-                      
+
             // Invalid response.
-            if(!string.Equals(response.ChildNodes[1].NamespaceURI + response.ChildNodes[1].LocalName,"DAV:multistatus",StringComparison.InvariantCultureIgnoreCase)){
+            if (!string.Equals(response.ChildNodes[1].NamespaceURI + response.ChildNodes[1].LocalName, "DAV:multistatus", StringComparison.InvariantCultureIgnoreCase))
+            {
                 throw new ParseException("Invalid DAV:multistatus value.");
             }
-       
+
             var retVal = new WebDav_MultiStatus();
 
             // Parse responses.
-            foreach (XmlNode responseNode in response.ChildNodes[1].ChildNodes){
+            foreach (XmlNode responseNode in response.ChildNodes[1].ChildNodes)
+            {
                 retVal.Responses.Add(WebDav_Response.Parse(responseNode));
             }
 
             return retVal;
         }
-
-        /// <summary>
-        /// Gets responses collection.
-        /// </summary>
-        public List<WebDav_Response> Responses { get; }
     }
 }

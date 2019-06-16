@@ -14,23 +14,18 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>rr</b> is null reference.</exception>
         internal RTCP_Report_Receiver(RTCP_Packet_ReportBlock rr)
         {
-            if(rr == null){
+            if (rr == null)
+            {
                 throw new ArgumentNullException("rr");
             }
 
-            FractionLost          = rr.FractionLost;
+            FractionLost = rr.FractionLost;
             CumulativePacketsLost = rr.CumulativePacketsLost;
-            ExtendedSequenceNumber    = rr.ExtendedHighestSeqNo;
-            Jitter                = rr.Jitter;
-            LastSR                = rr.LastSR;
-            DelaySinceLastSR      = rr.DelaySinceLastSR;
+            ExtendedSequenceNumber = rr.ExtendedHighestSeqNo;
+            Jitter = rr.Jitter;
+            LastSR = rr.LastSR;
+            DelaySinceLastSR = rr.DelaySinceLastSR;
         }
-
-        /// <summary>
-        /// Gets the fraction of RTP data packets from source SSRC lost since the previous SR or 
-        /// RR packet was sent.
-        /// </summary>
-        public uint FractionLost { get; }
 
         /// <summary>
         /// Gets total number of RTP data packets from source SSRC that have
@@ -39,9 +34,20 @@ namespace LumiSoft.Net.RTP
         public uint CumulativePacketsLost { get; }
 
         /// <summary>
+        /// Gets delay since last sender report(SR) was received.
+        /// </summary>
+        public uint DelaySinceLastSR { get; }
+
+        /// <summary>
         /// Gets extended highest sequence number received.
         /// </summary>
         public uint ExtendedSequenceNumber { get; }
+
+        /// <summary>
+        /// Gets the fraction of RTP data packets from source SSRC lost since the previous SR or 
+        /// RR packet was sent.
+        /// </summary>
+        public uint FractionLost { get; }
 
         /// <summary>
         /// Gets an estimate of the statistical variance of the RTP data packet
@@ -54,10 +60,5 @@ namespace LumiSoft.Net.RTP
         /// Gets when last sender report(SR) was recieved.
         /// </summary>
         public uint LastSR { get; }
-
-        /// <summary>
-        /// Gets delay since last sender report(SR) was received.
-        /// </summary>
-        public uint DelaySinceLastSR { get; }
     }
 }

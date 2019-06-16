@@ -35,27 +35,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal int Exists
         {
-            get{ return MessagesInfo.Count; }
-        }
-
-        /// <summary>
-        /// Gets messages count with recent flag set.
-        /// </summary>
-        internal int Recent
-        {
-            get{ 
-                int count = 0;
-                foreach(IMAP_MessageInfo m in MessagesInfo){
-                    foreach(string flag in m.Flags){
-                        if(string.Equals(flag,"Recent",StringComparison.InvariantCultureIgnoreCase)){
-                            count++;
-                            break;
-                        }
-                    }
-                }
-
-                return count; 
-            }
+            get { return MessagesInfo.Count; }
         }
 
         /// <summary>
@@ -63,34 +43,41 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal int FirstUnseen
         {
-            get{
-                for(int i=0;i<MessagesInfo.Count;i++){
-                    if(!MessagesInfo[i].ContainsFlag("Seen")){
+            get
+            {
+                for (int i = 0; i < MessagesInfo.Count; i++)
+                {
+                    if (!MessagesInfo[i].ContainsFlag("Seen"))
+                    {
                         return i + 1;
                     }
                 }
 
-                return -1; 
+                return -1;
             }
         }
 
         /// <summary>
-        /// Gets messages count with seen flag not set.
+        /// Gets messages count with recent flag set.
         /// </summary>
-        internal int Unseen
+        internal int Recent
         {
-            get{ 
-                int count = MessagesInfo.Count;
-                foreach(IMAP_MessageInfo m in MessagesInfo){
-                    foreach(string flag in m.Flags){
-                        if(string.Equals(flag,"Seen",StringComparison.InvariantCultureIgnoreCase)){
-                            count--;
+            get
+            {
+                int count = 0;
+                foreach (IMAP_MessageInfo m in MessagesInfo)
+                {
+                    foreach (string flag in m.Flags)
+                    {
+                        if (string.Equals(flag, "Recent", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            count++;
                             break;
                         }
                     }
                 }
 
-                return count; 
+                return count;
             }
         }
 
@@ -99,16 +86,43 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal long UidNext
         {
-            get{ 
+            get
+            {
                 long maxUID = 0;
-                foreach(IMAP_MessageInfo m in MessagesInfo){
-                    if(m.UID > maxUID){
+                foreach (IMAP_MessageInfo m in MessagesInfo)
+                {
+                    if (m.UID > maxUID)
+                    {
                         maxUID = m.UID;
                     }
                 }
                 maxUID++;
-                
-                return maxUID; 
+
+                return maxUID;
+            }
+        }
+
+        /// <summary>
+        /// Gets messages count with seen flag not set.
+        /// </summary>
+        internal int Unseen
+        {
+            get
+            {
+                int count = MessagesInfo.Count;
+                foreach (IMAP_MessageInfo m in MessagesInfo)
+                {
+                    foreach (string flag in m.Flags)
+                    {
+                        if (string.Equals(flag, "Seen", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            count--;
+                            break;
+                        }
+                    }
+                }
+
+                return count;
             }
         }
     }

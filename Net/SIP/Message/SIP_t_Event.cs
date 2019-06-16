@@ -27,6 +27,59 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets event type.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null vallue is passed.</exception>
+        /// <exception cref="ArgumentException">Is raised when emptu string passed.</exception>
+        public string EventType
+        {
+            get { return m_EventType; }
+
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("EventType");
+                }
+                if (value == "")
+                {
+                    throw new ArgumentException("Property EventType value can't be '' !");
+                }
+
+                m_EventType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'id' parameter value. Value null means not specified.
+        /// </summary>
+        public string ID
+        {
+            get
+            {
+                var parameter = Parameters["id"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("id");
+                }
+                else
+                {
+                    Parameters.Set("id", value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "Event" from specified value.
         /// </summary>
         /// <param name="value">SIP "Event" value.</param>
@@ -34,7 +87,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -54,7 +108,8 @@ namespace LumiSoft.Net.SIP.Message
                 event-param = generic-param / ( "id" EQUAL token )
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -86,51 +141,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets event type.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null vallue is passed.</exception>
-        /// <exception cref="ArgumentException">Is raised when emptu string passed.</exception>
-        public string EventType
-        {
-            get{ return m_EventType; }
-
-            set{
-                if(value == null){
-                    throw new ArgumentNullException("EventType");
-                }
-                if(value == ""){
-                    throw new ArgumentException("Property EventType value can't be '' !");
-                }
-
-                m_EventType = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'id' parameter value. Value null means not specified.
-        /// </summary>
-        public string ID
-        {
-            get{ 
-                var parameter = Parameters["id"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("id");
-                }
-                else{
-                    Parameters.Set("id",value);
-                }
-            }
         }
     }
 }

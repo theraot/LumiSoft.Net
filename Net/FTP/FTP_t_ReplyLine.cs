@@ -13,63 +13,22 @@ namespace LumiSoft.Net.FTP
         /// <param name="replyCode">FTP server reply code.</param>
         /// <param name="text">FTP server reply text.</param>
         /// <param name="isLastLine">Specifies if this line is last line in response.</param>
-        public FTP_t_ReplyLine(int replyCode,string text,bool isLastLine)
+        public FTP_t_ReplyLine(int replyCode, string text, bool isLastLine)
         {
-            if(text == null){
+            if (text == null)
+            {
                 text = "";
             }
 
-            ReplyCode  = replyCode;
-            Text       = text;
+            ReplyCode = replyCode;
+            Text = text;
             IsLastLine = isLastLine;
         }
 
         /// <summary>
-        /// Parses FTP reply-line from 
+        /// Gets if this is last reply line.
         /// </summary>
-        /// <param name="line">FTP server reply-line.</param>
-        /// <returns>Returns parsed FTP server reply-line.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>line</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when reply-line parsing fails.</exception>
-        public static FTP_t_ReplyLine Parse(string line)
-        {
-            if(line == null){
-                throw new ArgumentNullException("line");
-            }
-            if(line.Length < 3){
-                throw new ParseException("Invalid FTP server reply-line '" + line + "'.");
-            }
-
-            int replyCode = 0;
-            if(!int.TryParse(line.Substring(0,3),out replyCode)){
-                throw new ParseException("Invalid FTP server reply-line '" + line + "' reply-code.");
-            }
-            
-            bool isLastLine = true;            
-            if(line.Length > 3){
-                isLastLine = (line[3] == ' ');
-            }
-
-            var text = "";
-            if (line.Length > 5){
-                text = line.Substring(4);
-            }
-
-            return new FTP_t_ReplyLine(replyCode,text,isLastLine);
-        }
-
-        /// <summary>
-        /// Returns this as FTP server <b>reply-line</b>.
-        /// </summary>
-        /// <returns>Returns this as FTP server <b>reply-line</b>.</returns>
-        public override string ToString()
-        {
-            if(IsLastLine){
-                return ReplyCode.ToString() + " " + Text + "\r\n";
-            }
-
-            return ReplyCode.ToString() + "-" + Text + "\r\n";
-        }
+        public bool IsLastLine { get; } = true;
 
         /// <summary>
         /// Gets SMTP server reply code.
@@ -82,8 +41,56 @@ namespace LumiSoft.Net.FTP
         public string Text { get; }
 
         /// <summary>
-        /// Gets if this is last reply line.
+        /// Parses FTP reply-line from 
         /// </summary>
-        public bool IsLastLine { get; } = true;
+        /// <param name="line">FTP server reply-line.</param>
+        /// <returns>Returns parsed FTP server reply-line.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>line</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when reply-line parsing fails.</exception>
+        public static FTP_t_ReplyLine Parse(string line)
+        {
+            if (line == null)
+            {
+                throw new ArgumentNullException("line");
+            }
+            if (line.Length < 3)
+            {
+                throw new ParseException("Invalid FTP server reply-line '" + line + "'.");
+            }
+
+            int replyCode = 0;
+            if (!int.TryParse(line.Substring(0, 3), out replyCode))
+            {
+                throw new ParseException("Invalid FTP server reply-line '" + line + "' reply-code.");
+            }
+
+            bool isLastLine = true;
+            if (line.Length > 3)
+            {
+                isLastLine = (line[3] == ' ');
+            }
+
+            var text = "";
+            if (line.Length > 5)
+            {
+                text = line.Substring(4);
+            }
+
+            return new FTP_t_ReplyLine(replyCode, text, isLastLine);
+        }
+
+        /// <summary>
+        /// Returns this as FTP server <b>reply-line</b>.
+        /// </summary>
+        /// <returns>Returns this as FTP server <b>reply-line</b>.</returns>
+        public override string ToString()
+        {
+            if (IsLastLine)
+            {
+                return ReplyCode.ToString() + " " + Text + "\r\n";
+            }
+
+            return ReplyCode.ToString() + "-" + Text + "\r\n";
+        }
     }
 }

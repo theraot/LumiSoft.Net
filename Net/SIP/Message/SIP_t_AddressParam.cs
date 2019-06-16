@@ -12,7 +12,7 @@ namespace LumiSoft.Net.SIP.Message
         /// Default constructor.
         /// </summary>
         public SIP_t_AddressParam()
-        {            
+        {
         }
 
         /// <summary>
@@ -25,6 +25,11 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets address.
+        /// </summary>
+        public SIP_t_NameAddress Address { get; private set; }
+
+        /// <summary>
         /// Parses this from specified value.
         /// </summary>
         /// <param name="value">Address + params value.</param>
@@ -32,7 +37,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -47,10 +53,11 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public override void Parse(StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
-    
+
             // Parse address
             var address = new SIP_t_NameAddress();
             address.Parse(reader);
@@ -65,28 +72,26 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         /// <returns></returns>
         public override string ToStringValue()
-        {            
+        {
             var retVal = new StringBuilder();
 
             // Add address
             retVal.Append(Address.ToStringValue());
 
             // Add parameters
-            foreach(SIP_Parameter parameter in Parameters){
-                if(parameter.Value != null){
+            foreach (SIP_Parameter parameter in Parameters)
+            {
+                if (parameter.Value != null)
+                {
                     retVal.Append(";" + parameter.Name + "=" + parameter.Value);
                 }
-                else{
+                else
+                {
                     retVal.Append(";" + parameter.Name);
                 }
             }
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets address.
-        /// </summary>
-        public SIP_t_NameAddress Address { get; private set; }
     }
 }

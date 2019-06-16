@@ -16,24 +16,27 @@ namespace LumiSoft.Net.RTP
         /// <param name="controlPort">RTP control port. Usualy this is <b>dataPort</b> + 1.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid values.</exception>
-        public RTP_Address(IPAddress ip,int dataPort,int controlPort)
+        public RTP_Address(IPAddress ip, int dataPort, int controlPort)
         {
-            if(dataPort < IPEndPoint.MinPort || dataPort > IPEndPoint.MaxPort){
+            if (dataPort < IPEndPoint.MinPort || dataPort > IPEndPoint.MaxPort)
+            {
                 throw new ArgumentException("Argument 'dataPort' value must be between '" + IPEndPoint.MinPort + "' and '" + IPEndPoint.MaxPort + "'.");
             }
-            if(controlPort < IPEndPoint.MinPort || controlPort > IPEndPoint.MaxPort){
+            if (controlPort < IPEndPoint.MinPort || controlPort > IPEndPoint.MaxPort)
+            {
                 throw new ArgumentException("Argument 'controlPort' value must be between '" + IPEndPoint.MinPort + "' and '" + IPEndPoint.MaxPort + "'.");
             }
-            if(dataPort == controlPort){
+            if (dataPort == controlPort)
+            {
                 throw new ArgumentException("Arguments 'dataPort' and 'controlPort' values must be different.");
             }
 
-            IP         = ip ?? throw new ArgumentNullException("ip");
-            DataPort    = dataPort;
+            IP = ip ?? throw new ArgumentNullException("ip");
+            DataPort = dataPort;
             ControlPort = controlPort;
 
-            RtpEP  = new IPEndPoint(ip,dataPort);
-            RtcpEP = new IPEndPoint(ip,controlPort);
+            RtpEP = new IPEndPoint(ip, dataPort);
+            RtcpEP = new IPEndPoint(ip, controlPort);
         }
 
         /// <summary>
@@ -45,35 +48,79 @@ namespace LumiSoft.Net.RTP
         /// <param name="ttl">RTP control port. Usualy this is <b>dataPort</b> + 1.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid values.</exception>
-        public RTP_Address(IPAddress ip,int dataPort,int controlPort,int ttl)
+        public RTP_Address(IPAddress ip, int dataPort, int controlPort, int ttl)
         {
-            if(ip == null){
+            if (ip == null)
+            {
                 throw new ArgumentNullException("ip");
             }
-            if(!Net_Utils.IsMulticastAddress(ip)){
+            if (!Net_Utils.IsMulticastAddress(ip))
+            {
                 throw new ArgumentException("Argument 'ip' is not multicast ip address.");
             }
-            if(dataPort < IPEndPoint.MinPort || dataPort > IPEndPoint.MaxPort){
+            if (dataPort < IPEndPoint.MinPort || dataPort > IPEndPoint.MaxPort)
+            {
                 throw new ArgumentException("Argument 'dataPort' value must be between '" + IPEndPoint.MinPort + "' and '" + IPEndPoint.MaxPort + "'.");
             }
-            if(controlPort < IPEndPoint.MinPort || controlPort > IPEndPoint.MaxPort){
+            if (controlPort < IPEndPoint.MinPort || controlPort > IPEndPoint.MaxPort)
+            {
                 throw new ArgumentException("Argument 'controlPort' value must be between '" + IPEndPoint.MinPort + "' and '" + IPEndPoint.MaxPort + "'.");
             }
-            if(dataPort == controlPort){
+            if (dataPort == controlPort)
+            {
                 throw new ArgumentException("Arguments 'dataPort' and 'controlPort' values must be different.");
             }
-            if(ttl < 0 || ttl > 255){
+            if (ttl < 0 || ttl > 255)
+            {
                 throw new ArgumentException("Argument 'ttl' value must be between '0' and '255'.");
             }
 
-            IP         = ip;
-            DataPort    = dataPort;
+            IP = ip;
+            DataPort = dataPort;
             ControlPort = controlPort;
-            TTL         = ttl;
+            TTL = ttl;
 
-            RtpEP  = new IPEndPoint(ip,dataPort);
-            RtcpEP = new IPEndPoint(ip,controlPort);
+            RtpEP = new IPEndPoint(ip, dataPort);
+            RtcpEP = new IPEndPoint(ip, controlPort);
         }
+
+        /// <summary>
+        /// Gets RTCP control port.
+        /// </summary>
+        public int ControlPort { get; }
+
+        /// <summary>
+        /// Gets RTP data port.
+        /// </summary>
+        public int DataPort { get; }
+
+        /// <summary>
+        /// Gets IP address.
+        /// </summary>
+        public IPAddress IP { get; }
+
+        /// <summary>
+        /// Gets if this is multicast RTP address.
+        /// </summary>
+        public bool IsMulticast
+        {
+            get { return Net_Utils.IsMulticastAddress(IP); }
+        }
+
+        /// <summary>
+        /// Gets RTPCP end point.
+        /// </summary>
+        public IPEndPoint RtcpEP { get; }
+
+        /// <summary>
+        /// Gets RTP end point.
+        /// </summary>
+        public IPEndPoint RtpEP { get; }
+
+        /// <summary>
+        /// Gets mulicast TTL(time to live) value.
+        /// </summary>
+        public int TTL { get; }
 
         /// <summary>
         /// Determines whether the specified Object is equal to the current Object.
@@ -82,14 +129,17 @@ namespace LumiSoft.Net.RTP
         /// <returns>True if the specified Object is equal to the current Object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
-            if(obj == null){
+            if (obj == null)
+            {
                 return false;
             }
 
-            if(obj is RTP_Address){
+            if (obj is RTP_Address)
+            {
                 var a = (RTP_Address)obj;
 
-                if (a.IP.Equals(IP) && a.ControlPort == ControlPort && a.DataPort == DataPort){
+                if (a.IP.Equals(IP) && a.ControlPort == ControlPort && a.DataPort == DataPort)
+                {
                     return true;
                 }
             }
@@ -105,43 +155,5 @@ namespace LumiSoft.Net.RTP
         {
             return base.GetHashCode();
         }
-
-        /// <summary>
-        /// Gets if this is multicast RTP address.
-        /// </summary>
-        public bool IsMulticast
-        {
-            get{ return Net_Utils.IsMulticastAddress(IP); }
-        }
-
-        /// <summary>
-        /// Gets IP address.
-        /// </summary>
-        public IPAddress IP { get; }
-
-        /// <summary>
-        /// Gets RTP data port.
-        /// </summary>
-        public int DataPort { get; }
-
-        /// <summary>
-        /// Gets RTCP control port.
-        /// </summary>
-        public int ControlPort { get; }
-
-        /// <summary>
-        /// Gets mulicast TTL(time to live) value.
-        /// </summary>
-        public int TTL { get; }
-
-        /// <summary>
-        /// Gets RTP end point.
-        /// </summary>
-        public IPEndPoint RtpEP { get; }
-
-        /// <summary>
-        /// Gets RTPCP end point.
-        /// </summary>
-        public IPEndPoint RtcpEP { get; }
     }
 }

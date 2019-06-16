@@ -14,14 +14,15 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>sr</b> is null reference.</exception>
         internal RTCP_Report_Sender(RTCP_Packet_SR sr)
         {
-            if(sr == null){
+            if (sr == null)
+            {
                 throw new ArgumentNullException("sr");
             }
 
-            NtpTimestamp      = sr.NtpTimestamp;
-            RtpTimestamp      = sr.RtpTimestamp;
+            NtpTimestamp = sr.NtpTimestamp;
+            RtpTimestamp = sr.RtpTimestamp;
             SenderPacketCount = sr.SenderPacketCount;
-            SenderOctetCount  = sr.SenderOctetCount;
+            SenderOctetCount = sr.SenderOctetCount;
         }
 
         /// <summary>
@@ -35,13 +36,13 @@ namespace LumiSoft.Net.RTP
         public uint RtpTimestamp { get; }
 
         /// <summary>
-        /// Gets how many packets sender has sent.
-        /// </summary>
-        public uint SenderPacketCount { get; }
-
-        /// <summary>
         /// Gets how many bytes sender has sent.
         /// </summary>
         public uint SenderOctetCount { get; }
+
+        /// <summary>
+        /// Gets how many packets sender has sent.
+        /// </summary>
+        public uint SenderPacketCount { get; }
     }
 }

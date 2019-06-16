@@ -16,10 +16,12 @@ namespace LumiSoft.Net.ABNF
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public ABNF_ProseVal(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
-            if(!Validate(value)){
+            if (!Validate(value))
+            {
                 // Just <> missing
                 // throw new ArgumentException("Invalid argument 'value' value. Value must be: '*(%x20-3D / %x3F-7E)'.");
             }
@@ -28,13 +30,19 @@ namespace LumiSoft.Net.ABNF
         }
 
         /// <summary>
+        /// Gets value.
+        /// </summary>
+        public string Value { get; } = "";
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
         public static ABNF_ProseVal Parse(System.IO.StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -47,7 +55,8 @@ namespace LumiSoft.Net.ABNF
 
             */
 
-            if(reader.Peek() != '<'){
+            if (reader.Peek() != '<')
+            {
                 throw new ParseException("Invalid ABNF 'prose-val' value '" + reader.ReadToEnd() + "'.");
             }
 
@@ -58,23 +67,28 @@ namespace LumiSoft.Net.ABNF
 
             var value = new StringBuilder();
 
-            while (true){
+            while (true)
+            {
                 // We reached end of stream, no closing DQUOTE.
-                if(reader.Peek() == -1){
+                if (reader.Peek() == -1)
+                {
                     throw new ParseException("Invalid ABNF 'prose-val' value '" + reader.ReadToEnd() + "'.");
                 }
                 // We have closing ">".
 
-                if(reader.Peek() == '>'){
+                if (reader.Peek() == '>')
+                {
                     reader.Read();
                     break;
                 }
                 // Allowed char.
-                if((reader.Peek() >= 0x20 && reader.Peek() <= 0x3D) || (reader.Peek() >= 0x3F && reader.Peek() <= 0x7E)){
+                if ((reader.Peek() >= 0x20 && reader.Peek() <= 0x3D) || (reader.Peek() >= 0x3F && reader.Peek() <= 0x7E))
+                {
                     value.Append((char)reader.Read());
                 }
                 // Invalid value.
-                else{
+                else
+                {
                     throw new ParseException("Invalid ABNF 'prose-val' value '" + reader.ReadToEnd() + "'.");
                 }
             }
@@ -90,38 +104,39 @@ namespace LumiSoft.Net.ABNF
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         private bool Validate(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
             // RFC 5234 4.
             //  prose-val =  "<" *(%x20-3D / %x3F-7E) ">"
 
-            if(value.Length < 2){
+            if (value.Length < 2)
+            {
                 return false;
             }
 
-            for(int i=0;i<value.Length;i++){
+            for (int i = 0; i < value.Length; i++)
+            {
                 char c = value[i];
 
-                if(i == 0 && c != '<'){
+                if (i == 0 && c != '<')
+                {
                     return false;
                 }
 
-                if(i == (value.Length - 1) && c != '>'){
+                if (i == (value.Length - 1) && c != '>')
+                {
                     return false;
                 }
-                if(!((c >= 0x20 && c <= 0x3D) || (c >= 0x3F && c <= 0x7E))){
+                if (!((c >= 0x20 && c <= 0x3D) || (c >= 0x3F && c <= 0x7E)))
+                {
                     return false;
                 }
             }
 
             return true;
         }
-
-        /// <summary>
-        /// Gets value.
-        /// </summary>
-        public string Value { get; } = "";
     }
 }

@@ -14,7 +14,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public IMAP_ClientException(IMAP_r_ServerStatus response) : base(response.ToString())
         {
-            Response = response ?? throw new ArgumentNullException("response");            
+            Response = response ?? throw new ArgumentNullException("response");
         }
 
         /// <summary>
@@ -24,7 +24,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>responseLine</b> is null.</exception>
         public IMAP_ClientException(string responseLine) : base(responseLine)
         {
-            if(responseLine == null){
+            if (responseLine == null)
+            {
                 throw new ArgumentNullException("responseLine");
             }
 
@@ -38,19 +39,23 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="responseText">Response text.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>responseCode</b> or <b>responseText</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_ClientException(string responseCode,string responseText) : base(responseCode + " " + responseText)
+        public IMAP_ClientException(string responseCode, string responseText) : base(responseCode + " " + responseText)
         {
-            if(responseCode == null){
+            if (responseCode == null)
+            {
                 throw new ArgumentNullException("responseCode");
             }
-            if(responseCode == string .Empty){
-                throw new ArgumentException("Argument 'responseCode' value must be specified.","responseCode");
+            if (responseCode == string.Empty)
+            {
+                throw new ArgumentException("Argument 'responseCode' value must be specified.", "responseCode");
             }
-            if(responseText == null){
+            if (responseText == null)
+            {
                 throw new ArgumentNullException("responseText");
             }
-            if(responseText == string .Empty){
-                throw new ArgumentException("Argument 'responseText' value must be specified.","responseText");
+            if (responseText == string.Empty)
+            {
+                throw new ArgumentException("Argument 'responseText' value must be specified.", "responseText");
             }
 
             Response = IMAP_r_ServerStatus.Parse(responseCode + " " + responseText);
@@ -62,19 +67,19 @@ namespace LumiSoft.Net.IMAP.Client
         public IMAP_r_ServerStatus Response { get; }
 
         /// <summary>
-        /// Gets IMAP server error status code.
-        /// </summary>
-        public string StatusCode
-        {
-            get{ return Response.ResponseCode; }
-        }
-
-        /// <summary>
         /// Gets IMAP server response text after status code.
         /// </summary>
         public string ResponseText
         {
-            get{ return Response.ResponseText; }
+            get { return Response.ResponseText; }
+        }
+
+        /// <summary>
+        /// Gets IMAP server error status code.
+        /// </summary>
+        public string StatusCode
+        {
+            get { return Response.ResponseCode; }
         }
     }
 }

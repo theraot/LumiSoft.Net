@@ -17,13 +17,19 @@ namespace LumiSoft.Net.ABNF
         }
 
         /// <summary>
+        /// Gets alternation items.
+        /// </summary>
+        public List<ABNF_Concatenation> Items { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
         public static ABNF_Alternation Parse(System.IO.StringReader reader)
         {
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -31,33 +37,33 @@ namespace LumiSoft.Net.ABNF
 
             var retVal = new ABNF_Alternation();
 
-            while (true){
+            while (true)
+            {
                 var item = ABNF_Concatenation.Parse(reader);
-                if (item != null){
+                if (item != null)
+                {
                     retVal.Items.Add(item);
                 }
 
                 // We reached end of string.
-                if(reader.Peek() == -1){
+                if (reader.Peek() == -1)
+                {
                     break;
                 }
                 // We have next alternation item.
 
-                if(reader.Peek() == '/'){
+                if (reader.Peek() == '/')
+                {
                     reader.Read();
                 }
                 // We have unexpected value, probably alternation ends.
-                else{
+                else
+                {
                     break;
                 }
-            }                      
+            }
 
             return retVal;
         }
-
-        /// <summary>
-        /// Gets alternation items.
-        /// </summary>
-        public List<ABNF_Concatenation> Items { get; }
     }
 }

@@ -15,18 +15,30 @@ namespace LumiSoft.Net.IMAP
         /// <param name="folderName">Folder name with path.</param>
         /// <param name="entries">ACL entries.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folderName</b> or <b>entries</b> is null reference.</exception>
-        public IMAP_r_u_Acl(string folderName,IMAP_Acl_Entry[] entries)
+        public IMAP_r_u_Acl(string folderName, IMAP_Acl_Entry[] entries)
         {
-            if(folderName == null){
+            if (folderName == null)
+            {
                 throw new ArgumentNullException("folderName");
             }
-            if(folderName == string.Empty){
-                throw new ArgumentException("Argument 'folderName' value must be specified.","folderName");
+            if (folderName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'folderName' value must be specified.", "folderName");
             }
 
             FolderName = folderName;
-            Entires   = entries ?? throw new ArgumentNullException("entries");
+            Entires = entries ?? throw new ArgumentNullException("entries");
         }
+
+        /// <summary>
+        /// Gets ACL entries.
+        /// </summary>
+        public IMAP_Acl_Entry[] Entires { get; }
+
+        /// <summary>
+        /// Gets folder name.
+        /// </summary>
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Parses ACL response from acl-response string.
@@ -36,7 +48,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised wehn <b>aclResponse</b> is null reference.</exception>
         public static IMAP_r_u_Acl Parse(string aclResponse)
         {
-            if(aclResponse == null){
+            if (aclResponse == null)
+            {
                 throw new ArgumentNullException("aclResponse");
             }
 
@@ -61,14 +74,15 @@ namespace LumiSoft.Net.IMAP
             // Eat "ACL"
             r.ReadWord();
 
-            var               folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
-            var             items      = r.ReadToEnd().Split(' ');
-            var entries    = new List<IMAP_Acl_Entry>();
-            for (int i=0;i<items.Length;i+=2){
-                entries.Add(new IMAP_Acl_Entry(items[i],items[i + 1]));
+            var folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
+            var items = r.ReadToEnd().Split(' ');
+            var entries = new List<IMAP_Acl_Entry>();
+            for (int i = 0; i < items.Length; i += 2)
+            {
+                entries.Add(new IMAP_Acl_Entry(items[i], items[i + 1]));
             }
 
-            return new IMAP_r_u_Acl(folderName,entries.ToArray());
+            return new IMAP_r_u_Acl(folderName, entries.ToArray());
         }
 
         /// <summary>
@@ -91,23 +105,14 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* ACL ");
-            retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
-            foreach(IMAP_Acl_Entry e in Entires){
+            retVal.Append(IMAP_Utils.EncodeMailbox(FolderName, encoding));
+            foreach (IMAP_Acl_Entry e in Entires)
+            {
                 retVal.Append(" \"" + e.Identifier + "\" \"" + e.Rights + "\"");
             }
             retVal.Append("\r\n");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets folder name.
-        /// </summary>
-        public string FolderName { get; } = "";
-
-        /// <summary>
-        /// Gets ACL entries.
-        /// </summary>
-        public IMAP_Acl_Entry[] Entires { get; }
     }
 }

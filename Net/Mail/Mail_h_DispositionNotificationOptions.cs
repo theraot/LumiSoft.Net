@@ -10,6 +10,32 @@ namespace LumiSoft.Net.Mail
     /// </summary>
     public class Mail_h_DispositionNotificationOptions : MIME_h
     {
+
+        /// <summary>
+        /// Gets or sets mailbox address.
+        /// </summary>
+        public string Address
+        {
+            get { return "TODO:"; }
+        }
+
+        /// <summary>
+        /// Gets if this header field is modified since it has loaded.
+        /// </summary>
+        /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
+        /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
+        public override bool IsModified
+        {
+            get { return true; } //m_pAddresses.IsModified; }
+        }
+
+        /// <summary>
+        /// Gets header field name. For example "Sender".
+        /// </summary>
+        public override string Name
+        {
+            get { return "Disposition-Notification-Options"; }
+        }
         /*
             Disposition-Notification-Options    = "Disposition-Notification-Options" ":" disposition-notification-parameters
             disposition-notification-parameters = parameter *(";" parameter)
@@ -25,35 +51,9 @@ namespace LumiSoft.Net.Mail
         /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.</param>
         /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
         /// <returns>Returns header field as string.</returns>
-        public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
+        public override string ToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset, bool reEncode)
         {
             return "TODO:";
-        }
-
-        /// <summary>
-        /// Gets if this header field is modified since it has loaded.
-        /// </summary>
-        /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
-        /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get{ return true; } //m_pAddresses.IsModified; }
-        }
-
-        /// <summary>
-        /// Gets header field name. For example "Sender".
-        /// </summary>
-        public override string Name
-        {
-            get{ return "Disposition-Notification-Options"; }
-        }
-
-        /// <summary>
-        /// Gets or sets mailbox address.
-        /// </summary>
-        public string Address
-        {
-            get{ return "TODO:"; }
         }
     }
 }

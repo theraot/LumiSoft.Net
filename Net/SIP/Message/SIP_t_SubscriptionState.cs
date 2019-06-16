@@ -23,26 +23,224 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_SubscriptionState : SIP_t_ValueWithParams
     {
+
+        private string m_Value = "";
+
         /// <summary>
-        /// This class holds 'substate-value' values.
+        /// Default constructor.
         /// </summary>
-        public class SubscriptionState
+        /// <param name="value"></param>
+        public SIP_t_SubscriptionState(string value)
         {
-            /// <summary>
-            /// The subscription has been accepted and (in general) has been authorized.
-            /// </summary>
-            public const string active = "active";
+            Parse(value);
+        }
 
-            /// <summary>
-            /// The subscription has been received by the notifier, but there is insufficient policy
-            /// information to grant or deny the subscription yet.
-            /// </summary>
-            public const string pending = "pending";
+        /// <summary>
+        /// Gets or sets 'expires' parameter value. Value -1 means not specified.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when negative value(except -1) is passed.</exception>
+        public int Expires
+        {
+            get
+            {
+                var parameter = Parameters["expires"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
 
-            /// <summary>
-            /// The subscriber should consider the subscription terminated.
-            /// </summary>
-            public const string terminated = "terminated";
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("expires");
+                }
+                else
+                {
+                    if (value < 0)
+                    {
+                        throw new ArgumentException("Property 'Expires' value must >= 0 !");
+                    }
+
+                    Parameters.Set("expires", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'reason' parameter value. Known reason values are defined in EventReason class.
+        /// Value null means not specified. 
+        /// </summary>
+        public string Reason
+        {
+            get
+            {
+                var parameter = Parameters["reason"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("reason");
+                }
+                else
+                {
+                    Parameters.Set("reason", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'expires' parameter value. Value -1 means not specified.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when negative value(except -1) is passed.</exception>
+        public int RetryAfter
+        {
+            get
+            {
+                var parameter = Parameters["retry-after"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("retry-after");
+                }
+                else
+                {
+                    if (value < 0)
+                    {
+                        throw new ArgumentException("Property 'RetryAfter' value must >= 0 !");
+                    }
+
+                    Parameters.Set("retry-after", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets subscription state value. Known values are defined in SubscriptionState class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value passed.</exception>
+        /// <exception cref="ArgumentException">Is raised when empty string is passed or value is not token.</exception>
+        public string Value
+        {
+            get { return m_Value; }
+
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Value");
+                }
+                if (value == "")
+                {
+                    throw new ArgumentException("Property 'Value' value may not be '' !");
+                }
+                if (!TextUtils.IsToken(value))
+                {
+                    throw new ArgumentException("Property 'Value' value must be 'token' !");
+                }
+
+                m_Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Parses "Subscription-State" from specified value.
+        /// </summary>
+        /// <param name="value">SIP "Subscription-State" value.</param>
+        /// <exception cref="ArgumentNullException">Raised when <b>value</b> is null.</exception>
+        /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
+        public void Parse(string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            Parse(new StringReader(value));
+        }
+
+        /// <summary>
+        /// Parses "Subscription-State" from specified reader.
+        /// </summary>
+        /// <param name="reader">Reader from where to parse.</param>
+        /// <exception cref="ArgumentNullException">Raised when <b>reader</b> is null.</exception>
+        /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
+        public override void Parse(StringReader reader)
+        {
+            /*
+                Subscription-State     = substate-value *( SEMI subexp-params )
+                substate-value         = "active" / "pending" / "terminated" / extension-substate
+                extension-substate     = token
+                subexp-params          =   ("reason" EQUAL event-reason-value)
+                                          / ("expires" EQUAL delta-seconds)
+                                          / ("retry-after" EQUAL delta-seconds)
+                                          / generic-param
+                event-reason-value     = "deactivated" / "probation" / "rejected" / "timeout" / "giveup"
+                                          / "noresource" / event-reason-extension
+                event-reason-extension = token
+            */
+
+            if (reader == null)
+            {
+                throw new ArgumentNullException("reader");
+            }
+
+            // substate-value
+            var word = reader.ReadWord();
+            m_Value = word ?? throw new SIP_ParseException("SIP Event 'substate-value' value is missing !");
+
+            // Parse parameters
+            ParseParameters(reader);
+        }
+
+        /// <summary>
+        /// Converts this to valid "Subscription-State" value.
+        /// </summary>
+        /// <returns>Returns "Subscription-State" value.</returns>
+        public override string ToStringValue()
+        {
+            /*
+                Subscription-State     = substate-value *( SEMI subexp-params )
+                substate-value         = "active" / "pending" / "terminated" / extension-substate
+                extension-substate     = token
+                subexp-params          =   ("reason" EQUAL event-reason-value)
+                                          / ("expires" EQUAL delta-seconds)
+                                          / ("retry-after" EQUAL delta-seconds)
+                                          / generic-param
+                event-reason-value     = "deactivated" / "probation" / "rejected" / "timeout" / "giveup"
+                                          / "noresource" / event-reason-extension
+                event-reason-extension = token
+            */
+
+            var retVal = new StringBuilder();
+
+            // substate-value
+            retVal.Append(m_Value);
+
+            // Add parameters
+            retVal.Append(ParametersToString());
+
+            return retVal.ToString();
         }
 
         /// <summary>
@@ -92,201 +290,26 @@ namespace LumiSoft.Net.SIP.Message
             /// </summary>
             public const string noresource = "noresource";
         }
-
-        private string m_Value = "";
-
         /// <summary>
-        /// Default constructor.
+        /// This class holds 'substate-value' values.
         /// </summary>
-        /// <param name="value"></param>
-        public SIP_t_SubscriptionState(string value)
+        public class SubscriptionState
         {
-            Parse(value);
-        }
+            /// <summary>
+            /// The subscription has been accepted and (in general) has been authorized.
+            /// </summary>
+            public const string active = "active";
 
-        /// <summary>
-        /// Parses "Subscription-State" from specified value.
-        /// </summary>
-        /// <param name="value">SIP "Subscription-State" value.</param>
-        /// <exception cref="ArgumentNullException">Raised when <b>value</b> is null.</exception>
-        /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
-        public void Parse(string value)
-        {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
+            /// <summary>
+            /// The subscription has been received by the notifier, but there is insufficient policy
+            /// information to grant or deny the subscription yet.
+            /// </summary>
+            public const string pending = "pending";
 
-            Parse(new StringReader(value));
-        }
-
-        /// <summary>
-        /// Parses "Subscription-State" from specified reader.
-        /// </summary>
-        /// <param name="reader">Reader from where to parse.</param>
-        /// <exception cref="ArgumentNullException">Raised when <b>reader</b> is null.</exception>
-        /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
-        public override void Parse(StringReader reader)
-        {
-            /*
-                Subscription-State     = substate-value *( SEMI subexp-params )
-                substate-value         = "active" / "pending" / "terminated" / extension-substate
-                extension-substate     = token
-                subexp-params          =   ("reason" EQUAL event-reason-value)
-                                          / ("expires" EQUAL delta-seconds)
-                                          / ("retry-after" EQUAL delta-seconds)
-                                          / generic-param
-                event-reason-value     = "deactivated" / "probation" / "rejected" / "timeout" / "giveup"
-                                          / "noresource" / event-reason-extension
-                event-reason-extension = token
-            */
-
-            if(reader == null){
-                throw new ArgumentNullException("reader");
-            }
-
-            // substate-value
-            var word = reader.ReadWord();
-            m_Value = word ?? throw new SIP_ParseException("SIP Event 'substate-value' value is missing !");
-
-            // Parse parameters
-            ParseParameters(reader);
-        }
-
-        /// <summary>
-        /// Converts this to valid "Subscription-State" value.
-        /// </summary>
-        /// <returns>Returns "Subscription-State" value.</returns>
-        public override string ToStringValue()
-        {
-            /*
-                Subscription-State     = substate-value *( SEMI subexp-params )
-                substate-value         = "active" / "pending" / "terminated" / extension-substate
-                extension-substate     = token
-                subexp-params          =   ("reason" EQUAL event-reason-value)
-                                          / ("expires" EQUAL delta-seconds)
-                                          / ("retry-after" EQUAL delta-seconds)
-                                          / generic-param
-                event-reason-value     = "deactivated" / "probation" / "rejected" / "timeout" / "giveup"
-                                          / "noresource" / event-reason-extension
-                event-reason-extension = token
-            */
-
-            var retVal = new StringBuilder();
-
-            // substate-value
-            retVal.Append(m_Value);
-
-            // Add parameters
-            retVal.Append(ParametersToString());
-
-            return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets subscription state value. Known values are defined in SubscriptionState class.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value passed.</exception>
-        /// <exception cref="ArgumentException">Is raised when empty string is passed or value is not token.</exception>
-        public string Value
-        {
-            get{ return m_Value; }
-
-            set{
-                if(value == null){
-                    throw new ArgumentNullException("Value");
-                }
-                if(value == ""){
-                    throw new ArgumentException("Property 'Value' value may not be '' !");
-                }
-                if(!TextUtils.IsToken(value)){
-                    throw new ArgumentException("Property 'Value' value must be 'token' !");
-                }
-
-                m_Value = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'reason' parameter value. Known reason values are defined in EventReason class.
-        /// Value null means not specified. 
-        /// </summary>
-        public string Reason
-        {
-            get{ 
-                var parameter = Parameters["reason"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("reason");
-                }
-                else{
-                    Parameters.Set("reason",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'expires' parameter value. Value -1 means not specified.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when negative value(except -1) is passed.</exception>
-        public int Expires
-        {
-            get{ 
-                var parameter = Parameters["expires"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{                
-                if(value == -1){
-                    Parameters.Remove("expires");
-                }
-                else{
-                    if(value < 0){
-                        throw new ArgumentException("Property 'Expires' value must >= 0 !");
-                    }
-
-                    Parameters.Set("expires",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'expires' parameter value. Value -1 means not specified.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when negative value(except -1) is passed.</exception>
-        public int RetryAfter
-        {
-            get{ 
-                var parameter = Parameters["retry-after"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{                
-                if(value == -1){
-                    Parameters.Remove("retry-after");
-                }
-                else{
-                    if(value < 0){
-                        throw new ArgumentException("Property 'RetryAfter' value must >= 0 !");
-                    }
-
-                    Parameters.Set("retry-after",value.ToString());
-                }
-            }
+            /// <summary>
+            /// The subscriber should consider the subscription terminated.
+            /// </summary>
+            public const string terminated = "terminated";
         }
     }
 }

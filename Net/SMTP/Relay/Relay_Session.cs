@@ -17,6 +17,1159 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_Session : TCP_Session
     {
+        private Relay_Target m_pActiveTarget;
+        private IPBindInfo m_pLocalBindInfo;
+        private Relay_QueueItem m_pRelayItem;
+
+        private Relay_Server m_pServer;
+        private Relay_SmartHost[] m_pSmartHosts;
+        private SMTP_Client m_pSmtpClient;
+        private List<Relay_Target> m_pTargets;
+        private readonly Relay_Mode m_RelayMode = Relay_Mode.Dns;
+        private readonly DateTime m_SessionCreateTime;
+        private readonly string m_SessionID = "";
+
+        /// <summary>
+        /// Dns relay session constructor.
+        /// </summary>
+        /// <param name="server">Owner relay server.</param>
+        /// <param name="realyItem">Relay item.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>server</b> or <b>realyItem</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        internal Relay_Session(Relay_Server server, Relay_QueueItem realyItem)
+        {
+            m_pServer = server ?? throw new ArgumentNullException("server");
+            m_pRelayItem = realyItem ?? throw new ArgumentNullException("realyItem");
+
+            m_SessionID = Guid.NewGuid().ToString();
+            m_SessionCreateTime = DateTime.Now;
+            m_pTargets = new List<Relay_Target>();
+            m_pSmtpClient = new SMTP_Client();
+        }
+
+        /// <summary>
+        /// Smart host relay session constructor.
+        /// </summary>
+        /// <param name="server">Owner relay server.</param>
+        /// <param name="realyItem">Relay item.</param>
+        /// <param name="smartHosts">Smart hosts.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>server</b>,<b>realyItem</b> or <b>smartHosts</b>is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        internal Relay_Session(Relay_Server server, Relay_QueueItem realyItem, Relay_SmartHost[] smartHosts)
+        {
+            m_pServer = server ?? throw new ArgumentNullException("server");
+            m_pRelayItem = realyItem ?? throw new ArgumentNullException("realyItem");
+            m_pSmartHosts = smartHosts ?? throw new ArgumentNullException("smartHosts");
+
+            m_RelayMode = Relay_Mode.SmartHost;
+            m_SessionID = Guid.NewGuid().ToString();
+            m_SessionCreateTime = DateTime.Now;
+            m_pTargets = new List<Relay_Target>();
+            m_pSmtpClient = new SMTP_Client();
+        }
+
+        /// <summary>
+        /// Gets session authenticated user identity, returns null if not authenticated.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and relay session is not connected.</exception>
+        public override GenericIdentity AuthenticatedUserIdentity
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!m_pSmtpClient.IsConnected)
+                {
+                    throw new InvalidOperationException("You must connect first.");
+                }
+
+                return m_pSmtpClient.AuthenticatedUserIdentity;
+            }
+        }
+
+        /// <summary>
+        /// Gets the time when session was connected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override DateTime ConnectTime
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSmtpClient.ConnectTime;
+            }
+        }
+
+        /// <summary>
+        /// Gets how many seconds has left before timout is triggered.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public int ExpectedTimeout
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return (int)(m_pServer.SessionIdleTimeout - ((DateTime.Now.Ticks - TcpStream.LastActivity.Ticks) / 10000));
+            }
+        }
+
+        /// <summary>
+        /// Gets from address.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public string From
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRelayItem.From;
+            }
+        }
+
+        /// <summary>
+        /// Gets session ID.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override string ID
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_SessionID;
+            }
+        }
+
+        /// <summary>
+        /// Gets if session is connected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool IsConnected
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSmtpClient.IsConnected;
+            }
+        }
+
+        /// <summary>
+        /// Gets if this object is disposed.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Gets the last time when data was sent or received.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override DateTime LastActivity
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSmtpClient.LastActivity;
+            }
+        }
+
+        /// <summary>
+        /// Gets session local IP end point.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override IPEndPoint LocalEndPoint
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSmtpClient.LocalEndPoint;
+            }
+        }
+
+        /// <summary>
+        /// Gets local host name for LoaclEP.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public string LocalHostName
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return (m_pLocalBindInfo == null ? "" : m_pLocalBindInfo.HostName);
+            }
+        }
+
+        /// <summary>
+        /// Gets message ID which is being relayed now.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public string MessageID
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRelayItem.MessageID;
+            }
+        }
+
+        /// <summary>
+        /// Gets message what is being relayed now.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public Stream MessageStream
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRelayItem.MessageStream;
+            }
+        }
+
+        /// <summary>
+        /// Gets relay queue which session it is.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public Relay_Queue Queue
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRelayItem.Queue;
+            }
+        }
+
+        /// <summary>
+        /// Gets user data what was procided to Relay_Queue.QueueMessage method.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public object QueueTag
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRelayItem.Tag;
+            }
+        }
+
+        /// <summary>
+        /// Gets session remote IP end point.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override IPEndPoint RemoteEndPoint
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSmtpClient.RemoteEndPoint;
+            }
+        }
+
+        /// <summary>
+        /// Gets current remote host name. Returns null if not connected to any target.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public string RemoteHostName
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                if (m_pActiveTarget != null)
+                {
+                    return m_pActiveTarget.HostName;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets time when relay session created.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public DateTime SessionCreateTime
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_SessionCreateTime;
+            }
+        }
+
+        /// <summary>
+        /// Gets TCP stream which must be used to send/receive data through this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override SmartStream TcpStream
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSmtpClient.TcpStream;
+            }
+        }
+
+        /// <summary>
+        /// Gets target recipient.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public string To
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRelayItem.To;
+            }
+        }
+
+        /// <summary>
+        /// Closes relay connection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override void Disconnect()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                return;
+            }
+
+            m_pSmtpClient.Disconnect();
+        }
+
+        /// <summary>
+        /// Closes relay connection.
+        /// </summary>
+        /// <param name="text">Text to send to the connected host.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public void Disconnect(string text)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (!IsConnected)
+            {
+                return;
+            }
+
+            m_pSmtpClient.TcpStream.WriteLine(text);
+            Disconnect();
+        }
+
+        /// <summary>
+        /// Completes relay session and does clean up. This method is thread-safe.
+        /// </summary>
+        public override void Dispose()
+        {
+            Dispose(new ObjectDisposedException(GetType().Name));
+        }
+
+        /// <summary>
+        /// Completes relay session and does clean up. This method is thread-safe.
+        /// </summary>
+        /// <param name="exception">Exception happened or null if relay completed successfully.</param>
+        public void Dispose(Exception exception)
+        {
+            try
+            {
+                lock (this)
+                {
+                    if (IsDisposed)
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        m_pServer.OnSessionCompleted(this, exception);
+                    }
+                    catch
+                    {
+                    }
+                    m_pServer.Sessions.Remove(this);
+                    IsDisposed = true;
+
+                    m_pLocalBindInfo = null;
+                    m_pRelayItem = null;
+                    m_pSmartHosts = null;
+                    if (m_pSmtpClient != null)
+                    {
+                        m_pSmtpClient.Dispose();
+                        m_pSmtpClient = null;
+                    }
+                    m_pTargets = null;
+                    if (m_pActiveTarget != null)
+                    {
+                        m_pServer.RemoveIpUsage(m_pActiveTarget.Target.Address);
+                        m_pActiveTarget = null;
+                    }
+                    m_pServer = null;
+                }
+            }
+            catch (Exception x)
+            {
+                if (m_pServer != null)
+                {
+                    m_pServer.OnError(x);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Start processing relay message.
+        /// </summary>
+        /// <param name="state">User data.</param>
+        internal void Start(object state)
+        {
+            try
+            {
+                if (m_pServer.Logger != null)
+                {
+                    m_pSmtpClient.Logger = new Logger();
+                    m_pSmtpClient.Logger.WriteLog += new EventHandler<WriteLogEventArgs>(SmtpClient_WriteLog);
+                }
+
+                LogText("Starting to relay message '" + m_pRelayItem.MessageID + "' from '" + m_pRelayItem.From + "' to '" + m_pRelayItem.To + "'.");
+
+                // Resolve email target hosts.               
+                if (m_RelayMode == Relay_Mode.Dns)
+                {
+                    var op = new Dns_Client.GetEmailHostsAsyncOP(m_pRelayItem.To);
+                    op.CompletedAsync += delegate (object s1, EventArgs<Dns_Client.GetEmailHostsAsyncOP> e1)
+                    {
+                        EmailHostsResolveCompleted(m_pRelayItem.To, op);
+                    };
+                    if (!m_pServer.DnsClient.GetEmailHostsAsync(op))
+                    {
+                        EmailHostsResolveCompleted(m_pRelayItem.To, op);
+                    }
+                }
+                // Resolve smart hosts IP addresses.
+                else if (m_RelayMode == Relay_Mode.SmartHost)
+                {
+                    var smartHosts = new string[m_pSmartHosts.Length];
+                    for (int i = 0; i < m_pSmartHosts.Length; i++)
+                    {
+                        smartHosts[i] = m_pSmartHosts[i].Host;
+                    }
+
+                    var op = new Dns_Client.GetHostsAddressesAsyncOP(smartHosts);
+                    op.CompletedAsync += delegate (object s1, EventArgs<Dns_Client.GetHostsAddressesAsyncOP> e1)
+                    {
+                        SmartHostsResolveCompleted(op);
+                    };
+                    if (!m_pServer.DnsClient.GetHostsAddressesAsync(op))
+                    {
+                        SmartHostsResolveCompleted(op);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
+
+        /// <summary>
+        /// Is called when AUTH command has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void AuthCommandCompleted(SMTP_Client.AuthAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                if (op.Error != null)
+                {
+                    Dispose(op.Error);
+                }
+                else
+                {
+                    long messageSize = -1;
+                    try
+                    {
+                        messageSize = m_pRelayItem.MessageStream.Length - m_pRelayItem.MessageStream.Position;
+                    }
+                    catch
+                    {
+                        // Stream doesn't support seeking.
+                    }
+
+                    var mailOP = new SMTP_Client.MailFromAsyncOP(
+                        From,
+                        messageSize,
+                        IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
+                        IsDsnSupported() ? m_pRelayItem.EnvelopeID : null
+                    );
+                    mailOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.MailFromAsyncOP> e)
+                    {
+                        MailCommandCompleted(mailOP);
+                    };
+                    if (!m_pSmtpClient.MailFromAsync(mailOP))
+                    {
+                        MailCommandCompleted(mailOP);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
+
+        /// <summary>
+        /// Starts connecting to best target. 
+        /// </summary>
+        private void BeginConnect()
+        {
+            // No tagets, abort relay.
+            if (m_pTargets.Count == 0)
+            {
+                LogText("No relay target(s) for '" + m_pRelayItem.To + "', aborting.");
+                Dispose(new Exception("No relay target(s) for '" + m_pRelayItem.To + "', aborting."));
+
+                return;
+            }
+
+            // Maximum connections per IP limited.           
+            if (m_pServer.MaxConnectionsPerIP > 0)
+            {
+                // For DNS or load-balnced smart host relay, search free target if any.
+                if (m_pServer.RelayMode == Relay_Mode.Dns || m_pServer.SmartHostsBalanceMode == BalanceMode.LoadBalance)
+                {
+                    foreach (Relay_Target t in m_pTargets)
+                    {
+                        // Get local IP binding for remote IP.
+                        m_pLocalBindInfo = m_pServer.GetLocalBinding(t.Target.Address);
+
+                        // We have suitable local IP binding for the target.
+                        if (m_pLocalBindInfo != null)
+                        {
+                            // We found free target, stop searching.
+                            if (m_pServer.TryAddIpUsage(t.Target.Address))
+                            {
+                                m_pActiveTarget = t;
+                                m_pTargets.Remove(t);
+
+                                break;
+                            }
+                            // Connection per IP limit reached.
+
+                            LogText("Skipping relay target (" + t.HostName + "->" + t.Target.Address + "), maximum connections to the specified IP has reached.");
+                        }
+                        // No suitable local IP binding, try next target.
+                        else
+                        {
+                            LogText("Skipping relay target (" + t.HostName + "->" + t.Target.Address + "), no suitable local IPv4/IPv6 binding.");
+                        }
+                    }
+                }
+                // Smart host fail-over mode, just check if it's free.
+                else
+                {
+                    // Get local IP binding for remote IP.
+                    m_pLocalBindInfo = m_pServer.GetLocalBinding(m_pTargets[0].Target.Address);
+
+                    // We have suitable local IP binding for the target.
+                    if (m_pLocalBindInfo != null)
+                    {
+                        // Smart host IP limit not reached.
+                        if (m_pServer.TryAddIpUsage(m_pTargets[0].Target.Address))
+                        {
+                            m_pActiveTarget = m_pTargets[0];
+                            m_pTargets.RemoveAt(0);
+                        }
+                        // Connection per IP limit reached.
+                        else
+                        {
+                            LogText("Skipping relay target (" + m_pTargets[0].HostName + "->" + m_pTargets[0].Target.Address + "), maximum connections to the specified IP has reached.");
+                        }
+                    }
+                    // No suitable local IP binding, try next target.
+                    else
+                    {
+                        LogText("Skipping relay target (" + m_pTargets[0].HostName + "->" + m_pTargets[0].Target.Address + "), no suitable local IPv4/IPv6 binding.");
+                    }
+                }
+            }
+            // Just get first target.
+            else
+            {
+                // Get local IP binding for remote IP.
+                m_pLocalBindInfo = m_pServer.GetLocalBinding(m_pTargets[0].Target.Address);
+
+                // We have suitable local IP binding for the target.
+                if (m_pLocalBindInfo != null)
+                {
+                    m_pActiveTarget = m_pTargets[0];
+                    m_pTargets.RemoveAt(0);
+                }
+                // No suitable local IP binding, try next target.
+                else
+                {
+                    LogText("Skipping relay target (" + m_pTargets[0].HostName + "->" + m_pTargets[0].Target.Address + "), no suitable local IPv4/IPv6 binding.");
+                }
+            }
+
+            // We don't have suitable local IP end point for relay target.
+            // This may heppen for example: if remote server supports only IPv6 and we don't have local IPv6 local end point.            
+            if (m_pLocalBindInfo == null)
+            {
+                LogText("No suitable IPv4/IPv6 local IP endpoint for relay target.");
+                Dispose(new Exception("No suitable IPv4/IPv6 local IP endpoint for relay target."));
+
+                return;
+            }
+
+            // If all targets has exeeded maximum allowed connection per IP address, end relay session, 
+            // next relay cycle will try to relay again.
+            if (m_pActiveTarget == null)
+            {
+                LogText("All targets has exeeded maximum allowed connection per IP address, skip relay.");
+                Dispose(new Exception("All targets has exeeded maximum allowed connection per IP address, skip relay."));
+
+                return;
+            }
+
+            // Set SMTP host name.
+            m_pSmtpClient.LocalHostName = m_pLocalBindInfo.HostName;
+
+            // Start connecting to remote end point.
+            var connectOP = new TCP_Client.ConnectAsyncOP(new IPEndPoint(m_pLocalBindInfo.IP, 0), m_pActiveTarget.Target, false, null);
+            connectOP.CompletedAsync += delegate (object s, EventArgs<TCP_Client.ConnectAsyncOP> e)
+            {
+                ConnectCompleted(connectOP);
+            };
+            if (!m_pSmtpClient.ConnectAsync(connectOP))
+            {
+                ConnectCompleted(connectOP);
+            }
+        }
+
+        /// <summary>
+        /// Is called when EHLO/HELO command has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void ConnectCompleted(TCP_Client.ConnectAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                // Connect failed.
+                if (op.Error != null)
+                {
+                    try
+                    {
+                        // Release IP usage.
+                        m_pServer.RemoveIpUsage(m_pActiveTarget.Target.Address);
+                        m_pActiveTarget = null;
+
+                        // Connect failed, if there are more target IPs, try next one.
+                        if (!IsDisposed && !IsConnected && m_pTargets.Count > 0)
+                        {
+                            BeginConnect();
+                        }
+                        else
+                        {
+                            Dispose(op.Error);
+                        }
+                    }
+                    catch (Exception x1)
+                    {
+                        Dispose(x1);
+                    }
+                }
+                // Connect suceeded.
+                else
+                {
+                    // Do EHLO/HELO.
+                    var hostName = string.IsNullOrEmpty(m_pLocalBindInfo.HostName) ? Dns.GetHostName() : m_pLocalBindInfo.HostName;
+                    var ehloOP = new SMTP_Client.EhloHeloAsyncOP(hostName);
+                    ehloOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.EhloHeloAsyncOP> e)
+                    {
+                        EhloCommandCompleted(ehloOP);
+                    };
+                    if (!m_pSmtpClient.EhloHeloAsync(ehloOP))
+                    {
+                        EhloCommandCompleted(ehloOP);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
+
+        /// <summary>
+        /// Is called when EHLO/HELO command has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void EhloCommandCompleted(SMTP_Client.EhloHeloAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                if (op.Error != null)
+                {
+                    Dispose(op.Error);
+                }
+                else
+                {
+                    // Start TLS requested, start switching to secure.
+                    if (!m_pSmtpClient.IsSecureConnection && m_pActiveTarget.SslMode == SslMode.TLS)
+                    {
+                        var startTlsOP = new SMTP_Client.StartTlsAsyncOP(null);
+                        startTlsOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.StartTlsAsyncOP> e)
+                        {
+                            StartTlsCommandCompleted(startTlsOP);
+                        };
+                        if (!m_pSmtpClient.StartTlsAsync(startTlsOP))
+                        {
+                            StartTlsCommandCompleted(startTlsOP);
+                        }
+                    }
+                    // Authentication requested, start authenticating.
+                    else if (!string.IsNullOrEmpty(m_pActiveTarget.UserName))
+                    {
+                        var authOP = new SMTP_Client.AuthAsyncOP(m_pSmtpClient.AuthGetStrongestMethod(m_pActiveTarget.UserName, m_pActiveTarget.Password));
+                        authOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.AuthAsyncOP> e)
+                        {
+                            AuthCommandCompleted(authOP);
+                        };
+                        if (!m_pSmtpClient.AuthAsync(authOP))
+                        {
+                            AuthCommandCompleted(authOP);
+                        }
+                    }
+                    // Start MAIL command.
+                    else
+                    {
+                        long messageSize = -1;
+                        try
+                        {
+                            messageSize = m_pRelayItem.MessageStream.Length - m_pRelayItem.MessageStream.Position;
+                        }
+                        catch
+                        {
+                            // Stream doesn't support seeking.
+                        }
+
+                        var mailOP = new SMTP_Client.MailFromAsyncOP(
+                            From,
+                            messageSize,
+                            IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
+                            IsDsnSupported() ? m_pRelayItem.EnvelopeID : null
+                        );
+                        mailOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.MailFromAsyncOP> e)
+                        {
+                            MailCommandCompleted(mailOP);
+                        };
+                        if (!m_pSmtpClient.MailFromAsync(mailOP))
+                        {
+                            MailCommandCompleted(mailOP);
+                        }
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
+
+        /// <summary>
+        /// Is called when email domain target servers resolve operation has completed.
+        /// </summary>
+        /// <param name="to">RCPT TO: address.</param>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>to</b> or <b>op</b> is null reference.</exception>
+        private void EmailHostsResolveCompleted(string to, Dns_Client.GetEmailHostsAsyncOP op)
+        {
+            if (to == null)
+            {
+                throw new ArgumentNullException("to");
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            if (op.Error != null)
+            {
+                LogText("Failed to resolve email domain for email address '" + to + "' with error: " + op.Error.Message + ".");
+
+                Dispose(op.Error);
+            }
+            else
+            {
+                var buf = new StringBuilder();
+                foreach (HostEntry host in op.Hosts)
+                {
+                    foreach (IPAddress ip in host.Addresses)
+                    {
+                        m_pTargets.Add(new Relay_Target(host.HostName, new IPEndPoint(ip, 25)));
+                    }
+                    buf.Append(host.HostName + " ");
+                }
+                LogText("Resolved to following email hosts: (" + buf.ToString().TrimEnd() + ").");
+
+                BeginConnect();
+            }
+
+            op.Dispose();
+        }
+
+        /// <summary>
+        /// Gets if DSN extention is supported by remote server.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsDsnSupported()
+        {
+            foreach (string feature in m_pSmtpClient.EsmtpFeatures)
+            {
+                if (string.Equals(feature, SMTP_ServiceExtensions.DSN, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Logs specified text if logging enabled.
+        /// </summary>
+        /// <param name="text">Text to log.</param>
+        private void LogText(string text)
+        {
+            if (m_pServer.Logger != null)
+            {
+                GenericIdentity identity = null;
+                try
+                {
+                    identity = AuthenticatedUserIdentity;
+                }
+                catch
+                {
+                }
+                IPEndPoint localEP = null;
+                IPEndPoint remoteEP = null;
+                try
+                {
+                    localEP = m_pSmtpClient.LocalEndPoint;
+                    remoteEP = m_pSmtpClient.RemoteEndPoint;
+                }
+                catch
+                {
+                }
+                m_pServer.Logger.AddText(m_SessionID, identity, text, localEP, remoteEP);
+            }
+        }
+
+        /// <summary>
+        /// Is called when MAIL command has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void MailCommandCompleted(SMTP_Client.MailFromAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                if (op.Error != null)
+                {
+                    Dispose(op.Error);
+                }
+                else
+                {
+                    var rcptOP = new SMTP_Client.RcptToAsyncOP(
+                        To,
+                        IsDsnSupported() ? m_pRelayItem.DSN_Notify : SMTP_DSN_Notify.NotSpecified,
+                        IsDsnSupported() ? m_pRelayItem.OriginalRecipient : null
+                    );
+                    rcptOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.RcptToAsyncOP> e)
+                    {
+                        RcptCommandCompleted(rcptOP);
+                    };
+                    if (!m_pSmtpClient.RcptToAsync(rcptOP))
+                    {
+                        RcptCommandCompleted(rcptOP);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
+
+        /// <summary>
+        /// Is called when message sending has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void MessageSendingCompleted(SMTP_Client.SendMessageAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                if (op.Error != null)
+                {
+                    Dispose(op.Error);
+                }
+                // Message sent sucessfully.
+                else
+                {
+                    Dispose(null);
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+
+            op.Dispose();
+        }
+
+        /// <summary>
+        /// Is called when RCPT command has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void RcptCommandCompleted(SMTP_Client.RcptToAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                if (op.Error != null)
+                {
+                    Dispose(op.Error);
+                }
+                else
+                {
+                    // Start sending message.
+                    var sendMsgOP = new SMTP_Client.SendMessageAsyncOP(m_pRelayItem.MessageStream, false);
+                    sendMsgOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.SendMessageAsyncOP> e)
+                    {
+                        MessageSendingCompleted(sendMsgOP);
+                    };
+                    if (!m_pSmtpClient.SendMessageAsync(sendMsgOP))
+                    {
+                        MessageSendingCompleted(sendMsgOP);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
+
+        /// <summary>
+        /// Is called when smart hosts ip addresses resolve operation has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void SmartHostsResolveCompleted(Dns_Client.GetHostsAddressesAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            if (op.Error != null)
+            {
+                LogText("Failed to resolve relay smart host(s) ip addresses with error: " + op.Error.Message + ".");
+
+                Dispose(op.Error);
+            }
+            else
+            {
+                for (int i = 0; i < op.HostEntries.Length; i++)
+                {
+                    var smartHost = m_pSmartHosts[i];
+
+                    foreach (IPAddress ip in op.HostEntries[i].Addresses)
+                    {
+                        m_pTargets.Add(new Relay_Target(smartHost.Host, new IPEndPoint(ip, smartHost.Port), smartHost.SslMode, smartHost.UserName, smartHost.Password));
+                    }
+                }
+
+                BeginConnect();
+            }
+
+            op.Dispose();
+        }
+
+        /// <summary>
+        /// Thsi method is called when SMTP client has new log entry available.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void SmtpClient_WriteLog(object sender, WriteLogEventArgs e)
+        {
+            try
+            {
+                if (m_pServer.Logger == null)
+                {
+                }
+                else if (e.LogEntry.EntryType == LogEntryType.Read)
+                {
+                    m_pServer.Logger.AddRead(m_SessionID, e.LogEntry.UserIdentity, e.LogEntry.Size, e.LogEntry.Text, e.LogEntry.LocalEndPoint, e.LogEntry.RemoteEndPoint);
+                }
+                else if (e.LogEntry.EntryType == LogEntryType.Text)
+                {
+                    m_pServer.Logger.AddText(m_SessionID, e.LogEntry.UserIdentity, e.LogEntry.Text, e.LogEntry.LocalEndPoint, e.LogEntry.RemoteEndPoint);
+                }
+                else if (e.LogEntry.EntryType == LogEntryType.Write)
+                {
+                    m_pServer.Logger.AddWrite(m_SessionID, e.LogEntry.UserIdentity, e.LogEntry.Size, e.LogEntry.Text, e.LogEntry.LocalEndPoint, e.LogEntry.RemoteEndPoint);
+                }
+                else if (e.LogEntry.EntryType == LogEntryType.Exception)
+                {
+                    m_pServer.Logger.AddException(m_SessionID, e.LogEntry.UserIdentity, e.LogEntry.Text, e.LogEntry.LocalEndPoint, e.LogEntry.RemoteEndPoint, e.LogEntry.Exception);
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        /// Is called when STARTTLS command has completed.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        private void StartTlsCommandCompleted(SMTP_Client.StartTlsAsyncOP op)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            try
+            {
+                if (op.Error != null)
+                {
+                    Dispose(op.Error);
+                }
+                else
+                {
+                    // Do EHLO/HELO.
+                    var ehloOP = new SMTP_Client.EhloHeloAsyncOP(null);
+                    ehloOP.CompletedAsync += delegate (object s, EventArgs<SMTP_Client.EhloHeloAsyncOP> e)
+                    {
+                        EhloCommandCompleted(ehloOP);
+                    };
+                    if (!m_pSmtpClient.EhloHeloAsync(ehloOP))
+                    {
+                        EhloCommandCompleted(ehloOP);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Dispose(x);
+            }
+        }
         /// <summary>
         /// This class holds relay target information.
         /// </summary>
@@ -27,10 +1180,10 @@ namespace LumiSoft.Net.SMTP.Relay
             /// </summary>
             /// <param name="hostName">Target host name.</param>
             /// <param name="target">Target host IP end point.</param>
-            public Relay_Target(string hostName,IPEndPoint target)
+            public Relay_Target(string hostName, IPEndPoint target)
             {
                 HostName = hostName;
-                Target  = target;
+                Target = target;
             }
 
             /// <summary>
@@ -41,11 +1194,11 @@ namespace LumiSoft.Net.SMTP.Relay
             /// <param name="sslMode">SSL mode.</param>
             /// <param name="userName">Target host user name.</param>
             /// <param name="password">Target host password.</param>
-            public Relay_Target(string hostName,IPEndPoint target,SslMode sslMode,string userName,string password)
+            public Relay_Target(string hostName, IPEndPoint target, SslMode sslMode, string userName, string password)
             {
                 HostName = hostName;
-                Target  = target;
-                SslMode  = sslMode;
+                Target = target;
+                SslMode = sslMode;
                 UserName = userName;
                 Password = password;
             }
@@ -74,993 +1227,6 @@ namespace LumiSoft.Net.SMTP.Relay
             /// Gets target server password.
             /// </summary>
             public string Password { get; }
-        }
-
-        private Relay_Server       m_pServer;
-        private IPBindInfo         m_pLocalBindInfo;
-        private Relay_QueueItem    m_pRelayItem;
-        private Relay_SmartHost[]  m_pSmartHosts;
-        private readonly Relay_Mode         m_RelayMode      = Relay_Mode.Dns;
-        private readonly string             m_SessionID      = "";
-        private readonly DateTime           m_SessionCreateTime;
-        private SMTP_Client        m_pSmtpClient;
-        private List<Relay_Target> m_pTargets;
-        private Relay_Target       m_pActiveTarget;
-        
-        /// <summary>
-        /// Dns relay session constructor.
-        /// </summary>
-        /// <param name="server">Owner relay server.</param>
-        /// <param name="realyItem">Relay item.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>server</b> or <b>realyItem</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        internal Relay_Session(Relay_Server server,Relay_QueueItem realyItem)
-        {
-            m_pServer    = server ?? throw new ArgumentNullException("server");
-            m_pRelayItem = realyItem ?? throw new ArgumentNullException("realyItem");
-
-            m_SessionID         = Guid.NewGuid().ToString();
-            m_SessionCreateTime = DateTime.Now;
-            m_pTargets          = new List<Relay_Target>();
-            m_pSmtpClient       = new SMTP_Client();
-        }
-
-        /// <summary>
-        /// Smart host relay session constructor.
-        /// </summary>
-        /// <param name="server">Owner relay server.</param>
-        /// <param name="realyItem">Relay item.</param>
-        /// <param name="smartHosts">Smart hosts.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>server</b>,<b>realyItem</b> or <b>smartHosts</b>is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        internal Relay_Session(Relay_Server server,Relay_QueueItem realyItem,Relay_SmartHost[] smartHosts)
-        {
-            m_pServer     = server ?? throw new ArgumentNullException("server");
-            m_pRelayItem  = realyItem ?? throw new ArgumentNullException("realyItem");
-            m_pSmartHosts = smartHosts ?? throw new ArgumentNullException("smartHosts");
-                        
-            m_RelayMode         = Relay_Mode.SmartHost;
-            m_SessionID         = Guid.NewGuid().ToString();
-            m_SessionCreateTime = DateTime.Now;
-            m_pTargets          = new List<Relay_Target>();
-            m_pSmtpClient       = new SMTP_Client();
-        }
-
-        /// <summary>
-        /// Completes relay session and does clean up. This method is thread-safe.
-        /// </summary>
-        public override void Dispose()
-        {
-            Dispose(new ObjectDisposedException(GetType().Name));
-        }
-
-        /// <summary>
-        /// Completes relay session and does clean up. This method is thread-safe.
-        /// </summary>
-        /// <param name="exception">Exception happened or null if relay completed successfully.</param>
-        public void Dispose(Exception exception)
-        {
-            try{
-                lock(this){
-                    if(IsDisposed){
-                        return;
-                    }
-                    try{
-                        m_pServer.OnSessionCompleted(this,exception);
-                    }
-                    catch{
-                    }
-                    m_pServer.Sessions.Remove(this);
-                    IsDisposed = true;
-                        
-                    m_pLocalBindInfo = null;
-                    m_pRelayItem = null;
-                    m_pSmartHosts = null;
-                    if(m_pSmtpClient != null){
-                        m_pSmtpClient.Dispose();
-                        m_pSmtpClient = null;
-                    }
-                    m_pTargets = null;
-                    if(m_pActiveTarget != null){
-                        m_pServer.RemoveIpUsage(m_pActiveTarget.Target.Address);
-                        m_pActiveTarget = null;
-                    }
-                    m_pServer = null;
-                }
-            }
-            catch(Exception x){
-                if(m_pServer != null){
-                    m_pServer.OnError(x);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Start processing relay message.
-        /// </summary>
-        /// <param name="state">User data.</param>
-        internal void Start(object state)
-        {
-            try{ 
-                if(m_pServer.Logger != null){
-                    m_pSmtpClient.Logger = new Logger();
-                    m_pSmtpClient.Logger.WriteLog += new EventHandler<WriteLogEventArgs>(SmtpClient_WriteLog);
-                }
-
-                LogText("Starting to relay message '" + m_pRelayItem.MessageID + "' from '" + m_pRelayItem.From + "' to '" + m_pRelayItem.To + "'.");
-
-                // Resolve email target hosts.               
-                if(m_RelayMode == Relay_Mode.Dns){
-                    var op = new Dns_Client.GetEmailHostsAsyncOP(m_pRelayItem.To);
-                    op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetEmailHostsAsyncOP> e1){
-                        EmailHostsResolveCompleted(m_pRelayItem.To,op);
-                    };
-                    if(!m_pServer.DnsClient.GetEmailHostsAsync(op)){
-                        EmailHostsResolveCompleted(m_pRelayItem.To,op);
-                    }
-                }
-                // Resolve smart hosts IP addresses.
-                else if(m_RelayMode == Relay_Mode.SmartHost){
-                    var smartHosts = new string[m_pSmartHosts.Length];
-                    for (int i=0;i<m_pSmartHosts.Length;i++){
-                        smartHosts[i] = m_pSmartHosts[i].Host;
-                    }
-
-                    var op = new Dns_Client.GetHostsAddressesAsyncOP(smartHosts);
-                    op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetHostsAddressesAsyncOP> e1){
-                        SmartHostsResolveCompleted(op);
-                    };
-                    if(!m_pServer.DnsClient.GetHostsAddressesAsync(op)){
-                        SmartHostsResolveCompleted(op);
-                    }
-                } 
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Closes relay connection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override void Disconnect()
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                return;
-            }
-
-            m_pSmtpClient.Disconnect();
-        }
-
-        /// <summary>
-        /// Closes relay connection.
-        /// </summary>
-        /// <param name="text">Text to send to the connected host.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public void Disconnect(string text)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(!IsConnected){
-                return;
-            }
-
-            m_pSmtpClient.TcpStream.WriteLine(text);
-            Disconnect();
-        }
-
-        /// <summary>
-        /// Is called when email domain target servers resolve operation has completed.
-        /// </summary>
-        /// <param name="to">RCPT TO: address.</param>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>to</b> or <b>op</b> is null reference.</exception>
-        private void EmailHostsResolveCompleted(string to,Dns_Client.GetEmailHostsAsyncOP op)
-        {
-            if(to == null){
-                throw new ArgumentNullException("to");
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            
-            if(op.Error != null){
-                LogText("Failed to resolve email domain for email address '" + to + "' with error: " + op.Error.Message + ".");
-
-                Dispose(op.Error);
-            }
-            else{
-                var buf = new StringBuilder();
-                foreach (HostEntry host in op.Hosts){
-                    foreach(IPAddress ip in host.Addresses){
-                        m_pTargets.Add(new Relay_Target(host.HostName,new IPEndPoint(ip,25)));
-                    }
-                    buf.Append(host.HostName + " ");
-                }
-                LogText("Resolved to following email hosts: (" + buf.ToString().TrimEnd() + ").");
-
-                BeginConnect();
-            }
-
-            op.Dispose();
-        }
-
-        /// <summary>
-        /// Is called when smart hosts ip addresses resolve operation has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void SmartHostsResolveCompleted(Dns_Client.GetHostsAddressesAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            if(op.Error != null){
-                LogText("Failed to resolve relay smart host(s) ip addresses with error: " + op.Error.Message + ".");
-
-                Dispose(op.Error);
-            }
-            else{
-                for(int i=0;i<op.HostEntries.Length;i++){
-                    var smartHost = m_pSmartHosts[i];
-
-                    foreach (IPAddress ip in op.HostEntries[i].Addresses){
-                        m_pTargets.Add(new Relay_Target(smartHost.Host,new IPEndPoint(ip,smartHost.Port),smartHost.SslMode,smartHost.UserName,smartHost.Password));
-                    }
-                }                
-
-                BeginConnect();
-            }
-
-            op.Dispose();
-        }
-
-        /// <summary>
-        /// Starts connecting to best target. 
-        /// </summary>
-        private void BeginConnect()
-        {
-            // No tagets, abort relay.
-            if(m_pTargets.Count == 0){
-                LogText("No relay target(s) for '" + m_pRelayItem.To + "', aborting.");
-                Dispose(new Exception("No relay target(s) for '" + m_pRelayItem.To + "', aborting."));
-
-                return;
-            }
-
-            // Maximum connections per IP limited.           
-            if(m_pServer.MaxConnectionsPerIP > 0){
-                // For DNS or load-balnced smart host relay, search free target if any.
-                if(m_pServer.RelayMode == Relay_Mode.Dns || m_pServer.SmartHostsBalanceMode == BalanceMode.LoadBalance){
-                    foreach(Relay_Target t in m_pTargets){
-                        // Get local IP binding for remote IP.
-                        m_pLocalBindInfo = m_pServer.GetLocalBinding(t.Target.Address);
-
-                        // We have suitable local IP binding for the target.
-                        if(m_pLocalBindInfo != null)
-                        {
-                            // We found free target, stop searching.
-                            if(m_pServer.TryAddIpUsage(t.Target.Address)){
-                                m_pActiveTarget = t;
-                                m_pTargets.Remove(t);
-
-                                break;
-                            }
-                            // Connection per IP limit reached.
-
-                            LogText("Skipping relay target (" + t.HostName + "->" + t.Target.Address + "), maximum connections to the specified IP has reached.");
-                        }
-                        // No suitable local IP binding, try next target.
-                        else{
-                            LogText("Skipping relay target (" + t.HostName + "->" + t.Target.Address + "), no suitable local IPv4/IPv6 binding.");
-                        }
-                    }
-                }
-                // Smart host fail-over mode, just check if it's free.
-                else{
-                    // Get local IP binding for remote IP.
-                    m_pLocalBindInfo = m_pServer.GetLocalBinding(m_pTargets[0].Target.Address);
-
-                    // We have suitable local IP binding for the target.
-                    if(m_pLocalBindInfo != null){
-                        // Smart host IP limit not reached.
-                        if(m_pServer.TryAddIpUsage(m_pTargets[0].Target.Address)){
-                            m_pActiveTarget = m_pTargets[0];
-                            m_pTargets.RemoveAt(0);
-                        }
-                        // Connection per IP limit reached.
-                        else{
-                            LogText("Skipping relay target (" + m_pTargets[0].HostName + "->" + m_pTargets[0].Target.Address + "), maximum connections to the specified IP has reached.");
-                        }
-                    }
-                    // No suitable local IP binding, try next target.
-                    else{
-                        LogText("Skipping relay target (" + m_pTargets[0].HostName + "->" + m_pTargets[0].Target.Address + "), no suitable local IPv4/IPv6 binding.");
-                    }
-                }                
-            }
-            // Just get first target.
-            else{
-                 // Get local IP binding for remote IP.
-                 m_pLocalBindInfo = m_pServer.GetLocalBinding(m_pTargets[0].Target.Address);
-
-                 // We have suitable local IP binding for the target.
-                 if(m_pLocalBindInfo != null){
-                    m_pActiveTarget = m_pTargets[0];
-                    m_pTargets.RemoveAt(0);
-                 }
-                 // No suitable local IP binding, try next target.
-                 else{
-                    LogText("Skipping relay target (" + m_pTargets[0].HostName + "->" + m_pTargets[0].Target.Address + "), no suitable local IPv4/IPv6 binding.");
-                 }
-            }
-
-            // We don't have suitable local IP end point for relay target.
-            // This may heppen for example: if remote server supports only IPv6 and we don't have local IPv6 local end point.            
-            if(m_pLocalBindInfo == null){
-                LogText("No suitable IPv4/IPv6 local IP endpoint for relay target.");
-                Dispose(new Exception("No suitable IPv4/IPv6 local IP endpoint for relay target."));
-
-                return;
-            }
-
-            // If all targets has exeeded maximum allowed connection per IP address, end relay session, 
-            // next relay cycle will try to relay again.
-            if(m_pActiveTarget == null){
-                LogText("All targets has exeeded maximum allowed connection per IP address, skip relay.");
-                Dispose(new Exception("All targets has exeeded maximum allowed connection per IP address, skip relay."));
-
-                return;
-            }
-
-            // Set SMTP host name.
-            m_pSmtpClient.LocalHostName = m_pLocalBindInfo.HostName;
-
-            // Start connecting to remote end point.
-            var connectOP = new TCP_Client.ConnectAsyncOP(new IPEndPoint(m_pLocalBindInfo.IP,0),m_pActiveTarget.Target,false,null);
-            connectOP.CompletedAsync += delegate(object s,EventArgs<TCP_Client.ConnectAsyncOP> e){
-                ConnectCompleted(connectOP);
-            };
-            if(!m_pSmtpClient.ConnectAsync(connectOP)){
-                ConnectCompleted(connectOP);
-            }
-        }
-
-        /// <summary>
-        /// Is called when EHLO/HELO command has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void ConnectCompleted(TCP_Client.ConnectAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                // Connect failed.
-                if(op.Error != null){
-                    try{
-                        // Release IP usage.
-                        m_pServer.RemoveIpUsage(m_pActiveTarget.Target.Address);
-                        m_pActiveTarget = null;
-
-                        // Connect failed, if there are more target IPs, try next one.
-                        if(!IsDisposed && !IsConnected && m_pTargets.Count > 0){
-                            BeginConnect();
-                        }
-                        else{
-                            Dispose(op.Error);
-                        }
-                    }
-                    catch(Exception x1){
-                        Dispose(x1);
-                    }
-                }
-                // Connect suceeded.
-                else{
-                    // Do EHLO/HELO.
-                    var hostName = string.IsNullOrEmpty(m_pLocalBindInfo.HostName) ? Dns.GetHostName() : m_pLocalBindInfo.HostName;
-                    var ehloOP = new SMTP_Client.EhloHeloAsyncOP(hostName);
-                    ehloOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.EhloHeloAsyncOP> e){
-                        EhloCommandCompleted(ehloOP);
-                    };
-                    if(!m_pSmtpClient.EhloHeloAsync(ehloOP)){
-                        EhloCommandCompleted(ehloOP);
-                    }
-                }
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when EHLO/HELO command has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void EhloCommandCompleted(SMTP_Client.EhloHeloAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                if(op.Error != null){
-                    Dispose(op.Error);
-                }
-                else{
-                    // Start TLS requested, start switching to secure.
-                    if(!m_pSmtpClient.IsSecureConnection && m_pActiveTarget.SslMode == SslMode.TLS){
-                        var startTlsOP = new SMTP_Client.StartTlsAsyncOP(null);
-                        startTlsOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.StartTlsAsyncOP> e){
-                            StartTlsCommandCompleted(startTlsOP);
-                        };
-                        if(!m_pSmtpClient.StartTlsAsync(startTlsOP)){
-                            StartTlsCommandCompleted(startTlsOP);
-                        }
-                    }
-                    // Authentication requested, start authenticating.
-                    else if(!string.IsNullOrEmpty(m_pActiveTarget.UserName)){
-                        var authOP = new SMTP_Client.AuthAsyncOP(m_pSmtpClient.AuthGetStrongestMethod(m_pActiveTarget.UserName,m_pActiveTarget.Password));
-                        authOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.AuthAsyncOP> e){
-                            AuthCommandCompleted(authOP);
-                        };
-                        if(!m_pSmtpClient.AuthAsync(authOP)){
-                            AuthCommandCompleted(authOP);
-                        }
-                    }
-                    // Start MAIL command.
-                    else{
-                        long messageSize = -1;
-                        try{
-                            messageSize = m_pRelayItem.MessageStream.Length - m_pRelayItem.MessageStream.Position;
-                        }
-                        catch{
-                            // Stream doesn't support seeking.
-                        }
-
-                        var mailOP = new SMTP_Client.MailFromAsyncOP(
-                            From,
-                            messageSize,
-                            IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
-                            IsDsnSupported() ? m_pRelayItem.EnvelopeID : null
-                        );
-                        mailOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.MailFromAsyncOP> e){
-                            MailCommandCompleted(mailOP);
-                        };
-                        if(!m_pSmtpClient.MailFromAsync(mailOP)){
-                            MailCommandCompleted(mailOP);
-                        }
-                    }
-                }                                
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when STARTTLS command has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void StartTlsCommandCompleted(SMTP_Client.StartTlsAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                if(op.Error != null){
-                    Dispose(op.Error);
-                }
-                else{
-                    // Do EHLO/HELO.
-                    var ehloOP = new SMTP_Client.EhloHeloAsyncOP(null);
-                    ehloOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.EhloHeloAsyncOP> e){
-                        EhloCommandCompleted(ehloOP);
-                    };
-                    if(!m_pSmtpClient.EhloHeloAsync(ehloOP)){
-                        EhloCommandCompleted(ehloOP);
-                    }                    
-                }                                
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when AUTH command has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void AuthCommandCompleted(SMTP_Client.AuthAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                if(op.Error != null){
-                    Dispose(op.Error);
-                }
-                else{
-                    long messageSize = -1;
-                    try{
-                        messageSize = m_pRelayItem.MessageStream.Length - m_pRelayItem.MessageStream.Position;
-                    }
-                    catch{
-                        // Stream doesn't support seeking.
-                    }
-
-                    var mailOP = new SMTP_Client.MailFromAsyncOP(
-                        From,
-                        messageSize,
-                        IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
-                        IsDsnSupported() ? m_pRelayItem.EnvelopeID : null
-                    );
-                    mailOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.MailFromAsyncOP> e){
-                        MailCommandCompleted(mailOP);
-                    };
-                    if(!m_pSmtpClient.MailFromAsync(mailOP)){
-                        MailCommandCompleted(mailOP);
-                    }
-                }                                
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when MAIL command has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void MailCommandCompleted(SMTP_Client.MailFromAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                if(op.Error != null){
-                    Dispose(op.Error);
-                }
-                else{
-                    var rcptOP = new SMTP_Client.RcptToAsyncOP(
-                        To,
-                        IsDsnSupported() ? m_pRelayItem.DSN_Notify : SMTP_DSN_Notify.NotSpecified,
-                        IsDsnSupported() ? m_pRelayItem.OriginalRecipient : null
-                    );
-                    rcptOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.RcptToAsyncOP> e){
-                        RcptCommandCompleted(rcptOP);
-                    };
-                    if(!m_pSmtpClient.RcptToAsync(rcptOP)){
-                        RcptCommandCompleted(rcptOP);
-                    }
-                }                                
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when RCPT command has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void RcptCommandCompleted(SMTP_Client.RcptToAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                if(op.Error != null){
-                    Dispose(op.Error);
-                }
-                else{
-                    // Start sending message.
-                    var sendMsgOP = new SMTP_Client.SendMessageAsyncOP(m_pRelayItem.MessageStream,false);
-                    sendMsgOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.SendMessageAsyncOP> e){
-                        MessageSendingCompleted(sendMsgOP);
-                    };
-                    if(!m_pSmtpClient.SendMessageAsync(sendMsgOP)){
-                        MessageSendingCompleted(sendMsgOP);
-                    }
-                }                                
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-        }
-
-        /// <summary>
-        /// Is called when message sending has completed.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        private void MessageSendingCompleted(SMTP_Client.SendMessageAsyncOP op)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            try{
-                if(op.Error != null){
-                    Dispose(op.Error);
-                }
-                // Message sent sucessfully.
-                else{
-                    Dispose(null);
-                }
-            }
-            catch(Exception x){
-                Dispose(x);
-            }
-
-            op.Dispose();
-        }
-
-        /// <summary>
-        /// Thsi method is called when SMTP client has new log entry available.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void SmtpClient_WriteLog(object sender,WriteLogEventArgs e)
-        {
-            try{
-                if(m_pServer.Logger == null){
-                }
-                else if(e.LogEntry.EntryType == LogEntryType.Read){
-                    m_pServer.Logger.AddRead(m_SessionID,e.LogEntry.UserIdentity,e.LogEntry.Size,e.LogEntry.Text,e.LogEntry.LocalEndPoint,e.LogEntry.RemoteEndPoint);
-                }
-                else if(e.LogEntry.EntryType == LogEntryType.Text){
-                    m_pServer.Logger.AddText(m_SessionID,e.LogEntry.UserIdentity,e.LogEntry.Text,e.LogEntry.LocalEndPoint,e.LogEntry.RemoteEndPoint);
-                }
-                else if(e.LogEntry.EntryType == LogEntryType.Write){
-                    m_pServer.Logger.AddWrite(m_SessionID,e.LogEntry.UserIdentity,e.LogEntry.Size,e.LogEntry.Text,e.LogEntry.LocalEndPoint,e.LogEntry.RemoteEndPoint);
-                }
-                else if(e.LogEntry.EntryType == LogEntryType.Exception){
-                    m_pServer.Logger.AddException(m_SessionID,e.LogEntry.UserIdentity,e.LogEntry.Text,e.LogEntry.LocalEndPoint,e.LogEntry.RemoteEndPoint,e.LogEntry.Exception);
-                }
-            }
-            catch{
-            }
-        }
-
-        /// <summary>
-        /// Logs specified text if logging enabled.
-        /// </summary>
-        /// <param name="text">Text to log.</param>
-        private void LogText(string text)
-        {
-            if(m_pServer.Logger != null){
-                GenericIdentity identity = null;
-                try{
-                    identity = AuthenticatedUserIdentity;
-                }
-                catch{
-                }
-                IPEndPoint localEP  = null;
-                IPEndPoint remoteEP = null;
-                try{
-                    localEP  = m_pSmtpClient.LocalEndPoint;
-                    remoteEP = m_pSmtpClient.RemoteEndPoint;
-                }
-                catch{
-                }
-                m_pServer.Logger.AddText(m_SessionID,identity,text,localEP,remoteEP);
-            }
-        }
-
-        /// <summary>
-        /// Gets if DSN extention is supported by remote server.
-        /// </summary>
-        /// <returns></returns>
-        private bool IsDsnSupported()
-        {
-            foreach(string feature in m_pSmtpClient.EsmtpFeatures){
-                if(string.Equals(feature,SMTP_ServiceExtensions.DSN,StringComparison.InvariantCultureIgnoreCase)){
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets if this object is disposed.
-        /// </summary>
-        public bool IsDisposed { get; private set; }
-
-        /// <summary>
-        /// Gets local host name for LoaclEP.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public string LocalHostName
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return (m_pLocalBindInfo == null ? "" : m_pLocalBindInfo.HostName); 
-            }
-        }
-
-        /// <summary>
-        /// Gets time when relay session created.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public DateTime SessionCreateTime
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_SessionCreateTime; 
-            }
-        }
-
-        /// <summary>
-        /// Gets how many seconds has left before timout is triggered.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public int ExpectedTimeout
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return (int)(m_pServer.SessionIdleTimeout - ((DateTime.Now.Ticks - TcpStream.LastActivity.Ticks) / 10000));
-            }
-        }
-
-        /// <summary>
-        /// Gets from address.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public string From
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRelayItem.From; 
-            }
-        }
-
-        /// <summary>
-        /// Gets target recipient.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public string To
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pRelayItem.To; 
-            }
-        }
-
-        /// <summary>
-        /// Gets message ID which is being relayed now.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public string MessageID
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRelayItem.MessageID; 
-            }
-        }
-
-        /// <summary>
-        /// Gets message what is being relayed now.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public Stream MessageStream
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRelayItem.MessageStream; 
-            }
-        }
-
-        /// <summary>
-        /// Gets current remote host name. Returns null if not connected to any target.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public string RemoteHostName
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                if(m_pActiveTarget != null){
-                    return m_pActiveTarget.HostName;
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets relay queue which session it is.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public Relay_Queue Queue
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRelayItem.Queue; 
-            }
-        }
-
-        /// <summary>
-        /// Gets user data what was procided to Relay_Queue.QueueMessage method.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public object QueueTag
-        {
-            get{               
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRelayItem.Tag; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session authenticated user identity, returns null if not authenticated.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and relay session is not connected.</exception>
-        public override GenericIdentity AuthenticatedUserIdentity
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!m_pSmtpClient.IsConnected){
-				    throw new InvalidOperationException("You must connect first.");
-			    }
-
-                return m_pSmtpClient.AuthenticatedUserIdentity; 
-            }
-        }
-
-        /// <summary>
-        /// Gets if session is connected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool IsConnected
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSmtpClient.IsConnected; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session ID.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override string ID
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_SessionID; 
-            }
-        }
-
-        /// <summary>
-        /// Gets the time when session was connected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override DateTime ConnectTime
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSmtpClient.ConnectTime; 
-            }
-        }
-
-        /// <summary>
-        /// Gets the last time when data was sent or received.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override DateTime LastActivity
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSmtpClient.LastActivity; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session local IP end point.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override IPEndPoint LocalEndPoint
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSmtpClient.LocalEndPoint; 
-            }
-        }
-
-        /// <summary>
-        /// Gets session remote IP end point.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override IPEndPoint RemoteEndPoint
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSmtpClient.RemoteEndPoint; 
-            }
-        }
-
-        /// <summary>
-        /// Gets TCP stream which must be used to send/receive data through this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override SmartStream TcpStream
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSmtpClient.TcpStream; 
-            }
         }
     }
 }

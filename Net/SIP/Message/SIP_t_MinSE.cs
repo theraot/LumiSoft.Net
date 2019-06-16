@@ -35,6 +35,25 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets time in seconds when session expires.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when value is less than 1.</exception>
+        public int Time
+        {
+            get { return m_Time; }
+
+            set
+            {
+                if (m_Time < 1)
+                {
+                    throw new ArgumentException("Time value must be > 0 !");
+                }
+
+                m_Time = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "Min-SE" from specified value.
         /// </summary>
         /// <param name="value">SIP "Min-SE" value.</param>
@@ -42,7 +61,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -61,19 +81,23 @@ namespace LumiSoft.Net.SIP.Message
                 Min-SE = delta-seconds *(SEMI generic-param)
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // Parse address
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Min-SE delta-seconds value is missing !");
             }
-            try{
+            try
+            {
                 m_Time = Convert.ToInt32(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid Min-SE delta-seconds value !");
             }
 
@@ -100,23 +124,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets time in seconds when session expires.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when value is less than 1.</exception>
-        public int Time
-        {
-            get{ return m_Time; }
-
-            set{
-                if(m_Time < 1){
-                    throw new ArgumentException("Time value must be > 0 !");
-                }
-
-                m_Time = value;
-            }
         }
     }
 }

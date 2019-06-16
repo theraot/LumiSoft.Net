@@ -11,18 +11,18 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_UA_Registration
     {
-        private SIP_Stack                m_pStack;
-        private readonly SIP_Uri                  m_pServer;
-        private readonly string                   m_AOR               = "";
-        private readonly AbsoluteUri              m_pContact;
-        private readonly List<AbsoluteUri>        m_pContacts;
-        private readonly int                      m_RefreshInterval   = 300;
-        private TimerEx                  m_pTimer;
-        private SIP_RequestSender        m_pRegisterSender;
-        private SIP_RequestSender        m_pUnregisterSender;
-        private bool                     m_AutoRefresh       = true;
-        private bool                     m_AutoDispose;
-        private SIP_Flow                 m_pFlow;
+        private readonly string m_AOR = "";
+        private bool m_AutoDispose;
+        private bool m_AutoRefresh = true;
+        private readonly AbsoluteUri m_pContact;
+        private readonly List<AbsoluteUri> m_pContacts;
+        private SIP_Flow m_pFlow;
+        private SIP_RequestSender m_pRegisterSender;
+        private readonly SIP_Uri m_pServer;
+        private SIP_Stack m_pStack;
+        private TimerEx m_pTimer;
+        private SIP_RequestSender m_pUnregisterSender;
+        private readonly int m_RefreshInterval = 300;
 
         /// <summary>
         /// Default constructor.
@@ -34,19 +34,21 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="expires">Gets after how many seconds reigisration expires.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>ua</b>,<b>server</b>,<b>transport</b>,<b>aor</b> or <b>contact</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments contains invalid value.</exception>
-        internal SIP_UA_Registration(SIP_Stack stack,SIP_Uri server,string aor,AbsoluteUri contact,int expires)
+        internal SIP_UA_Registration(SIP_Stack stack, SIP_Uri server, string aor, AbsoluteUri contact, int expires)
         {
-            if(aor == null){
+            if (aor == null)
+            {
                 throw new ArgumentNullException("aor");
             }
-            if(aor == string.Empty){
+            if (aor == string.Empty)
+            {
                 throw new ArgumentException("Argument 'aor' value must be specified.");
             }
 
-            m_pStack          = stack ?? throw new ArgumentNullException("stack");
-            m_pServer         = server ?? throw new ArgumentNullException("server");
-            m_AOR             = aor;
-            m_pContact        = contact ?? throw new ArgumentNullException("contact");
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
+            m_pServer = server ?? throw new ArgumentNullException("server");
+            m_AOR = aor;
+            m_pContact = contact ?? throw new ArgumentNullException("contact");
             m_RefreshInterval = expires;
 
             m_pContacts = new List<AbsoluteUri>();
@@ -58,212 +60,115 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// This event is raised when registration has disposed.
         /// </summary>
-        public void Dispose()
+        public event EventHandler Disposed;
+
+        /// <summary>
+        /// This event is raised when REGISTER/un-REGISTER has failed.
+        /// </summary>
+        public event EventHandler<SIP_ResponseReceivedEventArgs> Error;
+
+        /// <summary>
+        /// This event is raised when REGISTER has completed successfully.
+        /// </summary>
+        public event EventHandler Registered;
+
+        /// <summary>
+        /// This event is raised when registration state has changed.
+        /// </summary>
+        public event EventHandler StateChanged;
+
+        /// <summary>
+        /// This event is raised when un-REGISTER has completed successfully.
+        /// </summary>
+        public event EventHandler Unregistered;
+
+        /// <summary>
+        /// Gets registration address of record.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public string AOR
         {
-            if(IsDisposed){
-                return;
-            }
-            IsDisposed = true;
-
-            m_pStack = null;
-            m_pTimer.Dispose();
-            m_pTimer = null;
-                     
-            SetState(SIP_UA_RegistrationState.Disposed);
-            OnDisposed();
-
-            Registered   = null;
-            Unregistered = null;
-            Error        = null;
-            Disposed     = null;
-        }
-
-        /// <summary>
-        /// This method is raised when registration needs to refresh server registration.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void m_pTimer_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
-        {   
-            if(m_pStack.State == SIP_StackState.Started){
-                BeginRegister(m_AutoRefresh);
-            }
-        }
-
-        /// <summary>
-        /// This method is called when REGISTER has finished.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void m_pRegisterSender_ResponseReceived(object sender,SIP_ResponseReceivedEventArgs e)
-        {   
-            m_pFlow = e.ClientTransaction.Flow;
-       
-            if(e.Response.StatusCodeType == SIP_StatusCodeType.Provisional){
-                return;
-            }
-
-            if(e.Response.StatusCodeType == SIP_StatusCodeType.Success){
-                m_pContacts.Clear();
-                foreach(SIP_t_ContactParam c in e.Response.Contact.GetAllValues()){
-                    m_pContacts.Add(c.Address.Uri);
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                SetState(SIP_UA_RegistrationState.Registered);
-                                             
-                OnRegistered();
-
-                m_pFlow.SendKeepAlives = true;
+                return m_AOR;
             }
-            else{
-                SetState(SIP_UA_RegistrationState.Error);
-
-                OnError(e);
-            }
-
-            // REMOVE ME:
-            if(AutoFixContact && (m_pContact is SIP_Uri)){
-                // If Via: received or rport paramter won't match to our sent-by, use received and rport to construct new contact value.
-                   
-                var       cContact    = ((SIP_Uri)m_pContact);
-                var     cContactIP  = Net_Utils.IsIPAddress(cContact.Host) ? IPAddress.Parse(cContact.Host) : null;
-                var via         = e.Response.Via.GetTopMostValue();
-                if (via != null && cContactIP != null){
-                    var ep = new IPEndPoint(via.Received != null ? via.Received : cContactIP,via.RPort > 0 ? via.RPort : cContact.Port);
-                    if (!cContactIP.Equals(ep.Address) || cContact.Port != via.RPort){
-                        // Unregister old contact.
-                        BeginUnregister(false);
-
-                        // Fix contact.
-                        cContact.Host = ep.Address.ToString();
-                        cContact.Port = ep.Port;
-
-                        m_pRegisterSender.Dispose();
-                        m_pRegisterSender = null;
-                                                
-                        BeginRegister(m_AutoRefresh);
-
-                        return;
-                    }
-                }
-            }
-
-            if(m_AutoRefresh){
-                // Set registration refresh timer.
-                m_pTimer.Enabled = true;
-            }
-
-            m_pRegisterSender.Dispose();
-            m_pRegisterSender = null;
         }
 
         /// <summary>
-        /// This method is called when un-REGISTER has finished.
+        /// If true and contact is different than received or rport, received and rport is used as contact.
         /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void m_pUnregisterSender_ResponseReceived(object sender,SIP_ResponseReceivedEventArgs e)
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public bool AutoFixContact
         {
-            SetState(SIP_UA_RegistrationState.Unregistered);
-            OnUnregistered();
-
-            if(m_AutoDispose){
-                Dispose();
-            }
-
-            m_pUnregisterSender = null;
-        }
-
-        /// <summary>
-        /// Starts registering.
-        /// </summary>
-        /// <param name="autoRefresh">If true, registration takes care of refreshing itself to registrar server.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        public void BeginRegister(bool autoRefresh)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-
-            // Fix ME: Stack not running, try register on next step.
-            // In ideal solution we need to start registering when stack starts.
-            if(m_pStack.State != SIP_StackState.Started){
-                m_pTimer.Enabled = true;
-                return;
-            }
-
-            m_AutoRefresh = autoRefresh;
-            SetState(SIP_UA_RegistrationState.Registering);
-
-            /* RFC 3261 10.1 Constructing the REGISTER Request.
-                Request-URI: The Request-URI names the domain of the location service for which the registration is meant (for example,
-                             "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
-            */
-
-            var register = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
-            register.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
-            register.Route.Add(m_pServer.ToString());
-            register.Contact.Add("<" + Contact + ">;expires=" + m_RefreshInterval);
-
-            m_pRegisterSender = m_pStack.CreateRequestSender(register,m_pFlow);
-            m_pRegisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pRegisterSender_ResponseReceived);
-            m_pRegisterSender.Start();
-        }
-
-        /// <summary>
-        /// Starts unregistering.
-        /// </summary>
-        /// <param name="dispose">If true, registration will be disposed after unregister.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        public void BeginUnregister(bool dispose)
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-
-            m_AutoDispose = dispose;
-
-            // Stop register timer, otherwise we may get register and unregister race condition.
-            m_pTimer.Enabled = false;
-
-            if(State == SIP_UA_RegistrationState.Registered){
-                /* RFC 3261 10.1 Constructing the REGISTER Request.
-                    Request-URI: The Request-URI names the domain of the location service for which the registration is meant (for example,
-                                 "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
-                */
-
-                var unregister = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
-                unregister.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
-                unregister.Route.Add(m_pServer.ToString());
-                unregister.Contact.Add("<" + Contact + ">;expires=0");
-            
-                m_pUnregisterSender = m_pStack.CreateRequestSender(unregister,m_pFlow);
-                m_pUnregisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pUnregisterSender_ResponseReceived);
-                m_pUnregisterSender.Start();
-            }
-            else{
-                SetState(SIP_UA_RegistrationState.Unregistered);
-                OnUnregistered();
-
-                if(m_AutoDispose){
-                    Dispose();
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                m_pUnregisterSender = null;
+                // TODO:
+
+                return false;
             }
         }
 
         /// <summary>
-        /// Changes current registration state.
+        /// Gets registration contact URI.
         /// </summary>
-        /// <param name="newState">New registration state.</param>
-        private void SetState(SIP_UA_RegistrationState newState)
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public AbsoluteUri Contact
         {
-            State = newState;
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
 
-            OnStateChanged();
+                return m_pContact;
+            }
+        }
+
+        /// <summary>
+        /// Gets registrar server all contacts registered for this AOR.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public AbsoluteUri[] Contacts
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pContacts.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets after how many seconds contact expires.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public int Expires
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return 3600;
+            }
         }
 
         /// <summary>
@@ -277,131 +182,230 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_UA_RegistrationState State { get; private set; } = SIP_UA_RegistrationState.Unregistered;
 
         /// <summary>
-        /// Gets after how many seconds contact expires.
+        /// Starts registering.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public int Expires
+        /// <param name="autoRefresh">If true, registration takes care of refreshing itself to registrar server.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        public void BeginRegister(bool autoRefresh)
         {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
+            // Fix ME: Stack not running, try register on next step.
+            // In ideal solution we need to start registering when stack starts.
+            if (m_pStack.State != SIP_StackState.Started)
+            {
+                m_pTimer.Enabled = true;
+                return;
+            }
+
+            m_AutoRefresh = autoRefresh;
+            SetState(SIP_UA_RegistrationState.Registering);
+
+            /* RFC 3261 10.1 Constructing the REGISTER Request.
+                Request-URI: The Request-URI names the domain of the location service for which the registration is meant (for example,
+                             "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
+            */
+
+            var register = m_pStack.CreateRequest(SIP_Methods.REGISTER, new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR), new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
+            register.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
+            register.Route.Add(m_pServer.ToString());
+            register.Contact.Add("<" + Contact + ">;expires=" + m_RefreshInterval);
+
+            m_pRegisterSender = m_pStack.CreateRequestSender(register, m_pFlow);
+            m_pRegisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pRegisterSender_ResponseReceived);
+            m_pRegisterSender.Start();
+        }
+
+        /// <summary>
+        /// Starts unregistering.
+        /// </summary>
+        /// <param name="dispose">If true, registration will be disposed after unregister.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        public void BeginUnregister(bool dispose)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
+            m_AutoDispose = dispose;
+
+            // Stop register timer, otherwise we may get register and unregister race condition.
+            m_pTimer.Enabled = false;
+
+            if (State == SIP_UA_RegistrationState.Registered)
+            {
+                /* RFC 3261 10.1 Constructing the REGISTER Request.
+                    Request-URI: The Request-URI names the domain of the location service for which the registration is meant (for example,
+                                 "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
+                */
+
+                var unregister = m_pStack.CreateRequest(SIP_Methods.REGISTER, new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR), new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
+                unregister.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
+                unregister.Route.Add(m_pServer.ToString());
+                unregister.Contact.Add("<" + Contact + ">;expires=0");
+
+                m_pUnregisterSender = m_pStack.CreateRequestSender(unregister, m_pFlow);
+                m_pUnregisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pUnregisterSender_ResponseReceived);
+                m_pUnregisterSender.Start();
+            }
+            else
+            {
+                SetState(SIP_UA_RegistrationState.Unregistered);
+                OnUnregistered();
+
+                if (m_AutoDispose)
+                {
+                    Dispose();
                 }
 
-                return 3600; 
+                m_pUnregisterSender = null;
             }
         }
 
         /// <summary>
-        /// Gets registration address of record.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public string AOR
+        public void Dispose()
         {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
+            if (IsDisposed)
+            {
+                return;
+            }
+            IsDisposed = true;
+
+            m_pStack = null;
+            m_pTimer.Dispose();
+            m_pTimer = null;
+
+            SetState(SIP_UA_RegistrationState.Disposed);
+            OnDisposed();
+
+            Registered = null;
+            Unregistered = null;
+            Error = null;
+            Disposed = null;
+        }
+
+        /// <summary>
+        /// This method is called when REGISTER has finished.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void m_pRegisterSender_ResponseReceived(object sender, SIP_ResponseReceivedEventArgs e)
+        {
+            m_pFlow = e.ClientTransaction.Flow;
+
+            if (e.Response.StatusCodeType == SIP_StatusCodeType.Provisional)
+            {
+                return;
+            }
+
+            if (e.Response.StatusCodeType == SIP_StatusCodeType.Success)
+            {
+                m_pContacts.Clear();
+                foreach (SIP_t_ContactParam c in e.Response.Contact.GetAllValues())
+                {
+                    m_pContacts.Add(c.Address.Uri);
                 }
 
-                return m_AOR; 
-            }
-        }
+                SetState(SIP_UA_RegistrationState.Registered);
 
-        /// <summary>
-        /// Gets registration contact URI.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public AbsoluteUri Contact
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
+                OnRegistered();
+
+                m_pFlow.SendKeepAlives = true;
+            }
+            else
+            {
+                SetState(SIP_UA_RegistrationState.Error);
+
+                OnError(e);
+            }
+
+            // REMOVE ME:
+            if (AutoFixContact && (m_pContact is SIP_Uri))
+            {
+                // If Via: received or rport paramter won't match to our sent-by, use received and rport to construct new contact value.
+
+                var cContact = ((SIP_Uri)m_pContact);
+                var cContactIP = Net_Utils.IsIPAddress(cContact.Host) ? IPAddress.Parse(cContact.Host) : null;
+                var via = e.Response.Via.GetTopMostValue();
+                if (via != null && cContactIP != null)
+                {
+                    var ep = new IPEndPoint(via.Received != null ? via.Received : cContactIP, via.RPort > 0 ? via.RPort : cContact.Port);
+                    if (!cContactIP.Equals(ep.Address) || cContact.Port != via.RPort)
+                    {
+                        // Unregister old contact.
+                        BeginUnregister(false);
+
+                        // Fix contact.
+                        cContact.Host = ep.Address.ToString();
+                        cContact.Port = ep.Port;
+
+                        m_pRegisterSender.Dispose();
+                        m_pRegisterSender = null;
+
+                        BeginRegister(m_AutoRefresh);
+
+                        return;
+                    }
                 }
-
-                return m_pContact; 
             }
+
+            if (m_AutoRefresh)
+            {
+                // Set registration refresh timer.
+                m_pTimer.Enabled = true;
+            }
+
+            m_pRegisterSender.Dispose();
+            m_pRegisterSender = null;
         }
 
         /// <summary>
-        /// Gets registrar server all contacts registered for this AOR.
+        /// This method is raised when registration needs to refresh server registration.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public AbsoluteUri[] Contacts
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void m_pTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pContacts.ToArray(); 
+            if (m_pStack.State == SIP_StackState.Started)
+            {
+                BeginRegister(m_AutoRefresh);
             }
         }
-        
+
         /// <summary>
-        /// If true and contact is different than received or rport, received and rport is used as contact.
+        /// This method is called when un-REGISTER has finished.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public bool AutoFixContact
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void m_pUnregisterSender_ResponseReceived(object sender, SIP_ResponseReceivedEventArgs e)
         {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+            SetState(SIP_UA_RegistrationState.Unregistered);
+            OnUnregistered();
 
-                // TODO:
-
-                return false; 
+            if (m_AutoDispose)
+            {
+                Dispose();
             }
+
+            m_pUnregisterSender = null;
         }
 
         /// <summary>
-        /// This event is raised when registration state has changed.
+        /// Raises event <b>Disposed</b>.
         /// </summary>
-        public event EventHandler StateChanged;
-
-        /// <summary>
-        /// Raises event <b>StateChanged</b>.
-        /// </summary>
-        private void OnStateChanged()
+        private void OnDisposed()
         {
-            if(StateChanged != null){
-                StateChanged(this,new EventArgs());
+            if (Disposed != null)
+            {
+                Disposed(this, new EventArgs());
             }
         }
-
-        /// <summary>
-        /// This event is raised when REGISTER has completed successfully.
-        /// </summary>
-        public event EventHandler Registered;
-
-        /// <summary>
-        /// Raises event <b>Registered</b>.
-        /// </summary>
-        private void OnRegistered()
-        {
-            if(Registered != null){
-                Registered(this,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when un-REGISTER has completed successfully.
-        /// </summary>
-        public event EventHandler Unregistered;
-
-        /// <summary>
-        /// Raises event <b>Unregistered</b>.
-        /// </summary>
-        private void OnUnregistered()
-        {
-            if(Unregistered != null){
-                Unregistered(this,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when REGISTER/un-REGISTER has failed.
-        /// </summary>
-        public event EventHandler<SIP_ResponseReceivedEventArgs> Error;
 
         /// <summary>
         /// Raises event <b>Error</b>.
@@ -409,24 +413,54 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         private void OnError(SIP_ResponseReceivedEventArgs e)
         {
-            if(Error != null){
-                Error(this,e);
+            if (Error != null)
+            {
+                Error(this, e);
             }
         }
 
         /// <summary>
-        /// This event is raised when registration has disposed.
+        /// Raises event <b>Registered</b>.
         /// </summary>
-        public event EventHandler Disposed;
+        private void OnRegistered()
+        {
+            if (Registered != null)
+            {
+                Registered(this, new EventArgs());
+            }
+        }
 
         /// <summary>
-        /// Raises event <b>Disposed</b>.
+        /// Raises event <b>StateChanged</b>.
         /// </summary>
-        private void OnDisposed()
+        private void OnStateChanged()
         {
-            if(Disposed != null){
-                Disposed(this,new EventArgs());
+            if (StateChanged != null)
+            {
+                StateChanged(this, new EventArgs());
             }
+        }
+
+        /// <summary>
+        /// Raises event <b>Unregistered</b>.
+        /// </summary>
+        private void OnUnregistered()
+        {
+            if (Unregistered != null)
+            {
+                Unregistered(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Changes current registration state.
+        /// </summary>
+        /// <param name="newState">New registration state.</param>
+        private void SetState(SIP_UA_RegistrationState newState)
+        {
+            State = newState;
+
+            OnStateChanged();
         }
     }
 }

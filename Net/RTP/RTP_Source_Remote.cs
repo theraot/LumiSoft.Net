@@ -11,7 +11,7 @@ namespace LumiSoft.Net.RTP
     public class RTP_Source_Remote : RTP_Source
     {
         private RTP_Participant_Remote m_pParticipant;
-        private RTP_ReceiveStream      m_pStream;
+        private RTP_ReceiveStream m_pStream;
 
         /// <summary>
         /// Default constructor.
@@ -19,8 +19,80 @@ namespace LumiSoft.Net.RTP
         /// <param name="session">Owner RTP session.</param>
         /// <param name="ssrc">Synchronization source ID.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
-        internal RTP_Source_Remote(RTP_Session session,uint ssrc) : base(session,ssrc)
+        internal RTP_Source_Remote(RTP_Session session, uint ssrc) : base(session, ssrc)
         {
+        }
+
+        /// <summary>
+        /// Is raised when source sends RTCP APP packet.
+        /// </summary>
+        public event EventHandler<EventArgs<RTCP_Packet_APP>> ApplicationPacket;
+
+        /// <summary>
+        /// Returns false.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public override bool IsLocal
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote participant. 
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Participant_Remote Participant
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pParticipant;
+            }
+        }
+
+        /// <summary>
+        /// Gets the stream we receive. Value null means that source is passive and doesn't send any RTP data.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_ReceiveStream Stream
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pStream;
+            }
+        }
+
+        /// <summary>
+        /// Gets source CNAME. Value null means that source not binded to participant.
+        /// </summary>
+        internal override string CName
+        {
+            get
+            {
+                if (Participant != null)
+                {
+                    return null;
+                }
+
+                return Participant.CNAME;
+            }
         }
 
         /// <summary>
@@ -29,13 +101,73 @@ namespace LumiSoft.Net.RTP
         internal override void Dispose()
         {
             m_pParticipant = null;
-            if(m_pStream != null){
+            if (m_pStream != null)
+            {
                 m_pStream.Dispose();
             }
 
             ApplicationPacket = null;
 
             base.Dispose();
+        }
+
+        /// <summary>
+        /// This method is called when this source got RTCP APP apcket.
+        /// </summary>
+        /// <param name="packet">RTCP APP packet.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
+        internal void OnAppPacket(RTCP_Packet_APP packet)
+        {
+            if (packet == null)
+            {
+                throw new ArgumentNullException("packet");
+            }
+
+            OnApplicationPacket(packet);
+        }
+
+        /// <summary>
+        /// Is called when RTP session receives new RTP packet.
+        /// </summary>
+        /// <param name="packet">RTP packet.</param>
+        /// <param name="size">Packet size in bytes.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
+        internal void OnRtpPacketReceived(RTP_Packet packet, int size)
+        {
+            if (packet == null)
+            {
+                throw new ArgumentNullException("packet");
+            }
+
+            SetLastRtpPacket(DateTime.Now);
+
+            // Passive source and first RTP packet.
+            if (m_pStream == null)
+            {
+                m_pStream = new RTP_ReceiveStream(Session, this, packet.SeqNo);
+
+                SetState(RTP_SourceState.Active);
+            }
+
+            m_pStream.Process(packet, size);
+        }
+
+        /// <summary>
+        /// This method is called when this source got sender report.
+        /// </summary>
+        /// <param name="report">Sender report.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>report</b> is null reference.</exception>
+        internal void OnSenderReport(RTCP_Report_Sender report)
+        {
+            if (report == null)
+            {
+                throw new ArgumentNullException("report");
+            }
+
+            if (m_pStream != null)
+            {
+                m_pStream.SetSR(report);
+            }
         }
 
         /// <summary>
@@ -49,136 +181,19 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Is called when RTP session receives new RTP packet.
-        /// </summary>
-        /// <param name="packet">RTP packet.</param>
-        /// <param name="size">Packet size in bytes.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
-        internal void OnRtpPacketReceived(RTP_Packet packet,int size)
-        {
-            if(packet == null){
-                throw new ArgumentNullException("packet");
-            }
-
-            SetLastRtpPacket(DateTime.Now);
-
-            // Passive source and first RTP packet.
-            if(m_pStream == null){
-                m_pStream = new RTP_ReceiveStream(Session,this,packet.SeqNo);
-
-                SetState(RTP_SourceState.Active);
-            }
-
-            m_pStream.Process(packet,size);
-        }
-
-        /// <summary>
-        /// This method is called when this source got sender report.
-        /// </summary>
-        /// <param name="report">Sender report.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>report</b> is null reference.</exception>
-        internal void OnSenderReport(RTCP_Report_Sender report)
-        {
-            if(report == null){
-                throw new ArgumentNullException("report");
-            }
-            
-            if(m_pStream != null){
-                m_pStream.SetSR(report);
-            }
-        }
-
-        /// <summary>
-        /// This method is called when this source got RTCP APP apcket.
-        /// </summary>
-        /// <param name="packet">RTCP APP packet.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
-        internal void OnAppPacket(RTCP_Packet_APP packet)
-        {
-            if(packet == null){
-                throw new ArgumentNullException("packet");
-            }
-
-            OnApplicationPacket(packet);
-        }
-
-        /// <summary>
-        /// Returns false.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public override bool IsLocal
-        {
-            get{ 
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return false; 
-            }
-        }
-        
-        /// <summary>
-        /// Gets remote participant. 
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Participant_Remote Participant
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pParticipant; 
-            }
-        }
-
-        /// <summary>
-        /// Gets the stream we receive. Value null means that source is passive and doesn't send any RTP data.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_ReceiveStream Stream
-        {
-            get{ 
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pStream; 
-            }
-        }
-
-        /// <summary>
-        /// Gets source CNAME. Value null means that source not binded to participant.
-        /// </summary>
-        internal override string CName
-        {
-            get
-            {
-                if(Participant != null){
-                    return null;
-                }
-
-                return Participant.CNAME;
-            }
-        }
-
-        /// <summary>
-        /// Is raised when source sends RTCP APP packet.
-        /// </summary>
-        public event EventHandler<EventArgs<RTCP_Packet_APP>> ApplicationPacket;
-
-        /// <summary>
         /// Raises <b>ApplicationPacket</b> event.
         /// </summary>
         /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
         private void OnApplicationPacket(RTCP_Packet_APP packet)
         {
-            if(packet == null){
+            if (packet == null)
+            {
                 throw new ArgumentNullException("packet");
             }
 
-            if(ApplicationPacket != null){
-                ApplicationPacket(this,new EventArgs<RTCP_Packet_APP>(packet));
+            if (ApplicationPacket != null)
+            {
+                ApplicationPacket(this, new EventArgs<RTCP_Packet_APP>(packet));
             }
         }
     }

@@ -41,8 +41,8 @@ namespace LumiSoft.Net.MIME
     /// </example>
     public class MIME_h_ContentDisposition : MIME_h
     {
-        private readonly bool                       m_IsModified;
-        private string                     m_ParseValue;
+        private readonly bool m_IsModified;
+        private string m_ParseValue;
 
         /// <summary>
         /// Default constructor.
@@ -52,17 +52,19 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public MIME_h_ContentDisposition(string dispositionType)
         {
-            if(dispositionType == null){
+            if (dispositionType == null)
+            {
                 throw new ArgumentNullException("dispositionType");
             }
-            if(dispositionType == string.Empty){
+            if (dispositionType == string.Empty)
+            {
                 throw new ArgumentException("Argument 'dispositionType' value must be specified.");
             }
 
             DispositionType = dispositionType;
 
             Parameters = new MIME_h_ParameterCollection(this);
-            m_IsModified  = true;
+            m_IsModified = true;
         }
 
         /// <summary>
@@ -74,6 +76,160 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
+        /// Gets the disposition-type. Known values are in <see cref="MIME_DispositionTypes">MIME_DispositionTypes</see>.
+        /// </summary>
+        public string DispositionType { get; private set; } = "";
+
+        /// <summary>
+        /// Gets if this header field is modified since it has loaded.
+        /// </summary>
+        /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
+        /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
+        public override bool IsModified
+        {
+            get { return m_IsModified || Parameters.IsModified; }
+        }
+
+        /// <summary>
+        /// Returns always "Content-Disposition".
+        /// </summary>
+        public override string Name
+        {
+            get { return "Content-Disposition"; }
+        }
+
+        /// <summary>
+        /// Gets or sets the creation date for a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.4.
+        /// </summary>
+        public DateTime Param_CreationDate
+        {
+            get
+            {
+                var value = Parameters["creation-date"];
+                if (value == null)
+                {
+                    return DateTime.MinValue;
+                }
+
+                return MIME_Utils.ParseRfc2822DateTime(value);
+            }
+
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    Parameters.Remove("creation-date");
+                }
+                else
+                {
+                    Parameters["creation-date"] = MIME_Utils.DateTimeToRfc2822(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the suggested file name. Value null means not specified. Defined in RFC 2183 2.3.
+        /// </summary>
+        public string Param_FileName
+        {
+            get { return Parameters["filename"]; }
+
+            set { Parameters["filename"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the modification date of a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.5.
+        /// </summary>
+        public DateTime Param_ModificationDate
+        {
+            get
+            {
+                var value = Parameters["modification-date"];
+                if (value == null)
+                {
+                    return DateTime.MinValue;
+                }
+
+                return MIME_Utils.ParseRfc2822DateTime(value);
+            }
+
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    Parameters.Remove("modification-date");
+                }
+                else
+                {
+                    Parameters["modification-date"] = MIME_Utils.DateTimeToRfc2822(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the last read date of a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.6.
+        /// </summary>
+        public DateTime Param_ReadDate
+        {
+            get
+            {
+                var value = Parameters["read-date"];
+                if (value == null)
+                {
+                    return DateTime.MinValue;
+                }
+
+                return MIME_Utils.ParseRfc2822DateTime(value);
+            }
+
+            set
+            {
+                if (value == DateTime.MinValue)
+                {
+                    Parameters.Remove("read-date");
+                }
+                else
+                {
+                    Parameters["read-date"] = MIME_Utils.DateTimeToRfc2822(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the size of a file. Value -1 means not specified. Defined in RFC 2183 2.7.
+        /// </summary>
+        public long Param_Size
+        {
+            get
+            {
+                var value = Parameters["size"];
+                if (value == null)
+                {
+                    return -1;
+                }
+
+                return Convert.ToInt64(value);
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    Parameters.Remove("size");
+                }
+                else
+                {
+                    Parameters["size"] = value.ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets Content-Type parameters collection.
+        /// </summary>
+        public MIME_h_ParameterCollection Parameters { get; }
+
+        /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
         /// <param name="value">Header field value. Header field name must be included. For example: 'Content-Type: text/plain'.</param>
@@ -82,7 +238,8 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
         public static MIME_h_ContentDisposition Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -91,14 +248,16 @@ namespace LumiSoft.Net.MIME
 
             var retVal = new MIME_h_ContentDisposition();
 
-            var name_value = value.Split(new[]{':'},2);
-            if (name_value.Length != 2){
+            var name_value = value.Split(new[] { ':' }, 2);
+            if (name_value.Length != 2)
+            {
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
 
             var r = new MIME_Reader(name_value[1]);
             var type = r.Token();
-            if (type == null){
+            if (type == null)
+            {
                 throw new ParseException("Invalid Content-Disposition: header field value '" + value + "'.");
             }
             retVal.DispositionType = type.Trim();
@@ -117,147 +276,14 @@ namespace LumiSoft.Net.MIME
         /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.</param>
         /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
         /// <returns>Returns header field as string.</returns>
-        public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
+        public override string ToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset, bool reEncode)
         {
-            if(reEncode || IsModified){
+            if (reEncode || IsModified)
+            {
                 return "Content-Disposition: " + DispositionType + Parameters.ToString(parmetersCharset) + "\r\n";
             }
 
             return m_ParseValue;
-        }
-
-        /// <summary>
-        /// Gets if this header field is modified since it has loaded.
-        /// </summary>
-        /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
-        /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get{ return m_IsModified || Parameters.IsModified; }
-        }
-
-        /// <summary>
-        /// Returns always "Content-Disposition".
-        /// </summary>
-        public override string Name
-        {
-            get { return "Content-Disposition"; }
-        }
-
-        /// <summary>
-        /// Gets the disposition-type. Known values are in <see cref="MIME_DispositionTypes">MIME_DispositionTypes</see>.
-        /// </summary>
-        public string DispositionType { get; private set; } = "";
-
-        /// <summary>
-        /// Gets Content-Type parameters collection.
-        /// </summary>
-        public MIME_h_ParameterCollection Parameters { get; }
-
-        /// <summary>
-        /// Gets or sets the suggested file name. Value null means not specified. Defined in RFC 2183 2.3.
-        /// </summary>
-        public string Param_FileName
-        {
-            get{ return Parameters["filename"]; }
-
-            set{ Parameters["filename"] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the creation date for a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.4.
-        /// </summary>
-        public DateTime Param_CreationDate
-        {
-            get{ 
-                var value = Parameters["creation-date"];
-                if (value == null){
-                    return DateTime.MinValue;
-                }
-
-                return MIME_Utils.ParseRfc2822DateTime(value);
-            }
-
-            set{ 
-                if(value == DateTime.MinValue){
-                    Parameters.Remove("creation-date");
-                }
-                else{
-                    Parameters["creation-date"] = MIME_Utils.DateTimeToRfc2822(value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the modification date of a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.5.
-        /// </summary>
-        public DateTime Param_ModificationDate
-        {
-            get{
-                var value = Parameters["modification-date"];
-                if (value == null){
-                    return DateTime.MinValue;
-                }
-
-                return MIME_Utils.ParseRfc2822DateTime(value);
-            }
-
-            set{ 
-                if(value == DateTime.MinValue){
-                    Parameters.Remove("modification-date");
-                }
-                else{
-                    Parameters["modification-date"] = MIME_Utils.DateTimeToRfc2822(value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the last read date of a file. Value DateTime.MinValue means not specified. Defined in RFC 2183 2.6.
-        /// </summary>
-        public DateTime Param_ReadDate
-        {
-            get{
-                var value = Parameters["read-date"];
-                if (value == null){
-                    return DateTime.MinValue;
-                }
-
-                return MIME_Utils.ParseRfc2822DateTime(value);
-            }
-
-            set{ 
-                if(value == DateTime.MinValue){
-                    Parameters.Remove("read-date");
-                }
-                else{
-                    Parameters["read-date"] = MIME_Utils.DateTimeToRfc2822(value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the size of a file. Value -1 means not specified. Defined in RFC 2183 2.7.
-        /// </summary>
-        public long Param_Size
-        {
-            get{
-                var value = Parameters["size"];
-                if (value == null){
-                    return -1;
-                }
-
-                return Convert.ToInt64(value);
-            }
-
-            set{ 
-                if(value < 0){
-                    Parameters.Remove("size");
-                }
-                else{
-                    Parameters["size"] = value.ToString();
-                }
-            }
         }
     }
 }

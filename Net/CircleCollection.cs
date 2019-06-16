@@ -8,8 +8,8 @@ namespace LumiSoft.Net
     /// </summary>
     public class CircleCollection<T>
     {
+        private int m_Index;
         private readonly List<T> m_pItems;
-        private int     m_Index;
 
         /// <summary>
         /// Default constructor.
@@ -20,17 +20,37 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
+        /// Gets number of items in the collection.
+        /// </summary>
+        public int Count
+        {
+            get { return m_pItems.Count; }
+        }
+
+        /// <summary>
+        /// Gets item at the specified index.
+        /// </summary>
+        /// <param name="index">Item zero based index.</param>
+        /// <returns>Returns item at the specified index.</returns>
+        public T this[int index]
+        {
+            get { return m_pItems[index]; }
+        }
+
+        /// <summary>
         /// Adds specified items to the collection.
         /// </summary>
         /// <param name="items">Items to add.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>items</b> is null.</exception>
         public void Add(T[] items)
         {
-            if(items == null){
+            if (items == null)
+            {
                 throw new ArgumentNullException("items");
             }
 
-            foreach(T item in items){
+            foreach (T item in items)
+            {
                 Add(item);
             }
         }
@@ -42,28 +62,12 @@ namespace LumiSoft.Net
         /// <exception cref="ArgumentNullException">Is raised when <b>item</b> is null.</exception>
         public void Add(T item)
         {
-            if(item == null){
+            if (item == null)
+            {
                 throw new ArgumentNullException("item");
             }
 
             m_pItems.Add(item);
-
-            // Reset loop index.
-            m_Index = 0;
-        }
-
-        /// <summary>
-        /// Removes specified item from the collection.
-        /// </summary>
-        /// <param name="item">Item to remove.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>item</b> is null.</exception>
-        public void Remove(T item)
-        {
-            if(item == null){
-                throw new ArgumentNullException("item");
-            }
-
-            m_pItems.Remove(item);
 
             // Reset loop index.
             m_Index = 0;
@@ -96,15 +100,18 @@ namespace LumiSoft.Net
         /// <exception cref="InvalidOperationException">Is raised when thre is no items in the collection.</exception>
         public T Next()
         {
-            if(m_pItems.Count == 0){
+            if (m_pItems.Count == 0)
+            {
                 throw new InvalidOperationException("There is no items in the collection.");
             }
 
-            lock(m_pItems){
+            lock (m_pItems)
+            {
                 var item = m_pItems[m_Index];
 
                 m_Index++;
-                if(m_Index >= m_pItems.Count){
+                if (m_Index >= m_pItems.Count)
+                {
                     m_Index = 0;
                 }
 
@@ -113,12 +120,31 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
+        /// Removes specified item from the collection.
+        /// </summary>
+        /// <param name="item">Item to remove.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>item</b> is null.</exception>
+        public void Remove(T item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            m_pItems.Remove(item);
+
+            // Reset loop index.
+            m_Index = 0;
+        }
+
+        /// <summary>
         /// Copies all elements to new array, all elements will be in order they added. This method is thread-safe.
         /// </summary>
         /// <returns>Returns elements in a new array.</returns>
         public T[] ToArray()
         {
-            lock(m_pItems){
+            lock (m_pItems)
+            {
                 return m_pItems.ToArray();
             }
         }
@@ -129,38 +155,23 @@ namespace LumiSoft.Net
         /// <returns>Returns elements in a new array.</returns>
         public T[] ToCurrentOrderArray()
         {
-            lock(m_pItems){
-                int index  = m_Index;
+            lock (m_pItems)
+            {
+                int index = m_Index;
                 var retVal = new T[m_pItems.Count];
-                for (int i=0;i<m_pItems.Count;i++){
+                for (int i = 0; i < m_pItems.Count; i++)
+                {
                     retVal[i] = m_pItems[index];
 
                     index++;
-                    if(index >= m_pItems.Count){
+                    if (index >= m_pItems.Count)
+                    {
                         index = 0;
                     }
                 }
 
                 return retVal;
             }
-        }
-
-        /// <summary>
-        /// Gets number of items in the collection.
-        /// </summary>
-        public int Count
-        {
-            get{ return m_pItems.Count; }
-        }
-
-        /// <summary>
-        /// Gets item at the specified index.
-        /// </summary>
-        /// <param name="index">Item zero based index.</param>
-        /// <returns>Returns item at the specified index.</returns>
-        public T this[int index]
-        {
-            get{ return m_pItems[index]; }
         }
     }
 }

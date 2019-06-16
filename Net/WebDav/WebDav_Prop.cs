@@ -20,6 +20,33 @@ namespace LumiSoft.Net.WebDav
         }
 
         /// <summary>
+        /// Gets WebDav 'DAV:resourcetype' property value. Returns null if no such property available.
+        /// </summary>
+        public WebDav_p_ResourceType Prop_ResourceType
+        {
+            get
+            {
+                foreach (WebDav_p property in m_pProperties)
+                {
+                    if (property is WebDav_p_ResourceType)
+                    {
+                        return (WebDav_p_ResourceType)property;
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets properties.
+        /// </summary>
+        public WebDav_p[] Properties
+        {
+            get { return m_pProperties.ToArray(); }
+        }
+
+        /// <summary>
         /// Parses WebDav_Prop from 'DAV:prop' element.
         /// </summary>
         /// <param name="propNode">The 'DAV:prop' element</param>
@@ -28,53 +55,34 @@ namespace LumiSoft.Net.WebDav
         /// <exception cref="ParseException">Is raised when there are any parsing error.</exception>
         internal static WebDav_Prop Parse(XmlNode propNode)
         {
-            if(propNode == null){
+            if (propNode == null)
+            {
                 throw new ArgumentNullException("propNode");
             }
 
             // Invalid response.
-            if(!string.Equals(propNode.NamespaceURI + propNode.LocalName,"DAV:prop",StringComparison.InvariantCultureIgnoreCase)){
+            if (!string.Equals(propNode.NamespaceURI + propNode.LocalName, "DAV:prop", StringComparison.InvariantCultureIgnoreCase))
+            {
                 throw new ParseException("Invalid DAV:prop value.");
             }
 
             var retVal = new WebDav_Prop();
 
-            foreach (XmlNode node in propNode.ChildNodes){
+            foreach (XmlNode node in propNode.ChildNodes)
+            {
                 // Resource type property.
-                if(string.Equals(node.LocalName,"resourcetype",StringComparison.InvariantCultureIgnoreCase)){
+                if (string.Equals(node.LocalName, "resourcetype", StringComparison.InvariantCultureIgnoreCase))
+                {
                     retVal.m_pProperties.Add(WebDav_p_ResourceType.Parse(node));
                 }
                 // Default name-value property.
-                else{
-                    retVal.m_pProperties.Add(new WebDav_p_Default(node.NamespaceURI,node.LocalName,node.InnerXml));
+                else
+                {
+                    retVal.m_pProperties.Add(new WebDav_p_Default(node.NamespaceURI, node.LocalName, node.InnerXml));
                 }
             }
 
             return retVal;
-        }
-
-        /// <summary>
-        /// Gets properties.
-        /// </summary>
-        public WebDav_p[] Properties
-        {
-            get{ return m_pProperties.ToArray(); }
-        }
-
-        /// <summary>
-        /// Gets WebDav 'DAV:resourcetype' property value. Returns null if no such property available.
-        /// </summary>
-        public WebDav_p_ResourceType Prop_ResourceType
-        {
-            get{
-                foreach(WebDav_p property in m_pProperties){
-                    if(property is WebDav_p_ResourceType){
-                        return (WebDav_p_ResourceType)property;
-                    }
-                }
-
-                return null;
-            }
         }
     }
 }

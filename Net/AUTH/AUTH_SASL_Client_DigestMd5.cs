@@ -8,13 +8,13 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_DigestMd5 : AUTH_SASL_Client
     {
-        private bool                         m_IsCompleted;
-        private int                          m_State;
-        private readonly string                       m_Protocol;
-        private readonly string                       m_ServerName;
-        private readonly string                       m_UserName;
-        private readonly string                       m_Password;
+        private bool m_IsCompleted;
+        private readonly string m_Password;
         private AUTH_SASL_DigestMD5_Response m_pResponse;
+        private readonly string m_Protocol;
+        private readonly string m_ServerName;
+        private int m_State;
+        private readonly string m_UserName;
 
         /// <summary>
         /// Default constructor.
@@ -25,31 +25,61 @@ namespace LumiSoft.Net.AUTH
         /// <param name="password">User password.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>protocol</b>,<b>server</b>,<b>userName</b> or <b>password</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public AUTH_SASL_Client_DigestMd5(string protocol,string server,string userName,string password)
+        public AUTH_SASL_Client_DigestMd5(string protocol, string server, string userName, string password)
         {
-            if(protocol == null){
+            if (protocol == null)
+            {
                 throw new ArgumentNullException("protocol");
             }
-            if(protocol == string.Empty){
-                throw new ArgumentException("Argument 'protocol' value must be specified.","userName");
+            if (protocol == string.Empty)
+            {
+                throw new ArgumentException("Argument 'protocol' value must be specified.", "userName");
             }
-            if(server == null){
+            if (server == null)
+            {
                 throw new ArgumentNullException("protocol");
             }
-            if(server == string.Empty){
-                throw new ArgumentException("Argument 'server' value must be specified.","userName");
+            if (server == string.Empty)
+            {
+                throw new ArgumentException("Argument 'server' value must be specified.", "userName");
             }
-            if(userName == null){
+            if (userName == null)
+            {
                 throw new ArgumentNullException("userName");
             }
-            if(userName == string.Empty){
-                throw new ArgumentException("Argument 'username' value must be specified.","userName");
+            if (userName == string.Empty)
+            {
+                throw new ArgumentException("Argument 'username' value must be specified.", "userName");
             }
 
-            m_Protocol   = protocol;
+            m_Protocol = protocol;
             m_ServerName = server;
-            m_UserName   = userName;
-            m_Password   = password ?? throw new ArgumentNullException("password");
+            m_UserName = userName;
+            m_Password = password ?? throw new ArgumentNullException("password");
+        }
+
+        /// <summary>
+        /// Gets if the authentication exchange has completed.
+        /// </summary>
+        public override bool IsCompleted
+        {
+            get { return m_IsCompleted; }
+        }
+
+        /// <summary>
+        /// Returns always "DIGEST-MD5".
+        /// </summary>
+        public override string Name
+        {
+            get { return "DIGEST-MD5"; }
+        }
+
+        /// <summary>
+        /// Gets user login name.
+        /// </summary>
+        public override string UserName
+        {
+            get { return m_UserName; }
         }
 
         /// <summary>
@@ -61,10 +91,12 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="InvalidOperationException">Is raised when this method is called when authentication is completed.</exception>
         public override byte[] Continue(byte[] serverResponse)
         {
-            if(serverResponse == null){
+            if (serverResponse == null)
+            {
                 throw new ArgumentNullException("serverResponse");
             }
-            if(m_IsCompleted){
+            if (m_IsCompleted)
+            {
                 throw new InvalidOperationException("Authentication is completed.");
             }
 
@@ -84,7 +116,8 @@ namespace LumiSoft.Net.AUTH
                 The password in this example was "secret".
             */
 
-            if(m_State == 0){
+            if (m_State == 0)
+            {
                 m_State++;
 
                 // Parse server challenge.
@@ -96,7 +129,7 @@ namespace LumiSoft.Net.AUTH
                     challenge.Realm[0],
                     m_UserName,
                     m_Password,
-                    Guid.NewGuid().ToString().Replace("-",""),
+                    Guid.NewGuid().ToString().Replace("-", ""),
                     1,
                     challenge.QopOptions[0],
                     m_Protocol + "/" + m_ServerName
@@ -105,42 +138,20 @@ namespace LumiSoft.Net.AUTH
                 return Encoding.UTF8.GetBytes(m_pResponse.ToResponse());
             }
 
-            if(m_State == 1){
+            if (m_State == 1)
+            {
                 m_State++;
                 m_IsCompleted = true;
 
                 // Check rspauth value.
-                if(!string.Equals(Encoding.UTF8.GetString(serverResponse),m_pResponse.ToRspauthResponse(m_UserName,m_Password),StringComparison.InvariantCultureIgnoreCase)){
+                if (!string.Equals(Encoding.UTF8.GetString(serverResponse), m_pResponse.ToRspauthResponse(m_UserName, m_Password), StringComparison.InvariantCultureIgnoreCase))
+                {
                     throw new Exception("Server server 'rspauth' value mismatch with local 'rspauth' value.");
                 }
 
                 return new byte[0];
             }
             throw new InvalidOperationException("Authentication is completed.");
-        }
-
-        /// <summary>
-        /// Gets if the authentication exchange has completed.
-        /// </summary>
-        public override bool IsCompleted
-        {
-            get{ return m_IsCompleted; }
-        }
-
-        /// <summary>
-        /// Returns always "DIGEST-MD5".
-        /// </summary>
-        public override string Name
-        {
-            get { return "DIGEST-MD5"; }
-        }
-
-        /// <summary>
-        /// Gets user login name.
-        /// </summary>
-        public override string UserName
-        {
-            get{ return m_UserName; }
         }
     }
 }

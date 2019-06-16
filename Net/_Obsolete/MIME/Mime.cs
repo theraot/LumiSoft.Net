@@ -112,229 +112,131 @@ namespace LumiSoft.Net.Mime
     /// </code>
     /// </example>
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
-	public class Mime
-	{
+    public class Mime
+    {
         /// <summary>
 		/// Default constructor.
 		/// </summary>
 		public Mime()
-		{
-			MainEntity = new MimeEntity();
+        {
+            MainEntity = new MimeEntity();
 
-			// Add default header fields
-			MainEntity.MessageID = MimeUtils.CreateMessageID();
-			MainEntity.Date = DateTime.Now;
-			MainEntity.MimeVersion = "1.0";
-		}
-
-        /// <summary>
-		/// Parses mime message from byte[] data.
-		/// </summary>
-		/// <param name="data">Mime message data.</param>
-		/// <returns></returns>
-		public static Mime Parse(byte[] data)
-		{
-			using(MemoryStream ms = new MemoryStream(data)){
-				return Parse(ms);
-			}
-		}
-
-		/// <summary>
-		/// Parses mime message from file.
-		/// </summary>
-		/// <param name="fileName">Mime message file.</param>
-		/// <returns></returns>
-		public static Mime Parse(string fileName)
-		{
-			using(FileStream fs = File.OpenRead(fileName)){
-				return Parse(fs);
-			}
-		}
-
-		/// <summary>
-		/// Parses mime message from stream.
-		/// </summary>
-		/// <param name="stream">Mime message stream.</param>
-		/// <returns></returns>
-		public static Mime Parse(Stream stream)
-		{
-			var mime = new Mime();
-            mime.MainEntity.Parse(new SmartStream(stream,false),null);
-
-			return mime;
-		}
+            // Add default header fields
+            MainEntity.MessageID = MimeUtils.CreateMessageID();
+            MainEntity.Date = DateTime.Now;
+            MainEntity.MimeVersion = "1.0";
+        }
 
         /// <summary>
-		/// Creates simple mime message.
-		/// </summary>
-		/// <param name="from">Header field From: value.</param>
-		/// <param name="to">Header field To: value.</param>
-		/// <param name="subject">Header field Subject: value.</param>
-		/// <param name="bodyText">Body text of message. NOTE: Pass null is body text isn't wanted.</param>
-		/// <param name="bodyHtml">Body HTML text of message. NOTE: Pass null is body HTML text isn't wanted.</param>
-		/// <returns></returns>
-		public static Mime CreateSimple(AddressList from,AddressList to,string subject,string bodyText,string bodyHtml)
-		{
-			return CreateSimple(from,to,subject,bodyText,bodyHtml,null);
-		}
+        /// Gets attachment entities. Entity is considered as attachmnet if:<p/>
+        ///     *) Content-Disposition: attachment (RFC 2822 message)<p/>
+        ///     *) Content-Disposition: filename = "" is specified  (RFC 2822 message)<p/>
+        ///     *) Content-Type: name = "" is specified  (old RFC 822 message)<p/>
+        /// </summary>
+        public MimeEntity[] Attachments
+        {
+            get
+            {
+                var attachments = new List<MimeEntity>();
+                var entities = MimeEntities;
+                foreach (MimeEntity entity in entities)
+                {
+                    if (entity.ContentDisposition == ContentDisposition_enum.Attachment)
+                    {
+                        attachments.Add(entity);
+                    }
+                    else if (entity.ContentType_Name != null)
+                    {
+                        attachments.Add(entity);
+                    }
+                    else if (entity.ContentDisposition_FileName != null)
+                    {
+                        attachments.Add(entity);
+                    }
+                }
 
-		/// <summary>
-		/// Creates simple mime message with attachments.
-		/// </summary>
-		/// <param name="from">Header field From: value.</param>
-		/// <param name="to">Header field To: value.</param>
-		/// <param name="subject">Header field Subject: value.</param>
-		/// <param name="bodyText">Body text of message. NOTE: Pass null is body text isn't wanted.</param>
-		/// <param name="bodyHtml">Body HTML text of message. NOTE: Pass null is body HTML text isn't wanted.</param>
-		/// <param name="attachmentFileNames">Attachment file names. Pass null if no attachments. NOTE: File name must contain full path to file, for example: c:\test.pdf.</param>
-		/// <returns></returns>
-		public static Mime CreateSimple(AddressList from,AddressList to,string subject,string bodyText,string bodyHtml,string[] attachmentFileNames)
-		{
-			var m = new Mime();
+                return attachments.ToArray();
+            }
+        }
+        /*
+                /// <summary>
+                /// Gets body text mime entity. Returns null if no body body text entity.
+                /// </summary>
+                public MimeEntity BodyTextEntity
+                {
+                    get{
+                        if(this.MainEntity.ContentType == MediaType_enum.NotSpecified){
+                            if(this.MainEntity.DataEncoded != null){
+                                return this.MainEntity;
+                            }
+                        }
+                        else{
+                            MimeEntity[] entities = this.MimeEntities;
+                            foreach(MimeEntity entity in entities){
+                                if(entity.ContentType == MediaType_enum.Text_plain){
+                                    return entity;
+                                }
+                            }
+                        }
 
-            var mainEntity = m.MainEntity;
-            mainEntity.From = from;
-			mainEntity.To = to;
-			mainEntity.Subject = subject;
+                        return null;
+                    }
+                }
+        */
+        /// <summary>
+        /// Gets message body html. Returns null if no body html text specified.
+        /// </summary>
+        public string BodyHtml
+        {
+            get
+            {
+                var entities = MimeEntities;
+                foreach (MimeEntity entity in entities)
+                {
+                    if (entity.ContentType == MediaType_enum.Text_html)
+                    {
+                        return entity.DataText;
+                    }
+                }
 
-			// There are no atachments
-			if(attachmentFileNames == null || attachmentFileNames.Length == 0){
-				// If bodyText and bodyHtml both specified
-				if(bodyText != null && bodyHtml != null){
-					mainEntity.ContentType = MediaType_enum.Multipart_alternative;
-
-					var textEntity = mainEntity.ChildEntities.Add();
-                    textEntity.ContentType = MediaType_enum.Text_plain;
-					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textEntity.DataText = bodyText;
-
-					var textHtmlEntity = mainEntity.ChildEntities.Add();
-                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
-					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textHtmlEntity.DataText = bodyHtml;
-				}
-				// There is only body text
-				else if(bodyText != null){
-					var textEntity = mainEntity;
-                    textEntity.ContentType = MediaType_enum.Text_plain;
-					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textEntity.DataText = bodyText;
-				}
-				// There is only body html text
-				else if(bodyHtml != null){
-					var textHtmlEntity = mainEntity;
-                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
-					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textHtmlEntity.DataText = bodyHtml;
-				}
-			}
-			// There are attachments
-			else{				
-				mainEntity.ContentType = MediaType_enum.Multipart_mixed;
-
-				// If bodyText and bodyHtml both specified
-				if(bodyText != null && bodyHtml != null){
-					var multiPartAlternativeEntity = mainEntity.ChildEntities.Add();
-                    multiPartAlternativeEntity.ContentType = MediaType_enum.Multipart_alternative;
-
-					var textEntity = multiPartAlternativeEntity.ChildEntities.Add();
-                    textEntity.ContentType = MediaType_enum.Text_plain;
-					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textEntity.DataText = bodyText;
-
-					var textHtmlEntity = multiPartAlternativeEntity.ChildEntities.Add();
-                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
-					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textHtmlEntity.DataText = bodyHtml;
-				}
-				// There is only body text
-				else if(bodyText != null){
-					var textEntity = mainEntity.ChildEntities.Add();
-                    textEntity.ContentType = MediaType_enum.Text_plain;
-					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textEntity.DataText = bodyText;
-				}
-				// There is only body html text
-				else if(bodyHtml != null){
-					var textHtmlEntity = mainEntity.ChildEntities.Add();
-                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
-					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-					textHtmlEntity.DataText = bodyHtml;
-				}
-
-				foreach(string fileName in attachmentFileNames){
-					var attachmentEntity = mainEntity.ChildEntities.Add();
-                    attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
-					attachmentEntity.ContentDisposition = ContentDisposition_enum.Attachment;
-					attachmentEntity.ContentTransferEncoding = ContentTransferEncoding_enum.Base64;
-					attachmentEntity.ContentDisposition_FileName = Core.GetFileNameFromPath(fileName);
-					attachmentEntity.DataFromFile(fileName);
-				}
-			}
-
-			return m;
-		}
+                return null;
+            }
+        }
 
         /// <summary>
-		/// Stores mime message to string.
-		/// </summary>
-		/// <returns></returns>
-		public string ToStringData()
-		{
-			return System.Text.Encoding.Default.GetString(ToByteData());
-		}
+        /// Gets message body text. Returns null if no body text specified.
+        /// </summary>
+        public string BodyText
+        {
+            get
+            {
+                /* RFC 2045 5.2 
+                    If content Content-Type: header field is missing, then it defaults to:
+                        Content-type: text/plain; charset=us-ascii
+                */
 
-        /// <summary>
-		/// Stores mime message to byte[].
-		/// </summary>
-		/// <returns></returns>
-		public byte[] ToByteData()
-		{
-			using(MemoryStream ms = new MemoryStream()){
-				ToStream(ms);
+                if (MainEntity.ContentType == MediaType_enum.NotSpecified)
+                {
+                    if (MainEntity.DataEncoded != null)
+                    {
+                        return System.Text.Encoding.ASCII.GetString(MainEntity.Data);
+                    }
+                }
+                else
+                {
+                    var entities = MimeEntities;
+                    foreach (MimeEntity entity in entities)
+                    {
+                        if (entity.ContentType == MediaType_enum.Text_plain)
+                        {
+                            return entity.DataText;
+                        }
+                    }
+                }
 
-				return ms.ToArray();
-			}
-		}
-
-        /// <summary>
-		/// Stores mime message to specified file.
-		/// </summary>
-		/// <param name="fileName">File name.</param>
-		public void ToFile(string fileName)
-		{
-			using(FileStream fs = File.Create(fileName)){
-				ToStream(fs);
-			}
-		}
-
-        /// <summary>
-		/// Stores mime message to specified stream. Stream position stays where mime writing ends.
-		/// </summary>
-		/// <param name="storeStream">Stream where to store mime message.</param>
-		public void ToStream(Stream storeStream)
-		{
-			MainEntity.ToStream(storeStream);
-		}
-
-        /// <summary>
-		/// Gets mime entities, including nested entries. 
-		/// </summary>
-		/// <param name="entities"></param>
-		/// <param name="allEntries"></param>
-		private void GetEntities(MimeEntityCollection entities,List<MimeEntity> allEntries)
-		{				
-			if(entities != null){
-				foreach(MimeEntity ent in entities){
-					allEntries.Add(ent);
-
-					// Add child entities, if any
-					if(ent.ChildEntities.Count > 0){
-						GetEntities(ent.ChildEntities,allEntries);
-					}
-				}
-			}
-		}
+                return null;
+            }
+        }
 
         /// <summary>
 		/// Message main(top-level) entity.
@@ -345,111 +247,240 @@ namespace LumiSoft.Net.Mime
 		/// Gets all mime entities contained in message, including child entities.
 		/// </summary>
 		public MimeEntity[] MimeEntities
-		{
-			get{ 
-				var allEntities = new List<MimeEntity>();
+        {
+            get
+            {
+                var allEntities = new List<MimeEntity>();
                 allEntities.Add(MainEntity);
-				GetEntities(MainEntity.ChildEntities,allEntities);
+                GetEntities(MainEntity.ChildEntities, allEntities);
 
-				return allEntities.ToArray(); 
-			}
-		}
-		
-		/// <summary>
-		/// Gets attachment entities. Entity is considered as attachmnet if:<p/>
-        ///     *) Content-Disposition: attachment (RFC 2822 message)<p/>
-        ///     *) Content-Disposition: filename = "" is specified  (RFC 2822 message)<p/>
-        ///     *) Content-Type: name = "" is specified  (old RFC 822 message)<p/>
+                return allEntities.ToArray();
+            }
+        }
+
+        /// <summary>
+		/// Creates simple mime message.
 		/// </summary>
-		public MimeEntity[] Attachments
-		{
-			get{                
-                var attachments = new List<MimeEntity>();
-                var entities = MimeEntities;
-                foreach (MimeEntity entity in entities){
-                    if(entity.ContentDisposition == ContentDisposition_enum.Attachment){
-                        attachments.Add(entity);
+		/// <param name="from">Header field From: value.</param>
+		/// <param name="to">Header field To: value.</param>
+		/// <param name="subject">Header field Subject: value.</param>
+		/// <param name="bodyText">Body text of message. NOTE: Pass null is body text isn't wanted.</param>
+		/// <param name="bodyHtml">Body HTML text of message. NOTE: Pass null is body HTML text isn't wanted.</param>
+		/// <returns></returns>
+		public static Mime CreateSimple(AddressList from, AddressList to, string subject, string bodyText, string bodyHtml)
+        {
+            return CreateSimple(from, to, subject, bodyText, bodyHtml, null);
+        }
+
+        /// <summary>
+        /// Creates simple mime message with attachments.
+        /// </summary>
+        /// <param name="from">Header field From: value.</param>
+        /// <param name="to">Header field To: value.</param>
+        /// <param name="subject">Header field Subject: value.</param>
+        /// <param name="bodyText">Body text of message. NOTE: Pass null is body text isn't wanted.</param>
+        /// <param name="bodyHtml">Body HTML text of message. NOTE: Pass null is body HTML text isn't wanted.</param>
+        /// <param name="attachmentFileNames">Attachment file names. Pass null if no attachments. NOTE: File name must contain full path to file, for example: c:\test.pdf.</param>
+        /// <returns></returns>
+        public static Mime CreateSimple(AddressList from, AddressList to, string subject, string bodyText, string bodyHtml, string[] attachmentFileNames)
+        {
+            var m = new Mime();
+
+            var mainEntity = m.MainEntity;
+            mainEntity.From = from;
+            mainEntity.To = to;
+            mainEntity.Subject = subject;
+
+            // There are no atachments
+            if (attachmentFileNames == null || attachmentFileNames.Length == 0)
+            {
+                // If bodyText and bodyHtml both specified
+                if (bodyText != null && bodyHtml != null)
+                {
+                    mainEntity.ContentType = MediaType_enum.Multipart_alternative;
+
+                    var textEntity = mainEntity.ChildEntities.Add();
+                    textEntity.ContentType = MediaType_enum.Text_plain;
+                    textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textEntity.DataText = bodyText;
+
+                    var textHtmlEntity = mainEntity.ChildEntities.Add();
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
+                    textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textHtmlEntity.DataText = bodyHtml;
+                }
+                // There is only body text
+                else if (bodyText != null)
+                {
+                    var textEntity = mainEntity;
+                    textEntity.ContentType = MediaType_enum.Text_plain;
+                    textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textEntity.DataText = bodyText;
+                }
+                // There is only body html text
+                else if (bodyHtml != null)
+                {
+                    var textHtmlEntity = mainEntity;
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
+                    textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textHtmlEntity.DataText = bodyHtml;
+                }
+            }
+            // There are attachments
+            else
+            {
+                mainEntity.ContentType = MediaType_enum.Multipart_mixed;
+
+                // If bodyText and bodyHtml both specified
+                if (bodyText != null && bodyHtml != null)
+                {
+                    var multiPartAlternativeEntity = mainEntity.ChildEntities.Add();
+                    multiPartAlternativeEntity.ContentType = MediaType_enum.Multipart_alternative;
+
+                    var textEntity = multiPartAlternativeEntity.ChildEntities.Add();
+                    textEntity.ContentType = MediaType_enum.Text_plain;
+                    textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textEntity.DataText = bodyText;
+
+                    var textHtmlEntity = multiPartAlternativeEntity.ChildEntities.Add();
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
+                    textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textHtmlEntity.DataText = bodyHtml;
+                }
+                // There is only body text
+                else if (bodyText != null)
+                {
+                    var textEntity = mainEntity.ChildEntities.Add();
+                    textEntity.ContentType = MediaType_enum.Text_plain;
+                    textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textEntity.DataText = bodyText;
+                }
+                // There is only body html text
+                else if (bodyHtml != null)
+                {
+                    var textHtmlEntity = mainEntity.ChildEntities.Add();
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
+                    textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+                    textHtmlEntity.DataText = bodyHtml;
+                }
+
+                foreach (string fileName in attachmentFileNames)
+                {
+                    var attachmentEntity = mainEntity.ChildEntities.Add();
+                    attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
+                    attachmentEntity.ContentDisposition = ContentDisposition_enum.Attachment;
+                    attachmentEntity.ContentTransferEncoding = ContentTransferEncoding_enum.Base64;
+                    attachmentEntity.ContentDisposition_FileName = Core.GetFileNameFromPath(fileName);
+                    attachmentEntity.DataFromFile(fileName);
+                }
+            }
+
+            return m;
+        }
+
+        /// <summary>
+		/// Parses mime message from byte[] data.
+		/// </summary>
+		/// <param name="data">Mime message data.</param>
+		/// <returns></returns>
+		public static Mime Parse(byte[] data)
+        {
+            using (MemoryStream ms = new MemoryStream(data))
+            {
+                return Parse(ms);
+            }
+        }
+
+        /// <summary>
+        /// Parses mime message from file.
+        /// </summary>
+        /// <param name="fileName">Mime message file.</param>
+        /// <returns></returns>
+        public static Mime Parse(string fileName)
+        {
+            using (FileStream fs = File.OpenRead(fileName))
+            {
+                return Parse(fs);
+            }
+        }
+
+        /// <summary>
+        /// Parses mime message from stream.
+        /// </summary>
+        /// <param name="stream">Mime message stream.</param>
+        /// <returns></returns>
+        public static Mime Parse(Stream stream)
+        {
+            var mime = new Mime();
+            mime.MainEntity.Parse(new SmartStream(stream, false), null);
+
+            return mime;
+        }
+
+        /// <summary>
+		/// Stores mime message to byte[].
+		/// </summary>
+		/// <returns></returns>
+		public byte[] ToByteData()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ToStream(ms);
+
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+		/// Stores mime message to specified file.
+		/// </summary>
+		/// <param name="fileName">File name.</param>
+		public void ToFile(string fileName)
+        {
+            using (FileStream fs = File.Create(fileName))
+            {
+                ToStream(fs);
+            }
+        }
+
+        /// <summary>
+		/// Stores mime message to specified stream. Stream position stays where mime writing ends.
+		/// </summary>
+		/// <param name="storeStream">Stream where to store mime message.</param>
+		public void ToStream(Stream storeStream)
+        {
+            MainEntity.ToStream(storeStream);
+        }
+
+        /// <summary>
+		/// Stores mime message to string.
+		/// </summary>
+		/// <returns></returns>
+		public string ToStringData()
+        {
+            return System.Text.Encoding.Default.GetString(ToByteData());
+        }
+
+        /// <summary>
+		/// Gets mime entities, including nested entries. 
+		/// </summary>
+		/// <param name="entities"></param>
+		/// <param name="allEntries"></param>
+		private void GetEntities(MimeEntityCollection entities, List<MimeEntity> allEntries)
+        {
+            if (entities != null)
+            {
+                foreach (MimeEntity ent in entities)
+                {
+                    allEntries.Add(ent);
+
+                    // Add child entities, if any
+                    if (ent.ChildEntities.Count > 0)
+                    {
+                        GetEntities(ent.ChildEntities, allEntries);
                     }
-                    else if(entity.ContentType_Name != null){
-                        attachments.Add(entity);
-                    }
-                    else if(entity.ContentDisposition_FileName != null){
-                        attachments.Add(entity);
-                    }
-				}
-
-                return attachments.ToArray();
-			}
-		}
-			
-		/// <summary>
-		/// Gets message body text. Returns null if no body text specified.
-		/// </summary>
-		public string BodyText
-		{
-			get{
-                /* RFC 2045 5.2 
-                    If content Content-Type: header field is missing, then it defaults to:
-                        Content-type: text/plain; charset=us-ascii
-                */
-
-				if(MainEntity.ContentType == MediaType_enum.NotSpecified){
-					if(MainEntity.DataEncoded != null){
-						return System.Text.Encoding.ASCII.GetString(MainEntity.Data);
-					}
-				}
-				else{
-					var entities = MimeEntities;
-                    foreach (MimeEntity entity in entities){
-						if(entity.ContentType == MediaType_enum.Text_plain){
-							return entity.DataText;
-						}
-					}
-				}
-
-				return null;
-			}
-		}
-/*
-		/// <summary>
-		/// Gets body text mime entity. Returns null if no body body text entity.
-		/// </summary>
-		public MimeEntity BodyTextEntity
-		{
-			get{
-				if(this.MainEntity.ContentType == MediaType_enum.NotSpecified){
-					if(this.MainEntity.DataEncoded != null){
-						return this.MainEntity;
-					}
-				}
-				else{
-					MimeEntity[] entities = this.MimeEntities;
-					foreach(MimeEntity entity in entities){
-						if(entity.ContentType == MediaType_enum.Text_plain){
-							return entity;
-						}
-					}
-				}
-
-				return null;
-			}
-		}
-*/
-		/// <summary>
-		/// Gets message body html. Returns null if no body html text specified.
-		/// </summary>
-		public string BodyHtml
-		{
-			get{
-				var entities = MimeEntities;
-                foreach (MimeEntity entity in entities){
-					if(entity.ContentType == MediaType_enum.Text_html){
-						return entity.DataText;
-					}
-				}
-
-				return null;
-			}
-		}
+                }
+            }
+        }
     }
 }

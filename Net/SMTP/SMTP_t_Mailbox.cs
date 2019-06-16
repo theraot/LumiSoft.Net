@@ -24,11 +24,23 @@ namespace LumiSoft.Net.SMTP
         /// <param name="localPart">Local part of mailbox.</param>
         /// <param name="domain">Domain of mailbox.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>localPart</b> or <b>domain</b> is null reference.</exception>
-        public SMTP_t_Mailbox(string localPart,string domain)
+        public SMTP_t_Mailbox(string localPart, string domain)
         {
             LocalPart = localPart ?? throw new ArgumentNullException("localPart");
-            Domain    = domain ?? throw new ArgumentNullException("domain");
+            Domain = domain ?? throw new ArgumentNullException("domain");
         }
+
+        /// <summary>
+        /// Gets domain of mailbox.
+        /// </summary>
+        /// <remarks>If domain is <b>address-literal</b>, surrounding bracets will be removed.</remarks>
+        public string Domain { get; }
+
+        /// <summary>
+        /// Gets local-part of mailbox.
+        /// </summary>
+        /// <remarks>If local-part is <b>Quoted-string</b>, quotes will not returned.</remarks>
+        public string LocalPart { get; }
 
         /*
         /// <summary>
@@ -70,23 +82,12 @@ namespace LumiSoft.Net.SMTP
         /// <returns>Returns mailbox as string.</returns>
         public override string ToString()
         {
-            if(MIME_Reader.IsDotAtom(LocalPart)){
+            if (MIME_Reader.IsDotAtom(LocalPart))
+            {
                 return LocalPart + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
             }
 
             return TextUtils.QuoteString(LocalPart) + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
         }
-
-        /// <summary>
-        /// Gets local-part of mailbox.
-        /// </summary>
-        /// <remarks>If local-part is <b>Quoted-string</b>, quotes will not returned.</remarks>
-        public string LocalPart { get; }
-
-        /// <summary>
-        /// Gets domain of mailbox.
-        /// </summary>
-        /// <remarks>If domain is <b>address-literal</b>, surrounding bracets will be removed.</remarks>
-        public string Domain { get; }
     }
 }

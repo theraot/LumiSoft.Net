@@ -7,9 +7,9 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_RequestReceivedEventArgs : EventArgs
     {
-        private readonly SIP_Stack             m_pStack;
+        private bool m_IsHandled;
+        private readonly SIP_Stack m_pStack;
         private SIP_ServerTransaction m_pTransaction;
-        private bool                  m_IsHandled;
 
         /// <summary>
         /// Default constructor.
@@ -17,8 +17,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="stack">Reference to SIP stack.</param>
         /// <param name="flow">SIP data flow.</param>
         /// <param name="request">Recieved request.</param>
-        internal SIP_RequestReceivedEventArgs(SIP_Stack stack,SIP_Flow flow,SIP_Request request) : this(stack,flow,request,null)
-        {           
+        internal SIP_RequestReceivedEventArgs(SIP_Stack stack, SIP_Flow flow, SIP_Request request) : this(stack, flow, request, null)
+        {
         }
 
         /// <summary>
@@ -28,18 +28,36 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="flow">SIP data flow.</param>
         /// <param name="request">Recieved request.</param>
         /// <param name="transaction">SIP server transaction which must be used to send response back to request maker.</param>
-        internal SIP_RequestReceivedEventArgs(SIP_Stack stack,SIP_Flow flow,SIP_Request request,SIP_ServerTransaction transaction)
+        internal SIP_RequestReceivedEventArgs(SIP_Stack stack, SIP_Flow flow, SIP_Request request, SIP_ServerTransaction transaction)
         {
-            m_pStack       = stack;
-            Flow        = flow;
-            Request     = request;
+            m_pStack = stack;
+            Flow = flow;
+            Request = request;
             m_pTransaction = transaction;
+        }
+
+        /// <summary>
+        /// Gets SIP dialog where Request belongs to. Returns null if Request doesn't belong any dialog.
+        /// </summary>
+        public SIP_Dialog Dialog
+        {
+            get { return m_pStack.TransactionLayer.MatchDialog(Request); }
         }
 
         /// <summary>
         /// Gets data flow what received SIP request.
         /// </summary>
         public SIP_Flow Flow { get; }
+
+        /// <summary>
+        /// Gets or sets if request is handled.
+        /// </summary>
+        public bool IsHandled
+        {
+            get { return m_IsHandled; }
+
+            set { m_IsHandled = true; }
+        }
 
         /// <summary>
         /// Gets the received rquest.
@@ -54,37 +72,22 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public SIP_ServerTransaction ServerTransaction
         {
-            get{
+            get
+            {
                 // ACK never creates transaction.
-                if(Request.RequestLine.Method == SIP_Methods.ACK){
+                if (Request.RequestLine.Method == SIP_Methods.ACK)
+                {
                     return null;
                 }
 
                 // Create server transaction for that request.
-                if(m_pTransaction == null){
-                    m_pTransaction = m_pStack.TransactionLayer.EnsureServerTransaction(Flow,Request);
+                if (m_pTransaction == null)
+                {
+                    m_pTransaction = m_pStack.TransactionLayer.EnsureServerTransaction(Flow, Request);
                 }
 
-                return m_pTransaction; 
+                return m_pTransaction;
             }
-        }
-
-        /// <summary>
-        /// Gets SIP dialog where Request belongs to. Returns null if Request doesn't belong any dialog.
-        /// </summary>
-        public SIP_Dialog Dialog
-        {
-            get{ return m_pStack.TransactionLayer.MatchDialog(Request); }
-        }
-
-        /// <summary>
-        /// Gets or sets if request is handled.
-        /// </summary>
-        public bool IsHandled
-        {
-            get{ return m_IsHandled; }
-
-            set{ m_IsHandled = true; }
         }
     }
 }

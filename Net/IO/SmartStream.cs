@@ -9,673 +9,1301 @@ namespace LumiSoft.Net.IO
     /// This class is wrapper to normal stream, provides most needed stream methods which are missing from normal stream.
     /// </summary>
     public class SmartStream : Stream
-    { 
+    {
+        private readonly int m_BufferSize = 32000;
+        private long m_BytesReaded;
+        private long m_BytesWritten;
+
+        private bool m_IsDisposed;
+        private bool m_IsOwner;
+        private DateTime m_LastActivity;
+        private Encoding m_pEncoding = Encoding.Default;
+        private readonly byte[] m_pReadBuffer;
+        private readonly BufferReadAsyncOP m_pReadBufferOP;
+        private readonly Stream m_pStream;
+        private int m_ReadBufferCount;
+        private int m_ReadBufferOffset;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="stream">Stream to wrap.</param>
+        /// <param name="owner">Specifies if SmartStream is owner of <b>stream</b>.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
+        public SmartStream(Stream stream, bool owner)
+        {
+            m_pStream = stream ?? throw new ArgumentNullException("stream");
+            m_IsOwner = owner;
+            m_pReadBuffer = new byte[m_BufferSize];
+            m_pReadBufferOP = new BufferReadAsyncOP(this);
+
+            m_LastActivity = DateTime.Now;
+        }
         private delegate void BufferCallback(Exception x);
 
         /// <summary>
-        /// This class implements read line operation.
+        /// Gets number of bytes in read buffer.
         /// </summary>
-        /// <remarks>This class can be reused on multiple calls of <see cref="SmartStream.ReadLine(ReadLineAsyncOP,bool)">SmartStream.ReadLine</see> method.</remarks>
-        public class ReadLineAsyncOP : AsyncOP,IDisposable
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public int BytesInReadBuffer
         {
-            private bool               m_IsDisposed;
-            private bool               m_IsCompleted;
-            private bool               m_IsCompletedSync;
-            private SmartStream        m_pOwner;
-            private byte[]             m_pBuffer;
-            private readonly bool               m_CRLFLinesOnly   = true;
-            private int                m_BytesInBuffer;
-            private int                m_LastByte        = -1;
-            private Exception          m_pException;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="buffer">Line buffer.</param>
-            /// <param name="exceededAction">Specifies how line-reader behaves when maximum line size exceeded.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
-            public ReadLineAsyncOP(byte[] buffer,SizeExceededAction exceededAction)
+            get
             {
-                m_pBuffer        = buffer ?? throw new ArgumentNullException("buffer");
-                SizeExceededAction = exceededAction;
-            }
-
-            /// <summary>
-            /// Destructor.
-            /// </summary>
-            ~ReadLineAsyncOP()
-            {
-                Dispose();
-            }
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(m_IsDisposed){
-                    return;
-                }
-                m_IsDisposed = true;
-
-                m_pOwner       = null;
-                m_pBuffer      = null;
-                m_pException   = null;
-                Completed = null;
-            }
-
-            /// <summary>
-            /// Starts reading line.
-            /// </summary>
-            /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
-            /// <param name="stream">Owner SmartStream.</param>
-            /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-            internal bool Start(bool async,SmartStream stream)
-            {
-                m_pOwner = stream ?? throw new ArgumentNullException("stream");
-
-                // Clear old data, if any.
-                m_IsCompleted   = false;
-                m_BytesInBuffer = 0;
-                m_LastByte      = -1;
-                m_pException    = null;
-   
-                m_IsCompletedSync = DoLineReading(async);
-
-                return m_IsCompletedSync;
-            }
-
-            /// <summary>
-            /// Is called when asynchronous read buffer buffering has completed.
-            /// </summary>
-            /// <param name="x">Exception that occured during async operation.</param>
-            private void Buffering_Completed(Exception x)
-            {   
-                if(m_pOwner.m_IsDisposed){
-                    return;
-                }
-            
-                if(x != null){
-                    m_pException = x;
-                    OnCompleted();
-                }
-                // We reached end of stream, no more data.
-                else if(m_pOwner.BytesInReadBuffer == 0){
-                    OnCompleted();
-                }
-                // Continue line reading.
-                else{
-                    if(DoLineReading(true)){
-                        OnCompleted();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Starts/continues line reading.
-            /// </summary>
-            /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
-            /// <returns>Returns true if line reading completed.</returns>
-            private bool DoLineReading(bool async)
-            {
-                try{
-                    while(true){                        
-                        // Read buffer empty, buff next data block.
-                        if(m_pOwner.BytesInReadBuffer == 0){
-                            // Buffering started asynchronously.
-                            if(m_pOwner.BufferRead(async,Buffering_Completed)){
-                                return false;
-                            }
-                            // Buffering completed synchronously, continue processing.
-
-                            // We reached end of stream, no more data.
-                            if(m_pOwner.BytesInReadBuffer == 0){                                    
-                                return true;
-                            }
-                        }
-
-                        byte b = m_pOwner.m_pReadBuffer[m_pOwner.m_ReadBufferOffset++];
-                        
-                        // Line buffer full.
-                        if(m_BytesInBuffer >= m_pBuffer.Length){
-                            if(m_pException == null){
-                                m_pException = new LineSizeExceededException();
-                            }
-
-                            if(SizeExceededAction == SizeExceededAction.ThrowException){                                
-                                return true;
-                            }
-                        }
-                        // Store byte.
-                        else{
-                            m_pBuffer[m_BytesInBuffer++] = b;
-                        }
-
-                        // We have LF line.
-                        if(b == '\n'){
-                            if(!m_CRLFLinesOnly || m_CRLFLinesOnly && m_LastByte == '\r'){
-                                m_IsCompleted = true;
-                                return true;
-                            }                   
-                        }
-
-                        m_LastByte = b;
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
                 }
 
-                return true;
-            }
-
-            /// <summary>
-            /// Sets specified field values.
-            /// </summary>
-            /// <param name="bytesInBuffer">Number of bytes in buffer.</param>
-            /// <param name="exception">Exception.</param>
-            internal void SetInfo(int bytesInBuffer,Exception exception)
-            {
-                m_IsCompleted     = true;
-                m_IsCompletedSync = true;
-                m_BytesInBuffer   = bytesInBuffer;
-                m_pException      = exception;
-            }
-
-            /// <summary>
-            /// Gets if this object is disposed.
-            /// </summary>
-            public override bool IsDisposed
-            {
-                get{ return m_IsDisposed; }
-            }
-
-            /// <summary>
-            /// Gets if asynchronous operation has completed.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public override bool IsCompleted
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    return m_IsCompleted; 
-                }
-            }
-
-            /// <summary>
-            /// Gets if operation completed synchronously.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public override bool IsCompletedSynchronously
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    return m_IsCompletedSync; 
-                }
-            }
-
-            /// <summary>
-            /// Gets line size exceeded action.
-            /// </summary>
-            public SizeExceededAction SizeExceededAction { get; } = SizeExceededAction.JunkAndThrowException;
-
-            /// <summary>
-            /// Gets line buffer.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public byte[] Buffer
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    return m_pBuffer; 
-                }
-            }
-
-            /// <summary>
-            /// Gets number of bytes stored in the buffer. Ending line-feed characters included.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public int BytesInBuffer
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    return m_BytesInBuffer; 
-                }
-            }
-
-            /// <summary>
-            /// Gets number of line data bytes stored in the buffer. Ending line-feed characters not included.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public int LineBytesInBuffer
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    int retVal = m_BytesInBuffer;
-
-                    if(m_BytesInBuffer > 1){
-                        if(m_pBuffer[m_BytesInBuffer - 1] == '\n'){
-                            retVal--;
-                            if(m_pBuffer[m_BytesInBuffer - 2] == '\r'){
-                                retVal--;
-                            }
-                        }
-                    }
-                    else if(m_BytesInBuffer > 0){
-                        if(m_pBuffer[m_BytesInBuffer - 1] == '\n'){
-                            retVal--;
-                        }
-                    }
-
-                    return retVal; 
-                }
-            }
-
-            /// <summary>
-            /// Gets line as ASCII string. Returns null if EOS(end of stream) reached. Ending line-feed characters not included.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public string LineAscii
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    if(BytesInBuffer == 0){
-                        return null;
-                    }
-
-                    return Encoding.ASCII.GetString(m_pBuffer,0,LineBytesInBuffer);
-                }
-            }
-
-            /// <summary>
-            /// Gets line as UTF-8 string. Returns null if EOS(end of stream) reached. Ending line-feed characters not included.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public string LineUtf8
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    if(BytesInBuffer == 0){
-                        return null;
-                    }
-
-                    return Encoding.UTF8.GetString(m_pBuffer,0,LineBytesInBuffer);
-                }
-            }
-
-            /// <summary>
-            /// Gets line as UTF-32 string. Returns null if EOS(end of stream) reached. Ending line-feed characters not included.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public string LineUtf32
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    if(BytesInBuffer == 0){
-                        return null;
-                    }
-
-                    return Encoding.UTF32.GetString(m_pBuffer,0,LineBytesInBuffer);
-                }
-            }
-
-            /// <summary>
-            /// Gets error occured during asynchronous operation. Value null means no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public Exception Error
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-    
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is raised when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<ReadLineAsyncOP>> Completed;
-
-            /// <summary>
-            /// Raises <b>Completed</b> event.
-            /// </summary>
-            private void OnCompleted()
-            {
-                m_IsCompleted = true;
-
-                if(Completed != null){
-                    Completed(this,new EventArgs<ReadLineAsyncOP>(this));
-                }
+                return m_ReadBufferCount - m_ReadBufferOffset;
             }
         }
 
         /// <summary>
-        /// This class implements read period-terminated operation.
+        /// Gets how many bytes are readed through this stream.
         /// </summary>
-        public class ReadPeriodTerminatedAsyncOP : AsyncOP,IDisposable
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public long BytesReaded
         {
-            private bool               m_IsDisposed;
-            private bool               m_IsCompleted;
-            private bool               m_IsCompletedSync;
-            private SmartStream        m_pOwner;
-            private Stream             m_pStream;
-            private readonly long               m_MaxCount;
-            private SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
-            private ReadLineAsyncOP    m_pReadLineOP;
-            private long               m_BytesStored;
-            private int                m_LinesStored;
-            private Exception          m_pException;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="stream">Stream wehre to sore readed data.</param>
-            /// <param name="maxCount">Maximum number of bytes to read. Value 0 means not limited.</param>
-            /// <param name="exceededAction">Specifies how period-terminated reader behaves when <b>maxCount</b> exceeded.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-            public ReadPeriodTerminatedAsyncOP(Stream stream,long maxCount,SizeExceededAction exceededAction)
+            get
             {
-                m_pStream        = stream ?? throw new ArgumentNullException("stream");
-                m_MaxCount       = maxCount;
-                m_ExceededAction = exceededAction;
-
-                m_pReadLineOP = new ReadLineAsyncOP(new byte[32000],exceededAction);
-                m_pReadLineOP.Completed += new EventHandler<EventArgs<ReadLineAsyncOP>>(m_pReadLineOP_Completed);
-            }
-
-            /// <summary>
-            /// Destructor.
-            /// </summary>
-            ~ReadPeriodTerminatedAsyncOP()
-            {
-                Dispose();
-            }
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(m_IsDisposed){
-                    return;
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
                 }
-                m_IsDisposed = true;
 
-                m_pOwner       = null;
-                m_pStream      = null;
-                m_pReadLineOP.Dispose();
-                m_pReadLineOP  = null;
-                m_pException   = null;
-                Completed = null;
+                return m_BytesReaded;
+            }
+        }
+
+        /// <summary>
+        /// Gets how many bytes are written through this stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public long BytesWritten
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_BytesWritten;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports reading.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanRead
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pStream.CanRead;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports seeking.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanSeek
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pStream.CanSeek;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports writing.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override bool CanWrite
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pStream.CanWrite;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets string related methods default encoding.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
+        public Encoding Encoding
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pEncoding;
             }
 
-            /// <summary>
-            /// Starts period-terminated data reading.
-            /// </summary>
-            /// <param name="stream">Owner SmartStream.</param>
-            /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-            internal bool Start(SmartStream stream)
+            set
             {
-                m_pOwner = stream ?? throw new ArgumentNullException("stream");
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
 
-                // Clear old data, if any.
-                m_IsCompleted = false;
-                m_BytesStored = 0;
-                m_LinesStored = 0;
-                m_pException  = null;
+                m_pEncoding = value ?? throw new ArgumentNullException();
+            }
+        }
 
-                m_IsCompletedSync = DoRead();
-   
-                return m_IsCompletedSync;
+        /// <summary>
+        /// Gets if SmartStream is owner of source stream. This property affects like closing this stream will close SourceStream if IsOwner true.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public bool IsOwner
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_IsOwner;
             }
 
-            /// <summary>
-            /// Is called when asynchronous line reading has completed.
-            /// </summary>
-            /// <param name="sender">Sender.</param>
-            /// <param name="e">Event data.</param>
-            private void m_pReadLineOP_Completed(object sender,EventArgs<ReadLineAsyncOP> e)
+            set
             {
-                try{
-                    if(ProcessReadedLine()){
-                        OnCompleted();
-                    }
-                    else{
-                        if(DoRead()){
-                            OnCompleted();
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                m_IsOwner = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the last time when data was read or written.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public DateTime LastActivity
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_LastActivity;
+            }
+        }
+
+        /// <summary>
+        /// Gets the length in bytes of the stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override long Length
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pStream.Length;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the position within the current stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public override long Position
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pStream.Position;
+            }
+
+            set
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                m_pStream.Position = value;
+
+                // Clear read buffer.
+                m_ReadBufferOffset = 0;
+                m_ReadBufferCount = 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets this stream underlying stream.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+        public Stream SourceStream
+        {
+            get
+            {
+                if (m_IsDisposed)
+                {
+                    throw new ObjectDisposedException("SmartStream");
+                }
+
+                return m_pStream;
+            }
+        }
+
+        /// <summary>
+        /// Begins an asynchronous read operation.
+        /// </summary>
+        /// <param name="buffer">The buffer to read the data into.</param>
+        /// <param name="offset">The byte offset in buffer at which to begin writing data read from the stream.</param>
+        /// <param name="count">The maximum number of bytes to read.</param>
+        /// <param name="callback">An optional asynchronous callback, to be called when the read is complete.</param>
+        /// <param name="state">A user-provided object that distinguishes this particular asynchronous read request from other requests.</param>
+        /// <returns>An IAsyncResult that represents the asynchronous read, which could still be pending.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
+        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+            }
+            if (offset > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be < buffer.Length.");
+            }
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' value must be >= 0.");
+            }
+            if (offset + count > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
+            }
+
+            return new ReadAsyncOperation(this, buffer, offset, count, callback, state);
+        }
+
+        /// <summary>
+        /// Begins an asynchronous data reading from the source stream.
+        /// </summary>
+        /// <param name="storeStream">Stream where to store readed header.</param>
+        /// <param name="count">Number of bytes to read.</param>
+        /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
+        /// <param name="state">An object that contains any additional user-defined data.</param>
+        /// <returns>An IAsyncResult that represents the asynchronous call.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public IAsyncResult BeginReadFixedCount(Stream storeStream, long count, AsyncCallback callback, object state)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (storeStream == null)
+            {
+                throw new ArgumentNullException("storeStream");
+            }
+            if (count < 0)
+            {
+                throw new ArgumentException("Argument 'count' value must be >= 0.");
+            }
+
+            return new ReadToStreamAsyncOperation(this, storeStream, count, callback, state);
+        }
+
+        /// <summary>
+        /// Begins an asynchronous header reading from the source stream.
+        /// </summary>
+        /// <param name="storeStream">Stream where to store readed header.</param>
+        /// <param name="maxCount">Maximum number of bytes to read. Value 0 means not limited.</param>
+        /// <param name="exceededAction">Specifies action what is done if <b>maxCount</b> number of bytes has exceeded.</param>
+        /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
+        /// <param name="state">An object that contains any additional user-defined data.</param>
+        /// <returns>An IAsyncResult that represents the asynchronous call.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public IAsyncResult BeginReadHeader(Stream storeStream, int maxCount, SizeExceededAction exceededAction, AsyncCallback callback, object state)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (storeStream == null)
+            {
+                throw new ArgumentNullException("storeStream");
+            }
+            if (maxCount < 0)
+            {
+                throw new ArgumentException("Argument 'maxCount' must be >= 0.");
+            }
+
+            return new ReadToTerminatorAsyncOperation(this, "", storeStream, maxCount, exceededAction, callback, state);
+        }
+
+        /// <summary>
+        /// Begins an asynchronous line reading from the source stream.
+        /// </summary>
+        /// <param name="buffer">Buffer where to store readed line data.</param>
+        /// <param name="offset">The location in <b>buffer</b> to begin storing the data.</param>
+        /// <param name="maxCount">Maximum number of bytes to read.</param>
+        /// <param name="exceededAction">Specifies how this method behaves when maximum line size exceeded.</param>
+        /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
+        /// <param name="state">An object that contains any additional user-defined data.</param>
+        /// <returns>An IAsyncResult that represents the asynchronous call.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">is raised when any of the arguments has invalid value.</exception>
+        [Obsolete("Use method 'ReadLine' instead.")]
+        public IAsyncResult BeginReadLine(byte[] buffer, int offset, int maxCount, SizeExceededAction exceededAction, AsyncCallback callback, object state)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+            }
+            if (offset > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be < buffer.Length.");
+            }
+            if (maxCount < 0)
+            {
+                throw new ArgumentOutOfRangeException("maxCount", "Argument 'maxCount' value must be >= 0.");
+            }
+            if (offset + maxCount > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("maxCount", "Argument 'maxCount' is bigger than than argument 'buffer' can store.");
+            }
+
+            return new ReadLineAsyncOperation(this, buffer, offset, maxCount, exceededAction, callback, state);
+        }
+
+        /// <summary>
+        /// Begins an asynchronous write operation.
+        /// </summary>
+        /// <param name="buffer">The buffer to write data from.</param>
+        /// <param name="offset">The byte offset in buffer from which to begin writing.</param>
+        /// <param name="count">The maximum number of bytes to write.</param>
+        /// <param name="callback">An optional asynchronous callback, to be called when the write is complete.</param>
+        /// <param name="state">A user-provided object that distinguishes this particular asynchronous write request from other requests.</param>
+        /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
+        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
+        {
+            m_LastActivity = DateTime.Now;
+            m_BytesWritten += count;
+
+            return m_pStream.BeginWrite(buffer, offset, count, callback, state);
+        }
+
+        /// <summary>
+        /// Cleans up any resources being used.
+        /// </summary>
+        public new void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                return;
+            }
+            m_IsDisposed = true;
+
+            if (m_IsOwner)
+            {
+                m_pStream.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Handles the end of an asynchronous data reading.
+        /// </summary>
+        /// <param name="asyncResult">The reference to the pending asynchronous request to finish.</param>
+        /// <returns>The total number of bytes read into the <b>buffer</b>. This can be less than the number of bytes requested 
+        /// if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
+        public override int EndRead(IAsyncResult asyncResult)
+        {
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+            if (!(asyncResult is ReadAsyncOperation))
+            {
+                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginRead method.");
+            }
+
+            var ar = (ReadAsyncOperation)asyncResult;
+            if (ar.IsEndCalled)
+            {
+                throw new InvalidOperationException("EndRead is already called for specified 'asyncResult'.");
+            }
+            ar.AsyncWaitHandle.WaitOne();
+            ar.AsyncWaitHandle.Close();
+            ar.IsEndCalled = true;
+
+            return ar.BytesStored;
+        }
+
+        /// <summary>
+        /// Handles the end of an asynchronous data reading.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when <b>EndReadToStream</b> has already been called for specified <b>asyncResult</b>.</exception>
+        public void EndReadFixedCount(IAsyncResult asyncResult)
+        {
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+            if (!(asyncResult is ReadToStreamAsyncOperation))
+            {
+                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginReadFixedCount method.");
+            }
+
+            var ar = (ReadToStreamAsyncOperation)asyncResult;
+            if (ar.IsEndCalled)
+            {
+                throw new InvalidOperationException("EndReadFixedCount is already called for specified 'asyncResult'.");
+            }
+            ar.AsyncWaitHandle.WaitOne();
+            ar.AsyncWaitHandle.Close();
+            ar.IsEndCalled = true;
+            if (ar.Exception != null)
+            {
+                throw ar.Exception;
+            }
+        }
+
+        /// <summary>
+        /// Handles the end of an asynchronous header reading.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
+        /// <returns>Returns number of bytes stored to <b>storeStream</b>.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when <b>EndReadLine</b> has already been called for specified <b>asyncResult</b>.</exception>
+        /// <exception cref="LineSizeExceededException">Is raised when source stream has too big line.</exception>
+        /// <exception cref="DataSizeExceededException">Is raised when reading exceeds <b>maxCount</b> specified value.</exception>
+        /// <exception cref="IncompleteDataException">Is raised when source stream closed before header-terminator reached.</exception>
+        public int EndReadHeader(IAsyncResult asyncResult)
+        {
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+            if (!(asyncResult is ReadToTerminatorAsyncOperation))
+            {
+                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginReadHeader method.");
+            }
+
+            var ar = (ReadToTerminatorAsyncOperation)asyncResult;
+            if (ar.IsEndCalled)
+            {
+                throw new InvalidOperationException("EndReadHeader is already called for specified 'asyncResult'.");
+            }
+            ar.AsyncWaitHandle.WaitOne();
+            ar.AsyncWaitHandle.Close();
+            ar.IsEndCalled = true;
+            if (ar.Exception != null)
+            {
+                throw ar.Exception;
+            }
+
+            return (int)ar.BytesStored;
+        }
+
+        /// <summary>
+        /// Handles the end of an asynchronous line reading.
+        /// </summary>
+        /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
+        /// <returns>Returns number of bytes stored to <b>buffer</b>. Returns -1 if no more data, end of stream reached.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when <b>EndReadLine</b> has already been called for specified <b>asyncResult</b>.</exception>
+        /// <exception cref="LineSizeExceededException">Is raised when <b>maxCount</b> value is exceeded.</exception>        
+        [Obsolete("Use method 'ReadLine' instead.")]
+        public int EndReadLine(IAsyncResult asyncResult)
+        {
+            if (asyncResult == null)
+            {
+                throw new ArgumentNullException("asyncResult");
+            }
+            if (!(asyncResult is ReadLineAsyncOperation))
+            {
+                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginReadLine method.");
+            }
+
+            var ar = (ReadLineAsyncOperation)asyncResult;
+            if (ar.IsEndCalled)
+            {
+                throw new InvalidOperationException("EndReadLine is already called for specified 'asyncResult'.");
+            }
+            ar.AsyncWaitHandle.WaitOne();
+            ar.AsyncWaitHandle.Close();
+            ar.IsEndCalled = true;
+
+            if (ar.BytesReaded == 0)
+            {
+                return -1;
+            }
+
+            return ar.BytesStored;
+        }
+
+        /// <summary>
+        /// Ends an asynchronous write operation.
+        /// </summary>
+        /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+        public override void EndWrite(IAsyncResult asyncResult)
+        {
+            m_pStream.EndWrite(asyncResult);
+        }
+
+        /// <summary>
+        /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override void Flush()
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("SmartStream");
+            }
+
+            m_pStream.Flush();
+        }
+
+        /// <summary>
+        /// Returns the next available character but does not consume it.
+        /// </summary>
+        /// <returns>An integer representing the next character to be read, or -1 if no more characters are available.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public int Peek()
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (BytesInReadBuffer == 0)
+            {
+                BufferRead(false, null);
+            }
+
+            // We are end of stream.
+            if (BytesInReadBuffer == 0)
+            {
+                return -1;
+            }
+
+            return m_pReadBuffer[m_ReadBufferOffset];
+        }
+
+        /// <summary>
+        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between offset and (offset + count - 1) replaced by the bytes read from the current source.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the current stream.</param>
+        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
+        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("SmartStream");
+            }
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+            }
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' value must be >= 0.");
+            }
+            if (offset + count > buffer.Length)
+            {
+                throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
+            }
+
+            if (BytesInReadBuffer == 0)
+            {
+                BufferRead(false, null);
+            }
+
+            if (BytesInReadBuffer == 0)
+            {
+                return 0;
+            }
+
+            int countToCopy = Math.Min(count, BytesInReadBuffer);
+            Array.Copy(m_pReadBuffer, m_ReadBufferOffset, buffer, offset, countToCopy);
+            m_ReadBufferOffset += countToCopy;
+
+            return countToCopy;
+        }
+
+        /// <summary>
+        /// Reads all data from source stream and stores to the specified stream.
+        /// </summary>
+        /// <param name="stream">Stream where to store readed data.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
+        public void ReadAll(Stream stream)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            var buffer = new byte[32000];
+            while (true)
+            {
+                int readedCount = Read(buffer, 0, buffer.Length);
+                // End of stream reached, we readed file sucessfully.
+                if (readedCount == 0)
+                {
+                    break;
+                }
+
+                stream.Write(buffer, 0, readedCount);
+            }
+        }
+
+        /// <summary>
+        /// Reads specified number of bytes from source stream and writes to the specified stream.
+        /// </summary>
+        /// <param name="storeStream">Stream where to store readed data.</param>
+        /// <param name="count">Number of bytes to read.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public void ReadFixedCount(Stream storeStream, long count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (storeStream == null)
+            {
+                throw new ArgumentNullException("storeStream");
+            }
+            if (count < 0)
+            {
+                throw new ArgumentException("Argument 'count' value must be >= 0.");
+            }
+
+            var ar = BeginReadFixedCount(storeStream, count, null, null);
+
+            EndReadFixedCount(ar);
+        }
+
+        /// <summary>
+        /// Reads specified number of bytes from source stream and converts it to string with current encoding.
+        /// </summary>
+        /// <param name="count">Number of bytes to read.</param>
+        /// <returns>Returns readed data as string.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        public string ReadFixedCountString(int count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (count < 0)
+            {
+                throw new ArgumentException("Argument 'count' value must be >= 0.");
+            }
+
+            var ms = new MemoryStream();
+            ReadFixedCount(ms, count);
+
+            return m_pEncoding.GetString(ms.ToArray());
+        }
+
+        /// <summary>
+        /// Reads header from stream and stores to the specified <b>storeStream</b>.
+        /// </summary>
+        /// <param name="storeStream">Stream where to store readed header.</param>
+        /// <param name="maxCount">Maximum number of bytes to read. Value 0 means not limited.</param>
+        /// <param name="exceededAction">Specifies action what is done if <b>maxCount</b> number of bytes has exceeded.</param>
+        /// <returns>Returns how many bytes readed from source stream.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        /// <exception cref="LineSizeExceededException">Is raised when source stream has too big line.</exception>
+        /// <exception cref="DataSizeExceededException">Is raised when reading exceeds <b>maxCount</b> specified value.</exception>
+        /// <exception cref="IncompleteDataException">Is raised when source stream closed before header-terminator reached.</exception>
+        public int ReadHeader(Stream storeStream, int maxCount, SizeExceededAction exceededAction)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (storeStream == null)
+            {
+                throw new ArgumentNullException("storeStream");
+            }
+            if (maxCount < 0)
+            {
+                throw new ArgumentException("Argument 'maxCount' must be >= 0.");
+            }
+
+            var ar = BeginReadHeader(storeStream, maxCount, exceededAction, null, null);
+
+            return EndReadHeader(ar);
+        }
+
+        /// <summary>
+        /// Begins line reading.
+        /// </summary>
+        /// <param name="op">Read line opeartion.</param>
+        /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
+        /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool ReadLine(ReadLineAsyncOP op, bool async)
+        {
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+
+            if (async)
+            {
+                return op.Start(async, this);
+            }
+
+            var buffer = op.Buffer;
+            int bytesInBuffer = 0;
+            int lastByte = -1;
+            bool CRLFLinesOnly = true;
+            int lineBuffSize = buffer.Length;
+            var exceededAction = op.SizeExceededAction;
+            Exception exception = null;
+
+            try
+            {
+                while (true)
+                {
+                    // Read buffer empty, buff next data block.
+                    if (m_ReadBufferOffset >= m_ReadBufferCount)
+                    {
+                        BufferRead(false, null);
+
+                        // We reached end of stream, no more data.
+                        if (m_ReadBufferCount == 0)
+                        {
+                            break;
                         }
                     }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    OnCompleted();
-                }
-            }
 
-            /// <summary>
-            /// Continues period-terminated reading.
-            /// </summary>
-            /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
-            private bool DoRead()
-            {
-                try{
-                    while(true){
-                        if(m_pOwner.ReadLine(m_pReadLineOP,true)){
-                            if(ProcessReadedLine()){
-                                break;
-                            }
+                    byte b = m_pReadBuffer[m_ReadBufferOffset++];
+
+                    // Line buffer full.
+                    if (bytesInBuffer >= lineBuffSize)
+                    {
+                        if (exception == null)
+                        {
+                            exception = new LineSizeExceededException();
                         }
-                        // Goto next while loop.
-                        else{
-                            return false;
+
+                        if (exceededAction == SizeExceededAction.ThrowException)
+                        {
+                            break;
                         }
                     }
+                    // Store byte.
+                    else
+                    {
+                        buffer[bytesInBuffer++] = b;
+                    }
+
+                    // We have LF line.
+                    if (b == '\n')
+                    {
+                        if (!CRLFLinesOnly || CRLFLinesOnly && lastByte == '\r')
+                        {
+                            break;
+                        }
+                    }
+
+                    lastByte = b;
                 }
-                catch(Exception x){
-                    m_pException = x;
-                }
-                                
-                return true;
+            }
+            catch (Exception x)
+            {
+                exception = x;
             }
 
-            /// <summary>
-            /// Processes readed line.
-            /// </summary>
-            /// <returns>Returns true if read period-terminated operation has completed.</returns>
-            private bool ProcessReadedLine()
+            // Set read line operation result data.
+            op.SetInfo(bytesInBuffer, exception);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Begins period-terminated data reading.
+        /// </summary>
+        /// <param name="op">Read period terminated opeartion.</param>
+        /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
+        /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool ReadPeriodTerminated(ReadPeriodTerminatedAsyncOP op, bool async)
+        {
+            if (op == null)
             {
-                if(m_pReadLineOP.Error != null){
-                    m_pException = m_pReadLineOP.Error;
+                throw new ArgumentNullException("op");
+            }
 
-                    return true;
-                }
-                // We reached end of stream, no more data.
-
-                if(m_pReadLineOP.BytesInBuffer == 0){
-                    m_pException = new IncompleteDataException("Data is not period-terminated.");
-
-                    return true;
-                }
-                // We have period terminator.
-                if(m_pReadLineOP.LineBytesInBuffer == 1 && m_pReadLineOP.Buffer[0] == '.'){
-                    return true;
-                }
-                // Normal line.
-                if(m_MaxCount < 1 || m_BytesStored < m_MaxCount){
-                    // Period handling: If line starts with '.', it must be removed.
-                    if(m_pReadLineOP.Buffer[0] == '.'){
-                        m_pStream.Write(m_pReadLineOP.Buffer,1,m_pReadLineOP.BytesInBuffer - 1);
-                        m_BytesStored += m_pReadLineOP.BytesInBuffer - 1;
-                        m_LinesStored++;
+            if (!op.Start(this))
+            {
+                if (!async)
+                {
+                    // Wait while async operation completes.
+                    while (!op.IsCompleted)
+                    {
+                        Thread.Sleep(1);
                     }
-                    // Nomrmal line.
-                    else{
-                        m_pStream.Write(m_pReadLineOP.Buffer,0,m_pReadLineOP.BytesInBuffer);
-                        m_BytesStored += m_pReadLineOP.BytesInBuffer;
-                        m_LinesStored++;
-                    }                        
+
+                    return true;
                 }
 
                 return false;
             }
+            // Completed synchronously.
 
-            /// <summary>
-            /// Gets if this object is disposed.
-            /// </summary>
-            public override bool IsDisposed
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the position within the current stream.
+        /// </summary>
+        /// <param name="offset">A byte offset relative to the <b>origin</b> parameter.</param>
+        /// <param name="origin">A value of type SeekOrigin indicating the reference point used to obtain the new position.</param>
+        /// <returns>The new position within the current stream.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            if (m_IsDisposed)
             {
-                get{ return m_IsDisposed; }
+                throw new ObjectDisposedException("SmartStream");
             }
 
-            /// <summary>
-            /// Gets if asynchronous operation has completed.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public override bool IsCompleted
+            return m_pStream.Seek(offset, origin);
+        }
+
+        /// <summary>
+        /// Sets the length of the current stream.
+        /// </summary>
+        /// <param name="value">The desired length of the current stream in bytes.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override void SetLength(long value)
+        {
+            if (m_IsDisposed)
             {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
+                throw new ObjectDisposedException("SmartStream");
+            }
+
+            m_pStream.SetLength(value);
+
+            // Clear read buffer.
+            m_ReadBufferOffset = 0;
+            m_ReadBufferCount = 0;
+        }
+
+        /// <summary>
+        /// Writes specified string data to stream.
+        /// </summary>
+        /// <param name="data">Data to write.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null.</exception>
+        public void Write(string data)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
+            var dataBytes = Encoding.Default.GetBytes(data);
+            Write(dataBytes, 0, dataBytes.Length);
+            Flush();
+        }
+
+        /// <summary>
+        /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException("SmartStream");
+            }
+
+            m_pStream.Write(buffer, offset, count);
+
+            m_LastActivity = DateTime.Now;
+            m_BytesWritten += count;
+        }
+
+        /// <summary>
+        /// Reads header from source <b>stream</b> and writes it to stream.
+        /// </summary>
+        /// <param name="stream">Stream from where to read header.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
+        public void WriteHeader(Stream stream)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            var reader = new SmartStream(stream, false);
+            reader.ReadHeader(this, 0, SizeExceededAction.ThrowException);
+        }
+
+        /// <summary>
+        /// Writes specified line to stream. If CRLF is missing, it will be added automatically to line data.
+        /// </summary>
+        /// <param name="line">Line to send.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>line</b> is null.</exception>
+        /// <returns>Returns number of raw bytes written.</returns>
+        public int WriteLine(string line)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (line == null)
+            {
+                throw new ArgumentNullException("line");
+            }
+
+            if (!line.EndsWith("\r\n"))
+            {
+                line += "\r\n";
+            }
+
+            var dataBytes = m_pEncoding.GetBytes(line);
+            Write(dataBytes, 0, dataBytes.Length);
+            Flush();
+
+            return dataBytes.Length;
+        }
+
+        /// <summary>
+        /// Writes period handled and terminated data to this stream.
+        /// </summary>
+        /// <param name="stream">Source stream. Reading starts from stream current location.</param>
+        /// <returns>Returns number of bytes written to stream.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
+        /// <exception cref="LineSizeExceededException">Is raised when <b>stream</b> has too big line.</exception>        
+        public long WritePeriodTerminated(Stream stream)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            var wait = new ManualResetEvent(false);
+            var op = new WritePeriodTerminatedAsyncOP(stream);
+            op.CompletedAsync += delegate (object s1, EventArgs<WritePeriodTerminatedAsyncOP> e1)
+            {
+                wait.Set();
+            };
+            if (!WritePeriodTerminatedAsync(op))
+            {
+                wait.Set();
+            }
+            wait.WaitOne();
+            wait.Close();
+
+            if (op.Error != null)
+            {
+                throw op.Error;
+            }
+
+            return op.BytesWritten;
+        }
+
+        /// <summary>
+        /// Starts writing period handled and terminated data to this stream.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="WritePeriodTerminatedAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool WritePeriodTerminatedAsync(WritePeriodTerminatedAsyncOP op)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Writes all source <b>stream</b> data to stream.
+        /// </summary>
+        /// <param name="stream">Stream which data to write.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
+        public void WriteStream(Stream stream)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            var buffer = new byte[m_BufferSize];
+            while (true)
+            {
+                int readed = stream.Read(buffer, 0, buffer.Length);
+                // We readed all data.
+                if (readed == 0)
+                {
+                    break;
+                }
+                Write(buffer, 0, readed);
+            }
+            Flush();
+        }
+
+        /// <summary>
+        /// Writes specified number of bytes from source <b>stream</b> to stream.
+        /// </summary>
+        /// <param name="stream">Stream which data to write.</param>
+        /// <param name="count">Number of bytes to write.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when <b>count</b> argument has invalid value.</exception>
+        public void WriteStream(Stream stream, long count)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+            if (count < 0)
+            {
+                throw new ArgumentException("Argument 'count' value must be >= 0.");
+            }
+
+            var buffer = new byte[m_BufferSize];
+            long readedCount = 0;
+            while (readedCount < count)
+            {
+                int readed = stream.Read(buffer, 0, (int)Math.Min(buffer.Length, count - readedCount));
+                readedCount += readed;
+                Write(buffer, 0, readed);
+            }
+            Flush();
+        }
+
+        /// <summary>
+        /// Starts writing stream data to this stream.
+        /// </summary>
+        /// <param name="op">Asynchronous operation.</param>
+        /// <returns>Returns true if aynchronous operation is pending (The <see cref="WriteStreamAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
+        public bool WriteStreamAsync(WriteStreamAsyncOP op)
+        {
+            if (m_IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (op == null)
+            {
+                throw new ArgumentNullException("op");
+            }
+            if (op.State != AsyncOP_State.WaitingForStart)
+            {
+                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.", "op");
+            }
+
+            return op.Start(this);
+        }
+
+        /// <summary>
+        /// Begins buffering read-buffer.
+        /// </summary>
+        /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
+        /// <param name="asyncCallback">The callback that is executed when asynchronous operation completes. 
+        /// If operation completes synchronously, no callback called.</param>
+        /// <returns>
+        /// Returns true if the I/O operation is pending. The BufferReadAsyncEventArgs.Completed event on the context parameter will be raised upon completion of the operation. 
+        /// Returns false if the I/O operation completed synchronously. The BufferReadAsyncEventArgs.Completed event on the context parameter will not be raised and the context object passed as a parameter may be examined immediately after the method call returns to retrieve the result of the operation. 
+        /// </returns>
+        /// <exception cref="InvalidOperationException">Is raised when there is data in read buffer and this method is called.</exception>
+        private bool BufferRead(bool async, BufferCallback asyncCallback)
+        {
+            if (BytesInReadBuffer != 0)
+            {
+                throw new InvalidOperationException("There is already data in read buffer.");
+            }
+
+            m_ReadBufferOffset = 0;
+            m_ReadBufferCount = 0;
+
+            if (async)
+            {
+                m_pReadBufferOP.ReleaseEvents();
+                m_pReadBufferOP.Completed += new EventHandler<EventArgs<BufferReadAsyncOP>>(delegate (object s, EventArgs<BufferReadAsyncOP> e)
+                {
+                    if (e.Value.Error != null)
+                    {
+                        if (asyncCallback != null)
+                        {
+                            asyncCallback(e.Value.Error);
+                        }
                     }
+                    else
+                    {
+                        m_ReadBufferOffset = 0;
+                        m_ReadBufferCount = e.Value.BytesInBuffer;
+                        m_BytesReaded += e.Value.BytesInBuffer;
+                        m_LastActivity = DateTime.Now;
 
-                    return m_IsCompleted; 
-                }
-            }
-
-            /// <summary>
-            /// Gets if operation completed synchronously.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public override bool IsCompletedSynchronously
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
+                        if (asyncCallback != null)
+                        {
+                            asyncCallback(null);
+                        }
                     }
+                });
 
-                    return m_IsCompletedSync; 
+                if (!m_pReadBufferOP.Start(async, m_pReadBuffer, m_pReadBuffer.Length))
+                {
+                    return true;
                 }
+
+                if (m_pReadBufferOP.Error != null)
+                {
+                    throw m_pReadBufferOP.Error;
+                }
+
+                m_ReadBufferOffset = 0;
+                m_ReadBufferCount = m_pReadBufferOP.BytesInBuffer;
+                m_BytesReaded += m_pReadBufferOP.BytesInBuffer;
+                m_LastActivity = DateTime.Now;
+
+                return false;
             }
 
-            /// <summary>
-            /// Gets stream where period terminated data has stored.
-            /// </summary>
-            public Stream Stream
-            {
-                get{ 
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
+            int countReaded = m_pStream.Read(m_pReadBuffer, 0, m_pReadBuffer.Length);
+            m_ReadBufferCount = countReaded;
+            m_BytesReaded += countReaded;
+            m_LastActivity = DateTime.Now;
 
-                    return m_pStream; 
-                }
-            }
-
-            /// <summary>
-            /// Gets number of bytes stored to <see cref="Stream">Stream</see> stream.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public long BytesStored
-            {
-                get{ 
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    return m_BytesStored; 
-                }
-            }
-
-            /// <summary>
-            /// Gets number of lines stored to <see cref="Stream">Stream</see> stream.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public int LinesStored
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-
-                    return m_LinesStored; 
-                }
-            }
-
-            /// <summary>
-            /// Gets error occured during asynchronous operation. Value null means no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-            public Exception Error
-            {
-                get{
-                    if(m_IsDisposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-    
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Is raised when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<ReadPeriodTerminatedAsyncOP>> Completed;
-
-            /// <summary>
-            /// Raises <b>Completed</b> event.
-            /// </summary>
-            private void OnCompleted()
-            {
-                m_IsCompleted = true;
-
-                if(Completed != null){
-                    Completed(this,new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
-                }
-            }
+            return false;
         }
 
         /// <summary>
         /// This class implements asynchronous read buffering.
         /// </summary>
-        private class BufferReadAsyncOP : AsyncOP,IDisposable
+        private class BufferReadAsyncOP : AsyncOP, IDisposable
         {
-            private bool        m_IsDisposed;
-            private bool        m_IsCompleted;            
-            private bool        m_IsCompletedSync;
+            private bool m_IsDisposed;
+            private bool m_IsCompleted;
+            private bool m_IsCompletedSync;
             private SmartStream m_pOwner;
-            private byte[]      m_pBuffer;
-            private int         m_MaxCount;
-            private int         m_BytesInBuffer;
-            private Exception   m_pException;
+            private byte[] m_pBuffer;
+            private int m_MaxCount;
+            private int m_BytesInBuffer;
+            private Exception m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -700,13 +1328,14 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public void Dispose()
             {
-                if(m_IsDisposed){
+                if (m_IsDisposed)
+                {
                     return;
                 }
                 m_IsDisposed = true;
 
-                m_pOwner       = null;
-                m_pBuffer      = null;
+                m_pOwner = null;
+                m_pBuffer = null;
                 Completed = null;
             }
 
@@ -720,53 +1349,63 @@ namespace LumiSoft.Net.IO
             /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
             /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
             /// <returns>Returns true if operation completed synchronously, false if asynchronous operation pending.</returns>
-            internal bool Start(bool async,byte[] buffer,int count)
+            internal bool Start(bool async, byte[] buffer, int count)
             {
-                if(m_IsDisposed){
+                if (m_IsDisposed)
+                {
                     throw new ObjectDisposedException(GetType().Name);
                 }
-                if(buffer == null){
+                if (buffer == null)
+                {
                     throw new ArgumentNullException("buffer");
                 }
-                if(count < 0){
+                if (count < 0)
+                {
                     throw new ArgumentException("Argument 'count' value must be >= 0.");
                 }
-                if(count > buffer.Length){
+                if (count > buffer.Length)
+                {
                     throw new ArgumentException("Argumnet 'count' value must be <= buffer.Length.");
                 }
 
-                m_IsCompleted   = false;
-                m_pBuffer       = buffer;
-                m_MaxCount      = count;
+                m_IsCompleted = false;
+                m_pBuffer = buffer;
+                m_MaxCount = count;
                 m_BytesInBuffer = 0;
-                m_pException    = null;
+                m_pException = null;
 
                 // Operation may complete asynchronously;
-                if(async){
-                    var ar = m_pOwner.m_pStream.BeginRead(buffer,0,count,new AsyncCallback(delegate(IAsyncResult r){
-                        try{
+                if (async)
+                {
+                    var ar = m_pOwner.m_pStream.BeginRead(buffer, 0, count, new AsyncCallback(delegate (IAsyncResult r)
+                    {
+                        try
+                        {
                             m_BytesInBuffer = m_pOwner.m_pStream.EndRead(r);
                         }
-                        catch(Exception x){
+                        catch (Exception x)
+                        {
                             m_pException = x;
                         }
 
-                        if(!r.CompletedSynchronously){
+                        if (!r.CompletedSynchronously)
+                        {
                             OnCompleted();
                         }
 
                         m_IsCompleted = true;
-                    }),null);
+                    }), null);
 
                     m_IsCompletedSync = ar.CompletedSynchronously;
                 }
                 // Operation must complete synchronously.
-                else{
-                    m_BytesInBuffer = m_pOwner.m_pStream.Read(buffer,0,count);
-                    m_IsCompleted     = true;
+                else
+                {
+                    m_BytesInBuffer = m_pOwner.m_pStream.Read(buffer, 0, count);
+                    m_IsCompleted = true;
                     m_IsCompletedSync = true;
                 }
-                                
+
                 return m_IsCompletedSync;
             }
 
@@ -783,7 +1422,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public override bool IsDisposed
             {
-                get{ return m_IsDisposed; }
+                get { return m_IsDisposed; }
             }
 
             /// <summary>
@@ -792,12 +1431,14 @@ namespace LumiSoft.Net.IO
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public override bool IsCompleted
             {
-                get{
-                    if(m_IsDisposed){
+                get
+                {
+                    if (m_IsDisposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_IsCompleted; 
+                    return m_IsCompleted;
                 }
             }
 
@@ -807,12 +1448,14 @@ namespace LumiSoft.Net.IO
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public override bool IsCompletedSynchronously
             {
-                get{
-                    if(m_IsDisposed){
+                get
+                {
+                    if (m_IsDisposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_IsCompletedSync; 
+                    return m_IsCompletedSync;
                 }
             }
 
@@ -822,12 +1465,14 @@ namespace LumiSoft.Net.IO
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public byte[] Buffer
             {
-                get{
-                    if(m_IsDisposed){
+                get
+                {
+                    if (m_IsDisposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_pBuffer; 
+                    return m_pBuffer;
                 }
             }
 
@@ -837,12 +1482,14 @@ namespace LumiSoft.Net.IO
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public int BytesInBuffer
             {
-                get{ 
-                    if(m_IsDisposed){
+                get
+                {
+                    if (m_IsDisposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_BytesInBuffer; 
+                    return m_BytesInBuffer;
                 }
             }
 
@@ -852,12 +1499,14 @@ namespace LumiSoft.Net.IO
             /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
             public Exception Error
             {
-                get{
-                    if(m_IsDisposed){
+                get
+                {
+                    if (m_IsDisposed)
+                    {
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_pException; 
+                    return m_pException;
                 }
             }
 
@@ -871,1611 +1520,24 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompleted()
             {
-                if(Completed != null){
-                    Completed(this,new EventArgs<BufferReadAsyncOP>(this));
+                if (Completed != null)
+                {
+                    Completed(this, new EventArgs<BufferReadAsyncOP>(this));
                 }
             }
         }
 
-        private bool              m_IsDisposed;
-        private readonly Stream            m_pStream;
-        private bool              m_IsOwner;
-        private DateTime          m_LastActivity;
-        private long              m_BytesReaded;
-        private long              m_BytesWritten;
-        private readonly int               m_BufferSize       = 32000;
-        private readonly byte[]            m_pReadBuffer;
-        private int               m_ReadBufferOffset;
-        private int               m_ReadBufferCount;        
-        private readonly BufferReadAsyncOP m_pReadBufferOP;
-        private Encoding          m_pEncoding        = Encoding.Default;
-
         /// <summary>
-        /// Default constructor.
+        /// This class implements asynchronous data reader.
         /// </summary>
-        /// <param name="stream">Stream to wrap.</param>
-        /// <param name="owner">Specifies if SmartStream is owner of <b>stream</b>.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        public SmartStream(Stream stream,bool owner)
+        private class ReadAsyncOperation : IAsyncResult
         {
-            m_pStream = stream ?? throw new ArgumentNullException("stream");
-            m_IsOwner = owner;
-            m_pReadBuffer = new byte[m_BufferSize];
-            m_pReadBufferOP = new BufferReadAsyncOP(this);
-
-            m_LastActivity = DateTime.Now;
-        }
-
-        /// <summary>
-        /// Cleans up any resources being used.
-        /// </summary>
-        public new void Dispose()
-        {
-            if(m_IsDisposed){
-                return;
-            }
-            m_IsDisposed = true;
-
-            if(m_IsOwner){
-                m_pStream.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Begins line reading.
-        /// </summary>
-        /// <param name="op">Read line opeartion.</param>
-        /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
-        /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool ReadLine(ReadLineAsyncOP op,bool async)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            if(async){
-                return op.Start(async,this);
-            }
-
-            var             buffer         = op.Buffer;
-            int                bytesInBuffer  = 0;
-            int                lastByte       = -1;
-            bool               CRLFLinesOnly  = true;
-            int                lineBuffSize   = buffer.Length;
-            var exceededAction = op.SizeExceededAction;
-            Exception          exception      = null;
-
-            try{
-                while(true){                        
-                    // Read buffer empty, buff next data block.
-                    if(m_ReadBufferOffset >= m_ReadBufferCount){                        
-                        BufferRead(false,null);
-                        
-                        // We reached end of stream, no more data.
-                        if(m_ReadBufferCount == 0){                                    
-                            break;
-                        }                        
-                    }
-
-                    byte b = m_pReadBuffer[m_ReadBufferOffset++];
-                        
-                    // Line buffer full.
-                    if(bytesInBuffer >= lineBuffSize){
-                        if(exception == null){
-                            exception = new LineSizeExceededException();
-                        }
-
-                        if(exceededAction == SizeExceededAction.ThrowException){                                
-                            break;
-                        }
-                    }
-                    // Store byte.
-                    else{
-                        buffer[bytesInBuffer++] = b;
-                    }
-
-                    // We have LF line.
-                    if(b == '\n'){
-                        if(!CRLFLinesOnly || CRLFLinesOnly && lastByte == '\r'){
-                            break;
-                        }
-                    }
-
-                    lastByte = b;
-                }
-            }
-            catch(Exception x){
-                exception = x;
-            }
-
-            // Set read line operation result data.
-            op.SetInfo(bytesInBuffer,exception);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Begins an asynchronous header reading from the source stream.
-        /// </summary>
-        /// <param name="storeStream">Stream where to store readed header.</param>
-        /// <param name="maxCount">Maximum number of bytes to read. Value 0 means not limited.</param>
-        /// <param name="exceededAction">Specifies action what is done if <b>maxCount</b> number of bytes has exceeded.</param>
-        /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
-        /// <param name="state">An object that contains any additional user-defined data.</param>
-        /// <returns>An IAsyncResult that represents the asynchronous call.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IAsyncResult BeginReadHeader(Stream storeStream,int maxCount,SizeExceededAction exceededAction,AsyncCallback callback,object state)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(storeStream == null){
-                throw new ArgumentNullException("storeStream");
-            }
-            if(maxCount < 0){
-                throw new ArgumentException("Argument 'maxCount' must be >= 0.");
-            }
-
-            return new ReadToTerminatorAsyncOperation(this,"",storeStream,maxCount,exceededAction,callback,state);
-        }
-
-        /// <summary>
-        /// Handles the end of an asynchronous header reading.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
-        /// <returns>Returns number of bytes stored to <b>storeStream</b>.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when <b>EndReadLine</b> has already been called for specified <b>asyncResult</b>.</exception>
-        /// <exception cref="LineSizeExceededException">Is raised when source stream has too big line.</exception>
-        /// <exception cref="DataSizeExceededException">Is raised when reading exceeds <b>maxCount</b> specified value.</exception>
-        /// <exception cref="IncompleteDataException">Is raised when source stream closed before header-terminator reached.</exception>
-        public int EndReadHeader(IAsyncResult asyncResult)
-        {
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-            if(!(asyncResult is ReadToTerminatorAsyncOperation)){
-                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginReadHeader method.");
-            }
-
-            var ar = (ReadToTerminatorAsyncOperation)asyncResult;
-            if (ar.IsEndCalled){
-                throw new InvalidOperationException("EndReadHeader is already called for specified 'asyncResult'.");
-            }
-            ar.AsyncWaitHandle.WaitOne();
-            ar.AsyncWaitHandle.Close();
-            ar.IsEndCalled = true;
-            if(ar.Exception != null){
-                throw ar.Exception;
-            }
-
-            return (int)ar.BytesStored;
-        }
-
-        /// <summary>
-        /// Reads header from stream and stores to the specified <b>storeStream</b>.
-        /// </summary>
-        /// <param name="storeStream">Stream where to store readed header.</param>
-        /// <param name="maxCount">Maximum number of bytes to read. Value 0 means not limited.</param>
-        /// <param name="exceededAction">Specifies action what is done if <b>maxCount</b> number of bytes has exceeded.</param>
-        /// <returns>Returns how many bytes readed from source stream.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="LineSizeExceededException">Is raised when source stream has too big line.</exception>
-        /// <exception cref="DataSizeExceededException">Is raised when reading exceeds <b>maxCount</b> specified value.</exception>
-        /// <exception cref="IncompleteDataException">Is raised when source stream closed before header-terminator reached.</exception>
-        public int ReadHeader(Stream storeStream,int maxCount,SizeExceededAction exceededAction)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(storeStream == null){
-                throw new ArgumentNullException("storeStream");
-            }            
-            if(maxCount < 0){
-                throw new ArgumentException("Argument 'maxCount' must be >= 0.");
-            }
-
-            var ar = BeginReadHeader(storeStream,maxCount,exceededAction,null,null);
-
-            return EndReadHeader(ar);
-        }
-
-        /// <summary>
-        /// Begins period-terminated data reading.
-        /// </summary>
-        /// <param name="op">Read period terminated opeartion.</param>
-        /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
-        /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool ReadPeriodTerminated(ReadPeriodTerminatedAsyncOP op,bool async)
-        {
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-
-            if(!op.Start(this))
-            {
-                if(!async){
-                    // Wait while async operation completes.
-                    while(!op.IsCompleted){
-                        Thread.Sleep(1);
-                    }
-
-                    return true;
-                }
-
-                return false;
-            }
-            // Completed synchronously.
-
-            return true;
-        }
-
-        /// <summary>
-        /// Begins an asynchronous data reading from the source stream.
-        /// </summary>
-        /// <param name="storeStream">Stream where to store readed header.</param>
-        /// <param name="count">Number of bytes to read.</param>
-        /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
-        /// <param name="state">An object that contains any additional user-defined data.</param>
-        /// <returns>An IAsyncResult that represents the asynchronous call.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IAsyncResult BeginReadFixedCount(Stream storeStream,long count,AsyncCallback callback,object state)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(storeStream == null){
-                throw new ArgumentNullException("storeStream");
-            }
-            if(count < 0){
-                throw new ArgumentException("Argument 'count' value must be >= 0.");
-            }
-
-            return new ReadToStreamAsyncOperation(this,storeStream,count,callback,state);
-        }
-
-        /// <summary>
-        /// Handles the end of an asynchronous data reading.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when <b>EndReadToStream</b> has already been called for specified <b>asyncResult</b>.</exception>
-        public void EndReadFixedCount(IAsyncResult asyncResult)
-        {
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-            if(!(asyncResult is ReadToStreamAsyncOperation)){
-                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginReadFixedCount method.");
-            }
-
-            var ar = (ReadToStreamAsyncOperation)asyncResult;
-            if (ar.IsEndCalled){
-                throw new InvalidOperationException("EndReadFixedCount is already called for specified 'asyncResult'.");
-            }
-            ar.AsyncWaitHandle.WaitOne();
-            ar.AsyncWaitHandle.Close();
-            ar.IsEndCalled = true;
-            if(ar.Exception != null){
-                throw ar.Exception;
-            }
-        }
-
-        /// <summary>
-        /// Reads specified number of bytes from source stream and writes to the specified stream.
-        /// </summary>
-        /// <param name="storeStream">Stream where to store readed data.</param>
-        /// <param name="count">Number of bytes to read.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>storeStream</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void ReadFixedCount(Stream storeStream,long count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(storeStream == null){
-                throw new ArgumentNullException("storeStream");
-            }
-            if(count < 0){
-                throw new ArgumentException("Argument 'count' value must be >= 0.");
-            }
-
-            var ar = BeginReadFixedCount(storeStream,count,null,null);
-
-            EndReadFixedCount(ar);
-        }
-
-        /// <summary>
-        /// Reads specified number of bytes from source stream and converts it to string with current encoding.
-        /// </summary>
-        /// <param name="count">Number of bytes to read.</param>
-        /// <returns>Returns readed data as string.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public string ReadFixedCountString(int count)
-        {    
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }        
-            if(count < 0){
-                throw new ArgumentException("Argument 'count' value must be >= 0.");
-            }
-
-            var ms = new MemoryStream();
-            ReadFixedCount(ms,count);
-
-            return m_pEncoding.GetString(ms.ToArray());
-        }
-
-        /// <summary>
-        /// Reads all data from source stream and stores to the specified stream.
-        /// </summary>
-        /// <param name="stream">Stream where to store readed data.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        public void ReadAll(Stream stream)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            var buffer = new byte[32000];
-            while (true){
-                int readedCount = Read(buffer,0,buffer.Length);
-                // End of stream reached, we readed file sucessfully.
-                if(readedCount == 0){
-                    break;
-                }
-
-                stream.Write(buffer,0,readedCount);
-            }
-        }
-
-        /// <summary>
-        /// Returns the next available character but does not consume it.
-        /// </summary>
-        /// <returns>An integer representing the next character to be read, or -1 if no more characters are available.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public int Peek()
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(BytesInReadBuffer == 0){
-                BufferRead(false,null);
-            }
-
-            // We are end of stream.
-            if(BytesInReadBuffer == 0){
-                return -1;
-            }
-
-            return m_pReadBuffer[m_ReadBufferOffset];
-        }
-
-        /// <summary>
-        /// Writes specified string data to stream.
-        /// </summary>
-        /// <param name="data">Data to write.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null.</exception>
-        public void Write(string data)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(data == null){
-                throw new ArgumentNullException("data");
-            }
-
-            var dataBytes = Encoding.Default.GetBytes(data);
-            Write(dataBytes,0,dataBytes.Length);
-            Flush();
-        }
-
-        /// <summary>
-        /// Writes specified line to stream. If CRLF is missing, it will be added automatically to line data.
-        /// </summary>
-        /// <param name="line">Line to send.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>line</b> is null.</exception>
-        /// <returns>Returns number of raw bytes written.</returns>
-        public int WriteLine(string line)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(line == null){
-                throw new ArgumentNullException("line");
-            }
-
-            if(!line.EndsWith("\r\n")){
-                line += "\r\n";
-            }
-
-            var dataBytes = m_pEncoding.GetBytes(line);
-            Write(dataBytes,0,dataBytes.Length);
-            Flush();
-
-            return dataBytes.Length;
-        }
-
-        /// <summary>
-        /// Writes all source <b>stream</b> data to stream.
-        /// </summary>
-        /// <param name="stream">Stream which data to write.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        public void WriteStream(Stream stream)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            var buffer = new byte[m_BufferSize];
-            while (true){
-                int readed = stream.Read(buffer,0,buffer.Length);
-                // We readed all data.
-                if(readed == 0){
-                    break;
-                }
-                Write(buffer,0,readed);
-            }
-            Flush();
-        }
-
-        /// <summary>
-        /// Writes specified number of bytes from source <b>stream</b> to stream.
-        /// </summary>
-        /// <param name="stream">Stream which data to write.</param>
-        /// <param name="count">Number of bytes to write.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when <b>count</b> argument has invalid value.</exception>
-        public void WriteStream(Stream stream,long count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-            if(count < 0){
-                throw new ArgumentException("Argument 'count' value must be >= 0.");
-            }
-
-            var buffer      = new byte[m_BufferSize];
-            long   readedCount = 0;
-            while(readedCount < count){
-                int readed = stream.Read(buffer,0,(int)Math.Min(buffer.Length,count - readedCount));
-                readedCount += readed;
-                Write(buffer,0,readed);
-            }
-            Flush();
-        }
-
-        /// <summary>
-        /// This class represents <see cref="SmartStream.WriteStreamAsync"/> asynchronous operation.
-        /// </summary>
-        public class WriteStreamAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object        m_pLock         = new object();
-            private Exception     m_pException;
-            private bool          m_RiseCompleted;
-            private SmartStream   m_pOwner;
-            private Stream        m_pStream;
-            private readonly long          m_Count;
-            private byte[]        m_pBuffer;
-            private long          m_BytesWritten;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="stream">Stream which data to write.</param>
-            /// <param name="count">Number of bytes to write. Value -1 means all stream data will be written.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-            public WriteStreamAsyncOP(Stream stream,long count)
-            {
-                m_pStream = stream ?? throw new ArgumentNullException("stream");
-                m_Count   = count;
-                m_pBuffer = new byte[32000];
-            }
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException = null;
-                m_pStream    = null;
-                m_pOwner     = null;
-                m_pBuffer    = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner SmartStream.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(SmartStream owner)
-            {
-                m_pOwner = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-                
-                BeginReadData();
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Starts reading data.
-            /// </summary>
-            private void BeginReadData()
-            {                
-                try{
-                    while(true){
-                        int count = m_Count == -1 ? m_pBuffer.Length : (int)Math.Min(m_pBuffer.Length,m_Count - m_BytesWritten);
-                        var readResult = m_pStream.BeginRead(
-                            m_pBuffer,
-                            0,
-                            count,
-                            delegate(IAsyncResult r){
-                                ProcessReadDataResult(r);
-                            },
-                            null
-                        );
-                        // Read data completed synchonously.
-                        if (readResult.CompletedSynchronously){
-                            // Operation completed asynchronously, it will continue processing.
-                            if(ProcessReadDataResult(readResult)){
-                                break;
-                            }
-                            // Error happened in ProcessReadDataResult method.
-                            if(State != AsyncOP_State.Active){
-                                break;
-                            }
-                        }
-                        // Read data completed asynchonously.
-                        else{
-                            break;
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Processes read data result.
-            /// </summary>
-            /// <param name="readResult">Asynchronous result.</param>
-            /// <returns>Retruns true if this method completed asynchronously, otherwise false.</returns>
-            private bool ProcessReadDataResult(IAsyncResult readResult)
-            {
-                try{
-                    int countReaded = m_pStream.EndRead(readResult);
-                    if(countReaded == 0){
-                        // We readed all stream data and write count not specified, we are done.
-                        if(m_Count == -1){
-                            SetState(AsyncOP_State.Completed);
-                        }
-                        // Source stream has less data than specified by count.
-                        else{
-                            m_pException = new ArgumentException("Argument 'stream' has less data than specified in 'count'.","stream");
-                            SetState(AsyncOP_State.Completed);
-                        }
-                    }
-                    else{
-                        var writeResult = m_pOwner.BeginWrite(
-                            m_pBuffer,
-                            0,
-                            countReaded,
-                            delegate(IAsyncResult r){
-                                try{
-                                    m_pOwner.EndWrite(r);
-                                    m_BytesWritten += countReaded;
-
-                                    // We have read and sent all requested data.
-                                    if(m_Count == m_BytesWritten){
-                                        SetState(AsyncOP_State.Completed);
-                                    }
-                                    // Start reading next data block(s).
-                                    else{                                        
-                                        BeginReadData();
-                                    }
-                                }
-                                catch(Exception x){
-                                    m_pException = x;
-                                    SetState(AsyncOP_State.Completed);
-                                }
-                            },
-                            null
-                        );
-                        if (writeResult.CompletedSynchronously){
-                            m_pOwner.EndWrite(writeResult);
-                            m_BytesWritten += countReaded;
-
-                            // We have read and sent all requested data.
-                            if(m_Count == m_BytesWritten){
-                                SetState(AsyncOP_State.Completed);
-                            }
-                        }
-                        else{
-                            return true;
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    SetState(AsyncOP_State.Completed);
-                }
-
-                return false;
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Gets number of bytes written.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public long BytesWritten
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-                    if(m_pException != null){
-                        throw m_pException;
-                    }
-
-                    return m_BytesWritten; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<WriteStreamAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<WriteStreamAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts writing stream data to this stream.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="WriteStreamAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool WriteStreamAsync(WriteStreamAsyncOP op)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Writes period handled and terminated data to this stream.
-        /// </summary>
-        /// <param name="stream">Source stream. Reading starts from stream current location.</param>
-        /// <returns>Returns number of bytes written to stream.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        /// <exception cref="LineSizeExceededException">Is raised when <b>stream</b> has too big line.</exception>        
-        public long WritePeriodTerminated(Stream stream)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            var wait = new ManualResetEvent(false);
-            var op = new WritePeriodTerminatedAsyncOP(stream);
-            op.CompletedAsync += delegate(object s1,EventArgs<WritePeriodTerminatedAsyncOP> e1){
-                wait.Set();
-            };
-            if(!WritePeriodTerminatedAsync(op)){
-                wait.Set();
-            }
-            wait.WaitOne();
-            wait.Close();
-
-            if(op.Error != null){
-                throw op.Error;
-            }
-
-            return op.BytesWritten;
-        }
-
-        /// <summary>
-        /// This class represents <see cref="SmartStream.WritePeriodTerminatedAsync"/> asynchronous operation.
-        /// </summary>
-        public class WritePeriodTerminatedAsyncOP : IDisposable,IAsyncOP
-        {
-            private readonly object          m_pLock         = new object();
-            private Exception       m_pException;
-            private SmartStream     m_pStream;
-            private SmartStream     m_pOwner;
-            private ReadLineAsyncOP m_pReadLineOP;
-            private int             m_BytesWritten;
-            private bool            m_EndsCRLF;
-            private bool            m_RiseCompleted;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="stream">Source stream. Reading starts from stream current location.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-            public WritePeriodTerminatedAsyncOP(Stream stream)
-            {
-                if(stream == null){
-                    throw new ArgumentNullException("stream");
-                }
-
-                m_pStream = new SmartStream(stream,false);
-            }
-
-            /// <summary>
-            /// Cleans up any resources being used.
-            /// </summary>
-            public void Dispose()
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-                SetState(AsyncOP_State.Disposed);
-                
-                m_pException  = null;
-                m_pStream     = null;
-                m_pOwner      = null;
-                m_pReadLineOP = null;
-
-                CompletedAsync = null;
-            }
-
-            /// <summary>
-            /// Starts operation processing.
-            /// </summary>
-            /// <param name="owner">Owner SmartStream.</param>
-            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
-            internal bool Start(SmartStream owner)
-            {
-                m_pOwner = owner ?? throw new ArgumentNullException("owner");
-
-                SetState(AsyncOP_State.Active);
-
-                try{
-                    // Read line.
-                    m_pReadLineOP = new ReadLineAsyncOP(new byte[32000],SizeExceededAction.ThrowException);
-                    m_pReadLineOP.Completed += delegate(object s,EventArgs<ReadLineAsyncOP> e){
-                        ReadLineCompleted(m_pReadLineOP);
-                    };
-                    if(m_pStream.ReadLine(m_pReadLineOP,true)){
-                        ReadLineCompleted(m_pReadLineOP);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    SetState(AsyncOP_State.Completed);
-                    m_pReadLineOP.Dispose();
-                }
-
-                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
-                // If already completed sync, that flag has no effect.
-                lock(m_pLock){
-                    m_RiseCompleted = true;
-
-                    return State == AsyncOP_State.Active;
-                }
-            }
-
-            /// <summary>
-            /// Sets operation state.
-            /// </summary>
-            /// <param name="state">New state.</param>
-            private void SetState(AsyncOP_State state)
-            {
-                if(State == AsyncOP_State.Disposed){
-                    return;
-                }
-
-                lock(m_pLock){
-                    State = state;
-
-                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
-                        OnCompletedAsync();
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Is called when source stream read line reading has completed.
-            /// </summary>
-            /// <param name="op">Asynchronous operation.</param>
-            private void ReadLineCompleted(ReadLineAsyncOP op)
-            {
-                try{
-                    if(op.Error != null){
-                        m_pException = op.Error;
-                        SetState(AsyncOP_State.Completed);
-                    }
-                    else{
-                        // We have readed all source stream data, we are done.
-                        if(op.BytesInBuffer == 0){
-                            // Line ends CRLF.
-                            if(m_EndsCRLF){
-                                m_BytesWritten += 3;
-                                m_pOwner.BeginWrite(new[]{(byte)'.',(byte)'\r',(byte)'\n'},0,3,SendTerminatorCompleted,null);
-                            }
-                            // Line doesn't end CRLF, we need to add it.
-                            else{
-                                m_BytesWritten += 5;
-                                m_pOwner.BeginWrite(new[]{(byte)'\r',(byte)'\n',(byte)'.',(byte)'\r',(byte)'\n'},0,5,SendTerminatorCompleted,null);
-                            }
-
-                            op.Dispose();
-                        }
-                        // Write readed line.
-                        else{
-                            m_BytesWritten += op.BytesInBuffer;
-
-                            // Check if line ends CRLF.
-                            if(op.BytesInBuffer >= 2 && op.Buffer[op.BytesInBuffer - 2] == '\r' && op.Buffer[op.BytesInBuffer - 1] == '\n'){
-                                m_EndsCRLF = true;
-                            }
-                            else{
-                                m_EndsCRLF = false;
-                            }
-
-                            // Period handling. If line starts with period(.), additional period is added.
-                            if(op.Buffer[0] == '.'){
-                                var buffer = new byte[op.BytesInBuffer + 1];
-                                buffer[0] = (byte)'.';
-                                Array.Copy(op.Buffer,0,buffer,1,op.BytesInBuffer);
-
-                                m_pOwner.BeginWrite(buffer,0,buffer.Length,SendLineCompleted,null);
-                            }
-                            // Normal line.
-                            else{
-                                m_pOwner.BeginWrite(op.Buffer,0,op.BytesInBuffer,SendLineCompleted,null);
-                            }
-                        }
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    SetState(AsyncOP_State.Completed);
-                    op.Dispose();
-                }
-            }
-
-            /// <summary>
-            /// Is called when line sending has completed.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void SendLineCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pOwner.EndWrite(ar);
-
-                    // Read next line.
-                    // We already have attahed m_pReadLineOP.Completed in start method, so skip it here.
-                    // m_pReadLineOP.Completed += delegate(object s,EventArgs<ReadLineAsyncOP> e){                        
-                    if(m_pStream.ReadLine(m_pReadLineOP,true)){
-                        ReadLineCompleted(m_pReadLineOP);
-                    }
-                }
-                catch(Exception x){
-                    m_pException = x;
-                    SetState(AsyncOP_State.Completed);
-                }
-            }
-
-            /// <summary>
-            /// Is called when ".CRLF" or "CRLF.CRLF" terminator sending has completed.
-            /// </summary>
-            /// <param name="ar">Asynchronous result.</param>
-            private void SendTerminatorCompleted(IAsyncResult ar)
-            {
-                try{
-                    m_pOwner.EndWrite(ar);                    
-                }
-                catch(Exception x){
-                    m_pException = x;
-                }
-
-                SetState(AsyncOP_State.Completed);
-            }
-
-            /// <summary>
-            /// Gets asynchronous operation state.
-            /// </summary>
-            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
-
-            /// <summary>
-            /// Gets error happened during operation. Returns null if no error.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public Exception Error
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-
-                    return m_pException; 
-                }
-            }
-
-            /// <summary>
-            /// Gets number of bytes written.
-            /// </summary>
-            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
-            public int BytesWritten
-            {
-                get{ 
-                    if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(GetType().Name);
-                    }
-                    if(State != AsyncOP_State.Completed){
-                        throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
-                    }
-                    if(m_pException != null){
-                        throw m_pException;
-                    }
-
-                    return m_BytesWritten; 
-                }
-            }
-
-            /// <summary>
-            /// Is called when asynchronous operation has completed.
-            /// </summary>
-            public event EventHandler<EventArgs<WritePeriodTerminatedAsyncOP>> CompletedAsync;
-
-            /// <summary>
-            /// Raises <b>CompletedAsync</b> event.
-            /// </summary>
-            private void OnCompletedAsync()
-            {
-                if(CompletedAsync != null){
-                    CompletedAsync(this,new EventArgs<WritePeriodTerminatedAsyncOP>(this));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Starts writing period handled and terminated data to this stream.
-        /// </summary>
-        /// <param name="op">Asynchronous operation.</param>
-        /// <returns>Returns true if aynchronous operation is pending (The <see cref="WritePeriodTerminatedAsyncOP.CompletedAsync"/> event is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
-        public bool WritePeriodTerminatedAsync(WritePeriodTerminatedAsyncOP op)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(op == null){
-                throw new ArgumentNullException("op");
-            }
-            if(op.State != AsyncOP_State.WaitingForStart){
-                throw new ArgumentException("Invalid argument 'op' state, 'op' must be in 'AsyncOP_State.WaitingForStart' state.","op");
-            }
-
-            return op.Start(this);
-        }
-
-        /// <summary>
-        /// Reads header from source <b>stream</b> and writes it to stream.
-        /// </summary>
-        /// <param name="stream">Stream from where to read header.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        public void WriteHeader(Stream stream)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            var reader = new SmartStream(stream,false);
-            reader.ReadHeader(this,0,SizeExceededAction.ThrowException);
-        }
-
-        /// <summary>
-        /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override void Flush()
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
-
-            m_pStream.Flush();
-        }
-
-        /// <summary>
-        /// Sets the position within the current stream.
-        /// </summary>
-        /// <param name="offset">A byte offset relative to the <b>origin</b> parameter.</param>
-        /// <param name="origin">A value of type SeekOrigin indicating the reference point used to obtain the new position.</param>
-        /// <returns>The new position within the current stream.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override long Seek(long offset,SeekOrigin origin)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
-
-            return m_pStream.Seek(offset,origin);
-        }
-
-        /// <summary>
-        /// Sets the length of the current stream.
-        /// </summary>
-        /// <param name="value">The desired length of the current stream in bytes.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override void SetLength(long value)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
-
-            m_pStream.SetLength(value);
-
-            // Clear read buffer.
-            m_ReadBufferOffset = 0;
-            m_ReadBufferCount  = 0;
-        }
-
-        /// <summary>
-        /// Begins an asynchronous read operation.
-        /// </summary>
-        /// <param name="buffer">The buffer to read the data into.</param>
-        /// <param name="offset">The byte offset in buffer at which to begin writing data read from the stream.</param>
-        /// <param name="count">The maximum number of bytes to read.</param>
-        /// <param name="callback">An optional asynchronous callback, to be called when the read is complete.</param>
-        /// <param name="state">A user-provided object that distinguishes this particular asynchronous read request from other requests.</param>
-        /// <returns>An IAsyncResult that represents the asynchronous read, which could still be pending.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
-        public override IAsyncResult BeginRead(byte[] buffer,int offset,int count,AsyncCallback callback,object state)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }
-            if(offset < 0){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
-            }
-            if(offset > buffer.Length){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be < buffer.Length.");
-            }
-            if(count < 0){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' value must be >= 0.");
-            }
-            if(offset + count > buffer.Length){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' is bigger than than argument 'buffer' can store.");
-            }
-
-            return new ReadAsyncOperation(this,buffer,offset,count,callback,state);
-        }
-
-        /// <summary>
-        /// Handles the end of an asynchronous data reading.
-        /// </summary>
-        /// <param name="asyncResult">The reference to the pending asynchronous request to finish.</param>
-        /// <returns>The total number of bytes read into the <b>buffer</b>. This can be less than the number of bytes requested 
-        /// if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
-        public override int EndRead(IAsyncResult asyncResult)
-        {
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-            if(!(asyncResult is ReadAsyncOperation)){
-                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginRead method.");
-            }
-
-            var ar = (ReadAsyncOperation)asyncResult;
-            if (ar.IsEndCalled){
-                throw new InvalidOperationException("EndRead is already called for specified 'asyncResult'.");
-            }
-            ar.AsyncWaitHandle.WaitOne();
-            ar.AsyncWaitHandle.Close();
-            ar.IsEndCalled = true;
-            
-            return ar.BytesStored;            
-        }
-
-        /// <summary>
-        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
-        /// </summary>
-        /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between offset and (offset + count - 1) replaced by the bytes read from the current source.</param>
-        /// <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the current stream.</param>
-        /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
-        /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
-        public override int Read(byte[] buffer,int offset,int count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }            
-            if(offset < 0){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
-            }
-            if(count < 0){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' value must be >= 0.");
-            }
-            if(offset + count > buffer.Length){
-                throw new ArgumentOutOfRangeException("count","Argument 'count' is bigger than than argument 'buffer' can store.");
-            }
-
-            if(BytesInReadBuffer == 0){
-                BufferRead(false,null);
-            }
-            
-            if(BytesInReadBuffer == 0){
-                return 0;
-            }
-
-            int countToCopy = Math.Min(count,BytesInReadBuffer);
-            Array.Copy(m_pReadBuffer,m_ReadBufferOffset,buffer,offset,countToCopy);
-            m_ReadBufferOffset += countToCopy;
-
-            return countToCopy;
-        }
-
-        /// <summary>
-        /// Begins an asynchronous write operation.
-        /// </summary>
-        /// <param name="buffer">The buffer to write data from.</param>
-        /// <param name="offset">The byte offset in buffer from which to begin writing.</param>
-        /// <param name="count">The maximum number of bytes to write.</param>
-        /// <param name="callback">An optional asynchronous callback, to be called when the write is complete.</param>
-        /// <param name="state">A user-provided object that distinguishes this particular asynchronous write request from other requests.</param>
-        /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
-        public override IAsyncResult BeginWrite(byte[] buffer,int offset,int count,AsyncCallback callback,object state)
-        {
-            m_LastActivity  = DateTime.Now;
-            m_BytesWritten += count;
-
-            return m_pStream.BeginWrite(buffer, offset, count, callback, state);
-        }
-
-        /// <summary>
-        /// Ends an asynchronous write operation.
-        /// </summary>
-        /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
-        public override void EndWrite(IAsyncResult asyncResult)
-        {
-            m_pStream.EndWrite(asyncResult);
-        }
-
-        /// <summary>
-        /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
-        /// </summary>
-        /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
-        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
-        /// <param name="count">The number of bytes to be written to the current stream.</param>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        public override void Write(byte[] buffer,int offset,int count)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException("SmartStream");
-            }            
-
-            m_pStream.Write(buffer,offset,count);
-            
-            m_LastActivity = DateTime.Now;
-            m_BytesWritten += count;
-        }
-
-        /// <summary>
-        /// Begins buffering read-buffer.
-        /// </summary>
-        /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
-        /// <param name="asyncCallback">The callback that is executed when asynchronous operation completes. 
-        /// If operation completes synchronously, no callback called.</param>
-        /// <returns>
-        /// Returns true if the I/O operation is pending. The BufferReadAsyncEventArgs.Completed event on the context parameter will be raised upon completion of the operation. 
-        /// Returns false if the I/O operation completed synchronously. The BufferReadAsyncEventArgs.Completed event on the context parameter will not be raised and the context object passed as a parameter may be examined immediately after the method call returns to retrieve the result of the operation. 
-        /// </returns>
-        /// <exception cref="InvalidOperationException">Is raised when there is data in read buffer and this method is called.</exception>
-        private bool BufferRead(bool async,BufferCallback asyncCallback)
-        {
-            if(BytesInReadBuffer != 0){
-                throw new InvalidOperationException("There is already data in read buffer.");
-            }
-
-            m_ReadBufferOffset =  0;
-            m_ReadBufferCount  =  0;
-
-            if(async){
-                m_pReadBufferOP.ReleaseEvents();
-                m_pReadBufferOP.Completed += new EventHandler<EventArgs<BufferReadAsyncOP>>(delegate(object s,EventArgs<BufferReadAsyncOP> e){            
-                    if(e.Value.Error != null){
-                        if(asyncCallback != null){
-                            asyncCallback(e.Value.Error);
-                        }
-                    }
-                    else{
-                        m_ReadBufferOffset =  0;
-                        m_ReadBufferCount  =  e.Value.BytesInBuffer;
-                        m_BytesReaded      += e.Value.BytesInBuffer;
-                        m_LastActivity     =  DateTime.Now; 
-
-                        if(asyncCallback != null){
-                            asyncCallback(null);
-                        }
-                    }
-                });
-                        
-                if(!m_pReadBufferOP.Start(async,m_pReadBuffer,m_pReadBuffer.Length)){
-                    return true;
-                }
-
-                if(m_pReadBufferOP.Error != null){
-                    throw m_pReadBufferOP.Error;
-                }
-
-                m_ReadBufferOffset =  0;
-                m_ReadBufferCount  =  m_pReadBufferOP.BytesInBuffer;
-                m_BytesReaded      += m_pReadBufferOP.BytesInBuffer;
-                m_LastActivity     =  DateTime.Now;
-
-                return false;
-            }
-
-            int countReaded = m_pStream.Read(m_pReadBuffer,0,m_pReadBuffer.Length);
-            m_ReadBufferCount  =  countReaded;
-            m_BytesReaded      += countReaded;
-            m_LastActivity     =  DateTime.Now;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets this stream underlying stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public Stream SourceStream
-        {
-            get{ 
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pStream; 
-            }
-        }
-
-        /// <summary>
-        /// Gets if SmartStream is owner of source stream. This property affects like closing this stream will close SourceStream if IsOwner true.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public bool IsOwner
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_IsOwner; 
-            }
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                m_IsOwner = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the last time when data was read or written.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public DateTime LastActivity
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_LastActivity; 
-            }
-        }
-
-        /// <summary>
-        /// Gets how many bytes are readed through this stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public long BytesReaded
-        {
-            get{ 
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_BytesReaded; 
-            }
-        }
-
-        /// <summary>
-        /// Gets how many bytes are written through this stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public long BytesWritten
-        {
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_BytesWritten;
-            }
-        }
-
-        /// <summary>
-        /// Gets number of bytes in read buffer.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public int BytesInReadBuffer
-        {
-            get{ 
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_ReadBufferCount - m_ReadBufferOffset; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets string related methods default encoding.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-        public Encoding Encoding
-        {
-            get{ 
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pEncoding; 
-            }
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                m_pEncoding = value ?? throw new ArgumentNullException();
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports reading.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanRead
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pStream.CanRead;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports seeking.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanSeek
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pStream.CanSeek;
-            } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current stream supports writing.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanWrite
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pStream.CanWrite;
-            } 
-        }
-
-        /// <summary>
-        /// Gets the length in bytes of the stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override long Length
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pStream.Length;
-            } 
-        }
-
-        /// <summary>
-        /// Gets or sets the position within the current stream.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override long Position
-        { 
-            get{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                return m_pStream.Position;
-            } 
-
-            set{
-                if(m_IsDisposed){
-                    throw new ObjectDisposedException("SmartStream");
-                }
-
-                m_pStream.Position = value;
-
-                // Clear read buffer.
-                m_ReadBufferOffset = 0;
-                m_ReadBufferCount  = 0;
-            }
-        }
-
-        //------- Obsolete
-
-        /// <summary>
-        /// This class implements asynchronous line reading.
-        /// </summary>
-        private class ReadLineAsyncOperation : IAsyncResult
-        {
-            private readonly SmartStream        m_pOwner;
-            private int                m_OffsetInBuffer;
-            private readonly int                m_MaxCount;
-            private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
-            private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private Exception          m_pException;
+            private readonly SmartStream m_pOwner;
+            private readonly int m_OffsetInBuffer;
+            private readonly int m_MaxSize;
+            private readonly AsyncCallback m_pAsyncCallback;
+            private readonly AutoResetEvent m_pAsyncWaitHandle;
+            private Exception m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -2483,41 +1545,42 @@ namespace LumiSoft.Net.IO
             /// <param name="owner">Owner stream.</param>
             /// <param name="buffer">Buffer where to store data.</param>
             /// <param name="offset">The location in <b>buffer</b> to begin storing the data.</param>
-            /// <param name="maxCount">Maximum number of bytes to read.</param>
-            /// <param name="exceededAction">Specifies how this method behaves when maximum line size exceeded.</param>
+            /// <param name="maxSize">Maximum number of bytes to read.</param>
             /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
             /// <param name="asyncState">User-defined object that qualifies or contains information about an asynchronous operation.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b>,<b>buffer</b> is null reference.</exception>
-            /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
-            public ReadLineAsyncOperation(SmartStream owner,byte[] buffer,int offset,int maxCount,SizeExceededAction exceededAction,AsyncCallback callback,object asyncState)
+            public ReadAsyncOperation(SmartStream owner, byte[] buffer, int offset, int maxSize, AsyncCallback callback, object asyncState)
             {
-                if(buffer == null){
+                if (buffer == null)
+                {
                     throw new ArgumentNullException("buffer");
                 }
-                if(offset < 0){
-                    throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
+                if (offset < 0)
+                {
+                    throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
                 }
-                if(offset > buffer.Length){
-                    throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be < buffer.Length.");
+                if (offset > buffer.Length)
+                {
+                    throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be < buffer.Length.");
                 }
-                if(maxCount < 0){
-                    throw new ArgumentOutOfRangeException("maxCount","Argument 'maxCount' value must be >= 0.");
+                if (maxSize < 0)
+                {
+                    throw new ArgumentOutOfRangeException("maxSize", "Argument 'maxSize' value must be >= 0.");
                 }
-                if(offset + maxCount > buffer.Length){
-                    throw new ArgumentOutOfRangeException("maxCount","Argument 'maxCount' is bigger than than argument 'buffer' can store.");
+                if (offset + maxSize > buffer.Length)
+                {
+                    throw new ArgumentOutOfRangeException("maxSize", "Argument 'maxSize' is bigger than than argument 'buffer' can store.");
                 }
 
-                m_pOwner             = owner ?? throw new ArgumentNullException("owner");
-                Buffer            = buffer;
-                m_OffsetInBuffer     = offset;
-                m_MaxCount           = maxCount;
-                m_SizeExceededAction = exceededAction;
-                m_pAsyncCallback     = callback;
-                AsyncState        = asyncState;
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
+                Buffer = buffer;
+                m_OffsetInBuffer = offset;
+                m_MaxSize = maxSize;
+                m_pAsyncCallback = callback;
+                AsyncState = asyncState;
 
                 m_pAsyncWaitHandle = new AutoResetEvent(false);
 
-                DoLineReading();                                
+                DoRead();
             }
 
             /// <summary>
@@ -2526,81 +1589,61 @@ namespace LumiSoft.Net.IO
             /// <param name="x">Exception that occured during async operation.</param>
             private void Buffering_Completed(Exception x)
             {
-                if(x != null){
+                if (x != null)
+                {
                     m_pException = x;
                     Completed();
                 }
                 // We reached end of stream, no more data.
-                else if(m_pOwner.BytesInReadBuffer == 0){
+                else if (m_pOwner.BytesInReadBuffer == 0)
+                {
                     Completed();
                 }
-                // Continue line reading.
-                else{
-                    DoLineReading();
+                // Continue data reading.
+                else
+                {
+                    DoRead();
                 }
             }
 
             /// <summary>
-            /// Does line reading.
+            /// Does asynchronous data reading.
             /// </summary>
-            private void DoLineReading()
-            {           
-                try{
-                    while(true){
-                        // Read buffer empty, buff next data block.
-                        if(m_pOwner.BytesInReadBuffer == 0){
-                            // Buffering started asynchronously.
-                            if(m_pOwner.BufferRead(true,Buffering_Completed)){
-                                return;
-                            }
-                            // Buffering completed synchronously, continue processing.
-
-                            // We reached end of stream, no more data.
-                            if(m_pOwner.BytesInReadBuffer == 0){
-                                Completed();
-                                return;
-                            }
+            private void DoRead()
+            {
+                try
+                {
+                    // Read buffer empty, buff next data block.
+                    if (m_pOwner.BytesInReadBuffer == 0)
+                    {
+                        // Buffering started asynchronously.
+                        if (m_pOwner.BufferRead(true, Buffering_Completed))
+                        {
+                            return;
                         }
+                        // Buffering completed synchronously, continue processing.
 
-                        byte b = m_pOwner.m_pReadBuffer[m_pOwner.m_ReadBufferOffset++];
-                        BytesReaded++;
-
-                        // We have LF line.
-                        if(b == '\n'){
-                            break;               
-                        }
-                        // We have CRLF line.
-
-                        if(b == '\r' && m_pOwner.Peek() == '\n'){
-                            // Consume LF char.
-                            m_pOwner.ReadByte();
-                            BytesReaded++;
-
-                            break;
-                        }
-                        // We have CR line.
-                        if(b == '\r'){
-                            break;
-                        }
-                        // We have normal line data char.
-// Line buffer full.
-                        if(BytesStored >= m_MaxCount){
-                            if(m_SizeExceededAction == SizeExceededAction.ThrowException){
-                                throw new LineSizeExceededException();
-                            }
-                            // Just skip storing.
-                        }
-                        else{
-                            Buffer[m_OffsetInBuffer++] = b;
-                            BytesStored++;
+                        // We reached end of stream, no more data.
+                        if (m_pOwner.BytesInReadBuffer == 0)
+                        {
+                            Completed();
+                            return;
                         }
                     }
-                }
-                catch(Exception x){
-                    m_pException = x;                    
-                }
 
-                Completed();
+                    int readedCount = Math.Min(m_MaxSize, m_pOwner.BytesInReadBuffer);
+                    Array.Copy(m_pOwner.m_pReadBuffer, m_pOwner.m_ReadBufferOffset, Buffer, m_OffsetInBuffer, readedCount);
+                    m_pOwner.m_ReadBufferOffset += readedCount;
+                    m_pOwner.m_LastActivity = DateTime.Now;
+                    BytesStored += readedCount;
+
+                    Completed();
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    Completed();
+                }
             }
 
             /// <summary>
@@ -2610,7 +1653,8 @@ namespace LumiSoft.Net.IO
             {
                 IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
-                if(m_pAsyncCallback != null){
+                if (m_pAsyncCallback != null)
+                {
                     m_pAsyncCallback(this);
                 }
             }
@@ -2625,7 +1669,630 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public WaitHandle AsyncWaitHandle
             {
-                get{ return m_pAsyncWaitHandle; }
+                get { return m_pAsyncWaitHandle; }
+            }
+
+            /// <summary>
+            /// Gets an indication of whether the asynchronous operation completed synchronously.
+            /// </summary>
+            public bool CompletedSynchronously { get; } = false;
+
+            /// <summary>
+            /// Gets an indication whether the asynchronous operation has completed.
+            /// </summary>
+            public bool IsCompleted { get; private set; }
+
+            /// <summary>
+            /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
+            /// </summary>
+            internal bool IsEndCalled { get; set; }
+
+            /// <summary>
+            /// Gets store buffer.
+            /// </summary>
+            internal byte[] Buffer { get; }
+
+            /// <summary>
+            /// Gets number of bytes stored in to <b>Buffer</b>.
+            /// </summary>
+            internal int BytesStored { get; private set; }
+        }
+
+        /// <summary>
+        /// This class implements read line operation.
+        /// </summary>
+        /// <remarks>This class can be reused on multiple calls of <see cref="SmartStream.ReadLine(ReadLineAsyncOP,bool)">SmartStream.ReadLine</see> method.</remarks>
+        public class ReadLineAsyncOP : AsyncOP, IDisposable
+        {
+            private bool m_IsDisposed;
+            private bool m_IsCompleted;
+            private bool m_IsCompletedSync;
+            private SmartStream m_pOwner;
+            private byte[] m_pBuffer;
+            private readonly bool m_CRLFLinesOnly = true;
+            private int m_BytesInBuffer;
+            private int m_LastByte = -1;
+            private Exception m_pException;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="buffer">Line buffer.</param>
+            /// <param name="exceededAction">Specifies how line-reader behaves when maximum line size exceeded.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
+            public ReadLineAsyncOP(byte[] buffer, SizeExceededAction exceededAction)
+            {
+                m_pBuffer = buffer ?? throw new ArgumentNullException("buffer");
+                SizeExceededAction = exceededAction;
+            }
+
+            /// <summary>
+            /// Destructor.
+            /// </summary>
+            ~ReadLineAsyncOP()
+            {
+                Dispose();
+            }
+
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (m_IsDisposed)
+                {
+                    return;
+                }
+                m_IsDisposed = true;
+
+                m_pOwner = null;
+                m_pBuffer = null;
+                m_pException = null;
+                Completed = null;
+            }
+
+            /// <summary>
+            /// Starts reading line.
+            /// </summary>
+            /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
+            /// <param name="stream">Owner SmartStream.</param>
+            /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+            internal bool Start(bool async, SmartStream stream)
+            {
+                m_pOwner = stream ?? throw new ArgumentNullException("stream");
+
+                // Clear old data, if any.
+                m_IsCompleted = false;
+                m_BytesInBuffer = 0;
+                m_LastByte = -1;
+                m_pException = null;
+
+                m_IsCompletedSync = DoLineReading(async);
+
+                return m_IsCompletedSync;
+            }
+
+            /// <summary>
+            /// Is called when asynchronous read buffer buffering has completed.
+            /// </summary>
+            /// <param name="x">Exception that occured during async operation.</param>
+            private void Buffering_Completed(Exception x)
+            {
+                if (m_pOwner.m_IsDisposed)
+                {
+                    return;
+                }
+
+                if (x != null)
+                {
+                    m_pException = x;
+                    OnCompleted();
+                }
+                // We reached end of stream, no more data.
+                else if (m_pOwner.BytesInReadBuffer == 0)
+                {
+                    OnCompleted();
+                }
+                // Continue line reading.
+                else
+                {
+                    if (DoLineReading(true))
+                    {
+                        OnCompleted();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Starts/continues line reading.
+            /// </summary>
+            /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
+            /// <returns>Returns true if line reading completed.</returns>
+            private bool DoLineReading(bool async)
+            {
+                try
+                {
+                    while (true)
+                    {
+                        // Read buffer empty, buff next data block.
+                        if (m_pOwner.BytesInReadBuffer == 0)
+                        {
+                            // Buffering started asynchronously.
+                            if (m_pOwner.BufferRead(async, Buffering_Completed))
+                            {
+                                return false;
+                            }
+                            // Buffering completed synchronously, continue processing.
+
+                            // We reached end of stream, no more data.
+                            if (m_pOwner.BytesInReadBuffer == 0)
+                            {
+                                return true;
+                            }
+                        }
+
+                        byte b = m_pOwner.m_pReadBuffer[m_pOwner.m_ReadBufferOffset++];
+
+                        // Line buffer full.
+                        if (m_BytesInBuffer >= m_pBuffer.Length)
+                        {
+                            if (m_pException == null)
+                            {
+                                m_pException = new LineSizeExceededException();
+                            }
+
+                            if (SizeExceededAction == SizeExceededAction.ThrowException)
+                            {
+                                return true;
+                            }
+                        }
+                        // Store byte.
+                        else
+                        {
+                            m_pBuffer[m_BytesInBuffer++] = b;
+                        }
+
+                        // We have LF line.
+                        if (b == '\n')
+                        {
+                            if (!m_CRLFLinesOnly || m_CRLFLinesOnly && m_LastByte == '\r')
+                            {
+                                m_IsCompleted = true;
+                                return true;
+                            }
+                        }
+
+                        m_LastByte = b;
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                }
+
+                return true;
+            }
+
+            /// <summary>
+            /// Sets specified field values.
+            /// </summary>
+            /// <param name="bytesInBuffer">Number of bytes in buffer.</param>
+            /// <param name="exception">Exception.</param>
+            internal void SetInfo(int bytesInBuffer, Exception exception)
+            {
+                m_IsCompleted = true;
+                m_IsCompletedSync = true;
+                m_BytesInBuffer = bytesInBuffer;
+                m_pException = exception;
+            }
+
+            /// <summary>
+            /// Gets if this object is disposed.
+            /// </summary>
+            public override bool IsDisposed
+            {
+                get { return m_IsDisposed; }
+            }
+
+            /// <summary>
+            /// Gets if asynchronous operation has completed.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public override bool IsCompleted
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_IsCompleted;
+                }
+            }
+
+            /// <summary>
+            /// Gets if operation completed synchronously.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public override bool IsCompletedSynchronously
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_IsCompletedSync;
+                }
+            }
+
+            /// <summary>
+            /// Gets line size exceeded action.
+            /// </summary>
+            public SizeExceededAction SizeExceededAction { get; } = SizeExceededAction.JunkAndThrowException;
+
+            /// <summary>
+            /// Gets line buffer.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public byte[] Buffer
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_pBuffer;
+                }
+            }
+
+            /// <summary>
+            /// Gets number of bytes stored in the buffer. Ending line-feed characters included.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public int BytesInBuffer
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_BytesInBuffer;
+                }
+            }
+
+            /// <summary>
+            /// Gets number of line data bytes stored in the buffer. Ending line-feed characters not included.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public int LineBytesInBuffer
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    int retVal = m_BytesInBuffer;
+
+                    if (m_BytesInBuffer > 1)
+                    {
+                        if (m_pBuffer[m_BytesInBuffer - 1] == '\n')
+                        {
+                            retVal--;
+                            if (m_pBuffer[m_BytesInBuffer - 2] == '\r')
+                            {
+                                retVal--;
+                            }
+                        }
+                    }
+                    else if (m_BytesInBuffer > 0)
+                    {
+                        if (m_pBuffer[m_BytesInBuffer - 1] == '\n')
+                        {
+                            retVal--;
+                        }
+                    }
+
+                    return retVal;
+                }
+            }
+
+            /// <summary>
+            /// Gets line as ASCII string. Returns null if EOS(end of stream) reached. Ending line-feed characters not included.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public string LineAscii
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    if (BytesInBuffer == 0)
+                    {
+                        return null;
+                    }
+
+                    return Encoding.ASCII.GetString(m_pBuffer, 0, LineBytesInBuffer);
+                }
+            }
+
+            /// <summary>
+            /// Gets line as UTF-8 string. Returns null if EOS(end of stream) reached. Ending line-feed characters not included.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public string LineUtf8
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    if (BytesInBuffer == 0)
+                    {
+                        return null;
+                    }
+
+                    return Encoding.UTF8.GetString(m_pBuffer, 0, LineBytesInBuffer);
+                }
+            }
+
+            /// <summary>
+            /// Gets line as UTF-32 string. Returns null if EOS(end of stream) reached. Ending line-feed characters not included.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public string LineUtf32
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    if (BytesInBuffer == 0)
+                    {
+                        return null;
+                    }
+
+                    return Encoding.UTF32.GetString(m_pBuffer, 0, LineBytesInBuffer);
+                }
+            }
+
+            /// <summary>
+            /// Gets error occured during asynchronous operation. Value null means no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is raised when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<ReadLineAsyncOP>> Completed;
+
+            /// <summary>
+            /// Raises <b>Completed</b> event.
+            /// </summary>
+            private void OnCompleted()
+            {
+                m_IsCompleted = true;
+
+                if (Completed != null)
+                {
+                    Completed(this, new EventArgs<ReadLineAsyncOP>(this));
+                }
+            }
+        }
+
+        //------- Obsolete
+
+        /// <summary>
+        /// This class implements asynchronous line reading.
+        /// </summary>
+        private class ReadLineAsyncOperation : IAsyncResult
+        {
+            private readonly SmartStream m_pOwner;
+            private int m_OffsetInBuffer;
+            private readonly int m_MaxCount;
+            private readonly SizeExceededAction m_SizeExceededAction = SizeExceededAction.JunkAndThrowException;
+            private readonly AsyncCallback m_pAsyncCallback;
+            private readonly AutoResetEvent m_pAsyncWaitHandle;
+            private Exception m_pException;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="owner">Owner stream.</param>
+            /// <param name="buffer">Buffer where to store data.</param>
+            /// <param name="offset">The location in <b>buffer</b> to begin storing the data.</param>
+            /// <param name="maxCount">Maximum number of bytes to read.</param>
+            /// <param name="exceededAction">Specifies how this method behaves when maximum line size exceeded.</param>
+            /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
+            /// <param name="asyncState">User-defined object that qualifies or contains information about an asynchronous operation.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b>,<b>buffer</b> is null reference.</exception>
+            /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
+            public ReadLineAsyncOperation(SmartStream owner, byte[] buffer, int offset, int maxCount, SizeExceededAction exceededAction, AsyncCallback callback, object asyncState)
+            {
+                if (buffer == null)
+                {
+                    throw new ArgumentNullException("buffer");
+                }
+                if (offset < 0)
+                {
+                    throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+                }
+                if (offset > buffer.Length)
+                {
+                    throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be < buffer.Length.");
+                }
+                if (maxCount < 0)
+                {
+                    throw new ArgumentOutOfRangeException("maxCount", "Argument 'maxCount' value must be >= 0.");
+                }
+                if (offset + maxCount > buffer.Length)
+                {
+                    throw new ArgumentOutOfRangeException("maxCount", "Argument 'maxCount' is bigger than than argument 'buffer' can store.");
+                }
+
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
+                Buffer = buffer;
+                m_OffsetInBuffer = offset;
+                m_MaxCount = maxCount;
+                m_SizeExceededAction = exceededAction;
+                m_pAsyncCallback = callback;
+                AsyncState = asyncState;
+
+                m_pAsyncWaitHandle = new AutoResetEvent(false);
+
+                DoLineReading();
+            }
+
+            /// <summary>
+            /// Is called when asynchronous read buffer buffering has completed.
+            /// </summary>
+            /// <param name="x">Exception that occured during async operation.</param>
+            private void Buffering_Completed(Exception x)
+            {
+                if (x != null)
+                {
+                    m_pException = x;
+                    Completed();
+                }
+                // We reached end of stream, no more data.
+                else if (m_pOwner.BytesInReadBuffer == 0)
+                {
+                    Completed();
+                }
+                // Continue line reading.
+                else
+                {
+                    DoLineReading();
+                }
+            }
+
+            /// <summary>
+            /// Does line reading.
+            /// </summary>
+            private void DoLineReading()
+            {
+                try
+                {
+                    while (true)
+                    {
+                        // Read buffer empty, buff next data block.
+                        if (m_pOwner.BytesInReadBuffer == 0)
+                        {
+                            // Buffering started asynchronously.
+                            if (m_pOwner.BufferRead(true, Buffering_Completed))
+                            {
+                                return;
+                            }
+                            // Buffering completed synchronously, continue processing.
+
+                            // We reached end of stream, no more data.
+                            if (m_pOwner.BytesInReadBuffer == 0)
+                            {
+                                Completed();
+                                return;
+                            }
+                        }
+
+                        byte b = m_pOwner.m_pReadBuffer[m_pOwner.m_ReadBufferOffset++];
+                        BytesReaded++;
+
+                        // We have LF line.
+                        if (b == '\n')
+                        {
+                            break;
+                        }
+                        // We have CRLF line.
+
+                        if (b == '\r' && m_pOwner.Peek() == '\n')
+                        {
+                            // Consume LF char.
+                            m_pOwner.ReadByte();
+                            BytesReaded++;
+
+                            break;
+                        }
+                        // We have CR line.
+                        if (b == '\r')
+                        {
+                            break;
+                        }
+                        // We have normal line data char.
+                        // Line buffer full.
+                        if (BytesStored >= m_MaxCount)
+                        {
+                            if (m_SizeExceededAction == SizeExceededAction.ThrowException)
+                            {
+                                throw new LineSizeExceededException();
+                            }
+                            // Just skip storing.
+                        }
+                        else
+                        {
+                            Buffer[m_OffsetInBuffer++] = b;
+                            BytesStored++;
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                }
+
+                Completed();
+            }
+
+            /// <summary>
+            /// This method must be called when asynchronous operation has completed.
+            /// </summary>
+            private void Completed()
+            {
+                IsCompleted = true;
+                m_pAsyncWaitHandle.Set();
+                if (m_pAsyncCallback != null)
+                {
+                    m_pAsyncCallback(this);
+                }
+            }
+
+            /// <summary>
+            /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
+            /// </summary>
+            public object AsyncState { get; }
+
+            /// <summary>
+            /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
+            /// </summary>
+            public WaitHandle AsyncWaitHandle
+            {
+                get { return m_pAsyncWaitHandle; }
             }
 
             /// <summary>
@@ -2660,18 +2327,503 @@ namespace LumiSoft.Net.IO
         }
 
         /// <summary>
+        /// This class implements read period-terminated operation.
+        /// </summary>
+        public class ReadPeriodTerminatedAsyncOP : AsyncOP, IDisposable
+        {
+            private bool m_IsDisposed;
+            private bool m_IsCompleted;
+            private bool m_IsCompletedSync;
+            private SmartStream m_pOwner;
+            private Stream m_pStream;
+            private readonly long m_MaxCount;
+            private SizeExceededAction m_ExceededAction = SizeExceededAction.JunkAndThrowException;
+            private ReadLineAsyncOP m_pReadLineOP;
+            private long m_BytesStored;
+            private int m_LinesStored;
+            private Exception m_pException;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="stream">Stream wehre to sore readed data.</param>
+            /// <param name="maxCount">Maximum number of bytes to read. Value 0 means not limited.</param>
+            /// <param name="exceededAction">Specifies how period-terminated reader behaves when <b>maxCount</b> exceeded.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+            public ReadPeriodTerminatedAsyncOP(Stream stream, long maxCount, SizeExceededAction exceededAction)
+            {
+                m_pStream = stream ?? throw new ArgumentNullException("stream");
+                m_MaxCount = maxCount;
+                m_ExceededAction = exceededAction;
+
+                m_pReadLineOP = new ReadLineAsyncOP(new byte[32000], exceededAction);
+                m_pReadLineOP.Completed += new EventHandler<EventArgs<ReadLineAsyncOP>>(m_pReadLineOP_Completed);
+            }
+
+            /// <summary>
+            /// Destructor.
+            /// </summary>
+            ~ReadPeriodTerminatedAsyncOP()
+            {
+                Dispose();
+            }
+
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (m_IsDisposed)
+                {
+                    return;
+                }
+                m_IsDisposed = true;
+
+                m_pOwner = null;
+                m_pStream = null;
+                m_pReadLineOP.Dispose();
+                m_pReadLineOP = null;
+                m_pException = null;
+                Completed = null;
+            }
+
+            /// <summary>
+            /// Starts period-terminated data reading.
+            /// </summary>
+            /// <param name="stream">Owner SmartStream.</param>
+            /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+            internal bool Start(SmartStream stream)
+            {
+                m_pOwner = stream ?? throw new ArgumentNullException("stream");
+
+                // Clear old data, if any.
+                m_IsCompleted = false;
+                m_BytesStored = 0;
+                m_LinesStored = 0;
+                m_pException = null;
+
+                m_IsCompletedSync = DoRead();
+
+                return m_IsCompletedSync;
+            }
+
+            /// <summary>
+            /// Is called when asynchronous line reading has completed.
+            /// </summary>
+            /// <param name="sender">Sender.</param>
+            /// <param name="e">Event data.</param>
+            private void m_pReadLineOP_Completed(object sender, EventArgs<ReadLineAsyncOP> e)
+            {
+                try
+                {
+                    if (ProcessReadedLine())
+                    {
+                        OnCompleted();
+                    }
+                    else
+                    {
+                        if (DoRead())
+                        {
+                            OnCompleted();
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    OnCompleted();
+                }
+            }
+
+            /// <summary>
+            /// Continues period-terminated reading.
+            /// </summary>
+            /// <returns>Returns true if read line completed synchronously, false if asynchronous operation pending.</returns>
+            private bool DoRead()
+            {
+                try
+                {
+                    while (true)
+                    {
+                        if (m_pOwner.ReadLine(m_pReadLineOP, true))
+                        {
+                            if (ProcessReadedLine())
+                            {
+                                break;
+                            }
+                        }
+                        // Goto next while loop.
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                }
+
+                return true;
+            }
+
+            /// <summary>
+            /// Processes readed line.
+            /// </summary>
+            /// <returns>Returns true if read period-terminated operation has completed.</returns>
+            private bool ProcessReadedLine()
+            {
+                if (m_pReadLineOP.Error != null)
+                {
+                    m_pException = m_pReadLineOP.Error;
+
+                    return true;
+                }
+                // We reached end of stream, no more data.
+
+                if (m_pReadLineOP.BytesInBuffer == 0)
+                {
+                    m_pException = new IncompleteDataException("Data is not period-terminated.");
+
+                    return true;
+                }
+                // We have period terminator.
+                if (m_pReadLineOP.LineBytesInBuffer == 1 && m_pReadLineOP.Buffer[0] == '.')
+                {
+                    return true;
+                }
+                // Normal line.
+                if (m_MaxCount < 1 || m_BytesStored < m_MaxCount)
+                {
+                    // Period handling: If line starts with '.', it must be removed.
+                    if (m_pReadLineOP.Buffer[0] == '.')
+                    {
+                        m_pStream.Write(m_pReadLineOP.Buffer, 1, m_pReadLineOP.BytesInBuffer - 1);
+                        m_BytesStored += m_pReadLineOP.BytesInBuffer - 1;
+                        m_LinesStored++;
+                    }
+                    // Nomrmal line.
+                    else
+                    {
+                        m_pStream.Write(m_pReadLineOP.Buffer, 0, m_pReadLineOP.BytesInBuffer);
+                        m_BytesStored += m_pReadLineOP.BytesInBuffer;
+                        m_LinesStored++;
+                    }
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// Gets if this object is disposed.
+            /// </summary>
+            public override bool IsDisposed
+            {
+                get { return m_IsDisposed; }
+            }
+
+            /// <summary>
+            /// Gets if asynchronous operation has completed.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public override bool IsCompleted
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_IsCompleted;
+                }
+            }
+
+            /// <summary>
+            /// Gets if operation completed synchronously.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public override bool IsCompletedSynchronously
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_IsCompletedSync;
+                }
+            }
+
+            /// <summary>
+            /// Gets stream where period terminated data has stored.
+            /// </summary>
+            public Stream Stream
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_pStream;
+                }
+            }
+
+            /// <summary>
+            /// Gets number of bytes stored to <see cref="Stream">Stream</see> stream.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public long BytesStored
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_BytesStored;
+                }
+            }
+
+            /// <summary>
+            /// Gets number of lines stored to <see cref="Stream">Stream</see> stream.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public int LinesStored
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_LinesStored;
+                }
+            }
+
+            /// <summary>
+            /// Gets error occured during asynchronous operation. Value null means no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (m_IsDisposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+
+                    return m_pException;
+                }
+            }
+
+            /// <summary>
+            /// Is raised when asynchronous operation has completed.
+            /// </summary>
+            public event EventHandler<EventArgs<ReadPeriodTerminatedAsyncOP>> Completed;
+
+            /// <summary>
+            /// Raises <b>Completed</b> event.
+            /// </summary>
+            private void OnCompleted()
+            {
+                m_IsCompleted = true;
+
+                if (Completed != null)
+                {
+                    Completed(this, new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
+                }
+            }
+        }
+
+        /// <summary>
+        /// This class implements asynchronous read to stream data reader.
+        /// </summary>
+        private class ReadToStreamAsyncOperation : IAsyncResult
+        {
+            private readonly SmartStream m_pOwner;
+            private readonly Stream m_pStoreStream;
+            private readonly long m_Count;
+            private readonly AsyncCallback m_pAsyncCallback;
+            private readonly AutoResetEvent m_pAsyncWaitHandle;
+
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="owner">Owner stream.</param>
+            /// <param name="storeStream">Stream where to store readed data.</param>
+            /// <param name="count">Number of bytes to read from source stream.</param>
+            /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
+            /// <param name="asyncState">User-defined object that qualifies or contains information about an asynchronous operation.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> or <b>storeStream</b> is null reference.</exception>
+            /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+            public ReadToStreamAsyncOperation(SmartStream owner, Stream storeStream, long count, AsyncCallback callback, object asyncState)
+            {
+                if (count < 0)
+                {
+                    throw new ArgumentException("Argument 'count' must be >= 0.");
+                }
+
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
+                m_pStoreStream = storeStream ?? throw new ArgumentNullException("storeStream");
+                m_Count = count;
+                m_pAsyncCallback = callback;
+                AsyncState = asyncState;
+
+                m_pAsyncWaitHandle = new AutoResetEvent(false);
+
+                if (m_Count == 0)
+                {
+                    Completed();
+                }
+                else
+                {
+                    DoDataReading();
+                }
+            }
+
+            /// <summary>
+            /// Is called when asynchronous read buffer buffering has completed.
+            /// </summary>
+            /// <param name="x">Exception that occured during async operation.</param>
+            private void Buffering_Completed(Exception x)
+            {
+                if (x != null)
+                {
+                    Exception = x;
+                    Completed();
+                }
+                // We reached end of stream, no more data.
+                else if (m_pOwner.BytesInReadBuffer == 0)
+                {
+                    Exception = new IncompleteDataException();
+                    Completed();
+                }
+                // Continue line reading.
+                else
+                {
+                    DoDataReading();
+                }
+            }
+
+            /// <summary>
+            /// Does data reading.
+            /// </summary>
+            private void DoDataReading()
+            {
+                try
+                {
+                    while (true)
+                    {
+                        // Read buffer empty, buff next data block.
+                        if (m_pOwner.BytesInReadBuffer == 0)
+                        {
+                            // Buffering started asynchronously.
+                            if (m_pOwner.BufferRead(true, Buffering_Completed))
+                            {
+                                return;
+                            }
+                            // Buffering completed synchronously, continue processing.
+
+                            // We reached end of stream, no more data.
+                            if (m_pOwner.BytesInReadBuffer == 0)
+                            {
+                                throw new IncompleteDataException();
+                            }
+                        }
+
+                        int countToRead = (int)Math.Min(m_Count - BytesStored, m_pOwner.BytesInReadBuffer);
+                        m_pStoreStream.Write(m_pOwner.m_pReadBuffer, m_pOwner.m_ReadBufferOffset, countToRead);
+                        BytesStored += countToRead;
+                        m_pOwner.m_ReadBufferOffset += countToRead;
+
+                        // We have readed all data.
+                        if (m_Count == BytesStored)
+                        {
+                            Completed();
+                            return;
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    Exception = x;
+                    Completed();
+                }
+            }
+
+            /// <summary>
+            /// This method must be called when asynchronous operation has completed.
+            /// </summary>
+            private void Completed()
+            {
+                IsCompleted = true;
+                m_pAsyncWaitHandle.Set();
+                if (m_pAsyncCallback != null)
+                {
+                    m_pAsyncCallback(this);
+                }
+            }
+
+            /// <summary>
+            /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
+            /// </summary>
+            public object AsyncState { get; }
+
+            /// <summary>
+            /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
+            /// </summary>
+            public WaitHandle AsyncWaitHandle
+            {
+                get { return m_pAsyncWaitHandle; }
+            }
+
+            /// <summary>
+            /// Gets an indication of whether the asynchronous operation completed synchronously.
+            /// </summary>
+            public bool CompletedSynchronously { get; } = false;
+
+            /// <summary>
+            /// Gets an indication whether the asynchronous operation has completed.
+            /// </summary>
+            public bool IsCompleted { get; private set; }
+
+            /// <summary>
+            /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
+            /// </summary>
+            internal bool IsEndCalled { get; set; }
+
+            /// <summary>
+            /// Gets number of bytes stored in to <b>storeStream</b>.
+            /// </summary>
+            internal long BytesStored { get; private set; }
+
+            /// <summary>
+            /// Gets exception happened on asynchronous operation. Returns null if operation was successfull.
+            /// </summary>
+            internal Exception Exception { get; private set; }
+        }
+
+        /// <summary>
         /// This class implements asynchronous line-based terminated data reader, where terminator is on line itself.
         /// </summary>
         private class ReadToTerminatorAsyncOperation : IAsyncResult
         {
-            private readonly SmartStream        m_pOwner;
-            private readonly byte[]             m_pTerminatorBytes;
-            private readonly Stream             m_pStoreStream;
-            private readonly long               m_MaxCount;            
-            private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
-            private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private readonly byte[]             m_pLineBuffer;
+            private readonly SmartStream m_pOwner;
+            private readonly byte[] m_pTerminatorBytes;
+            private readonly Stream m_pStoreStream;
+            private readonly long m_MaxCount;
+            private readonly SizeExceededAction m_SizeExceededAction = SizeExceededAction.JunkAndThrowException;
+            private readonly AsyncCallback m_pAsyncCallback;
+            private readonly AutoResetEvent m_pAsyncWaitHandle;
+            private readonly byte[] m_pLineBuffer;
 
             /// <summary>
             /// Default constructor.
@@ -2684,29 +2836,30 @@ namespace LumiSoft.Net.IO
             /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
             /// <param name="asyncState">User-defined object that qualifies or contains information about an asynchronous operation.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b>,<b>terminator</b> or <b>storeStream</b> is null reference.</exception>
-            public ReadToTerminatorAsyncOperation(SmartStream owner,string terminator,Stream storeStream,long maxCount,SizeExceededAction exceededAction,AsyncCallback callback,object asyncState)
+            public ReadToTerminatorAsyncOperation(SmartStream owner, string terminator, Stream storeStream, long maxCount, SizeExceededAction exceededAction, AsyncCallback callback, object asyncState)
             {
-                if(maxCount < 0){
+                if (maxCount < 0)
+                {
                     throw new ArgumentException("Argument 'maxCount' must be >= 0.");
                 }
 
-                m_pOwner             = owner ?? throw new ArgumentNullException("owner");
-                Terminator         = terminator ?? throw new ArgumentNullException("terminator");
-                m_pTerminatorBytes   = Encoding.ASCII.GetBytes(terminator);
-                m_pStoreStream       = storeStream ?? throw new ArgumentNullException("storeStream");
-                m_MaxCount           = maxCount;
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
+                Terminator = terminator ?? throw new ArgumentNullException("terminator");
+                m_pTerminatorBytes = Encoding.ASCII.GetBytes(terminator);
+                m_pStoreStream = storeStream ?? throw new ArgumentNullException("storeStream");
+                m_MaxCount = maxCount;
                 m_SizeExceededAction = exceededAction;
-                m_pAsyncCallback     = callback;
-                AsyncState        = asyncState;
+                m_pAsyncCallback = callback;
+                AsyncState = asyncState;
 
                 m_pAsyncWaitHandle = new AutoResetEvent(false);
 
                 m_pLineBuffer = new byte[32000];
 
                 // Start reading data.
-                #pragma warning disable
-                m_pOwner.BeginReadLine(m_pLineBuffer,0,m_pLineBuffer.Length - 2,m_SizeExceededAction,new AsyncCallback(ReadLine_Completed),null);
-                #pragma warning restore
+#pragma warning disable
+                m_pOwner.BeginReadLine(m_pLineBuffer, 0, m_pLineBuffer.Length - 2, m_SizeExceededAction, new AsyncCallback(ReadLine_Completed), null);
+#pragma warning restore
             }
 
             /// <summary>
@@ -2715,15 +2868,19 @@ namespace LumiSoft.Net.IO
             /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
             private void ReadLine_Completed(IAsyncResult asyncResult)
             {
-                try{
-                    int storedCount = 0;                    
-                    try{
-                        #pragma warning disable
+                try
+                {
+                    int storedCount = 0;
+                    try
+                    {
+#pragma warning disable
                         storedCount = m_pOwner.EndReadLine(asyncResult);
-                        #pragma warning restore
+#pragma warning restore
                     }
-                    catch(LineSizeExceededException lx){
-                        if(m_SizeExceededAction == SizeExceededAction.ThrowException){
+                    catch (LineSizeExceededException lx)
+                    {
+                        if (m_SizeExceededAction == SizeExceededAction.ThrowException)
+                        {
                             throw lx;
                         }
                         Exception = new LineSizeExceededException();
@@ -2731,42 +2888,48 @@ namespace LumiSoft.Net.IO
                     }
 
                     // Source stream closed berore we reached terminator.
-                    if(storedCount == -1){
+                    if (storedCount == -1)
+                    {
                         throw new IncompleteDataException();
                     }
 
                     // Check for terminator.
-                    if(Net_Utils.CompareArray(m_pTerminatorBytes,m_pLineBuffer,storedCount)){
+                    if (Net_Utils.CompareArray(m_pTerminatorBytes, m_pLineBuffer, storedCount))
+                    {
                         Completed();
                     }
-                    else{
+                    else
+                    {
                         // We have exceeded maximum allowed data count.
-                        if(m_MaxCount > 0 && (BytesStored + storedCount + 2) > m_MaxCount)
+                        if (m_MaxCount > 0 && (BytesStored + storedCount + 2) > m_MaxCount)
                         {
-                            if(m_SizeExceededAction == SizeExceededAction.ThrowException){
+                            if (m_SizeExceededAction == SizeExceededAction.ThrowException)
+                            {
                                 throw new DataSizeExceededException();
                             }
                             // Just skip storing.
 
                             Exception = new DataSizeExceededException();
                         }
-                        else{
+                        else
+                        {
                             // Store readed line.
                             m_pLineBuffer[storedCount++] = (byte)'\r';
                             m_pLineBuffer[storedCount++] = (byte)'\n';
-                            m_pStoreStream.Write(m_pLineBuffer,0,storedCount);
-                            BytesStored += storedCount;                           
+                            m_pStoreStream.Write(m_pLineBuffer, 0, storedCount);
+                            BytesStored += storedCount;
                         }
 
                         // Strart reading new line.
-                        #pragma warning disable
-                        m_pOwner.BeginReadLine(m_pLineBuffer,0,m_pLineBuffer.Length - 2,m_SizeExceededAction,new AsyncCallback(ReadLine_Completed),null);
-                        #pragma warning restore
+#pragma warning disable
+                        m_pOwner.BeginReadLine(m_pLineBuffer, 0, m_pLineBuffer.Length - 2, m_SizeExceededAction, new AsyncCallback(ReadLine_Completed), null);
+#pragma warning restore
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     Exception = x;
-                    Completed();                
+                    Completed();
                 }
             }
 
@@ -2777,7 +2940,8 @@ namespace LumiSoft.Net.IO
             {
                 IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
-                if(m_pAsyncCallback != null){
+                if (m_pAsyncCallback != null)
+                {
                     m_pAsyncCallback(this);
                 }
             }
@@ -2797,7 +2961,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public WaitHandle AsyncWaitHandle
             {
-                get{ return m_pAsyncWaitHandle; }
+                get { return m_pAsyncWaitHandle; }
             }
 
             /// <summary>
@@ -2827,386 +2991,593 @@ namespace LumiSoft.Net.IO
         }
 
         /// <summary>
-        /// This class implements asynchronous read to stream data reader.
+        /// This class represents <see cref="SmartStream.WritePeriodTerminatedAsync"/> asynchronous operation.
         /// </summary>
-        private class ReadToStreamAsyncOperation : IAsyncResult
+        public class WritePeriodTerminatedAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly SmartStream        m_pOwner;
-            private readonly Stream             m_pStoreStream;
-            private readonly long               m_Count;
-            private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private SmartStream m_pStream;
+            private SmartStream m_pOwner;
+            private ReadLineAsyncOP m_pReadLineOP;
+            private int m_BytesWritten;
+            private bool m_EndsCRLF;
+            private bool m_RiseCompleted;
 
             /// <summary>
             /// Default constructor.
             /// </summary>
-            /// <param name="owner">Owner stream.</param>
-            /// <param name="storeStream">Stream where to store readed data.</param>
-            /// <param name="count">Number of bytes to read from source stream.</param>
-            /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
-            /// <param name="asyncState">User-defined object that qualifies or contains information about an asynchronous operation.</param>
-            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> or <b>storeStream</b> is null reference.</exception>
-            /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-            public ReadToStreamAsyncOperation(SmartStream owner,Stream storeStream,long count,AsyncCallback callback,object asyncState)
+            /// <param name="stream">Source stream. Reading starts from stream current location.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+            public WritePeriodTerminatedAsyncOP(Stream stream)
             {
-                if(count < 0){
-                    throw new ArgumentException("Argument 'count' must be >= 0.");
+                if (stream == null)
+                {
+                    throw new ArgumentNullException("stream");
                 }
 
-                m_pOwner             = owner ?? throw new ArgumentNullException("owner");
-                m_pStoreStream       = storeStream ?? throw new ArgumentNullException("storeStream");
-                m_Count              = count;
-                m_pAsyncCallback     = callback;
-                AsyncState        = asyncState;
+                m_pStream = new SmartStream(stream, false);
+            }
 
-                m_pAsyncWaitHandle = new AutoResetEvent(false);
-
-                if(m_Count == 0){
-                    Completed();                    
+            /// <summary>
+            /// Cleans up any resources being used.
+            /// </summary>
+            public void Dispose()
+            {
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
                 }
-                else{
-                    DoDataReading();
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pStream = null;
+                m_pOwner = null;
+                m_pReadLineOP = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner SmartStream.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(SmartStream owner)
+            {
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                try
+                {
+                    // Read line.
+                    m_pReadLineOP = new ReadLineAsyncOP(new byte[32000], SizeExceededAction.ThrowException);
+                    m_pReadLineOP.Completed += delegate (object s, EventArgs<ReadLineAsyncOP> e)
+                    {
+                        ReadLineCompleted(m_pReadLineOP);
+                    };
+                    if (m_pStream.ReadLine(m_pReadLineOP, true))
+                    {
+                        ReadLineCompleted(m_pReadLineOP);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    SetState(AsyncOP_State.Completed);
+                    m_pReadLineOP.Dispose();
+                }
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
                 }
             }
 
             /// <summary>
-            /// Is called when asynchronous read buffer buffering has completed.
+            /// Sets operation state.
             /// </summary>
-            /// <param name="x">Exception that occured during async operation.</param>
-            private void Buffering_Completed(Exception x)
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
             {
-                if(x != null){
-                    Exception = x;
-                    Completed();
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
                 }
-                // We reached end of stream, no more data.
-                else if(m_pOwner.BytesInReadBuffer == 0){
-                    Exception = new IncompleteDataException();
-                    Completed();
-                }
-                // Continue line reading.
-                else{
-                    DoDataReading();
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
                 }
             }
 
             /// <summary>
-            /// Does data reading.
+            /// Is called when source stream read line reading has completed.
             /// </summary>
-            private void DoDataReading()
+            /// <param name="op">Asynchronous operation.</param>
+            private void ReadLineCompleted(ReadLineAsyncOP op)
             {
-                try{
-                    while(true){
-                        // Read buffer empty, buff next data block.
-                        if(m_pOwner.BytesInReadBuffer == 0){
-                            // Buffering started asynchronously.
-                            if(m_pOwner.BufferRead(true,Buffering_Completed)){
-                                return;
+                try
+                {
+                    if (op.Error != null)
+                    {
+                        m_pException = op.Error;
+                        SetState(AsyncOP_State.Completed);
+                    }
+                    else
+                    {
+                        // We have readed all source stream data, we are done.
+                        if (op.BytesInBuffer == 0)
+                        {
+                            // Line ends CRLF.
+                            if (m_EndsCRLF)
+                            {
+                                m_BytesWritten += 3;
+                                m_pOwner.BeginWrite(new[] { (byte)'.', (byte)'\r', (byte)'\n' }, 0, 3, SendTerminatorCompleted, null);
                             }
-                            // Buffering completed synchronously, continue processing.
+                            // Line doesn't end CRLF, we need to add it.
+                            else
+                            {
+                                m_BytesWritten += 5;
+                                m_pOwner.BeginWrite(new[] { (byte)'\r', (byte)'\n', (byte)'.', (byte)'\r', (byte)'\n' }, 0, 5, SendTerminatorCompleted, null);
+                            }
 
-                            // We reached end of stream, no more data.
-                            if(m_pOwner.BytesInReadBuffer == 0){
-                                throw new IncompleteDataException();
-                            }
+                            op.Dispose();
                         }
-                    
-                        int countToRead = (int)Math.Min(m_Count - BytesStored,m_pOwner.BytesInReadBuffer);                
-                        m_pStoreStream.Write(m_pOwner.m_pReadBuffer,m_pOwner.m_ReadBufferOffset,countToRead);
-                        BytesStored += countToRead;
-                        m_pOwner.m_ReadBufferOffset += countToRead;
-   
-                        // We have readed all data.
-                        if(m_Count == BytesStored){
-                            Completed();
-                            return;
+                        // Write readed line.
+                        else
+                        {
+                            m_BytesWritten += op.BytesInBuffer;
+
+                            // Check if line ends CRLF.
+                            if (op.BytesInBuffer >= 2 && op.Buffer[op.BytesInBuffer - 2] == '\r' && op.Buffer[op.BytesInBuffer - 1] == '\n')
+                            {
+                                m_EndsCRLF = true;
+                            }
+                            else
+                            {
+                                m_EndsCRLF = false;
+                            }
+
+                            // Period handling. If line starts with period(.), additional period is added.
+                            if (op.Buffer[0] == '.')
+                            {
+                                var buffer = new byte[op.BytesInBuffer + 1];
+                                buffer[0] = (byte)'.';
+                                Array.Copy(op.Buffer, 0, buffer, 1, op.BytesInBuffer);
+
+                                m_pOwner.BeginWrite(buffer, 0, buffer.Length, SendLineCompleted, null);
+                            }
+                            // Normal line.
+                            else
+                            {
+                                m_pOwner.BeginWrite(op.Buffer, 0, op.BytesInBuffer, SendLineCompleted, null);
+                            }
                         }
                     }
                 }
-                catch(Exception x){
-                    Exception = x;
-                    Completed();
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    SetState(AsyncOP_State.Completed);
+                    op.Dispose();
                 }
             }
 
             /// <summary>
-            /// This method must be called when asynchronous operation has completed.
+            /// Is called when line sending has completed.
             /// </summary>
-            private void Completed()
+            /// <param name="ar">Asynchronous result.</param>
+            private void SendLineCompleted(IAsyncResult ar)
             {
-                IsCompleted = true;
-                m_pAsyncWaitHandle.Set();
-                if(m_pAsyncCallback != null){
-                    m_pAsyncCallback(this);
+                try
+                {
+                    m_pOwner.EndWrite(ar);
+
+                    // Read next line.
+                    // We already have attahed m_pReadLineOP.Completed in start method, so skip it here.
+                    // m_pReadLineOP.Completed += delegate(object s,EventArgs<ReadLineAsyncOP> e){                        
+                    if (m_pStream.ReadLine(m_pReadLineOP, true))
+                    {
+                        ReadLineCompleted(m_pReadLineOP);
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    SetState(AsyncOP_State.Completed);
                 }
             }
 
             /// <summary>
-            /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
+            /// Is called when ".CRLF" or "CRLF.CRLF" terminator sending has completed.
             /// </summary>
-            public object AsyncState { get; }
-
-            /// <summary>
-            /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
-            /// </summary>
-            public WaitHandle AsyncWaitHandle
+            /// <param name="ar">Asynchronous result.</param>
+            private void SendTerminatorCompleted(IAsyncResult ar)
             {
-                get{ return m_pAsyncWaitHandle; }
+                try
+                {
+                    m_pOwner.EndWrite(ar);
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                }
+
+                SetState(AsyncOP_State.Completed);
             }
 
             /// <summary>
-            /// Gets an indication of whether the asynchronous operation completed synchronously.
+            /// Gets asynchronous operation state.
             /// </summary>
-            public bool CompletedSynchronously { get; } = false;
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
-            /// Gets an indication whether the asynchronous operation has completed.
+            /// Gets error happened during operation. Returns null if no error.
             /// </summary>
-            public bool IsCompleted { get; private set; }
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
+                }
+            }
 
             /// <summary>
-            /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
+            /// Gets number of bytes written.
             /// </summary>
-            internal bool IsEndCalled { get; set; }
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public int BytesWritten
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+                    if (m_pException != null)
+                    {
+                        throw m_pException;
+                    }
+
+                    return m_BytesWritten;
+                }
+            }
 
             /// <summary>
-            /// Gets number of bytes stored in to <b>storeStream</b>.
+            /// Is called when asynchronous operation has completed.
             /// </summary>
-            internal long BytesStored { get; private set; }
+            public event EventHandler<EventArgs<WritePeriodTerminatedAsyncOP>> CompletedAsync;
 
             /// <summary>
-            /// Gets exception happened on asynchronous operation. Returns null if operation was successfull.
+            /// Raises <b>CompletedAsync</b> event.
             /// </summary>
-            internal Exception Exception { get; private set; }
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<WritePeriodTerminatedAsyncOP>(this));
+                }
+            }
         }
 
         /// <summary>
-        /// This class implements asynchronous data reader.
+        /// This class represents <see cref="SmartStream.WriteStreamAsync"/> asynchronous operation.
         /// </summary>
-        private class ReadAsyncOperation : IAsyncResult
+        public class WriteStreamAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly SmartStream        m_pOwner;
-            private readonly int                m_OffsetInBuffer;
-            private readonly int                m_MaxSize;
-            private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private Exception          m_pException;
+            private readonly object m_pLock = new object();
+            private Exception m_pException;
+            private bool m_RiseCompleted;
+            private SmartStream m_pOwner;
+            private Stream m_pStream;
+            private readonly long m_Count;
+            private byte[] m_pBuffer;
+            private long m_BytesWritten;
 
             /// <summary>
             /// Default constructor.
             /// </summary>
-            /// <param name="owner">Owner stream.</param>
-            /// <param name="buffer">Buffer where to store data.</param>
-            /// <param name="offset">The location in <b>buffer</b> to begin storing the data.</param>
-            /// <param name="maxSize">Maximum number of bytes to read.</param>
-            /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
-            /// <param name="asyncState">User-defined object that qualifies or contains information about an asynchronous operation.</param>
-            public ReadAsyncOperation(SmartStream owner,byte[] buffer,int offset,int maxSize,AsyncCallback callback,object asyncState)
+            /// <param name="stream">Stream which data to write.</param>
+            /// <param name="count">Number of bytes to write. Value -1 means all stream data will be written.</param>
+            /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+            public WriteStreamAsyncOP(Stream stream, long count)
             {
-                if(buffer == null){
-                    throw new ArgumentNullException("buffer");
-                }
-                if(offset < 0){
-                    throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
-                }
-                if(offset > buffer.Length){
-                    throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be < buffer.Length.");
-                }
-                if(maxSize < 0){
-                    throw new ArgumentOutOfRangeException("maxSize","Argument 'maxSize' value must be >= 0.");
-                }
-                if(offset + maxSize > buffer.Length){
-                    throw new ArgumentOutOfRangeException("maxSize","Argument 'maxSize' is bigger than than argument 'buffer' can store.");
-                }
-
-                m_pOwner             = owner ?? throw new ArgumentNullException("owner");
-                Buffer            = buffer;
-                m_OffsetInBuffer     = offset;
-                m_MaxSize            = maxSize;
-                m_pAsyncCallback     = callback;
-                AsyncState        = asyncState;
-
-                m_pAsyncWaitHandle = new AutoResetEvent(false);
-
-                DoRead();
+                m_pStream = stream ?? throw new ArgumentNullException("stream");
+                m_Count = count;
+                m_pBuffer = new byte[32000];
             }
 
             /// <summary>
-            /// Is called when asynchronous read buffer buffering has completed.
+            /// Cleans up any resources being used.
             /// </summary>
-            /// <param name="x">Exception that occured during async operation.</param>
-            private void Buffering_Completed(Exception x)
+            public void Dispose()
             {
-                if(x != null){
-                    m_pException = x;
-                    Completed();
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
                 }
-                // We reached end of stream, no more data.
-                else if(m_pOwner.BytesInReadBuffer == 0){
-                    Completed();
-                }
-                // Continue data reading.
-                else{
-                    DoRead();
+                SetState(AsyncOP_State.Disposed);
+
+                m_pException = null;
+                m_pStream = null;
+                m_pOwner = null;
+                m_pBuffer = null;
+
+                CompletedAsync = null;
+            }
+
+            /// <summary>
+            /// Starts operation processing.
+            /// </summary>
+            /// <param name="owner">Owner SmartStream.</param>
+            /// <returns>Returns true if asynchronous operation in progress or false if operation completed synchronously.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
+            internal bool Start(SmartStream owner)
+            {
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
+
+                SetState(AsyncOP_State.Active);
+
+                BeginReadData();
+
+                // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
+                // If already completed sync, that flag has no effect.
+                lock (m_pLock)
+                {
+                    m_RiseCompleted = true;
+
+                    return State == AsyncOP_State.Active;
                 }
             }
 
             /// <summary>
-            /// Does asynchronous data reading.
+            /// Sets operation state.
             /// </summary>
-            private void DoRead()
+            /// <param name="state">New state.</param>
+            private void SetState(AsyncOP_State state)
             {
-                try{
-                    // Read buffer empty, buff next data block.
-                    if(m_pOwner.BytesInReadBuffer == 0){
-                        // Buffering started asynchronously.
-                        if(m_pOwner.BufferRead(true,Buffering_Completed)){
-                            return;
+                if (State == AsyncOP_State.Disposed)
+                {
+                    return;
+                }
+
+                lock (m_pLock)
+                {
+                    State = state;
+
+                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    {
+                        OnCompletedAsync();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Starts reading data.
+            /// </summary>
+            private void BeginReadData()
+            {
+                try
+                {
+                    while (true)
+                    {
+                        int count = m_Count == -1 ? m_pBuffer.Length : (int)Math.Min(m_pBuffer.Length, m_Count - m_BytesWritten);
+                        var readResult = m_pStream.BeginRead(
+                            m_pBuffer,
+                            0,
+                            count,
+                            delegate (IAsyncResult r)
+                            {
+                                ProcessReadDataResult(r);
+                            },
+                            null
+                        );
+                        // Read data completed synchonously.
+                        if (readResult.CompletedSynchronously)
+                        {
+                            // Operation completed asynchronously, it will continue processing.
+                            if (ProcessReadDataResult(readResult))
+                            {
+                                break;
+                            }
+                            // Error happened in ProcessReadDataResult method.
+                            if (State != AsyncOP_State.Active)
+                            {
+                                break;
+                            }
                         }
-                        // Buffering completed synchronously, continue processing.
-
-                        // We reached end of stream, no more data.
-                        if(m_pOwner.BytesInReadBuffer == 0){
-                            Completed();
-                            return;
+                        // Read data completed asynchonously.
+                        else
+                        {
+                            break;
                         }
                     }
-
-                    int readedCount = Math.Min(m_MaxSize,m_pOwner.BytesInReadBuffer);
-                    Array.Copy(m_pOwner.m_pReadBuffer,m_pOwner.m_ReadBufferOffset,Buffer,m_OffsetInBuffer,readedCount);
-                    m_pOwner.m_ReadBufferOffset += readedCount;
-                    m_pOwner.m_LastActivity = DateTime.Now;
-                    BytesStored += readedCount;
-
-                    Completed();
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pException = x;
-                    Completed();
+                    SetState(AsyncOP_State.Completed);
                 }
             }
 
             /// <summary>
-            /// This method must be called when asynchronous operation has completed.
+            /// Processes read data result.
             /// </summary>
-            private void Completed()
+            /// <param name="readResult">Asynchronous result.</param>
+            /// <returns>Retruns true if this method completed asynchronously, otherwise false.</returns>
+            private bool ProcessReadDataResult(IAsyncResult readResult)
             {
-                IsCompleted = true;
-                m_pAsyncWaitHandle.Set();
-                if(m_pAsyncCallback != null){
-                    m_pAsyncCallback(this);
+                try
+                {
+                    int countReaded = m_pStream.EndRead(readResult);
+                    if (countReaded == 0)
+                    {
+                        // We readed all stream data and write count not specified, we are done.
+                        if (m_Count == -1)
+                        {
+                            SetState(AsyncOP_State.Completed);
+                        }
+                        // Source stream has less data than specified by count.
+                        else
+                        {
+                            m_pException = new ArgumentException("Argument 'stream' has less data than specified in 'count'.", "stream");
+                            SetState(AsyncOP_State.Completed);
+                        }
+                    }
+                    else
+                    {
+                        var writeResult = m_pOwner.BeginWrite(
+                            m_pBuffer,
+                            0,
+                            countReaded,
+                            delegate (IAsyncResult r)
+                            {
+                                try
+                                {
+                                    m_pOwner.EndWrite(r);
+                                    m_BytesWritten += countReaded;
+
+                                    // We have read and sent all requested data.
+                                    if (m_Count == m_BytesWritten)
+                                    {
+                                        SetState(AsyncOP_State.Completed);
+                                    }
+                                    // Start reading next data block(s).
+                                    else
+                                    {
+                                        BeginReadData();
+                                    }
+                                }
+                                catch (Exception x)
+                                {
+                                    m_pException = x;
+                                    SetState(AsyncOP_State.Completed);
+                                }
+                            },
+                            null
+                        );
+                        if (writeResult.CompletedSynchronously)
+                        {
+                            m_pOwner.EndWrite(writeResult);
+                            m_BytesWritten += countReaded;
+
+                            // We have read and sent all requested data.
+                            if (m_Count == m_BytesWritten)
+                            {
+                                SetState(AsyncOP_State.Completed);
+                            }
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception x)
+                {
+                    m_pException = x;
+                    SetState(AsyncOP_State.Completed);
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// Gets asynchronous operation state.
+            /// </summary>
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
+
+            /// <summary>
+            /// Gets error happened during operation. Returns null if no error.
+            /// </summary>
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public Exception Error
+            {
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+
+                    return m_pException;
                 }
             }
 
             /// <summary>
-            /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
+            /// Gets number of bytes written.
             /// </summary>
-            public object AsyncState { get; }
-
-            /// <summary>
-            /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
-            /// </summary>
-            public WaitHandle AsyncWaitHandle
+            /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+            /// <exception cref="InvalidOperationException">Is raised when this property is accessed other than <b>AsyncOP_State.Completed</b> state.</exception>
+            public long BytesWritten
             {
-                get{ return m_pAsyncWaitHandle; }
+                get
+                {
+                    if (State == AsyncOP_State.Disposed)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                    if (State != AsyncOP_State.Completed)
+                    {
+                        throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
+                    }
+                    if (m_pException != null)
+                    {
+                        throw m_pException;
+                    }
+
+                    return m_BytesWritten;
+                }
             }
 
             /// <summary>
-            /// Gets an indication of whether the asynchronous operation completed synchronously.
+            /// Is called when asynchronous operation has completed.
             /// </summary>
-            public bool CompletedSynchronously { get; } = false;
+            public event EventHandler<EventArgs<WriteStreamAsyncOP>> CompletedAsync;
 
             /// <summary>
-            /// Gets an indication whether the asynchronous operation has completed.
+            /// Raises <b>CompletedAsync</b> event.
             /// </summary>
-            public bool IsCompleted { get; private set; }
-
-            /// <summary>
-            /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
-            /// </summary>
-            internal bool IsEndCalled { get; set; }
-
-            /// <summary>
-            /// Gets store buffer.
-            /// </summary>
-            internal byte[] Buffer { get; }
-
-            /// <summary>
-            /// Gets number of bytes stored in to <b>Buffer</b>.
-            /// </summary>
-            internal int BytesStored { get; private set; }
-        }
-
-        /// <summary>
-        /// Begins an asynchronous line reading from the source stream.
-        /// </summary>
-        /// <param name="buffer">Buffer where to store readed line data.</param>
-        /// <param name="offset">The location in <b>buffer</b> to begin storing the data.</param>
-        /// <param name="maxCount">Maximum number of bytes to read.</param>
-        /// <param name="exceededAction">Specifies how this method behaves when maximum line size exceeded.</param>
-        /// <param name="callback">The AsyncCallback delegate that is executed when asynchronous operation completes.</param>
-        /// <param name="state">An object that contains any additional user-defined data.</param>
-        /// <returns>An IAsyncResult that represents the asynchronous call.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">is raised when any of the arguments has invalid value.</exception>
-        [Obsolete("Use method 'ReadLine' instead.")]
-        public IAsyncResult BeginReadLine(byte[] buffer,int offset,int maxCount,SizeExceededAction exceededAction,AsyncCallback callback,object state)
-        {
-            if(m_IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
+            private void OnCompletedAsync()
+            {
+                if (CompletedAsync != null)
+                {
+                    CompletedAsync(this, new EventArgs<WriteStreamAsyncOP>(this));
+                }
             }
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }
-            if(offset < 0){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be >= 0.");
-            }
-            if(offset > buffer.Length){
-                throw new ArgumentOutOfRangeException("offset","Argument 'offset' value must be < buffer.Length.");
-            }
-            if(maxCount < 0){
-                throw new ArgumentOutOfRangeException("maxCount","Argument 'maxCount' value must be >= 0.");
-            }
-            if(offset + maxCount > buffer.Length){
-                throw new ArgumentOutOfRangeException("maxCount","Argument 'maxCount' is bigger than than argument 'buffer' can store.");
-            }
-
-            return new ReadLineAsyncOperation(this,buffer,offset,maxCount,exceededAction,callback,state);
-        }
-
-        /// <summary>
-        /// Handles the end of an asynchronous line reading.
-        /// </summary>
-        /// <param name="asyncResult">An IAsyncResult that represents an asynchronous call.</param>
-        /// <returns>Returns number of bytes stored to <b>buffer</b>. Returns -1 if no more data, end of stream reached.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when <b>EndReadLine</b> has already been called for specified <b>asyncResult</b>.</exception>
-        /// <exception cref="LineSizeExceededException">Is raised when <b>maxCount</b> value is exceeded.</exception>        
-        [Obsolete("Use method 'ReadLine' instead.")]
-        public int EndReadLine(IAsyncResult asyncResult)
-        {
-            if(asyncResult == null){
-                throw new ArgumentNullException("asyncResult");
-            }
-            if(!(asyncResult is ReadLineAsyncOperation)){
-                throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginReadLine method.");
-            }
-
-            var ar = (ReadLineAsyncOperation)asyncResult;
-            if (ar.IsEndCalled){
-                throw new InvalidOperationException("EndReadLine is already called for specified 'asyncResult'.");
-            }
-            ar.AsyncWaitHandle.WaitOne();
-            ar.AsyncWaitHandle.Close();
-            ar.IsEndCalled = true;
-            
-            if(ar.BytesReaded == 0){
-                return -1;
-            }
-
-            return ar.BytesStored;
         }
     }
 }

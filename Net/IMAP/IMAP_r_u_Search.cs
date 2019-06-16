@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets search matching messages seqNo/UID(Depeneds on UID SEARCH) list.
+        /// </summary>
+        public int[] Values { get; }
+
+        /// <summary>
         /// Parses SEARCH response from exists-response string.
         /// </summary>
         /// <param name="response">Exists response string.</param>
@@ -26,7 +31,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Search Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -43,8 +49,10 @@ namespace LumiSoft.Net.IMAP
             */
 
             var values = new List<int>();
-            if (response.Split(' ').Length > 2){
-                foreach(string value in response.Split(new[]{' '},3)[2].Split(' ')){
+            if (response.Split(' ').Length > 2)
+            {
+                foreach (string value in response.Split(new[] { ' ' }, 3)[2].Split(' '))
+                {
                     values.Add(Convert.ToInt32(value));
                 }
             }
@@ -62,17 +70,13 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* SEARCH");
-            foreach(int i in Values){
+            foreach (int i in Values)
+            {
                 retVal.Append(" " + i.ToString());
             }
             retVal.Append("\r\n");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets search matching messages seqNo/UID(Depeneds on UID SEARCH) list.
-        /// </summary>
-        public int[] Values { get; }
     }
 }

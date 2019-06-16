@@ -97,6 +97,11 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets directive.
+        /// </summary>
+        public DirectiveType Directive { get; set; } = DirectiveType.Fork;
+
+        /// <summary>
         /// Parses "directive" from specified value.
         /// </summary>
         /// <param name="value">SIP "directive" value.</param>
@@ -104,7 +109,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -130,52 +136,67 @@ namespace LumiSoft.Net.SIP.Message
                 queue-directive    = "queue" / "no-queue"
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // Get Method
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("'directive' value is missing !");
             }
-            if(word.ToLower() == "proxy"){
+            if (word.ToLower() == "proxy")
+            {
                 Directive = DirectiveType.Proxy;
             }
-            else if(word.ToLower() == "redirect"){
+            else if (word.ToLower() == "redirect")
+            {
                 Directive = DirectiveType.Redirect;
             }
-            else if(word.ToLower() == "cancel"){
+            else if (word.ToLower() == "cancel")
+            {
                 Directive = DirectiveType.Cancel;
             }
-            else if(word.ToLower() == "no-cancel"){
+            else if (word.ToLower() == "no-cancel")
+            {
                 Directive = DirectiveType.NoCancel;
             }
-            else if(word.ToLower() == "fork"){
+            else if (word.ToLower() == "fork")
+            {
                 Directive = DirectiveType.Fork;
             }
-            else if(word.ToLower() == "no-fork"){
+            else if (word.ToLower() == "no-fork")
+            {
                 Directive = DirectiveType.NoFork;
             }
-            else if(word.ToLower() == "recurse"){
+            else if (word.ToLower() == "recurse")
+            {
                 Directive = DirectiveType.Recurse;
             }
-            else if(word.ToLower() == "no-recurse"){
+            else if (word.ToLower() == "no-recurse")
+            {
                 Directive = DirectiveType.NoRecurse;
             }
-            else if(word.ToLower() == "parallel"){
+            else if (word.ToLower() == "parallel")
+            {
                 Directive = DirectiveType.Parallel;
             }
-            else if(word.ToLower() == "sequential"){
+            else if (word.ToLower() == "sequential")
+            {
                 Directive = DirectiveType.Sequential;
             }
-            else if(word.ToLower() == "queue"){
+            else if (word.ToLower() == "queue")
+            {
                 Directive = DirectiveType.Queue;
             }
-            else if(word.ToLower() == "no-queue"){
+            else if (word.ToLower() == "no-queue")
+            {
                 Directive = DirectiveType.NoQueue;
             }
-            else{
+            else
+            {
                 throw new SIP_ParseException("Invalid 'directive' value !");
             }
         }
@@ -197,49 +218,56 @@ namespace LumiSoft.Net.SIP.Message
                 queue-directive    = "queue" / "no-queue"
             */
 
-            if(Directive == DirectiveType.Proxy){
+            if (Directive == DirectiveType.Proxy)
+            {
                 return "proxy";
             }
 
-            if(Directive == DirectiveType.Redirect){
+            if (Directive == DirectiveType.Redirect)
+            {
                 return "redirect";
             }
-            if(Directive == DirectiveType.Cancel){
+            if (Directive == DirectiveType.Cancel)
+            {
                 return "cancel";
             }
-            if(Directive == DirectiveType.NoCancel){
+            if (Directive == DirectiveType.NoCancel)
+            {
                 return "no-cancel";
             }
-            if(Directive == DirectiveType.Fork){
+            if (Directive == DirectiveType.Fork)
+            {
                 return "fork";
             }
-            if(Directive == DirectiveType.NoFork){
+            if (Directive == DirectiveType.NoFork)
+            {
                 return "no-fork";
             }
-            if(Directive == DirectiveType.Recurse){
+            if (Directive == DirectiveType.Recurse)
+            {
                 return "recurse";
             }
-            if(Directive == DirectiveType.NoRecurse){
+            if (Directive == DirectiveType.NoRecurse)
+            {
                 return "no-recurse";
             }
-            if(Directive == DirectiveType.Parallel){
+            if (Directive == DirectiveType.Parallel)
+            {
                 return "parallel";
             }
-            if(Directive == DirectiveType.Sequential){
+            if (Directive == DirectiveType.Sequential)
+            {
                 return "sequential";
             }
-            if(Directive == DirectiveType.Queue){
+            if (Directive == DirectiveType.Queue)
+            {
                 return "queue";
             }
-            if(Directive == DirectiveType.NoQueue){
+            if (Directive == DirectiveType.NoQueue)
+            {
                 return "no-queue";
             }
             throw new ArgumentException("Invalid property Directive value, this should never happen !");
         }
-
-        /// <summary>
-        /// Gets or sets directive.
-        /// </summary>
-        public DirectiveType Directive { get; set; } = DirectiveType.Fork;
     }
 }

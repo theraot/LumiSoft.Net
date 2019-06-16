@@ -16,6 +16,21 @@ namespace LumiSoft.Net.WebDav
         }
 
         /// <summary>
+        /// Gets 'prop' element value.
+        /// </summary>
+        public WebDav_Prop Prop { get; private set; }
+
+        /// <summary>
+        /// Gets human-readable status property description.
+        /// </summary>
+        public string ResponseDescription { get; } = null;
+
+        /// <summary>
+        /// Gets property HTTP status.
+        /// </summary>
+        public string Status { get; private set; }
+
+        /// <summary>
         /// Parses WebDav_PropStat from 'DAV:propstat' element.
         /// </summary>
         /// <param name="propstatNode">The 'DAV:propstat' element</param>
@@ -24,42 +39,32 @@ namespace LumiSoft.Net.WebDav
         /// <exception cref="ParseException">Is raised when there are any parsing error.</exception>
         internal static WebDav_PropStat Parse(XmlNode propstatNode)
         {
-            if(propstatNode == null){
+            if (propstatNode == null)
+            {
                 throw new ArgumentNullException("propstatNode");
             }
 
             // Invalid response.
-            if(!string.Equals(propstatNode.NamespaceURI + propstatNode.LocalName,"DAV:propstat",StringComparison.InvariantCultureIgnoreCase)){
+            if (!string.Equals(propstatNode.NamespaceURI + propstatNode.LocalName, "DAV:propstat", StringComparison.InvariantCultureIgnoreCase))
+            {
                 throw new ParseException("Invalid DAV:propstat value.");
             }
 
             var retVAl = new WebDav_PropStat();
 
-            foreach (XmlNode node in propstatNode.ChildNodes){
-                if(string.Equals(node.LocalName,"status",StringComparison.InvariantCultureIgnoreCase)){
+            foreach (XmlNode node in propstatNode.ChildNodes)
+            {
+                if (string.Equals(node.LocalName, "status", StringComparison.InvariantCultureIgnoreCase))
+                {
                     retVAl.Status = node.ChildNodes[0].Value;
                 }
-                else if(string.Equals(node.LocalName,"prop",StringComparison.InvariantCultureIgnoreCase)){
+                else if (string.Equals(node.LocalName, "prop", StringComparison.InvariantCultureIgnoreCase))
+                {
                     retVAl.Prop = WebDav_Prop.Parse(node);
-                }                
+                }
             }
 
             return retVAl;
         }
-
-        /// <summary>
-        /// Gets property HTTP status.
-        /// </summary>
-        public string Status { get; private set; }
-
-        /// <summary>
-        /// Gets human-readable status property description.
-        /// </summary>
-        public string ResponseDescription { get; } = null;
-
-        /// <summary>
-        /// Gets 'prop' element value.
-        /// </summary>
-        public WebDav_Prop Prop { get; private set; }
     }
 }

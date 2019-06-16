@@ -28,11 +28,22 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         /// <param name="time">Time in seconds when request was sent.</param>
         /// <param name="delay">Delay time in seconds.</param>
-        public SIP_t_Timestamp(decimal time,decimal delay)
+        public SIP_t_Timestamp(decimal time, decimal delay)
         {
-            Time  = time;
+            Time = time;
             Delay = delay;
         }
+
+        /// <summary>
+        /// Gets or sets delay time in seconds. Delay specifies the time between the UAS received 
+        /// the request and generated response.
+        /// </summary>
+        public decimal Delay { get; set; }
+
+        /// <summary>
+        /// Gets or sets time in seconds when request was sent.
+        /// </summary>
+        public decimal Time { get; set; }
 
         /// <summary>
         /// Parses "Timestamp" from specified value.
@@ -42,7 +53,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -62,23 +74,27 @@ namespace LumiSoft.Net.SIP.Message
                     delay =  *(DIGIT) [ "." *(DIGIT) ]
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // Get time
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Invalid 'Timestamp' value, time is missing !");
             }
             Time = Convert.ToDecimal(word);
 
             // Get optional delay
             word = reader.ReadWord();
-            if(word != null){
+            if (word != null)
+            {
                 Delay = Convert.ToDecimal(word);
             }
-            else{
+            else
+            {
                 Delay = 0;
             }
         }
@@ -94,22 +110,12 @@ namespace LumiSoft.Net.SIP.Message
                     delay =  *(DIGIT) [ "." *(DIGIT) ]
             */
 
-            if(Delay > 0){
+            if (Delay > 0)
+            {
                 return Time.ToString() + " " + Delay.ToString();
             }
 
             return Time.ToString();
         }
-
-        /// <summary>
-        /// Gets or sets time in seconds when request was sent.
-        /// </summary>
-        public decimal Time { get; set; }
-
-        /// <summary>
-        /// Gets or sets delay time in seconds. Delay specifies the time between the UAS received 
-        /// the request and generated response.
-        /// </summary>
-        public decimal Delay { get; set; }
     }
 }

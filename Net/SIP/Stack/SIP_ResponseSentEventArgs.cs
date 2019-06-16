@@ -13,20 +13,20 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="transaction">Server transaction.</param>
         /// <param name="response">SIP response.</param>
         /// <exception cref="ArgumentNullException">Is raised when any of the arguments is null.</exception>
-        public SIP_ResponseSentEventArgs(SIP_ServerTransaction transaction,SIP_Response response)
+        public SIP_ResponseSentEventArgs(SIP_ServerTransaction transaction, SIP_Response response)
         {
             ServerTransaction = transaction ?? throw new ArgumentNullException("transaction");
-            Response    = response ?? throw new ArgumentNullException("response");
+            Response = response ?? throw new ArgumentNullException("response");
         }
-
-        /// <summary>
-        /// Gets server transaction which sent response.
-        /// </summary>
-        public SIP_ServerTransaction ServerTransaction { get; }
 
         /// <summary>
         /// Gets response which was sent.
         /// </summary>
         public SIP_Response Response { get; }
+
+        /// <summary>
+        /// Gets server transaction which sent response.
+        /// </summary>
+        public SIP_ServerTransaction ServerTransaction { get; }
     }
 }

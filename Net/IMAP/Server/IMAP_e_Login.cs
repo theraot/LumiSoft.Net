@@ -13,9 +13,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="user">User name.</param>
         /// <param name="password">Password.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
-        internal IMAP_e_Login(string user,string password)
+        internal IMAP_e_Login(string user, string password)
         {
-            UserName     = user ?? throw new ArgumentNullException("user");
+            UserName = user ?? throw new ArgumentNullException("user");
             Password = password ?? throw new ArgumentNullException("password");
         }
 
@@ -25,13 +25,13 @@ namespace LumiSoft.Net.IMAP.Server
         public bool IsAuthenticated { get; set; }
 
         /// <summary>
-        /// Gets user name.
-        /// </summary>
-        public string UserName { get; } = "";
-
-        /// <summary>
         /// Gets user password.
         /// </summary>
         public string Password { get; } = "";
+
+        /// <summary>
+        /// Gets user name.
+        /// </summary>
+        public string UserName { get; } = "";
     }
 }

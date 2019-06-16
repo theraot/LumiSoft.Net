@@ -17,26 +17,50 @@ namespace LumiSoft.Net.IMAP
         /// <param name="optionalRights">Optional rights.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> or <b>identifier</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_r_u_ListRights(string folder,string identifier,string requiredRights,string optionalRights)
+        public IMAP_r_u_ListRights(string folder, string identifier, string requiredRights, string optionalRights)
         {
-            if(folder == null){
+            if (folder == null)
+            {
                 throw new ArgumentNullException("folder");
             }
-            if(folder == string.Empty){
-                throw new ArgumentException("Argument 'folder' name must be specified.","folder");
+            if (folder == string.Empty)
+            {
+                throw new ArgumentException("Argument 'folder' name must be specified.", "folder");
             }
-            if(identifier == null){
+            if (identifier == null)
+            {
                 throw new ArgumentNullException("identifier");
             }
-            if(identifier == string.Empty){
-                throw new ArgumentException("Argument 'identifier' name must be specified.","identifier");
+            if (identifier == string.Empty)
+            {
+                throw new ArgumentException("Argument 'identifier' name must be specified.", "identifier");
             }
 
-            FolderName     = folder;
-            Identifier     = identifier;
+            FolderName = folder;
+            Identifier = identifier;
             RequiredRights = requiredRights == string.Empty ? null : requiredRights;
             OptionalRights = optionalRights == string.Empty ? null : optionalRights;
         }
+
+        /// <summary>
+        /// Gets folder name.
+        /// </summary>
+        public string FolderName { get; } = "";
+
+        /// <summary>
+        /// Gets identifier. Normaly this is user or group name.
+        /// </summary>
+        public string Identifier { get; } = "";
+
+        /// <summary>
+        /// Gets optional rights.
+        /// </summary>
+        public string OptionalRights { get; }
+
+        /// <summary>
+        /// Gets required rights.
+        /// </summary>
+        public string RequiredRights { get; }
 
         /// <summary>
         /// Parses LISTRIGHTS response from LISTRIGHTS-response string.
@@ -46,7 +70,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>listRightsResponse</b> is null reference.</exception>
         public static IMAP_r_u_ListRights Parse(string listRightsResponse)
         {
-            if(listRightsResponse == null){
+            if (listRightsResponse == null)
+            {
                 throw new ArgumentNullException("listRightsResponse");
             }
 
@@ -83,12 +108,12 @@ namespace LumiSoft.Net.IMAP
             // Eat "LISTRIGHTS"
             r.ReadWord();
 
-            var folder     = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
+            var folder = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
             var identifier = r.ReadWord(true);
-            var reqRights  = r.ReadWord(true);
-            var optRights  = r.ReadWord(true);
+            var reqRights = r.ReadWord(true);
+            var optRights = r.ReadWord(true);
 
-            return new IMAP_r_u_ListRights(folder,identifier,reqRights,optRights);
+            return new IMAP_r_u_ListRights(folder, identifier, reqRights, optRights);
         }
 
         /// <summary>
@@ -110,29 +135,9 @@ namespace LumiSoft.Net.IMAP
             // Example:    S: * LISTRIGHTS ~/Mail/saved smith la r swicdkxte
 
             var retVal = new StringBuilder();
-            retVal.Append("* LISTRIGHTS " + IMAP_Utils.EncodeMailbox(FolderName,encoding) + " \"" + RequiredRights + "\" " + OptionalRights + "\r\n");
-            
+            retVal.Append("* LISTRIGHTS " + IMAP_Utils.EncodeMailbox(FolderName, encoding) + " \"" + RequiredRights + "\" " + OptionalRights + "\r\n");
+
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets folder name.
-        /// </summary>
-        public string FolderName { get; } = "";
-
-        /// <summary>
-        /// Gets identifier. Normaly this is user or group name.
-        /// </summary>
-        public string Identifier { get; } = "";
-
-        /// <summary>
-        /// Gets required rights.
-        /// </summary>
-        public string RequiredRights { get; }
-
-        /// <summary>
-        /// Gets optional rights.
-        /// </summary>
-        public string OptionalRights { get; }
     }
 }

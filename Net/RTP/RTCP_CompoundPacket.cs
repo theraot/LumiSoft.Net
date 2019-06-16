@@ -17,12 +17,34 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
+        /// Gets compound packets.
+        /// </summary>
+        public List<RTCP_Packet> Packets { get; }
+
+        /// <summary>
+        /// Gets total packets size in bytes which is needed for this compound packet.
+        /// </summary>
+        internal int TotalSize
+        {
+            get
+            {
+                int size = 0;
+                foreach (RTCP_Packet packet in Packets)
+                {
+                    size += packet.Size;
+                }
+
+                return size;
+            }
+        }
+
+        /// <summary>
         /// Parses RTP compound packet.
         /// </summary>
         /// <param name="buffer">Data buffer..</param>
         /// <param name="count">Number of bytes in the <b>buffer</b>.</param>
         /// <returns>Returns parsed RTP packet.</returns>
-        public static RTCP_CompoundPacket Parse(byte[] buffer,int count)
+        public static RTCP_CompoundPacket Parse(byte[] buffer, int count)
         {
             /* Compound packet stucture:
                  Encryption prefix
@@ -54,9 +76,11 @@ namespace LumiSoft.Net.RTP
             int offset = 0;
 
             var packet = new RTCP_CompoundPacket();
-            while (offset < count){
-                var p = RTCP_Packet.Parse(buffer,ref offset,true);
-                if (p != null){
+            while (offset < count)
+            {
+                var p = RTCP_Packet.Parse(buffer, ref offset, true);
+                if (p != null)
+                {
                     packet.Packets.Add(p);
                 }
             }
@@ -71,8 +95,8 @@ namespace LumiSoft.Net.RTP
         public byte[] ToByte()
         {
             var retVal = new byte[TotalSize];
-            int    offset = 0;
-            ToByte(retVal,ref offset);
+            int offset = 0;
+            ToByte(retVal, ref offset);
 
             return retVal;
         }
@@ -84,18 +108,21 @@ namespace LumiSoft.Net.RTP
         /// <param name="offset">Offset in buffer.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void ToByte(byte[] buffer,ref int offset)
+        public void ToByte(byte[] buffer, ref int offset)
         {
-            if(buffer == null){
+            if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
             }
-            if(offset < 0){
+            if (offset < 0)
+            {
                 throw new ArgumentException("Argument 'offset' value must be >= 0.");
             }
-                 
-            foreach(RTCP_Packet packet in Packets){                
-                packet.ToByte(buffer,ref offset);
-            }   
+
+            foreach (RTCP_Packet packet in Packets)
+            {
+                packet.ToByte(buffer, ref offset);
+            }
         }
 
         /// <summary>
@@ -120,45 +147,30 @@ namespace LumiSoft.Net.RTP
                    the overall length of the compound RTCP packet as received.  This
                    is a fairly strong check.
             */
-                        
-            if(Packets.Count == 0){
+
+            if (Packets.Count == 0)
+            {
                 throw new ArgumentException("No RTCP packets.");
             }
 
             // Check version and padding.
-            for(int i=0;i<Packets.Count;i++){
+            for (int i = 0; i < Packets.Count; i++)
+            {
                 var packet = Packets[i];
-                if (packet.Version != 2){
+                if (packet.Version != 2)
+                {
                     throw new ArgumentException("RTP version field must equal 2.");
                 }
-                if(i < (Packets.Count - 1) && packet.IsPadded){
+                if (i < (Packets.Count - 1) && packet.IsPadded)
+                {
                     throw new ArgumentException("Only the last packet in RTCP compound packet may be padded.");
                 }
             }
 
             // The first RTCP packet in a compound packet must be equal to SR or RR.
-            if(Packets[0].Type != RTCP_PacketType.SR || Packets[0].Type != RTCP_PacketType.RR){
+            if (Packets[0].Type != RTCP_PacketType.SR || Packets[0].Type != RTCP_PacketType.RR)
+            {
                 throw new ArgumentException("The first RTCP packet in a compound packet must be equal to SR or RR.");
-            }          
-        }
-
-        /// <summary>
-        /// Gets compound packets.
-        /// </summary>
-        public List<RTCP_Packet> Packets { get; }
-
-        /// <summary>
-        /// Gets total packets size in bytes which is needed for this compound packet.
-        /// </summary>
-        internal int TotalSize
-        {
-            get{
-                int size = 0;
-                foreach(RTCP_Packet packet in Packets){
-                    size += packet.Size;
-                }
-
-                return size; 
             }
         }
     }

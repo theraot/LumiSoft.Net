@@ -9,35 +9,10 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class Auth_HttpDigest_NonceManager : IDisposable
     {
-        /// <summary>
-        /// This class represents nonce entry in active nonces collection.
-        /// </summary>
-        private class NonceEntry
-        {
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            /// <param name="nonce"></param>
-            public NonceEntry(string nonce)
-            {
-                Nonce      = nonce;
-                CreateTime = DateTime.Now;
-            }
-
-            /// <summary>
-            /// Gets nonce value.
-            /// </summary>
-            public string Nonce { get; } = "";
-
-            /// <summary>
-            /// Gets time when this nonce entry was created.
-            /// </summary>
-            public DateTime CreateTime { get; }
-        }
+        private int m_ExpireTime = 30;
 
         private List<NonceEntry> m_pNonces;
-        private int              m_ExpireTime = 30;
-        private Timer            m_pTimer;
+        private Timer m_pTimer;
 
         /// <summary>
         /// Default constructor.
@@ -52,24 +27,21 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Cleans up nay resource being used.
+        /// Gets or sets nonce expire time in seconds.
         /// </summary>
-        public void Dispose()
+        public int ExpireTime
         {
-            if(m_pNonces == null){
-                m_pNonces.Clear();
-                m_pNonces = null;
-            }
+            get { return m_ExpireTime; }
 
-            if(m_pTimer != null){
-                m_pTimer.Dispose();
-                m_pTimer = null;
-            }
-        }
+            set
+            {
+                if (value < 5)
+                {
+                    throw new ArgumentException("Property ExpireTime value must be >= 5 !");
+                }
 
-        private void m_pTimer_Elapsed(object sender,ElapsedEventArgs e)
-        {
-            RemoveExpiredNonces();
+                m_ExpireTime = value;
+            }
         }
 
         /// <summary>
@@ -78,10 +50,28 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns new created nonce.</returns>
         public string CreateNonce()
         {
-            var nonce = Guid.NewGuid().ToString().Replace("-","");
+            var nonce = Guid.NewGuid().ToString().Replace("-", "");
             m_pNonces.Add(new NonceEntry(nonce));
 
             return nonce;
+        }
+
+        /// <summary>
+        /// Cleans up nay resource being used.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_pNonces == null)
+            {
+                m_pNonces.Clear();
+                m_pNonces = null;
+            }
+
+            if (m_pTimer != null)
+            {
+                m_pTimer.Dispose();
+                m_pTimer = null;
+            }
         }
 
         /// <summary>
@@ -91,9 +81,12 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns true if nonce exists in active nonces collection, otherwise returns false.</returns>
         public bool NonceExists(string nonce)
         {
-            lock(m_pNonces){
-                foreach(NonceEntry e in m_pNonces){
-                    if(e.Nonce == nonce){
+            lock (m_pNonces)
+            {
+                foreach (NonceEntry e in m_pNonces)
+                {
+                    if (e.Nonce == nonce)
+                    {
                         return true;
                     }
                 }
@@ -108,14 +101,22 @@ namespace LumiSoft.Net.AUTH
         /// <param name="nonce">Nonce to remove.</param>
         public void RemoveNonce(string nonce)
         {
-            lock(m_pNonces){
-                for(int i=0;i<m_pNonces.Count;i++){
-                    if(m_pNonces[i].Nonce == nonce){
+            lock (m_pNonces)
+            {
+                for (int i = 0; i < m_pNonces.Count; i++)
+                {
+                    if (m_pNonces[i].Nonce == nonce)
+                    {
                         m_pNonces.RemoveAt(i);
                         i--;
                     }
                 }
             }
+        }
+
+        private void m_pTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            RemoveExpiredNonces();
         }
 
         /// <summary>
@@ -123,31 +124,43 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private void RemoveExpiredNonces()
         {
-            lock(m_pNonces){
-                for(int i=0;i<m_pNonces.Count;i++){
+            lock (m_pNonces)
+            {
+                for (int i = 0; i < m_pNonces.Count; i++)
+                {
                     // Nonce expired, remove it.
-                    if(m_pNonces[i].CreateTime.AddSeconds(m_ExpireTime) > DateTime.Now){
+                    if (m_pNonces[i].CreateTime.AddSeconds(m_ExpireTime) > DateTime.Now)
+                    {
                         m_pNonces.RemoveAt(i);
                         i--;
                     }
                 }
             }
         }
-
         /// <summary>
-        /// Gets or sets nonce expire time in seconds.
+        /// This class represents nonce entry in active nonces collection.
         /// </summary>
-        public int ExpireTime
+        private class NonceEntry
         {
-            get{ return m_ExpireTime; }
-
-            set{
-                if(value < 5){
-                    throw new ArgumentException("Property ExpireTime value must be >= 5 !");
-                }
-
-                m_ExpireTime = value;
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="nonce"></param>
+            public NonceEntry(string nonce)
+            {
+                Nonce = nonce;
+                CreateTime = DateTime.Now;
             }
+
+            /// <summary>
+            /// Gets nonce value.
+            /// </summary>
+            public string Nonce { get; } = "";
+
+            /// <summary>
+            /// Gets time when this nonce entry was created.
+            /// </summary>
+            public DateTime CreateTime { get; }
         }
     }
 }

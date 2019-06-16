@@ -15,20 +15,10 @@ namespace LumiSoft.Net.IMAP
         /// <param name="offset">Data starting offset. Value -1 means not specified.</param>
         /// <param name="stream">Data stream.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        public IMAP_t_Fetch_r_i_Body(string section,int offset,Stream stream)
+        public IMAP_t_Fetch_r_i_Body(string section, int offset, Stream stream)
         {
             BodySection = section;
-            Offset  = offset;
-            Stream = stream ?? throw new ArgumentNullException("stream");
-        }
-
-        /// <summary>
-        /// Sets Stream property value.
-        /// </summary>
-        /// <param name="stream">Stream.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        internal void SetStream(Stream stream)
-        {
+            Offset = offset;
             Stream = stream ?? throw new ArgumentNullException("stream");
         }
 
@@ -46,5 +36,15 @@ namespace LumiSoft.Net.IMAP
         /// Gets data stream.
         /// </summary>
         public Stream Stream { get; private set; }
+
+        /// <summary>
+        /// Sets Stream property value.
+        /// </summary>
+        /// <param name="stream">Stream.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+        internal void SetStream(Stream stream)
+        {
+            Stream = stream ?? throw new ArgumentNullException("stream");
+        }
     }
 }

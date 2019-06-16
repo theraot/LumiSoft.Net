@@ -8,7 +8,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_h_Unparsed : MIME_h
     {
-        private readonly string    m_ParseValue;
+        private readonly string m_ParseValue;
 
         /// <summary>
         /// Default constructor.
@@ -17,22 +17,49 @@ namespace LumiSoft.Net.MIME
         /// <param name="exception">Parsing error.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
-        internal MIME_h_Unparsed(string value,Exception exception)
+        internal MIME_h_Unparsed(string value, Exception exception)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
-            
-            var name_value = value.Split(new[]{':'},2);
-            if (name_value.Length != 2){
+
+            var name_value = value.Split(new[] { ':' }, 2);
+            if (name_value.Length != 2)
+            {
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
 
-            Name       = name_value[0];
-            Value      = name_value[1].Trim();
+            Name = name_value[0];
+            Value = name_value[1].Trim();
             m_ParseValue = value;
             Exception = exception;
         }
+
+        /// <summary>
+        /// Gets error happened during parse.
+        /// </summary>
+        public Exception Exception { get; }
+
+        /// <summary>
+        /// Gets if this header field is modified since it has loaded.
+        /// </summary>
+        /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
+        /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
+        public override bool IsModified
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets header field name.
+        /// </summary>
+        public override string Name { get; }
+
+        /// <summary>
+        /// Gets header field value.
+        /// </summary>
+        public string Value { get; }
 
         /// <summary>
         /// Parses header field from the specified value.
@@ -52,34 +79,9 @@ namespace LumiSoft.Net.MIME
         /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.</param>
         /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
         /// <returns>Returns header field as string.</returns>
-        public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
+        public override string ToString(MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset, bool reEncode)
         {
             return m_ParseValue;
         }
-
-        /// <summary>
-        /// Gets if this header field is modified since it has loaded.
-        /// </summary>
-        /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
-        /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get{ return false; }
-        }
-
-        /// <summary>
-        /// Gets header field name.
-        /// </summary>
-        public override string Name { get; }
-
-        /// <summary>
-        /// Gets header field value.
-        /// </summary>
-        public string Value { get; }
-
-        /// <summary>
-        /// Gets error happened during parse.
-        /// </summary>
-        public Exception Exception { get; }
     }
 }

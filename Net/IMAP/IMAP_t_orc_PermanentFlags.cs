@@ -18,6 +18,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets list of supported permanent flags.
+        /// </summary>
+        public string[] Flags { get; }
+
+        /// <summary>
         /// Parses PERMANENTFLAGS optional response from string.
         /// </summary>
         /// <param name="value">PERMANENTFLAGS optional response string.</param>
@@ -25,16 +30,19 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_PermanentFlags Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new[]{' '},2);
-            if (!string.Equals("PERMANENTFLAGS",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid PERMANENTFLAGS response value.","value");
+            var code_value = value.Split(new[] { ' ' }, 2);
+            if (!string.Equals("PERMANENTFLAGS", code_value[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid PERMANENTFLAGS response value.", "value");
             }
-            if(code_value.Length != 2){
-                throw new ArgumentException("Invalid PERMANENTFLAGS response value.","value");
+            if (code_value.Length != 2)
+            {
+                throw new ArgumentException("Invalid PERMANENTFLAGS response value.", "value");
             }
 
             var r = new StringReader(code_value[1]);
@@ -49,12 +57,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "PERMANENTFLAGS (" + Net_Utils.ArrayToString(Flags," ") + ")";
+            return "PERMANENTFLAGS (" + Net_Utils.ArrayToString(Flags, " ") + ")";
         }
-
-        /// <summary>
-        /// Gets list of supported permanent flags.
-        /// </summary>
-        public string[] Flags { get; }
     }
 }

@@ -36,6 +36,64 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets 'explicit' parameter value.
+        /// </summary>
+        public bool Explicit
+        {
+            get
+            {
+                var parameter = Parameters["explicit"];
+                if (parameter != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (!value)
+                {
+                    Parameters.Remove("explicit");
+                }
+                else
+                {
+                    Parameters.Set("explicit", null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'require' parameter value.
+        /// </summary>
+        public bool Require
+        {
+            get
+            {
+                var parameter = Parameters["require"];
+                if (parameter != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (!value)
+                {
+                    Parameters.Remove("require");
+                }
+                else
+                {
+                    Parameters.Set("require", null);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "ac-value" from specified value.
         /// </summary>
         /// <param name="value">SIP "ac-value" value.</param>
@@ -43,7 +101,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -67,12 +126,14 @@ namespace LumiSoft.Net.SIP.Message
                 explicit-param = "explicit"
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Invalid 'ac-value', '*' is missing !");
             }
 
@@ -104,54 +165,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets 'require' parameter value.
-        /// </summary>
-        public bool Require
-        {
-            get{ 
-                var parameter = Parameters["require"];
-                if (parameter != null){
-                    return true;
-                }
-
-                return false;
-            }
-
-            set{ 
-                if(!value){
-                    Parameters.Remove("require");
-                }
-                else{
-                    Parameters.Set("require",null);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'explicit' parameter value.
-        /// </summary>
-        public bool Explicit
-        {
-            get{ 
-                var parameter = Parameters["explicit"];
-                if (parameter != null){
-                    return true;
-                }
-
-                return false;
-            }
-
-            set{ 
-                if(!value){
-                    Parameters.Remove("explicit");
-                }
-                else{
-                    Parameters.Set("explicit",null);
-                }
-            }
         }
     }
 }

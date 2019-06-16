@@ -14,12 +14,27 @@ namespace LumiSoft.Net.IMAP
         /// <param name="sourceSeqSet">Source messages UID's.</param>
         /// <param name="targetSeqSet">Target messages UID's.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceSeqSet</b> or <b>targetSeqSet</b> is null reference.</exception>
-        public IMAP_t_orc_CopyUid(long targetMailboxUid,IMAP_t_SeqSet sourceSeqSet,IMAP_t_SeqSet targetSeqSet)
+        public IMAP_t_orc_CopyUid(long targetMailboxUid, IMAP_t_SeqSet sourceSeqSet, IMAP_t_SeqSet targetSeqSet)
         {
             TargetMailboxUid = targetMailboxUid;
-            SourceSeqSet    = sourceSeqSet ?? throw new ArgumentNullException("sourceSeqSet");
-            TargetSeqSet    = targetSeqSet ?? throw new ArgumentNullException("targetSeqSet");
+            SourceSeqSet = sourceSeqSet ?? throw new ArgumentNullException("sourceSeqSet");
+            TargetSeqSet = targetSeqSet ?? throw new ArgumentNullException("targetSeqSet");
         }
+
+        /// <summary>
+        /// Gets source messages UID sequence set.
+        /// </summary>
+        public IMAP_t_SeqSet SourceSeqSet { get; }
+
+        /// <summary>
+        /// Gets target mailbox UID value.
+        /// </summary>
+        public long TargetMailboxUid { get; }
+
+        /// <summary>
+        /// Gets target messages UID sequence set.
+        /// </summary>
+        public IMAP_t_SeqSet TargetSeqSet { get; }
 
         /// <summary>
         /// Parses COPYUID optional response from string.
@@ -29,7 +44,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_CopyUid Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -43,12 +59,14 @@ namespace LumiSoft.Net.IMAP
                     mailbox with the stated UID(s).
             */
 
-            var code_mailboxUid_sourceSeqSet_targetSeqSet = value.Split(new[]{' '},4);
-            if (!string.Equals("COPYUID",code_mailboxUid_sourceSeqSet_targetSeqSet[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid COPYUID response value.","value");
+            var code_mailboxUid_sourceSeqSet_targetSeqSet = value.Split(new[] { ' ' }, 4);
+            if (!string.Equals("COPYUID", code_mailboxUid_sourceSeqSet_targetSeqSet[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid COPYUID response value.", "value");
             }
-            if(code_mailboxUid_sourceSeqSet_targetSeqSet.Length != 4){
-                throw new ArgumentException("Invalid COPYUID response value.","value");
+            if (code_mailboxUid_sourceSeqSet_targetSeqSet.Length != 4)
+            {
+                throw new ArgumentException("Invalid COPYUID response value.", "value");
             }
 
             return new IMAP_t_orc_CopyUid(
@@ -66,20 +84,5 @@ namespace LumiSoft.Net.IMAP
         {
             return "COPYUID " + "m_MailboxUid" + " " + "m_MessageUid";
         }
-
-        /// <summary>
-        /// Gets target mailbox UID value.
-        /// </summary>
-        public long TargetMailboxUid { get; }
-
-        /// <summary>
-        /// Gets source messages UID sequence set.
-        /// </summary>
-        public IMAP_t_SeqSet SourceSeqSet { get; }
-
-        /// <summary>
-        /// Gets target messages UID sequence set.
-        /// </summary>
-        public IMAP_t_SeqSet TargetSeqSet { get; }
     }
 }

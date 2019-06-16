@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets AND-ded keys collection.
+        /// </summary>
+        public List<IMAP_Search_Key> Keys { get; }
+
+        /// <summary>
         /// Returns parsed IMAP SEARCH <b>AND</b> key group.
         /// </summary>
         /// <param name="r">String reader.</param>
@@ -27,19 +32,22 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ParseException">Is raised when parsing fails.</exception>
         public static IMAP_Search_Key_Group Parse(StringReader r)
         {
-            if(r == null){
+            if (r == null)
+            {
                 throw new ArgumentNullException("r");
             }
 
             // Remove parenthesis, if any.
-            if(r.StartsWith("(")){
+            if (r.StartsWith("("))
+            {
                 r = new StringReader(r.ReadParenthesized());
-            }            
+            }
 
             var retVal = new IMAP_Search_Key_Group();
 
             r.ReadToFirstChar();
-            while(r.Available > 0){
+            while (r.Available > 0)
+            {
                 retVal.Keys.Add(ParseKey(r));
             }
 
@@ -54,8 +62,10 @@ namespace LumiSoft.Net.IMAP
         {
             var retVal = new StringBuilder();
             retVal.Append("(");
-            for(int i=0;i<Keys.Count;i++){
-                if(i > 0){
+            for (int i = 0; i < Keys.Count; i++)
+            {
+                if (i > 0)
+                {
                     retVal.Append(" ");
                 }
                 retVal.Append(Keys[i].ToString());
@@ -72,23 +82,21 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
         {
-            if(list == null){
+            if (list == null)
+            {
                 throw new ArgumentNullException("list");
             }
 
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"("));
-            for(int i=0;i<Keys.Count;i++){
-                if(i > 0){
-                    list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant," "));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, "("));
+            for (int i = 0; i < Keys.Count; i++)
+            {
+                if (i > 0)
+                {
+                    list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, " "));
                 }
                 Keys[i].ToCmdParts(list);
             }
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,")"));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, ")"));
         }
-
-        /// <summary>
-        /// Gets AND-ded keys collection.
-        /// </summary>
-        public List<IMAP_Search_Key> Keys { get; }
     }
 }

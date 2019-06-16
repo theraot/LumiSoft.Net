@@ -15,9 +15,9 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_RAck : SIP_t_Value
     {
-        private int    m_ResponseNumber = 1;
-        private int    m_CSeqNumber     = 1;
-        private string m_Method         = "";
+        private int m_CSeqNumber = 1;
+        private string m_Method = "";
+        private int m_ResponseNumber = 1;
 
         /// <summary>
         /// Default constructor.
@@ -34,11 +34,60 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="responseNo">Response number.</param>
         /// <param name="cseqNo">CSeq number.</param>
         /// <param name="method">Request method.</param>
-        public SIP_t_RAck(int responseNo,int cseqNo,string method)
+        public SIP_t_RAck(int responseNo, int cseqNo, string method)
         {
             ResponseNumber = responseNo;
-            CSeqNumber     = cseqNo;
-            Method         = method;
+            CSeqNumber = cseqNo;
+            Method = method;
+        }
+
+        /// <summary>
+        /// Gets or sets CSeq number.
+        /// </summary>
+        public int CSeqNumber
+        {
+            get { return m_CSeqNumber; }
+
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("CSeqNumber value must be >= 1 !");
+                }
+
+                m_CSeqNumber = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets method.
+        /// </summary>
+        public string Method
+        {
+            get { return m_Method; }
+
+            set
+            {
+                m_Method = value ?? throw new ArgumentNullException("Method");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets response number.
+        /// </summary>
+        public int ResponseNumber
+        {
+            get { return m_ResponseNumber; }
+
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("ResponseNumber value must be >= 1 !");
+                }
+
+                m_ResponseNumber = value;
+            }
         }
 
         /// <summary>
@@ -49,7 +98,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -70,31 +120,38 @@ namespace LumiSoft.Net.SIP.Message
                 CSeq-num     = 1*DIGIT
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // response-num
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("RAck response-num value is missing !");
             }
-            try{
+            try
+            {
                 m_ResponseNumber = Convert.ToInt32(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid RAck response-num value !");
             }
 
             // CSeq-num
             word = reader.ReadWord();
-            if(word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("RAck CSeq-num value is missing !");
             }
-            try{
+            try
+            {
                 m_CSeqNumber = Convert.ToInt32(word);
-            }            
-            catch{
+            }
+            catch
+            {
                 throw new SIP_ParseException("Invalid RAck CSeq-num value !");
             }
 
@@ -116,50 +173,6 @@ namespace LumiSoft.Net.SIP.Message
             */
 
             return m_ResponseNumber + " " + m_CSeqNumber + " " + m_Method;
-        }
-
-        /// <summary>
-        /// Gets or sets response number.
-        /// </summary>
-        public int ResponseNumber
-        {
-            get{ return m_ResponseNumber; }
-
-            set{
-                if(value < 1){
-                    throw new ArgumentException("ResponseNumber value must be >= 1 !");
-                }
-
-                m_ResponseNumber = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets CSeq number.
-        /// </summary>
-        public int CSeqNumber
-        {
-            get{ return m_CSeqNumber; }
-
-            set{
-                if(value < 1){
-                    throw new ArgumentException("CSeqNumber value must be >= 1 !");
-                }
-
-                m_CSeqNumber = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets method.
-        /// </summary>
-        public string Method
-        {
-            get{ return m_Method; }
-
-            set{
-                m_Method = value ?? throw new ArgumentNullException("Method");
-            }
         }
     }
 }

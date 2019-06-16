@@ -14,25 +14,16 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         /// <param name="baseValue">Clock base value from where clock starts.</param>
         /// <param name="rate">Clock rate in Hz.</param>
-        public RTP_Clock(int baseValue,int rate)
+        public RTP_Clock(int baseValue, int rate)
         {
-            if(rate < 1){
-                throw new ArgumentException("Argument 'rate' value must be between 1 and 100 000.","rate");
+            if (rate < 1)
+            {
+                throw new ArgumentException("Argument 'rate' value must be between 1 and 100 000.", "rate");
             }
 
-            BaseValue  = baseValue;
-            Rate       = rate;
+            BaseValue = baseValue;
+            Rate = rate;
             m_CreateTime = DateTime.Now;
-        }
-
-        /// <summary>
-        /// Convers milliseconds to RTP clock ticks. For example clock 8khz 20ms will be 160 RTP clock ticks.
-        /// </summary>
-        /// <param name="milliseconds">Milliseconds.</param>
-        /// <returns>Returns RTP clock ticks.</returns>
-        public int MillisecondsToRtpTicks(int milliseconds)
-        {
-            return ((Rate * milliseconds) / 1000);
         }
 
         /// <summary>
@@ -50,16 +41,27 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public uint RtpTimestamp
         {
-            get{
+            get
+            {
                 /*
                     m_Rate  -> 1000ms
                     elapsed -> x
                 */
 
-                long elapsed =  (long)((TimeSpan)(DateTime.Now - m_CreateTime)).TotalMilliseconds;
-                
-                return (uint)(BaseValue + ((Rate  * elapsed) / 1000));
+                long elapsed = (long)((TimeSpan)(DateTime.Now - m_CreateTime)).TotalMilliseconds;
+
+                return (uint)(BaseValue + ((Rate * elapsed) / 1000));
             }
+        }
+
+        /// <summary>
+        /// Convers milliseconds to RTP clock ticks. For example clock 8khz 20ms will be 160 RTP clock ticks.
+        /// </summary>
+        /// <param name="milliseconds">Milliseconds.</param>
+        /// <returns>Returns RTP clock ticks.</returns>
+        public int MillisecondsToRtpTicks(int milliseconds)
+        {
+            return ((Rate * milliseconds) / 1000);
         }
     }
 }

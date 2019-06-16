@@ -13,21 +13,21 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         /// <param name="request">Incoming SIP request.</param>
         /// <param name="remoteEndpoint">IP end point what made request.</param>
-        public SIP_ValidateRequestEventArgs(SIP_Request request,IPEndPoint remoteEndpoint)
+        public SIP_ValidateRequestEventArgs(SIP_Request request, IPEndPoint remoteEndpoint)
         {
-            Request        = request;
+            Request = request;
             RemoteEndPoint = remoteEndpoint;
         }
-
-        /// <summary>
-        /// Gets incoming SIP request.
-        /// </summary>
-        public SIP_Request Request { get; }
 
         /// <summary>
         /// Gets IP end point what made request.
         /// </summary>
         public IPEndPoint RemoteEndPoint { get; }
+
+        /// <summary>
+        /// Gets incoming SIP request.
+        /// </summary>
+        public SIP_Request Request { get; }
 
         /// <summary>
         /// Gets or sets response code. Value null means SIP stack will handle it.

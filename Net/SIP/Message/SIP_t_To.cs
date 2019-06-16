@@ -38,6 +38,42 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets to address.
+        /// </summary>
+        public SIP_t_NameAddress Address { get; }
+
+        /// <summary>
+        /// Gets or sets tag parameter value.
+        /// The "tag" parameter serves as a general mechanism for dialog identification.
+        /// Value null means that 'tag' paramter doesn't exist.
+        /// </summary>
+        public string Tag
+        {
+            get
+            {
+                var parameter = Parameters["tag"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("tag");
+                }
+                else
+                {
+                    Parameters.Set("tag", value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "To" from specified value.
         /// </summary>
         /// <param name="value">SIP "To" value.</param>
@@ -45,7 +81,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -64,7 +101,8 @@ namespace LumiSoft.Net.SIP.Message
                to-param =  tag-param / generic-param
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -86,37 +124,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets to address.
-        /// </summary>
-        public SIP_t_NameAddress Address { get; }
-
-        /// <summary>
-        /// Gets or sets tag parameter value.
-        /// The "tag" parameter serves as a general mechanism for dialog identification.
-        /// Value null means that 'tag' paramter doesn't exist.
-        /// </summary>
-        public string Tag
-        {
-            get{ 
-                var parameter = Parameters["tag"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("tag");
-                }
-                else{
-                    Parameters.Set("tag",value);
-                }
-            }
         }
     }
 }

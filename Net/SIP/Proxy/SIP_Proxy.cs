@@ -31,14 +31,14 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Proxy : IDisposable
     {
-        private  SIP_Stack              m_pStack;
-        private  SIP_ProxyMode          m_ProxyMode      = SIP_ProxyMode.Registrar | SIP_ProxyMode.Statefull;
-        private  SIP_ForkingMode        m_ForkingMode    = SIP_ForkingMode.Parallel;
-        private  SIP_Registrar          m_pRegistrar;
-        private  SIP_B2BUA              m_pB2BUA;
-        private readonly string                 m_Opaque         = "";
         internal List<SIP_ProxyContext> m_pProxyContexts;
+        private SIP_ForkingMode m_ForkingMode = SIP_ForkingMode.Parallel;
+        private readonly string m_Opaque = "";
+        private SIP_B2BUA m_pB2BUA;
         private readonly List<SIP_ProxyHandler> m_pHandlers;
+        private SIP_Registrar m_pRegistrar;
+        private SIP_ProxyMode m_ProxyMode = SIP_ProxyMode.Registrar | SIP_ProxyMode.Statefull;
+        private SIP_Stack m_pStack;
 
         /// <summary>
         /// Default constructor.
@@ -51,11 +51,163 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pStack.RequestReceived += new EventHandler<SIP_RequestReceivedEventArgs>(m_pStack_RequestReceived);
             m_pStack.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pStack_ResponseReceived);
 
-            m_pRegistrar     = new SIP_Registrar(this);
-            m_pB2BUA         = new SIP_B2BUA(this);
-            m_Opaque         = Auth_HttpDigest.CreateOpaque();
+            m_pRegistrar = new SIP_Registrar(this);
+            m_pB2BUA = new SIP_B2BUA(this);
+            m_Opaque = Auth_HttpDigest.CreateOpaque();
             m_pProxyContexts = new List<SIP_ProxyContext>();
-            m_pHandlers      = new List<SIP_ProxyHandler>();
+            m_pHandlers = new List<SIP_ProxyHandler>();
+        }
+
+        /// <summary>
+        /// This event is raised when SIP proxy needs to know if specified local server address exists.
+        /// </summary>
+        public event SIP_AddressExistsEventHandler AddressExists;
+
+        /// <summary>
+        /// This event is raised when SIP proxy or registrar server needs to authenticate user.
+        /// </summary>
+        public event SIP_AuthenticateEventHandler Authenticate;
+
+        /// <summary>
+        /// This event is raised when SIP proxy needs to know if specified request URI is local URI or remote URI.
+        /// </summary>
+        public event SIP_IsLocalUriEventHandler IsLocalUri;
+
+        /// <summary>
+        /// Gets SIP B2BUA server.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_B2BUA B2BUA
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pB2BUA;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets how proxy handle forking. This property applies for statefull proxy only.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_ForkingMode ForkingMode
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_ForkingMode;
+            }
+
+            set
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                m_ForkingMode = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP proxy request handlers collection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        /// <remarks>
+        /// NOTE: Handlers with lower index number are processed first.
+        /// </remarks>
+        public List<SIP_ProxyHandler> Handlers
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pHandlers;
+            }
+        }
+
+        /// <summary>
+        /// Gets if this object is disposed.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Gets or sets proxy mode.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid combination modes passed.</exception>
+        public SIP_ProxyMode ProxyMode
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_ProxyMode;
+            }
+
+            set
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                // Check for invalid mode ()
+                if ((value & SIP_ProxyMode.Statefull) != 0 && (value & SIP_ProxyMode.Stateless) != 0)
+                {
+                    throw new ArgumentException("Proxy can't be at Statefull and Stateless at same time !");
+                }
+
+                m_ProxyMode = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP registrar server.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_Registrar Registrar
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRegistrar;
+            }
+        }
+
+        /// <summary>
+        /// Gets owner SIP stack.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_Stack Stack
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pStack;
+            }
         }
 
         /// <summary>
@@ -63,12 +215,14 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         public void Dispose()
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 return;
             }
             IsDisposed = true;
 
-            if(m_pStack != null){
+            if (m_pStack != null)
+            {
                 m_pStack.Dispose();
                 m_pStack = null;
             }
@@ -78,140 +232,96 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// This method is called when SIP stack receives new request.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void m_pStack_RequestReceived(object sender,SIP_RequestReceivedEventArgs e)
-        {
-            OnRequestReceived(e);
-        }
-
-        /// <summary>
-        /// This method is called when SIP stack receives new response.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void m_pStack_ResponseReceived(object sender,SIP_ResponseReceivedEventArgs e)
-        {
-            OnResponseReceived(e);            
-        }
-
-        /// <summary>
-        /// This method is called when new request is received.
+        /// Authenticates SIP request. This method also sends all needed replys to request sender.
         /// </summary>
         /// <param name="e">Request event arguments.</param>
-        private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
-        {            
-            var request = e.Request;
-            try
-            {
-                // Statefull
-                if((m_ProxyMode & SIP_ProxyMode.Statefull) != 0){
-                    // Statefull proxy is transaction statefull proxy only, 
-                    // what don't create dialogs and keep dialog state.
-
-                    /* RFC 3261 16.10.
-                        StateFull proxy:
-	                        If a matching response context is found, the element MUST
-	                        immediately return a 200 (OK) response to the CANCEL request. 
-
-	                        If a response context is not found, the element does not have any
-	                        knowledge of the request to apply the CANCEL to.  It MUST statelessly
-	                        forward the CANCEL request (it may have statelessly forwarded the
-	                        associated request previously).
-                    */
-                    if(e.Request.RequestLine.Method == SIP_Methods.CANCEL){
-                        // Don't do server transaction before we get CANCEL matching transaction.
-                        var trToCancel = m_pStack.TransactionLayer.MatchCancelToTransaction(e.Request);
-                        if (trToCancel != null){
-                            trToCancel.Cancel();
-                            e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,request));
-                        }
-                        else{
-                            ForwardRequest(false,e,true);
-                        }
-                    }
-                    // ACK never creates transaction, it's always passed directly to transport layer.
-                    else if(e.Request.RequestLine.Method == SIP_Methods.ACK){
-                        ForwardRequest(false,e,true);
-                    }
-                    else{
-                        ForwardRequest(true,e,true);
-                    }
-                }
-
-                // B2BUA
-                else if((m_ProxyMode & SIP_ProxyMode.B2BUA) != 0){
-                    m_pB2BUA.OnRequestReceived(e);
-                }
-
-                // Stateless
-                else if((m_ProxyMode & SIP_ProxyMode.Stateless) != 0){
-                    // Stateless proxy don't do transaction, just forwards all.
-                    ForwardRequest(false,e,true);
-                }
-                else{
-                    e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x501_Not_Implemented,request));
-                }
-            }
-            catch(Exception x){
-                try{
-                    m_pStack.TransportLayer.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x500_Server_Internal_Error + ": " + x.Message,e.Request));
-                }
-                catch{
-                    // Skip transport layer exception if send fails.
-                }
-
-                // Don't raise OnError for transport errors.
-                if(!(x is SIP_TransportException)){
-                    m_pStack.OnError(x);
-                }
-            }            
+        /// <returns>Returns true if request was authenticated.</returns>
+        internal bool AuthenticateRequest(SIP_RequestReceivedEventArgs e)
+        {
+            string userName = null;
+            return AuthenticateRequest(e, out userName);
         }
 
         /// <summary>
-        /// This method is called when new response is received.
+        /// Authenticates SIP request. This method also sends all needed replys to request sender.
         /// </summary>
-        /// <param name="e">Response event arguments.</param>
-        private void OnResponseReceived(SIP_ResponseReceivedEventArgs e)
+        /// <param name="e">Request event arguments.</param>
+        /// <param name="userName">If authentication sucessful, then authenticated user name is stored to this variable.</param>
+        /// <returns>Returns true if request was authenticated.</returns>
+        internal bool AuthenticateRequest(SIP_RequestReceivedEventArgs e, out string userName)
         {
-            if((m_ProxyMode & SIP_ProxyMode.B2BUA) != 0){
-                m_pB2BUA.OnResponseReceived(e);
-            }
-            else if((m_ProxyMode & SIP_ProxyMode.Statefull) != 0){
-                /* RFC 6026 7.3. Proxy Considerations.
-                    This document changes the behavior of transaction-stateful proxies to
-                    not forward stray INVITE responses.  When receiving any SIP response,
-                    a transaction-stateful proxy MUST compare the transaction identifier
-                    in that response against its existing transaction state machines.
-                    The proxy MUST NOT forward the response if there is no matching
-                    transaction state machine.
-                */
-            }
-            else{
-                /* This method is called when stateless proxy gets response.
-                */
-                               
-                /* RFC 3261 16.11.
-                    When a response arrives at a stateless proxy, the proxy MUST inspect the sent-by 
-                    value in the first (topmost) Via header field value. If that address matches the proxy,
-                    (it equals a value this proxy has inserted into previous requests) the proxy MUST 
-                    remove that header field value from the response and forward the result to the 
-                    location indicated in the next Via header field value.
-                */
-                // Just remove topmost Via:, sent-by check is done in transport layer.
-                e.Response.Via.RemoveTopMostValue();
+            userName = null;
 
-                if((m_ProxyMode & SIP_ProxyMode.Statefull) != 0){
-                    // We should not reach here. This happens when no matching client transaction found.
-                    // RFC 3161 18.1.2 orders to forward them statelessly.
-                    m_pStack.TransportLayer.SendResponse(e.Response);
-                }
-                else if((m_ProxyMode & SIP_ProxyMode.Stateless) != 0){
-                    m_pStack.TransportLayer.SendResponse(e.Response);
-                }
+            var credentials = SIP_Utils.GetCredentials(e.Request, m_pStack.Realm);
+            // No credentials for our realm.
+            if (credentials == null)
+            {
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required, e.Request);
+                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm, m_pStack.DigestNonceManager.CreateNonce(), m_Opaque).ToChallange());
+
+                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
+                return false;
             }
+
+            var auth = new Auth_HttpDigest(credentials.AuthData, e.Request.RequestLine.Method);
+            // Check opaque validity.
+            if (auth.Opaque != m_Opaque)
+            {
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Opaque value won't match !", e.Request);
+                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm, m_pStack.DigestNonceManager.CreateNonce(), m_Opaque).ToChallange());
+
+                // Send response
+                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
+                return false;
+            }
+            // Check nonce validity.
+            if (!m_pStack.DigestNonceManager.NonceExists(auth.Nonce))
+            {
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Invalid nonce value !", e.Request);
+                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm, m_pStack.DigestNonceManager.CreateNonce(), m_Opaque).ToChallange());
+
+                // Send response
+                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
+                return false;
+            }
+            // Valid nonce, consume it so that nonce can't be used any more. 
+
+            m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
+
+            var eArgs = OnAuthenticate(auth);
+            // Authenticate failed.
+            if (!eArgs.Authenticated)
+            {
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Authentication failed.", e.Request);
+                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm, m_pStack.DigestNonceManager.CreateNonce(), m_Opaque).ToChallange());
+
+                // Send response
+                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
+                return false;
+            }
+
+            userName = auth.UserName;
+
+            return true;
+        }
+
+        internal SIP_ProxyContext CreateProxyContext(SIP_RequestContext requestContext, SIP_ServerTransaction transaction, SIP_Request request, bool addRecordRoute)
+        {
+            // Create proxy context that will be responsible for forwarding request.
+            var proxyContext = new SIP_ProxyContext(
+                this,
+                transaction,
+                request,
+                addRecordRoute,
+                m_ForkingMode,
+                (ProxyMode & SIP_ProxyMode.B2BUA) != 0,
+                false,
+                false,
+                requestContext.Targets.ToArray()
+            );
+            m_pProxyContexts.Add(proxyContext);
+
+            return proxyContext;
         }
 
         /// <summary>
@@ -220,13 +330,13 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="statefull">Specifies if request is sent statefully or statelessly.</param>
         /// <param name="e">Request event arguments.</param>
         /// <param name="addRecordRoute">If true Record-Route header field is added.</param>
-        internal void ForwardRequest(bool statefull,SIP_RequestReceivedEventArgs e,bool addRecordRoute)
+        internal void ForwardRequest(bool statefull, SIP_RequestReceivedEventArgs e, bool addRecordRoute)
         {
-            var requestContext = new SIP_RequestContext(this,e.Request,e.Flow);
+            var requestContext = new SIP_RequestContext(this, e.Request, e.Flow);
 
             var request = e.Request;
-            SIP_Uri     route   = null;
-                        
+            SIP_Uri route = null;
+
             /* RFC 3261 16.
                 1. Validate the request (Section 16.3)
                     1. Reasonable Syntax
@@ -250,8 +360,9 @@ namespace LumiSoft.Net.SIP.Proxy
             //      We do it later.
 
             // 1.3 Max-Forwards.
-            if(request.MaxForwards <= 0){
-                e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x483_Too_Many_Hops,request));
+            if (request.MaxForwards <= 0)
+            {
+                e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x483_Too_Many_Hops, request));
                 return;
             }
 
@@ -267,27 +378,34 @@ namespace LumiSoft.Net.SIP.Proxy
                 section also defines what the element must do if the inspection
                 fails.
             */
-                        
+
             // We need to auth all foreign calls.            
-            if(!SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString()) || !OnIsLocalUri(((SIP_Uri)request.RequestLine.Uri).Host)){
+            if (!SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString()) || !OnIsLocalUri(((SIP_Uri)request.RequestLine.Uri).Host))
+            {
                 // If To: field is registrar AOR and request-URI is local registration contact, skip authentication.
                 bool skipAuth = false;
-                if(request.To.Address.IsSipOrSipsUri){
+                if (request.To.Address.IsSipOrSipsUri)
+                {
                     var registration = m_pRegistrar.GetRegistration(((SIP_Uri)request.To.Address.Uri).Address);
-                    if (registration != null){
-                        if(registration.GetBinding(request.RequestLine.Uri) != null){
+                    if (registration != null)
+                    {
+                        if (registration.GetBinding(request.RequestLine.Uri) != null)
+                        {
                             skipAuth = true;
                         }
                     }
                 }
 
-                if(!skipAuth){
+                if (!skipAuth)
+                {
                     string userName = null;
 
                     // We need to pass-through ACK.
-                    if(request.RequestLine.Method == SIP_Methods.ACK){
+                    if (request.RequestLine.Method == SIP_Methods.ACK)
+                    {
                     }
-                    else if(!AuthenticateRequest(e,out userName)){
+                    else if (!AuthenticateRequest(e, out userName))
+                    {
                         return;
                     }
 
@@ -333,9 +451,10 @@ namespace LumiSoft.Net.SIP.Proxy
                 If the first value in the Route header field indicates this proxy,
                 the proxy MUST remove that value from the request.
             */
-            
+
             // Strict route - handle it.
-            if((request.RequestLine.Uri is SIP_Uri) && IsRecordRoute(((SIP_Uri)request.RequestLine.Uri)) && request.Route.GetAllValues().Length > 0){
+            if ((request.RequestLine.Uri is SIP_Uri) && IsRecordRoute(((SIP_Uri)request.RequestLine.Uri)) && request.Route.GetAllValues().Length > 0)
+            {
                 request.RequestLine.Uri = request.Route.GetAllValues()[request.Route.GetAllValues().Length - 1].Address.Uri;
                 var routes = request.Route.GetAllValues();
                 route = (SIP_Uri)routes[routes.Length - 1].Address.Uri;
@@ -343,31 +462,37 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             // Check if Route header field indicates this proxy.
-            if(request.Route.GetAllValues().Length > 0){
+            if (request.Route.GetAllValues().Length > 0)
+            {
                 route = (SIP_Uri)request.Route.GetTopMostValue().Address.Uri;
 
                 // We consider loose-route always ours, because otherwise this message never reach here.
-                if(route.Param_Lr){
+                if (route.Param_Lr)
+                {
                     request.Route.RemoveTopMostValue();
                 }
                 // It's our route, remove it.
-                else if(IsLocalRoute(route)){
+                else if (IsLocalRoute(route))
+                {
                     request.Route.RemoveTopMostValue();
                 }
             }
 
-            if(e.Request.RequestLine.Method == SIP_Methods.REGISTER){
+            if (e.Request.RequestLine.Method == SIP_Methods.REGISTER)
+            {
                 var requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
                 // REGISTER is meant for us.
-                if (OnIsLocalUri(requestUri.Host)){
-                    if((m_ProxyMode & SIP_ProxyMode.Registrar) != 0){
+                if (OnIsLocalUri(requestUri.Host))
+                {
+                    if ((m_ProxyMode & SIP_ProxyMode.Registrar) != 0)
+                    {
                         m_pRegistrar.Register(e);
 
                         return;
                     }
 
-                    e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x405_Method_Not_Allowed,e.Request));
+                    e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x405_Method_Not_Allowed, e.Request));
 
                     return;
                 }
@@ -400,16 +525,18 @@ namespace LumiSoft.Net.SIP.Proxy
                     as an index.  The output of these mechanisms is used to construct the
                     target set.
             */
-            
+
             // Non-SIP
             // Foreign SIP
             // Local SIP
 
-            if(e.Request.RequestLine.Uri is SIP_Uri){                        
+            if (e.Request.RequestLine.Uri is SIP_Uri)
+            {
                 var requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
                 // Proxy is not responsible for the domain in the Request-URI.
-                if (!OnIsLocalUri(requestUri.Host)){
+                if (!OnIsLocalUri(requestUri.Host))
+                {
                     /* NAT traversal.
                         When we do record routing, store request sender flow info and request target flow info.
                         Now the tricky part, how proxy later which flow is target (because both sides can send requests).
@@ -423,86 +550,105 @@ namespace LumiSoft.Net.SIP.Proxy
 
                     SIP_Flow targetFlow = null;
                     var flowInfo = (route != null && route.Parameters["flowInfo"] != null) ? route.Parameters["flowInfo"].Value : null;
-                    if (flowInfo != null && request.To.Tag != null){
-                        var flow1Tag = flowInfo.Substring(0,flowInfo.IndexOf(':'));
-                        var flow1ID  = flowInfo.Substring(flowInfo.IndexOf(':') + 1,flowInfo.IndexOf('/') - flowInfo.IndexOf(':') - 1);
-                        var flow2ID  = flowInfo.Substring(flowInfo.IndexOf('/') + 1);
+                    if (flowInfo != null && request.To.Tag != null)
+                    {
+                        var flow1Tag = flowInfo.Substring(0, flowInfo.IndexOf(':'));
+                        var flow1ID = flowInfo.Substring(flowInfo.IndexOf(':') + 1, flowInfo.IndexOf('/') - flowInfo.IndexOf(':') - 1);
+                        var flow2ID = flowInfo.Substring(flowInfo.IndexOf('/') + 1);
 
-                        if (flow1Tag == request.To.Tag){
+                        if (flow1Tag == request.To.Tag)
+                        {
                             targetFlow = m_pStack.TransportLayer.GetFlow(flow1ID);
                         }
-                        else{;
+                        else
+                        {
+                            ;
                             targetFlow = m_pStack.TransportLayer.GetFlow(flow2ID);
                         }
                     }
 
-                    requestContext.Targets.Add(new SIP_ProxyTarget(requestUri,targetFlow));
+                    requestContext.Targets.Add(new SIP_ProxyTarget(requestUri, targetFlow));
                 }
                 // Proxy is responsible for the domain in the Request-URI.
-                else{
+                else
+                {
                     // Try to get AOR from registrar.
                     var registration = m_pRegistrar.GetRegistration(requestUri.Address);
 
                     // We have AOR specified in request-URI in registrar server.
-                    if (registration != null){
+                    if (registration != null)
+                    {
                         // Add all AOR SIP contacts to target set.
-                        foreach(SIP_RegistrationBinding binding in registration.Bindings){
-                            if(binding.ContactURI is SIP_Uri && binding.TTL > 0){
-                                requestContext.Targets.Add(new SIP_ProxyTarget((SIP_Uri)binding.ContactURI,binding.Flow));
+                        foreach (SIP_RegistrationBinding binding in registration.Bindings)
+                        {
+                            if (binding.ContactURI is SIP_Uri && binding.TTL > 0)
+                            {
+                                requestContext.Targets.Add(new SIP_ProxyTarget((SIP_Uri)binding.ContactURI, binding.Flow));
                             }
                         }
                     }
                     // We don't have AOR specified in request-URI in registrar server.
-                    else{
+                    else
+                    {
                         // If the Request-URI indicates a resource at this proxy that does not
                         // exist, the proxy MUST return a 404 (Not Found) response.                    
-                        if(!OnAddressExists(requestUri.Address)){                        
-                            e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found,e.Request));
+                        if (!OnAddressExists(requestUri.Address))
+                        {
+                            e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found, e.Request));
                             return;
                         }
                     }
 
                     // If the target set remains empty after applying all of the above, the proxy MUST return an error response, 
                     // which SHOULD be the 480 (Temporarily Unavailable) response.
-                    if(requestContext.Targets.Count == 0){
-                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x480_Temporarily_Unavailable,e.Request));
+                    if (requestContext.Targets.Count == 0)
+                    {
+                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x480_Temporarily_Unavailable, e.Request));
                         return;
                     }
-                }               
+                }
             }
 
             // x.1 Process custom request handlers, if any.
-            foreach(SIP_ProxyHandler handler in Handlers){
-                try{
+            foreach (SIP_ProxyHandler handler in Handlers)
+            {
+                try
+                {
                     var h = handler;
 
                     // Reusing existing handler not allowed, create new instance of handler.
-                    if (!handler.IsReusable){
+                    if (!handler.IsReusable)
+                    {
                         h = (SIP_ProxyHandler)Activator.CreateInstance(handler.GetType());
                     }
 
-                    if(h.ProcessRequest(requestContext)){
+                    if (h.ProcessRequest(requestContext))
+                    {
                         // Handler processed request, we are done.
                         return;
                     }
                 }
-                catch(Exception x){
+                catch (Exception x)
+                {
                     m_pStack.OnError(x);
                 }
             }
 
             // x.2 URI scheme.
             //  If no targets and request-URI non-SIP, reject request because custom handlers should have been handled it.
-            if(requestContext.Targets.Count == 0 && !SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString())){
-                e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x416_Unsupported_URI_Scheme,e.Request));
+            if (requestContext.Targets.Count == 0 && !SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString()))
+            {
+                e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x416_Unsupported_URI_Scheme, e.Request));
                 return;
             }
 
-            if (statefull){
-                var proxyContext = CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
+            if (statefull)
+            {
+                var proxyContext = CreateProxyContext(requestContext, e.ServerTransaction, request, addRecordRoute);
                 proxyContext.Start();
             }
-            else{
+            else
+            {
                 /* RFC 3261 16.6 Request Forwarding.
                 For each target, the proxy forwards the request following these steps:
                     1.  Make a copy of the received request
@@ -532,8 +678,8 @@ namespace LumiSoft.Net.SIP.Proxy
                     We just use: "z9hG4bK-" + md5(topmost branch)                
                 */
 
-                bool      isStrictRoute = false;
-                SIP_Hop[] hops          = null;
+                bool isStrictRoute = false;
+                SIP_Hop[] hops = null;
 
                 var forwardRequest = request.Copy();
 
@@ -551,7 +697,8 @@ namespace LumiSoft.Net.SIP.Proxy
                         - The proxy MUST then place the first Route header field value
                           into the Request-URI and remove that value from the Route header field.
                 */
-                if(forwardRequest.Route.GetAllValues().Length > 0 && !forwardRequest.Route.GetTopMostValue().Parameters.Contains("lr")){
+                if (forwardRequest.Route.GetAllValues().Length > 0 && !forwardRequest.Route.GetTopMostValue().Parameters.Contains("lr"))
+                {
                     forwardRequest.Route.Add(forwardRequest.RequestLine.Uri.ToString());
 
                     forwardRequest.RequestLine.Uri = SIP_Utils.UriToRequestUri(forwardRequest.Route.GetTopMostValue().Address.Uri);
@@ -604,131 +751,72 @@ namespace LumiSoft.Net.SIP.Proxy
                       the target set.  The proxy does not need to place anything in
                       the response context, but otherwise acts as if this element of
                       the target set returned a 408 (Request Timeout) final response.
-                */            
+                */
                 SIP_Uri uri = null;
-                if(isStrictRoute){
+                if (isStrictRoute)
+                {
                     uri = (SIP_Uri)forwardRequest.RequestLine.Uri;
                 }
-                else if(forwardRequest.Route.GetTopMostValue() != null){
+                else if (forwardRequest.Route.GetTopMostValue() != null)
+                {
                     uri = (SIP_Uri)forwardRequest.Route.GetTopMostValue().Address.Uri;
                 }
-                else{
+                else
+                {
                     uri = (SIP_Uri)forwardRequest.RequestLine.Uri;
                 }
-                
-                hops = m_pStack.GetHops(uri,forwardRequest.ToByteData().Length,((SIP_Uri)forwardRequest.RequestLine.Uri).IsSecure);
 
-                if(hops.Length == 0){
-                    if(forwardRequest.RequestLine.Method != SIP_Methods.ACK){
-                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": No hop(s) for target.",forwardRequest));
+                hops = m_pStack.GetHops(uri, forwardRequest.ToByteData().Length, ((SIP_Uri)forwardRequest.RequestLine.Uri).IsSecure);
+
+                if (hops.Length == 0)
+                {
+                    if (forwardRequest.RequestLine.Method != SIP_Methods.ACK)
+                    {
+                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": No hop(s) for target.", forwardRequest));
                     }
 
                     return;
                 }
 
-                forwardRequest.Via.AddToTop("SIP/2.0/transport-tl-addign sentBy-tl-assign-it;branch=z9hG4bK-" + Net_Utils.ComputeMd5(request.Via.GetTopMostValue().Branch,true));
-                
+                forwardRequest.Via.AddToTop("SIP/2.0/transport-tl-addign sentBy-tl-assign-it;branch=z9hG4bK-" + Net_Utils.ComputeMd5(request.Via.GetTopMostValue().Branch, true));
+
                 // Add 'flowID' what received request, you should use the same flow to send response back.
                 // For more info see RFC 3261 18.2.2.
-                forwardRequest.Via.GetTopMostValue().Parameters.Add("flowID",request.Flow.ID);
+                forwardRequest.Via.GetTopMostValue().Parameters.Add("flowID", request.Flow.ID);
 
                 // Skip, our SIP_Message class is smart and do it when ever it's needed.
 
-                try{
-                    try{
-                        if(requestContext.Targets[0].Flow != null){
-                            m_pStack.TransportLayer.SendRequest(requestContext.Targets[0].Flow,request);
-                            
+                try
+                {
+                    try
+                    {
+                        if (requestContext.Targets[0].Flow != null)
+                        {
+                            m_pStack.TransportLayer.SendRequest(requestContext.Targets[0].Flow, request);
+
                             return;
                         }
                     }
-                    catch{
-                        m_pStack.TransportLayer.SendRequest(request,null,hops[0]);
+                    catch
+                    {
+                        m_pStack.TransportLayer.SendRequest(request, null, hops[0]);
                     }
                 }
-                catch(SIP_TransportException x){
+                catch (SIP_TransportException x)
+                {
                     var dummy = x.Message;
 
-                    if (forwardRequest.RequestLine.Method != SIP_Methods.ACK){
+                    if (forwardRequest.RequestLine.Method != SIP_Methods.ACK)
+                    {
                         /* RFC 3261 16.9 Handling Transport Errors
                             If the transport layer notifies a proxy of an error when it tries to
                             forward a request (see Section 18.4), the proxy MUST behave as if the
                             forwarded request received a 503 (Service Unavailable) response.
                         */
-                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": Transport error.",forwardRequest));
+                        e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": Transport error.", forwardRequest));
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Authenticates SIP request. This method also sends all needed replys to request sender.
-        /// </summary>
-        /// <param name="e">Request event arguments.</param>
-        /// <returns>Returns true if request was authenticated.</returns>
-        internal bool AuthenticateRequest(SIP_RequestReceivedEventArgs e)
-        {
-            string userName = null;
-            return AuthenticateRequest(e,out userName);
-        }
-
-        /// <summary>
-        /// Authenticates SIP request. This method also sends all needed replys to request sender.
-        /// </summary>
-        /// <param name="e">Request event arguments.</param>
-        /// <param name="userName">If authentication sucessful, then authenticated user name is stored to this variable.</param>
-        /// <returns>Returns true if request was authenticated.</returns>
-        internal bool AuthenticateRequest(SIP_RequestReceivedEventArgs e,out string userName)
-        {            
-            userName = null;
-         
-            var credentials = SIP_Utils.GetCredentials(e.Request,m_pStack.Realm);
-            // No credentials for our realm.
-            if (credentials == null){
-                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required,e.Request);
-                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
-                    
-                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
-                return false;
-            }
-                                       
-            var auth = new Auth_HttpDigest(credentials.AuthData,e.Request.RequestLine.Method);
-            // Check opaque validity.
-            if (auth.Opaque != m_Opaque){
-                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Opaque value won't match !",e.Request);
-                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
-
-                // Send response
-                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
-                return false;
-            }
-            // Check nonce validity.
-            if(!m_pStack.DigestNonceManager.NonceExists(auth.Nonce)){
-                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Invalid nonce value !",e.Request);
-                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
-
-                // Send response
-                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
-                return false;
-            }
-            // Valid nonce, consume it so that nonce can't be used any more. 
-
-            m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
-
-            var eArgs = OnAuthenticate(auth);
-            // Authenticate failed.
-            if (!eArgs.Authenticated){
-                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Authentication failed.",e.Request);
-                notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
-                    
-                // Send response
-                e.ServerTransaction.SendResponse(notAuthenticatedResponse);
-                return false;
-            }
-
-            userName = auth.UserName;
-
-            return true;
         }
 
         /// <summary>
@@ -739,37 +827,21 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
         internal bool IsLocalRoute(SIP_Uri uri)
         {
-            if(uri == null){
+            if (uri == null)
+            {
                 throw new ArgumentNullException("uri");
             }
 
             // Not a route.
-            if(uri.User != null){
+            if (uri.User != null)
+            {
                 return false;
             }
 
-            foreach(IPBindInfo bind in m_pStack.BindInfo){
-                if(uri.Host.ToLower() == bind.HostName.ToLower()){
-                    return true;
-                }
-            }
-            
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the specified route is Record-Route what we add.
-        /// </summary>
-        /// <param name="route">Record route.</param>
-        /// <returns>Returns true if the specified route is local Record-Route value, otherwise false.</returns>
-        private bool IsRecordRoute(SIP_Uri route)
-        {
-            if(route == null){
-                throw new ArgumentNullException("route");
-            }
-
-            foreach(IPBindInfo bind in m_pStack.BindInfo){
-                if(route.Host.ToLower() == bind.HostName.ToLower()){
+            foreach (IPBindInfo bind in m_pStack.BindInfo)
+            {
+                if (uri.Host.ToLower() == bind.HostName.ToLower())
+                {
                     return true;
                 }
             }
@@ -777,168 +849,20 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        internal SIP_ProxyContext CreateProxyContext(SIP_RequestContext requestContext,SIP_ServerTransaction transaction,SIP_Request request,bool addRecordRoute)
-        {            
-            // Create proxy context that will be responsible for forwarding request.
-            var proxyContext = new SIP_ProxyContext(
-                this,
-                transaction,
-                request,
-                addRecordRoute,
-                m_ForkingMode,
-                (ProxyMode & SIP_ProxyMode.B2BUA) != 0,
-                false,
-                false,
-                requestContext.Targets.ToArray()
-            );
-            m_pProxyContexts.Add(proxyContext);
-
-            return proxyContext;
-        }
-
         /// <summary>
-        /// Gets if this object is disposed.
+        /// Is called by SIP proxy if it needs to check if specified address exists.
         /// </summary>
-        public bool IsDisposed { get; private set; }
-
-        /// <summary>
-        /// Gets owner SIP stack.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_Stack Stack
+        /// <param name="address">SIP address to check.</param>
+        /// <returns>Returns true if specified address exists, otherwise false.</returns>
+        internal bool OnAddressExists(string address)
         {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pStack; 
+            if (AddressExists != null)
+            {
+                return AddressExists(address);
             }
+
+            return false;
         }
-
-        /// <summary>
-        /// Gets or sets proxy mode.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid combination modes passed.</exception>
-        public SIP_ProxyMode ProxyMode
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_ProxyMode; 
-            }
-
-            set{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                                
-                // Check for invalid mode ()
-                if((value & SIP_ProxyMode.Statefull) != 0 && (value & SIP_ProxyMode.Stateless) != 0){
-                    throw new ArgumentException("Proxy can't be at Statefull and Stateless at same time !");
-                }
-
-                m_ProxyMode = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets how proxy handle forking. This property applies for statefull proxy only.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_ForkingMode ForkingMode
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_ForkingMode; 
-            }
-
-            set{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                m_ForkingMode = value; 
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP registrar server.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_Registrar Registrar
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRegistrar; 
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP B2BUA server.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_B2BUA B2BUA
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pB2BUA; 
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP proxy request handlers collection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        /// <remarks>
-        /// NOTE: Handlers with lower index number are processed first.
-        /// </remarks>
-        public List<SIP_ProxyHandler> Handlers
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pHandlers; 
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when SIP proxy needs to know if specified request URI is local URI or remote URI.
-        /// </summary>
-        public event SIP_IsLocalUriEventHandler IsLocalUri;
-
-        /// <summary>
-        /// Raises <b>IsLocalUri</b> event.
-        /// </summary>
-        /// <param name="uri">Request URI.</param>
-        /// <returns>Returns true if server local URI, otherwise false.</returns>
-        internal bool OnIsLocalUri(string uri)
-        {
-            if(IsLocalUri != null){
-                return IsLocalUri(uri);
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// This event is raised when SIP proxy or registrar server needs to authenticate user.
-        /// </summary>
-        public event SIP_AuthenticateEventHandler Authenticate;
 
         /// <summary>
         /// Is called by SIP proxy or registrar server when it needs to authenticate user.
@@ -948,7 +872,8 @@ namespace LumiSoft.Net.SIP.Proxy
         internal SIP_AuthenticateEventArgs OnAuthenticate(Auth_HttpDigest auth)
         {
             var eArgs = new SIP_AuthenticateEventArgs(auth);
-            if (Authenticate != null){
+            if (Authenticate != null)
+            {
                 Authenticate(eArgs);
             }
 
@@ -956,22 +881,196 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// This event is raised when SIP proxy needs to know if specified local server address exists.
+        /// Raises <b>IsLocalUri</b> event.
         /// </summary>
-        public event SIP_AddressExistsEventHandler AddressExists;
+        /// <param name="uri">Request URI.</param>
+        /// <returns>Returns true if server local URI, otherwise false.</returns>
+        internal bool OnIsLocalUri(string uri)
+        {
+            if (IsLocalUri != null)
+            {
+                return IsLocalUri(uri);
+            }
+
+            return true;
+        }
 
         /// <summary>
-        /// Is called by SIP proxy if it needs to check if specified address exists.
+        /// Checks if the specified route is Record-Route what we add.
         /// </summary>
-        /// <param name="address">SIP address to check.</param>
-        /// <returns>Returns true if specified address exists, otherwise false.</returns>
-        internal bool OnAddressExists(string address)
-        {            
-            if(AddressExists != null){
-                return AddressExists(address);
+        /// <param name="route">Record route.</param>
+        /// <returns>Returns true if the specified route is local Record-Route value, otherwise false.</returns>
+        private bool IsRecordRoute(SIP_Uri route)
+        {
+            if (route == null)
+            {
+                throw new ArgumentNullException("route");
             }
-                        
+
+            foreach (IPBindInfo bind in m_pStack.BindInfo)
+            {
+                if (route.Host.ToLower() == bind.HostName.ToLower())
+                {
+                    return true;
+                }
+            }
+
             return false;
+        }
+
+        /// <summary>
+        /// This method is called when SIP stack receives new request.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void m_pStack_RequestReceived(object sender, SIP_RequestReceivedEventArgs e)
+        {
+            OnRequestReceived(e);
+        }
+
+        /// <summary>
+        /// This method is called when SIP stack receives new response.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void m_pStack_ResponseReceived(object sender, SIP_ResponseReceivedEventArgs e)
+        {
+            OnResponseReceived(e);
+        }
+
+        /// <summary>
+        /// This method is called when new request is received.
+        /// </summary>
+        /// <param name="e">Request event arguments.</param>
+        private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
+        {
+            var request = e.Request;
+            try
+            {
+                // Statefull
+                if ((m_ProxyMode & SIP_ProxyMode.Statefull) != 0)
+                {
+                    // Statefull proxy is transaction statefull proxy only, 
+                    // what don't create dialogs and keep dialog state.
+
+                    /* RFC 3261 16.10.
+                        StateFull proxy:
+	                        If a matching response context is found, the element MUST
+	                        immediately return a 200 (OK) response to the CANCEL request. 
+
+	                        If a response context is not found, the element does not have any
+	                        knowledge of the request to apply the CANCEL to.  It MUST statelessly
+	                        forward the CANCEL request (it may have statelessly forwarded the
+	                        associated request previously).
+                    */
+                    if (e.Request.RequestLine.Method == SIP_Methods.CANCEL)
+                    {
+                        // Don't do server transaction before we get CANCEL matching transaction.
+                        var trToCancel = m_pStack.TransactionLayer.MatchCancelToTransaction(e.Request);
+                        if (trToCancel != null)
+                        {
+                            trToCancel.Cancel();
+                            e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok, request));
+                        }
+                        else
+                        {
+                            ForwardRequest(false, e, true);
+                        }
+                    }
+                    // ACK never creates transaction, it's always passed directly to transport layer.
+                    else if (e.Request.RequestLine.Method == SIP_Methods.ACK)
+                    {
+                        ForwardRequest(false, e, true);
+                    }
+                    else
+                    {
+                        ForwardRequest(true, e, true);
+                    }
+                }
+
+                // B2BUA
+                else if ((m_ProxyMode & SIP_ProxyMode.B2BUA) != 0)
+                {
+                    m_pB2BUA.OnRequestReceived(e);
+                }
+
+                // Stateless
+                else if ((m_ProxyMode & SIP_ProxyMode.Stateless) != 0)
+                {
+                    // Stateless proxy don't do transaction, just forwards all.
+                    ForwardRequest(false, e, true);
+                }
+                else
+                {
+                    e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x501_Not_Implemented, request));
+                }
+            }
+            catch (Exception x)
+            {
+                try
+                {
+                    m_pStack.TransportLayer.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x500_Server_Internal_Error + ": " + x.Message, e.Request));
+                }
+                catch
+                {
+                    // Skip transport layer exception if send fails.
+                }
+
+                // Don't raise OnError for transport errors.
+                if (!(x is SIP_TransportException))
+                {
+                    m_pStack.OnError(x);
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method is called when new response is received.
+        /// </summary>
+        /// <param name="e">Response event arguments.</param>
+        private void OnResponseReceived(SIP_ResponseReceivedEventArgs e)
+        {
+            if ((m_ProxyMode & SIP_ProxyMode.B2BUA) != 0)
+            {
+                m_pB2BUA.OnResponseReceived(e);
+            }
+            else if ((m_ProxyMode & SIP_ProxyMode.Statefull) != 0)
+            {
+                /* RFC 6026 7.3. Proxy Considerations.
+                    This document changes the behavior of transaction-stateful proxies to
+                    not forward stray INVITE responses.  When receiving any SIP response,
+                    a transaction-stateful proxy MUST compare the transaction identifier
+                    in that response against its existing transaction state machines.
+                    The proxy MUST NOT forward the response if there is no matching
+                    transaction state machine.
+                */
+            }
+            else
+            {
+                /* This method is called when stateless proxy gets response.
+                */
+
+                /* RFC 3261 16.11.
+                    When a response arrives at a stateless proxy, the proxy MUST inspect the sent-by 
+                    value in the first (topmost) Via header field value. If that address matches the proxy,
+                    (it equals a value this proxy has inserted into previous requests) the proxy MUST 
+                    remove that header field value from the response and forward the result to the 
+                    location indicated in the next Via header field value.
+                */
+                // Just remove topmost Via:, sent-by check is done in transport layer.
+                e.Response.Via.RemoveTopMostValue();
+
+                if ((m_ProxyMode & SIP_ProxyMode.Statefull) != 0)
+                {
+                    // We should not reach here. This happens when no matching client transaction found.
+                    // RFC 3161 18.1.2 orders to forward them statelessly.
+                    m_pStack.TransportLayer.SendResponse(e.Response);
+                }
+                else if ((m_ProxyMode & SIP_ProxyMode.Stateless) != 0)
+                {
+                    m_pStack.TransportLayer.SendResponse(e.Response);
+                }
+            }
         }
     }
 }

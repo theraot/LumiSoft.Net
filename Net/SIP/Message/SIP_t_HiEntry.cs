@@ -21,6 +21,54 @@ namespace LumiSoft.Net.SIP.Message
         private SIP_t_NameAddress m_pAddress;
 
         /// <summary>
+        /// Gets or sets address.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
+        public SIP_t_NameAddress Address
+        {
+            get { return m_pAddress; }
+
+            set
+            {
+                if (m_pAddress == null)
+                {
+                    throw new ArgumentNullException("m_pAddress");
+                }
+
+                m_pAddress = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'index' parameter value. Value -1 means not specified.
+        /// </summary>
+        public double Index
+        {
+            get
+            {
+                var parameter = Parameters["index"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("index");
+                }
+                else
+                {
+                    Parameters.Set("index", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "hi-entry" from specified value.
         /// </summary>
         /// <param name="value">SIP "hi-entry" value.</param>
@@ -28,7 +76,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -51,7 +100,8 @@ namespace LumiSoft.Net.SIP.Message
                 hi-extension = generic-param
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -86,47 +136,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets address.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-        public SIP_t_NameAddress Address
-        {
-            get{ return m_pAddress; }
-
-            set{
-                if(m_pAddress == null){
-                    throw new ArgumentNullException("m_pAddress");
-                }
-
-                m_pAddress = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'index' parameter value. Value -1 means not specified.
-        /// </summary>
-        public double Index
-        {
-            get{ 
-                var parameter = Parameters["index"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{                
-                if(value == -1){
-                    Parameters.Remove("index");
-                }
-                else{
-                    Parameters.Set("index",value.ToString());
-                }
-            }
         }
     }
 }

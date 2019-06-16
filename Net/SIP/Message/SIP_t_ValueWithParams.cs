@@ -16,6 +16,40 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets via parameters.
+        /// </summary>
+        public SIP_ParameterCollection Parameters { get; }
+
+        /// <summary>
+        /// Convert parameters to valid parameters string.
+        /// </summary>
+        /// <returns>Returns parameters string.</returns>
+        protected string ParametersToString()
+        {
+            var retVal = new StringBuilder();
+            foreach (SIP_Parameter parameter in Parameters)
+            {
+                if (!string.IsNullOrEmpty(parameter.Value))
+                {
+                    if (TextUtils.IsToken(parameter.Value))
+                    {
+                        retVal.Append(";" + parameter.Name + "=" + parameter.Value);
+                    }
+                    else
+                    {
+                        retVal.Append(";" + parameter.Name + "=" + TextUtils.QuoteString(parameter.Value));
+                    }
+                }
+                else
+                {
+                    retVal.Append(";" + parameter.Name);
+                }
+            }
+
+            return retVal.ToString();
+        }
+
+        /// <summary>
         /// Parses parameters from specified reader. Reader position must be where parameters begin.
         /// </summary>
         /// <param name="reader">Reader from where to read parameters.</param>
@@ -26,61 +60,39 @@ namespace LumiSoft.Net.SIP.Message
             Parameters.Clear();
 
             // Parse parameters
-            while(reader.Available > 0){
+            while (reader.Available > 0)
+            {
                 reader.ReadToFirstChar();
 
                 // We have parameter
-                if(reader.SourceString.StartsWith(";")){
+                if (reader.SourceString.StartsWith(";"))
+                {
                     reader.ReadSpecifiedLength(1);
-                    var paramString = reader.QuotedReadToDelimiter(new[]{';',','},false);
-                    if (paramString != ""){
-                        var name_value = paramString.Split(new[]{'='},2);
-                        if (name_value.Length == 2){
-                           Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
+                    var paramString = reader.QuotedReadToDelimiter(new[] { ';', ',' }, false);
+                    if (paramString != "")
+                    {
+                        var name_value = paramString.Split(new[] { '=' }, 2);
+                        if (name_value.Length == 2)
+                        {
+                            Parameters.Add(name_value[0], TextUtils.UnQuoteString(name_value[1]));
                         }
-                        else{
-                            Parameters.Add(name_value[0],null);
+                        else
+                        {
+                            Parameters.Add(name_value[0], null);
                         }
                     }
                 }
                 // Next value
-                else if(reader.SourceString.StartsWith(",")){
+                else if (reader.SourceString.StartsWith(","))
+                {
                     break;
                 }
                 // Unknown data
-                else{
+                else
+                {
                     throw new SIP_ParseException("Unexpected value '" + reader.SourceString + "' !");
                 }
             }
         }
-
-        /// <summary>
-        /// Convert parameters to valid parameters string.
-        /// </summary>
-        /// <returns>Returns parameters string.</returns>
-        protected string ParametersToString()
-        {
-            var retVal = new StringBuilder();
-            foreach (SIP_Parameter parameter in Parameters){
-                if(!string.IsNullOrEmpty(parameter.Value)){
-                    if(TextUtils.IsToken(parameter.Value)){
-                        retVal.Append(";" + parameter.Name + "=" + parameter.Value);
-                    }
-                    else{
-                        retVal.Append(";" + parameter.Name + "=" + TextUtils.QuoteString(parameter.Value));
-                    }
-                }
-                else{
-                    retVal.Append(";" + parameter.Name);
-                }
-            }
-
-            return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets via parameters.
-        /// </summary>
-        public SIP_ParameterCollection Parameters { get; }
     }
 }

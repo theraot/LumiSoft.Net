@@ -16,24 +16,11 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="msgInfo">Message info.</param>
         /// <param name="response">Default IMAP server response.</param>
         /// <exception cref="ArgumentNullException">Is riased when <b>folder</b>,<b>msgInfo</b> or <b>response</b> is null reference.</exception>
-        internal IMAP_e_Expunge(string folder,IMAP_MessageInfo msgInfo,IMAP_r_ServerStatus response)
+        internal IMAP_e_Expunge(string folder, IMAP_MessageInfo msgInfo, IMAP_r_ServerStatus response)
         {
             m_pResponse = response ?? throw new ArgumentNullException("response");
-            Folder    = folder ?? throw new ArgumentNullException("folder");
-            MessageInfo  = msgInfo ?? throw new ArgumentNullException("msgInfo");
-        }
-
-        /// <summary>
-        /// Gets or sets IMAP server response to this operation.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
-        public IMAP_r_ServerStatus Response
-        {
-            get{ return m_pResponse; }
-
-            set{
-                m_pResponse = value ?? throw new ArgumentNullException("value"); 
-            }
+            Folder = folder ?? throw new ArgumentNullException("folder");
+            MessageInfo = msgInfo ?? throw new ArgumentNullException("msgInfo");
         }
 
         /// <summary>
@@ -45,5 +32,19 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets message info.
         /// </summary>
         public IMAP_MessageInfo MessageInfo { get; }
+
+        /// <summary>
+        /// Gets or sets IMAP server response to this operation.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null reference value set.</exception>
+        public IMAP_r_ServerStatus Response
+        {
+            get { return m_pResponse; }
+
+            set
+            {
+                m_pResponse = value ?? throw new ArgumentNullException("value");
+            }
+        }
     }
 }

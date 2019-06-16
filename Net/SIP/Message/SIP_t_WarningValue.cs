@@ -19,9 +19,63 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_WarningValue : SIP_t_Value
     {
-        private int    m_Code;
         private string m_Agent = "";
-        private string m_Text  = "";
+        private int m_Code;
+        private string m_Text = "";
+
+        /// <summary>
+        /// Gets or sets name or pseudonym of the server.
+        /// </summary>
+        public string Agent
+        {
+            get { return m_Agent; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Agent value may not be null or empty !");
+                }
+
+                m_Agent = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets warning code.
+        /// </summary>
+        public int Code
+        {
+            get { return m_Code; }
+
+            set
+            {
+                if (value < 100 || value > 999)
+                {
+                    throw new ArgumentException("Property Code value must be 3 digit !");
+                }
+
+                m_Code = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets warning text.
+        /// </summary>
+        public string Text
+        {
+            get { return m_Text; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Text value may not be null or empty !");
+                }
+
+                m_Text = value;
+            }
+        }
 
         /// <summary>
         /// Parses "warning-value" from specified value.
@@ -31,7 +85,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -56,18 +111,22 @@ namespace LumiSoft.Net.SIP.Message
                 pseudonym      =  token
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Invalid 'warning-value' value, warn-code is missing !");
             }
-            try{
+            try
+            {
                 Code = Convert.ToInt32(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid 'warning-value' warn-code value, warn-code is missing !");
             }
 
@@ -75,7 +134,8 @@ namespace LumiSoft.Net.SIP.Message
             Agent = word ?? throw new SIP_ParseException("Invalid 'warning-value' value, warn-agent is missing !");
 
             word = reader.ReadToEnd();
-            if(word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Invalid 'warning-value' value, warn-text is missing !");
             }
             Agent = TextUtils.UnQuoteString(word);
@@ -88,54 +148,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_Code + " " + m_Agent + " " + TextUtils.QuoteString(m_Text);
-        }
-
-        /// <summary>
-        /// Gets or sets warning code.
-        /// </summary>
-        public int Code
-        {
-            get{ return m_Code; }
-
-            set{ 
-                if(value < 100 || value > 999){
-                    throw new ArgumentException("Property Code value must be 3 digit !");
-                }
-
-                m_Code = value; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets name or pseudonym of the server.
-        /// </summary>
-        public string Agent
-        {
-            get{ return m_Agent; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Agent value may not be null or empty !");
-                }
-
-                m_Agent = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets warning text.
-        /// </summary>
-        public string Text
-        {
-            get{ return m_Text; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Text value may not be null or empty !");
-                }
-
-                m_Text = value;
-            }
         }
     }
 }

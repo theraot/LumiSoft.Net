@@ -20,7 +20,7 @@ namespace LumiSoft.Net
     /// </remarks>
     public class SIP_Uri : AbsoluteUri
     {
-        private string                  m_Host        = "";
+        private string m_Host = "";
 
         /// <summary>
         /// Default constructor.
@@ -31,6 +31,587 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
+        /// Gets address from SIP URI. Examples: ivar@lumisoft.ee,ivar@195.222.10.1.
+        /// </summary>
+        public string Address
+        {
+            get { return User + "@" + m_Host; }
+        }
+
+        /// <summary>
+        /// Gets or sets header.
+        /// </summary>
+        public string Header { get; set; }
+
+        /// <summary>
+        /// Gets or sets host name or IP.
+        /// </summary>
+        public string Host
+        {
+            get { return m_Host; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Host value can't be null or '' !");
+                }
+
+                m_Host = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets host with optional port. If port specified returns Host:Port, otherwise Host.
+        /// </summary>
+        public string HostPort
+        {
+            get
+            {
+                if (Port == -1)
+                {
+                    return m_Host;
+                }
+
+                return m_Host + ":" + Port;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets if secure SIP. If true then sips: uri, otherwise sip: uri.
+        /// </summary>
+        public bool IsSecure { get; set; }
+
+        /// <summary>
+        /// Gets or sets 'cause' parameter value. Value -1 means not specified.
+        /// Cause is a URI parameter that is used to indicate the service that
+        /// the User Agent Server (UAS) receiving the message should perform.
+        /// Defined in RFC 4458.
+        /// </summary>
+        public int Param_Cause
+        {
+            get
+            {
+                var parameter = Parameters["cause"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("cause");
+                }
+                else
+                {
+                    Parameters.Set("cause", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'comp' parameter value. Value null means not specified. Defined in RFC 3486.
+        /// </summary>
+        public string Param_Comp
+        {
+            get
+            {
+                var parameter = Parameters["comp"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("comp");
+                }
+                else
+                {
+                    Parameters.Set("comp", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'content-type' parameter value. Value null means not specified. Defined in RFC 4240.
+        /// </summary>
+        public string Param_ContentType
+        {
+            get
+            {
+                var parameter = Parameters["content-type"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("content-type");
+                }
+                else
+                {
+                    Parameters.Set("content-type", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'delay' prameter value. Value -1 means not specified. 
+        /// Specifies a delay interval between announcement repetitions. The delay is measured in milliseconds.
+        /// Defined in RFC 4240.
+        /// </summary>
+        public int Param_Delay
+        {
+            get
+            {
+                var parameter = Parameters["delay"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("delay");
+                }
+                else
+                {
+                    Parameters.Set("delay", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'duration' prameter value. Value -1 means not specified. 
+        /// Specifies the maximum duration of the announcement. The media server will discontinue 
+        /// the announcement and end the call if the maximum duration has been reached. The duration 
+        /// is measured in milliseconds. Defined in RFC 4240.
+        /// </summary>
+        public int Param_Duration
+        {
+            get
+            {
+                var parameter = Parameters["duration"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("duration");
+                }
+                else
+                {
+                    Parameters.Set("duration", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'locale' prameter value. Specifies the language and optionally country 
+        /// variant of the announcement sequence named in the "play=" parameter. Defined in RFC 4240.
+        /// </summary>
+        public string Param_Locale
+        {
+            get
+            {
+                var parameter = Parameters["locale"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("locale");
+                }
+                else
+                {
+                    Parameters.Set("locale", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'lr' parameter. The lr parameter, when present, indicates that the element
+        /// responsible for this resource implements the routing mechanisms
+        /// specified in this document. Defined in RFC 3261.
+        /// </summary>
+        public bool Param_Lr
+        {
+            get
+            {
+                var parameter = Parameters["lr"];
+                if (parameter != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (!value)
+                {
+                    Parameters.Remove("lr");
+                }
+                else
+                {
+                    Parameters.Set("lr", null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'maddr' parameter value. Value null means not specified. 
+        /// <a style="font-weight: bold; color: red">NOTE: This value is deprecated in since SIP 2.0.</a>
+        /// The maddr parameter indicates the server address to be contacted for this user, 
+        /// overriding any address derived from the host field. Defined in RFC 3261.
+        /// </summary>
+        public string Param_Maddr
+        {
+            get
+            {
+                var parameter = Parameters["maddr"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("maddr");
+                }
+                else
+                {
+                    Parameters.Set("maddr", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'method' prameter value. Value null means not specified. Defined in RFC 3261.
+        /// </summary>
+        public string Param_Method
+        {
+            get
+            {
+                var parameter = Parameters["method"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("method");
+                }
+                else
+                {
+                    Parameters.Set("method", value);
+                }
+            }
+        }
+
+        //  param[n]           No                    [RFC4240]
+
+        /// <summary>
+        /// Gets or sets 'play' parameter value. Value null means not specified. 
+        /// Specifies the resource or announcement sequence to be played. Defined in RFC 4240.
+        /// </summary>
+        public string Param_Play
+        {
+            get
+            {
+                var parameter = Parameters["play"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("play");
+                }
+                else
+                {
+                    Parameters.Set("play", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'repeat' parameter value. Value -1 means not specified, value int.MaxValue means 'forever'.
+        /// Specifies how many times the media server should repeat the announcement or sequence named by 
+        /// the "play=" parameter. Defined in RFC 4240.
+        /// </summary>
+        public int Param_Repeat
+        {
+            get
+            {
+                var parameter = Parameters["ttl"];
+                if (parameter != null)
+                {
+                    if (parameter.Value.ToLower() == "forever")
+                    {
+                        return int.MaxValue;
+                    }
+
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("ttl");
+                }
+                else if (value == int.MaxValue)
+                {
+                    Parameters.Set("ttl", "forever");
+                }
+                else
+                {
+                    Parameters.Set("ttl", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'target' parameter value. Value null means not specified. Defined in RFC 4240.
+        /// </summary>
+        public string Param_Target
+        {
+            get
+            {
+                var parameter = Parameters["target"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("target");
+                }
+                else
+                {
+                    Parameters.Set("target", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'transport' parameter value. Value null means not specified. 
+        /// The transport parameter determines the transport mechanism to
+        /// be used for sending SIP messages. Defined in RFC 3261.
+        /// </summary>
+        public string Param_Transport
+        {
+            get
+            {
+                var parameter = Parameters["transport"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("transport");
+                }
+                else
+                {
+                    Parameters.Set("transport", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'ttl' parameter value. Value -1 means not specified.
+        /// <a style="font-weight: bold; color: red">NOTE: This value is deprecated in since SIP 2.0.</a>
+        /// The ttl parameter determines the time-to-live value of the UDP
+        /// multicast packet and MUST only be used if maddr is a multicast
+        /// address and the transport protocol is UDP. Defined in RFC 3261.
+        /// </summary>
+        public int Param_Ttl
+        {
+            get
+            {
+                var parameter = Parameters["ttl"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("ttl");
+                }
+                else
+                {
+                    Parameters.Set("ttl", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'user' parameter value. Value null means not specified. Defined in RFC 3261.
+        /// </summary>
+        public string Param_User
+        {
+            get
+            {
+                var parameter = Parameters["user"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("user");
+                }
+                else
+                {
+                    Parameters.Set("user", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'voicexml' parameter value. Value null means not specified. Defined in RFC 4240.
+        /// </summary>
+        public string Param_Voicexml
+        {
+            get
+            {
+                var parameter = Parameters["voicexml"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("voicexml");
+                }
+                else
+                {
+                    Parameters.Set("voicexml", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets URI parameters.
+        /// </summary>
+        public SIP_ParameterCollection Parameters { get; }
+
+        /// <summary>
+        /// Gets or sets host port. Value -1 means not specified.
+        /// </summary>
+        public int Port { get; set; } = -1;
+
+        /// <summary>
+        /// Gets URI scheme.
+        /// </summary>
+        public override string Scheme
+        {
+            get
+            {
+                if (IsSecure)
+                {
+                    return "sips";
+                }
+
+                return "sip";
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets user name. Value null means not specified.
+        /// </summary>
+        public string User { get; set; }
+
+        /// <summary>
         /// Parse SIP or SIPS URI from string value.
         /// </summary>
         /// <param name="value">String URI value.</param>
@@ -39,7 +620,8 @@ namespace LumiSoft.Net
         public new static SIP_Uri Parse(string value)
         {
             var uri = AbsoluteUri.Parse(value);
-            if (uri is SIP_Uri){
+            if (uri is SIP_Uri)
+            {
                 return (SIP_Uri)uri;
             }
 
@@ -104,20 +686,24 @@ namespace LumiSoft.Net
 
             */
 
-            if(obj == null){
+            if (obj == null)
+            {
                 return false;
             }
-            if(!(obj is SIP_Uri)){
+            if (!(obj is SIP_Uri))
+            {
                 return false;
             }
 
             var sipUri = (SIP_Uri)obj;
 
-            if (IsSecure && !sipUri.IsSecure){
+            if (IsSecure && !sipUri.IsSecure)
+            {
                 return false;
             }
 
-            if(User != sipUri.User){
+            if (User != sipUri.User)
+            {
                 return false;
             }
 
@@ -125,12 +711,14 @@ namespace LumiSoft.Net
             if(this.Password != sipUri.Password){
                 return false;
             }*/
-                        
-            if(Host.ToLower() != sipUri.Host.ToLower()){
+
+            if (Host.ToLower() != sipUri.Host.ToLower())
+            {
                 return false;
             }
 
-            if(Port != sipUri.Port){
+            if (Port != sipUri.Port)
+            {
                 return false;
             }
 
@@ -150,6 +738,67 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
+        /// Converts SIP_Uri to valid SIP-URI string.
+        /// </summary>
+        /// <returns>Returns SIP-URI string.</returns>
+        public override string ToString()
+        {
+            // Syntax: sip:/sips: username@host *[;parameter] [?header *[&header]]
+
+            var retVal = new StringBuilder();
+            if (IsSecure)
+            {
+                retVal.Append("sips:");
+            }
+            else
+            {
+                retVal.Append("sip:");
+            }
+            if (User != null)
+            {
+                retVal.Append(User + "@");
+            }
+
+            retVal.Append(Host);
+            if (Port > -1)
+            {
+                retVal.Append(":" + Port.ToString());
+            }
+
+            // Add URI parameters.
+            foreach (SIP_Parameter parameter in Parameters)
+            {
+                /*
+                 * If value is token value is not quoted(quoted-string).
+                 * If value contains `tspecials', value should be represented as quoted-string.
+                 * If value is empty string, only parameter name is added.
+                */
+                if (parameter.Value != null)
+                {
+                    if (MIME.MIME_Reader.IsToken(parameter.Value))
+                    {
+                        retVal.Append(";" + parameter.Name + "=" + parameter.Value);
+                    }
+                    else
+                    {
+                        retVal.Append(";" + parameter.Name + "=" + TextUtils.QuoteString(parameter.Value));
+                    }
+                }
+                else
+                {
+                    retVal.Append(";" + parameter.Name);
+                }
+            }
+
+            if (Header != null)
+            {
+                retVal.Append("?" + Header);
+            }
+
+            return retVal.ToString();
+        }
+
+        /// <summary>
         /// Parses SIP_Uri from SIP-URI string.
         /// </summary>
         /// <param name="value">SIP-URI  string.</param>
@@ -160,13 +809,15 @@ namespace LumiSoft.Net
         {
             // Syntax: sip:/sips: username@host:port *[;parameter] [?header *[&header]]
 
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
             value = Uri.UnescapeDataString(value);
 
-            if(!(value.ToLower().StartsWith("sip:") || value.ToLower().StartsWith("sips:"))){
+            if (!(value.ToLower().StartsWith("sip:") || value.ToLower().StartsWith("sips:")))
+            {
                 throw new SIP_ParseException("Specified value is invalid SIP-URI !");
             }
 
@@ -174,588 +825,49 @@ namespace LumiSoft.Net
 
             // IsSecure
             IsSecure = r.QuotedReadToDelimiter(':').ToLower() == "sips";
-                                    
+
             // Get username
-            if(r.SourceString.IndexOf('@') > -1){
+            if (r.SourceString.IndexOf('@') > -1)
+            {
                 User = r.QuotedReadToDelimiter('@');
             }
-            
+
             // Gets host[:port]
-            var host_port = r.QuotedReadToDelimiter(new[]{';','?'},false).Split(':');
+            var host_port = r.QuotedReadToDelimiter(new[] { ';', '?' }, false).Split(':');
             Host = host_port[0];
             // Optional port specified
-            if(host_port.Length == 2){
+            if (host_port.Length == 2)
+            {
                 Port = Convert.ToInt32(host_port[1]);
             }
-          
+
             // We have parameters and/or header
-            if(r.Available > 0){
+            if (r.Available > 0)
+            {
                 // Get parameters
-                var parameters = TextUtils.SplitQuotedString(r.QuotedReadToDelimiter('?'),';');
-                foreach (string parameter in parameters){
-                    if(parameter.Trim() != ""){
-                        var name_value = parameter.Trim().Split(new[]{'='},2);
-                        if (name_value.Length == 2){
-                            Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
+                var parameters = TextUtils.SplitQuotedString(r.QuotedReadToDelimiter('?'), ';');
+                foreach (string parameter in parameters)
+                {
+                    if (parameter.Trim() != "")
+                    {
+                        var name_value = parameter.Trim().Split(new[] { '=' }, 2);
+                        if (name_value.Length == 2)
+                        {
+                            Parameters.Add(name_value[0], TextUtils.UnQuoteString(name_value[1]));
                         }
-                        else{
-                            Parameters.Add(name_value[0],null);
+                        else
+                        {
+                            Parameters.Add(name_value[0], null);
                         }
                     }
                 }
 
                 // We have header
-                if(r.Available > 0){
+                if (r.Available > 0)
+                {
                     Header = r.ReadToEnd();
                 }
             }
         }
-
-        /// <summary>
-        /// Converts SIP_Uri to valid SIP-URI string.
-        /// </summary>
-        /// <returns>Returns SIP-URI string.</returns>
-        public override string ToString()
-        {
-            // Syntax: sip:/sips: username@host *[;parameter] [?header *[&header]]
-
-            var retVal = new StringBuilder();
-            if (IsSecure){
-                retVal.Append("sips:");
-            }
-            else{
-                retVal.Append("sip:");
-            }
-            if(User != null){
-                retVal.Append(User + "@");
-            }
-
-            retVal.Append(Host);
-            if(Port > -1){
-                retVal.Append(":" + Port.ToString());
-            }
-            
-            // Add URI parameters.
-            foreach(SIP_Parameter parameter in Parameters){
-                /*
-                 * If value is token value is not quoted(quoted-string).
-                 * If value contains `tspecials', value should be represented as quoted-string.
-                 * If value is empty string, only parameter name is added.
-                */
-                if(parameter.Value != null){    
-                    if(MIME.MIME_Reader.IsToken(parameter.Value)){
-                        retVal.Append(";" + parameter.Name + "=" + parameter.Value);
-                    }
-                    else{
-                        retVal.Append(";" + parameter.Name + "=" + TextUtils.QuoteString(parameter.Value));
-                    }
-                }
-                else{
-                    retVal.Append(";" + parameter.Name);
-                }
-            }
-
-            if(Header != null){
-                retVal.Append("?" + Header);
-            }
-
-            return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets URI scheme.
-        /// </summary>
-        public override string Scheme
-        {
-            get
-            {
-                if(IsSecure){
-                    return "sips";
-                }
-
-                return "sip";
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if secure SIP. If true then sips: uri, otherwise sip: uri.
-        /// </summary>
-        public bool IsSecure { get; set; }
-
-        /// <summary>
-        /// Gets address from SIP URI. Examples: ivar@lumisoft.ee,ivar@195.222.10.1.
-        /// </summary>
-        public string Address
-        {
-            get{ return User + "@" + m_Host; }
-        }
-
-        /// <summary>
-        /// Gets or sets user name. Value null means not specified.
-        /// </summary>
-        public string User { get; set; }
-
-        /// <summary>
-        /// Gets or sets host name or IP.
-        /// </summary>
-        public string Host
-        {
-            get{ return m_Host; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Host value can't be null or '' !");
-                }
-
-                m_Host = value; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets host port. Value -1 means not specified.
-        /// </summary>
-        public int Port { get; set; } = -1;
-
-        /// <summary>
-        /// Gets host with optional port. If port specified returns Host:Port, otherwise Host.
-        /// </summary>
-        public string HostPort
-        {
-            get
-            {
-                if(Port == -1){
-                    return m_Host;
-                }
-
-                return m_Host + ":" + Port;
-            }
-        }
-
-        /// <summary>
-        /// Gets URI parameters.
-        /// </summary>
-        public SIP_ParameterCollection Parameters { get; }
-
-        /// <summary>
-        /// Gets or sets 'cause' parameter value. Value -1 means not specified.
-        /// Cause is a URI parameter that is used to indicate the service that
-        /// the User Agent Server (UAS) receiving the message should perform.
-        /// Defined in RFC 4458.
-        /// </summary>
-        public int Param_Cause
-        {
-            get{
-                var parameter = Parameters["cause"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value == -1){
-                    Parameters.Remove("cause");
-                }
-                else{
-                    Parameters.Set("cause",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'comp' parameter value. Value null means not specified. Defined in RFC 3486.
-        /// </summary>
-        public string Param_Comp
-        {
-            get{
-                var parameter = Parameters["comp"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("comp");
-                }
-                else{
-                    Parameters.Set("comp",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'content-type' parameter value. Value null means not specified. Defined in RFC 4240.
-        /// </summary>
-        public string Param_ContentType
-        {
-            get{ 
-                var parameter = Parameters["content-type"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("content-type");
-                }
-                else{
-                    Parameters.Set("content-type",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'delay' prameter value. Value -1 means not specified. 
-        /// Specifies a delay interval between announcement repetitions. The delay is measured in milliseconds.
-        /// Defined in RFC 4240.
-        /// </summary>
-        public int Param_Delay
-        {
-            get{
-                var parameter = Parameters["delay"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value == -1){
-                    Parameters.Remove("delay");
-                }
-                else{
-                    Parameters.Set("delay",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'duration' prameter value. Value -1 means not specified. 
-        /// Specifies the maximum duration of the announcement. The media server will discontinue 
-        /// the announcement and end the call if the maximum duration has been reached. The duration 
-        /// is measured in milliseconds. Defined in RFC 4240.
-        /// </summary>
-        public int Param_Duration
-        {
-            get{
-                var parameter = Parameters["duration"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value == -1){
-                    Parameters.Remove("duration");
-                }
-                else{
-                    Parameters.Set("duration",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'locale' prameter value. Specifies the language and optionally country 
-        /// variant of the announcement sequence named in the "play=" parameter. Defined in RFC 4240.
-        /// </summary>
-        public string Param_Locale
-        {
-            get{ 
-                var parameter = Parameters["locale"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("locale");
-                }
-                else{
-                    Parameters.Set("locale",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'lr' parameter. The lr parameter, when present, indicates that the element
-        /// responsible for this resource implements the routing mechanisms
-        /// specified in this document. Defined in RFC 3261.
-        /// </summary>
-        public bool Param_Lr
-        {
-            get{ 
-                var parameter = Parameters["lr"];
-                if (parameter != null){
-                    return true;
-                }
-
-                return false;
-            }
-
-            set{
-                if(!value){
-                    Parameters.Remove("lr");
-                }
-                else{
-                    Parameters.Set("lr",null);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'maddr' parameter value. Value null means not specified. 
-        /// <a style="font-weight: bold; color: red">NOTE: This value is deprecated in since SIP 2.0.</a>
-        /// The maddr parameter indicates the server address to be contacted for this user, 
-        /// overriding any address derived from the host field. Defined in RFC 3261.
-        /// </summary>
-        public string Param_Maddr
-        {
-            get{ 
-                var parameter = Parameters["maddr"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("maddr");
-                }
-                else{
-                    Parameters.Set("maddr",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'method' prameter value. Value null means not specified. Defined in RFC 3261.
-        /// </summary>
-        public string Param_Method
-        {
-            get{ 
-                var parameter = Parameters["method"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("method");
-                }
-                else{
-                    Parameters.Set("method",value);
-                }
-            }
-        }
-                                              
-        //  param[n]           No                    [RFC4240]
-
-        /// <summary>
-        /// Gets or sets 'play' parameter value. Value null means not specified. 
-        /// Specifies the resource or announcement sequence to be played. Defined in RFC 4240.
-        /// </summary>
-        public string Param_Play
-        {
-            get{ 
-                var parameter = Parameters["play"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("play");
-                }
-                else{
-                    Parameters.Set("play",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'repeat' parameter value. Value -1 means not specified, value int.MaxValue means 'forever'.
-        /// Specifies how many times the media server should repeat the announcement or sequence named by 
-        /// the "play=" parameter. Defined in RFC 4240.
-        /// </summary>
-        public int Param_Repeat
-        {
-            get{ 
-                var parameter = Parameters["ttl"];
-                if (parameter != null)
-                {
-                    if(parameter.Value.ToLower() == "forever"){
-                        return int.MaxValue;
-                    }
-
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value == -1){
-                    Parameters.Remove("ttl");
-                }
-                else if(value == int.MaxValue){
-                    Parameters.Set("ttl","forever");
-                }
-                else{
-                    Parameters.Set("ttl",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'target' parameter value. Value null means not specified. Defined in RFC 4240.
-        /// </summary>
-        public string Param_Target
-        {
-            get{ 
-                var parameter = Parameters["target"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("target");
-                }
-                else{
-                    Parameters.Set("target",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'transport' parameter value. Value null means not specified. 
-        /// The transport parameter determines the transport mechanism to
-        /// be used for sending SIP messages. Defined in RFC 3261.
-        /// </summary>
-        public string Param_Transport
-        {
-            get{ 
-                var parameter = Parameters["transport"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("transport");
-                }
-                else{
-                    Parameters.Set("transport",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'ttl' parameter value. Value -1 means not specified.
-        /// <a style="font-weight: bold; color: red">NOTE: This value is deprecated in since SIP 2.0.</a>
-        /// The ttl parameter determines the time-to-live value of the UDP
-        /// multicast packet and MUST only be used if maddr is a multicast
-        /// address and the transport protocol is UDP. Defined in RFC 3261.
-        /// </summary>
-        public int Param_Ttl
-        {
-            get{ 
-                var parameter = Parameters["ttl"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value == -1){
-                    Parameters.Remove("ttl");
-                }
-                else{
-                    Parameters.Set("ttl",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'user' parameter value. Value null means not specified. Defined in RFC 3261.
-        /// </summary>
-        public string Param_User
-        {
-            get{ 
-                var parameter = Parameters["user"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("user");
-                }
-                else{
-                    Parameters.Set("user",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'voicexml' parameter value. Value null means not specified. Defined in RFC 4240.
-        /// </summary>
-        public string Param_Voicexml
-        {
-            get{ 
-                var parameter = Parameters["voicexml"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("voicexml");
-                }
-                else{
-                    Parameters.Set("voicexml",value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets header.
-        /// </summary>
-        public string Header { get; set; }
     }
 }

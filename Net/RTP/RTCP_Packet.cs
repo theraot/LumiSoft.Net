@@ -10,6 +10,64 @@ namespace LumiSoft.Net.RTP
         private int m_PaddBytesCount;
 
         /// <summary>
+        /// Gets if packet is padded to some bytes boundary.
+        /// </summary>
+        public bool IsPadded
+        {
+            get
+            {
+                if (m_PaddBytesCount > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets number empty bytes to add at the end of packet.
+        /// </summary>
+        public int PaddBytesCount
+        {
+            get { return m_PaddBytesCount; }
+
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Property 'PaddBytesCount' value must be >= 0.");
+                }
+
+                m_PaddBytesCount = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of bytes needed for this packet.
+        /// </summary>
+        public abstract int Size
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets RTCP packet type.
+        /// </summary>
+        public abstract int Type
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets RTCP version.
+        /// </summary>
+        public abstract int Version
+        {
+            get;
+        }
+
+        /// <summary>
         /// Parses 1 RTCP packet from the specified buffer.
         /// </summary>
         /// <param name="buffer">Buffer which contains RTCP packet.</param>
@@ -17,9 +75,9 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns parsed RTCP packet.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public static RTCP_Packet Parse(byte[] buffer,ref int offset)
+        public static RTCP_Packet Parse(byte[] buffer, ref int offset)
         {
-            return Parse(buffer, ref offset,false);
+            return Parse(buffer, ref offset, false);
         }
 
         /// <summary>
@@ -31,12 +89,14 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns parsed RTCP packet or null if parsing is failed and <b>noException=true</b>.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public static RTCP_Packet Parse(byte[] buffer,ref int offset,bool noException)
+        public static RTCP_Packet Parse(byte[] buffer, ref int offset, bool noException)
         {
-            if(buffer == null){
+            if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
             }
-            if(offset < 0){
+            if (offset < 0)
+            {
                 throw new ArgumentException("Argument 'offset' value must be >= 0.");
             }
 
@@ -51,47 +111,53 @@ namespace LumiSoft.Net.RTP
             int type = buffer[offset + 1];
 
             // SR
-            if(type == RTCP_PacketType.SR){
+            if (type == RTCP_PacketType.SR)
+            {
                 var packet = new RTCP_Packet_SR();
-                packet.ParseInternal(buffer,ref offset);
+                packet.ParseInternal(buffer, ref offset);
 
                 return packet;
             }
             // RR
 
-            if(type == RTCP_PacketType.RR){
+            if (type == RTCP_PacketType.RR)
+            {
                 var packet = new RTCP_Packet_RR();
-                packet.ParseInternal(buffer,ref offset);
+                packet.ParseInternal(buffer, ref offset);
 
                 return packet;
             }
             // SDES
-            if(type == RTCP_PacketType.SDES){
+            if (type == RTCP_PacketType.SDES)
+            {
                 var packet = new RTCP_Packet_SDES();
-                packet.ParseInternal(buffer,ref offset);
+                packet.ParseInternal(buffer, ref offset);
 
                 return packet;
             }
             // BYE
-            if(type == RTCP_PacketType.BYE){
+            if (type == RTCP_PacketType.BYE)
+            {
                 var packet = new RTCP_Packet_BYE();
-                packet.ParseInternal(buffer,ref offset);
+                packet.ParseInternal(buffer, ref offset);
 
                 return packet;
             }
             // APP
-            if(type == RTCP_PacketType.APP){
+            if (type == RTCP_PacketType.APP)
+            {
                 var packet = new RTCP_Packet_APP();
-                packet.ParseInternal(buffer,ref offset);
+                packet.ParseInternal(buffer, ref offset);
 
                 return packet;
             }
-// We need to move offset.
+            // We need to move offset.
             offset += 2;
             int length = buffer[offset++] << 8 | buffer[offset++];
             offset += length;
 
-            if(noException){
+            if (noException)
+            {
                 return null;
             }
 
@@ -103,68 +169,13 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         /// <param name="buffer">Buffer where to store packet.</param>
         /// <param name="offset">Offset in buffer.</param>
-        public abstract void ToByte(byte[] buffer,ref int offset);
+        public abstract void ToByte(byte[] buffer, ref int offset);
 
         /// <summary>
         /// Parses RTCP packet from the specified buffer.
         /// </summary>
         /// <param name="buffer">Buffer which contains packet.</param>
         /// <param name="offset">Offset in buffer.</param>
-        protected abstract void ParseInternal(byte[] buffer,ref int offset);
-
-        /// <summary>
-        /// Gets RTCP version.
-        /// </summary>
-        public abstract int Version
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets if packet is padded to some bytes boundary.
-        /// </summary>
-        public bool IsPadded
-        {
-            get
-            {
-                if(m_PaddBytesCount > 0){
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets RTCP packet type.
-        /// </summary>
-        public abstract int Type
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets or sets number empty bytes to add at the end of packet.
-        /// </summary>
-        public int PaddBytesCount
-        {
-            get{ return m_PaddBytesCount; }
-
-            set{
-                if(value < 0){
-                    throw new ArgumentException("Property 'PaddBytesCount' value must be >= 0.");
-                }
-
-                m_PaddBytesCount = value;
-            }            
-        }
-
-        /// <summary>
-        /// Gets number of bytes needed for this packet.
-        /// </summary>
-        public abstract int Size
-        {
-            get;
-        }
+        protected abstract void ParseInternal(byte[] buffer, ref int offset);
     }
 }

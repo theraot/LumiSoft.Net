@@ -19,15 +19,47 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public Relay_Queue(string name)
         {
-            if(name == null){
+            if (name == null)
+            {
                 throw new ArgumentNullException("name");
             }
-            if(name == ""){
+            if (name == "")
+            {
                 throw new ArgumentException("Argument 'name' value may not be empty.");
             }
 
-            Name   = name;
+            Name = name;
             m_pQueue = new Queue<Relay_QueueItem>();
+        }
+
+        /// <summary>
+        /// Gets number of queued items in queue.
+        /// </summary>
+        public int Count
+        {
+            get { return m_pQueue.Count; }
+        }
+
+        /// <summary>
+        /// Gets queue name.
+        /// </summary>
+        public string Name { get; } = "";
+
+        /// <summary>
+        /// Dequeues message from queue. If there are no messages, this method returns null.
+        /// </summary>
+        /// <returns>Returns queued relay message or null if no messages.</returns>
+        public Relay_QueueItem DequeueMessage()
+        {
+            lock (m_pQueue)
+            {
+                if (m_pQueue.Count > 0)
+                {
+                    return m_pQueue.Dequeue();
+                }
+
+                return null;
+            }
         }
 
         /// <summary>
@@ -47,9 +79,9 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="tag">User data.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>to</b>,<b>to</b>,<b>messageID</b> or <b>message</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void QueueMessage(string from,string to,string messageID,Stream message,object tag)
+        public void QueueMessage(string from, string to, string messageID, Stream message, object tag)
         {
-            QueueMessage(from,null,SMTP_DSN_Ret.NotSpecified,to,null,SMTP_DSN_Notify.NotSpecified,messageID,message,tag);
+            QueueMessage(from, null, SMTP_DSN_Ret.NotSpecified, to, null, SMTP_DSN_Notify.NotSpecified, messageID, message, tag);
         }
 
         /// <summary>
@@ -66,50 +98,25 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="tag">User data.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>to</b>,<b>to</b>,<b>messageID</b> or <b>message</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void QueueMessage(string from,string envelopeID,SMTP_DSN_Ret ret,string to,string originalRecipient,SMTP_DSN_Notify notify,string messageID,Stream message,object tag)
+        public void QueueMessage(string from, string envelopeID, SMTP_DSN_Ret ret, string to, string originalRecipient, SMTP_DSN_Notify notify, string messageID, Stream message, object tag)
         {
-            if(messageID == null){
+            if (messageID == null)
+            {
                 throw new ArgumentNullException("messageID");
             }
-            if(messageID == ""){
+            if (messageID == "")
+            {
                 throw new ArgumentException("Argument 'messageID' value must be specified.");
             }
-            if(message == null){
+            if (message == null)
+            {
                 throw new ArgumentNullException("message");
             }
 
-            lock(m_pQueue){
-                m_pQueue.Enqueue(new Relay_QueueItem(this,from,envelopeID,ret,to,originalRecipient,notify,messageID,message,tag));
-            }
-        }
-
-        /// <summary>
-        /// Dequeues message from queue. If there are no messages, this method returns null.
-        /// </summary>
-        /// <returns>Returns queued relay message or null if no messages.</returns>
-        public Relay_QueueItem DequeueMessage()
-        {
-            lock(m_pQueue)
+            lock (m_pQueue)
             {
-                if(m_pQueue.Count > 0){
-                    return m_pQueue.Dequeue();
-                }
-
-                return null;
+                m_pQueue.Enqueue(new Relay_QueueItem(this, from, envelopeID, ret, to, originalRecipient, notify, messageID, message, tag));
             }
-        }
-
-        /// <summary>
-        /// Gets queue name.
-        /// </summary>
-        public string Name { get; } = "";
-
-        /// <summary>
-        /// Gets number of queued items in queue.
-        /// </summary>
-        public int Count
-        {
-            get{ return m_pQueue.Count; }
         }
     }
 }

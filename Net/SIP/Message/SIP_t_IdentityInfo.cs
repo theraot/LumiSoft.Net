@@ -30,6 +30,59 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets 'alg' parameter value. Value null means not specified.
+        /// </summary>
+        public string Alg
+        {
+            get
+            {
+                var parameter = Parameters["alg"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Parameters.Remove("alg");
+                }
+                else
+                {
+                    Parameters.Set("alg", value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets URI value.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid 'absoluteURI' value is passed.</exception>
+        public string Uri
+        {
+            get { return m_Uri; }
+
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Uri");
+                }
+                if (value == "")
+                {
+                    throw new ArgumentException("Invalid Identity-Info 'absoluteURI' value !");
+                }
+
+                m_Uri = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "Identity-Info" from specified value.
         /// </summary>
         /// <param name="value">SIP "Identity-Info" value.</param>
@@ -37,7 +90,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -60,19 +114,22 @@ namespace LumiSoft.Net.SIP.Message
                 ident-info-extension = generic-param
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // absoluteURI
-            try{
+            try
+            {
                 var word = reader.ReadParenthesized();
                 m_Uri = word ?? throw new SIP_ParseException("Invalid Identity-Info 'absoluteURI' value !");
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid Identity-Info 'absoluteURI' value !");
             }
-            
+
             // Parse parameters
             ParseParameters(reader);
         }
@@ -100,51 +157,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets URI value.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid 'absoluteURI' value is passed.</exception>
-        public string Uri
-        {
-            get{ return m_Uri; }
-
-            set{
-                if(value == null){
-                    throw new ArgumentNullException("Uri");
-                }
-                if(value == ""){
-                    throw new ArgumentException("Invalid Identity-Info 'absoluteURI' value !");
-                }
-
-                m_Uri = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'alg' parameter value. Value null means not specified.
-        /// </summary>
-        public string Alg
-        {
-            get{ 
-                var parameter = Parameters["alg"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{                
-                if(string.IsNullOrEmpty(value)){
-                    Parameters.Remove("alg");
-                }
-                else{
-                    Parameters.Set("alg",value);
-                }
-            }
         }
     }
 }

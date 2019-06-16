@@ -23,30 +23,41 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Parses body from the specified stream
+        /// Gets if body has modified.
         /// </summary>
-        /// <param name="owner">Owner MIME entity.</param>
-        /// <param name="defaultContentType">Default content-type for this body.</param>
-        /// <param name="stream">Stream from where to read body.</param>
-        /// <returns>Returns parsed body.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b>, <b>defaultContentType</b> or <b>stream</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when any parsing errors.</exception>
-        protected static new MIME_b Parse(MIME_Entity owner,MIME_h_ContentType defaultContentType,SmartStream stream)
+        public override bool IsModified
         {
-            if(owner == null){
-                throw new ArgumentNullException("owner");
-            }
-            if(defaultContentType == null){
-                throw new ArgumentNullException("defaultContentType");
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
+            get { return m_pMessage.IsModified; }
+        }
 
-            var retVal = new MIME_b_MessageRfc822();
-            retVal.m_pMessage = Mail_Message.ParseFromStream(stream);
+        /// <summary>
+        /// Gets embbed mail message.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
+        public Mail_Message Message
+        {
+            get { return m_pMessage; }
 
-            return retVal;
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+                if (Entity == null)
+                {
+                    throw new InvalidOperationException("Body must be bounded to some entity first.");
+                }
+
+                // Owner entity has no content-type or has different content-type, just add/overwrite it.
+                if (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype, MediaType, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Entity.ContentType = new MIME_h_ContentType(MediaType);
+                }
+
+                m_pMessage = value;
+            }
         }
 
         /// <summary>
@@ -58,47 +69,44 @@ namespace LumiSoft.Net.MIME
         /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        internal protected override void ToStream(Stream stream,MIME_Encoding_EncodedWord headerWordEncoder,Encoding headerParmetersCharset,bool headerReencode)
+        internal protected override void ToStream(Stream stream, MIME_Encoding_EncodedWord headerWordEncoder, Encoding headerParmetersCharset, bool headerReencode)
         {
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
-            m_pMessage.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
+            m_pMessage.ToStream(stream, headerWordEncoder, headerParmetersCharset, headerReencode);
         }
 
         /// <summary>
-        /// Gets if body has modified.
+        /// Parses body from the specified stream
         /// </summary>
-        public override bool IsModified
+        /// <param name="owner">Owner MIME entity.</param>
+        /// <param name="defaultContentType">Default content-type for this body.</param>
+        /// <param name="stream">Stream from where to read body.</param>
+        /// <returns>Returns parsed body.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b>, <b>defaultContentType</b> or <b>stream</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when any parsing errors.</exception>
+        protected static new MIME_b Parse(MIME_Entity owner, MIME_h_ContentType defaultContentType, SmartStream stream)
         {
-            get{ return m_pMessage.IsModified; }
-        }
-    
-        /// <summary>
-        /// Gets embbed mail message.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        public Mail_Message Message
-        {
-            get{ return m_pMessage; }
-
-            set{
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-                if(Entity == null){
-                    throw new InvalidOperationException("Body must be bounded to some entity first.");
-                }
-
-                // Owner entity has no content-type or has different content-type, just add/overwrite it.
-                if(Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase)){
-                    Entity.ContentType = new MIME_h_ContentType(MediaType);
-                }
-
-                m_pMessage = value;
+            if (owner == null)
+            {
+                throw new ArgumentNullException("owner");
             }
+            if (defaultContentType == null)
+            {
+                throw new ArgumentNullException("defaultContentType");
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            var retVal = new MIME_b_MessageRfc822();
+            retVal.m_pMessage = Mail_Message.ParseFromStream(stream);
+
+            return retVal;
         }
     }
 }

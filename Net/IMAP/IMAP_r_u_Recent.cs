@@ -14,12 +14,18 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public IMAP_r_u_Recent(int messageCount)
         {
-            if(messageCount < 0){
-                throw new ArgumentException("Arguments 'messageCount' value must be >= 0.","messageCount");
+            if (messageCount < 0)
+            {
+                throw new ArgumentException("Arguments 'messageCount' value must be >= 0.", "messageCount");
             }
 
             MessageCount = messageCount;
         }
+
+        /// <summary>
+        /// Gets number of messages in mailbox with \Recent flag set.
+        /// </summary>
+        public int MessageCount { get; }
 
         /// <summary>
         /// Parses RECENT response from recent-response string.
@@ -29,7 +35,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Recent Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -60,7 +67,7 @@ namespace LumiSoft.Net.IMAP
 
                 Example:    S: * 5 RECENT
             */
-                                               
+
             return new IMAP_r_u_Recent(Convert.ToInt32(response.Split(' ')[1]));
         }
 
@@ -74,10 +81,5 @@ namespace LumiSoft.Net.IMAP
 
             return "* " + MessageCount.ToString() + " RECENT\r\n";
         }
-
-        /// <summary>
-        /// Gets number of messages in mailbox with \Recent flag set.
-        /// </summary>
-        public int MessageCount { get; }
     }
 }

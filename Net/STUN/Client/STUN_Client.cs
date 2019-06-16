@@ -29,6 +29,119 @@ namespace LumiSoft.Net.STUN.Client
     /// </example>
     public class STUN_Client
     {
+
+        /// <summary>
+        /// Resolves socket local end point to public end point.
+        /// </summary>
+        /// <param name="stunServer">STUN server.</param>
+        /// <param name="port">STUN server port. Default port is 3478.</param>
+        /// <param name="socket">UDP socket to use.</param>
+        /// <returns>Returns public IP end point.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stunServer</b> or <b>socket</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        /// <exception cref="IOException">Is raised when no connection to STUN server.</exception>
+        public static IPEndPoint GetPublicEP(string stunServer, int port, Socket socket)
+        {
+            if (stunServer == null)
+            {
+                throw new ArgumentNullException("stunServer");
+            }
+            if (stunServer == "")
+            {
+                throw new ArgumentException("Argument 'stunServer' value must be specified.");
+            }
+            if (port < 1)
+            {
+                throw new ArgumentException("Invalid argument 'port' value.");
+            }
+            if (socket == null)
+            {
+                throw new ArgumentNullException("socket");
+            }
+            if (socket.ProtocolType != ProtocolType.Udp)
+            {
+                throw new ArgumentException("Socket must be UDP socket !");
+            }
+
+            var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(stunServer)[0], port);
+
+            try
+            {
+                // Test I
+                var test1 = new STUN_Message();
+                test1.Type = STUN_MessageType.BindingRequest;
+                var test1response = DoTransaction(test1, socket, remoteEndPoint, 1000);
+
+                // UDP blocked.
+                if (test1response == null)
+                {
+                    throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+                }
+
+                return test1response.SourceAddress;
+            }
+            catch
+            {
+                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+            }
+            finally
+            {
+                // Junk all late responses.
+                var startTime = DateTime.Now;
+                while (startTime.AddMilliseconds(200) > DateTime.Now)
+                {
+                    // We got response.
+                    if (socket.Poll(1, SelectMode.SelectRead))
+                    {
+                        var receiveBuffer = new byte[512];
+                        socket.Receive(receiveBuffer);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resolves local IP to public IP using STUN.
+        /// </summary>
+        /// <param name="stunServer">STUN server.</param>
+        /// <param name="port">STUN server port. Default port is 3478.</param>
+        /// <param name="localIP">Local IP address.</param>
+        /// <returns>Returns public IP address.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stunServer</b> or <b>localIP</b> is null reference.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        /// <exception cref="IOException">Is raised when no connection to STUN server.</exception>
+        public static IPAddress GetPublicIP(string stunServer, int port, IPAddress localIP)
+        {
+            if (stunServer == null)
+            {
+                throw new ArgumentNullException("stunServer");
+            }
+            if (stunServer == "")
+            {
+                throw new ArgumentException("Argument 'stunServer' value must be specified.");
+            }
+            if (port < 1)
+            {
+                throw new ArgumentException("Invalid argument 'port' value.");
+            }
+            if (localIP == null)
+            {
+                throw new ArgumentNullException("localIP");
+            }
+
+            if (!Net_Utils.IsPrivateIP(localIP))
+            {
+                return localIP;
+            }
+
+            var result = Query(stunServer, port, Net_Utils.CreateSocket(new IPEndPoint(localIP, 0), ProtocolType.Udp));
+            if (result.PublicEndPoint != null)
+            {
+                return result.PublicEndPoint.Address;
+            }
+
+            throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+        }
         /// <summary>
         /// Gets NAT info from STUN server.
         /// </summary>
@@ -38,19 +151,22 @@ namespace LumiSoft.Net.STUN.Client
         /// <returns>Returns UDP netwrok info.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>host</b> or <b>localEP</b> is null reference.</exception>
         /// <exception cref="Exception">Throws exception if unexpected error happens.</exception>
-        public static STUN_Result Query(string host,int port,IPEndPoint localEP)
+        public static STUN_Result Query(string host, int port, IPEndPoint localEP)
         {
-            if(host == null){
+            if (host == null)
+            {
                 throw new ArgumentNullException("host");
             }
-            if(localEP == null){
+            if (localEP == null)
+            {
                 throw new ArgumentNullException("localEP");
             }
 
-            using(Socket s = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
+            using (Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+            {
                 s.Bind(localEP);
 
-                return Query(host,port,s);
+                return Query(host, port, s);
             }
         }
 
@@ -62,22 +178,26 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns UDP netwrok info.</returns>
         /// <exception cref="Exception">Throws exception if unexpected error happens.</exception>
-        public static STUN_Result Query(string host,int port,Socket socket)
+        public static STUN_Result Query(string host, int port, Socket socket)
         {
-            if(host == null){
+            if (host == null)
+            {
                 throw new ArgumentNullException("host");
             }
-            if(socket == null){
+            if (socket == null)
+            {
                 throw new ArgumentNullException("socket");
             }
-            if(port < 1){
+            if (port < 1)
+            {
                 throw new ArgumentException("Port value must be >= 1 !");
             }
-            if(socket.ProtocolType != ProtocolType.Udp){
+            if (socket.ProtocolType != ProtocolType.Udp)
+            {
                 throw new ArgumentException("Socket must be UDP socket !");
             }
 
-            var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0],port);
+            var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0], port);
 
             /*
                 In test I, the client sends a STUN Binding Request to a server, without any flags set in the
@@ -139,39 +259,47 @@ namespace LumiSoft.Net.STUN.Client
                 // Test I
                 var test1 = new STUN_Message();
                 test1.Type = STUN_MessageType.BindingRequest;
-                var test1response = DoTransaction(test1,socket,remoteEndPoint,1600);
+                var test1response = DoTransaction(test1, socket, remoteEndPoint, 1600);
 
                 // UDP blocked.
-                if (test1response == null){
-                    return new STUN_Result(STUN_NetType.UdpBlocked,null);
+                if (test1response == null)
+                {
+                    return new STUN_Result(STUN_NetType.UdpBlocked, null);
                 }
-                else{
+                else
+                {
                     // Test II
                     var test2 = new STUN_Message();
                     test2.Type = STUN_MessageType.BindingRequest;
-                    test2.ChangeRequest = new STUN_t_ChangeRequest(true,true);
+                    test2.ChangeRequest = new STUN_t_ChangeRequest(true, true);
 
                     // No NAT.
-                    if(socket.LocalEndPoint.Equals(test1response.MappedAddress)){
-                        var test2Response = DoTransaction(test2,socket,remoteEndPoint,1600);
+                    if (socket.LocalEndPoint.Equals(test1response.MappedAddress))
+                    {
+                        var test2Response = DoTransaction(test2, socket, remoteEndPoint, 1600);
                         // Open Internet.
-                        if (test2Response != null){
-                            return new STUN_Result(STUN_NetType.OpenInternet,test1response.MappedAddress);
+                        if (test2Response != null)
+                        {
+                            return new STUN_Result(STUN_NetType.OpenInternet, test1response.MappedAddress);
                         }
                         // Symmetric UDP firewall.
-                        else{
-                            return new STUN_Result(STUN_NetType.SymmetricUdpFirewall,test1response.MappedAddress);
+                        else
+                        {
+                            return new STUN_Result(STUN_NetType.SymmetricUdpFirewall, test1response.MappedAddress);
                         }
                     }
                     // NAT
-                    else{
-                        var test2Response = DoTransaction(test2,socket,remoteEndPoint,1600);
+                    else
+                    {
+                        var test2Response = DoTransaction(test2, socket, remoteEndPoint, 1600);
 
                         // Full cone NAT.
-                        if (test2Response != null){
-                            return new STUN_Result(STUN_NetType.FullCone,test1response.MappedAddress);
+                        if (test2Response != null)
+                        {
+                            return new STUN_Result(STUN_NetType.FullCone, test1response.MappedAddress);
                         }
-                        else{
+                        else
+                        {
                             /*
                                 If no response is received, it performs test I again, but this time, does so to 
                                 the address and port from the CHANGED-ADDRESS attribute from the response to test I.
@@ -181,29 +309,35 @@ namespace LumiSoft.Net.STUN.Client
                             var test12 = new STUN_Message();
                             test12.Type = STUN_MessageType.BindingRequest;
 
-                            var test12Response = DoTransaction(test12,socket,test1response.ChangedAddress,1600);
-                            if (test12Response == null){
+                            var test12Response = DoTransaction(test12, socket, test1response.ChangedAddress, 1600);
+                            if (test12Response == null)
+                            {
                                 throw new Exception("STUN Test I(II) dind't get resonse !");
                             }
-                            else{
+                            else
+                            {
                                 // Symmetric NAT
-                                if(!test12Response.MappedAddress.Equals(test1response.MappedAddress)){
-                                    return new STUN_Result(STUN_NetType.Symmetric,test1response.MappedAddress);
+                                if (!test12Response.MappedAddress.Equals(test1response.MappedAddress))
+                                {
+                                    return new STUN_Result(STUN_NetType.Symmetric, test1response.MappedAddress);
                                 }
-                                else{
+                                else
+                                {
                                     // Test III
                                     var test3 = new STUN_Message();
                                     test3.Type = STUN_MessageType.BindingRequest;
-                                    test3.ChangeRequest = new STUN_t_ChangeRequest(false,true);
+                                    test3.ChangeRequest = new STUN_t_ChangeRequest(false, true);
 
-                                    var test3Response = DoTransaction(test3,socket,test1response.ChangedAddress,1600);
+                                    var test3Response = DoTransaction(test3, socket, test1response.ChangedAddress, 1600);
                                     // Restricted
-                                    if (test3Response != null){
-                                        return new STUN_Result(STUN_NetType.RestrictedCone,test1response.MappedAddress);
+                                    if (test3Response != null)
+                                    {
+                                        return new STUN_Result(STUN_NetType.RestrictedCone, test1response.MappedAddress);
                                     }
                                     // Port restricted
-                                    else{
-                                        return new STUN_Result(STUN_NetType.PortRestrictedCone,test1response.MappedAddress);
+                                    else
+                                    {
+                                        return new STUN_Result(STUN_NetType.PortRestrictedCone, test1response.MappedAddress);
                                     }
                                 }
                             }
@@ -211,114 +345,64 @@ namespace LumiSoft.Net.STUN.Client
                     }
                 }
             }
-            finally{
-                // Junk all late responses.
-                var startTime = DateTime.Now;
-                while (startTime.AddMilliseconds(200) > DateTime.Now){
-                    // We got response.
-                    if(socket.Poll(1,SelectMode.SelectRead)){
-                        var receiveBuffer = new byte[512];
-                        socket.Receive(receiveBuffer);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Resolves local IP to public IP using STUN.
-        /// </summary>
-        /// <param name="stunServer">STUN server.</param>
-        /// <param name="port">STUN server port. Default port is 3478.</param>
-        /// <param name="localIP">Local IP address.</param>
-        /// <returns>Returns public IP address.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stunServer</b> or <b>localIP</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="IOException">Is raised when no connection to STUN server.</exception>
-        public static IPAddress GetPublicIP(string stunServer,int port,IPAddress localIP)
-        {
-            if(stunServer == null){
-                throw new ArgumentNullException("stunServer");
-            }
-            if(stunServer == ""){
-                throw new ArgumentException("Argument 'stunServer' value must be specified.");
-            }
-            if(port < 1){
-                throw new ArgumentException("Invalid argument 'port' value.");
-            }
-            if(localIP == null){
-                throw new ArgumentNullException("localIP");
-            }
-
-            if(!Net_Utils.IsPrivateIP(localIP)){
-                return localIP;
-            }
-                        
-            var result = Query(stunServer,port,Net_Utils.CreateSocket(new IPEndPoint(localIP,0),ProtocolType.Udp));
-            if (result.PublicEndPoint != null){
-                return result.PublicEndPoint.Address;
-            }
-
-            throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
-        }
-
-        /// <summary>
-        /// Resolves socket local end point to public end point.
-        /// </summary>
-        /// <param name="stunServer">STUN server.</param>
-        /// <param name="port">STUN server port. Default port is 3478.</param>
-        /// <param name="socket">UDP socket to use.</param>
-        /// <returns>Returns public IP end point.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stunServer</b> or <b>socket</b> is null reference.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="IOException">Is raised when no connection to STUN server.</exception>
-        public static IPEndPoint GetPublicEP(string stunServer,int port,Socket socket)
-        {
-            if(stunServer == null){
-                throw new ArgumentNullException("stunServer");
-            }
-            if(stunServer == ""){
-                throw new ArgumentException("Argument 'stunServer' value must be specified.");
-            }
-            if(port < 1){
-                throw new ArgumentException("Invalid argument 'port' value.");
-            }
-            if(socket == null){
-                throw new ArgumentNullException("socket");
-            }
-            if(socket.ProtocolType != ProtocolType.Udp){
-                throw new ArgumentException("Socket must be UDP socket !");
-            }
-
-            var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(stunServer)[0],port);
-
-            try
+            finally
             {
-                // Test I
-                var test1 = new STUN_Message();
-                test1.Type = STUN_MessageType.BindingRequest;
-                var test1response = DoTransaction(test1,socket,remoteEndPoint,1000);
-
-                // UDP blocked.
-                if (test1response == null){
-                    throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
-                }
-
-                return test1response.SourceAddress;
-            }
-            catch{
-                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
-            }
-            finally{
                 // Junk all late responses.
                 var startTime = DateTime.Now;
-                while (startTime.AddMilliseconds(200) > DateTime.Now){
+                while (startTime.AddMilliseconds(200) > DateTime.Now)
+                {
                     // We got response.
-                    if(socket.Poll(1,SelectMode.SelectRead)){
+                    if (socket.Poll(1, SelectMode.SelectRead))
+                    {
                         var receiveBuffer = new byte[512];
                         socket.Receive(receiveBuffer);
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Does STUN transaction. Returns transaction response or null if transaction failed.
+        /// </summary>
+        /// <param name="request">STUN message.</param>
+        /// <param name="socket">Socket to use for send/receive.</param>
+        /// <param name="remoteEndPoint">Remote end point.</param>
+        /// <param name="timeout">Timeout in milli seconds.</param>
+        /// <returns>Returns transaction response or null if transaction failed.</returns>
+        private static STUN_Message DoTransaction(STUN_Message request, Socket socket, IPEndPoint remoteEndPoint, int timeout)
+        {
+            var requestBytes = request.ToByteData();
+            var startTime = DateTime.Now;
+            // Retransmit with 500 ms.
+            while (startTime.AddMilliseconds(timeout) > DateTime.Now)
+            {
+                try
+                {
+                    socket.SendTo(requestBytes, remoteEndPoint);
+
+                    // We got response.
+                    if (socket.Poll(500 * 1000, SelectMode.SelectRead))
+                    {
+                        var receiveBuffer = new byte[512];
+                        socket.Receive(receiveBuffer);
+
+                        // Parse message
+                        var response = new STUN_Message();
+                        response.Parse(receiveBuffer);
+
+                        // Check that transaction ID matches or not response what we want.
+                        if (Net_Utils.CompareArray(request.TransactionID, response.TransactionID))
+                        {
+                            return response;
+                        }
+                    }
+                }
+                catch
+                {
+                }
+            }
+
+            return null;
         }
 
         private void GetSharedSecret()
@@ -356,45 +440,6 @@ namespace LumiSoft.Net.STUN.Client
                     // TODO: Unknown response
                 }
             }*/
-        }
-
-        /// <summary>
-        /// Does STUN transaction. Returns transaction response or null if transaction failed.
-        /// </summary>
-        /// <param name="request">STUN message.</param>
-        /// <param name="socket">Socket to use for send/receive.</param>
-        /// <param name="remoteEndPoint">Remote end point.</param>
-        /// <param name="timeout">Timeout in milli seconds.</param>
-        /// <returns>Returns transaction response or null if transaction failed.</returns>
-        private static STUN_Message DoTransaction(STUN_Message request,Socket socket,IPEndPoint remoteEndPoint,int timeout)
-        {                        
-            var requestBytes = request.ToByteData();
-            var startTime = DateTime.Now;
-            // Retransmit with 500 ms.
-            while (startTime.AddMilliseconds(timeout) > DateTime.Now){
-                try{
-                    socket.SendTo(requestBytes,remoteEndPoint);
-
-                    // We got response.
-                    if(socket.Poll(500 * 1000,SelectMode.SelectRead)){
-                        var receiveBuffer = new byte[512];
-                        socket.Receive(receiveBuffer);
-
-                        // Parse message
-                        var response = new STUN_Message();
-                        response.Parse(receiveBuffer);
-                
-                        // Check that transaction ID matches or not response what we want.
-                        if(Net_Utils.CompareArray(request.TransactionID,response.TransactionID)){                            
-                            return response;
-                        }
-                    }
-                }
-                catch{
-                }
-            }
-
-            return null;
         }
 
         // TODO: Update to RFC 5389

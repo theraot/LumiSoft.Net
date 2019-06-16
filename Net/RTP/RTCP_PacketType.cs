@@ -5,10 +5,16 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_PacketType
     {
+
         /// <summary>
-        /// Sender report.
+        /// Application specifiec data.
         /// </summary>
-        public const int SR = 200;
+        public const int APP = 204;
+
+        /// <summary>
+        /// BYE.
+        /// </summary>
+        public const int BYE = 203;
 
         /// <summary>
         /// Receiver report.
@@ -19,15 +25,9 @@ namespace LumiSoft.Net.RTP
         /// Session description.
         /// </summary>
         public const int SDES = 202;
-
         /// <summary>
-        /// BYE.
+        /// Sender report.
         /// </summary>
-        public const int BYE = 203;
-
-        /// <summary>
-        /// Application specifiec data.
-        /// </summary>
-        public const int APP = 204;
+        public const int SR = 200;
     }
 }

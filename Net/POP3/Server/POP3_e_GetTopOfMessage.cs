@@ -14,20 +14,22 @@ namespace LumiSoft.Net.POP3.Server
         /// <param name="lines">Number of message-body lines to get.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>message</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        internal POP3_e_GetTopOfMessage(POP3_ServerMessage message,int lines)
+        internal POP3_e_GetTopOfMessage(POP3_ServerMessage message, int lines)
         {
-            if(lines < 0){
-                throw new ArgumentException("Argument 'lines' value must be >= 0.","lines");
+            if (lines < 0)
+            {
+                throw new ArgumentException("Argument 'lines' value must be >= 0.", "lines");
             }
 
-            Message  = message ?? throw new ArgumentNullException("message");
+            Message = message ?? throw new ArgumentNullException("message");
             LineCount = lines;
         }
 
         /// <summary>
-        /// Gets message info.
+        /// Gets or sets top of message data.
         /// </summary>
-        public POP3_ServerMessage Message { get; }
+        /// <remarks>This value should contain message header + number of <b>lineCount</b> body lines.</remarks>
+        public byte[] Data { get; set; }
 
         /// <summary>
         /// Gets number message body lines should be included.
@@ -35,9 +37,8 @@ namespace LumiSoft.Net.POP3.Server
         public int LineCount { get; }
 
         /// <summary>
-        /// Gets or sets top of message data.
+        /// Gets message info.
         /// </summary>
-        /// <remarks>This value should contain message header + number of <b>lineCount</b> body lines.</remarks>
-        public byte[] Data { get; set; }
+        public POP3_ServerMessage Message { get; }
     }
 }

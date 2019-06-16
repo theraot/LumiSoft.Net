@@ -21,24 +21,16 @@ namespace LumiSoft.Net.Mail
         /// <param name="ip">IP address.</param>
         /// <param name="hostName">Host name.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
-        public Mail_t_TcpInfo(IPAddress ip,string hostName)
+        public Mail_t_TcpInfo(IPAddress ip, string hostName)
         {
-            IP      = ip ?? throw new ArgumentNullException("ip");
+            IP = ip ?? throw new ArgumentNullException("ip");
             HostName = hostName;
         }
 
         /// <summary>
-        /// Returns this as string.
+        /// Gets host value. Value null means not specified.
         /// </summary>
-        /// <returns>Returns this as string.</returns>
-        public override string ToString()
-        {
-            if(string.IsNullOrEmpty(HostName)){
-                return "["  + IP.ToString() + "]";
-            }
-
-            return HostName + " [" + IP.ToString() + "]";
-        }
+        public string HostName { get; }
 
         /// <summary>
         /// Gets IP address.
@@ -46,8 +38,17 @@ namespace LumiSoft.Net.Mail
         public IPAddress IP { get; }
 
         /// <summary>
-        /// Gets host value. Value null means not specified.
+        /// Returns this as string.
         /// </summary>
-        public string HostName { get; }
+        /// <returns>Returns this as string.</returns>
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(HostName))
+            {
+                return "[" + IP.ToString() + "]";
+            }
+
+            return HostName + " [" + IP.ToString() + "]";
+        }
     }
 }

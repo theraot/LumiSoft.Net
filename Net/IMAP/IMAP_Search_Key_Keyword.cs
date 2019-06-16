@@ -21,29 +21,9 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-        /// Returns parsed IMAP SEARCH <b>KEYWORD (string)</b> key.
+        /// Gets keyword value.
         /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP SEARCH <b>KEYWORD (string)</b> key.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        internal static IMAP_Search_Key_Keyword Parse(StringReader r)
-        {
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-
-            var word = r.ReadWord();
-            if (!string.Equals(word,"KEYWORD",StringComparison.InvariantCultureIgnoreCase)){
-                throw new ParseException("Parse error: Not a SEARCH 'KEYWORD' key.");
-            }
-            var value = r.ReadWord();
-            if (value == null){
-                throw new ParseException("Parse error: Invalid 'KEYWORD' value.");
-            }
-
-            return new IMAP_Search_Key_Keyword(value);
-        }
+        public string Value { get; } = "";
 
         /// <summary>
         /// Returns this as string.
@@ -55,22 +35,46 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Returns parsed IMAP SEARCH <b>KEYWORD (string)</b> key.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP SEARCH <b>KEYWORD (string)</b> key.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
+        internal static IMAP_Search_Key_Keyword Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            var word = r.ReadWord();
+            if (!string.Equals(word, "KEYWORD", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ParseException("Parse error: Not a SEARCH 'KEYWORD' key.");
+            }
+            var value = r.ReadWord();
+            if (value == null)
+            {
+                throw new ParseException("Parse error: Invalid 'KEYWORD' value.");
+            }
+
+            return new IMAP_Search_Key_Keyword(value);
+        }
+
+        /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
         /// </summary>
         /// <param name="list">Array where to store command parts.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
         {
-            if(list == null){
+            if (list == null)
+            {
                 throw new ArgumentNullException("list");
             }
 
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, ToString()));
         }
-
-        /// <summary>
-        /// Gets keyword value.
-        /// </summary>
-        public string Value { get; } = "";
     }
 }

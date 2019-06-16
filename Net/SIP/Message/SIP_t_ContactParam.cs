@@ -28,6 +28,90 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets contact address.
+        /// </summary>
+        public SIP_t_NameAddress Address { get; private set; }
+
+        /// <summary>
+        /// Gets or sets expire parameter (time in seconds when contact expires). Value -1 means not specified.
+        /// </summary>
+        public int Expires
+        {
+            get
+            {
+                var parameter = Parameters["expires"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    Parameters.Remove("expires");
+                }
+                else
+                {
+                    Parameters.Set("expires", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets is this SIP contact is special STAR contact.
+        /// </summary>
+        public bool IsStarContact
+        {
+            get
+            {
+                if (Address.Uri.Value.StartsWith("*"))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
+        /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
+        /// </summary>
+        public double QValue
+        {
+            get
+            {
+                if (!Parameters.Contains("qvalue"))
+                {
+                    return -1;
+                }
+
+                return double.Parse(Parameters["qvalue"].Value, System.Globalization.NumberStyles.Any);
+            }
+
+            set
+            {
+                if (value < 0 || value > 1)
+                {
+                    throw new ArgumentException("Property QValue value must be between 0.0 and 1.0 !");
+                }
+
+                if (value < 0)
+                {
+                    Parameters.Remove("qvalue");
+                }
+                else
+                {
+                    Parameters.Set("qvalue", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "contact-param" from specified value.
         /// </summary>
         /// <param name="value">SIP "contact-param" value.</param>
@@ -35,7 +119,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -73,7 +158,8 @@ namespace LumiSoft.Net.SIP.Message
                 mark. There may or may not be LWS between the display-name and the "<".            
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -116,79 +202,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets is this SIP contact is special STAR contact.
-        /// </summary>
-        public bool IsStarContact
-        {
-            get
-            {
-                if(Address.Uri.Value.StartsWith("*")){
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets contact address.
-        /// </summary>
-        public SIP_t_NameAddress Address { get; private set; }
-
-        /// <summary>
-        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
-        /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
-        /// </summary>
-        public double QValue
-        {
-            get
-            {
-                if(!Parameters.Contains("qvalue")){
-                    return -1;
-                }
-
-                return double.Parse(Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
-            }
-
-            set{
-                if(value < 0 || value > 1){
-                    throw new ArgumentException("Property QValue value must be between 0.0 and 1.0 !");
-                }
-
-                if(value < 0){
-                    Parameters.Remove("qvalue");
-                }
-                else{
-                    Parameters.Set("qvalue",value.ToString());
-                }
-            }
-        }
-                
-        /// <summary>
-        /// Gets or sets expire parameter (time in seconds when contact expires). Value -1 means not specified.
-        /// </summary>
-        public int Expires
-        {
-            get{
-                var parameter = Parameters["expires"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{
-                if(value < 0){
-                    Parameters.Remove("expires");
-                }
-                else{
-                    Parameters.Set("expires",value.ToString());
-                }
-            }
         }
     }
 }

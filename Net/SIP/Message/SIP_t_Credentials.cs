@@ -15,8 +15,8 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_Credentials : SIP_t_Value
     {
-        private string m_Method   = "";
         private string m_AuthData = "";
+        private string m_Method = "";
 
         /// <summary>
         /// Default constructor.
@@ -28,6 +28,42 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets authentication data. That value depends on authentication type.
+        /// </summary>
+        public string AuthData
+        {
+            get { return m_AuthData; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property AuthData value cant be null or mepty !");
+                }
+
+                m_AuthData = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets authentication method. Normally this value is always 'Digest'.
+        /// </summary>
+        public string Method
+        {
+            get { return m_Method; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property Method value cant be null or mepty !");
+                }
+
+                m_Method = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "credentials" from specified value.
         /// </summary>
         /// <param name="value">SIP "credentials" value.</param>
@@ -35,7 +71,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -54,7 +91,8 @@ namespace LumiSoft.Net.SIP.Message
                 credentials = ("Digest" LWS digest-response) / other-response
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -64,7 +102,8 @@ namespace LumiSoft.Net.SIP.Message
 
             // Get authentication data
             word = reader.ReadToEnd();
-            if(word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Invalid 'credentials' value, authentication parameters are missing !");
             }
             m_AuthData = word.Trim();
@@ -77,38 +116,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_Method + " " + m_AuthData;
-        }
-
-        /// <summary>
-        /// Gets or sets authentication method. Normally this value is always 'Digest'.
-        /// </summary>
-        public string Method
-        {
-            get{ return m_Method; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property Method value cant be null or mepty !");
-                }
-
-                m_Method = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets authentication data. That value depends on authentication type.
-        /// </summary>
-        public string AuthData
-        {
-            get{ return m_AuthData; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property AuthData value cant be null or mepty !");
-                }
-
-                m_AuthData = value;
-            }
         }
     }
 }

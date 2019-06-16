@@ -18,6 +18,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets list of supported capabilities.
+        /// </summary>
+        public string[] Capabilities { get; }
+
+        /// <summary>
         /// Parses CAPABILITY optional response from string.
         /// </summary>
         /// <param name="value">CAPABILITY optional response string.</param>
@@ -25,16 +30,19 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public new static IMAP_t_orc_Capability Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new[]{' '},2);
-            if (!string.Equals("CAPABILITY",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
-                throw new ArgumentException("Invalid CAPABILITY response value.","value");
+            var code_value = value.Split(new[] { ' ' }, 2);
+            if (!string.Equals("CAPABILITY", code_value[0], StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("Invalid CAPABILITY response value.", "value");
             }
-            if(code_value.Length != 2){
-                throw new ArgumentException("Invalid CAPABILITY response value.","value");
+            if (code_value.Length != 2)
+            {
+                throw new ArgumentException("Invalid CAPABILITY response value.", "value");
             }
 
             return new IMAP_t_orc_Capability(code_value[1].Split(' '));
@@ -46,12 +54,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "CAPABILITY (" + Net_Utils.ArrayToString(Capabilities," ") + ")";
+            return "CAPABILITY (" + Net_Utils.ArrayToString(Capabilities, " ") + ")";
         }
-
-        /// <summary>
-        /// Gets list of supported capabilities.
-        /// </summary>
-        public string[] Capabilities { get; }
     }
 }

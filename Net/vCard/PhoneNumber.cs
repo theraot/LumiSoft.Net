@@ -5,29 +5,53 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class PhoneNumber
     {
-        private PhoneNumberType_enum m_Type   = PhoneNumberType_enum.Voice;
-        private string               m_Number = "";
-                
+        private string m_Number = "";
+        private PhoneNumberType_enum m_Type = PhoneNumberType_enum.Voice;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="item">Owner vCard item.</param>
         /// <param name="type">Phone number type. Note: This value can be flagged value !</param>
         /// <param name="number">Phone number.</param>
-        internal PhoneNumber(Item item,PhoneNumberType_enum type,string number)
+        internal PhoneNumber(Item item, PhoneNumberType_enum type, string number)
         {
-            Item  = item;
-            m_Type   = type;
+            Item = item;
+            m_Type = type;
             m_Number = number;
         }
 
         /// <summary>
-        /// This method is called when some property has changed, wee need to update underlaying vCard item.
+        /// Gets underlaying vCrad item.
         /// </summary>
-        private void Changed()
+        public Item Item { get; }
+
+        /// <summary>
+        /// Gets or sets phone number.
+        /// </summary>
+        public string Number
         {
-            Item.ParametersString = PhoneTypeToString(m_Type);
-            Item.Value            = m_Number;
+            get { return m_Number; }
+
+            set
+            {
+                m_Number = value;
+                Changed();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets phone number type. Note: This property can be flagged value !
+        /// </summary>
+        public PhoneNumberType_enum NumberType
+        {
+            get { return m_Type; }
+
+            set
+            {
+                m_Type = value;
+                Changed();
+            }
         }
 
         /// <summary>
@@ -37,50 +61,64 @@ namespace LumiSoft.Net.Mime.vCard
         internal static PhoneNumber Parse(Item item)
         {
             var type = PhoneNumberType_enum.NotSpecified;
-            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1)
+            {
                 type |= PhoneNumberType_enum.Preferred;
             }
-            if(item.ParametersString.ToUpper().IndexOf("HOME") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("HOME") != -1)
+            {
                 type |= PhoneNumberType_enum.Home;
             }
-            if(item.ParametersString.ToUpper().IndexOf("MSG") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("MSG") != -1)
+            {
                 type |= PhoneNumberType_enum.Msg;
             }
-            if(item.ParametersString.ToUpper().IndexOf("WORK") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("WORK") != -1)
+            {
                 type |= PhoneNumberType_enum.Work;
             }
-            if(item.ParametersString.ToUpper().IndexOf("VOICE") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("VOICE") != -1)
+            {
                 type |= PhoneNumberType_enum.Voice;
             }
-            if(item.ParametersString.ToUpper().IndexOf("FAX") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("FAX") != -1)
+            {
                 type |= PhoneNumberType_enum.Fax;
             }
-            if(item.ParametersString.ToUpper().IndexOf("CELL") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("CELL") != -1)
+            {
                 type |= PhoneNumberType_enum.Cellular;
             }
-            if(item.ParametersString.ToUpper().IndexOf("VIDEO") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("VIDEO") != -1)
+            {
                 type |= PhoneNumberType_enum.Video;
             }
-            if(item.ParametersString.ToUpper().IndexOf("PAGER") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("PAGER") != -1)
+            {
                 type |= PhoneNumberType_enum.Pager;
             }
-            if(item.ParametersString.ToUpper().IndexOf("BBS") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("BBS") != -1)
+            {
                 type |= PhoneNumberType_enum.BBS;
             }
-            if(item.ParametersString.ToUpper().IndexOf("MODEM") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("MODEM") != -1)
+            {
                 type |= PhoneNumberType_enum.Modem;
             }
-            if(item.ParametersString.ToUpper().IndexOf("CAR") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("CAR") != -1)
+            {
                 type |= PhoneNumberType_enum.Car;
             }
-            if(item.ParametersString.ToUpper().IndexOf("ISDN") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("ISDN") != -1)
+            {
                 type |= PhoneNumberType_enum.ISDN;
             }
-            if(item.ParametersString.ToUpper().IndexOf("PCS") != -1){
+            if (item.ParametersString.ToUpper().IndexOf("PCS") != -1)
+            {
                 type |= PhoneNumberType_enum.PCS;
             }
 
-            return new PhoneNumber(item,type,item.Value);
+            return new PhoneNumber(item, type, item.Value);
         }
 
         /// <summary>
@@ -91,84 +129,77 @@ namespace LumiSoft.Net.Mime.vCard
         internal static string PhoneTypeToString(PhoneNumberType_enum type)
         {
             var retVal = "";
-            if ((type & PhoneNumberType_enum.BBS) != 0){
+            if ((type & PhoneNumberType_enum.BBS) != 0)
+            {
                 retVal += "BBS,";
             }
-            if((type & PhoneNumberType_enum.Car) != 0){
+            if ((type & PhoneNumberType_enum.Car) != 0)
+            {
                 retVal += "CAR,";
             }
-            if((type & PhoneNumberType_enum.Cellular) != 0){
+            if ((type & PhoneNumberType_enum.Cellular) != 0)
+            {
                 retVal += "CELL,";
             }
-            if((type & PhoneNumberType_enum.Fax) != 0){
+            if ((type & PhoneNumberType_enum.Fax) != 0)
+            {
                 retVal += "FAX,";
             }
-            if((type & PhoneNumberType_enum.Home) != 0){
+            if ((type & PhoneNumberType_enum.Home) != 0)
+            {
                 retVal += "HOME,";
             }
-            if((type & PhoneNumberType_enum.ISDN) != 0){
+            if ((type & PhoneNumberType_enum.ISDN) != 0)
+            {
                 retVal += "ISDN,";
             }
-            if((type & PhoneNumberType_enum.Modem) != 0){
+            if ((type & PhoneNumberType_enum.Modem) != 0)
+            {
                 retVal += "MODEM,";
             }
-            if((type & PhoneNumberType_enum.Msg) != 0){
+            if ((type & PhoneNumberType_enum.Msg) != 0)
+            {
                 retVal += "MSG,";
             }
-            if((type & PhoneNumberType_enum.Pager) != 0){
+            if ((type & PhoneNumberType_enum.Pager) != 0)
+            {
                 retVal += "PAGER,";
             }
-            if((type & PhoneNumberType_enum.PCS) != 0){
+            if ((type & PhoneNumberType_enum.PCS) != 0)
+            {
                 retVal += "PCS,";
             }
-            if((type & PhoneNumberType_enum.Preferred) != 0){
+            if ((type & PhoneNumberType_enum.Preferred) != 0)
+            {
                 retVal += "PREF,";
             }
-            if((type & PhoneNumberType_enum.Video) != 0){
+            if ((type & PhoneNumberType_enum.Video) != 0)
+            {
                 retVal += "VIDEO,";
             }
-            if((type & PhoneNumberType_enum.Voice) != 0){
+            if ((type & PhoneNumberType_enum.Voice) != 0)
+            {
                 retVal += "VOICE,";
             }
-            if((type & PhoneNumberType_enum.Work) != 0){
+            if ((type & PhoneNumberType_enum.Work) != 0)
+            {
                 retVal += "WORK,";
             }
-            if(retVal.EndsWith(",")){
-                retVal = retVal.Substring(0,retVal.Length - 1);
+            if (retVal.EndsWith(","))
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
             }
 
             return retVal;
         }
 
         /// <summary>
-        /// Gets underlaying vCrad item.
+        /// This method is called when some property has changed, wee need to update underlaying vCard item.
         /// </summary>
-        public Item Item { get; }
-
-        /// <summary>
-        /// Gets or sets phone number type. Note: This property can be flagged value !
-        /// </summary>
-        public PhoneNumberType_enum NumberType
+        private void Changed()
         {
-            get{ return m_Type; }
-
-            set{ 
-                m_Type = value; 
-                Changed();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets phone number.
-        /// </summary>
-        public string Number
-        {
-            get{ return m_Number; }
-
-            set{ 
-                m_Number = value;
-                Changed();
-            }
+            Item.ParametersString = PhoneTypeToString(m_Type);
+            Item.Value = m_Number;
         }
     }
 }

@@ -18,13 +18,13 @@ namespace LumiSoft.Net.FTP.Server
         }
 
         /// <summary>
-        /// Gets or sets FTP server response.
-        /// </summary>
-        public FTP_t_ReplyLine[] Response { get; set; }
-
-        /// <summary>
         /// Gets file name with optional path.
         /// </summary>
         public string FileName { get; }
+
+        /// <summary>
+        /// Gets or sets FTP server response.
+        /// </summary>
+        public FTP_t_ReplyLine[] Response { get; set; }
     }
 }

@@ -14,21 +14,34 @@ namespace LumiSoft.Net.ABNF
         /// <param name="elements">Alternation elements.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>name</b> or <b>elements</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public ABNF_Rule(string name,ABNF_Alternation elements)
+        public ABNF_Rule(string name, ABNF_Alternation elements)
         {
-            if(name == null){
+            if (name == null)
+            {
                 throw new ArgumentNullException("name");
             }
-            if(name == string.Empty){
+            if (name == string.Empty)
+            {
                 throw new ArgumentException("Argument 'name' value must be specified.");
             }
-            if(!ValidateName(name)){
+            if (!ValidateName(name))
+            {
                 throw new ArgumentException("Invalid argument 'name' value. Value must be 'rulename =  ALPHA *(ALPHA / DIGIT / \"-\")'.");
             }
 
-            Name      = name;
+            Name = name;
             Elements = elements ?? throw new ArgumentNullException("elements");
         }
+
+        /// <summary>
+        /// Gets rule elements.
+        /// </summary>
+        public ABNF_Alternation Elements { get; }
+
+        /// <summary>
+        /// Gets rule name.
+        /// </summary>
+        public string Name { get; }
 
         /// <summary>
         /// 
@@ -37,16 +50,18 @@ namespace LumiSoft.Net.ABNF
         /// <returns></returns>
         public static ABNF_Rule Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
-            var name_value = value.Split(new[]{'='},2);
-            if (name_value.Length != 2){
+            var name_value = value.Split(new[] { '=' }, 2);
+            if (name_value.Length != 2)
+            {
                 throw new ParseException("Invalid ABNF rule '" + value + "'.");
             }
 
-            var retVal = new ABNF_Rule(name_value[0].Trim(),ABNF_Alternation.Parse(new System.IO.StringReader(name_value[1])));
+            var retVal = new ABNF_Rule(name_value[0].Trim(), ABNF_Alternation.Parse(new System.IO.StringReader(name_value[1])));
 
             return retVal;
         }
@@ -58,37 +73,32 @@ namespace LumiSoft.Net.ABNF
         /// <returns>Returns true if rule name is valid, otherwise false.</returns>
         private bool ValidateName(string name)
         {
-            if(name == null){
+            if (name == null)
+            {
                 return false;
             }
-            if(name == string.Empty){
+            if (name == string.Empty)
+            {
                 return false;
             }
 
             // RFC 5234 4.
             //  rulename =  ALPHA *(ALPHA / DIGIT / "-")
 
-            if(!char.IsLetter(name[0])){
+            if (!char.IsLetter(name[0]))
+            {
                 return false;
             }
-            for(int i=1;i<name.Length;i++){
+            for (int i = 1; i < name.Length; i++)
+            {
                 char c = name[i];
-                if(!(char.IsLetter(c) | char.IsDigit(c) | c == '-')){
+                if (!(char.IsLetter(c) | char.IsDigit(c) | c == '-'))
+                {
                     return false;
                 }
             }
 
             return true;
         }
-
-        /// <summary>
-        /// Gets rule name.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets rule elements.
-        /// </summary>
-        public ABNF_Alternation Elements { get; }
     }
 }

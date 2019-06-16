@@ -13,9 +13,9 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="user">User name.</param>
         /// <param name="password">Password.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
-        internal FTP_e_Authenticate(string user,string password)
+        internal FTP_e_Authenticate(string user, string password)
         {
-            User     = user ?? throw new ArgumentNullException("user");
+            User = user ?? throw new ArgumentNullException("user");
             Password = password ?? throw new ArgumentNullException("password");
         }
 
@@ -25,13 +25,13 @@ namespace LumiSoft.Net.FTP.Server
         public bool IsAuthenticated { get; set; }
 
         /// <summary>
-        /// Gets user name.
-        /// </summary>
-        public string User { get; } = "";
-
-        /// <summary>
         /// Gets password.
         /// </summary>
         public string Password { get; } = "";
+
+        /// <summary>
+        /// Gets user name.
+        /// </summary>
+        public string User { get; } = "";
     }
 }

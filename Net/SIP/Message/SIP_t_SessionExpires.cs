@@ -33,14 +33,64 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="expires">Specifies after many seconds session expires.</param>
         /// <param name="refresher">Specifies session refresher(uac/uas/null). Value null means not specified.</param>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public SIP_t_SessionExpires(int expires,string refresher)
+        public SIP_t_SessionExpires(int expires, string refresher)
         {
-            if(m_Expires < 90){
+            if (m_Expires < 90)
+            {
                 throw new ArgumentException("Argument 'expires' value must be >= 90 !");
             }
 
             m_Expires = expires;
             Refresher = refresher;
+        }
+
+        /// <summary>
+        /// Gets or sets after how many seconds session expires.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when value less than 90 is passed.</exception>
+        public int Expires
+        {
+            get { return m_Expires; }
+
+            set
+            {
+                if (m_Expires < 90)
+                {
+                    throw new ArgumentException("Property Expires value must be >= 90 !");
+                }
+
+                m_Expires = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Session-Expires 'refresher' parameter. Normally this value is 'ua' or 'uas'.
+        /// Value null means not specified.
+        /// </summary>
+        public string Refresher
+        {
+            get
+            {
+                var parameter = Parameters["refresher"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("refresher");
+                }
+                else
+                {
+                    Parameters.Set("refresher", value);
+                }
+            }
         }
 
         /// <summary>
@@ -51,7 +101,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -72,19 +123,23 @@ namespace LumiSoft.Net.SIP.Message
                 refresher-param  = "refresher" EQUAL  ("uas" / "uac")      
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // delta-seconds
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Session-Expires delta-seconds value is missing !");
             }
-            try{
+            try
+            {
                 m_Expires = Convert.ToInt32(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid Session-Expires delta-seconds value !");
             }
 
@@ -113,48 +168,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets after how many seconds session expires.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when value less than 90 is passed.</exception>
-        public int Expires
-        {
-            get{ return m_Expires; }
-
-            set{
-                if(m_Expires < 90){
-                    throw new ArgumentException("Property Expires value must be >= 90 !");
-                }
-
-                m_Expires = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets Session-Expires 'refresher' parameter. Normally this value is 'ua' or 'uas'.
-        /// Value null means not specified.
-        /// </summary>
-        public string Refresher
-        {
-            get{ 
-                var parameter = Parameters["refresher"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("refresher");
-                }
-                else{
-                    Parameters.Set("refresher",value);
-                }
-            }
         }
     }
 }

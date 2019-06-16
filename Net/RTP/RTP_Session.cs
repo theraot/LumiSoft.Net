@@ -17,44 +17,44 @@ namespace LumiSoft.Net.RTP
     /// Though RTP session can send multiple streams of same payload.</remarks>
     public class RTP_Session : IDisposable
     {
-        private object                             m_pLock                      = new object();
-        private bool                               m_IsStarted;
-        private RTP_MultimediaSession              m_pSession;
-        private RTP_Address                        m_pLocalEP;
-        private readonly RTP_Clock                          m_pRtpClock;
-        private RTP_StreamMode                     m_StreamMode                 = RTP_StreamMode.SendReceive;
-        private List<RTP_Address>                  m_pTargets;
-        private int                                m_Payload;
-        private int                                m_Bandwidth                  = 64000;
-        private List<RTP_Source_Local>             m_pLocalSources;
-        private RTP_Source                         m_pRtcpSource;
-        private Dictionary<uint,RTP_Source>        m_pMembers;
-        private int                                m_PMembersCount;
-        private Dictionary<uint,RTP_Source>        m_pSenders;
-        private Dictionary<string,DateTime>        m_pConflictingEPs;
-        private List<UDP_DataReceiver>             m_pUdpDataReceivers;
-        private Socket                             m_pRtpSocket;
-        private Socket                             m_pRtcpSocket;
-        private long                               m_RtpPacketsSent;
-        private long                               m_RtpBytesSent;
-        private long                               m_RtpPacketsReceived;
-        private long                               m_RtpBytesReceived;
-        private long                               m_RtpFailedTransmissions;
-        private long                               m_RtcpPacketsSent;
-        private long                               m_RtcpBytesSent;
-        private long                               m_RtcpPacketsReceived;
-        private long                               m_RtcpBytesReceived;
-        private double                             m_RtcpAvgPacketSize;
-        private long                               m_RtcpFailedTransmissions;
-        private long                               m_RtcpUnknownPacketsReceived;
-        private DateTime                           m_RtcpLastTransmission       = DateTime.MinValue;
-        private long                               m_LocalCollisions;
-        private long                               m_RemoteCollisions;
-        private long                               m_LocalPacketsLooped;
-        private long                               m_RemotePacketsLooped;
-        private readonly int                                m_MTU                        = 1400;
-        private TimerEx                            m_pRtcpTimer;        
-        private readonly KeyValueCollection<int,Codec>      m_pPayloads;
+        private int m_Bandwidth = 64000;
+        private bool m_IsStarted;
+        private long m_LocalCollisions;
+        private long m_LocalPacketsLooped;
+        private readonly int m_MTU = 1400;
+        private int m_Payload;
+        private Dictionary<string, DateTime> m_pConflictingEPs;
+        private RTP_Address m_pLocalEP;
+        private List<RTP_Source_Local> m_pLocalSources;
+        private object m_pLock = new object();
+        private Dictionary<uint, RTP_Source> m_pMembers;
+        private int m_PMembersCount;
+        private readonly KeyValueCollection<int, Codec> m_pPayloads;
+        private Socket m_pRtcpSocket;
+        private RTP_Source m_pRtcpSource;
+        private TimerEx m_pRtcpTimer;
+        private readonly RTP_Clock m_pRtpClock;
+        private Socket m_pRtpSocket;
+        private Dictionary<uint, RTP_Source> m_pSenders;
+        private RTP_MultimediaSession m_pSession;
+        private List<RTP_Address> m_pTargets;
+        private List<UDP_DataReceiver> m_pUdpDataReceivers;
+        private long m_RemoteCollisions;
+        private long m_RemotePacketsLooped;
+        private double m_RtcpAvgPacketSize;
+        private long m_RtcpBytesReceived;
+        private long m_RtcpBytesSent;
+        private long m_RtcpFailedTransmissions;
+        private DateTime m_RtcpLastTransmission = DateTime.MinValue;
+        private long m_RtcpPacketsReceived;
+        private long m_RtcpPacketsSent;
+        private long m_RtcpUnknownPacketsReceived;
+        private long m_RtpBytesReceived;
+        private long m_RtpBytesSent;
+        private long m_RtpFailedTransmissions;
+        private long m_RtpPacketsReceived;
+        private long m_RtpPacketsSent;
+        private RTP_StreamMode m_StreamMode = RTP_StreamMode.SendReceive;
 
         /// <summary>
         /// Default constructor.
@@ -63,30 +63,724 @@ namespace LumiSoft.Net.RTP
         /// <param name="localEP">Local RTP end point.</param>
         /// <param name="clock">RTP media clock.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>localEP</b>, <b>localEP</b> or <b>clock</b> is null reference.</exception>
-        internal RTP_Session(RTP_MultimediaSession session,RTP_Address localEP,RTP_Clock clock)
+        internal RTP_Session(RTP_MultimediaSession session, RTP_Address localEP, RTP_Clock clock)
         {
-            m_pSession  = session ?? throw new ArgumentNullException("session");
-            m_pLocalEP  = localEP ?? throw new ArgumentNullException("localEP");
+            m_pSession = session ?? throw new ArgumentNullException("session");
+            m_pLocalEP = localEP ?? throw new ArgumentNullException("localEP");
             m_pRtpClock = clock ?? throw new ArgumentNullException("clock");
 
             m_pLocalSources = new List<RTP_Source_Local>();
             m_pTargets = new List<RTP_Address>();
-            m_pMembers = new Dictionary<uint,RTP_Source>();
-            m_pSenders = new Dictionary<uint,RTP_Source>();
-            m_pConflictingEPs = new Dictionary<string,DateTime>();
-            m_pPayloads = new KeyValueCollection<int,Codec>();
-            
+            m_pMembers = new Dictionary<uint, RTP_Source>();
+            m_pSenders = new Dictionary<uint, RTP_Source>();
+            m_pConflictingEPs = new Dictionary<string, DateTime>();
+            m_pPayloads = new KeyValueCollection<int, Codec>();
+
             m_pUdpDataReceivers = new List<UDP_DataReceiver>();
-            m_pRtpSocket = new Socket(localEP.IP.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
+            m_pRtpSocket = new Socket(localEP.IP.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             m_pRtpSocket.Bind(localEP.RtpEP);
-            m_pRtcpSocket = new Socket(localEP.IP.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
+            m_pRtcpSocket = new Socket(localEP.IP.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
             m_pRtcpSocket.Bind(localEP.RtcpEP);
-                        
+
             m_pRtcpTimer = new TimerEx();
-            m_pRtcpTimer.Elapsed += new System.Timers.ElapsedEventHandler(delegate(object sender,System.Timers.ElapsedEventArgs e){
+            m_pRtcpTimer.Elapsed += new System.Timers.ElapsedEventHandler(delegate (object sender, System.Timers.ElapsedEventArgs e)
+            {
                 SendRtcp();
             });
             m_pRtcpTimer.AutoReset = false;
+        }
+
+        /// <summary>
+        /// Is raised when RTP session has closed.
+        /// </summary>
+        public event EventHandler Closed;
+
+        /// <summary>
+        /// Is raised when RTP session has disposed.
+        /// </summary>
+        public event EventHandler Disposed;
+
+        /// <summary>
+        /// Is raised when new recieve stream received from remote target.
+        /// </summary>
+        public event EventHandler<RTP_ReceiveStreamEventArgs> NewReceiveStream;
+
+        /// <summary>
+        /// Is raised when new send stream created.
+        /// </summary>
+        public event EventHandler<RTP_SendStreamEventArgs> NewSendStream;
+
+        /// <summary>
+        /// Is raised when session sending payload has changed.
+        /// </summary>
+        public event EventHandler PayloadChanged;
+
+        /// <summary>
+        /// Gets or sets session bandwidth in bits per second.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
+        public int Bandwidth
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_Bandwidth;
+            }
+
+            set
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (value < 8)
+                {
+                    throw new ArgumentException("Property 'Bandwidth' value must be >= 8.");
+                }
+
+                m_Bandwidth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets if this object is disposed.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Gets number of times local SSRC collision dedected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long LocalCollisions
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LocalCollisions;
+            }
+        }
+
+        /// <summary>
+        /// Gets local RTP end point.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Address LocalEP
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pLocalEP;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of times local packets loop dedected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long LocalPacketsLooped
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LocalPacketsLooped;
+            }
+        }
+
+        /// <summary>
+        /// Gets session members. Session member is local/remote source what sends RTCP,RTP or RTCP-RTP data.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Source[] Members
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                lock (m_pMembers)
+                {
+                    var sources = new RTP_Source[m_pMembers.Count];
+                    m_pMembers.Values.CopyTo(sources, 0);
+
+                    return sources;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets maximum transfet unit size in bytes.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int MTU
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_MTU;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets sending payload.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int Payload
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_Payload;
+            }
+
+            set
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                if (m_Payload != value)
+                {
+                    m_Payload = value;
+
+                    OnPayloadChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets RTP payloads.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public KeyValueCollection<int, Codec> Payloads
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pPayloads;
+            }
+        }
+
+        /// <summary>
+        /// Gets the RTP streams what we receive.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_ReceiveStream[] ReceiveStreams
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                lock (m_pSenders)
+                {
+                    var retVal = new List<RTP_ReceiveStream>();
+                    foreach (RTP_Source source in m_pSenders.Values)
+                    {
+                        if (!source.IsLocal)
+                        {
+                            retVal.Add(((RTP_Source_Remote)source).Stream);
+                        }
+                    }
+
+                    return retVal.ToArray();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets number of times remote SSRC collision dedected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RemoteCollisions
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RemoteCollisions;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of times remote packets loop dedected.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RemotePacketsLooped
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RemotePacketsLooped;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTCP bytes(RTCP headers included) received by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtcpBytesReceived
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtcpBytesReceived;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTCP bytes(RTCP headers included) sent by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtcpBytesSent
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtcpBytesSent;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of times RTCP packet sending has failed.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtcpFailedTransmissions
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtcpFailedTransmissions;
+            }
+        }
+
+        /// <summary>
+        /// Current RTCP reporting interval in seconds.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int RtcpInterval
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return (int)(m_pRtcpTimer.Interval / 1000);
+            }
+        }
+
+        /// <summary>
+        /// Gets time when last RTCP report was sent.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public DateTime RtcpLastTransmission
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtcpLastTransmission;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTCP packets received by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtcpPacketsReceived
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtcpPacketsReceived;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTCP packets sent by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtcpPacketsSent
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtcpPacketsSent;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTP bytes(RTP headers included) received by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtpBytesReceived
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtpBytesReceived;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTP bytes(RTP headers included) sent by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtpBytesSent
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtpBytesSent;
+            }
+        }
+
+        /// <summary>
+        /// Gets RTP media clock.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Clock RtpClock
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRtpClock;
+            }
+        }
+
+        /// <summary>
+        /// Gets number of times RTP packet sending has failed.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtpFailedTransmissions
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtpFailedTransmissions;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTP packets received by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtpPacketsReceived
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtpPacketsReceived;
+            }
+        }
+
+        /// <summary>
+        /// Gets total of RTP packets sent by this session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public long RtpPacketsSent
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RtpPacketsSent;
+            }
+        }
+
+        /// <summary>
+        /// Gets session senders. Sender is local/remote source what sends RTP data.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Source[] Senders
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                lock (m_pSenders)
+                {
+                    var sources = new RTP_Source[m_pSenders.Count];
+                    m_pSenders.Values.CopyTo(sources, 0);
+
+                    return sources;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the RTP streams what we send.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_SendStream[] SendStreams
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                lock (m_pLocalSources)
+                {
+                    var retVal = new List<RTP_SendStream>();
+                    foreach (RTP_Source_Local source in m_pLocalSources)
+                    {
+                        if (source.Stream != null)
+                        {
+                            retVal.Add(source.Stream);
+                        }
+                    }
+
+                    return retVal.ToArray();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets owner RTP multimedia session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_MultimediaSession Session
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSession;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets stream mode.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_StreamMode StreamMode
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_StreamMode;
+            }
+
+            set
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                m_StreamMode = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets RTP session remote targets.
+        /// </summary>
+        /// <remarks>Normally RTP session has only 1 remote target, for multi-unicast session, there may be more than 1 target.</remarks>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Address[] Targets
+        {
+            get
+            {
+                if (IsDisposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pTargets.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Opens RTP session to the specified remote target.
+        /// </summary>
+        /// <remarks>Once RTP session opened, RTCP reports sent to that target and also each local sending stream data.</remarks>
+        /// <param name="target">Session remote target.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>target</b> is null reference.</exception>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid values.</exception>
+        public void AddTarget(RTP_Address target)
+        {
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+            if (m_pLocalEP.Equals(target))
+            {
+                throw new ArgumentException("Argument 'target' value collapses with property 'LocalEP'.", "target");
+            }
+
+            foreach (RTP_Address t in Targets)
+            {
+                if (t.Equals(target))
+                {
+                    throw new ArgumentException("Specified target already exists.", "target");
+                }
+            }
+
+            m_pTargets.Add(target);
+        }
+
+        /// <summary>
+        /// Closes RTP session, sends BYE with optional reason text to remote targets.
+        /// </summary>
+        /// <param name="closeReason">Close reason. Value null means not specified.</param>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
+        public void Close(string closeReason)
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
+            // Generate BYE packet(s).
+            var compundPacket = new RTCP_CompoundPacket();
+            var rr = new RTCP_Packet_RR();
+            rr.SSRC = m_pRtcpSource.SSRC;
+            compundPacket.Packets.Add(rr);
+            int sourcesProcessed = 0;
+            while (sourcesProcessed < m_pLocalSources.Count)
+            {
+                var sources = new uint[Math.Min(m_pLocalSources.Count - sourcesProcessed, 31)];
+                for (int i = 0; i < sources.Length; i++)
+                {
+                    sources[i] = m_pLocalSources[sourcesProcessed].SSRC;
+                    sourcesProcessed++;
+                }
+
+                var bye = new RTCP_Packet_BYE();
+                bye.Sources = sources;
+                compundPacket.Packets.Add(bye);
+            }
+
+            // Send BYE.
+            SendRtcpPacket(compundPacket);
+
+            OnClosed();
+            Dispose();
+        }
+
+        /// <summary>
+        /// Creates new send stream.
+        /// </summary>
+        /// <returns>Returns new created send stream.</returns>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
+        public RTP_SendStream CreateSendStream()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
+            var source = CreateLocalSource();
+            source.CreateStream();
+
+            OnNewSendStream(source.Stream);
+
+            return source.Stream;
         }
 
         /// <summary>
@@ -94,28 +788,33 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public void Dispose()
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 return;
             }
             IsDisposed = true;
 
-            foreach(UDP_DataReceiver receiver in m_pUdpDataReceivers){
+            foreach (UDP_DataReceiver receiver in m_pUdpDataReceivers)
+            {
                 receiver.Dispose();
             }
             m_pUdpDataReceivers = null;
-            if(m_pRtcpTimer != null){
+            if (m_pRtcpTimer != null)
+            {
                 m_pRtcpTimer.Dispose();
                 m_pRtcpTimer = null;
             }
             m_pSession = null;
             m_pLocalEP = null;
             m_pTargets = null;
-            foreach(RTP_Source_Local source in m_pLocalSources.ToArray()){
+            foreach (RTP_Source_Local source in m_pLocalSources.ToArray())
+            {
                 source.Dispose();
             }
             m_pLocalSources = null;
             m_pRtcpSource = null;
-            foreach(RTP_Source source in m_pMembers.Values){
+            foreach (RTP_Source source in m_pMembers.Values)
+            {
                 source.Dispose();
             }
             m_pMembers = null;
@@ -136,39 +835,37 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Closes RTP session, sends BYE with optional reason text to remote targets.
+        /// Removes specified target.
         /// </summary>
-        /// <param name="closeReason">Close reason. Value null means not specified.</param>
+        /// <param name="target">Session remote target.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>target</b> is null reference.</exception>
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
-        public void Close(string closeReason)
+        public void RemoveTarget(RTP_Address target)
         {
-            if(IsDisposed){
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
 
-            // Generate BYE packet(s).
-            var compundPacket = new RTCP_CompoundPacket();
-            var rr = new RTCP_Packet_RR();
-            rr.SSRC = m_pRtcpSource.SSRC;
-            compundPacket.Packets.Add(rr);
-            int sourcesProcessed = 0;
-            while(sourcesProcessed < m_pLocalSources.Count){
-                var sources = new uint[Math.Min(m_pLocalSources.Count - sourcesProcessed,31)];
-                for (int i=0;i<sources.Length;i++){
-                    sources[i] = m_pLocalSources[sourcesProcessed].SSRC;
-                    sourcesProcessed++;
-                }
+            m_pTargets.Remove(target);
+        }
 
-                var bye = new RTCP_Packet_BYE();
-                bye.Sources = sources;
-                compundPacket.Packets.Add(bye);
+        /// <summary>
+        /// Removes all targets.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
+        public void RemoveTargets()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
             }
 
-            // Send BYE.
-            SendRtcpPacket(compundPacket);
-
-            OnClosed();
-            Dispose();
+            m_pTargets.Clear();
         }
 
         /// <summary>
@@ -177,10 +874,12 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Start()
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(m_IsStarted){
+            if (m_IsStarted)
+            {
                 return;
             }
             m_IsStarted = true;
@@ -204,27 +903,29 @@ namespace LumiSoft.Net.RTP
 
             // Add ourself to members list.
             m_pRtcpSource = CreateLocalSource();
-            m_pMembers.Add(m_pRtcpSource.SSRC,m_pRtcpSource);
+            m_pMembers.Add(m_pRtcpSource.SSRC, m_pRtcpSource);
 
             // Create RTP data receiver.
             var rtpDataReceiver = new UDP_DataReceiver(m_pRtpSocket);
-            rtpDataReceiver.PacketReceived += delegate(object s1,UDP_e_PacketReceived e1){
-                ProcessRtp(e1.Buffer,e1.Count,e1.RemoteEP);
+            rtpDataReceiver.PacketReceived += delegate (object s1, UDP_e_PacketReceived e1)
+            {
+                ProcessRtp(e1.Buffer, e1.Count, e1.RemoteEP);
             };
             // rtpDataReceiver.Error // We don't care about receiving errors here.
             m_pUdpDataReceivers.Add(rtpDataReceiver);
             rtpDataReceiver.Start();
             // Create RTCP data receiver.
             var rtcpDataReceiver = new UDP_DataReceiver(m_pRtcpSocket);
-            rtcpDataReceiver.PacketReceived += delegate(object s1,UDP_e_PacketReceived e1){
-                ProcessRtcp(e1.Buffer,e1.Count,e1.RemoteEP);
+            rtcpDataReceiver.PacketReceived += delegate (object s1, UDP_e_PacketReceived e1)
+            {
+                ProcessRtcp(e1.Buffer, e1.Count, e1.RemoteEP);
             };
             // rtcpDataReceiver.Error // We don't care about receiving errors here.
             m_pUdpDataReceivers.Add(rtcpDataReceiver);
-            rtcpDataReceiver.Start();           
-                   
+            rtcpDataReceiver.Start();
+
             // Start RTCP reporting.
-            Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count,m_pSenders.Count,m_Bandwidth * 0.25,false,m_RtcpAvgPacketSize,true));
+            Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count, m_pSenders.Count, m_Bandwidth * 0.25, false, m_RtcpAvgPacketSize, true));
         }
 
         /// <summary>
@@ -233,92 +934,14 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Stop()
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
 
             // TODO:
 
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Creates new send stream.
-        /// </summary>
-        /// <returns>Returns new created send stream.</returns>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
-        public RTP_SendStream CreateSendStream()
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-
-            var source = CreateLocalSource();
-            source.CreateStream();
-
-            OnNewSendStream(source.Stream);
-
-            return source.Stream;
-        }
-
-        /// <summary>
-        /// Opens RTP session to the specified remote target.
-        /// </summary>
-        /// <remarks>Once RTP session opened, RTCP reports sent to that target and also each local sending stream data.</remarks>
-        /// <param name="target">Session remote target.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>target</b> is null reference.</exception>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid values.</exception>
-        public void AddTarget(RTP_Address target)
-        {
-            if(target == null){
-                throw new ArgumentNullException("target");
-            }
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-            if(m_pLocalEP.Equals(target)){
-                throw new ArgumentException("Argument 'target' value collapses with property 'LocalEP'.","target");
-            }
-
-            foreach(RTP_Address t in Targets){
-                if(t.Equals(target)){
-                    throw new ArgumentException("Specified target already exists.","target");
-                }
-            }
-
-            m_pTargets.Add(target);
-        }
-
-        /// <summary>
-        /// Removes specified target.
-        /// </summary>
-        /// <param name="target">Session remote target.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>target</b> is null reference.</exception>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
-        public void RemoveTarget(RTP_Address target)
-        {
-            if(target == null){
-                throw new ArgumentNullException("target");
-            }
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-
-            m_pTargets.Remove(target);
-        }
-
-        /// <summary>
-        /// Removes all targets.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
-        public void RemoveTargets()
-        {
-            if(IsDisposed){
-                throw new ObjectDisposedException(GetType().Name);
-            }
-
-            m_pTargets.Clear();
         }
 
         /// <summary>
@@ -331,31 +954,74 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns true if public end points allocated, otherwise false.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>server</b> is null reference.</exception>
         /// <exception cref="InvalidOperationException">Is raised when RTP session is in invalid state and this method is called.</exception>
-        public bool StunPublicEndPoints(string server,int port,out IPEndPoint rtpEP,out IPEndPoint rtcpEP)
+        public bool StunPublicEndPoints(string server, int port, out IPEndPoint rtpEP, out IPEndPoint rtcpEP)
         {
-            if(server == null){
+            if (server == null)
+            {
                 throw new ArgumentNullException("server");
             }
-            if(m_IsStarted){
+            if (m_IsStarted)
+            {
                 throw new InvalidOperationException("Method 'StunPublicEndPoints' may be called only if RTP session has not started.");
             }
 
-            rtpEP  = null;
+            rtpEP = null;
             rtcpEP = null;
 
-            try{
-                var rtpResult = STUN_Client.Query(server,port,m_pRtpSocket);
-                if (rtpResult.NetType == STUN_NetType.FullCone || rtpResult.NetType == STUN_NetType.PortRestrictedCone || rtpResult.NetType == STUN_NetType.RestrictedCone){                                        
-                    rtpEP  = rtpResult.PublicEndPoint;
-                    rtcpEP = STUN_Client.GetPublicEP(server,port,m_pRtcpSocket);
-                                               
+            try
+            {
+                var rtpResult = STUN_Client.Query(server, port, m_pRtpSocket);
+                if (rtpResult.NetType == STUN_NetType.FullCone || rtpResult.NetType == STUN_NetType.PortRestrictedCone || rtpResult.NetType == STUN_NetType.RestrictedCone)
+                {
+                    rtpEP = rtpResult.PublicEndPoint;
+                    rtcpEP = STUN_Client.GetPublicEP(server, port, m_pRtcpSocket);
+
                     return true;
-                }                
+                }
             }
-            catch{
+            catch
+            {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Creates local source.
+        /// </summary>
+        /// <returns>Returns new local source.</returns>
+        internal RTP_Source_Local CreateLocalSource()
+        {
+            uint ssrc = RTP_Utils.GenerateSSRC();
+            // Ensure that any member don't have such SSRC.
+            while (m_pMembers.ContainsKey(ssrc))
+            {
+                ssrc = RTP_Utils.GenerateSSRC();
+            }
+
+            var source = new RTP_Source_Local(this, ssrc, m_pLocalEP.RtcpEP, m_pLocalEP.RtpEP);
+            source.Disposing += new EventHandler(delegate (object s, EventArgs e)
+            {
+                m_pSenders.Remove(source.SSRC);
+                m_pMembers.Remove(source.SSRC);
+                m_pLocalSources.Remove(source);
+            });
+            m_pLocalSources.Add(source);
+            m_pSession.LocalParticipant.EnsureSource(source);
+
+            return source;
+        }
+
+        /// <summary>
+        /// Raises <b>NewReceiveStream</b> event.
+        /// </summary>
+        /// <param name="stream">New receive stream.</param>
+        internal void OnNewReceiveStream(RTP_ReceiveStream stream)
+        {
+            if (NewReceiveStream != null)
+            {
+                NewReceiveStream(this, new RTP_ReceiveStreamEventArgs(stream));
+            }
         }
 
         /// <summary>
@@ -367,26 +1033,31 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
         internal int SendRtcpPacket(RTCP_CompoundPacket packet)
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(packet == null){
+            if (packet == null)
+            {
                 throw new ArgumentNullException("packet");
             }
-                        
+
             var packetBytes = packet.ToByte();
 
             // Send packet to each remote target.
-            foreach (RTP_Address target in Targets){
-                try{
-                    m_pRtcpSocket.SendTo(packetBytes,packetBytes.Length,SocketFlags.None,target.RtcpEP);
+            foreach (RTP_Address target in Targets)
+            {
+                try
+                {
+                    m_pRtcpSocket.SendTo(packetBytes, packetBytes.Length, SocketFlags.None, target.RtcpEP);
 
                     m_RtcpPacketsSent++;
                     m_RtcpBytesSent += packetBytes.Length;
                     // RFC requires IP header counted too, we just don't do it.
-                    m_RtcpAvgPacketSize = (1/16) * packetBytes.Length + (15/16) * m_RtcpAvgPacketSize;
+                    m_RtcpAvgPacketSize = (1 / 16) * packetBytes.Length + (15 / 16) * m_RtcpAvgPacketSize;
                 }
-                catch{
+                catch
+                {
                     m_RtcpFailedTransmissions++;
                 }
             }
@@ -402,271 +1073,190 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns packet size in bytes.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> or <b>packet</b> is null reference.</exception>
-        internal int SendRtpPacket(RTP_SendStream stream,RTP_Packet packet)
+        internal int SendRtpPacket(RTP_SendStream stream, RTP_Packet packet)
         {
-            if(IsDisposed){
+            if (IsDisposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
-            if(packet == null){
+            if (packet == null)
+            {
                 throw new ArgumentNullException("packet");
             }
 
             // Check that we are in members table (because SSRC has timed out), add itself to senders table.
-            lock(m_pMembers){
-                if(!m_pMembers.ContainsKey(stream.Source.SSRC)){
-                    m_pMembers.Add(stream.Source.SSRC,stream.Source);
+            lock (m_pMembers)
+            {
+                if (!m_pMembers.ContainsKey(stream.Source.SSRC))
+                {
+                    m_pMembers.Add(stream.Source.SSRC, stream.Source);
                 }
             }
 
             // If we are not in sender table (because SSRC has timed out), add itself to senders table.
-            lock(m_pSenders){
-                if(!m_pSenders.ContainsKey(stream.Source.SSRC)){
-                    m_pSenders.Add(stream.Source.SSRC,stream.Source);
+            lock (m_pSenders)
+            {
+                if (!m_pSenders.ContainsKey(stream.Source.SSRC))
+                {
+                    m_pSenders.Add(stream.Source.SSRC, stream.Source);
                 }
             }
-                        
+
             var packetBytes = new byte[m_MTU];
             int count = 0;
-            packet.ToByte(packetBytes,ref count);
+            packet.ToByte(packetBytes, ref count);
 
             // Send packet to each remote target.
-            foreach(RTP_Address target in Targets){
-                try{
-                    m_pRtpSocket.BeginSendTo(packetBytes,0,count,SocketFlags.None,target.RtpEP,RtpAsyncSocketSendCompleted,null);
+            foreach (RTP_Address target in Targets)
+            {
+                try
+                {
+                    m_pRtpSocket.BeginSendTo(packetBytes, 0, count, SocketFlags.None, target.RtpEP, RtpAsyncSocketSendCompleted, null);
                 }
-                catch{
+                catch
+                {
                     m_RtpFailedTransmissions++;
                 }
             }
-                        
+
             return count;
         }
 
         /// <summary>
-        /// Processes specified RTCP data.
+        /// Computes RTCP transmission interval. Defined in RFC 3550 6.3.1.
         /// </summary>
-        /// <param name="buffer">Data buffer.</param>
-        /// <param name="count">Number of bytes in data buffer.</param>
-        /// <param name="remoteEP">IP end point what sent RTCP packet.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> or <b>remoteEP</b> is null reference.</exception>
-        private void ProcessRtcp(byte[] buffer,int count,IPEndPoint remoteEP)
+        /// <param name="members">Current mebers count.</param>
+        /// <param name="senders">Current sender count.</param>
+        /// <param name="rtcp_bw">RTCP bandwidth.</param>
+        /// <param name="we_sent">Specifies if we have sent data after last 2 RTCP interval.</param>
+        /// <param name="avg_rtcp_size">Average RTCP raw packet size, IP headers included.</param>
+        /// <param name="initial">Specifies if we ever have sent data to target.</param>
+        /// <returns>Returns transmission interval in seconds.</returns>
+        private int ComputeRtcpTransmissionInterval(int members, int senders, double rtcp_bw, bool we_sent, double avg_rtcp_size, bool initial)
         {
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }
-            if(remoteEP == null){
-                throw new ArgumentNullException("remoteEP");
-            }
-            
-            /* RFC 3550 6.3.3 Receiving an RTP or Non-BYE RTCP Packet
-                When an RTP or RTCP packet is received from a participant whose SSRC
-                is not in the member table, the SSRC is added to the table, and the
-                value for members is updated once the participant has been validated
-                as described in Section 6.2.1.  The same processing occurs for each
-                CSRC in a validated RTP packet.
+            // RFC 3550 A.7.
 
-                For each compound RTCP packet received, the value of avg_rtcp_size is
-                updated:
-                    avg_rtcp_size = (1/16) * packet_size + (15/16) * avg_rtcp_size
-
-                where packet_size is the size of the RTCP packet just received.
-              
-               6.3.4 Receiving an RTCP BYE Packet
-                Except as described in Section 6.3.7 for the case when an RTCP BYE is
-                to be transmitted, if the received packet is an RTCP BYE packet, the
-                SSRC is checked against the member table.  If present, the entry is
-                removed from the table, and the value for members is updated.  The
-                SSRC is then checked against the sender table.  If present, the entry
-                is removed from the table, and the value for senders is updated.
-
-                Furthermore, to make the transmission rate of RTCP packets more
-                adaptive to changes in group membership, the following "reverse
-                reconsideration" algorithm SHOULD be executed when a BYE packet is
-                received.
+            /*
+                Minimum average time between RTCP packets from this site (in
+                seconds).  This time prevents the reports from `clumping' when
+                sessions are small and the law of large numbers isn't helping
+                to smooth out the traffic.  It also keeps the report interval
+                from becoming ridiculously small during transient outages like
+                a network partition.
             */
+            double RTCP_MIN_TIME = 5;
+            /*
+                Fraction of the RTCP bandwidth to be shared among active
+                senders.  (This fraction was chosen so that in a typical
+                session with one or two active senders, the computed report
+                time would be roughly equal to the minimum report time so that
+                we don't unnecessarily slow down receiver reports.)  The
+                receiver fraction must be 1 - the sender fraction.
+            */
+            double RTCP_SENDER_BW_FRACTION = 0.25;
+            double RTCP_RCVR_BW_FRACTION = (1 - RTCP_SENDER_BW_FRACTION);
+            /* 
+                To compensate for "timer reconsideration" converging to a
+                value below the intended average.
+            */
+            double COMPENSATION = 2.71828 - 1.5;
 
-            m_RtcpPacketsReceived++;
-            m_RtcpBytesReceived += count;
-            // RFC requires IP header counted too, we just don't do it.
-            m_RtcpAvgPacketSize = (1/16) * count + (15/16) * m_RtcpAvgPacketSize;
+            double t;                   /* interval */
+            double rtcp_min_time = RTCP_MIN_TIME;
+            int n;                      /* no. of members for computation */
 
-            try{
-                var compoundPacket = RTCP_CompoundPacket.Parse(buffer,count);
-                // Process each RTCP packet.
-                foreach (RTCP_Packet packet in compoundPacket.Packets){
-                    if(packet.Type == RTCP_PacketType.APP){
-                        var app = ((RTCP_Packet_APP)packet);
-
-                        var source = GetOrCreateSource(true,app.Source,null,remoteEP);
-                        if (source != null){
-                            source.SetLastRtcpPacket(DateTime.Now);
-                            source.OnAppPacket(app);
-                        }
-                    }
-                    else if(packet.Type == RTCP_PacketType.BYE){
-                        var bye = ((RTCP_Packet_BYE)packet);
-
-                        bool membersChanges = false;
-                        foreach(uint src in bye.Sources){
-                            RTP_Source source = GetOrCreateSource(true,src,null,remoteEP);
-                            if(source != null){
-                                membersChanges = true;
-                                m_pMembers.Remove(src);
-                                source.Close(bye.LeavingReason);
-                                // Closing source will take care of closing it's underlaying stream, if source is "active".
-                            }
-
-                            m_pSenders.Remove(src);
-                        }
-                        if(membersChanges){
-                            DoReverseReconsideration();
-                        }
-                    }
-                    else if(packet.Type == RTCP_PacketType.RR){
-                        var rr = ((RTCP_Packet_RR)packet);
-
-                        RTP_Source source = GetOrCreateSource(true,rr.SSRC,null,remoteEP);
-                        if(source != null){
-                            source.SetLastRtcpPacket(DateTime.Now);
-
-                            foreach(RTCP_Packet_ReportBlock reportBlock in rr.ReportBlocks){
-                                source = GetOrCreateSource(true,rr.SSRC,null,remoteEP);
-                                if(source != null){
-                                    source.SetLastRtcpPacket(DateTime.Now);
-                                    source.SetRR(reportBlock);
-                                }
-                            }
-                        }                        
-                    }
-                    else if(packet.Type == RTCP_PacketType.SDES){ 
-                        foreach(RTCP_Packet_SDES_Chunk sdes in ((RTCP_Packet_SDES)packet).Chunks){
-                            RTP_Source source = GetOrCreateSource(true,sdes.Source,sdes.CName,remoteEP);
-                            if(source != null){
-                                source.SetLastRtcpPacket(DateTime.Now);
-
-                                var participant = m_pSession.GetOrCreateParticipant(string.IsNullOrEmpty(sdes.CName) ? "null" : sdes.CName);
-
-                                // Map participant to source.
-                                ((RTP_Source_Remote)source).SetParticipant(participant);
-
-                                // Map source to participant.
-                                participant.EnsureSource(source);
-                            
-                                // Update participant SDES items.
-                                participant.Update(sdes);                                
-                            }                            
-                        }
-                    }
-                    else if(packet.Type == RTCP_PacketType.SR){
-                        var sr = ((RTCP_Packet_SR)packet);
-
-                        var source = GetOrCreateSource(true,sr.SSRC,null,remoteEP);
-                        if (source != null){
-                            source.SetLastRtcpPacket(DateTime.Now);
-                            source.OnSenderReport(new RTCP_Report_Sender(sr));
-
-                            foreach(RTCP_Packet_ReportBlock reportBlock in sr.ReportBlocks){
-                                source = GetOrCreateSource(true,sr.SSRC,null,remoteEP);
-                                if(source != null){
-                                    source.SetLastRtcpPacket(DateTime.Now);
-                                    source.SetRR(reportBlock);
-                                }
-                            }
-                        }                        
-                    }
-
-                    // Unknown packet.
-                    else{
-                        m_RtcpUnknownPacketsReceived++;
-                    }
+            /*
+                Very first call at application start-up uses half the min
+                delay for quicker notification while still allowing some time
+                before reporting for randomization and to learn about other
+                sources so the report interval will converge to the correct
+                interval more quickly.
+            */
+            if (initial)
+            {
+                rtcp_min_time /= 2;
+            }
+            /*
+                Dedicate a fraction of the RTCP bandwidth to senders unless
+                the number of senders is large enough that their share is
+                more than that fraction.
+            */
+            n = members;
+            if (senders <= (members * RTCP_SENDER_BW_FRACTION))
+            {
+                if (we_sent)
+                {
+                    rtcp_bw = (rtcp_bw * RTCP_SENDER_BW_FRACTION);
+                    n = senders;
+                }
+                else
+                {
+                    rtcp_bw = (rtcp_bw * RTCP_SENDER_BW_FRACTION);
+                    n -= senders;
                 }
             }
-            catch(Exception x){
-                m_pSession.OnError(x);
+
+            /*
+                The effective number of sites times the average packet size is
+                the total number of octets sent when each site sends a report.
+                Dividing this by the effective bandwidth gives the time
+                interval over which those packets must be sent in order to
+                meet the bandwidth target, with a minimum enforced.  In that
+                time interval we send one report so this time is also our
+                average time between reports.
+            */
+            t = avg_rtcp_size * n / rtcp_bw;
+            if (t < rtcp_min_time)
+            {
+                t = rtcp_min_time;
             }
+
+            /*
+                To avoid traffic bursts from unintended synchronization with
+                other sites, we then pick our actual next report interval as a
+                random number uniformly distributed between 0.5*t and 1.5*t.
+            */
+            t = t * (new Random().Next(5, 15) / 10.0);
+            t = t / COMPENSATION;
+
+            return (int)Math.Max(t, 2.0);
         }
 
         /// <summary>
-        /// Processes specified RTP data.
+        /// Does "reverse reconsideration" algorithm. Defined in RFC 3550 6.3.4.
         /// </summary>
-        /// <param name="buffer">Data buffer.</param>
-        /// <param name="count">Number of bytes in data buffer.</param>
-        /// <param name="remoteEP">IP end point what sent RTCP packet.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> or <b>remoteEP</b> is null reference.</exception>
-        private void ProcessRtp(byte[] buffer,int count,IPEndPoint remoteEP)
+        private void DoReverseReconsideration()
         {
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }
-            if(remoteEP == null){
-                throw new ArgumentNullException("remoteEP");
-            }
+            /* RFC 3550 6.3.4. "reverse reconsideration"
+                o  The value for tn is updated according to the following formula:
+                   tn = tc + (members/pmembers) * (tn - tc)
 
-            /* RFC 3550 6.3.3 Receiving an RTP or Non-BYE RTCP Packet
-                When an RTP or RTCP packet is received from a participant whose SSRC
-                is not in the member table, the SSRC is added to the table, and the
-                value for members is updated once the participant has been validated
-                as described in Section 6.2.1.  The same processing occurs for each
-                CSRC in a validated RTP packet.
+                o  The value for tp is updated according the following formula:
+                   tp = tc - (members/pmembers) * (tc - tp).
+              
+                o  The next RTCP packet is rescheduled for transmission at time tn,
+                   which is now earlier.
 
-                When an RTP packet is received from a participant whose SSRC is not
-                in the sender table, the SSRC is added to the table, and the value
-                for senders is updated.
+                o  The value of pmembers is set equal to members.
+
+                This algorithm does not prevent the group size estimate from
+                incorrectly dropping to zero for a short time due to premature
+                timeouts when most participants of a large session leave at once but
+                some remain.  The algorithm does make the estimate return to the
+                correct value more rapidly.  This situation is unusual enough and the
+                consequences are sufficiently harmless that this problem is deemed
+                only a secondary concern.
             */
 
-            m_RtpPacketsReceived++;
-            m_RtpBytesReceived += count;
+            var timeNext = m_RtcpLastTransmission == DateTime.MinValue ? DateTime.Now : m_RtcpLastTransmission.AddMilliseconds(m_pRtcpTimer.Interval);
 
-            try{
-                var packet = RTP_Packet.Parse(buffer,count);
+            Schedule((int)Math.Max((m_pMembers.Count / m_PMembersCount) * ((TimeSpan)(timeNext - DateTime.Now)).TotalSeconds, 2));
 
-                RTP_Source source = GetOrCreateSource(false,packet.SSRC,null,remoteEP);
-                if(source != null){                    
-                    // Process CSRC.
-                    foreach(uint csrc in packet.CSRC){
-                        RTP_Source dummy = GetOrCreateSource(false,packet.SSRC,null,remoteEP);
-                    }
-
-                    lock(m_pSenders){
-                        if(!m_pSenders.ContainsKey(source.SSRC)){
-                            m_pSenders.Add(source.SSRC,source);
-                        }
-                    }
-
-                    // Let source to process RTP packet.
-                    ((RTP_Source_Remote)source).OnRtpPacketReceived(packet,count);
-                }                
-            }
-            catch(Exception x){
-                m_pSession.OnError(x);
-            }
-        }
-
-        /// <summary>
-        /// Creates local source.
-        /// </summary>
-        /// <returns>Returns new local source.</returns>
-        internal RTP_Source_Local CreateLocalSource()
-        {
-            uint ssrc = RTP_Utils.GenerateSSRC();
-            // Ensure that any member don't have such SSRC.
-            while(m_pMembers.ContainsKey(ssrc)){
-                ssrc = RTP_Utils.GenerateSSRC();
-            }
-
-            var source = new RTP_Source_Local(this,ssrc,m_pLocalEP.RtcpEP,m_pLocalEP.RtpEP);
-            source.Disposing += new EventHandler(delegate(object s,EventArgs e){
-                m_pSenders.Remove(source.SSRC);
-                m_pMembers.Remove(source.SSRC);    
-                m_pLocalSources.Remove(source);
-            });
-            m_pLocalSources.Add(source);
-            m_pSession.LocalParticipant.EnsureSource(source);
-
-            return source;
+            m_PMembersCount = m_pMembers.Count;
         }
 
         /// <summary>
@@ -678,9 +1268,10 @@ namespace LumiSoft.Net.RTP
         /// <param name="packetEP">Packet sender end point.</param>
         /// <returns>Returns specified source. Returns null if source has "collision or loop".</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>packetEP</b> is null reference.</exception>
-        private RTP_Source_Remote GetOrCreateSource(bool rtcp_rtp,uint src,string cname,IPEndPoint packetEP)
+        private RTP_Source_Remote GetOrCreateSource(bool rtcp_rtp, uint src, string cname, IPEndPoint packetEP)
         {
-            if(packetEP == null){
+            if (packetEP == null)
+            {
                 throw new ArgumentNullException("packetEP");
             }
 
@@ -729,37 +1320,48 @@ namespace LumiSoft.Net.RTP
 
             RTP_Source source = null;
 
-            lock(m_pMembers){                
-                m_pMembers.TryGetValue(src,out source);
+            lock (m_pMembers)
+            {
+                m_pMembers.TryGetValue(src, out source);
 
                 // SSRC or CSRC identifier is not found in the source identifier table.
-                if(source == null){
-                    source = new RTP_Source_Remote(this,src);
-                    if(rtcp_rtp){
+                if (source == null)
+                {
+                    source = new RTP_Source_Remote(this, src);
+                    if (rtcp_rtp)
+                    {
                         source.SetRtcpEP(packetEP);
                     }
-                    else{
+                    else
+                    {
                         source.SetRtpEP(packetEP);
                     }
-                    m_pMembers.Add(src,source);
+                    m_pMembers.Add(src, source);
                 }
                 // Table entry was created on receipt of a control packet and this is the first data packet or vice versa.
-                else if((rtcp_rtp ? source.RtcpEP : source.RtpEP) == null){
-                    if(rtcp_rtp){
+                else if ((rtcp_rtp ? source.RtcpEP : source.RtpEP) == null)
+                {
+                    if (rtcp_rtp)
+                    {
                         source.SetRtcpEP(packetEP);
                     }
-                    else{
+                    else
+                    {
                         source.SetRtpEP(packetEP);
                     }
                 }
                 // Source transport address from the packet does not match the one saved in the table entry for this identifier.
-                else if(!packetEP.Equals((rtcp_rtp ? source.RtcpEP : source.RtpEP))){
+                else if (!packetEP.Equals((rtcp_rtp ? source.RtcpEP : source.RtpEP)))
+                {
                     // Source identifier is not the participant's own.
-                    if(!source.IsLocal){
-                        if(cname != null && cname != source.CName){
+                    if (!source.IsLocal)
+                    {
+                        if (cname != null && cname != source.CName)
+                        {
                             m_RemoteCollisions++;
                         }
-                        else{
+                        else
+                        {
                             m_RemotePacketsLooped++;
                         }
 
@@ -767,8 +1369,10 @@ namespace LumiSoft.Net.RTP
                     }
                     // A collision or loop of the participant's own packets.
 
-                    if(m_pConflictingEPs.ContainsKey(packetEP.ToString())){
-                        if(cname == null || cname == source.CName){
+                    if (m_pConflictingEPs.ContainsKey(packetEP.ToString()))
+                    {
+                        if (cname == null || cname == source.CName)
+                        {
                             m_LocalPacketsLooped++;
                         }
 
@@ -778,29 +1382,30 @@ namespace LumiSoft.Net.RTP
                     }
                     // New collision, change SSRC identifier.
                     m_LocalCollisions++;
-                    m_pConflictingEPs.Add(packetEP.ToString(),DateTime.Now);
+                    m_pConflictingEPs.Add(packetEP.ToString(), DateTime.Now);
 
                     // Remove SSRC from members,senders. Choose new SSRC, CNAME new and BYE old.
                     m_pMembers.Remove(source.SSRC);
                     m_pSenders.Remove(source.SSRC);
-                    uint oldSSRC = source.SSRC;                        
+                    uint oldSSRC = source.SSRC;
                     source.GenerateNewSSRC();
                     // Ensure that new SSRC is not in use, if so repaeat while not conflicting SSRC.
-                    while(m_pMembers.ContainsKey(source.SSRC)){
+                    while (m_pMembers.ContainsKey(source.SSRC))
+                    {
                         source.GenerateNewSSRC();
                     }
-                    m_pMembers.Add(source.SSRC,source);
+                    m_pMembers.Add(source.SSRC, source);
 
                     var compoundPacket = new RTCP_CompoundPacket();
                     var rr = new RTCP_Packet_RR();
                     rr.SSRC = m_pRtcpSource.SSRC;
                     compoundPacket.Packets.Add(rr);
                     var sdes = new RTCP_Packet_SDES();
-                    var sdes_chunk = new RTCP_Packet_SDES_Chunk(source.SSRC,m_pSession.LocalParticipant.CNAME);
+                    var sdes_chunk = new RTCP_Packet_SDES_Chunk(source.SSRC, m_pSession.LocalParticipant.CNAME);
                     sdes.Chunks.Add(sdes_chunk);
                     compoundPacket.Packets.Add(sdes);
                     var bye = new RTCP_Packet_BYE();
-                    bye.Sources = new[]{oldSSRC};
+                    bye.Sources = new[] { oldSSRC };
                     bye.LeavingReason = "Collision, changing SSRC.";
                     compoundPacket.Packets.Add(bye);
 
@@ -808,18 +1413,313 @@ namespace LumiSoft.Net.RTP
                     //----------------------------------------------------------------------
 
                     // Add new source to members, it's not conflicting any more, we changed SSRC.
-                    source = new RTP_Source_Remote(this,src);
-                    if(rtcp_rtp){
+                    source = new RTP_Source_Remote(this, src);
+                    if (rtcp_rtp)
+                    {
                         source.SetRtcpEP(packetEP);
                     }
-                    else{
+                    else
+                    {
                         source.SetRtpEP(packetEP);
                     }
-                    m_pMembers.Add(src,source);
+                    m_pMembers.Add(src, source);
                 }
             }
 
             return (RTP_Source_Remote)source;
+        }
+
+        /// <summary>
+        /// Raises <b>Closed</b> event.
+        /// </summary>
+        private void OnClosed()
+        {
+            if (Closed != null)
+            {
+                Closed(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>Disposed</b> event.
+        /// </summary>
+        private void OnDisposed()
+        {
+            if (Disposed != null)
+            {
+                Disposed(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>NewSendStream</b> event.
+        /// </summary>
+        /// <param name="stream">New send stream.</param>
+        private void OnNewSendStream(RTP_SendStream stream)
+        {
+            if (NewSendStream != null)
+            {
+                NewSendStream(this, new RTP_SendStreamEventArgs(stream));
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>PayloadChanged</b> event.
+        /// </summary>
+        private void OnPayloadChanged()
+        {
+            if (PayloadChanged != null)
+            {
+                PayloadChanged(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Processes specified RTCP data.
+        /// </summary>
+        /// <param name="buffer">Data buffer.</param>
+        /// <param name="count">Number of bytes in data buffer.</param>
+        /// <param name="remoteEP">IP end point what sent RTCP packet.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> or <b>remoteEP</b> is null reference.</exception>
+        private void ProcessRtcp(byte[] buffer, int count, IPEndPoint remoteEP)
+        {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (remoteEP == null)
+            {
+                throw new ArgumentNullException("remoteEP");
+            }
+
+            /* RFC 3550 6.3.3 Receiving an RTP or Non-BYE RTCP Packet
+                When an RTP or RTCP packet is received from a participant whose SSRC
+                is not in the member table, the SSRC is added to the table, and the
+                value for members is updated once the participant has been validated
+                as described in Section 6.2.1.  The same processing occurs for each
+                CSRC in a validated RTP packet.
+
+                For each compound RTCP packet received, the value of avg_rtcp_size is
+                updated:
+                    avg_rtcp_size = (1/16) * packet_size + (15/16) * avg_rtcp_size
+
+                where packet_size is the size of the RTCP packet just received.
+              
+               6.3.4 Receiving an RTCP BYE Packet
+                Except as described in Section 6.3.7 for the case when an RTCP BYE is
+                to be transmitted, if the received packet is an RTCP BYE packet, the
+                SSRC is checked against the member table.  If present, the entry is
+                removed from the table, and the value for members is updated.  The
+                SSRC is then checked against the sender table.  If present, the entry
+                is removed from the table, and the value for senders is updated.
+
+                Furthermore, to make the transmission rate of RTCP packets more
+                adaptive to changes in group membership, the following "reverse
+                reconsideration" algorithm SHOULD be executed when a BYE packet is
+                received.
+            */
+
+            m_RtcpPacketsReceived++;
+            m_RtcpBytesReceived += count;
+            // RFC requires IP header counted too, we just don't do it.
+            m_RtcpAvgPacketSize = (1 / 16) * count + (15 / 16) * m_RtcpAvgPacketSize;
+
+            try
+            {
+                var compoundPacket = RTCP_CompoundPacket.Parse(buffer, count);
+                // Process each RTCP packet.
+                foreach (RTCP_Packet packet in compoundPacket.Packets)
+                {
+                    if (packet.Type == RTCP_PacketType.APP)
+                    {
+                        var app = ((RTCP_Packet_APP)packet);
+
+                        var source = GetOrCreateSource(true, app.Source, null, remoteEP);
+                        if (source != null)
+                        {
+                            source.SetLastRtcpPacket(DateTime.Now);
+                            source.OnAppPacket(app);
+                        }
+                    }
+                    else if (packet.Type == RTCP_PacketType.BYE)
+                    {
+                        var bye = ((RTCP_Packet_BYE)packet);
+
+                        bool membersChanges = false;
+                        foreach (uint src in bye.Sources)
+                        {
+                            RTP_Source source = GetOrCreateSource(true, src, null, remoteEP);
+                            if (source != null)
+                            {
+                                membersChanges = true;
+                                m_pMembers.Remove(src);
+                                source.Close(bye.LeavingReason);
+                                // Closing source will take care of closing it's underlaying stream, if source is "active".
+                            }
+
+                            m_pSenders.Remove(src);
+                        }
+                        if (membersChanges)
+                        {
+                            DoReverseReconsideration();
+                        }
+                    }
+                    else if (packet.Type == RTCP_PacketType.RR)
+                    {
+                        var rr = ((RTCP_Packet_RR)packet);
+
+                        RTP_Source source = GetOrCreateSource(true, rr.SSRC, null, remoteEP);
+                        if (source != null)
+                        {
+                            source.SetLastRtcpPacket(DateTime.Now);
+
+                            foreach (RTCP_Packet_ReportBlock reportBlock in rr.ReportBlocks)
+                            {
+                                source = GetOrCreateSource(true, rr.SSRC, null, remoteEP);
+                                if (source != null)
+                                {
+                                    source.SetLastRtcpPacket(DateTime.Now);
+                                    source.SetRR(reportBlock);
+                                }
+                            }
+                        }
+                    }
+                    else if (packet.Type == RTCP_PacketType.SDES)
+                    {
+                        foreach (RTCP_Packet_SDES_Chunk sdes in ((RTCP_Packet_SDES)packet).Chunks)
+                        {
+                            RTP_Source source = GetOrCreateSource(true, sdes.Source, sdes.CName, remoteEP);
+                            if (source != null)
+                            {
+                                source.SetLastRtcpPacket(DateTime.Now);
+
+                                var participant = m_pSession.GetOrCreateParticipant(string.IsNullOrEmpty(sdes.CName) ? "null" : sdes.CName);
+
+                                // Map participant to source.
+                                ((RTP_Source_Remote)source).SetParticipant(participant);
+
+                                // Map source to participant.
+                                participant.EnsureSource(source);
+
+                                // Update participant SDES items.
+                                participant.Update(sdes);
+                            }
+                        }
+                    }
+                    else if (packet.Type == RTCP_PacketType.SR)
+                    {
+                        var sr = ((RTCP_Packet_SR)packet);
+
+                        var source = GetOrCreateSource(true, sr.SSRC, null, remoteEP);
+                        if (source != null)
+                        {
+                            source.SetLastRtcpPacket(DateTime.Now);
+                            source.OnSenderReport(new RTCP_Report_Sender(sr));
+
+                            foreach (RTCP_Packet_ReportBlock reportBlock in sr.ReportBlocks)
+                            {
+                                source = GetOrCreateSource(true, sr.SSRC, null, remoteEP);
+                                if (source != null)
+                                {
+                                    source.SetLastRtcpPacket(DateTime.Now);
+                                    source.SetRR(reportBlock);
+                                }
+                            }
+                        }
+                    }
+
+                    // Unknown packet.
+                    else
+                    {
+                        m_RtcpUnknownPacketsReceived++;
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                m_pSession.OnError(x);
+            }
+        }
+
+        /// <summary>
+        /// Processes specified RTP data.
+        /// </summary>
+        /// <param name="buffer">Data buffer.</param>
+        /// <param name="count">Number of bytes in data buffer.</param>
+        /// <param name="remoteEP">IP end point what sent RTCP packet.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> or <b>remoteEP</b> is null reference.</exception>
+        private void ProcessRtp(byte[] buffer, int count, IPEndPoint remoteEP)
+        {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (remoteEP == null)
+            {
+                throw new ArgumentNullException("remoteEP");
+            }
+
+            /* RFC 3550 6.3.3 Receiving an RTP or Non-BYE RTCP Packet
+                When an RTP or RTCP packet is received from a participant whose SSRC
+                is not in the member table, the SSRC is added to the table, and the
+                value for members is updated once the participant has been validated
+                as described in Section 6.2.1.  The same processing occurs for each
+                CSRC in a validated RTP packet.
+
+                When an RTP packet is received from a participant whose SSRC is not
+                in the sender table, the SSRC is added to the table, and the value
+                for senders is updated.
+            */
+
+            m_RtpPacketsReceived++;
+            m_RtpBytesReceived += count;
+
+            try
+            {
+                var packet = RTP_Packet.Parse(buffer, count);
+
+                RTP_Source source = GetOrCreateSource(false, packet.SSRC, null, remoteEP);
+                if (source != null)
+                {
+                    // Process CSRC.
+                    foreach (uint csrc in packet.CSRC)
+                    {
+                        RTP_Source dummy = GetOrCreateSource(false, packet.SSRC, null, remoteEP);
+                    }
+
+                    lock (m_pSenders)
+                    {
+                        if (!m_pSenders.ContainsKey(source.SSRC))
+                        {
+                            m_pSenders.Add(source.SSRC, source);
+                        }
+                    }
+
+                    // Let source to process RTP packet.
+                    ((RTP_Source_Remote)source).OnRtpPacketReceived(packet, count);
+                }
+            }
+            catch (Exception x)
+            {
+                m_pSession.OnError(x);
+            }
+        }
+
+        /// <summary>
+        /// Is called when RTP socket has finisehd data sending.
+        /// </summary>
+        /// <param name="ar">The result of the asynchronous operation.</param>
+        private void RtpAsyncSocketSendCompleted(IAsyncResult ar)
+        {
+            try
+            {
+                m_RtpBytesSent += m_pRtpSocket.EndSendTo(ar);
+                m_RtpPacketsSent++;
+            }
+            catch
+            {
+                m_RtpFailedTransmissions++;
+            }
         }
 
         /// <summary>
@@ -831,194 +1731,6 @@ namespace LumiSoft.Net.RTP
             m_pRtcpTimer.Stop();
             m_pRtcpTimer.Interval = seconds * 1000;
             m_pRtcpTimer.Enabled = true;
-        }
-
-        /// <summary>
-        /// Computes RTCP transmission interval. Defined in RFC 3550 6.3.1.
-        /// </summary>
-        /// <param name="members">Current mebers count.</param>
-        /// <param name="senders">Current sender count.</param>
-        /// <param name="rtcp_bw">RTCP bandwidth.</param>
-        /// <param name="we_sent">Specifies if we have sent data after last 2 RTCP interval.</param>
-        /// <param name="avg_rtcp_size">Average RTCP raw packet size, IP headers included.</param>
-        /// <param name="initial">Specifies if we ever have sent data to target.</param>
-        /// <returns>Returns transmission interval in seconds.</returns>
-        private int ComputeRtcpTransmissionInterval(int members,int senders,double rtcp_bw,bool we_sent,double avg_rtcp_size,bool initial)
-        {
-            // RFC 3550 A.7.
-
-            /*
-                Minimum average time between RTCP packets from this site (in
-                seconds).  This time prevents the reports from `clumping' when
-                sessions are small and the law of large numbers isn't helping
-                to smooth out the traffic.  It also keeps the report interval
-                from becoming ridiculously small during transient outages like
-                a network partition.
-            */
-            double RTCP_MIN_TIME = 5;
-            /*
-                Fraction of the RTCP bandwidth to be shared among active
-                senders.  (This fraction was chosen so that in a typical
-                session with one or two active senders, the computed report
-                time would be roughly equal to the minimum report time so that
-                we don't unnecessarily slow down receiver reports.)  The
-                receiver fraction must be 1 - the sender fraction.
-            */
-            double RTCP_SENDER_BW_FRACTION = 0.25;
-            double RTCP_RCVR_BW_FRACTION = (1-RTCP_SENDER_BW_FRACTION);            
-            /* 
-                To compensate for "timer reconsideration" converging to a
-                value below the intended average.
-            */
-            double COMPENSATION = 2.71828 - 1.5;
-
-            double t;                   /* interval */
-            double rtcp_min_time = RTCP_MIN_TIME;
-            int n;                      /* no. of members for computation */
-
-            /*
-                Very first call at application start-up uses half the min
-                delay for quicker notification while still allowing some time
-                before reporting for randomization and to learn about other
-                sources so the report interval will converge to the correct
-                interval more quickly.
-            */
-            if(initial){
-                rtcp_min_time /= 2;
-            }
-            /*
-                Dedicate a fraction of the RTCP bandwidth to senders unless
-                the number of senders is large enough that their share is
-                more than that fraction.
-            */
-            n = members;
-            if(senders <= (members * RTCP_SENDER_BW_FRACTION)){
-                if(we_sent){
-                    rtcp_bw = (rtcp_bw * RTCP_SENDER_BW_FRACTION);
-                    n = senders;
-                }
-                else{
-                    rtcp_bw = (rtcp_bw * RTCP_SENDER_BW_FRACTION);
-                    n -= senders;
-                }
-            }
-
-            /*
-                The effective number of sites times the average packet size is
-                the total number of octets sent when each site sends a report.
-                Dividing this by the effective bandwidth gives the time
-                interval over which those packets must be sent in order to
-                meet the bandwidth target, with a minimum enforced.  In that
-                time interval we send one report so this time is also our
-                average time between reports.
-            */
-            t = avg_rtcp_size * n / rtcp_bw;
-            if(t < rtcp_min_time){
-                t = rtcp_min_time;
-            }
-
-            /*
-                To avoid traffic bursts from unintended synchronization with
-                other sites, we then pick our actual next report interval as a
-                random number uniformly distributed between 0.5*t and 1.5*t.
-            */
-            t = t * (new Random().Next(5,15) / 10.0);
-            t = t / COMPENSATION;
-
-            return (int)Math.Max(t,2.0);
-        }
-
-        /// <summary>
-        /// Does "reverse reconsideration" algorithm. Defined in RFC 3550 6.3.4.
-        /// </summary>
-        private void DoReverseReconsideration()
-        {
-            /* RFC 3550 6.3.4. "reverse reconsideration"
-                o  The value for tn is updated according to the following formula:
-                   tn = tc + (members/pmembers) * (tn - tc)
-
-                o  The value for tp is updated according the following formula:
-                   tp = tc - (members/pmembers) * (tc - tp).
-              
-                o  The next RTCP packet is rescheduled for transmission at time tn,
-                   which is now earlier.
-
-                o  The value of pmembers is set equal to members.
-
-                This algorithm does not prevent the group size estimate from
-                incorrectly dropping to zero for a short time due to premature
-                timeouts when most participants of a large session leave at once but
-                some remain.  The algorithm does make the estimate return to the
-                correct value more rapidly.  This situation is unusual enough and the
-                consequences are sufficiently harmless that this problem is deemed
-                only a secondary concern.
-            */
-            
-            var timeNext = m_RtcpLastTransmission == DateTime.MinValue ? DateTime.Now : m_RtcpLastTransmission.AddMilliseconds(m_pRtcpTimer.Interval);
-
-            Schedule((int)Math.Max((m_pMembers.Count / m_PMembersCount) * ((TimeSpan)(timeNext - DateTime.Now)).TotalSeconds,2));
-            
-            m_PMembersCount = m_pMembers.Count;
-        }
-
-        /// <summary>
-        /// Does RFC 3550 6.3.5 Timing Out an SSRC.
-        /// </summary>
-        private void TimeOutSsrc()
-        {
-            /* RFC 3550 6.3.5 Timing Out an SSRC.
-                At occasional intervals, the participant MUST check to see if any of
-                the other participants time out.  To do this, the participant
-                computes the deterministic (without the randomization factor)
-                calculated interval Td for a receiver, that is, with we_sent false.
-                Any other session member who has not sent an RTP or RTCP packet since
-                time tc - MTd (M is the timeout multiplier, and defaults to 5) is
-                timed out.  This means that its SSRC is removed from the member list,
-                and members is updated.  A similar check is performed on the sender
-                list.  Any member on the sender list who has not sent an RTP packet
-                since time tc - 2T (within the last two RTCP report intervals) is
-                removed from the sender list, and senders is updated.
-
-                If any members time out, the reverse reconsideration algorithm
-                described in Section 6.3.4 SHOULD be performed.
-
-                The participant MUST perform this check at least once per RTCP
-                transmission interval.
-            */
-
-            bool membersUpdated = false;
-                         
-            // Senders check.
-            var senders = new RTP_Source[m_pSenders.Count];
-            m_pSenders.Values.CopyTo(senders,0);
-            foreach(RTP_Source sender in senders){
-                // Sender has not sent RTP data since last two RTCP intervals.
-                if(sender.LastRtpPacket.AddMilliseconds(2 * m_pRtcpTimer.Interval) < DateTime.Now){
-                    m_pSenders.Remove(sender.SSRC);
-
-                    // Mark source "passive".
-                    sender.SetActivePassive(false);
-                }
-            }
-
-            int Td = ComputeRtcpTransmissionInterval(m_pMembers.Count,m_pSenders.Count,m_Bandwidth * 0.25,false,m_RtcpAvgPacketSize,false);
-
-            // Members check.
-            foreach(RTP_Source member in Members){                
-                // Source timed out.
-                if(member.LastActivity.AddSeconds(5 * Td) < DateTime.Now){
-                    m_pMembers.Remove(member.SSRC);
-                    // Don't dispose local source, just remove only from members.
-                    if(!member.IsLocal){
-                        member.Dispose();
-                    }
-                    membersUpdated = true;
-                }
-            }          
-            
-            if(membersUpdated){
-                DoReverseReconsideration();
-            }            
         }
 
         /// <summary>
@@ -1055,17 +1767,20 @@ namespace LumiSoft.Net.RTP
 
             bool we_sent = false;
 
-            try{
+            try
+            {
                 m_pRtcpSource.SetLastRtcpPacket(DateTime.Now);
-                                
+
                 var compundPacket = new RTCP_CompoundPacket();
 
                 RTCP_Packet_RR rr = null;
 
                 // Find active send streams.
                 var activeSendStreams = new List<RTP_SendStream>();
-                foreach (RTP_SendStream stream in SendStreams){
-                    if(stream.RtcpCyclesSinceWeSent < 2){
+                foreach (RTP_SendStream stream in SendStreams)
+                {
+                    if (stream.RtcpCyclesSinceWeSent < 2)
+                    {
                         activeSendStreams.Add(stream);
                         we_sent = true;
                     }
@@ -1074,22 +1789,25 @@ namespace LumiSoft.Net.RTP
                 }
 
                 // We are sender.
-                if(we_sent){
+                if (we_sent)
+                {
                     // Create SR for each active send stream.
-                    for(int i=0;i<activeSendStreams.Count;i++){
+                    for (int i = 0; i < activeSendStreams.Count; i++)
+                    {
                         var sendStream = activeSendStreams[i];
 
                         var sr = new RTCP_Packet_SR(sendStream.Source.SSRC);
-                        sr.NtpTimestamp      = RTP_Utils.DateTimeToNTP64(DateTime.Now);
-                        sr.RtpTimestamp      = m_pRtpClock.RtpTimestamp;
+                        sr.NtpTimestamp = RTP_Utils.DateTimeToNTP64(DateTime.Now);
+                        sr.RtpTimestamp = m_pRtpClock.RtpTimestamp;
                         sr.SenderPacketCount = (uint)sendStream.RtpPacketsSent;
-                        sr.SenderOctetCount  = (uint)sendStream.RtpBytesSent;
+                        sr.SenderOctetCount = (uint)sendStream.RtpBytesSent;
 
                         compundPacket.Packets.Add(sr);
                     }
                 }
                 // We are receiver.
-                else{
+                else
+                {
                     rr = new RTCP_Packet_RR();
                     rr.SSRC = m_pRtcpSource.SSRC;
                     compundPacket.Packets.Add(rr);
@@ -1099,13 +1817,14 @@ namespace LumiSoft.Net.RTP
 
                 var sdes = new RTCP_Packet_SDES();
                 // Add default SSRC.
-                var sdesChunk = new RTCP_Packet_SDES_Chunk(m_pRtcpSource.SSRC,m_pSession.LocalParticipant.CNAME);
+                var sdesChunk = new RTCP_Packet_SDES_Chunk(m_pRtcpSource.SSRC, m_pSession.LocalParticipant.CNAME);
                 // Add next optional SDES item, if any. (We round-robin optional items)
                 m_pSession.LocalParticipant.AddNextOptionalSdesItem(sdesChunk);
-                sdes.Chunks.Add(sdesChunk);   
+                sdes.Chunks.Add(sdesChunk);
                 // Add all active send streams SSRC -> CNAME. This enusres that all send streams will be mapped to participant.
-                foreach(RTP_SendStream stream in activeSendStreams){
-                    sdes.Chunks.Add(new RTCP_Packet_SDES_Chunk(stream.Source.SSRC,m_pSession.LocalParticipant.CNAME));
+                foreach (RTP_SendStream stream in activeSendStreams)
+                {
+                    sdes.Chunks.Add(new RTCP_Packet_SDES_Chunk(stream.Source.SSRC, m_pSession.LocalParticipant.CNAME));
                 }
                 compundPacket.Packets.Add(sdes);
 
@@ -1113,29 +1832,34 @@ namespace LumiSoft.Net.RTP
                     Report up to 31 active senders, if more senders, reoprt next with next interval.
                     Report oldest not reported first,then ventually all sources will be reported with this algorythm.
                 */
-                var        senders             = Senders;
-                var          acitveSourceRRTimes = new DateTime[senders.Length];
-                var activeSenders       = new RTP_ReceiveStream[senders.Length];
-                int                 activeSenderCount   = 0;
-                foreach(RTP_Source sender in senders){
+                var senders = Senders;
+                var acitveSourceRRTimes = new DateTime[senders.Length];
+                var activeSenders = new RTP_ReceiveStream[senders.Length];
+                int activeSenderCount = 0;
+                foreach (RTP_Source sender in senders)
+                {
                     // Remote sender sent RTP data during last RTCP interval.
-                    if(!sender.IsLocal && sender.LastRtpPacket > m_RtcpLastTransmission){
+                    if (!sender.IsLocal && sender.LastRtpPacket > m_RtcpLastTransmission)
+                    {
                         acitveSourceRRTimes[activeSenderCount] = sender.LastRRTime;
-                        activeSenders[activeSenderCount]       = ((RTP_Source_Remote)sender).Stream;
+                        activeSenders[activeSenderCount] = ((RTP_Source_Remote)sender).Stream;
                         activeSenderCount++;
                     }
-                }                
+                }
                 // Create RR is SR report and no RR created yet.
-                if(rr == null){
+                if (rr == null)
+                {
                     rr = new RTCP_Packet_RR();
                     rr.SSRC = m_pRtcpSource.SSRC;
                     compundPacket.Packets.Add(rr);
                 }
                 // Sort ASC.
-                Array.Sort(acitveSourceRRTimes,activeSenders,0,activeSenderCount);
+                Array.Sort(acitveSourceRRTimes, activeSenders, 0, activeSenderCount);
                 // Add up to 31 oldest not reported sources to report.
-                for(int i=1;i<31;i++){
-                    if((activeSenderCount - i) < 0){
+                for (int i = 1; i < 31; i++)
+                {
+                    if ((activeSenderCount - i) < 0)
+                    {
                         break;
                     }
                     rr.ReportBlocks.Add(activeSenders[activeSenderCount - i].CreateReceiverReport());
@@ -1145,11 +1869,14 @@ namespace LumiSoft.Net.RTP
                 SendRtcpPacket(compundPacket);
 
                 // Timeout conflicting transport addresses, if not conflicting any more.
-                lock(m_pConflictingEPs){
+                lock (m_pConflictingEPs)
+                {
                     var keys = new string[m_pConflictingEPs.Count];
-                    m_pConflictingEPs.Keys.CopyTo(keys,0);
-                    foreach(string key in keys){
-                        if(m_pConflictingEPs[key].AddMinutes(3) < DateTime.Now){
+                    m_pConflictingEPs.Keys.CopyTo(keys, 0);
+                    foreach (string key in keys)
+                    {
+                        if (m_pConflictingEPs[key].AddMinutes(3) < DateTime.Now)
+                        {
                             m_pConflictingEPs.Remove(key);
                         }
                     }
@@ -1159,8 +1886,10 @@ namespace LumiSoft.Net.RTP
                 // check this before sending RTCP.
                 TimeOutSsrc();
             }
-            catch(Exception x){
-                if(IsDisposed){
+            catch (Exception x)
+            {
+                if (IsDisposed)
+                {
                     return;
                 }
 
@@ -1170,599 +1899,72 @@ namespace LumiSoft.Net.RTP
             m_RtcpLastTransmission = DateTime.Now;
 
             // Schedule next RTCP sending.
-            Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count,m_pSenders.Count,m_Bandwidth * 0.25,we_sent,m_RtcpAvgPacketSize,false));
+            Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count, m_pSenders.Count, m_Bandwidth * 0.25, we_sent, m_RtcpAvgPacketSize, false));
         }
 
         /// <summary>
-        /// Is called when RTP socket has finisehd data sending.
+        /// Does RFC 3550 6.3.5 Timing Out an SSRC.
         /// </summary>
-        /// <param name="ar">The result of the asynchronous operation.</param>
-        private void RtpAsyncSocketSendCompleted(IAsyncResult ar)
+        private void TimeOutSsrc()
         {
-            try{
-                m_RtpBytesSent += m_pRtpSocket.EndSendTo(ar);
-                m_RtpPacketsSent++;
-            }
-            catch{
-                m_RtpFailedTransmissions++;
-            }
-        }
+            /* RFC 3550 6.3.5 Timing Out an SSRC.
+                At occasional intervals, the participant MUST check to see if any of
+                the other participants time out.  To do this, the participant
+                computes the deterministic (without the randomization factor)
+                calculated interval Td for a receiver, that is, with we_sent false.
+                Any other session member who has not sent an RTP or RTCP packet since
+                time tc - MTd (M is the timeout multiplier, and defaults to 5) is
+                timed out.  This means that its SSRC is removed from the member list,
+                and members is updated.  A similar check is performed on the sender
+                list.  Any member on the sender list who has not sent an RTP packet
+                since time tc - 2T (within the last two RTCP report intervals) is
+                removed from the sender list, and senders is updated.
 
-        /// <summary>
-        /// Gets if this object is disposed.
-        /// </summary>
-        public bool IsDisposed { get; private set; }
+                If any members time out, the reverse reconsideration algorithm
+                described in Section 6.3.4 SHOULD be performed.
 
-        /// <summary>
-        /// Gets owner RTP multimedia session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_MultimediaSession Session
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+                The participant MUST perform this check at least once per RTCP
+                transmission interval.
+            */
 
-                return m_pSession; 
-            }
-        }
+            bool membersUpdated = false;
 
-        /// <summary>
-        /// Gets local RTP end point.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Address LocalEP
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+            // Senders check.
+            var senders = new RTP_Source[m_pSenders.Count];
+            m_pSenders.Values.CopyTo(senders, 0);
+            foreach (RTP_Source sender in senders)
+            {
+                // Sender has not sent RTP data since last two RTCP intervals.
+                if (sender.LastRtpPacket.AddMilliseconds(2 * m_pRtcpTimer.Interval) < DateTime.Now)
+                {
+                    m_pSenders.Remove(sender.SSRC);
 
-                return m_pLocalEP; 
-            }
-        }
-
-        /// <summary>
-        /// Gets RTP media clock.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Clock RtpClock
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRtpClock; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets stream mode.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_StreamMode StreamMode
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_StreamMode; 
-            }
-
-            set{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                m_StreamMode = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets RTP session remote targets.
-        /// </summary>
-        /// <remarks>Normally RTP session has only 1 remote target, for multi-unicast session, there may be more than 1 target.</remarks>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Address[] Targets
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pTargets.ToArray(); 
-            }
-        }
-
-        /// <summary>
-        /// Gets maximum transfet unit size in bytes.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int MTU
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_MTU; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets sending payload.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int Payload
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_Payload; 
-            }
-
-            set{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                if(m_Payload != value){
-                    m_Payload = value;
-
-                    OnPayloadChanged();
+                    // Mark source "passive".
+                    sender.SetActivePassive(false);
                 }
             }
-        }
 
-        /// <summary>
-        /// Gets or sets session bandwidth in bits per second.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
-        public int Bandwidth
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+            int Td = ComputeRtcpTransmissionInterval(m_pMembers.Count, m_pSenders.Count, m_Bandwidth * 0.25, false, m_RtcpAvgPacketSize, false);
 
-                return m_Bandwidth; 
-            }
-
-            set{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(value < 8){
-                    throw new ArgumentException("Property 'Bandwidth' value must be >= 8.");
-                }
-
-                m_Bandwidth = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets session members. Session member is local/remote source what sends RTCP,RTP or RTCP-RTP data.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Source[] Members
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                lock(m_pMembers){
-                    var sources = new RTP_Source[m_pMembers.Count];
-                    m_pMembers.Values.CopyTo(sources,0);
-
-                    return sources;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets session senders. Sender is local/remote source what sends RTP data.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Source[] Senders
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                lock(m_pSenders){
-                    var sources = new RTP_Source[m_pSenders.Count];
-                    m_pSenders.Values.CopyTo(sources,0);
-
-                    return sources;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the RTP streams what we send.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_SendStream[] SendStreams
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                lock(m_pLocalSources){
-                    var retVal = new List<RTP_SendStream>();
-                    foreach (RTP_Source_Local source in m_pLocalSources){
-                        if(source.Stream != null){
-                            retVal.Add(source.Stream);
-                        }
+            // Members check.
+            foreach (RTP_Source member in Members)
+            {
+                // Source timed out.
+                if (member.LastActivity.AddSeconds(5 * Td) < DateTime.Now)
+                {
+                    m_pMembers.Remove(member.SSRC);
+                    // Don't dispose local source, just remove only from members.
+                    if (!member.IsLocal)
+                    {
+                        member.Dispose();
                     }
-
-                    return retVal.ToArray();
+                    membersUpdated = true;
                 }
             }
-        }
 
-        /// <summary>
-        /// Gets the RTP streams what we receive.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_ReceiveStream[] ReceiveStreams
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                lock(m_pSenders){
-                    var retVal = new List<RTP_ReceiveStream>();
-                    foreach (RTP_Source source in m_pSenders.Values){
-                        if(!source.IsLocal){
-                            retVal.Add(((RTP_Source_Remote)source).Stream);
-                        }
-                    }
-
-                    return retVal.ToArray();
-                }
-            }
-        }
-     
-        /// <summary>
-        /// Gets total of RTP packets sent by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtpPacketsSent
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtpPacketsSent; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTP bytes(RTP headers included) sent by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtpBytesSent
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtpBytesSent; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTP packets received by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtpPacketsReceived
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtpPacketsReceived; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTP bytes(RTP headers included) received by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtpBytesReceived
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtpBytesReceived; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of times RTP packet sending has failed.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtpFailedTransmissions
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtpFailedTransmissions; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTCP packets sent by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtcpPacketsSent
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtcpPacketsSent; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTCP bytes(RTCP headers included) sent by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtcpBytesSent
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtcpBytesSent; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTCP packets received by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtcpPacketsReceived
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtcpPacketsReceived; 
-            }
-        }
-
-        /// <summary>
-        /// Gets total of RTCP bytes(RTCP headers included) received by this session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtcpBytesReceived
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtcpBytesReceived; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of times RTCP packet sending has failed.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RtcpFailedTransmissions
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtcpFailedTransmissions; 
-            }
-        }
-
-        /// <summary>
-        /// Current RTCP reporting interval in seconds.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int RtcpInterval
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return (int)(m_pRtcpTimer.Interval / 1000); 
-            }
-        }
-
-        /// <summary>
-        /// Gets time when last RTCP report was sent.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public DateTime RtcpLastTransmission
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RtcpLastTransmission; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of times local SSRC collision dedected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long LocalCollisions
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LocalCollisions; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of times remote SSRC collision dedected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RemoteCollisions
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RemoteCollisions; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of times local packets loop dedected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long LocalPacketsLooped
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LocalPacketsLooped; 
-            }
-        }
-
-        /// <summary>
-        /// Gets number of times remote packets loop dedected.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public long RemotePacketsLooped
-        {
-            get{
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RemotePacketsLooped; 
-            }
-        }
-
-        /// <summary>
-        /// Gets RTP payloads.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public KeyValueCollection<int,Codec> Payloads
-        {
-            get{ 
-                if(IsDisposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pPayloads; 
-            }
-        }
-
-        /// <summary>
-        /// Is raised when RTP session has disposed.
-        /// </summary>
-        public event EventHandler Disposed;
-
-        /// <summary>
-        /// Raises <b>Disposed</b> event.
-        /// </summary>
-        private void OnDisposed()
-        {
-            if(Disposed != null){
-                Disposed(this,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// Is raised when RTP session has closed.
-        /// </summary>
-        public event EventHandler Closed;
-
-        /// <summary>
-        /// Raises <b>Closed</b> event.
-        /// </summary>
-        private void OnClosed()
-        {
-            if(Closed != null){
-                Closed(this,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// Is raised when new send stream created.
-        /// </summary>
-        public event EventHandler<RTP_SendStreamEventArgs> NewSendStream;
-
-        /// <summary>
-        /// Raises <b>NewSendStream</b> event.
-        /// </summary>
-        /// <param name="stream">New send stream.</param>
-        private void OnNewSendStream(RTP_SendStream stream)
-        {
-            if(NewSendStream != null){
-                NewSendStream(this,new RTP_SendStreamEventArgs(stream));
-            }
-        }
-
-        /// <summary>
-        /// Is raised when new recieve stream received from remote target.
-        /// </summary>
-        public event EventHandler<RTP_ReceiveStreamEventArgs> NewReceiveStream;
-
-        /// <summary>
-        /// Raises <b>NewReceiveStream</b> event.
-        /// </summary>
-        /// <param name="stream">New receive stream.</param>
-        internal void OnNewReceiveStream(RTP_ReceiveStream stream)
-        {
-            if(NewReceiveStream != null){
-                NewReceiveStream(this,new RTP_ReceiveStreamEventArgs(stream));
-            }
-        }
-
-        /// <summary>
-        /// Is raised when session sending payload has changed.
-        /// </summary>
-        public event EventHandler PayloadChanged;
-
-        /// <summary>
-        /// Raises <b>PayloadChanged</b> event.
-        /// </summary>
-        private void OnPayloadChanged()
-        {
-            if(PayloadChanged != null){
-                PayloadChanged(this,new EventArgs());
+            if (membersUpdated)
+            {
+                DoReverseReconsideration();
             }
         }
     }

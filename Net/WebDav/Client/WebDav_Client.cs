@@ -10,92 +10,51 @@ namespace LumiSoft.Net.WebDav.Client
     /// </summary>
     public class WebDav_Client
     {
-        /// <summary>
-        /// Executes PROPFIND method.
-        /// </summary>
-        /// <param name="requestUri">Request URI.</param>
-        /// <param name="propertyNames">Properties to get. Value null means property names listing.</param>
-        /// <param name="depth">Maximum depth inside collections to get.</param>
-        /// <returns>Returns server returned responses.</returns>
-        public WebDav_MultiStatus PropFind(string requestUri,string[] propertyNames,int depth)
-        {
-            if(requestUri == null){
-                throw new ArgumentNullException("requestUri");
-            }
 
-            var requestContentString = new StringBuilder();
-            requestContentString.Append("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n");
-            requestContentString.Append("<propfind xmlns=\"DAV:\">\r\n");
-            requestContentString.Append("<prop>\r\n");
-            if(propertyNames == null || propertyNames.Length == 0){
-                requestContentString.Append("   <propname/>\r\n");
-            }
-            else{
-                foreach(string propertyName in propertyNames){
-                    requestContentString.Append("<" + propertyName + "/>");
-                }
-            }            
-            requestContentString.Append("</prop>\r\n");
-            requestContentString.Append("</propfind>\r\n");
+        // public void Lock()
+        // {
+        // }
 
-            var requestContent = Encoding.UTF8.GetBytes(requestContentString.ToString());
-
-            var request = (HttpWebRequest)WebRequest.Create(requestUri);
-            request.Method = "PROPFIND";
-            request.ContentType = "application/xml";
-            request.ContentLength = requestContent.Length;
-            request.Credentials = Credentials;
-            if(depth > -1){
-                request.Headers.Add("Depth: " + depth);
-            }
-            request.GetRequestStream().Write(requestContent,0,requestContent.Length);
-            
-            return WebDav_MultiStatus.Parse(request.GetResponse().GetResponseStream());
-        }
-
-        // public void PropPatch()
+        // public void Unlock()
         // {
         // }
 
         /// <summary>
-        /// Creates new collection to the specified path.
+        /// Gets or sets credentials.
         /// </summary>
-        /// <param name="uri">Target collection URI.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> null reference.</exception>
-        public void MkCol(string uri)
-        {
-            if(uri == null){
-                throw new ArgumentNullException("uri");
-            }
-
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.Method = "MKCOL";
-            request.Credentials = Credentials;
-
-            var response = (HttpWebResponse)request.GetResponse();
-        }
+        public NetworkCredential Credentials { get; set; }
 
         /// <summary>
-        /// Gets the specified resource stream.
+        /// Copies source URI resource to the target URI.
         /// </summary>
-        /// <param name="uri">Target resource URI.</param>
-        /// <param name="contentSize">Returns resource size in bytes.</param>
-        /// <returns>Retruns resource stream.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
-        public Stream Get(string uri,out long contentSize)
+        /// <param name="sourceUri">Source URI.</param>
+        /// <param name="targetUri">Target URI.</param>
+        /// <param name="depth">If source is collection, then depth specified how many nested levels will be copied.</param>
+        /// <param name="overwrite">If true and target resource already exists, it will be over written. 
+        /// If false and target resource exists, exception is thrown.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>sourceUri</b> or <b>targetUri</b> is null reference.</exception>
+        public void Copy(string sourceUri, string targetUri, int depth, bool overwrite)
         {
-            if(uri == null){
-                throw new ArgumentNullException("uri");
+            if (sourceUri == null)
+            {
+                throw new ArgumentNullException(sourceUri);
+            }
+            if (targetUri == null)
+            {
+                throw new ArgumentNullException(targetUri);
             }
 
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.Method = "GET";
+            var request = (HttpWebRequest)WebRequest.Create(sourceUri);
+            request.Method = "COPY";
+            request.Headers.Add("Destination: " + targetUri);
+            request.Headers.Add("Overwrite: " + (overwrite ? "T" : "F"));
+            if (depth > -1)
+            {
+                request.Headers.Add("Depth: " + depth);
+            }
             request.Credentials = Credentials;
 
-            var response = (HttpWebResponse)request.GetResponse();
-            contentSize = response.ContentLength;
-
-            return response.GetResponseStream();
+            request.GetResponse();
         }
 
         // public void Head()
@@ -113,7 +72,8 @@ namespace LumiSoft.Net.WebDav.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
         public void Delete(string uri)
         {
-            if(uri == null){
+            if (uri == null)
+            {
                 throw new ArgumentNullException("uri");
             }
 
@@ -125,79 +85,50 @@ namespace LumiSoft.Net.WebDav.Client
         }
 
         /// <summary>
-        /// Creates specified resource to the specified location.
+        /// Gets the specified resource stream.
         /// </summary>
-        /// <param name="targetUri">Target URI. For example: htt://server/test.txt .</param>
-        /// <param name="stream">Stream which data to upload.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>targetUri</b> or <b>stream</b> is null reference.</exception>
-        public void Put(string targetUri,Stream stream)
+        /// <param name="uri">Target resource URI.</param>
+        /// <param name="contentSize">Returns resource size in bytes.</param>
+        /// <returns>Retruns resource stream.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
+        public Stream Get(string uri, out long contentSize)
         {
-            if(targetUri == null){
-                throw new ArgumentNullException("targetUri");
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
             }
 
-            // Work around, to casuse authentication, otherwise we may not use AllowWriteStreamBuffering = false later.
-            // All this because ms is so lazy, tries to write all data to memory, instead switching to temp file if bigger 
-            // data sent.
-            try{
-                var dummy  = (HttpWebRequest)WebRequest.Create(targetUri);
-                // Set the username and the password.
-                dummy.Credentials = Credentials;
-			    dummy.PreAuthenticate = true;
-			    dummy.Method = "HEAD";
-			    ((HttpWebResponse)dummy.GetResponse()).Close(); 
-            }
-            catch{
-            }
-
-            var request = (HttpWebRequest)WebRequest.Create(targetUri);
-            request.Method = "PUT";
-            request.ContentType = "application/octet-stream";
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Method = "GET";
             request.Credentials = Credentials;
-            request.PreAuthenticate = true;
-            request.AllowWriteStreamBuffering = false;
-            if(stream.CanSeek){                
-                request.ContentLength = (stream.Length - stream.Position);
-            }            
-            
-            using(Stream requestStream = request.GetRequestStream()){                
-                Net_Utils.StreamCopy(stream,requestStream,32000);
-            }
 
-            request.GetResponse();
+            var response = (HttpWebResponse)request.GetResponse();
+            contentSize = response.ContentLength;
+
+            return response.GetResponseStream();
         }
 
+        // public void PropPatch()
+        // {
+        // }
+
         /// <summary>
-        /// Copies source URI resource to the target URI.
+        /// Creates new collection to the specified path.
         /// </summary>
-        /// <param name="sourceUri">Source URI.</param>
-        /// <param name="targetUri">Target URI.</param>
-        /// <param name="depth">If source is collection, then depth specified how many nested levels will be copied.</param>
-        /// <param name="overwrite">If true and target resource already exists, it will be over written. 
-        /// If false and target resource exists, exception is thrown.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>sourceUri</b> or <b>targetUri</b> is null reference.</exception>
-        public void Copy(string sourceUri,string targetUri,int depth,bool overwrite)
+        /// <param name="uri">Target collection URI.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> null reference.</exception>
+        public void MkCol(string uri)
         {
-            if(sourceUri == null){
-                throw new ArgumentNullException(sourceUri);
-            }
-            if(targetUri == null){
-                throw new ArgumentNullException(targetUri);
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
             }
 
-            var request = (HttpWebRequest)WebRequest.Create(sourceUri);
-            request.Method = "COPY";
-            request.Headers.Add("Destination: " + targetUri);
-            request.Headers.Add("Overwrite: " + (overwrite ? "T" : "F"));
-            if(depth > -1){
-                request.Headers.Add("Depth: " + depth);
-            }
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Method = "MKCOL";
             request.Credentials = Credentials;
 
-            request.GetResponse();
+            var response = (HttpWebResponse)request.GetResponse();
         }
 
         /// <summary>
@@ -209,12 +140,14 @@ namespace LumiSoft.Net.WebDav.Client
         /// <param name="overwrite">If true and target resource already exists, it will be over written. 
         /// If false and target resource exists, exception is thrown.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceUri</b> or <b>targetUri</b> is null reference.</exception>
-        public void Move(string sourceUri,string targetUri,int depth,bool overwrite)
+        public void Move(string sourceUri, string targetUri, int depth, bool overwrite)
         {
-            if(sourceUri == null){
+            if (sourceUri == null)
+            {
                 throw new ArgumentNullException(sourceUri);
             }
-            if(targetUri == null){
+            if (targetUri == null)
+            {
                 throw new ArgumentNullException(targetUri);
             }
 
@@ -222,25 +155,112 @@ namespace LumiSoft.Net.WebDav.Client
             request.Method = "MOVE";
             request.Headers.Add("Destination: " + targetUri);
             request.Headers.Add("Overwrite: " + (overwrite ? "T" : "F"));
-            if(depth > -1){
+            if (depth > -1)
+            {
                 request.Headers.Add("Depth: " + depth);
             }
             request.Credentials = Credentials;
 
             request.GetResponse();
         }
+        /// <summary>
+        /// Executes PROPFIND method.
+        /// </summary>
+        /// <param name="requestUri">Request URI.</param>
+        /// <param name="propertyNames">Properties to get. Value null means property names listing.</param>
+        /// <param name="depth">Maximum depth inside collections to get.</param>
+        /// <returns>Returns server returned responses.</returns>
+        public WebDav_MultiStatus PropFind(string requestUri, string[] propertyNames, int depth)
+        {
+            if (requestUri == null)
+            {
+                throw new ArgumentNullException("requestUri");
+            }
 
-        // public void Lock()
-        // {
-        // }
+            var requestContentString = new StringBuilder();
+            requestContentString.Append("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n");
+            requestContentString.Append("<propfind xmlns=\"DAV:\">\r\n");
+            requestContentString.Append("<prop>\r\n");
+            if (propertyNames == null || propertyNames.Length == 0)
+            {
+                requestContentString.Append("   <propname/>\r\n");
+            }
+            else
+            {
+                foreach (string propertyName in propertyNames)
+                {
+                    requestContentString.Append("<" + propertyName + "/>");
+                }
+            }
+            requestContentString.Append("</prop>\r\n");
+            requestContentString.Append("</propfind>\r\n");
 
-        // public void Unlock()
-        // {
-        // }
+            var requestContent = Encoding.UTF8.GetBytes(requestContentString.ToString());
+
+            var request = (HttpWebRequest)WebRequest.Create(requestUri);
+            request.Method = "PROPFIND";
+            request.ContentType = "application/xml";
+            request.ContentLength = requestContent.Length;
+            request.Credentials = Credentials;
+            if (depth > -1)
+            {
+                request.Headers.Add("Depth: " + depth);
+            }
+            request.GetRequestStream().Write(requestContent, 0, requestContent.Length);
+
+            return WebDav_MultiStatus.Parse(request.GetResponse().GetResponseStream());
+        }
 
         /// <summary>
-        /// Gets or sets credentials.
+        /// Creates specified resource to the specified location.
         /// </summary>
-        public NetworkCredential Credentials { get; set; }
+        /// <param name="targetUri">Target URI. For example: htt://server/test.txt .</param>
+        /// <param name="stream">Stream which data to upload.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>targetUri</b> or <b>stream</b> is null reference.</exception>
+        public void Put(string targetUri, Stream stream)
+        {
+            if (targetUri == null)
+            {
+                throw new ArgumentNullException("targetUri");
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            // Work around, to casuse authentication, otherwise we may not use AllowWriteStreamBuffering = false later.
+            // All this because ms is so lazy, tries to write all data to memory, instead switching to temp file if bigger 
+            // data sent.
+            try
+            {
+                var dummy = (HttpWebRequest)WebRequest.Create(targetUri);
+                // Set the username and the password.
+                dummy.Credentials = Credentials;
+                dummy.PreAuthenticate = true;
+                dummy.Method = "HEAD";
+                ((HttpWebResponse)dummy.GetResponse()).Close();
+            }
+            catch
+            {
+            }
+
+            var request = (HttpWebRequest)WebRequest.Create(targetUri);
+            request.Method = "PUT";
+            request.ContentType = "application/octet-stream";
+            request.Credentials = Credentials;
+            request.PreAuthenticate = true;
+            request.AllowWriteStreamBuffering = false;
+            if (stream.CanSeek)
+            {
+                request.ContentLength = (stream.Length - stream.Position);
+            }
+
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                Net_Utils.StreamCopy(stream, requestStream, 32000);
+            }
+
+            request.GetResponse();
+        }
     }
 }

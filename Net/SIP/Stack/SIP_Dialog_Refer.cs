@@ -14,10 +14,10 @@ namespace LumiSoft.Net.SIP.Stack
         {
         }
 
-        private void CreateNotify(string statusLine)
-        {
-            // TODO: Block for UAC ? because UAS can generate NOTIFY requests only.
-        }
+        /// <summary>
+        /// Is raised when NOTIFY request received.
+        /// </summary>
+        public event EventHandler<SIP_RequestReceivedEventArgs> Notify;
 
         /// <summary>
         /// Processes specified request through this dialog.
@@ -27,15 +27,18 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>e</b> is null reference.</exception>
         internal protected override bool ProcessRequest(SIP_RequestReceivedEventArgs e)
         {
-            if(e == null){
+            if (e == null)
+            {
                 throw new ArgumentNullException("e");
             }
 
-            if(base.ProcessRequest(e)){
+            if (base.ProcessRequest(e))
+            {
                 return true;
             }
 
-            if(e.Request.RequestLine.Method == SIP_Methods.NOTIFY){
+            if (e.Request.RequestLine.Method == SIP_Methods.NOTIFY)
+            {
                 OnNotify(e);
 
                 return true;
@@ -44,10 +47,10 @@ namespace LumiSoft.Net.SIP.Stack
             return false;
         }
 
-        /// <summary>
-        /// Is raised when NOTIFY request received.
-        /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> Notify;
+        private void CreateNotify(string statusLine)
+        {
+            // TODO: Block for UAC ? because UAS can generate NOTIFY requests only.
+        }
 
         /// <summary>
         /// Raises <b>Notify</b> event.
@@ -55,8 +58,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event args.</param>
         private void OnNotify(SIP_RequestReceivedEventArgs e)
         {
-            if(Notify != null){
-                Notify(this,e);
+            if (Notify != null)
+            {
+                Notify(this, e);
             }
         }
     }

@@ -12,15 +12,15 @@ namespace LumiSoft.Net.RTP
     /// </remarks>
     public abstract class RTP_Source
     {
-        private RTP_Session          m_pSession;
-        private uint                 m_SSRC;
-        private IPEndPoint           m_pRtcpEP;
-        private IPEndPoint           m_pRtpEP;
-        private DateTime             m_LastRtcpPacket = DateTime.MinValue;
-        private DateTime             m_LastRtpPacket  = DateTime.MinValue;
-        private DateTime             m_LastActivity   = DateTime.Now;
-        private readonly DateTime             m_LastRRTime     = DateTime.MinValue;
-        private string               m_CloseReason;
+        private string m_CloseReason;
+        private DateTime m_LastActivity = DateTime.Now;
+        private readonly DateTime m_LastRRTime = DateTime.MinValue;
+        private DateTime m_LastRtcpPacket = DateTime.MinValue;
+        private DateTime m_LastRtpPacket = DateTime.MinValue;
+        private IPEndPoint m_pRtcpEP;
+        private IPEndPoint m_pRtpEP;
+        private RTP_Session m_pSession;
+        private uint m_SSRC;
 
         /// <summary>
         /// Default constructor.
@@ -28,30 +28,205 @@ namespace LumiSoft.Net.RTP
         /// <param name="session">Owner RTP session.</param>
         /// <param name="ssrc">Synchronization source ID.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
-        internal RTP_Source(RTP_Session session,uint ssrc)
+        internal RTP_Source(RTP_Session session, uint ssrc)
         {
             m_pSession = session ?? throw new ArgumentNullException("session");
-            m_SSRC     = ssrc;
+            m_SSRC = ssrc;
         }
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// Is raised when source is closed (by BYE).
         /// </summary>
-        internal virtual void Dispose()
-        {   
-            if(State == RTP_SourceState.Disposed){
-                return;
+        public event EventHandler Closed;
+
+        /// <summary>
+        /// Is raised when source is disposing.
+        /// </summary>
+        public event EventHandler Disposing;
+
+        /// <summary>
+        /// Is raised when source state has changed.
+        /// </summary>
+        public event EventHandler StateChanged;
+
+        /// <summary>
+        /// Gets source closing reason. Value null means not specified.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public string CloseReason
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_CloseReason;
             }
-            OnDisposing();
-            SetState(RTP_SourceState.Disposed);
+        }
 
-            m_pSession = null;
-            m_pRtcpEP = null;
-            m_pRtpEP = null;
+        /// <summary>
+        /// Gets if source is local or remote source.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public abstract bool IsLocal
+        {
+            get;
+        }
 
-            Closed = null;
-            Disposing = null;
-            StateChanged = null;
+        /// <summary>
+        /// Gets last time when source sent RTP or RCTP packet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public DateTime LastActivity
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LastActivity;
+            }
+        }
+
+        /// <summary>
+        /// Gets last time when source sent RTCP RR report.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public DateTime LastRRTime
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LastRRTime;
+            }
+        }
+
+        /// <summary>
+        /// Gets last time when source sent RTCP packet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public DateTime LastRtcpPacket
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LastRtcpPacket;
+            }
+        }
+
+        /// <summary>
+        /// Gets last time when source sent RTP packet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public DateTime LastRtpPacket
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LastRtpPacket;
+            }
+        }
+
+        /// <summary>
+        /// Gets source RTCP end point. Value null means source haven't sent any RTCP packet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public IPEndPoint RtcpEP
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRtcpEP;
+            }
+        }
+
+        /// <summary>
+        /// Gets source RTP end point. Value null means source haven't sent any RTCP packet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public IPEndPoint RtpEP
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRtpEP;
+            }
+        }
+
+        /// <summary>
+        /// Gets owner RTP session.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public RTP_Session Session
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pSession;
+            }
+        }
+
+        /// <summary>
+        /// Gets synchronization source ID.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public uint SSRC
+        {
+            get
+            {
+                if (State == RTP_SourceState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_SSRC;
+            }
+        }
+
+        /// <summary>
+        /// Gets source state.
+        /// </summary>
+        public RTP_SourceState State { get; private set; } = RTP_SourceState.Passive;
+
+        /// <summary>
+        /// Gets or sets user data.
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// Gets source CNAME. Value null means that source not binded to participant.
+        /// </summary>
+        internal abstract string CName
+        {
+            get;
         }
 
         /// <summary>
@@ -67,21 +242,32 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Sets property <b>RtcpEP</b> value.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="ep">IP end point.</param>
-        internal void SetRtcpEP(IPEndPoint ep)
+        internal virtual void Dispose()
         {
-            m_pRtcpEP = ep;
+            if (State == RTP_SourceState.Disposed)
+            {
+                return;
+            }
+            OnDisposing();
+            SetState(RTP_SourceState.Disposed);
+
+            m_pSession = null;
+            m_pRtcpEP = null;
+            m_pRtpEP = null;
+
+            Closed = null;
+            Disposing = null;
+            StateChanged = null;
         }
 
         /// <summary>
-        /// Sets property <b>RtpEP</b> value.
+        /// Generates new SSRC value. This must be called only if SSRC collision of local source.
         /// </summary>
-        /// <param name="ep">IP end point.</param>
-        internal void SetRtpEP(IPEndPoint ep)
+        internal void GenerateNewSSRC()
         {
-            m_pRtpEP = ep;
+            m_SSRC = RTP_Utils.GenerateSSRC();
         }
 
         /// <summary>
@@ -89,8 +275,9 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         /// <param name="active">If true, source switches to active, otherwise to passive.</param>
         internal void SetActivePassive(bool active)
-        {            
-            if(active){
+        {
+            if (active)
+            {
             }
 
             // TODO:
@@ -123,17 +310,28 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>rr</b> is null reference.</exception>
         internal void SetRR(RTCP_Packet_ReportBlock rr)
         {
-            if(rr == null){
+            if (rr == null)
+            {
                 throw new ArgumentNullException("rr");
             }
         }
 
         /// <summary>
-        /// Generates new SSRC value. This must be called only if SSRC collision of local source.
+        /// Sets property <b>RtcpEP</b> value.
         /// </summary>
-        internal void GenerateNewSSRC()
+        /// <param name="ep">IP end point.</param>
+        internal void SetRtcpEP(IPEndPoint ep)
         {
-            m_SSRC = RTP_Utils.GenerateSSRC();
+            m_pRtcpEP = ep;
+        }
+
+        /// <summary>
+        /// Sets property <b>RtpEP</b> value.
+        /// </summary>
+        /// <param name="ep">IP end point.</param>
+        internal void SetRtpEP(IPEndPoint ep)
+        {
+            m_pRtpEP = ep;
         }
 
         /// <summary>
@@ -142,11 +340,13 @@ namespace LumiSoft.Net.RTP
         /// <param name="state">New source state.</param>
         protected void SetState(RTP_SourceState state)
         {
-            if(State == RTP_SourceState.Disposed){
+            if (State == RTP_SourceState.Disposed)
+            {
                 return;
             }
 
-            if(State != state){
+            if (State != state)
+            {
                 State = state;
 
                 OnStateChaged();
@@ -154,209 +354,35 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Gets source state.
-        /// </summary>
-        public RTP_SourceState State { get; private set; } = RTP_SourceState.Passive;
-
-        /// <summary>
-        /// Gets owner RTP session.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public RTP_Session Session
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pSession; 
-            }
-        }
-
-        /// <summary>
-        /// Gets synchronization source ID.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public uint SSRC
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_SSRC; 
-            }
-        }
-
-        /// <summary>
-        /// Gets source RTCP end point. Value null means source haven't sent any RTCP packet.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public IPEndPoint RtcpEP
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRtcpEP; 
-            }
-        }
-
-        /// <summary>
-        /// Gets source RTP end point. Value null means source haven't sent any RTCP packet.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public IPEndPoint RtpEP
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRtpEP; 
-            }
-        }
-
-        /// <summary>
-        /// Gets if source is local or remote source.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public abstract bool IsLocal
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets last time when source sent RTP or RCTP packet.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public DateTime LastActivity
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LastActivity; 
-            }
-        }
-
-        /// <summary>
-        /// Gets last time when source sent RTCP packet.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public DateTime LastRtcpPacket
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LastRtcpPacket; 
-            }
-        }
-
-        /// <summary>
-        /// Gets last time when source sent RTP packet.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public DateTime LastRtpPacket
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LastRtpPacket; 
-            }
-        }
-
-        /// <summary>
-        /// Gets last time when source sent RTCP RR report.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public DateTime LastRRTime
-        {
-            get{
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LastRRTime; 
-            }
-        }
-
-        /// <summary>
-        /// Gets source closing reason. Value null means not specified.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public string CloseReason
-        {
-            get{ 
-                if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_CloseReason; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets user data.
-        /// </summary>
-        public object Tag { get; set; }
-
-        /// <summary>
-        /// Gets source CNAME. Value null means that source not binded to participant.
-        /// </summary>
-        internal abstract string CName
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Is raised when source is closed (by BYE).
-        /// </summary>
-        public event EventHandler Closed;
-
-        /// <summary>
         /// Raises <b>Closed</b> event.
         /// </summary>
         private void OnClosed()
         {
-            if(Closed != null){
-                Closed(this,new EventArgs());
+            if (Closed != null)
+            {
+                Closed(this, new EventArgs());
             }
         }
-
-        /// <summary>
-        /// Is raised when source is disposing.
-        /// </summary>
-        public event EventHandler Disposing;
 
         /// <summary>
         /// Raises <b>Disposing</b> event.
         /// </summary>
         private void OnDisposing()
         {
-            if(Disposing != null){
-                Disposing(this,new EventArgs());
+            if (Disposing != null)
+            {
+                Disposing(this, new EventArgs());
             }
         }
-
-        /// <summary>
-        /// Is raised when source state has changed.
-        /// </summary>
-        public event EventHandler StateChanged;
 
         /// <summary>
         /// Raises <b>StateChanged</b> event.
         /// </summary>
         private void OnStateChaged()
         {
-            if(StateChanged != null){
-                StateChanged(this,new EventArgs());
+            if (StateChanged != null)
+            {
+                StateChanged(this, new EventArgs());
             }
         }
     }

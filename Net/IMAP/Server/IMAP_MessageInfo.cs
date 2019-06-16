@@ -18,24 +18,57 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="internalDate">Message IMAP internal date.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>id</b> or <b>flags</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_MessageInfo(string id,long uid,string[] flags,int size,DateTime internalDate)
+        public IMAP_MessageInfo(string id, long uid, string[] flags, int size, DateTime internalDate)
         {
-            if(id == null){
+            if (id == null)
+            {
                 throw new ArgumentNullException("id");
             }
-            if(id == string.Empty){
-                throw new ArgumentException("Argument 'id' value must be specified.","id");
+            if (id == string.Empty)
+            {
+                throw new ArgumentException("Argument 'id' value must be specified.", "id");
             }
-            if(uid < 1){
-                throw new ArgumentException("Argument 'uid' value must be >= 1.","uid");
+            if (uid < 1)
+            {
+                throw new ArgumentException("Argument 'uid' value must be >= 1.", "uid");
             }
 
-            ID           = id;
-            UID          = uid;
-            Flags       = flags ?? throw new ArgumentNullException("flags");
-            Size         = size;
+            ID = id;
+            UID = uid;
+            Flags = flags ?? throw new ArgumentNullException("flags");
+            Size = size;
             InternalDate = internalDate;
         }
+
+        /// <summary>
+        /// Gets message flags.
+        /// </summary>
+        public string[] Flags { get; private set; }
+
+        /// <summary>
+        /// Gets message ID value.
+        /// </summary>
+        public string ID { get; }
+
+        /// <summary>
+        /// Gets message IMAP internal date.
+        /// </summary>
+        public DateTime InternalDate { get; }
+
+        /// <summary>
+        /// Gets message size in bytes.
+        /// </summary>
+        public int Size { get; }
+
+        /// <summary>
+        /// Gets message IMAP UID value.
+        /// </summary>
+        public long UID { get; }
+
+        /// <summary>
+        /// Gets or sets message one-based sequnece number.
+        /// </summary>
+        internal int SeqNo { get; set; } = 1;
 
         /// <summary>
         /// Gets if this message info contains specified message flag.
@@ -44,12 +77,15 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns true if message info contains specified message flag.</returns>
         public bool ContainsFlag(string flag)
         {
-            if(flag == null){
+            if (flag == null)
+            {
                 throw new ArgumentNullException("flag");
             }
 
-            foreach(string f in Flags){
-                if(string.Equals(f,flag,StringComparison.InvariantCultureIgnoreCase)){
+            foreach (string f in Flags)
+            {
+                if (string.Equals(f, flag, StringComparison.InvariantCultureIgnoreCase))
+                {
                     return true;
                 }
             }
@@ -65,8 +101,10 @@ namespace LumiSoft.Net.IMAP.Server
         {
             var retVal = new StringBuilder();
             retVal.Append("(");
-            for(int i=0;i<Flags.Length;i++){
-                if(i > 0){
+            for (int i = 0; i < Flags.Length; i++)
+            {
+                if (i > 0)
+                {
                     retVal.Append(" ");
                 }
 
@@ -83,51 +121,25 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="setType">Flags set type.</param>
         /// <param name="flags">IMAP message flags.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>flags</b> is null reference.</exception>
-        internal void UpdateFlags(IMAP_Flags_SetType setType,string[] flags)
+        internal void UpdateFlags(IMAP_Flags_SetType setType, string[] flags)
         {
-            if(flags == null){
+            if (flags == null)
+            {
                 throw new ArgumentNullException("flags");
             }
 
-            if(setType == IMAP_Flags_SetType.Add){
-                Flags = IMAP_Utils.MessageFlagsAdd(Flags,flags);
+            if (setType == IMAP_Flags_SetType.Add)
+            {
+                Flags = IMAP_Utils.MessageFlagsAdd(Flags, flags);
             }
-            else if(setType == IMAP_Flags_SetType.Remove){
-                Flags = IMAP_Utils.MessageFlagsRemove(Flags,flags);
+            else if (setType == IMAP_Flags_SetType.Remove)
+            {
+                Flags = IMAP_Utils.MessageFlagsRemove(Flags, flags);
             }
-            else{
+            else
+            {
                 Flags = flags;
             }
         }
-
-        /// <summary>
-        /// Gets message ID value.
-        /// </summary>
-        public string ID { get; }
-
-        /// <summary>
-        /// Gets message IMAP UID value.
-        /// </summary>
-        public long UID { get; }
-
-        /// <summary>
-        /// Gets message flags.
-        /// </summary>
-        public string[] Flags { get; private set; }
-
-        /// <summary>
-        /// Gets message size in bytes.
-        /// </summary>
-        public int Size { get; }
-
-        /// <summary>
-        /// Gets message IMAP internal date.
-        /// </summary>
-        public DateTime InternalDate { get; }
-
-        /// <summary>
-        /// Gets or sets message one-based sequnece number.
-        /// </summary>
-        internal int SeqNo { get; set; } = 1;
     }
 }

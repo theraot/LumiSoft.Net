@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets capabilities list.
+        /// </summary>
+        public string[] Capabilities { get; }
+
+        /// <summary>
         /// Parses CAPABILITY response from capability-response string.
         /// </summary>
         /// <param name="response">Capability response string.</param>
@@ -26,7 +31,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is riased when <b>response</b> is null reference.</exception>
         public static IMAP_r_u_Capability Parse(string response)
         {
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
@@ -99,17 +105,13 @@ namespace LumiSoft.Net.IMAP
 
             var retVal = new StringBuilder();
             retVal.Append("* CAPABILITY");
-            foreach(string capability in Capabilities){
+            foreach (string capability in Capabilities)
+            {
                 retVal.Append(" " + capability);
             }
             retVal.Append("\r\n");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets capabilities list.
-        /// </summary>
-        public string[] Capabilities { get; }
     }
 }

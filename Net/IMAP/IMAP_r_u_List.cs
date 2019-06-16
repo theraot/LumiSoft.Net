@@ -16,11 +16,12 @@ namespace LumiSoft.Net.IMAP
         /// <param name="attributes">Folder attributes.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_r_u_List(string folder,char delimiter,string[] attributes)
+        public IMAP_r_u_List(string folder, char delimiter, string[] attributes)
         {
             FolderName = folder ?? throw new ArgumentNullException("folder");
-            HierarchyDelimiter  = delimiter;
-            if(attributes != null){
+            HierarchyDelimiter = delimiter;
+            if (attributes != null)
+            {
                 FolderAttributes = attributes;
             }
         }
@@ -36,6 +37,21 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets folder attributes list.
+        /// </summary>
+        public string[] FolderAttributes { get; } = new string[0];
+
+        /// <summary>
+        /// Gets folder name.
+        /// </summary>
+        public string FolderName { get; } = "";
+
+        /// <summary>
+        /// Gets hierarchy delimiter char.
+        /// </summary>
+        public char HierarchyDelimiter { get; } = '/';
+
+        /// <summary>
         /// Parses LIST response from list-response string.
         /// </summary>
         /// <param name="listResponse">List response string.</param>
@@ -43,7 +59,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>listResponse</b> is null reference.</exception>
         public static IMAP_r_u_List Parse(string listResponse)
         {
-            if(listResponse == null){
+            if (listResponse == null)
+            {
                 throw new ArgumentNullException("listResponse");
             }
 
@@ -101,10 +118,10 @@ namespace LumiSoft.Net.IMAP
             r.ReadWord();
 
             var attributes = r.ReadParenthesized();
-            var delimiter  = r.ReadWord();
-            var folder     = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(r.ReadToEnd().Trim()));
+            var delimiter = r.ReadWord();
+            var folder = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(r.ReadToEnd().Trim()));
 
-            return new IMAP_r_u_List(folder,delimiter[0],attributes == string.Empty ? new string[0] : attributes.Split(' '));
+            return new IMAP_r_u_List(folder, delimiter[0], attributes == string.Empty ? new string[0] : attributes.Split(' '));
         }
 
         /// <summary>
@@ -132,15 +149,19 @@ namespace LumiSoft.Net.IMAP
             */
 
             // Hierarchy delimiter request.
-            if(string.IsNullOrEmpty(FolderName)){
+            if (string.IsNullOrEmpty(FolderName))
+            {
                 return "* LIST (\\Noselect) \"/\" \"\"\r\n";
             }
 
             var retVal = new StringBuilder();
             retVal.Append("* LIST (");
-            if(FolderAttributes != null){
-                for(int i=0;i<FolderAttributes.Length;i++){
-                    if(i > 0){
+            if (FolderAttributes != null)
+            {
+                for (int i = 0; i < FolderAttributes.Length; i++)
+                {
+                    if (i > 0)
+                    {
                         retVal.Append(" ");
                     }
                     retVal.Append(FolderAttributes[i]);
@@ -148,25 +169,10 @@ namespace LumiSoft.Net.IMAP
             }
             retVal.Append(") ");
             retVal.Append("\"" + HierarchyDelimiter + "\" ");
-            retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
+            retVal.Append(IMAP_Utils.EncodeMailbox(FolderName, encoding));
             retVal.Append("\r\n");
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets folder name.
-        /// </summary>
-        public string FolderName { get; } = "";
-
-        /// <summary>
-        /// Gets hierarchy delimiter char.
-        /// </summary>
-        public char HierarchyDelimiter { get; } = '/';
-
-        /// <summary>
-        /// Gets folder attributes list.
-        /// </summary>
-        public string[] FolderAttributes { get; } = new string[0];
     }
 }

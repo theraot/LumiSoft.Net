@@ -17,24 +17,16 @@ namespace LumiSoft.Net.SIP.Stack
     /// </remarks>
     public class SIP_RequestSender : IDisposable
     {
-        private enum SIP_RequestSenderState
-        {
-            Initial,
-            Starting,
-            Started,
-            Completed,
-            Disposed
-        }
-
-        private object                  m_pLock        = new object();
-        private SIP_RequestSenderState  m_State        = SIP_RequestSenderState.Initial;
-        private bool                    m_IsStarted;
-        private SIP_Stack               m_pStack;
-        private SIP_Request             m_pRequest;
+        private bool m_IsStarted;
         private List<NetworkCredential> m_pCredentials;
-        private Queue<SIP_Hop>          m_pHops;
-        private SIP_ClientTransaction   m_pTransaction;
-        private SIP_Flow                m_pFlow;
+        private SIP_Flow m_pFlow;
+        private Queue<SIP_Hop> m_pHops;
+
+        private object m_pLock = new object();
+        private SIP_Request m_pRequest;
+        private SIP_Stack m_pStack;
+        private SIP_ClientTransaction m_pTransaction;
+        private SIP_RequestSenderState m_State = SIP_RequestSenderState.Initial;
 
         /// <summary>
         /// Default constructor.
@@ -44,14 +36,188 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="flow">Active data flow what to try before RFC 3261 [4](RFC 3263) methods to use to send request.
         /// This value can be null.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b> or <b>request</b> is null.</exception>
-        internal SIP_RequestSender(SIP_Stack stack,SIP_Request request,SIP_Flow flow)
+        internal SIP_RequestSender(SIP_Stack stack, SIP_Request request, SIP_Flow flow)
         {
-            m_pStack   = stack ?? throw new ArgumentNullException("stack");
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
             m_pRequest = request ?? throw new ArgumentNullException("request");
-            m_pFlow    = flow;
+            m_pFlow = flow;
 
             m_pCredentials = new List<NetworkCredential>();
             m_pHops = new Queue<SIP_Hop>();
+        }
+
+        /// <summary>
+        /// Is raised when sender has finished processing(got final-response or error).
+        /// </summary>
+        public event EventHandler Completed;
+
+        /// <summary>
+        /// Is raised when this object has disposed.
+        /// </summary>
+        public event EventHandler Disposed;
+
+        /// <summary>
+        /// Is raised when this transaction has got response from target end point.
+        /// </summary>
+        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
+        private enum SIP_RequestSenderState
+        {
+            Initial,
+            Starting,
+            Started,
+            Completed,
+            Disposed
+        }
+
+        /// <summary>
+        /// Gets credentials collection.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public List<NetworkCredential> Credentials
+        {
+            get
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pCredentials;
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP flow what was used to send request or null if request is not sent yet.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_Flow Flow
+        {
+            get
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pFlow;
+            }
+        }
+
+        /// <summary>
+        /// Gets if request sender has complted sending request.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public bool IsCompleted
+        {
+            get
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_State == SIP_RequestSenderState.Completed;
+            }
+        }
+
+        /// <summary>
+        /// Gets if this object is disposed.
+        /// </summary>
+        public bool IsDisposed
+        {
+            get { return m_State == SIP_RequestSenderState.Disposed; }
+        }
+
+        /// <summary>
+        /// Gets if request sending has been started.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public bool IsStarted
+        {
+            get
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_IsStarted;
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP request.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_Request Request
+        {
+            get
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRequest;
+            }
+        }
+
+        /// <summary>
+        /// Gets owner stack.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
+        public SIP_Stack Stack
+        {
+            get
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pStack;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets user data.
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// Cancels current request sending.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when request sending has not been started by <b>Start</b> method.</exception>
+        public void Cancel()
+        {
+            // If sender is in starting state, we must wait that state to complete.
+            while (m_State == SIP_RequestSenderState.Starting)
+            {
+                Thread.Sleep(5);
+            }
+
+            lock (m_pLock)
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+                if (!m_IsStarted)
+                {
+                    throw new InvalidOperationException("Request sending has not started, nothing to cancel.");
+                }
+                if (m_State != SIP_RequestSenderState.Started)
+                {
+                    return;
+                }
+
+                m_pHops.Clear();
+            }
+
+            // We may not call m_pTransaction.Cancel() in lock block, because deadlock can happen when transaction get response at same time.
+            // Transaction waits lock for us and we wait lock to transaction.
+            m_pTransaction.Cancel();
         }
 
         /// <summary>
@@ -59,8 +225,10 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public void Dispose()
         {
-            lock(m_pLock){
-                if(m_State == SIP_RequestSenderState.Disposed){
+            lock (m_pLock)
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
                     return;
                 }
                 m_State = SIP_RequestSenderState.Disposed;
@@ -70,155 +238,13 @@ namespace LumiSoft.Net.SIP.Stack
                 ResponseReceived = null;
                 Completed = null;
                 Disposed = null;
-                
-                m_pStack       = null;
-                m_pRequest     = null;
+
+                m_pStack = null;
+                m_pRequest = null;
                 m_pCredentials = null;
-                m_pHops        = null;
+                m_pHops = null;
                 m_pTransaction = null;
-                m_pLock        = null;
-            }
-        }
-
-        /// <summary>
-        /// Is called when client transactions receives response.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void ClientTransaction_ResponseReceived(object sender,SIP_ResponseReceivedEventArgs e)
-        {                              
-            lock(m_pLock){
-                m_pFlow = e.ClientTransaction.Request.Flow;
-
-                if(e.Response.StatusCode == 401 || e.Response.StatusCode == 407){
-                    // Check if authentication failed(We sent authorization data and it's challenged again, 
-                    // probably user name or password inccorect)
-                    bool hasFailedAuthorization = false;
-                    foreach(SIP_t_Challenge challange in e.Response.WWWAuthenticate.GetAllValues()){
-                        foreach(SIP_t_Credentials credentials in m_pTransaction.Request.Authorization.GetAllValues()){
-                            if(new Auth_HttpDigest(challange.AuthData,"").Realm == new Auth_HttpDigest(credentials.AuthData,"").Realm){
-                                hasFailedAuthorization = true;
-                                break;
-                            }
-                        }
-                    }
-                    foreach(SIP_t_Challenge challange in e.Response.ProxyAuthenticate.GetAllValues()){
-                        foreach(SIP_t_Credentials credentials in m_pTransaction.Request.ProxyAuthorization.GetAllValues()){
-                            if(new Auth_HttpDigest(challange.AuthData,"").Realm == new Auth_HttpDigest(credentials.AuthData,"").Realm){
-                                hasFailedAuthorization = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    // Authorization failed, pass response to UA.
-                    if(hasFailedAuthorization){
-                        OnResponseReceived(e.Response);
-                    }
-                    // Try to authorize challanges.
-                    else{
-                        var request = m_pRequest.Copy();
-
-                        /* RFC 3261 22.2.
-                            When a UAC resubmits a request with its credentials after receiving a
-                            401 (Unauthorized) or 407 (Proxy Authentication Required) response,
-                            it MUST increment the CSeq header field value as it would normally
-                            when sending an updated request.
-                        */
-                        request.CSeq = new SIP_t_CSeq(m_pStack.ConsumeCSeq(),request.CSeq.RequestMethod);
-
-                        // All challanges authorized, resend request.
-                        if(Authorize(request,e.Response,Credentials.ToArray())){
-                            var flow  = m_pTransaction.Flow;
-                            CleanUpActiveTransaction();            
-                            SendToFlow(flow,request);
-                        }
-                        // We don't have credentials for one or more challenges.
-                        else{
-                            OnResponseReceived(e.Response);
-                        }
-                    }                   
-                }
-                else{
-                    OnResponseReceived(e.Response);
-                    if(e.Response.StatusCodeType != SIP_StatusCodeType.Provisional){
-                        OnCompleted();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Is called when client transaction has timed out.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void ClientTransaction_TimedOut(object sender,EventArgs e)
-        {
-            lock(m_pLock){
-                /* RFC 3261 8.1.2.
-                    The UAC SHOULD follow the procedures defined in [4] for stateful
-                    elements, trying each address until a server is contacted.  Each try
-                    constitutes a new transaction, and therefore each carries a different
-                    topmost Via header field value with a new branch parameter.
-                    Furthermore, the transport value in the Via header field is set to
-                    whatever transport was determined for the target server.
-                */
-                if(m_pHops.Count > 0){
-                    CleanUpActiveTransaction();
-                    SendToNextHop();
-                }
-                /* 8.1.3.1 Transaction Layer Errors
-                    In some cases, the response returned by the transaction layer will
-                    not be a SIP message, but rather a transaction layer error.  When a
-                    timeout error is received from the transaction layer, it MUST be
-                    treated as if a 408 (Request Timeout) status code has been received.
-                    If a fatal transport error is reported by the transport layer
-                    (generally, due to fatal ICMP errors in UDP or connection failures in
-                    TCP), the condition MUST be treated as a 503 (Service Unavailable)
-                    status code.                    
-                */
-                else{
-                    OnResponseReceived(m_pStack.CreateResponse(SIP_ResponseCodes.x408_Request_Timeout,m_pRequest));
-                    OnCompleted();
-                }               
-            }
-        }
-
-        /// <summary>
-        /// Is called when client transaction encountered transport error.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void ClientTransaction_TransportError(object sender,EventArgs e)
-        {
-            lock(m_pLock){
-                /* RFC 3261 8.1.2.
-                    The UAC SHOULD follow the procedures defined in [4] for stateful
-                    elements, trying each address until a server is contacted.  Each try
-                    constitutes a new transaction, and therefore each carries a different
-                    topmost Via header field value with a new branch parameter.
-                    Furthermore, the transport value in the Via header field is set to
-                    whatever transport was determined for the target server.
-                */
-                if(m_pHops.Count > 0){
-                    CleanUpActiveTransaction();
-                    SendToNextHop();
-                }
-                /* RFC 3261 8.1.3.1 Transaction Layer Errors
-                    In some cases, the response returned by the transaction layer will
-                    not be a SIP message, but rather a transaction layer error.  When a
-                    timeout error is received from the transaction layer, it MUST be
-                    treated as if a 408 (Request Timeout) status code has been received.
-                    If a fatal transport error is reported by the transport layer
-                    (generally, due to fatal ICMP errors in UDP or connection failures in
-                    TCP), the condition MUST be treated as a 503 (Service Unavailable)
-                    status code.                    
-                */
-                else{
-                    OnResponseReceived(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": Transport error.",m_pRequest));
-                    OnCompleted();
-                }                
+                m_pLock = null;
             }
         }
 
@@ -230,23 +256,29 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="SIP_TransportException">Is raised when no transport hop(s) for request.</exception>
         public void Start()
         {
-            lock(m_pLock){
-                if(m_State == SIP_RequestSenderState.Disposed){
+            lock (m_pLock)
+            {
+                if (m_State == SIP_RequestSenderState.Disposed)
+                {
                     throw new ObjectDisposedException(GetType().Name);
                 }
-                if(m_IsStarted){
+                if (m_IsStarted)
+                {
                     throw new InvalidOperationException("Start method has been already called.");
                 }
                 m_IsStarted = true;
                 m_State = SIP_RequestSenderState.Starting;
 
                 // Start may take so, process it on thread pool.
-                ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){
-                    lock(m_pLock){
-                        if(m_State == SIP_RequestSenderState.Disposed){
+                ThreadPool.QueueUserWorkItem(new WaitCallback(delegate (object state)
+                {
+                    lock (m_pLock)
+                    {
+                        if (m_State == SIP_RequestSenderState.Disposed)
+                        {
                             return;
                         }
-                                                
+
                         /* RFC 3261 8.1.2 Sending the Request                
                             The destination for the request is then computed.  Unless there is
                             local policy specifying otherwise, the destination MUST be determined
@@ -269,49 +301,60 @@ namespace LumiSoft.Net.SIP.Stack
                             Furthermore, the transport value in the Via header field is set to
                             whatever transport was determined for the target server.
                         */
-                                                                
+
                         // We never use strict, only loose route.
                         bool isStrictRoute = false;
 
                         SIP_Uri uri = null;
-                        if(isStrictRoute){
+                        if (isStrictRoute)
+                        {
                             uri = (SIP_Uri)m_pRequest.RequestLine.Uri;
                         }
-                        else if(m_pRequest.Route.GetTopMostValue() != null){
+                        else if (m_pRequest.Route.GetTopMostValue() != null)
+                        {
                             uri = (SIP_Uri)m_pRequest.Route.GetTopMostValue().Address.Uri;
                         }
-                        else{
+                        else
+                        {
                             uri = (SIP_Uri)m_pRequest.RequestLine.Uri;
                         }
 
-                        try{
+                        try
+                        {
                             // Queue hops.
-                            foreach(SIP_Hop hop in m_pStack.GetHops(uri,m_pRequest.ToByteData().Length,((SIP_Uri)m_pRequest.RequestLine.Uri).IsSecure)){
+                            foreach (SIP_Hop hop in m_pStack.GetHops(uri, m_pRequest.ToByteData().Length, ((SIP_Uri)m_pRequest.RequestLine.Uri).IsSecure))
+                            {
                                 m_pHops.Enqueue(hop);
                             }
                         }
-                        catch(Exception x){
+                        catch (Exception x)
+                        {
                             OnTransportError(new SIP_TransportException("SIP hops resolving failed '" + x.Message + "'."));
                             OnCompleted();
 
                             return;
                         }
 
-                        if(m_pHops.Count == 0){
+                        if (m_pHops.Count == 0)
+                        {
                             OnTransportError(new SIP_TransportException("No target hops resolved for '" + uri + "'."));
                             OnCompleted();
                         }
-                        else{
+                        else
+                        {
                             m_State = SIP_RequestSenderState.Started;
 
-                            try{
-                                if(m_pFlow != null){
-                                    SendToFlow(m_pFlow,m_pRequest.Copy());
+                            try
+                            {
+                                if (m_pFlow != null)
+                                {
+                                    SendToFlow(m_pFlow, m_pRequest.Copy());
 
                                     return;
                                 }
                             }
-                            catch{
+                            catch
+                            {
                                 // Sending to specified flow failed, probably disposed, just try send to first hop.
                             }
 
@@ -323,106 +366,88 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Cancels current request sending.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when request sending has not been started by <b>Start</b> method.</exception>
-        public void Cancel()
-        {
-            // If sender is in starting state, we must wait that state to complete.
-            while(m_State == SIP_RequestSenderState.Starting){
-                Thread.Sleep(5);
-            }
-
-            lock(m_pLock){
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                if(!m_IsStarted){
-                    throw new InvalidOperationException("Request sending has not started, nothing to cancel.");
-                }
-                if(m_State != SIP_RequestSenderState.Started){
-                    return;
-                }
-                
-                m_pHops.Clear();                
-            }
-
-            // We may not call m_pTransaction.Cancel() in lock block, because deadlock can happen when transaction get response at same time.
-            // Transaction waits lock for us and we wait lock to transaction.
-            m_pTransaction.Cancel();
-        }
-
-        /// <summary>
         /// Creates authorization for each challange in <b>response</b>.
         /// </summary>
         /// <param name="request">SIP request where to add authorization values.</param>
         /// <param name="response">SIP response which challanges to authorize.</param>
         /// <param name="credentials">Credentials for authorization.</param>
         /// <returns>Returns true if all challanges were authorized. If any of the challanges was not authorized, returns false.</returns>
-        private bool Authorize(SIP_Request request,SIP_Response response,NetworkCredential[] credentials)
+        private bool Authorize(SIP_Request request, SIP_Response response, NetworkCredential[] credentials)
         {
-            if(request == null){
+            if (request == null)
+            {
                 throw new ArgumentNullException("request");
             }
-            if(response == null){
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
-            if(credentials == null){
+            if (credentials == null)
+            {
                 throw new ArgumentNullException("credentials");
             }
 
             bool allAuthorized = true;
 
-            foreach(SIP_t_Challenge challange in response.WWWAuthenticate.GetAllValues()){
-                var authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
+            foreach (SIP_t_Challenge challange in response.WWWAuthenticate.GetAllValues())
+            {
+                var authDigest = new Auth_HttpDigest(challange.AuthData, request.RequestLine.Method);
 
                 // Serach credential for the specified challange.
                 NetworkCredential credential = null;
-                foreach(NetworkCredential c in credentials){
-                    if(c.Domain.ToLower() == authDigest.Realm.ToLower()){
+                foreach (NetworkCredential c in credentials)
+                {
+                    if (c.Domain.ToLower() == authDigest.Realm.ToLower())
+                    {
                         credential = c;
                         break;
                     }
                 }
                 // We don't have credential for this challange.
-                if(credential == null){
+                if (credential == null)
+                {
                     allAuthorized = false;
                 }
                 // Authorize challange.
-                else{
+                else
+                {
                     authDigest.UserName = credential.UserName;
                     authDigest.Password = credential.Password;
-                    authDigest.CNonce   = Auth_HttpDigest.CreateNonce();
-                    authDigest.Uri      = request.RequestLine.Uri.ToString();
+                    authDigest.CNonce = Auth_HttpDigest.CreateNonce();
+                    authDigest.Uri = request.RequestLine.Uri.ToString();
 
                     request.Authorization.Add(authDigest.ToAuthorization());
                 }
             }
 
-            foreach(SIP_t_Challenge challange in response.ProxyAuthenticate.GetAllValues()){
-                var authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
+            foreach (SIP_t_Challenge challange in response.ProxyAuthenticate.GetAllValues())
+            {
+                var authDigest = new Auth_HttpDigest(challange.AuthData, request.RequestLine.Method);
 
                 // Serach credential for the specified challange.
                 NetworkCredential credential = null;
-                foreach(NetworkCredential c in credentials){
-                    if(c.Domain.ToLower() == authDigest.Realm.ToLower()){
+                foreach (NetworkCredential c in credentials)
+                {
+                    if (c.Domain.ToLower() == authDigest.Realm.ToLower())
+                    {
                         credential = c;
                         break;
                     }
                 }
                 // We don't have credential for this challange.
-                if(credential == null){
+                if (credential == null)
+                {
                     allAuthorized = false;
                 }
                 // Authorize challange.
-                else{
+                else
+                {
                     authDigest.UserName = credential.UserName;
                     authDigest.Password = credential.Password;
-                    authDigest.CNonce   = Auth_HttpDigest.CreateNonce();
-                    authDigest.Uri      = request.RequestLine.Uri.ToString();
+                    authDigest.CNonce = Auth_HttpDigest.CreateNonce();
+                    authDigest.Uri = request.RequestLine.Uri.ToString();
 
-                    request.ProxyAuthorization.Add(authDigest.ToAuthorization());                    
+                    request.ProxyAuthorization.Add(authDigest.ToAuthorization());
                 }
             }
 
@@ -430,25 +455,228 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Starts sending request to next hop in queue.
+        /// Cleans up active transaction.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Is raised when no next hop available(m_pHops.Count == 0) and this method is accessed.</exception>
-        private void SendToNextHop()
+        private void CleanUpActiveTransaction()
         {
-            if(m_pHops.Count == 0){
-                throw new InvalidOperationException("No more hop(s).");
-            }
+            if (m_pTransaction != null)
+            {
+                // Don't dispose transaction, transaction will dispose itself when done.
+                // Otherwise for example failed INVITE won't linger in "Completed" state as it must be.
+                // We just release Events processing, because you don't care about them any more.
+                m_pTransaction.ResponseReceived -= new EventHandler<SIP_ResponseReceivedEventArgs>(ClientTransaction_ResponseReceived);
+                m_pTransaction.TimedOut -= new EventHandler(ClientTransaction_TimedOut);
+                m_pTransaction.TransportError -= new EventHandler<ExceptionEventArgs>(ClientTransaction_TransportError);
 
-            try{
-                var hop = m_pHops.Dequeue();
-                SendToFlow(m_pStack.TransportLayer.GetOrCreateFlow(hop.Transport,null,hop.EndPoint),m_pRequest.Copy());
+                m_pTransaction = null;
             }
-            catch(ObjectDisposedException x){
-                // Skip all exceptions if owner stack is disposed.
-                if(m_pStack.State != SIP_StackState.Disposed){
-                    throw x;
+        }
+
+        /// <summary>
+        /// Is called when client transactions receives response.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void ClientTransaction_ResponseReceived(object sender, SIP_ResponseReceivedEventArgs e)
+        {
+            lock (m_pLock)
+            {
+                m_pFlow = e.ClientTransaction.Request.Flow;
+
+                if (e.Response.StatusCode == 401 || e.Response.StatusCode == 407)
+                {
+                    // Check if authentication failed(We sent authorization data and it's challenged again, 
+                    // probably user name or password inccorect)
+                    bool hasFailedAuthorization = false;
+                    foreach (SIP_t_Challenge challange in e.Response.WWWAuthenticate.GetAllValues())
+                    {
+                        foreach (SIP_t_Credentials credentials in m_pTransaction.Request.Authorization.GetAllValues())
+                        {
+                            if (new Auth_HttpDigest(challange.AuthData, "").Realm == new Auth_HttpDigest(credentials.AuthData, "").Realm)
+                            {
+                                hasFailedAuthorization = true;
+                                break;
+                            }
+                        }
+                    }
+                    foreach (SIP_t_Challenge challange in e.Response.ProxyAuthenticate.GetAllValues())
+                    {
+                        foreach (SIP_t_Credentials credentials in m_pTransaction.Request.ProxyAuthorization.GetAllValues())
+                        {
+                            if (new Auth_HttpDigest(challange.AuthData, "").Realm == new Auth_HttpDigest(credentials.AuthData, "").Realm)
+                            {
+                                hasFailedAuthorization = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Authorization failed, pass response to UA.
+                    if (hasFailedAuthorization)
+                    {
+                        OnResponseReceived(e.Response);
+                    }
+                    // Try to authorize challanges.
+                    else
+                    {
+                        var request = m_pRequest.Copy();
+
+                        /* RFC 3261 22.2.
+                            When a UAC resubmits a request with its credentials after receiving a
+                            401 (Unauthorized) or 407 (Proxy Authentication Required) response,
+                            it MUST increment the CSeq header field value as it would normally
+                            when sending an updated request.
+                        */
+                        request.CSeq = new SIP_t_CSeq(m_pStack.ConsumeCSeq(), request.CSeq.RequestMethod);
+
+                        // All challanges authorized, resend request.
+                        if (Authorize(request, e.Response, Credentials.ToArray()))
+                        {
+                            var flow = m_pTransaction.Flow;
+                            CleanUpActiveTransaction();
+                            SendToFlow(flow, request);
+                        }
+                        // We don't have credentials for one or more challenges.
+                        else
+                        {
+                            OnResponseReceived(e.Response);
+                        }
+                    }
+                }
+                else
+                {
+                    OnResponseReceived(e.Response);
+                    if (e.Response.StatusCodeType != SIP_StatusCodeType.Provisional)
+                    {
+                        OnCompleted();
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// Is called when client transaction has timed out.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void ClientTransaction_TimedOut(object sender, EventArgs e)
+        {
+            lock (m_pLock)
+            {
+                /* RFC 3261 8.1.2.
+                    The UAC SHOULD follow the procedures defined in [4] for stateful
+                    elements, trying each address until a server is contacted.  Each try
+                    constitutes a new transaction, and therefore each carries a different
+                    topmost Via header field value with a new branch parameter.
+                    Furthermore, the transport value in the Via header field is set to
+                    whatever transport was determined for the target server.
+                */
+                if (m_pHops.Count > 0)
+                {
+                    CleanUpActiveTransaction();
+                    SendToNextHop();
+                }
+                /* 8.1.3.1 Transaction Layer Errors
+                    In some cases, the response returned by the transaction layer will
+                    not be a SIP message, but rather a transaction layer error.  When a
+                    timeout error is received from the transaction layer, it MUST be
+                    treated as if a 408 (Request Timeout) status code has been received.
+                    If a fatal transport error is reported by the transport layer
+                    (generally, due to fatal ICMP errors in UDP or connection failures in
+                    TCP), the condition MUST be treated as a 503 (Service Unavailable)
+                    status code.                    
+                */
+                else
+                {
+                    OnResponseReceived(m_pStack.CreateResponse(SIP_ResponseCodes.x408_Request_Timeout, m_pRequest));
+                    OnCompleted();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Is called when client transaction encountered transport error.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void ClientTransaction_TransportError(object sender, EventArgs e)
+        {
+            lock (m_pLock)
+            {
+                /* RFC 3261 8.1.2.
+                    The UAC SHOULD follow the procedures defined in [4] for stateful
+                    elements, trying each address until a server is contacted.  Each try
+                    constitutes a new transaction, and therefore each carries a different
+                    topmost Via header field value with a new branch parameter.
+                    Furthermore, the transport value in the Via header field is set to
+                    whatever transport was determined for the target server.
+                */
+                if (m_pHops.Count > 0)
+                {
+                    CleanUpActiveTransaction();
+                    SendToNextHop();
+                }
+                /* RFC 3261 8.1.3.1 Transaction Layer Errors
+                    In some cases, the response returned by the transaction layer will
+                    not be a SIP message, but rather a transaction layer error.  When a
+                    timeout error is received from the transaction layer, it MUST be
+                    treated as if a 408 (Request Timeout) status code has been received.
+                    If a fatal transport error is reported by the transport layer
+                    (generally, due to fatal ICMP errors in UDP or connection failures in
+                    TCP), the condition MUST be treated as a 503 (Service Unavailable)
+                    status code.                    
+                */
+                else
+                {
+                    OnResponseReceived(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": Transport error.", m_pRequest));
+                    OnCompleted();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Raises event <b>Completed</b>.
+        /// </summary>
+        private void OnCompleted()
+        {
+            m_State = SIP_RequestSenderState.Completed;
+
+            if (Completed != null)
+            {
+                Completed(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>Disposed</b> event.
+        /// </summary>
+        private void OnDisposed()
+        {
+            if (Disposed != null)
+            {
+                Disposed(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Raises ResponseReceived event.
+        /// </summary>
+        /// <param name="response">SIP response received.</param>
+        private void OnResponseReceived(SIP_Response response)
+        {
+            if (ResponseReceived != null)
+            {
+                ResponseReceived(this, new SIP_ResponseReceivedEventArgs(m_pStack, m_pTransaction, response));
+            }
+        }
+
+        /// <summary>
+        /// Raises event <b>TransportError</b>.
+        /// </summary>
+        /// <param name="exception">Excption happened.</param>
+        private void OnTransportError(Exception exception)
+        {
+            // TODO:
         }
 
         /// <summary>
@@ -457,12 +685,14 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="flow">SIP data flow.</param>
         /// <param name="request">SIP request to send.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>flow</b> or <b>request</b> is null reference.</exception>
-        private void SendToFlow(SIP_Flow flow,SIP_Request request)
+        private void SendToFlow(SIP_Flow flow, SIP_Request request)
         {
-            if(flow == null){
+            if (flow == null)
+            {
                 throw new ArgumentNullException("flow");
             }
-            if(request == null){
+            if (request == null)
+            {
                 throw new ArgumentNullException("request");
             }
 
@@ -485,205 +715,56 @@ namespace LumiSoft.Net.SIP.Stack
             var contact = request.Contact.GetTopMostValue();
 
             // Add contact header If request-Method can establish dialog and contact header not present.            
-            if (SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method) && contact == null){    
+            if (SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method) && contact == null)
+            {
                 var from = (SIP_Uri)request.From.Address.Uri;
 
-                request.Contact.Add((flow.IsSecure ? "sips:" : "sip:" ) + from.User + "@" + flow.LocalPublicEP.ToString());
+                request.Contact.Add((flow.IsSecure ? "sips:" : "sip:") + from.User + "@" + flow.LocalPublicEP.ToString());
 
                 // REMOVE ME: 22.10.2010
                 //request.Contact.Add((flow.IsSecure ? "sips:" : "sip:" ) + from.User + "@" + m_pStack.TransportLayer.GetContactHost(flow).ToString());
             }
             // If contact SIP URI and host = auto-allocate, allocate it as needed.
-            else if(contact != null && contact.Address.Uri is SIP_Uri && ((SIP_Uri)contact.Address.Uri).Host == "auto-allocate"){
-                ((SIP_Uri)contact.Address.Uri).Host =  flow.LocalPublicEP.ToString();
+            else if (contact != null && contact.Address.Uri is SIP_Uri && ((SIP_Uri)contact.Address.Uri).Host == "auto-allocate")
+            {
+                ((SIP_Uri)contact.Address.Uri).Host = flow.LocalPublicEP.ToString();
 
                 // REMOVE ME: 22.10.2010
                 //((SIP_Uri)contact.Address.Uri).Host =  m_pStack.TransportLayer.GetContactHost(flow).ToString();
             }
 
-            m_pTransaction = m_pStack.TransactionLayer.CreateClientTransaction(flow,request,true);  
+            m_pTransaction = m_pStack.TransactionLayer.CreateClientTransaction(flow, request, true);
             m_pTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(ClientTransaction_ResponseReceived);
             m_pTransaction.TimedOut += new EventHandler(ClientTransaction_TimedOut);
             m_pTransaction.TransportError += new EventHandler<ExceptionEventArgs>(ClientTransaction_TransportError);
- 
+
             // Start transaction processing.
             m_pTransaction.Start();
         }
 
         /// <summary>
-        /// Cleans up active transaction.
+        /// Starts sending request to next hop in queue.
         /// </summary>
-        private void CleanUpActiveTransaction()
+        /// <exception cref="InvalidOperationException">Is raised when no next hop available(m_pHops.Count == 0) and this method is accessed.</exception>
+        private void SendToNextHop()
         {
-            if(m_pTransaction != null){
-                // Don't dispose transaction, transaction will dispose itself when done.
-                // Otherwise for example failed INVITE won't linger in "Completed" state as it must be.
-                // We just release Events processing, because you don't care about them any more.
-                m_pTransaction.ResponseReceived -= new EventHandler<SIP_ResponseReceivedEventArgs>(ClientTransaction_ResponseReceived);
-                m_pTransaction.TimedOut -= new EventHandler(ClientTransaction_TimedOut);
-                m_pTransaction.TransportError -= new EventHandler<ExceptionEventArgs>(ClientTransaction_TransportError);
-
-                m_pTransaction = null;
+            if (m_pHops.Count == 0)
+            {
+                throw new InvalidOperationException("No more hop(s).");
             }
-        }
 
-        /// <summary>
-        /// Gets if this object is disposed.
-        /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_State == SIP_RequestSenderState.Disposed; }
-        }
-
-        /// <summary>
-        /// Gets if request sending has been started.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public bool IsStarted
-        {
-            get{
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
+            try
+            {
+                var hop = m_pHops.Dequeue();
+                SendToFlow(m_pStack.TransportLayer.GetOrCreateFlow(hop.Transport, null, hop.EndPoint), m_pRequest.Copy());
+            }
+            catch (ObjectDisposedException x)
+            {
+                // Skip all exceptions if owner stack is disposed.
+                if (m_pStack.State != SIP_StackState.Disposed)
+                {
+                    throw x;
                 }
-
-                return m_IsStarted; 
-            }
-        }
-
-        /// <summary>
-        /// Gets if request sender has complted sending request.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public bool IsCompleted
-        {
-            get{
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_State == SIP_RequestSenderState.Completed; 
-            }
-        }
-
-        /// <summary>
-        /// Gets owner stack.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_Stack Stack
-        {
-            get{ 
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pStack; 
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP request.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_Request Request
-        {
-            get{
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRequest; 
-            }
-        }
-
-        /// <summary>
-        /// Gets SIP flow what was used to send request or null if request is not sent yet.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public SIP_Flow Flow
-        {
-            get{
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pFlow; 
-            }
-        }
-
-        /// <summary>
-        /// Gets credentials collection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
-        public List<NetworkCredential> Credentials
-        {
-            get{ 
-                if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-                
-                return m_pCredentials; 
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets user data.
-        /// </summary>
-        public object Tag { get; set; }
-
-        /// <summary>
-        /// Is raised when this transaction has got response from target end point.
-        /// </summary>
-        public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
-
-        /// <summary>
-        /// Raises ResponseReceived event.
-        /// </summary>
-        /// <param name="response">SIP response received.</param>
-        private void OnResponseReceived(SIP_Response response)
-        {
-            if(ResponseReceived != null){
-                ResponseReceived(this,new SIP_ResponseReceivedEventArgs(m_pStack,m_pTransaction,response));
-            }
-        }
-
-        /// <summary>
-        /// Raises event <b>TransportError</b>.
-        /// </summary>
-        /// <param name="exception">Excption happened.</param>
-        private void OnTransportError(Exception exception)
-        {
-            // TODO:
-        }
-
-        /// <summary>
-        /// Is raised when sender has finished processing(got final-response or error).
-        /// </summary>
-        public event EventHandler Completed;
-
-        /// <summary>
-        /// Raises event <b>Completed</b>.
-        /// </summary>
-        private void OnCompleted()
-        {
-            m_State = SIP_RequestSenderState.Completed;
-
-            if(Completed != null){
-                Completed(this,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// Is raised when this object has disposed.
-        /// </summary>
-        public event EventHandler Disposed;
-
-        /// <summary>
-        /// Raises <b>Disposed</b> event.
-        /// </summary>
-        private void OnDisposed()
-        {
-            if(Disposed != null){
-                Disposed(this,new EventArgs());
             }
         }
     }

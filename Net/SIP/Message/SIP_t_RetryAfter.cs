@@ -28,6 +28,62 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets 'duration' parameter value. The 'duration' parameter indicates how long the 
+        /// called party will be reachable starting at the initial time of availability. If no duration 
+        /// parameter is given, the service is assumed to be available indefinitely. Value -1 means not specified.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when when value less than 1 is passed.</exception>
+        public int Duration
+        {
+            get
+            {
+                var parameter = Parameters["duration"];
+                if (parameter != null)
+                {
+                    return Convert.ToInt32(parameter.Value);
+                }
+
+                return -1;
+            }
+
+            set
+            {
+                if (value == -1)
+                {
+                    Parameters.Remove("duration");
+                }
+                else
+                {
+                    if (value < 1)
+                    {
+                        throw new ArgumentException("Property Duration value must be >= 1 !");
+                    }
+
+                    Parameters.Set("duration", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets how many seconds the service is expected to be unavailable to the requesting client.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when when value less than 1 is passed.</exception>
+        public int Time
+        {
+            get { return m_Time; }
+
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("Property Time value must be >= 1 !");
+                }
+
+                m_Time = value;
+            }
+        }
+
+        /// <summary>
         /// Parses "Retry-After" from specified value.
         /// </summary>
         /// <param name="value">SIP "Retry-After" value.</param>
@@ -35,7 +91,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -55,19 +112,23 @@ namespace LumiSoft.Net.SIP.Message
                 retry-param = ("duration" EQUAL delta-seconds) / generic-param
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // delta-seconds
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("SIP Retry-After 'delta-seconds' value is missing !");
             }
-            try{
+            try
+            {
                 m_Time = Convert.ToInt32(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid SIP Retry-After 'delta-seconds' value !");
             }
 
@@ -95,54 +156,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets how many seconds the service is expected to be unavailable to the requesting client.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when when value less than 1 is passed.</exception>
-        public int Time
-        {
-            get{ return m_Time; }
-
-            set{
-                if(value < 1){
-                    throw new ArgumentException("Property Time value must be >= 1 !");
-                }
-
-                m_Time = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'duration' parameter value. The 'duration' parameter indicates how long the 
-        /// called party will be reachable starting at the initial time of availability. If no duration 
-        /// parameter is given, the service is assumed to be available indefinitely. Value -1 means not specified.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when when value less than 1 is passed.</exception>
-        public int Duration
-        {
-            get{ 
-                var parameter = Parameters["duration"];
-                if (parameter != null){
-                    return Convert.ToInt32(parameter.Value);
-                }
-
-                return -1;
-            }
-
-            set{                
-                if(value == -1){
-                    Parameters.Remove("duration");
-                }
-                else{
-                    if(value < 1){
-                        throw new ArgumentException("Property Duration value must be >= 1 !");
-                    }
-
-                    Parameters.Set("duration",value.ToString());
-                }
-            }
         }
     }
 }

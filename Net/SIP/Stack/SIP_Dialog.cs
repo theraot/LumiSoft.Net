@@ -9,214 +9,355 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Dialog
     {
-        private SIP_Stack              m_pStack;
-        private readonly DateTime               m_CreateTime;
-        private string                 m_CallID           = "";
-        private string                 m_LocalTag         = "";
-        private string                 m_RemoteTag        = "";
-        private int                    m_LocalSeqNo;
-        private int                    m_RemoteSeqNo;
-        private AbsoluteUri            m_pLocalUri;
-        private AbsoluteUri            m_pRemoteUri;
-        private SIP_Uri                m_pLocalContact;
-        private SIP_Uri                m_pRemoteTarget;
-        private bool                   m_IsSecure;
-        private SIP_t_AddressParam[]   m_pRouteSet;
-        private string[]               m_pRemoteAllow;
-        private string[]               m_pRemoteSupported;
-        private SIP_Flow               m_pFlow;
-        private readonly List<SIP_Transaction>  m_pTransactions;
+        private string m_CallID = "";
+        private readonly DateTime m_CreateTime;
+        private bool m_IsSecure;
+        private int m_LocalSeqNo;
+        private string m_LocalTag = "";
+        private SIP_Flow m_pFlow;
+        private SIP_Uri m_pLocalContact;
+        private AbsoluteUri m_pLocalUri;
+        private string[] m_pRemoteAllow;
+        private string[] m_pRemoteSupported;
+        private SIP_Uri m_pRemoteTarget;
+        private AbsoluteUri m_pRemoteUri;
+        private SIP_t_AddressParam[] m_pRouteSet;
+        private SIP_Stack m_pStack;
+        private readonly List<SIP_Transaction> m_pTransactions;
+        private int m_RemoteSeqNo;
+        private string m_RemoteTag = "";
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SIP_Dialog()
         {
-            m_CreateTime    = DateTime.Now;
-            m_pRouteSet     = new SIP_t_AddressParam[0];
+            m_CreateTime = DateTime.Now;
+            m_pRouteSet = new SIP_t_AddressParam[0];
             m_pTransactions = new List<SIP_Transaction>();
         }
 
         /// <summary>
-        /// Initializes dialog.
+        /// Is raised when dialog gets new request.
         /// </summary>
-        /// <param name="stack">Owner stack.</param>
-        /// <param name="transaction">Owner transaction.</param>
-        /// <param name="response">SIP response what caused dialog creation.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stack</b>,<b>transaction</b> or <b>response</b>.</exception>
-        internal protected virtual void Init(SIP_Stack stack,SIP_Transaction transaction,SIP_Response response)
-        {
-            if(transaction == null){
-                throw new ArgumentNullException("transaction");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            m_pStack = stack ?? throw new ArgumentNullException("stack");
-
-            /* RFC 3261 12.1.1.
-                The UAS then constructs the state of the dialog.  This state MUST be
-                maintained for the duration of the dialog.
-
-                If the request arrived over TLS, and the Request-URI contained a SIPS
-                URI, the "secure" flag is set to TRUE.
-
-                The route set MUST be set to the list of URIs in the Record-Route
-                header field from the request, taken in order and preserving all URI
-                parameters.  If no Record-Route header field is present in the
-                request, the route set MUST be set to the empty set.  This route set,
-                even if empty, overrides any pre-existing route set for future
-                requests in this dialog.  The remote target MUST be set to the URI
-                from the Contact header field of the request.
-
-                The remote sequence number MUST be set to the value of the sequence
-                number in the CSeq header field of the request.  The local sequence
-                number MUST be empty.  The call identifier component of the dialog ID
-                MUST be set to the value of the Call-ID in the request.  The local
-                tag component of the dialog ID MUST be set to the tag in the To field
-                in the response to the request (which always includes a tag), and the
-                remote tag component of the dialog ID MUST be set to the tag from the
-                From field in the request.  A UAS MUST be prepared to receive a
-                request without a tag in the From field, in which case the tag is
-                considered to have a value of null.
-
-                    This is to maintain backwards compatibility with RFC 2543, which
-                    did not mandate From tags.
-
-                The remote URI MUST be set to the URI in the From field, and the
-                local URI MUST be set to the URI in the To field.
-            */
-
-            if(transaction is SIP_ServerTransaction){
-                m_IsSecure = ((SIP_Uri)transaction.Request.RequestLine.Uri).IsSecure;
-                m_pRouteSet = (SIP_t_AddressParam[])Net_Utils.ReverseArray(transaction.Request.RecordRoute.GetAllValues());
-                m_pRemoteTarget = (SIP_Uri)transaction.Request.Contact.GetTopMostValue().Address.Uri;
-                m_RemoteSeqNo = transaction.Request.CSeq.SequenceNumber;
-                m_LocalSeqNo = 0;
-                m_CallID = transaction.Request.CallID;
-                m_LocalTag = response.To.Tag;
-                m_RemoteTag = transaction.Request.From.Tag;
-                m_pRemoteUri = transaction.Request.From.Address.Uri;
-                m_pLocalUri = transaction.Request.To.Address.Uri;
-                m_pLocalContact = (SIP_Uri)response.Contact.GetTopMostValue().Address.Uri;
-
-                var allow = new List<string>();
-                foreach (SIP_t_Method m in response.Allow.GetAllValues()){
-                    allow.Add(m.Method);
-                }
-                m_pRemoteAllow = allow.ToArray();
-
-                var supported = new List<string>();
-                foreach (SIP_t_OptionTag s in response.Supported.GetAllValues()){
-                    supported.Add(s.OptionTag);
-                }
-                m_pRemoteSupported = supported.ToArray();
-            }
-            /* RFC 3261 12.1.2.
-                When a UAC receives a response that establishes a dialog, it
-                constructs the state of the dialog.  This state MUST be maintained
-                for the duration of the dialog.
-
-                If the request was sent over TLS, and the Request-URI contained a
-                SIPS URI, the "secure" flag is set to TRUE.
-
-                The route set MUST be set to the list of URIs in the Record-Route
-                header field from the response, taken in reverse order and preserving
-                all URI parameters.  If no Record-Route header field is present in
-                the response, the route set MUST be set to the empty set.  This route
-                set, even if empty, overrides any pre-existing route set for future
-                requests in this dialog.  The remote target MUST be set to the URI
-                from the Contact header field of the response.
-
-                The local sequence number MUST be set to the value of the sequence
-                number in the CSeq header field of the request.  The remote sequence
-                number MUST be empty (it is established when the remote UA sends a
-                request within the dialog).  The call identifier component of the
-                dialog ID MUST be set to the value of the Call-ID in the request.
-                The local tag component of the dialog ID MUST be set to the tag in
-                the From field in the request, and the remote tag component of the
-                dialog ID MUST be set to the tag in the To field of the response.  A
-                UAC MUST be prepared to receive a response without a tag in the To
-                field, in which case the tag is considered to have a value of null.
-
-                    This is to maintain backwards compatibility with RFC 2543, which
-                    did not mandate To tags.
-
-                The remote URI MUST be set to the URI in the To field, and the local
-                URI MUST be set to the URI in the From field.
-            */
-
-            else{
-                // TODO: Validate request or client transaction must do it ?
-
-                m_IsSecure  = ((SIP_Uri)transaction.Request.RequestLine.Uri).IsSecure;
-                m_pRouteSet = (SIP_t_AddressParam[])Net_Utils.ReverseArray(response.RecordRoute.GetAllValues());
-                m_pRemoteTarget = (SIP_Uri)response.Contact.GetTopMostValue().Address.Uri;                
-                m_LocalSeqNo = transaction.Request.CSeq.SequenceNumber;
-                m_RemoteSeqNo = 0;
-                m_CallID = transaction.Request.CallID;
-                m_LocalTag = transaction.Request.From.Tag;
-                m_RemoteTag = response.To.Tag;
-                m_pRemoteUri = transaction.Request.To.Address.Uri;
-                m_pLocalUri = transaction.Request.From.Address.Uri;
-                m_pLocalContact = (SIP_Uri)transaction.Request.Contact.GetTopMostValue().Address.Uri;
-                
-                var allow = new List<string>();
-                foreach (SIP_t_Method m in response.Allow.GetAllValues()){
-                    allow.Add(m.Method);
-                }
-                m_pRemoteAllow = allow.ToArray();
-
-                var supported = new List<string>();
-                foreach (SIP_t_OptionTag s in response.Supported.GetAllValues()){
-                    supported.Add(s.OptionTag);
-                }
-                m_pRemoteSupported = supported.ToArray();
-            }
-
-            m_pFlow = transaction.Flow;
-            AddTransaction(transaction);
-        }
+        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
 
         /// <summary>
-        /// Cleans up any resources being used.
+        /// This event is raised when Dialog state has changed.
         /// </summary>
-        public virtual void Dispose()
-        {
-            lock(SyncRoot){
-                if(State == SIP_DialogState.Disposed){
-                    return;
-                }
-
-                SetState(SIP_DialogState.Disposed,true);
-   
-                RequestReceived = null;
-                m_pStack             = null;
-                m_CallID             = null;
-                m_LocalTag           = null;
-                m_RemoteTag          = null;
-                m_pLocalUri          = null;
-                m_pRemoteUri         = null;
-                m_pLocalContact      = null;
-                m_pRemoteTarget      = null;
-                m_pRouteSet          = null;
-                m_pFlow              = null;           
-            }
-        }
+        public event EventHandler StateChanged;
 
         /// <summary>
-        /// Terminates dialog.
+        /// Get call ID.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
-        public void Terminate()
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public string CallID
         {
-            lock(SyncRoot){
-                if(State == SIP_DialogState.Disposed){
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                SetState(SIP_DialogState.Terminated,true);
+                return m_CallID;
+            }
+        }
+
+        /// <summary>
+        /// Gets dialog creation time.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public DateTime CreateTime
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_CreateTime;
+            }
+        }
+
+        /// <summary>
+        /// Gets data flow used to send or receive last SIP message.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_Flow Flow
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pFlow;
+            }
+        }
+
+        /// <summary>
+        /// Gets dialog ID.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public string ID
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return CallID + "-" + LocalTag + "-" + RemoteTag;
+            }
+        }
+
+        /// <summary>
+        /// Gets if dialog uses secure transport.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public bool IsSecure
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_IsSecure;
+            }
+        }
+
+        /// <summary>
+        /// Gets local contact URI.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_Uri LocalContact
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pLocalContact;
+            }
+        }
+
+        /// <summary>
+        /// Gets local sequence number.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int LocalSeqNo
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LocalSeqNo;
+            }
+        }
+
+        /// <summary>
+        /// Gets local-tag.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public string LocalTag
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_LocalTag;
+            }
+        }
+
+        /// <summary>
+        /// Gets local URI.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public AbsoluteUri LocalUri
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pLocalUri;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote party supported SIP methods.
+        /// </summary>
+        public string[] RemoteAllow
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRemoteAllow;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote sequence number.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public int RemoteSeqNo
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RemoteSeqNo;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote party supported SIP extentions.
+        /// </summary>
+        public string[] RemoteSupported
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRemoteSupported;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote-tag.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public string RemoteTag
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_RemoteTag;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote target URI.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_Uri RemoteTarget
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRemoteTarget;
+            }
+        }
+
+        /// <summary>
+        /// Gets remote URI.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public AbsoluteUri RemoteUri
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRemoteUri;
+            }
+        }
+
+        /// <summary>
+        /// Gets route set.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_t_AddressParam[] RouteSet
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pRouteSet;
+            }
+        }
+
+        /// <summary>
+        /// Gets owner stack.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_Stack Stack
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pStack;
+            }
+        }
+
+        /// <summary>
+        /// Gets dialog state.
+        /// </summary>
+        public SIP_DialogState State { get; private set; } = SIP_DialogState.Early;
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the dialog.
+        /// </summary>
+        public object SyncRoot { get; } = new object();
+
+        /// <summary>
+        /// Gets dialog's active transactions.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
+        public SIP_Transaction[] Transactions
+        {
+            get
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+
+                return m_pTransactions.ToArray();
             }
         }
 
@@ -230,13 +371,16 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns created request.</returns>
         public SIP_Request CreateRequest(string method)
         {
-            if(State == SIP_DialogState.Disposed){
+            if (State == SIP_DialogState.Disposed)
+            {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if(method == null){
+            if (method == null)
+            {
                 throw new ArgumentNullException("method");
             }
-            if(method == string.Empty){
+            if (method == string.Empty)
+            {
                 throw new ArgumentException("Argument 'method' value must be specified.");
             }
 
@@ -329,23 +473,30 @@ namespace LumiSoft.Net.SIP.Stack
                 The rest of the request is formed as described in Section 8.1.1.
             */
 
-            lock(SyncRoot){
-                var request = m_pStack.CreateRequest(method,new SIP_t_NameAddress("",m_pRemoteUri),new SIP_t_NameAddress("",m_pLocalUri));
+            lock (SyncRoot)
+            {
+                var request = m_pStack.CreateRequest(method, new SIP_t_NameAddress("", m_pRemoteUri), new SIP_t_NameAddress("", m_pLocalUri));
                 request.Route.RemoveAll();
-                if(m_pRouteSet.Length == 0){
+                if (m_pRouteSet.Length == 0)
+                {
                     request.RequestLine.Uri = m_pRemoteTarget;
                 }
-                else{  
+                else
+                {
                     var topmostRoute = ((SIP_Uri)m_pRouteSet[0].Address.Uri);
-                    if (topmostRoute.Param_Lr){
+                    if (topmostRoute.Param_Lr)
+                    {
                         request.RequestLine.Uri = m_pRemoteTarget;
-                        for(int i=0;i<m_pRouteSet.Length;i++){
+                        for (int i = 0; i < m_pRouteSet.Length; i++)
+                        {
                             request.Route.Add(m_pRouteSet[i].ToStringValue());
                         }
                     }
-                    else{
+                    else
+                    {
                         request.RequestLine.Uri = SIP_Utils.UriToRequestUri(topmostRoute);
-                        for(int i=1;i<m_pRouteSet.Length;i++){
+                        for (int i = 1; i < m_pRouteSet.Length; i++)
+                        {
                             request.Route.Add(m_pRouteSet[i].ToStringValue());
                         }
                     }
@@ -354,11 +505,12 @@ namespace LumiSoft.Net.SIP.Stack
                 request.From.Tag = m_LocalTag;
                 request.CallID = m_CallID;
                 // ACK won't increase sequence.
-                if(method != SIP_Methods.ACK){
+                if (method != SIP_Methods.ACK)
+                {
                     request.CSeq.SequenceNumber = ++m_LocalSeqNo;
                 }
                 request.Contact.Add(m_pLocalContact.ToString());
-    
+
                 return request;
             }
         }
@@ -373,73 +525,236 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null.</exception>
         public SIP_RequestSender CreateRequestSender(SIP_Request request)
         {
-            lock(SyncRoot){
-                if(State == SIP_DialogState.Terminated){
+            lock (SyncRoot)
+            {
+                if (State == SIP_DialogState.Terminated)
+                {
                     throw new ObjectDisposedException(GetType().Name);
                 }
-                if(request == null){
+                if (request == null)
+                {
                     throw new ArgumentNullException("request");
                 }
 
                 // TODO: Request sender must use dialog sequence numbering if authentication done.
-               
-                var sender = m_pStack.CreateRequestSender(request,Flow);
+
+                var sender = m_pStack.CreateRequestSender(request, Flow);
 
                 return sender;
             }
         }
 
         /// <summary>
-        /// Gets if sepcified request method is target-refresh method.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="method">SIP request method.</param>
-        /// <returns>Returns true if specified method is target-refresh method.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>method</b> is null reference.</exception>
-        protected bool IsTargetRefresh(string method)
+        public virtual void Dispose()
         {
-            if(method == null){
-                throw new ArgumentNullException("method");
-            }
+            lock (SyncRoot)
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    return;
+                }
 
-            method = method.ToUpper();
+                SetState(SIP_DialogState.Disposed, true);
 
-            // RFC 5057 5.4. Target Refresh Requests.         
-            if(method == SIP_Methods.INVITE){
-                return true;
+                RequestReceived = null;
+                m_pStack = null;
+                m_CallID = null;
+                m_LocalTag = null;
+                m_RemoteTag = null;
+                m_pLocalUri = null;
+                m_pRemoteUri = null;
+                m_pLocalContact = null;
+                m_pRemoteTarget = null;
+                m_pRouteSet = null;
+                m_pFlow = null;
             }
-
-            if(method == SIP_Methods.UPDATE){
-                return true;
-            }
-            if(method == SIP_Methods.SUBSCRIBE){
-                return true;
-            }
-            if(method == SIP_Methods.NOTIFY){
-                return true;
-            }
-            if(method == SIP_Methods.REFER){
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
-        /// Sets dialog state.
+        /// Terminates dialog.
         /// </summary>
-        /// <param name="state">New dialog state,</param>
-        /// <param name="raiseEvent">If true, StateChanged event is raised after state change.</param>
-        protected void SetState(SIP_DialogState state,bool raiseEvent)
+        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
+        public void Terminate()
         {
-            State = state;
+            lock (SyncRoot)
+            {
+                if (State == SIP_DialogState.Disposed)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
 
-            if(raiseEvent){
-                OnStateChanged();
+                SetState(SIP_DialogState.Terminated, true);
             }
-            
-            if(State == SIP_DialogState.Terminated){
-                Dispose();
+        }
+
+        /// <summary>
+        /// Adds transaction to dialog transactions list.
+        /// </summary>
+        /// <param name="transaction"></param>
+        internal void AddTransaction(SIP_Transaction transaction)
+        {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException("transaction");
             }
+
+            m_pTransactions.Add(transaction);
+            transaction.Disposed += new EventHandler(delegate (object s, EventArgs e)
+            {
+                m_pTransactions.Remove(transaction);
+            });
+        }
+
+        /// <summary>
+        /// Initializes dialog.
+        /// </summary>
+        /// <param name="stack">Owner stack.</param>
+        /// <param name="transaction">Owner transaction.</param>
+        /// <param name="response">SIP response what caused dialog creation.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stack</b>,<b>transaction</b> or <b>response</b>.</exception>
+        internal protected virtual void Init(SIP_Stack stack, SIP_Transaction transaction, SIP_Response response)
+        {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException("transaction");
+            }
+            if (response == null)
+            {
+                throw new ArgumentNullException("response");
+            }
+
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
+
+            /* RFC 3261 12.1.1.
+                The UAS then constructs the state of the dialog.  This state MUST be
+                maintained for the duration of the dialog.
+
+                If the request arrived over TLS, and the Request-URI contained a SIPS
+                URI, the "secure" flag is set to TRUE.
+
+                The route set MUST be set to the list of URIs in the Record-Route
+                header field from the request, taken in order and preserving all URI
+                parameters.  If no Record-Route header field is present in the
+                request, the route set MUST be set to the empty set.  This route set,
+                even if empty, overrides any pre-existing route set for future
+                requests in this dialog.  The remote target MUST be set to the URI
+                from the Contact header field of the request.
+
+                The remote sequence number MUST be set to the value of the sequence
+                number in the CSeq header field of the request.  The local sequence
+                number MUST be empty.  The call identifier component of the dialog ID
+                MUST be set to the value of the Call-ID in the request.  The local
+                tag component of the dialog ID MUST be set to the tag in the To field
+                in the response to the request (which always includes a tag), and the
+                remote tag component of the dialog ID MUST be set to the tag from the
+                From field in the request.  A UAS MUST be prepared to receive a
+                request without a tag in the From field, in which case the tag is
+                considered to have a value of null.
+
+                    This is to maintain backwards compatibility with RFC 2543, which
+                    did not mandate From tags.
+
+                The remote URI MUST be set to the URI in the From field, and the
+                local URI MUST be set to the URI in the To field.
+            */
+
+            if (transaction is SIP_ServerTransaction)
+            {
+                m_IsSecure = ((SIP_Uri)transaction.Request.RequestLine.Uri).IsSecure;
+                m_pRouteSet = (SIP_t_AddressParam[])Net_Utils.ReverseArray(transaction.Request.RecordRoute.GetAllValues());
+                m_pRemoteTarget = (SIP_Uri)transaction.Request.Contact.GetTopMostValue().Address.Uri;
+                m_RemoteSeqNo = transaction.Request.CSeq.SequenceNumber;
+                m_LocalSeqNo = 0;
+                m_CallID = transaction.Request.CallID;
+                m_LocalTag = response.To.Tag;
+                m_RemoteTag = transaction.Request.From.Tag;
+                m_pRemoteUri = transaction.Request.From.Address.Uri;
+                m_pLocalUri = transaction.Request.To.Address.Uri;
+                m_pLocalContact = (SIP_Uri)response.Contact.GetTopMostValue().Address.Uri;
+
+                var allow = new List<string>();
+                foreach (SIP_t_Method m in response.Allow.GetAllValues())
+                {
+                    allow.Add(m.Method);
+                }
+                m_pRemoteAllow = allow.ToArray();
+
+                var supported = new List<string>();
+                foreach (SIP_t_OptionTag s in response.Supported.GetAllValues())
+                {
+                    supported.Add(s.OptionTag);
+                }
+                m_pRemoteSupported = supported.ToArray();
+            }
+            /* RFC 3261 12.1.2.
+                When a UAC receives a response that establishes a dialog, it
+                constructs the state of the dialog.  This state MUST be maintained
+                for the duration of the dialog.
+
+                If the request was sent over TLS, and the Request-URI contained a
+                SIPS URI, the "secure" flag is set to TRUE.
+
+                The route set MUST be set to the list of URIs in the Record-Route
+                header field from the response, taken in reverse order and preserving
+                all URI parameters.  If no Record-Route header field is present in
+                the response, the route set MUST be set to the empty set.  This route
+                set, even if empty, overrides any pre-existing route set for future
+                requests in this dialog.  The remote target MUST be set to the URI
+                from the Contact header field of the response.
+
+                The local sequence number MUST be set to the value of the sequence
+                number in the CSeq header field of the request.  The remote sequence
+                number MUST be empty (it is established when the remote UA sends a
+                request within the dialog).  The call identifier component of the
+                dialog ID MUST be set to the value of the Call-ID in the request.
+                The local tag component of the dialog ID MUST be set to the tag in
+                the From field in the request, and the remote tag component of the
+                dialog ID MUST be set to the tag in the To field of the response.  A
+                UAC MUST be prepared to receive a response without a tag in the To
+                field, in which case the tag is considered to have a value of null.
+
+                    This is to maintain backwards compatibility with RFC 2543, which
+                    did not mandate To tags.
+
+                The remote URI MUST be set to the URI in the To field, and the local
+                URI MUST be set to the URI in the From field.
+            */
+
+            else
+            {
+                // TODO: Validate request or client transaction must do it ?
+
+                m_IsSecure = ((SIP_Uri)transaction.Request.RequestLine.Uri).IsSecure;
+                m_pRouteSet = (SIP_t_AddressParam[])Net_Utils.ReverseArray(response.RecordRoute.GetAllValues());
+                m_pRemoteTarget = (SIP_Uri)response.Contact.GetTopMostValue().Address.Uri;
+                m_LocalSeqNo = transaction.Request.CSeq.SequenceNumber;
+                m_RemoteSeqNo = 0;
+                m_CallID = transaction.Request.CallID;
+                m_LocalTag = transaction.Request.From.Tag;
+                m_RemoteTag = response.To.Tag;
+                m_pRemoteUri = transaction.Request.To.Address.Uri;
+                m_pLocalUri = transaction.Request.From.Address.Uri;
+                m_pLocalContact = (SIP_Uri)transaction.Request.Contact.GetTopMostValue().Address.Uri;
+
+                var allow = new List<string>();
+                foreach (SIP_t_Method m in response.Allow.GetAllValues())
+                {
+                    allow.Add(m.Method);
+                }
+                m_pRemoteAllow = allow.ToArray();
+
+                var supported = new List<string>();
+                foreach (SIP_t_OptionTag s in response.Supported.GetAllValues())
+                {
+                    supported.Add(s.OptionTag);
+                }
+                m_pRemoteSupported = supported.ToArray();
+            }
+
+            m_pFlow = transaction.Flow;
+            AddTransaction(transaction);
         }
 
         // TODO: Early timer.
@@ -452,7 +767,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>e</b> is null reference.</exception>
         internal protected virtual bool ProcessRequest(SIP_RequestReceivedEventArgs e)
         {
-            if(e == null){
+            if (e == null)
+            {
                 throw new ArgumentNullException("e");
             }
 
@@ -473,15 +789,18 @@ namespace LumiSoft.Net.SIP.Stack
                 CSeq header field value in the request.
             */
 
-            if(m_RemoteSeqNo == 0){
+            if (m_RemoteSeqNo == 0)
+            {
                 m_RemoteSeqNo = e.Request.CSeq.SequenceNumber;
             }
-            else if(e.Request.CSeq.SequenceNumber < m_RemoteSeqNo){
-                e.ServerTransaction.SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x500_Server_Internal_Error + ": The mid-dialog request is out of order(late arriving request).",e.Request));
+            else if (e.Request.CSeq.SequenceNumber < m_RemoteSeqNo)
+            {
+                e.ServerTransaction.SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x500_Server_Internal_Error + ": The mid-dialog request is out of order(late arriving request).", e.Request));
 
                 return true;
             }
-            else{
+            else
+            {
                 m_RemoteSeqNo = e.Request.CSeq.SequenceNumber;
             }
 
@@ -493,12 +812,13 @@ namespace LumiSoft.Net.SIP.Stack
                 Per RFC we must do it after 2xx response. There are some drwabacks, like old contact not accessible any more
                 due to NAT, so only valid contact new contact. Because of it currently we always change contact.
             */
-            if(IsTargetRefresh(e.Request.RequestLine.Method) && e.Request.Contact.Count != 0){
+            if (IsTargetRefresh(e.Request.RequestLine.Method) && e.Request.Contact.Count != 0)
+            {
                 m_pRemoteTarget = (SIP_Uri)e.Request.Contact.GetTopMostValue().Address.Uri;
             }
 
             OnRequestReceived(e);
-                        
+
             return e.IsHandled;
         }
 
@@ -509,327 +829,75 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns true if this dialog processed specified response, otherwise false.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null.</exception>
         internal protected virtual bool ProcessResponse(SIP_Response response)
-        {      
-            if(response == null){
+        {
+            if (response == null)
+            {
                 throw new ArgumentNullException("response");
             }
 
-            return false;            
+            return false;
         }
 
         /// <summary>
-        /// Adds transaction to dialog transactions list.
+        /// Gets if sepcified request method is target-refresh method.
         /// </summary>
-        /// <param name="transaction"></param>
-        internal void AddTransaction(SIP_Transaction transaction)
+        /// <param name="method">SIP request method.</param>
+        /// <returns>Returns true if specified method is target-refresh method.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>method</b> is null reference.</exception>
+        protected bool IsTargetRefresh(string method)
         {
-            if(transaction == null){
-                throw new ArgumentNullException("transaction");
+            if (method == null)
+            {
+                throw new ArgumentNullException("method");
             }
 
-            m_pTransactions.Add(transaction);
-            transaction.Disposed += new EventHandler(delegate(object s,EventArgs e){
-                m_pTransactions.Remove(transaction);
-            });            
+            method = method.ToUpper();
+
+            // RFC 5057 5.4. Target Refresh Requests.         
+            if (method == SIP_Methods.INVITE)
+            {
+                return true;
+            }
+
+            if (method == SIP_Methods.UPDATE)
+            {
+                return true;
+            }
+            if (method == SIP_Methods.SUBSCRIBE)
+            {
+                return true;
+            }
+            if (method == SIP_Methods.NOTIFY)
+            {
+                return true;
+            }
+            if (method == SIP_Methods.REFER)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
-        /// Gets an object that can be used to synchronize access to the dialog.
+        /// Sets dialog state.
         /// </summary>
-        public object SyncRoot { get; } = new object();
-
-        /// <summary>
-        /// Gets dialog state.
-        /// </summary>
-        public SIP_DialogState State { get; private set; } = SIP_DialogState.Early;
-
-        /// <summary>
-        /// Gets owner stack.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_Stack Stack
+        /// <param name="state">New dialog state,</param>
+        /// <param name="raiseEvent">If true, StateChanged event is raised after state change.</param>
+        protected void SetState(SIP_DialogState state, bool raiseEvent)
         {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
+            State = state;
 
-                return m_pStack; 
+            if (raiseEvent)
+            {
+                OnStateChanged();
+            }
+
+            if (State == SIP_DialogState.Terminated)
+            {
+                Dispose();
             }
         }
-
-        /// <summary>
-        /// Gets dialog creation time.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public DateTime CreateTime
-        {
-            get{
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_CreateTime; 
-            }
-        }
-
-        /// <summary>
-        /// Gets dialog ID.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public string ID
-        {
-            get{
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return CallID + "-" + LocalTag + "-" + RemoteTag; 
-            }
-        }
-
-        /// <summary>
-        /// Get call ID.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public string CallID
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_CallID; 
-            }
-        }
-
-        /// <summary>
-        /// Gets local-tag.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public string LocalTag
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LocalTag; 
-            }
-        }
-
-        /// <summary>
-        /// Gets remote-tag.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public string RemoteTag
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RemoteTag;
-            }
-        }
-
-        /// <summary>
-        /// Gets local sequence number.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int LocalSeqNo
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_LocalSeqNo;
-            }
-        }
-
-        /// <summary>
-        /// Gets remote sequence number.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public int RemoteSeqNo
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_RemoteSeqNo; 
-            }
-        }
-
-        /// <summary>
-        /// Gets local URI.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public AbsoluteUri LocalUri
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pLocalUri; 
-            }
-        }
-
-        /// <summary>
-        /// Gets remote URI.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public AbsoluteUri RemoteUri
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRemoteUri; 
-            }
-        }
-
-        /// <summary>
-        /// Gets local contact URI.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_Uri LocalContact
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pLocalContact;
-            }
-        }
-
-        /// <summary>
-        /// Gets remote target URI.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_Uri RemoteTarget
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRemoteTarget;
-            }
-        }
-
-        /// <summary>
-        /// Gets if dialog uses secure transport.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public bool IsSecure
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_IsSecure; 
-            }
-        }
-
-        /// <summary>
-        /// Gets route set.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_t_AddressParam[] RouteSet
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRouteSet; 
-            }
-        }
-
-        /// <summary>
-        /// Gets remote party supported SIP methods.
-        /// </summary>
-        public string[] RemoteAllow
-        {
-            get{
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRemoteAllow;
-            }
-        }
-
-        /// <summary>
-        /// Gets remote party supported SIP extentions.
-        /// </summary>
-        public string[] RemoteSupported
-        {
-            get{
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pRemoteSupported;
-            }
-        }
-                
-        /// <summary>
-        /// Gets data flow used to send or receive last SIP message.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_Flow Flow
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pFlow; 
-            }
-        }
-
-        /// <summary>
-        /// Gets dialog's active transactions.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
-        public SIP_Transaction[] Transactions
-        {
-            get{ 
-                if(State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(GetType().Name);
-                }
-
-                return m_pTransactions.ToArray(); 
-            }
-        }
-
-        /// <summary>
-        /// This event is raised when Dialog state has changed.
-        /// </summary>
-        public event EventHandler StateChanged;
-
-        /// <summary>
-        /// Raises <b>StateChanged</b> event.
-        /// </summary>
-        private void OnStateChanged()
-        {
-            if(StateChanged != null){
-                StateChanged(this,new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// Is raised when dialog gets new request.
-        /// </summary>
-        public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
 
         /// <summary>
         /// Raises <b>RequestReceived</b> event.
@@ -837,8 +905,20 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event args.</param>
         private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {
-            if(RequestReceived != null){
-                RequestReceived(this,e);
+            if (RequestReceived != null)
+            {
+                RequestReceived(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Raises <b>StateChanged</b> event.
+        /// </summary>
+        private void OnStateChanged()
+        {
+            if (StateChanged != null)
+            {
+                StateChanged(this, new EventArgs());
             }
         }
     }

@@ -33,6 +33,11 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets refer-sub-value value.
+        /// </summary>
+        public bool Value { get; set; }
+
+        /// <summary>
         /// Parses "Refer-Sub" from specified value.
         /// </summary>
         /// <param name="value">SIP "Refer-Sub" value.</param>
@@ -40,7 +45,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -61,19 +67,23 @@ namespace LumiSoft.Net.SIP.Message
                 exten           = generic-param        
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             // refer-sub-value
             var word = reader.ReadWord();
-            if (word == null){
+            if (word == null)
+            {
                 throw new SIP_ParseException("Refer-Sub refer-sub-value value is missing !");
             }
-            try{
+            try
+            {
                 Value = Convert.ToBoolean(word);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid Refer-Sub refer-sub-value value !");
             }
 
@@ -103,10 +113,5 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets or sets refer-sub-value value.
-        /// </summary>
-        public bool Value { get; set; }
     }
 }

@@ -16,13 +16,31 @@ namespace LumiSoft.Net.SIP.Message
         private string m_CallID = "";
 
         /// <summary>
+        /// Gets or sets call ID.
+        /// </summary>
+        public string CallID
+        {
+            get { return m_CallID; }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Property CallID value may not be null or empty !");
+                }
+
+                m_CallID = value;
+            }
+        }
+
+        /// <summary>
         /// Creates new call ID value.
         /// </summary>
         /// <returns>Returns call ID value.</returns>
         public static SIP_t_CallID CreateCallID()
         {
             var callID = new SIP_t_CallID();
-            callID.CallID = Guid.NewGuid().ToString().Replace("-","");
+            callID.CallID = Guid.NewGuid().ToString().Replace("-", "");
 
             return callID;
         }
@@ -35,7 +53,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -52,7 +71,8 @@ namespace LumiSoft.Net.SIP.Message
         {
             // callid = word [ "@" word ]
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -68,22 +88,6 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             return m_CallID;
-        }
-
-        /// <summary>
-        /// Gets or sets call ID.
-        /// </summary>
-        public string CallID
-        {
-            get{ return m_CallID; }
-
-            set{
-                if(string.IsNullOrEmpty(value)){
-                    throw new ArgumentException("Property CallID value may not be null or empty !");
-                }
-
-                m_CallID = value;
-            }
         }
     }
 }

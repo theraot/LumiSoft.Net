@@ -14,19 +14,19 @@ namespace LumiSoft.Net.IMAP
         /// <param name="delimiter">Hierarchy delimiter char.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>name</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public IMAP_Namespace_Entry(string name,char delimiter)
+        public IMAP_Namespace_Entry(string name, char delimiter)
         {
             NamespaceName = name ?? throw new ArgumentNullException("name");
         }
 
         /// <summary>
-        /// Gets namespace name.
-        /// </summary>
-        public string NamespaceName { get; } = "";
-
-        /// <summary>
         /// Gets namespace hierarchy delimiter char.
         /// </summary>
         public char HierarchyDelimiter { get; } = '/';
+
+        /// <summary>
+        /// Gets namespace name.
+        /// </summary>
+        public string NamespaceName { get; } = "";
     }
 }

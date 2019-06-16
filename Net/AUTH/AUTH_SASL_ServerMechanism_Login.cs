@@ -8,11 +8,11 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_Login : AUTH_SASL_ServerMechanism
     {
-        private bool   m_IsCompleted;
-        private bool   m_IsAuthenticated;
-        private string m_UserName;
+        private bool m_IsAuthenticated;
+        private bool m_IsCompleted;
         private string m_Password;
-        private int    m_State;
+        private int m_State;
+        private string m_UserName;
 
         /// <summary>
         /// Default constructor.
@@ -24,62 +24,16 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Resets any authentication state data.
+        /// Is called when authentication mechanism needs to authenticate specified user.
         /// </summary>
-        public override void Reset()
-        {
-            m_IsCompleted     = false;
-            m_IsAuthenticated = false;
-            m_UserName        = null;
-            m_Password        = null;
-            m_State           = 0;
-        }
+        public event EventHandler<AUTH_e_Authenticate> Authenticate;
 
         /// <summary>
-        /// Continues authentication process.
+        /// Gets if user has authenticated sucessfully.
         /// </summary>
-        /// <param name="clientResponse">Client sent SASL response.</param>
-        /// <returns>Retunrns challange response what must be sent to client or null if authentication has completed.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>clientResponse</b> is null reference.</exception>
-        public override byte[] Continue(byte[] clientResponse)
+        public override bool IsAuthenticated
         {
-            if(clientResponse == null){
-                throw new ArgumentNullException("clientResponse");
-            }
-
-            /* RFC none.
-                S: "Username:"
-                C: userName
-                S: "Password:"
-                C: password
-             
-                NOTE: UserName may be included in initial client response.
-            */
-
-            // User name provided, so skip that state.
-            if(m_State == 0 && clientResponse.Length > 0){
-                m_State++;
-            }
-
-            if(m_State == 0){
-                m_State++;
-
-                return Encoding.ASCII.GetBytes("UserName:");
-            }
-
-            if(m_State == 1){
-                m_State++;
-                m_UserName = Encoding.UTF8.GetString(clientResponse);
-            
-                return Encoding.ASCII.GetBytes("Password:");
-            }
-            m_Password = Encoding.UTF8.GetString(clientResponse);
-
-            var result = OnAuthenticate("",m_UserName,m_Password);
-            m_IsAuthenticated = result.IsAuthenticated;
-            m_IsCompleted = true;
-
-            return null;
+            get { return m_IsAuthenticated; }
         }
 
         /// <summary>
@@ -87,15 +41,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public override bool IsCompleted
         {
-            get{ return m_IsCompleted; }
-        }
-
-        /// <summary>
-        /// Gets if user has authenticated sucessfully.
-        /// </summary>
-        public override bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
+            get { return m_IsCompleted; }
         }
 
         /// <summary>
@@ -116,13 +62,71 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public override string UserName
         {
-            get{ return m_UserName; }
+            get { return m_UserName; }
         }
 
         /// <summary>
-        /// Is called when authentication mechanism needs to authenticate specified user.
+        /// Continues authentication process.
         /// </summary>
-        public event EventHandler<AUTH_e_Authenticate> Authenticate;
+        /// <param name="clientResponse">Client sent SASL response.</param>
+        /// <returns>Retunrns challange response what must be sent to client or null if authentication has completed.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>clientResponse</b> is null reference.</exception>
+        public override byte[] Continue(byte[] clientResponse)
+        {
+            if (clientResponse == null)
+            {
+                throw new ArgumentNullException("clientResponse");
+            }
+
+            /* RFC none.
+                S: "Username:"
+                C: userName
+                S: "Password:"
+                C: password
+             
+                NOTE: UserName may be included in initial client response.
+            */
+
+            // User name provided, so skip that state.
+            if (m_State == 0 && clientResponse.Length > 0)
+            {
+                m_State++;
+            }
+
+            if (m_State == 0)
+            {
+                m_State++;
+
+                return Encoding.ASCII.GetBytes("UserName:");
+            }
+
+            if (m_State == 1)
+            {
+                m_State++;
+                m_UserName = Encoding.UTF8.GetString(clientResponse);
+
+                return Encoding.ASCII.GetBytes("Password:");
+            }
+            m_Password = Encoding.UTF8.GetString(clientResponse);
+
+            var result = OnAuthenticate("", m_UserName, m_Password);
+            m_IsAuthenticated = result.IsAuthenticated;
+            m_IsCompleted = true;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Resets any authentication state data.
+        /// </summary>
+        public override void Reset()
+        {
+            m_IsCompleted = false;
+            m_IsAuthenticated = false;
+            m_UserName = null;
+            m_Password = null;
+            m_State = 0;
+        }
 
         /// <summary>
         /// Raises <b>Authenticate</b> event.
@@ -131,12 +135,13 @@ namespace LumiSoft.Net.AUTH
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
         /// <returns>Returns authentication result.</returns>
-        private AUTH_e_Authenticate OnAuthenticate(string authorizationID,string userName,string password)
+        private AUTH_e_Authenticate OnAuthenticate(string authorizationID, string userName, string password)
         {
-            var retVal = new AUTH_e_Authenticate(authorizationID,userName,password);
+            var retVal = new AUTH_e_Authenticate(authorizationID, userName, password);
 
-            if (Authenticate != null){
-                Authenticate(this,retVal);
+            if (Authenticate != null)
+            {
+                Authenticate(this, retVal);
             }
 
             return retVal;

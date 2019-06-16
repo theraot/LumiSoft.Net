@@ -11,9 +11,9 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Response : SIP_Message
     {
-        private double      m_SipVersion   = 2.0d;
-        private int         m_StatusCode   = 100;
-        private string      m_ReasonPhrase = "";
+        private string m_ReasonPhrase = "";
+        private double m_SipVersion = 2.0d;
+        private int m_StatusCode = 100;
 
         /// <summary>
         /// Default constructor.
@@ -32,52 +32,128 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Clones this request.
+        /// Gets or sets reponse reasong phrase. This just StatusCode describeing text.
         /// </summary>
-        /// <returns>Returns new cloned request.</returns>
-        public SIP_Response Copy()
+        public string ReasonPhrase
         {
-            var retVal = Parse(ToByteData());
+            get { return m_ReasonPhrase; }
 
-            return retVal;
+            set
+            {
+                m_ReasonPhrase = value ?? throw new ArgumentNullException("ReasonPhrase");
+            }
         }
 
         /// <summary>
-        /// Checks if SIP response has all required values as response line,header fields and their values.
-        /// Throws Exception if not valid SIP response.
+        /// Gets SIP request which response it is. This value is null if this is stateless response.
         /// </summary>
-        public void Validate()
-        {            
-            // Via: + branch prameter
-            // To:
-            // From:
-            // CallID:
-            // CSeq
-                        
-            if(Via.GetTopMostValue() == null){
-                throw new SIP_ParseException("Via: header field is missing !");
-            }
-            if(Via.GetTopMostValue().Branch == null){
-                throw new SIP_ParseException("Via: header fields branch parameter is missing !");
-            }
+        public SIP_Request Request { get; }
 
-            if(To == null){
-                throw new SIP_ParseException("To: header field is missing !");
-            }
+        /// <summary>
+        /// Gets or sets SIP version.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when invalid SIP version value passed.</exception>
+        public double SipVersion
+        {
+            get { return m_SipVersion; }
 
-            if(From == null){
-                throw new SIP_ParseException("From: header field is missing !");
-            }
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("Property SIP version must be >= 1.0 !");
+                }
 
-            if(CallID == null){
-                throw new SIP_ParseException("CallID: header field is missing !");
+                m_SipVersion = value;
             }
+        }
 
-            if(CSeq == null){
-                throw new SIP_ParseException("CSeq: header field is missing !");
+        /// <summary>
+        /// Gets or sets response status code. This value must be between 100 and 999.
+        /// </summary>
+        /// <exception cref="ArgumentException">Is raised when value is out of allowed range.</exception>
+        public int StatusCode
+        {
+            get { return m_StatusCode; }
+
+            set
+            {
+                if (value < 1 || value > 999)
+                {
+                    throw new ArgumentException("Property 'StatusCode' value must be >= 100 && <= 999 !");
+                }
+
+                m_StatusCode = value;
             }
+        }
 
-            // TODO: INVITE 2xx must have only 1 contact header with SIP or SIPS.
+        /// <summary>
+        /// Gets or sets SIP Status-Code with Reason-Phrase (Status-Code SP Reason-Phrase).
+        /// </summary>
+        public string StatusCode_ReasonPhrase
+        {
+            get { return m_StatusCode + " " + m_ReasonPhrase; }
+
+            set
+            {
+                // Status-Code SP Reason-Phrase
+
+                if (value == null)
+                {
+                    throw new ArgumentNullException("StatusCode_ReasonPhrase");
+                }
+
+                var code_reason = value.Split(new[] { ' ' }, 2);
+                if (code_reason.Length != 2)
+                {
+                    throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Reason-Phrase value !");
+                }
+                try
+                {
+                    StatusCode = Convert.ToInt32(code_reason[0]);
+                }
+                catch
+                {
+                    throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Status-Code value !");
+                }
+                ReasonPhrase = code_reason[1];
+            }
+        }
+
+        /// <summary>
+        /// Gets SIP status code type.
+        /// </summary>
+        public SIP_StatusCodeType StatusCodeType
+        {
+            get
+            {
+                if (m_StatusCode >= 100 && m_StatusCode < 200)
+                {
+                    return SIP_StatusCodeType.Provisional;
+                }
+
+                if (m_StatusCode >= 200 && m_StatusCode < 300)
+                {
+                    return SIP_StatusCodeType.Success;
+                }
+                if (m_StatusCode >= 300 && m_StatusCode < 400)
+                {
+                    return SIP_StatusCodeType.Redirection;
+                }
+                if (m_StatusCode >= 400 && m_StatusCode < 500)
+                {
+                    return SIP_StatusCodeType.RequestFailure;
+                }
+                if (m_StatusCode >= 500 && m_StatusCode < 600)
+                {
+                    return SIP_StatusCodeType.ServerFailure;
+                }
+                if (m_StatusCode >= 600 && m_StatusCode < 700)
+                {
+                    return SIP_StatusCodeType.GlobalFailure;
+                }
+                throw new Exception("Unknown SIP StatusCodeType !");
+            }
         }
 
         /// <summary>
@@ -89,7 +165,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public static SIP_Response Parse(byte[] data)
         {
-            if(data == null){
+            if (data == null)
+            {
                 throw new ArgumentNullException("data");
             }
 
@@ -110,7 +187,8 @@ namespace LumiSoft.Net.SIP.Stack
                 SIP-Message                          
             */
 
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
@@ -119,23 +197,28 @@ namespace LumiSoft.Net.SIP.Stack
             // Parse Response-line
             var r = new StreamLineReader(stream);
             r.Encoding = "utf-8";
-            var version_code_text = r.ReadLineString().Split(new[]{' '},3);
-            if (version_code_text.Length != 3){
+            var version_code_text = r.ReadLineString().Split(new[] { ' ' }, 3);
+            if (version_code_text.Length != 3)
+            {
                 throw new SIP_ParseException("Invalid SIP Status-Line syntax ! Syntax: {SIP-Version SP Status-Code SP Reason-Phrase}.");
             }
             // SIP-Version
-            try{
-                retVal.SipVersion = Convert.ToDouble(version_code_text[0].Split('/')[1],System.Globalization.NumberFormatInfo.InvariantInfo);
+            try
+            {
+                retVal.SipVersion = Convert.ToDouble(version_code_text[0].Split('/')[1], System.Globalization.NumberFormatInfo.InvariantInfo);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid Status-Line SIP-Version value !");
             }
 
             // Status-Code
-            try{
+            try
+            {
                 retVal.StatusCode = Convert.ToInt32(version_code_text[1]);
             }
-            catch{
+            catch
+            {
                 throw new SIP_ParseException("Invalid Status-Line Status-Code value !");
             }
 
@@ -149,6 +232,29 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
+        /// Clones this request.
+        /// </summary>
+        /// <returns>Returns new cloned request.</returns>
+        public SIP_Response Copy()
+        {
+            var retVal = Parse(ToByteData());
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// Converts this response to raw srver response data.
+        /// </summary>
+        /// <returns></returns>
+        public byte[] ToByteData()
+        {
+            var retVal = new MemoryStream();
+            ToStream(retVal);
+
+            return retVal.ToArray();
+        }
+
+        /// <summary>
         /// Stores SIP_Response to specified stream.
         /// </summary>
         /// <param name="stream">Stream where to store.</param>
@@ -157,23 +263,11 @@ namespace LumiSoft.Net.SIP.Stack
             // Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
 
             // Add response-line
-            var responseLine = Encoding.UTF8.GetBytes("SIP/" + SipVersion.ToString("f1").Replace(',','.') + " " + StatusCode + " " + ReasonPhrase + "\r\n");
-            stream.Write(responseLine,0,responseLine.Length);
+            var responseLine = Encoding.UTF8.GetBytes("SIP/" + SipVersion.ToString("f1").Replace(',', '.') + " " + StatusCode + " " + ReasonPhrase + "\r\n");
+            stream.Write(responseLine, 0, responseLine.Length);
 
             // Add SIP-message
             InternalToStream(stream);
-        }
-
-        /// <summary>
-        /// Converts this response to raw srver response data.
-        /// </summary>
-        /// <returns></returns>
-        public byte[] ToByteData()
-        {              
-            var retVal = new MemoryStream();
-            ToStream(retVal);
-
-            return retVal.ToArray();
         }
 
         /// <summary>
@@ -186,111 +280,47 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Gets SIP request which response it is. This value is null if this is stateless response.
+        /// Checks if SIP response has all required values as response line,header fields and their values.
+        /// Throws Exception if not valid SIP response.
         /// </summary>
-        public SIP_Request Request { get; }
-
-        /// <summary>
-        /// Gets or sets SIP version.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when invalid SIP version value passed.</exception>
-        public double SipVersion
+        public void Validate()
         {
-            get{ return m_SipVersion; }
+            // Via: + branch prameter
+            // To:
+            // From:
+            // CallID:
+            // CSeq
 
-            set{
-                if(value < 1){
-                    throw new ArgumentException("Property SIP version must be >= 1.0 !");
-                }
-
-                m_SipVersion = value;
+            if (Via.GetTopMostValue() == null)
+            {
+                throw new SIP_ParseException("Via: header field is missing !");
             }
-        }
-
-        /// <summary>
-        /// Gets SIP status code type.
-        /// </summary>
-        public SIP_StatusCodeType StatusCodeType
-        {
-            get{
-                if(m_StatusCode >= 100 && m_StatusCode < 200){
-                    return SIP_StatusCodeType.Provisional;
-                }
-
-                if(m_StatusCode >= 200 && m_StatusCode < 300){
-                    return SIP_StatusCodeType.Success;
-                }
-                if(m_StatusCode >= 300 && m_StatusCode < 400){
-                    return SIP_StatusCodeType.Redirection;
-                }
-                if(m_StatusCode >= 400 && m_StatusCode < 500){
-                    return SIP_StatusCodeType.RequestFailure;
-                }
-                if(m_StatusCode >= 500 && m_StatusCode < 600){
-                    return SIP_StatusCodeType.ServerFailure;
-                }
-                if(m_StatusCode >= 600 && m_StatusCode < 700){
-                    return SIP_StatusCodeType.GlobalFailure;
-                }
-                throw new Exception("Unknown SIP StatusCodeType !");
+            if (Via.GetTopMostValue().Branch == null)
+            {
+                throw new SIP_ParseException("Via: header fields branch parameter is missing !");
             }
-        }
 
-        /// <summary>
-        /// Gets or sets response status code. This value must be between 100 and 999.
-        /// </summary>
-        /// <exception cref="ArgumentException">Is raised when value is out of allowed range.</exception>
-        public int StatusCode
-        {
-            get{ return m_StatusCode; }
-
-            set{
-                if(value < 1 || value > 999){
-                    throw new ArgumentException("Property 'StatusCode' value must be >= 100 && <= 999 !");
-                }
-
-                m_StatusCode = value;
+            if (To == null)
+            {
+                throw new SIP_ParseException("To: header field is missing !");
             }
-        }
 
-        /// <summary>
-        /// Gets or sets reponse reasong phrase. This just StatusCode describeing text.
-        /// </summary>
-        public string ReasonPhrase
-        {
-            get{ return m_ReasonPhrase; }
-
-            set{
-                m_ReasonPhrase = value ?? throw new ArgumentNullException("ReasonPhrase");
+            if (From == null)
+            {
+                throw new SIP_ParseException("From: header field is missing !");
             }
-        }
 
-        /// <summary>
-        /// Gets or sets SIP Status-Code with Reason-Phrase (Status-Code SP Reason-Phrase).
-        /// </summary>
-        public string StatusCode_ReasonPhrase
-        {
-            get{ return m_StatusCode + " " + m_ReasonPhrase; }
-
-            set{
-                // Status-Code SP Reason-Phrase
-
-                if(value == null){
-                    throw new ArgumentNullException("StatusCode_ReasonPhrase");
-                }
-
-                var code_reason = value.Split(new[]{' '},2);
-                if (code_reason.Length != 2){
-                    throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Reason-Phrase value !");
-                }
-                try{
-                    StatusCode = Convert.ToInt32(code_reason[0]);
-                }
-                catch{
-                    throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Status-Code value !");
-                }
-                ReasonPhrase = code_reason[1];
+            if (CallID == null)
+            {
+                throw new SIP_ParseException("CallID: header field is missing !");
             }
+
+            if (CSeq == null)
+            {
+                throw new SIP_ParseException("CSeq: header field is missing !");
+            }
+
+            // TODO: INVITE 2xx must have only 1 contact header with SIP or SIPS.
         }
     }
 }

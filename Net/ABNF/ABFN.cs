@@ -18,6 +18,26 @@ namespace LumiSoft.Net.ABNF
             Init();
         }
 
+        /// <summary>
+        /// Gets ABNF rules collection.
+        /// </summary>
+        public List<ABNF_Rule> Rules { get; }
+
+        /// <summary>
+        /// Parses and adds ABNF rules from the specified ABFN string.
+        /// </summary>
+        /// <param name="value">ABNF string.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
+        public void AddRules(string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            // TODO:
+        }
+
         private void Init()
         {
             /*
@@ -76,24 +96,5 @@ namespace LumiSoft.Net.ABNF
                                 ; white space
 */
         }
-
-        /// <summary>
-        /// Parses and adds ABNF rules from the specified ABFN string.
-        /// </summary>
-        /// <param name="value">ABNF string.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
-        public void AddRules(string value)
-        {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            // TODO:
-        }
-
-        /// <summary>
-        /// Gets ABNF rules collection.
-        /// </summary>
-        public List<ABNF_Rule> Rules { get; }
     }
 }

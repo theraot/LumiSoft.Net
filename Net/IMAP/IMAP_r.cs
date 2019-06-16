@@ -11,6 +11,25 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public abstract class IMAP_r
     {
+
+        /// <summary>
+        /// Starts writing response to the specified stream.
+        /// </summary>
+        /// <param name="stream">Stream where to store response.</param>
+        /// <param name="mailboxEncoding">Specifies how mailbox name is encoded.</param>
+        /// <param name="completedAsyncCallback">Callback to be called when this method completes asynchronously.</param>
+        /// <returns>Returns true is method completed asynchronously(the completedAsyncCallback is raised upon completion of the operation).
+        /// Returns false if operation completed synchronously.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
+        public bool ToStreamAsync(Stream stream, IMAP_Mailbox_Encoding mailboxEncoding, EventHandler<EventArgs<Exception>> completedAsyncCallback)
+        {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            return ToStreamAsync(null, stream, mailboxEncoding, completedAsyncCallback);
+        }
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -22,24 +41,6 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-        /// Starts writing response to the specified stream.
-        /// </summary>
-        /// <param name="stream">Stream where to store response.</param>
-        /// <param name="mailboxEncoding">Specifies how mailbox name is encoded.</param>
-        /// <param name="completedAsyncCallback">Callback to be called when this method completes asynchronously.</param>
-        /// <returns>Returns true is method completed asynchronously(the completedAsyncCallback is raised upon completion of the operation).
-        /// Returns false if operation completed synchronously.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        public bool ToStreamAsync(Stream stream,IMAP_Mailbox_Encoding mailboxEncoding,EventHandler<EventArgs<Exception>> completedAsyncCallback)
-        {
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            return ToStreamAsync(null,stream,mailboxEncoding,completedAsyncCallback);
-        }
-
-        /// <summary>
         /// Starts sending response to the specified IMAP session remote endpoint.
         /// </summary>
         /// <param name="session">Stream where to store response.</param>
@@ -47,13 +48,14 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns true is method completed asynchronously(the completedAsyncCallback is raised upon completion of the operation).
         /// Returns false if operation completed synchronously.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
-        internal bool SendAsync(IMAP_Session session,EventHandler<EventArgs<Exception>> completedAsyncCallback)
+        internal bool SendAsync(IMAP_Session session, EventHandler<EventArgs<Exception>> completedAsyncCallback)
         {
-            if(session == null){
+            if (session == null)
+            {
                 throw new ArgumentNullException("session");
             }
 
-            return ToStreamAsync(session,session.TcpStream,session.MailboxEncoding,completedAsyncCallback);
+            return ToStreamAsync(session, session.TcpStream, session.MailboxEncoding, completedAsyncCallback);
         }
 
         /// <summary>
@@ -66,18 +68,20 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns true is method completed asynchronously(the completedAsyncCallback is raised upon completion of the operation).
         /// Returns false if operation completed synchronously.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
-        protected virtual bool ToStreamAsync(IMAP_Session session,Stream stream,IMAP_Mailbox_Encoding mailboxEncoding,EventHandler<EventArgs<Exception>> completedAsyncCallback)
+        protected virtual bool ToStreamAsync(IMAP_Session session, Stream stream, IMAP_Mailbox_Encoding mailboxEncoding, EventHandler<EventArgs<Exception>> completedAsyncCallback)
         {
-            if(stream == null){
+            if (stream == null)
+            {
                 throw new ArgumentNullException("stream");
             }
 
             var responseS = ToString(mailboxEncoding);
-            var response  = Encoding.UTF8.GetBytes(responseS);
+            var response = Encoding.UTF8.GetBytes(responseS);
 
             // Log.
-            if (session != null){
-                session.LogAddWrite(response.Length,responseS.TrimEnd());
+            if (session != null)
+            {
+                session.LogAddWrite(response.Length, responseS.TrimEnd());
             }
 
             // Starts writing response to stream.
@@ -85,28 +89,35 @@ namespace LumiSoft.Net.IMAP
                 response,
                 0,
                 response.Length,
-                delegate(IAsyncResult r){                    
-                    if(r.CompletedSynchronously){
+                delegate (IAsyncResult r)
+                {
+                    if (r.CompletedSynchronously)
+                    {
                         return;
                     }
 
-                    try{
+                    try
+                    {
                         stream.EndWrite(r);
 
-                        if(completedAsyncCallback != null){
-                            completedAsyncCallback(this,new EventArgs<Exception>(null));
+                        if (completedAsyncCallback != null)
+                        {
+                            completedAsyncCallback(this, new EventArgs<Exception>(null));
                         }
                     }
-                    catch(Exception x){
-                        if(completedAsyncCallback != null){
-                            completedAsyncCallback(this,new EventArgs<Exception>(x));
+                    catch (Exception x)
+                    {
+                        if (completedAsyncCallback != null)
+                        {
+                            completedAsyncCallback(this, new EventArgs<Exception>(x));
                         }
                     }
                 },
                 null
             );
             // Completed synchronously, process result.
-            if (ar.CompletedSynchronously){
+            if (ar.CompletedSynchronously)
+            {
                 stream.EndWrite(ar);
 
                 return false;

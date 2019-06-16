@@ -8,9 +8,9 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_Plain : AUTH_SASL_ServerMechanism
     {
-        private bool   m_IsCompleted;
-        private bool   m_IsAuthenticated;
-        private string m_UserName        = "";
+        private bool m_IsAuthenticated;
+        private bool m_IsCompleted;
+        private string m_UserName = "";
 
         /// <summary>
         /// Default constructor.
@@ -22,13 +22,45 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Resets any authentication state data.
+        /// Is called when authentication mechanism needs to authenticate specified user.
         /// </summary>
-        public override void Reset()
+        public event EventHandler<AUTH_e_Authenticate> Authenticate;
+
+        /// <summary>
+        /// Gets if user has authenticated sucessfully.
+        /// </summary>
+        public override bool IsAuthenticated
         {
-            m_IsCompleted     = false;
-            m_IsAuthenticated = false;
-            m_UserName        = "";
+            get { return m_IsAuthenticated; }
+        }
+
+        /// <summary>
+        /// Gets if the authentication exchange has completed.
+        /// </summary>
+        public override bool IsCompleted
+        {
+            get { return m_IsCompleted; }
+        }
+
+        /// <summary>
+        /// Returns always "PLAIN".
+        /// </summary>
+        public override string Name
+        {
+            get { return "PLAIN"; }
+        }
+
+        /// <summary>
+        /// Gets if specified SASL mechanism is available only to SSL connection.
+        /// </summary>
+        public override bool RequireSSL { get; }
+
+        /// <summary>
+        /// Gets user login name.
+        /// </summary>
+        public override string UserName
+        {
+            get { return m_UserName; }
         }
 
         /// <summary>
@@ -39,7 +71,8 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>clientResponse</b> is null reference.</exception>
         public override byte[] Continue(byte[] clientResponse)
         {
-            if(clientResponse == null){
+            if (clientResponse == null)
+            {
                 throw new ArgumentNullException("clientResponse");
             }
 
@@ -64,15 +97,17 @@ namespace LumiSoft.Net.AUTH
                     S: a002 OK "Authenticated"
             */
 
-            if(clientResponse.Length == 0){
+            if (clientResponse.Length == 0)
+            {
                 return new byte[0];
             }
             // Parse response
 
             var authzid_authcid_passwd = Encoding.UTF8.GetString(clientResponse).Split('\0');
-            if (authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1])){  
+            if (authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1]))
+            {
                 m_UserName = authzid_authcid_passwd[1];
-                var result = OnAuthenticate(authzid_authcid_passwd[0],authzid_authcid_passwd[1],authzid_authcid_passwd[2]);
+                var result = OnAuthenticate(authzid_authcid_passwd[0], authzid_authcid_passwd[1], authzid_authcid_passwd[2]);
                 m_IsAuthenticated = result.IsAuthenticated;
             }
 
@@ -82,46 +117,14 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Gets if the authentication exchange has completed.
+        /// Resets any authentication state data.
         /// </summary>
-        public override bool IsCompleted
+        public override void Reset()
         {
-            get{ return m_IsCompleted; }
+            m_IsCompleted = false;
+            m_IsAuthenticated = false;
+            m_UserName = "";
         }
-
-        /// <summary>
-        /// Gets if user has authenticated sucessfully.
-        /// </summary>
-        public override bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
-        }
-
-        /// <summary>
-        /// Returns always "PLAIN".
-        /// </summary>
-        public override string Name
-        {
-            get { return "PLAIN"; }
-        }
-
-        /// <summary>
-        /// Gets if specified SASL mechanism is available only to SSL connection.
-        /// </summary>
-        public override bool RequireSSL { get; }
-
-        /// <summary>
-        /// Gets user login name.
-        /// </summary>
-        public override string UserName
-        {
-            get{ return m_UserName; }
-        }
-
-        /// <summary>
-        /// Is called when authentication mechanism needs to authenticate specified user.
-        /// </summary>
-        public event EventHandler<AUTH_e_Authenticate> Authenticate;
 
         /// <summary>
         /// Raises <b>Authenticate</b> event.
@@ -130,12 +133,13 @@ namespace LumiSoft.Net.AUTH
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
         /// <returns>Returns authentication result.</returns>
-        private AUTH_e_Authenticate OnAuthenticate(string authorizationID,string userName,string password)
+        private AUTH_e_Authenticate OnAuthenticate(string authorizationID, string userName, string password)
         {
-            var retVal = new AUTH_e_Authenticate(authorizationID,userName,password);
+            var retVal = new AUTH_e_Authenticate(authorizationID, userName, password);
 
-            if (Authenticate != null){
-                Authenticate(this,retVal);
+            if (Authenticate != null)
+            {
+                Authenticate(this, retVal);
             }
 
             return retVal;

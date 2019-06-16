@@ -5,50 +5,54 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class EmailAddress
     {
-        private EmailAddressType_enum m_Type         = EmailAddressType_enum.Internet;
-        private string                m_EmailAddress = "";
-                
+        private string m_EmailAddress = "";
+        private EmailAddressType_enum m_Type = EmailAddressType_enum.Internet;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="item">Owner vCard item.</param>
         /// <param name="type">Email type. Note: This value can be flagged value !</param>
         /// <param name="emailAddress">Email address.</param>
-        internal EmailAddress(Item item,EmailAddressType_enum type,string emailAddress)
+        internal EmailAddress(Item item, EmailAddressType_enum type, string emailAddress)
         {
-            Item        = item;
-            m_Type         = type;
+            Item = item;
+            m_Type = type;
             m_EmailAddress = emailAddress;
         }
 
         /// <summary>
-        /// This method is called when some property has changed, wee need to update underlaying vCard item.
+        /// Gets or sets email address.
         /// </summary>
-        private void Changed()
+        public string Email
         {
-            Item.ParametersString = EmailTypeToString(m_Type);
-            Item.SetDecodedValue(m_EmailAddress);
+            get { return m_EmailAddress; }
+
+            set
+            {
+                m_EmailAddress = value;
+                Changed();
+            }
         }
 
         /// <summary>
-        /// Parses email address from vCard EMAIL structure string.
+        /// Gets or sets email type. Note: This property can be flagged value !
         /// </summary>
-        /// <param name="item">vCard EMAIL item.</param>
-        internal static EmailAddress Parse(Item item)
+        public EmailAddressType_enum EmailType
         {
-            var type = EmailAddressType_enum.NotSpecified;
-            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1){
-                type |= EmailAddressType_enum.Preferred;
-            }
-            if(item.ParametersString.ToUpper().IndexOf("INTERNET") != -1){
-                type |= EmailAddressType_enum.Internet;
-            }
-            if(item.ParametersString.ToUpper().IndexOf("X400") != -1){
-                type |= EmailAddressType_enum.X400;
-            }
+            get { return m_Type; }
 
-            return new EmailAddress(item,type,item.DecodedValue);
+            set
+            {
+                m_Type = value;
+                Changed();
+            }
         }
+
+        /// <summary>
+        /// Gets underlaying vCrad item.
+        /// </summary>
+        public Item Item { get; }
 
         /// <summary>
         /// Converts EmailAddressType_enum to vCard item parameters string.
@@ -58,51 +62,56 @@ namespace LumiSoft.Net.Mime.vCard
         internal static string EmailTypeToString(EmailAddressType_enum type)
         {
             var retVal = "";
-            if ((type & EmailAddressType_enum.Internet) != 0){
+            if ((type & EmailAddressType_enum.Internet) != 0)
+            {
                 retVal += "INTERNET,";
             }
-            if((type & EmailAddressType_enum.Preferred) != 0){
+            if ((type & EmailAddressType_enum.Preferred) != 0)
+            {
                 retVal += "PREF,";
             }
-            if((type & EmailAddressType_enum.X400) != 0){
+            if ((type & EmailAddressType_enum.X400) != 0)
+            {
                 retVal += "X400,";
             }
-            if(retVal.EndsWith(",")){
-                retVal = retVal.Substring(0,retVal.Length - 1);
+            if (retVal.EndsWith(","))
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
             }
 
             return retVal;
         }
 
         /// <summary>
-        /// Gets underlaying vCrad item.
+        /// Parses email address from vCard EMAIL structure string.
         /// </summary>
-        public Item Item { get; }
-
-        /// <summary>
-        /// Gets or sets email type. Note: This property can be flagged value !
-        /// </summary>
-        public EmailAddressType_enum EmailType
+        /// <param name="item">vCard EMAIL item.</param>
+        internal static EmailAddress Parse(Item item)
         {
-            get{ return m_Type; }
-
-            set{ 
-                m_Type = value; 
-                Changed();
+            var type = EmailAddressType_enum.NotSpecified;
+            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1)
+            {
+                type |= EmailAddressType_enum.Preferred;
             }
+            if (item.ParametersString.ToUpper().IndexOf("INTERNET") != -1)
+            {
+                type |= EmailAddressType_enum.Internet;
+            }
+            if (item.ParametersString.ToUpper().IndexOf("X400") != -1)
+            {
+                type |= EmailAddressType_enum.X400;
+            }
+
+            return new EmailAddress(item, type, item.DecodedValue);
         }
 
         /// <summary>
-        /// Gets or sets email address.
+        /// This method is called when some property has changed, wee need to update underlaying vCard item.
         /// </summary>
-        public string Email
+        private void Changed()
         {
-            get{ return m_EmailAddress; }
-
-            set{ 
-                m_EmailAddress = value; 
-                Changed();
-            }
+            Item.ParametersString = EmailTypeToString(m_Type);
+            Item.SetDecodedValue(m_EmailAddress);
         }
     }
 }

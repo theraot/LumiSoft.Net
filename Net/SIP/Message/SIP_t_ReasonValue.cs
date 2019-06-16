@@ -39,6 +39,78 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets 'cause' parameter value. The cause parameter contains a SIP status code. 
+        /// Value -1 means not specified.
+        /// </summary>
+        public int Cause
+        {
+            get
+            {
+                if (Parameters["cause"] == null)
+                {
+                    return -1;
+                }
+
+                return Convert.ToInt32(Parameters["cause"].Value);
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    Parameters.Remove("cause");
+                }
+                else
+                {
+                    Parameters.Set("cause", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets protocol.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
+        public string Protocol
+        {
+            get { return m_Protocol; }
+
+            set
+            {
+                m_Protocol = value ?? throw new ArgumentNullException("Protocol");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets 'text' parameter value. Value null means not specified.
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                var parameter = Parameters["text"];
+                if (parameter != null)
+                {
+                    return parameter.Value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    Parameters.Remove("text");
+                }
+                else
+                {
+                    Parameters.Set("text", value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses "reason-value" from specified value.
         /// </summary>
         /// <param name="value">SIP "reason-value" value.</param>
@@ -46,7 +118,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -71,7 +144,8 @@ namespace LumiSoft.Net.SIP.Message
                 reason-extension  =  generic-param
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
@@ -108,68 +182,6 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets protocol.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-        public string Protocol
-        {
-            get{ return m_Protocol; }
-
-            set{
-                m_Protocol = value ?? throw new ArgumentNullException("Protocol");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'cause' parameter value. The cause parameter contains a SIP status code. 
-        /// Value -1 means not specified.
-        /// </summary>
-        public int Cause
-        {
-            get
-            {
-                if(Parameters["cause"] == null){
-                    return -1;
-                }
-
-                return Convert.ToInt32(Parameters["cause"].Value);
-            }
-
-            set{
-                if(value < 0){
-                    Parameters.Remove("cause");
-                }
-                else{
-                    Parameters.Set("cause",value.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets 'text' parameter value. Value null means not specified.
-        /// </summary>
-        public string Text
-        {
-            get{
-                var parameter = Parameters["text"];
-                if (parameter != null){
-                    return parameter.Value;
-                }
-
-                return null;
-            }
-
-            set{
-                if(value == null){
-                    Parameters.Remove("text");
-                }
-                else{
-                    Parameters.Set("text",value);
-                }
-            }
         }
     }
 }

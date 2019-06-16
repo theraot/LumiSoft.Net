@@ -9,8 +9,8 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_t_AuthenticationInfo : SIP_t_Value
     {
-        private int    m_NonceCount   = -1;
-      
+        private int m_NonceCount = -1;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,6 +21,47 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
+        /// Gets or sets cnonce value. Value null means that value not specified.
+        /// </summary>
+        public string CNonce { get; set; }
+
+        /// <summary>
+        /// Gets or sets server next predicted nonce value. Value null means that value not specified.
+        /// </summary>
+        public string NextNonce { get; set; }
+
+        /// <summary>
+        /// Gets or sets nonce count. Value -1 means that value not specified.
+        /// </summary>
+        public int NonceCount
+        {
+            get { return m_NonceCount; }
+
+            set
+            {
+                if (value < 0)
+                {
+                    m_NonceCount = -1;
+                }
+                else
+                {
+                    m_NonceCount = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets QOP value. Value null means that value not specified.
+        /// </summary>
+        public string Qop { get; set; }
+
+        /// <summary>
+        /// Gets or sets rspauth value. Value null means that value not specified.
+        /// This can be only HEX value.
+        /// </summary>
+        public string ResponseAuth { get; set; }
+
+        /// <summary>
         /// Parses "Authentication-Info" from specified value.
         /// </summary>
         /// <param name="value">SIP "Authentication-Info" value.</param>
@@ -28,7 +69,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("value");
             }
 
@@ -52,30 +94,39 @@ namespace LumiSoft.Net.SIP.Message
                 nc-value             =  8LHEX
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
-            while(reader.Available > 0){
+            while (reader.Available > 0)
+            {
                 var word = reader.QuotedReadToDelimiter(',');
-                if (word != null && word.Length > 0){
-                    var name_value = word.Split(new[]{'='},2);
-                    if (name_value[0].ToLower() == "nextnonce"){
+                if (word != null && word.Length > 0)
+                {
+                    var name_value = word.Split(new[] { '=' }, 2);
+                    if (name_value[0].ToLower() == "nextnonce")
+                    {
                         NextNonce = name_value[1];
                     }
-                    else if(name_value[0].ToLower() == "qop"){
+                    else if (name_value[0].ToLower() == "qop")
+                    {
                         Qop = name_value[1];
                     }
-                    else if(name_value[0].ToLower() == "rspauth"){
+                    else if (name_value[0].ToLower() == "rspauth")
+                    {
                         ResponseAuth = name_value[1];
                     }
-                    else if(name_value[0].ToLower() == "cnonce"){
+                    else if (name_value[0].ToLower() == "cnonce")
+                    {
                         CNonce = name_value[1];
                     }
-                    else if(name_value[0].ToLower() == "nc"){
+                    else if (name_value[0].ToLower() == "nc")
+                    {
                         NonceCount = Convert.ToInt32(name_value[1]);
                     }
-                    else{
+                    else
+                    {
                         throw new SIP_ParseException("Invalid Authentication-Info value !");
                     }
                 }
@@ -99,36 +150,45 @@ namespace LumiSoft.Net.SIP.Message
 
             var retVal = new StringBuilder();
 
-            if (NextNonce != null){
+            if (NextNonce != null)
+            {
                 retVal.Append("nextnonce=" + NextNonce);
             }
 
-            if(Qop != null){
-                if(retVal.Length > 0){
+            if (Qop != null)
+            {
+                if (retVal.Length > 0)
+                {
                     retVal.Append(',');
                 }
 
                 retVal.Append("qop=" + Qop);
             }
 
-            if(ResponseAuth != null){
-                if(retVal.Length > 0){
+            if (ResponseAuth != null)
+            {
+                if (retVal.Length > 0)
+                {
                     retVal.Append(',');
                 }
 
                 retVal.Append("rspauth=" + TextUtils.QuoteString(ResponseAuth));
             }
 
-            if(CNonce != null){
-                if(retVal.Length > 0){
+            if (CNonce != null)
+            {
+                if (retVal.Length > 0)
+                {
                     retVal.Append(',');
                 }
 
                 retVal.Append("cnonce=" + CNonce);
             }
-            
-            if(m_NonceCount != -1){                
-                if(retVal.Length > 0){
+
+            if (m_NonceCount != -1)
+            {
+                if (retVal.Length > 0)
+                {
                     retVal.Append(',');
                 }
 
@@ -136,44 +196,6 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets server next predicted nonce value. Value null means that value not specified.
-        /// </summary>
-        public string NextNonce { get; set; }
-
-        /// <summary>
-        /// Gets or sets QOP value. Value null means that value not specified.
-        /// </summary>
-        public string Qop { get; set; }
-
-        /// <summary>
-        /// Gets or sets rspauth value. Value null means that value not specified.
-        /// This can be only HEX value.
-        /// </summary>
-        public string ResponseAuth { get; set; }
-
-        /// <summary>
-        /// Gets or sets cnonce value. Value null means that value not specified.
-        /// </summary>
-        public string CNonce { get; set; }
-
-        /// <summary>
-        /// Gets or sets nonce count. Value -1 means that value not specified.
-        /// </summary>
-        public int NonceCount
-        {
-            get{ return m_NonceCount; }
-
-            set{
-                if(value < 0){
-                    m_NonceCount = -1;
-                }
-                else{
-                    m_NonceCount = value;
-                }
-            }
         }
     }
 }

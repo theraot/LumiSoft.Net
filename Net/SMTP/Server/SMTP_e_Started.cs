@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_Started : EventArgs
     {
-        private SMTP_Reply   m_pReply;
+        private SMTP_Reply m_pReply;
 
         /// <summary>
         /// Default constructor.
@@ -15,16 +15,11 @@ namespace LumiSoft.Net.SMTP.Server
         /// <param name="session">Owner SMTP server session.</param>
         /// <param name="reply">SMTP server reply.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> or <b>reply</b> is null reference.</exception>
-        public SMTP_e_Started(SMTP_Session session,SMTP_Reply reply)
+        public SMTP_e_Started(SMTP_Session session, SMTP_Reply reply)
         {
             Session = session ?? throw new ArgumentNullException("session");
-            m_pReply   = reply ?? throw new ArgumentNullException("reply");
+            m_pReply = reply ?? throw new ArgumentNullException("reply");
         }
-
-        /// <summary>
-        /// Gets owner SMTP session.
-        /// </summary>
-        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets or sets SMTP server reply.
@@ -32,11 +27,17 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
         public SMTP_Reply Reply
         {
-            get{ return m_pReply; }
+            get { return m_pReply; }
 
-            set{
+            set
+            {
                 m_pReply = value ?? throw new ArgumentNullException("Reply");
             }
         }
+
+        /// <summary>
+        /// Gets owner SMTP session.
+        /// </summary>
+        public SMTP_Session Session { get; }
     }
 }

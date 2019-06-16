@@ -13,18 +13,13 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         /// <param name="referenceName">Folder reference name.</param>
         /// <param name="folderFilter">Folder filter.</param>
-        internal IMAP_e_LSub(string referenceName,string folderFilter)
+        internal IMAP_e_LSub(string referenceName, string folderFilter)
         {
             FolderReferenceName = referenceName;
-            FolderFilter        = folderFilter;
+            FolderFilter = folderFilter;
 
             Folders = new List<IMAP_r_u_LSub>();
         }
-
-        /// <summary>
-        /// Gets folder reference name. Value null means not specified.
-        /// </summary>
-        public string FolderReferenceName { get; }
 
         /// <summary>
         /// Gets folder filter.
@@ -37,6 +32,11 @@ namespace LumiSoft.Net.IMAP.Server
         /// of hierarchy are also returned.
         /// </remarks>
         public string FolderFilter { get; }
+
+        /// <summary>
+        /// Gets folder reference name. Value null means not specified.
+        /// </summary>
+        public string FolderReferenceName { get; }
 
         /// <summary>
         /// Gets IMAP folders collection.

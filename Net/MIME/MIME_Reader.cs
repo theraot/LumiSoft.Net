@@ -9,15 +9,15 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Reader
     {
+
+        private static readonly char[] atextChars = new[] { '!', '#', '$', '%', '&', '\'', '*', '+', '-', '/', '=', '?', '^', '_', '`', '{', '|', '}', '~' };
+
+        private static readonly Regex encodedword_regex = new Regex(@"=\?(?<charset>.*?)\?(?<encoding>[qQbB])\?(?<value>.*?)\?=", RegexOptions.IgnoreCase);
+
+        private static readonly char[] specials = new[] { '(', ')', '<', '>', '[', ']', ':', ';', '@', '\\', ',', '.', '"' };
+
+        private static readonly char[] tspecials = new[] { '(', ')', '<', '>', '@', ',', ';', ':', '\\', '"', '/', '[', ']', '?', '=' };
         private readonly string m_Source = "";
-
-        private static readonly char[] atextChars = new[]{'!','#','$','%','&','\'','*','+','-','/','=','?','^','_','`','{','|','}','~'};
-
-        private static readonly char[] specials = new[]{'(',')','<','>','[',']',':',';','@','\\',',','.','"'};
-
-        private static readonly char[] tspecials = new[]{'(',')','<','>','@',',',';',':','\\','"','/','[',']','?','='};
-
-        private static readonly Regex encodedword_regex = new Regex(@"=\?(?<charset>.*?)\?(?<encoding>[qQbB])\?(?<value>.*?)\?=",RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Default constructor.
@@ -27,6 +27,193 @@ namespace LumiSoft.Net.MIME
         public MIME_Reader(string value)
         {
             m_Source = value ?? throw new ArgumentNullException("value");
+        }
+
+        /// <summary>
+        /// Gets number of chars has left for processing.
+        /// </summary>
+        public int Available
+        {
+            get { return m_Source.Length - Position; }
+        }
+
+        /// <summary>
+        /// Gets position in string.
+        /// </summary>
+        public int Position { get; private set; }
+
+        /// <summary>
+        /// Gets if the specified char is RFC 822 'ALPHA'.
+        /// </summary>
+        /// <param name="c">Char to check.</param>
+        /// <returns>Returns true if specified char is RFC 822 'ALPHA'.</returns>
+        public static bool IsAlpha(char c)
+        {
+            /* RFC 822 3.3.
+                ALPHA = <any ASCII alphabetic character>; (65.- 90.); (97.-122.)
+            */
+
+            if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets if the specified char is RFC 2822 'atext'.
+        /// </summary>
+        /// <param name="c">Char to check.</param>
+        /// <returns>Returns true if specified char is RFC 2822 'atext'.</returns>
+        public static bool IsAText(char c)
+        {
+            /* RFC 2822 3.2.4.
+             *  atext = ALPHA / DIGIT / 
+             *          "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" /
+             *          "-" / "/" / "=" / "?" / "^" / "_" / "`" / "{" /
+             *          "|" / "}" / "~"
+            */
+
+            if (IsAlpha(c) || char.IsDigit(c))
+            {
+                return true;
+            }
+
+            foreach (char aC in atextChars)
+            {
+                if (c == aC)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets if the specified char is RFC 2231 (section 7) 'attribute-char'.
+        /// </summary>
+        /// <param name="c">Char to check.</param>
+        /// <returns>Returns true if specified char is RFC 2231 (section 7) 'attribute-char'.</returns>
+        public static bool IsAttributeChar(char c)
+        {
+            /* RFC 2231 7.
+             * attribute-char := <any (US-ASCII) CHAR except SPACE, CTLs, "*", "'", "%", or tspecials>
+             * 
+             * RFC 822 3.3.
+             *  CTL =  <any ASCII control; (0.- 31.); (127.)
+            */
+
+            if (c <= 31 || c > 127)
+            {
+                return false;
+            }
+
+            if (c == ' ' || c == '*' || c == '\'' || c == '%')
+            {
+                return false;
+            }
+            foreach (char cS in tspecials)
+            {
+                if (c == cS)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets if the specified value can be represented as "dot-atom".
+        /// </summary>
+        /// <param name="value">Value to check.</param>
+        /// <returns>Returns true if the specified value can be represented as "dot-atom".</returns>
+        public static bool IsDotAtom(string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            /* RFC 2822 3.2.4.
+             *  dot-atom      = [CFWS] dot-atom-text [CFWS]
+             *  dot-atom-text = 1*atext *("." 1*atext)
+            */
+
+            foreach (char c in value)
+            {
+                if (c != '.' && !IsAText(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets if specified valu is RFC 2045 (section 5) 'token'.
+        /// </summary>
+        /// <param name="text">Text to check.</param>
+        /// <returns>Returns true if specified char is RFC 2045 (section 5) 'token'.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>text</b> is null.</exception>
+        public static bool IsToken(string text)
+        {
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+
+            if (text == "")
+            {
+                return false;
+            }
+
+            foreach (char c in text)
+            {
+                if (!IsToken(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets if the specified char is RFC 2045 (section 5) 'token'.
+        /// </summary>
+        /// <param name="c">Char to check.</param>
+        /// <returns>Returns true if specified char is RFC 2045 (section 5) 'token'.</returns>
+        public static bool IsToken(char c)
+        {
+            /* RFC 2045 5.
+             *  token := 1*<any (US-ASCII) CHAR except SPACE, CTLs, or tspecials>
+             * 
+             * RFC 822 3.3.
+             *  CTL =  <any ASCII control; (0.- 31.); (127.)
+            */
+
+            if (c <= 31 || c == 127)
+            {
+                return false;
+            }
+
+            if (c == ' ')
+            {
+                return false;
+            }
+            foreach (char tsC in tspecials)
+            {
+                if (tsC == c)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -42,24 +229,29 @@ namespace LumiSoft.Net.MIME
             ToFirstChar();
 
             var retVal = new StringBuilder();
-            while (true){
+            while (true)
+            {
                 int peekChar = Peek(false);
                 // We reached end of string.
-                if(peekChar == -1){
+                if (peekChar == -1)
+                {
                     break;
                 }
 
                 char c = (char)peekChar;
-                if(IsAText(c)){
+                if (IsAText(c))
+                {
                     retVal.Append((char)Char(false));
                 }
                 // Char is not part of 'atom', break.
-                else{
+                else
+                {
                     break;
                 }
             }
 
-            if(retVal.Length > 0){
+            if (retVal.Length > 0)
+            {
                 return retVal.ToString();
             }
 
@@ -67,79 +259,23 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Reads RFC 2822 'dot-atom' from source stream.
+        /// Reads 1 char from source stream.
         /// </summary>
-        /// <returns>Returns RFC 2822 'dot-atom' or null if end of stream reached.</returns>
-        public string DotAtom()
+        /// <param name="readToFirstChar">Specifies if postion is moved to char(skips white spaces).</param>
+        /// <returns>Returns readed char or -1 if end of stream reached.</returns>
+        public int Char(bool readToFirstChar)
         {
-            /* RFC 2822 3.2.4.
-             *  dot-atom      = [CFWS] dot-atom-text [CFWS]
-             *  dot-atom-text = 1*atext *("." 1*atext)
-            */
-
-            ToFirstChar();
-
-            var retVal = new StringBuilder();
-            while (true){
-                var atom = Atom();
-                // We reached end of string.
-                if (atom == null){
-                    break;
-                }
-
-                retVal.Append(atom);
-                                      
-                // dot-atom-text continues.                    
-                if(Peek(false) == '.'){
-                    retVal.Append((char)Char(false));
-                }
-                else{
-                    break;
-                }
+            if (readToFirstChar)
+            {
+                ToFirstChar();
             }
 
-            if(retVal.Length > 0){
-                return retVal.ToString();
+            if (Position > m_Source.Length - 1)
+            {
+                return -1;
             }
 
-            return null;
-        }
-
-        /// <summary>
-        /// Reads RFC 2045 (section 5) 'token' from source stream.
-        /// </summary>
-        /// <returns>Returns RFC 2045 (section 5) 'token' or null if end of stream reached.</returns>
-        public string Token()
-        {
-            /* RFC 2045 5.
-             *  token := 1*<any (US-ASCII) CHAR except SPACE, CTLs, or tspecials>
-            */
-
-            ToFirstChar();
-
-            var retVal = new StringBuilder();
-            while (true){
-                int peekChar = Peek(false);
-                // We reached end of string.
-                if(peekChar == -1){
-                    break;
-                }
-
-                char c = (char)peekChar;
-                if(IsToken(c)){
-                    retVal.Append((char)Char(false));
-                }
-                // Char is not part of 'token', break.
-                else{
-                    break;
-                }
-            }
-
-            if(retVal.Length > 0){
-                return retVal.ToString();
-            }
-
-            return null;
+            return m_Source[Position++];
         }
 
         /// <summary>
@@ -156,7 +292,8 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-            if(Peek(false) != '('){
+            if (Peek(false) != '(')
+            {
                 throw new InvalidOperationException("No 'comment' value available.");
             }
 
@@ -166,26 +303,31 @@ namespace LumiSoft.Net.MIME
             Char(false);
 
             int nestedParenthesis = 0;
-            while(true){
+            while (true)
+            {
                 int intC = Char(false);
                 // End of stream reached, invalid 'comment' value.
-                if(intC == -1){
+                if (intC == -1)
+                {
                     throw new ArgumentException("Invalid 'comment' value, no closing ')'.");
                 }
 
-                if(intC == '('){
+                if (intC == '(')
+                {
                     nestedParenthesis++;
                 }
-                else if(intC == ')')
+                else if (intC == ')')
                 {
                     // We readed whole 'comment' ok.
-                    if(nestedParenthesis == 0){
+                    if (nestedParenthesis == 0)
+                    {
                         break;
                     }
 
                     nestedParenthesis--;
                 }
-                else{
+                else
+                {
                     retVal.Append((char)intC);
                 }
             }
@@ -194,22 +336,47 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Reads RFC 2822 (section 3.2.6) 'word' from source stream.
+        /// Reads RFC 2822 'dot-atom' from source stream.
         /// </summary>
-        /// <returns>Returns RFC 2822 (section 3.2.6) 'word' or null if end of stream reached.</returns>
-        public string Word()
+        /// <returns>Returns RFC 2822 'dot-atom' or null if end of stream reached.</returns>
+        public string DotAtom()
         {
-            /* RFC 2822 3.2.6.
-                word = atom / quoted-string
-            
-                Consider dot-atom as word too.
+            /* RFC 2822 3.2.4.
+             *  dot-atom      = [CFWS] dot-atom-text [CFWS]
+             *  dot-atom-text = 1*atext *("." 1*atext)
             */
 
-            if(Peek(true) == '"'){
-                return QuotedString();
+            ToFirstChar();
+
+            var retVal = new StringBuilder();
+            while (true)
+            {
+                var atom = Atom();
+                // We reached end of string.
+                if (atom == null)
+                {
+                    break;
+                }
+
+                retVal.Append(atom);
+
+                // dot-atom-text continues.                    
+                if (Peek(false) == '.')
+                {
+                    retVal.Append((char)Char(false));
+                }
+                else
+                {
+                    break;
+                }
             }
 
-            return DotAtom();
+            if (retVal.Length > 0)
+            {
+                return retVal.ToString();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -235,51 +402,204 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-            if(Peek(false) != '='){
+            if (Peek(false) != '=')
+            {
                 throw new InvalidOperationException("No encoded-word available.");
             }
 
             var retVal = new StringBuilder();
-            while (true){
-                var match = encodedword_regex.Match(m_Source,Position);
-                if (match.Success && match.Index == Position){
-                    var encodedWord = m_Source.Substring(Position,match.Length);
+            while (true)
+            {
+                var match = encodedword_regex.Match(m_Source, Position);
+                if (match.Success && match.Index == Position)
+                {
+                    var encodedWord = m_Source.Substring(Position, match.Length);
                     // Move index over encoded-word.
                     Position += match.Length;
 
-                    try{
-                        if(string.Equals(match.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
-                            retVal.Append(MIME_Utils.QDecode(Encoding.GetEncoding(match.Groups["charset"].Value),match.Groups["value"].Value));
+                    try
+                    {
+                        if (string.Equals(match.Groups["encoding"].Value, "Q", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            retVal.Append(MIME_Utils.QDecode(Encoding.GetEncoding(match.Groups["charset"].Value), match.Groups["value"].Value));
                         }
-                        else if(string.Equals(match.Groups["encoding"].Value,"B",StringComparison.InvariantCultureIgnoreCase)){
+                        else if (string.Equals(match.Groups["encoding"].Value, "B", StringComparison.InvariantCultureIgnoreCase))
+                        {
                             retVal.Append(Encoding.GetEncoding(match.Groups["charset"].Value).GetString(Net_Utils.FromBase64(Encoding.Default.GetBytes(match.Groups["value"].Value))));
                         }
                         // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
-                        else{
+                        else
+                        {
                             retVal.Append(encodedWord);
                         }
                     }
-                    catch{
+                    catch
+                    {
                         // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
                         retVal.Append(encodedWord);
                     }
                 }
-                else{
+                else
+                {
                     retVal.Append(Atom());
                 }
 
                 // We have continuos encoded-word.
-                match = encodedword_regex.Match(m_Source,Position);
-                if(match.Success && match.Index == Position){
+                match = encodedword_regex.Match(m_Source, Position);
+                if (match.Success && match.Index == Position)
+                {
                     ToFirstChar();
                 }
                 // encoded-word does not continue.
-                else{
+                else
+                {
                     break;
                 }
             }
 
             return retVal.ToString();
+        }
+
+        /// <summary>
+        /// Shows next char in source stream, this method won't consume that char.
+        /// </summary>
+        /// <param name="readToFirstChar">Specifies if postion is moved to char(skips white spaces).</param>
+        /// <returns>Returns next char in source stream, returns -1 if end of stream.</returns>
+        public int Peek(bool readToFirstChar)
+        {
+            if (readToFirstChar)
+            {
+                ToFirstChar();
+            }
+
+            if (Position > m_Source.Length - 1)
+            {
+                return -1;
+            }
+
+            return m_Source[Position];
+        }
+
+        /// <summary>
+        /// Reads RFC 2047 (section 5) 'phrase' from source stream.
+        /// </summary>
+        /// <returns>Returns RFC 2047 (section 5) 'phrase' or null if end of stream reached.</returns>
+        public string Phrase()
+        {
+            /* RFC 2047 5.
+             *  phrase = 1*( encoded-word / word )        
+             *  word   = atom / quoted-string
+            */
+
+            int peek = Peek(true);
+            if (peek == -1)
+            {
+                return null;
+            }
+
+            if (peek == '"')
+            {
+                return "\"" + QuotedString() + "\"";
+            }
+            if (peek == '=')
+            {
+                return EncodedWord();
+            }
+            var word = Atom();
+            if (word == null)
+            {
+                return null;
+            }
+
+            // Try to encode invalid encoded-words if any mixed in text.
+            word = encodedword_regex.Replace(word, delegate (Match m)
+            {
+                var encodedWord = m.Value;
+                try
+                {
+                    if (string.Equals(m.Groups["encoding"].Value, "Q", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return MIME_Utils.QDecode(Encoding.GetEncoding(m.Groups["charset"].Value), m.Groups["value"].Value);
+                    }
+
+                    if (string.Equals(m.Groups["encoding"].Value, "B", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return Encoding.GetEncoding(m.Groups["charset"].Value).GetString(Net_Utils.FromBase64(Encoding.Default.GetBytes(m.Groups["value"].Value)));
+                    }
+                    // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
+                    return encodedWord;
+                }
+                catch
+                {
+                    // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
+                    return encodedWord;
+                }
+            });
+
+            return word;
+        }
+
+        /// <summary>
+		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped. 
+		/// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
+		/// </summary>
+		/// <param name="delimiters">Data delimiters.</param>
+		/// <returns>Returns readed string or null if end of string reached.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>delimiters</b> is null reference.</exception>
+		public string QuotedReadToDelimiter(char[] delimiters)
+        {
+            if (delimiters == null)
+            {
+                throw new ArgumentNullException("delimiters");
+            }
+
+            if (Available == 0)
+            {
+                return null;
+            }
+
+            ToFirstChar();
+
+            var currentSplitBuffer = new StringBuilder(); // Holds active
+            bool inQuotedString = false;               // Holds flag if position is quoted string or not
+            char lastChar = (char)0;
+
+            for (int i = Position; i < m_Source.Length; i++)
+            {
+                char c = (char)Peek(false);
+
+                // Skip escaped(\) "
+                if (lastChar != '\\' && c == '\"')
+                {
+                    // Start/end quoted string area
+                    inQuotedString = !inQuotedString;
+                }
+
+                // See if char is delimiter
+                bool isDelimiter = false;
+                foreach (char delimiter in delimiters)
+                {
+                    if (c == delimiter)
+                    {
+                        isDelimiter = true;
+                        break;
+                    }
+                }
+
+                // Current char is split char and it isn't in quoted string, do split
+                if (!inQuotedString && isDelimiter)
+                {
+                    return currentSplitBuffer.ToString();
+                }
+
+                currentSplitBuffer.Append(c);
+                Position++;
+
+                lastChar = c;
+            }
+
+            // If we reached so far then we are end of string, return it.
+            return currentSplitBuffer.ToString();
         }
 
         /// <summary>
@@ -301,7 +621,8 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-            if(Peek(false) != '"'){
+            if (Peek(false) != '"')
+            {
                 throw new InvalidOperationException("No quoted-string available.");
             }
 
@@ -310,32 +631,39 @@ namespace LumiSoft.Net.MIME
 
             var retVal = new StringBuilder();
             bool escape = false;
-            while(true){
+            while (true)
+            {
                 int intC = Char(false);
                 // We reached end of stream, invalid quoted string, end quote is missing.
-                if(intC == -1){
+                if (intC == -1)
+                {
                     throw new ArgumentException("Invalid quoted-string, end quote is missing.");
                 }
                 // This char is escaped.
 
-                if(escape){
+                if (escape)
+                {
                     escape = false;
 
                     retVal.Append((char)intC);
                 }
                 // Closing DQUOTE.
-                else if(intC == '"'){
+                else if (intC == '"')
+                {
                     break;
                 }
                 // Next char is escaped.
-                else if(intC == '\\'){
+                else if (intC == '\\')
+                {
                     escape = true;
                 }
                 // Skip folding chars.
-                else if(intC == '\r' || intC == '\n'){
-                }                   
+                else if (intC == '\r' || intC == '\n')
+                {
+                }
                 // Normal char in quoted-string.
-                else{
+                else
+                {
                     retVal.Append((char)intC);
                 }
             }
@@ -344,69 +672,99 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Reads RFC 2045 (section 5) 'token' from source stream.
-        /// </summary>
-        /// <returns>Returns 2045 (section 5) 'token' or null if end of stream reached.</returns>
-        public string Value()
+		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
+		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
+		/// </summary>
+		/// <returns>Returns value between parenthesized.</returns>
+		public string ReadParenthesized()
         {
-            // value := token / quoted-string
+            ToFirstChar();
 
-            if(Peek(true) == '"'){
-                return QuotedString();
+            char startingChar = ' ';
+            char closingChar = ' ';
+
+            if (m_Source[Position] == '{')
+            {
+                startingChar = '{';
+                closingChar = '}';
+            }
+            else if (m_Source[Position] == '(')
+            {
+                startingChar = '(';
+                closingChar = ')';
+            }
+            else if (m_Source[Position] == '[')
+            {
+                startingChar = '[';
+                closingChar = ']';
+            }
+            else if (m_Source[Position] == '<')
+            {
+                startingChar = '<';
+                closingChar = '>';
+            }
+            else
+            {
+                throw new Exception("No parenthesized value '" + m_Source.Substring(Position) + "' !");
+            }
+            Position++;
+
+            bool inQuotedString = false; // Holds flag if position is quoted string or not
+            char lastChar = (char)0;
+            int nestedStartingCharCounter = 0;
+            for (int i = Position; i < m_Source.Length; i++)
+            {
+                // Skip escaped(\) "
+                if (lastChar != '\\' && m_Source[i] == '\"')
+                {
+                    // Start/end quoted string area
+                    inQuotedString = !inQuotedString;
+                }
+                // We need to skip parenthesis in quoted string
+                else if (!inQuotedString)
+                {
+                    // There is nested parenthesis
+                    if (m_Source[i] == startingChar)
+                    {
+                        nestedStartingCharCounter++;
+                    }
+                    // Closing char
+                    else if (m_Source[i] == closingChar)
+                    {
+                        // There isn't nested parenthesis closing chars left, this is closing char what we want.
+                        if (nestedStartingCharCounter == 0)
+                        {
+                            var retVal = m_Source.Substring(Position, i - Position);
+                            Position = i + 1;
+
+                            return retVal;
+                        }
+                        // This is nested parenthesis closing char
+
+                        nestedStartingCharCounter--;
+                    }
+                }
+
+                lastChar = m_Source[i];
             }
 
-            return Token();
+            throw new ArgumentException("There is no closing parenthesize for '" + m_Source.Substring(Position) + "' !");
         }
 
         /// <summary>
-        /// Reads RFC 2047 (section 5) 'phrase' from source stream.
+        /// Gets if source stream valu starts with the specified value. Compare is case-insensitive.
         /// </summary>
-        /// <returns>Returns RFC 2047 (section 5) 'phrase' or null if end of stream reached.</returns>
-        public string Phrase()
+        /// <param name="value">Value to check.</param>
+        /// <returns>Returns true if source steam satrs with specified string.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null.</exception>
+        public bool StartsWith(string value)
         {
-            /* RFC 2047 5.
-             *  phrase = 1*( encoded-word / word )        
-             *  word   = atom / quoted-string
-            */
-                        
-            int peek = Peek(true);
-            if(peek == -1){
-                return null;
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
             }
 
-            if(peek == '"'){
-                return "\"" + QuotedString() + "\"";
-            }
-            if(peek == '='){
-                return EncodedWord();
-            }
-            var word = Atom();
-            if (word == null){
-                return null;
-            }
-                
-            // Try to encode invalid encoded-words if any mixed in text.
-            word = encodedword_regex.Replace(word,delegate(Match m){
-                var encodedWord = m.Value;
-                try
-                {
-                    if(string.Equals(m.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
-                        return MIME_Utils.QDecode(Encoding.GetEncoding(m.Groups["charset"].Value),m.Groups["value"].Value);
-                    }
-
-                    if(string.Equals(m.Groups["encoding"].Value,"B",StringComparison.InvariantCultureIgnoreCase)){
-                        return Encoding.GetEncoding(m.Groups["charset"].Value).GetString(Net_Utils.FromBase64(Encoding.Default.GetBytes(m.Groups["value"].Value)));
-                    }
-                    // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
-                    return encodedWord;
-                }
-                catch{
-                    // Failed to parse encoded-word, leave it as is. RFC 2047 6.3.
-                    return encodedWord;
-                }
-            });        
-
-            return word;
+            return m_Source.Substring(Position).StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -419,96 +777,13 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Reads all white-space chars + CR and LF.
-        /// </summary>
-        /// <returns>Returns readed chars.</returns>
-        public string ToFirstChar()
-        {
-            // NOTE: Never call Peek or Char method here or stack overflow !
-
-            var retVal = new StringBuilder();
-            while (true){
-                int peekChar = -1;
-                if(Position > m_Source.Length - 1){
-                    peekChar = -1;
-                }
-                else{
-                    peekChar = m_Source[Position];
-                }
-                // We reached end of string.
-                if(peekChar == -1){
-                    break;
-                }
-
-                if(peekChar == ' ' || peekChar == '\t' || peekChar == '\r' || peekChar == '\n'){
-                    retVal.Append(m_Source[Position++]);
-                }
-                else{
-                    break;
-                }
-            }
-
-            return retVal.ToString();
-        }
-
-        /// <summary>
-        /// Reads 1 char from source stream.
-        /// </summary>
-        /// <param name="readToFirstChar">Specifies if postion is moved to char(skips white spaces).</param>
-        /// <returns>Returns readed char or -1 if end of stream reached.</returns>
-        public int Char(bool readToFirstChar)
-        {
-            if(readToFirstChar){
-                ToFirstChar();
-            }
-
-            if(Position > m_Source.Length - 1){
-                return -1;
-            }
-
-            return m_Source[Position++];
-        }
-
-        /// <summary>
-        /// Shows next char in source stream, this method won't consume that char.
-        /// </summary>
-        /// <param name="readToFirstChar">Specifies if postion is moved to char(skips white spaces).</param>
-        /// <returns>Returns next char in source stream, returns -1 if end of stream.</returns>
-        public int Peek(bool readToFirstChar)
-        {
-            if(readToFirstChar){
-                ToFirstChar();
-            }
-
-            if(Position > m_Source.Length - 1){
-                return -1;
-            }
-
-            return m_Source[Position];
-        }
-
-        /// <summary>
-        /// Gets if source stream valu starts with the specified value. Compare is case-insensitive.
-        /// </summary>
-        /// <param name="value">Value to check.</param>
-        /// <returns>Returns true if source steam satrs with specified string.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null.</exception>
-        public bool StartsWith(string value)
-        {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            return m_Source.Substring(Position).StartsWith(value,StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        /// <summary>
         /// Reads all data from current postion to the end.
         /// </summary>
         /// <returns>Retruns readed data. Returns null if end of string is reached.</returns>
         public string ToEnd()
         {
-            if(Position >= m_Source.Length){
+            if (Position >= m_Source.Length)
+            {
                 return null;
             }
 
@@ -519,297 +794,120 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Gets if the specified char is RFC 822 'ALPHA'.
+        /// Reads all white-space chars + CR and LF.
         /// </summary>
-        /// <param name="c">Char to check.</param>
-        /// <returns>Returns true if specified char is RFC 822 'ALPHA'.</returns>
-        public static bool IsAlpha(char c)
+        /// <returns>Returns readed chars.</returns>
+        public string ToFirstChar()
         {
-            /* RFC 822 3.3.
-                ALPHA = <any ASCII alphabetic character>; (65.- 90.); (97.-122.)
-            */
+            // NOTE: Never call Peek or Char method here or stack overflow !
 
-            if((c >= 65 && c <= 90) || (c >= 97 && c <= 122)){
-                return true;
-            }
+            var retVal = new StringBuilder();
+            while (true)
+            {
+                int peekChar = -1;
+                if (Position > m_Source.Length - 1)
+                {
+                    peekChar = -1;
+                }
+                else
+                {
+                    peekChar = m_Source[Position];
+                }
+                // We reached end of string.
+                if (peekChar == -1)
+                {
+                    break;
+                }
 
-            return false;
-        }
-
-        /// <summary>
-        /// Gets if the specified char is RFC 2822 'atext'.
-        /// </summary>
-        /// <param name="c">Char to check.</param>
-        /// <returns>Returns true if specified char is RFC 2822 'atext'.</returns>
-        public static bool IsAText(char c)
-        {
-            /* RFC 2822 3.2.4.
-             *  atext = ALPHA / DIGIT / 
-             *          "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" /
-             *          "-" / "/" / "=" / "?" / "^" / "_" / "`" / "{" /
-             *          "|" / "}" / "~"
-            */
-                        
-            if(IsAlpha(c) || char.IsDigit(c)){
-                return true;
-            }
-
-            foreach(char aC in atextChars){
-                if(c == aC){
-                    return true;
+                if (peekChar == ' ' || peekChar == '\t' || peekChar == '\r' || peekChar == '\n')
+                {
+                    retVal.Append(m_Source[Position++]);
+                }
+                else
+                {
+                    break;
                 }
             }
 
-            return false;
+            return retVal.ToString();
         }
 
         /// <summary>
-        /// Gets if the specified value can be represented as "dot-atom".
+        /// Reads RFC 2045 (section 5) 'token' from source stream.
         /// </summary>
-        /// <param name="value">Value to check.</param>
-        /// <returns>Returns true if the specified value can be represented as "dot-atom".</returns>
-        public static bool IsDotAtom(string value)
-        {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            /* RFC 2822 3.2.4.
-             *  dot-atom      = [CFWS] dot-atom-text [CFWS]
-             *  dot-atom-text = 1*atext *("." 1*atext)
-            */
-
-            foreach(char c in value){
-                if(c != '.' && !IsAText(c)){
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Gets if specified valu is RFC 2045 (section 5) 'token'.
-        /// </summary>
-        /// <param name="text">Text to check.</param>
-        /// <returns>Returns true if specified char is RFC 2045 (section 5) 'token'.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>text</b> is null.</exception>
-        public static bool IsToken(string text)
-        {
-            if(text == null){
-                throw new ArgumentNullException("text");
-            }
-
-            if(text == ""){
-                return false;
-            }
-
-            foreach(char c in text){
-                if(!IsToken(c)){
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Gets if the specified char is RFC 2045 (section 5) 'token'.
-        /// </summary>
-        /// <param name="c">Char to check.</param>
-        /// <returns>Returns true if specified char is RFC 2045 (section 5) 'token'.</returns>
-        public static bool IsToken(char c)
+        /// <returns>Returns RFC 2045 (section 5) 'token' or null if end of stream reached.</returns>
+        public string Token()
         {
             /* RFC 2045 5.
              *  token := 1*<any (US-ASCII) CHAR except SPACE, CTLs, or tspecials>
-             * 
-             * RFC 822 3.3.
-             *  CTL =  <any ASCII control; (0.- 31.); (127.)
             */
-            
-            if(c <= 31 || c == 127){
-                return false;
-            }
-
-            if(c == ' '){
-                return false;
-            }
-            foreach(char tsC in tspecials){
-                if(tsC == c){
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Gets if the specified char is RFC 2231 (section 7) 'attribute-char'.
-        /// </summary>
-        /// <param name="c">Char to check.</param>
-        /// <returns>Returns true if specified char is RFC 2231 (section 7) 'attribute-char'.</returns>
-        public static bool IsAttributeChar(char c)
-        {
-            /* RFC 2231 7.
-             * attribute-char := <any (US-ASCII) CHAR except SPACE, CTLs, "*", "'", "%", or tspecials>
-             * 
-             * RFC 822 3.3.
-             *  CTL =  <any ASCII control; (0.- 31.); (127.)
-            */
-
-            if(c <= 31 || c > 127){
-                return false;
-            }
-
-            if(c == ' ' || c == '*' || c == '\'' || c == '%'){
-                return false;
-            }
-            foreach(char cS in tspecials){
-                if(c == cS){
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
-		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
-		/// </summary>
-		/// <returns>Returns value between parenthesized.</returns>
-		public string ReadParenthesized()
-		{
-            ToFirstChar();
-
-			char startingChar = ' ';
-			char closingChar  = ' ';
-
-			if(m_Source[Position] == '{'){
-				startingChar = '{';
-				closingChar = '}';
-			}
-			else if(m_Source[Position] == '('){
-				startingChar = '(';
-				closingChar = ')';
-			}			
-			else if(m_Source[Position] == '['){
-				startingChar = '[';
-				closingChar = ']';
-			}						
-			else if(m_Source[Position] == '<'){
-				startingChar = '<';
-				closingChar = '>';
-			}
-			else{
-				throw new Exception("No parenthesized value '" + m_Source.Substring(Position) + "' !");
-			}
-            Position++;
-
-			bool inQuotedString            = false; // Holds flag if position is quoted string or not
-			char lastChar                  = (char)0;
-			int  nestedStartingCharCounter = 0;
-			for(int i=Position;i<m_Source.Length;i++){
-				// Skip escaped(\) "
-				if(lastChar != '\\' && m_Source[i] == '\"'){
-					// Start/end quoted string area
-					inQuotedString = !inQuotedString;
-				}
-				// We need to skip parenthesis in quoted string
-				else if(!inQuotedString){
-					// There is nested parenthesis
-					if(m_Source[i] == startingChar){
-						nestedStartingCharCounter++;
-					}
-					// Closing char
-					else if(m_Source[i] == closingChar)
-                    {
-                        // There isn't nested parenthesis closing chars left, this is closing char what we want.
-						if(nestedStartingCharCounter == 0){
-                            var retVal = m_Source.Substring(Position,i - Position);
-                            Position = i + 1;
-
-				            return retVal;
-						}
-						// This is nested parenthesis closing char
-
-                        nestedStartingCharCounter--;
-                    }
-				}
-
-				lastChar = m_Source[i];
-			}
-
-			throw new ArgumentException("There is no closing parenthesize for '" + m_Source.Substring(Position) + "' !");
-		}
-
-        /// <summary>
-		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped. 
-		/// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
-		/// </summary>
-		/// <param name="delimiters">Data delimiters.</param>
-		/// <returns>Returns readed string or null if end of string reached.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>delimiters</b> is null reference.</exception>
-		public string QuotedReadToDelimiter(char[] delimiters)
-		{
-            if(delimiters == null){
-                throw new ArgumentNullException("delimiters");
-            }
-
-            if(Available == 0){
-                return null;
-            }
 
             ToFirstChar();
 
-			var currentSplitBuffer = new StringBuilder(); // Holds active
-            bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
-			char          lastChar           = (char)0;
-
-			for(int i=Position;i<m_Source.Length;i++){
-				char c = (char)Peek(false);
-
-				// Skip escaped(\) "
-				if(lastChar != '\\' && c == '\"'){
-					// Start/end quoted string area
-					inQuotedString = !inQuotedString;
-				}
-			
-                // See if char is delimiter
-                bool isDelimiter = false;
-                foreach(char delimiter in delimiters){
-                    if(c == delimiter){
-                        isDelimiter = true;
-                        break;
-                    }
+            var retVal = new StringBuilder();
+            while (true)
+            {
+                int peekChar = Peek(false);
+                // We reached end of string.
+                if (peekChar == -1)
+                {
+                    break;
                 }
 
-				// Current char is split char and it isn't in quoted string, do split
-				if(!inQuotedString && isDelimiter){
-					return currentSplitBuffer.ToString();
-				}
+                char c = (char)peekChar;
+                if (IsToken(c))
+                {
+                    retVal.Append((char)Char(false));
+                }
+                // Char is not part of 'token', break.
+                else
+                {
+                    break;
+                }
+            }
 
-                currentSplitBuffer.Append(c);
-                Position++;
+            if (retVal.Length > 0)
+            {
+                return retVal.ToString();
+            }
 
-                lastChar = c;
-			}
-            
-			// If we reached so far then we are end of string, return it.
-			return currentSplitBuffer.ToString();
+            return null;
         }
 
         /// <summary>
-        /// Gets number of chars has left for processing.
+        /// Reads RFC 2045 (section 5) 'token' from source stream.
         /// </summary>
-        public int Available
+        /// <returns>Returns 2045 (section 5) 'token' or null if end of stream reached.</returns>
+        public string Value()
         {
-            get{ return m_Source.Length - Position; }
+            // value := token / quoted-string
+
+            if (Peek(true) == '"')
+            {
+                return QuotedString();
+            }
+
+            return Token();
         }
 
         /// <summary>
-        /// Gets position in string.
+        /// Reads RFC 2822 (section 3.2.6) 'word' from source stream.
         /// </summary>
-        public int Position { get; private set; }
+        /// <returns>Returns RFC 2822 (section 3.2.6) 'word' or null if end of stream reached.</returns>
+        public string Word()
+        {
+            /* RFC 2822 3.2.6.
+                word = atom / quoted-string
+            
+                Consider dot-atom as word too.
+            */
+
+            if (Peek(true) == '"')
+            {
+                return QuotedString();
+            }
+
+            return DotAtom();
+        }
     }
 }

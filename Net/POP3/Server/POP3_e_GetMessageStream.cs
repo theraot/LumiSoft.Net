@@ -15,18 +15,18 @@ namespace LumiSoft.Net.POP3.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>message</b> is null reference.</exception>
         internal POP3_e_GetMessageStream(POP3_ServerMessage message)
         {
-            Message  = message ?? throw new ArgumentNullException("message");
+            Message = message ?? throw new ArgumentNullException("message");
         }
-
-        /// <summary>
-        /// Gets message info.
-        /// </summary>
-        public POP3_ServerMessage Message { get; }
 
         /// <summary>
         /// Gets or sets if message stream is closed after message sending has completed.
         /// </summary>
         public bool CloseMessageStream { get; set; } = true;
+
+        /// <summary>
+        /// Gets message info.
+        /// </summary>
+        public POP3_ServerMessage Message { get; }
 
         /// <summary>
         /// Gets or sets message stream.

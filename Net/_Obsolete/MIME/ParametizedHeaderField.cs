@@ -3,104 +3,112 @@ using System.Collections;
 
 namespace LumiSoft.Net.Mime
 {
-	/// <summary>
-	/// Parametized header field. 
-	/// <p/>
-	/// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... .
-	/// Example: (Content-Type:) text/html; charset="ascii".
-	/// </summary>
+    /// <summary>
+    /// Parametized header field. 
+    /// <p/>
+    /// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... .
+    /// Example: (Content-Type:) text/html; charset="ascii".
+    /// </summary>
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
-	public class ParametizedHeaderField
-	{
-		private readonly HeaderField                    m_pHeaderField;
+    public class ParametizedHeaderField
+    {
+        private readonly HeaderField m_pHeaderField;
 
         /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="headerField">Source header field.</param>
 		public ParametizedHeaderField(HeaderField headerField)
-		{
-			m_pHeaderField = headerField;
+        {
+            m_pHeaderField = headerField;
 
-			Parameters = new HeaderFieldParameterCollection(this);
-		}
+            Parameters = new HeaderFieldParameterCollection(this);
+        }
+
+        /// <summary>
+		/// Gets header field name.
+		/// </summary>
+		public string Name
+        {
+            get { return m_pHeaderField.Name; }
+        }
+
+        /// <summary>
+        /// Gets header field parameters.
+        /// </summary>
+        public HeaderFieldParameterCollection Parameters { get; }
+
+        /// <summary>
+        /// Gets or sets header field value.
+        /// </summary>
+        public string Value
+        {
+            get
+            {
+                // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
+                // First item is value
+                return TextUtils.SplitQuotedString(m_pHeaderField.Value, ';')[0];
+            }
+
+            set
+            {
+                StoreParameters(value, ParseParameters());
+            }
+        }
 
         /// <summary>
 		/// Parses parameters from header field.
 		/// </summary>
 		/// <returns></returns>
 		internal Hashtable ParseParameters()
-		{
-			// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... 
-			var paramNameValues = TextUtils.SplitQuotedString(m_pHeaderField.EncodedValue,';');
+        {
+            // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... 
+            var paramNameValues = TextUtils.SplitQuotedString(m_pHeaderField.EncodedValue, ';');
 
             var retVal = new Hashtable();
             // Skip value, other entries are parameters
-            for (int i=1;i<paramNameValues.Length;i++){
-				var paramNameValue = paramNameValues[i].Trim().Split(new[]{'='},2);
-                if (!retVal.ContainsKey(paramNameValue[0].ToLower())){
-					if(paramNameValue.Length == 2){
+            for (int i = 1; i < paramNameValues.Length; i++)
+            {
+                var paramNameValue = paramNameValues[i].Trim().Split(new[] { '=' }, 2);
+                if (!retVal.ContainsKey(paramNameValue[0].ToLower()))
+                {
+                    if (paramNameValue.Length == 2)
+                    {
                         var value = paramNameValue[1];
 
                         // Quotes-string, unqoute.
-                        if (value.StartsWith("\"")){
+                        if (value.StartsWith("\""))
+                        {
                             value = TextUtils.UnQuoteString(paramNameValue[1]);
                         }
 
-						retVal.Add(paramNameValue[0].ToLower(),value);
-					}
-					else{
-						retVal.Add(paramNameValue[0].ToLower(),"");
-					}
-				}
-			}
+                        retVal.Add(paramNameValue[0].ToLower(), value);
+                    }
+                    else
+                    {
+                        retVal.Add(paramNameValue[0].ToLower(), "");
+                    }
+                }
+            }
 
-			return retVal;
-		}
+            return retVal;
+        }
 
         /// <summary>
 		/// Stores parameters to header field Value property.
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="parameters"></param>
-		internal void StoreParameters(string value,Hashtable parameters)
-		{
-			var retVal = value;
-            foreach (DictionaryEntry entry in parameters){
-				retVal += ";\t" + entry.Key + "=\"" + entry.Value + "\"";
-			}
+		internal void StoreParameters(string value, Hashtable parameters)
+        {
+            var retVal = value;
+            foreach (DictionaryEntry entry in parameters)
+            {
+                retVal += ";\t" + entry.Key + "=\"" + entry.Value + "\"";
+            }
 
-			// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
-			m_pHeaderField.Value = retVal;
-		}
-
-        /// <summary>
-		/// Gets header field name.
-		/// </summary>
-		public string Name
-		{
-			get{ return m_pHeaderField.Name; }
-		}
-
-		/// <summary>
-		/// Gets or sets header field value.
-		/// </summary>
-		public string Value
-		{
-			get{
-				// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
-				// First item is value
-				return TextUtils.SplitQuotedString(m_pHeaderField.Value,';')[0];
-			}
-
-			set{
-				StoreParameters(value,ParseParameters());
-			}
-		}
-
-		/// <summary>
-		/// Gets header field parameters.
-		/// </summary>
-		public HeaderFieldParameterCollection Parameters { get; }
+            // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
+            m_pHeaderField.Value = retVal;
+        }
     }
 }

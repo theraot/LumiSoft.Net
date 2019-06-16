@@ -16,15 +16,62 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ArgumentException">Is riased when any of the arguments has invalid value.</exception>
         public IMAP_Client_SelectedFolder(string name)
         {
-            if(name == null){
+            if (name == null)
+            {
                 throw new ArgumentNullException("name");
             }
-            if(name == string.Empty){
-                throw new ArgumentException("The argument 'name' value must be specified.","name");
+            if (name == string.Empty)
+            {
+                throw new ArgumentException("The argument 'name' value must be specified.", "name");
             }
 
             Name = name;
         }
+
+        /// <summary>
+        /// Gets first unseen message sequence number. Value -1 means no unseen message.
+        /// </summary>
+        public int FirstUnseen { get; private set; } = -1;
+
+        /// <summary>
+        /// Gets flags what folder supports.
+        /// </summary>
+        public string[] Flags { get; private set; } = new string[0];
+
+        /// <summary>
+        /// Gets if folder is read-only or read-write.
+        /// </summary>
+        public bool IsReadOnly { get; private set; }
+
+        /// <summary>
+        /// Gets number of messages in this folder.
+        /// </summary>
+        public int MessagesCount { get; private set; }
+
+        /// <summary>
+        /// Gets selected folder name(path included).
+        /// </summary>
+        public string Name { get; } = "";
+
+        /// <summary>
+        /// Gets permanent flags what folder can store.
+        /// </summary>
+        public string[] PermanentFlags { get; private set; } = new string[0];
+
+        /// <summary>
+        /// Gets number of recent messages in this folder.
+        /// </summary>
+        public int RecentMessagesCount { get; private set; }
+
+        /// <summary>
+        /// Gets next predicted message UID. Value -1 means that IMAP server doesn't support it.
+        /// </summary>
+        public long UidNext { get; private set; } = -1;
+
+        /// <summary>
+        /// Gets folder UID value. Value null means IMAP server doesn't support <b>UIDVALIDITY</b> feature.
+        /// </summary>
+        public long UidValidity { get; private set; } = -1;
 
         /// <summary>
         /// Returns this object as human readable string.
@@ -33,26 +80,26 @@ namespace LumiSoft.Net.IMAP.Client
         public override string ToString()
         {
             var retVal = new StringBuilder();
-            retVal.AppendLine("Name: "                + Name);
-            retVal.AppendLine("UidValidity: "         + UidValidity);
-            retVal.AppendLine("Flags: "               + StringArrayToString(Flags));
-            retVal.AppendLine("PermanentFlags: "      + StringArrayToString(PermanentFlags));
-            retVal.AppendLine("IsReadOnly: "          + IsReadOnly);
-            retVal.AppendLine("UidNext: "             + UidNext);
-            retVal.AppendLine("FirstUnseen: "         + FirstUnseen);
-            retVal.AppendLine("MessagesCount: "       + MessagesCount);
+            retVal.AppendLine("Name: " + Name);
+            retVal.AppendLine("UidValidity: " + UidValidity);
+            retVal.AppendLine("Flags: " + StringArrayToString(Flags));
+            retVal.AppendLine("PermanentFlags: " + StringArrayToString(PermanentFlags));
+            retVal.AppendLine("IsReadOnly: " + IsReadOnly);
+            retVal.AppendLine("UidNext: " + UidNext);
+            retVal.AppendLine("FirstUnseen: " + FirstUnseen);
+            retVal.AppendLine("MessagesCount: " + MessagesCount);
             retVal.AppendLine("RecentMessagesCount: " + RecentMessagesCount);
 
             return retVal.ToString();
         }
 
         /// <summary>
-        /// Sets UidValidity property value.
+        /// Sets FirstUnseen property value.
         /// </summary>
         /// <param name="value">Value to set.</param>
-        internal void SetUidValidity(long value)
+        internal void SetFirstUnseen(int value)
         {
-            UidValidity = value;
+            FirstUnseen = value;
         }
 
         /// <summary>
@@ -62,6 +109,15 @@ namespace LumiSoft.Net.IMAP.Client
         internal void SetFlags(string[] value)
         {
             Flags = value;
+        }
+
+        /// <summary>
+        /// Sets MessagesCount property value.
+        /// </summary>
+        /// <param name="value">Value to set.</param>
+        internal void SetMessagesCount(int value)
+        {
+            MessagesCount = value;
         }
 
         /// <summary>
@@ -83,6 +139,15 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
         /// <summary>
+        /// Sets RecentMessagesCount property value.
+        /// </summary>
+        /// <param name="value">Value to set.</param>
+        internal void SetRecentMessagesCount(int value)
+        {
+            RecentMessagesCount = value;
+        }
+
+        /// <summary>
         /// Sets UidNext property value.
         /// </summary>
         /// <param name="value">Value to set.</param>
@@ -92,30 +157,12 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
         /// <summary>
-        /// Sets FirstUnseen property value.
+        /// Sets UidValidity property value.
         /// </summary>
         /// <param name="value">Value to set.</param>
-        internal void SetFirstUnseen(int value)
+        internal void SetUidValidity(long value)
         {
-            FirstUnseen = value;
-        }
-
-        /// <summary>
-        /// Sets MessagesCount property value.
-        /// </summary>
-        /// <param name="value">Value to set.</param>
-        internal void SetMessagesCount(int value)
-        {
-            MessagesCount = value;
-        }
-
-        /// <summary>
-        /// Sets RecentMessagesCount property value.
-        /// </summary>
-        /// <param name="value">Value to set.</param>
-        internal void SetRecentMessagesCount(int value)
-        {
-            RecentMessagesCount = value;
+            UidValidity = value;
         }
 
         /// <summary>
@@ -127,62 +174,20 @@ namespace LumiSoft.Net.IMAP.Client
         {
             var retVal = new StringBuilder();
 
-            for (int i=0;i<value.Length;i++){
+            for (int i = 0; i < value.Length; i++)
+            {
                 // Last item.
-                if(i == (value.Length - 1)){
+                if (i == (value.Length - 1))
+                {
                     retVal.Append(value[i]);
                 }
-                else{
+                else
+                {
                     retVal.Append(value[i] + ",");
                 }
             }
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets selected folder name(path included).
-        /// </summary>
-        public string Name { get; } = "";
-
-        /// <summary>
-        /// Gets folder UID value. Value null means IMAP server doesn't support <b>UIDVALIDITY</b> feature.
-        /// </summary>
-        public long UidValidity { get; private set; } = -1;
-
-        /// <summary>
-        /// Gets flags what folder supports.
-        /// </summary>
-        public string[] Flags { get; private set; } = new string[0];
-
-        /// <summary>
-        /// Gets permanent flags what folder can store.
-        /// </summary>
-        public string[] PermanentFlags { get; private set; } = new string[0];
-
-        /// <summary>
-        /// Gets if folder is read-only or read-write.
-        /// </summary>
-        public bool IsReadOnly { get; private set; }
-
-        /// <summary>
-        /// Gets next predicted message UID. Value -1 means that IMAP server doesn't support it.
-        /// </summary>
-        public long UidNext { get; private set; } = -1;
-
-        /// <summary>
-        /// Gets first unseen message sequence number. Value -1 means no unseen message.
-        /// </summary>
-        public int FirstUnseen { get; private set; } = -1;
-
-        /// <summary>
-        /// Gets number of messages in this folder.
-        /// </summary>
-        public int MessagesCount { get; private set; }
-
-        /// <summary>
-        /// Gets number of recent messages in this folder.
-        /// </summary>
-        public int RecentMessagesCount { get; private set; }
     }
 }

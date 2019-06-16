@@ -21,36 +21,28 @@ namespace LumiSoft.Net.IMAP
             Value = seqSet ?? throw new ArgumentNullException("seqSet");
         }
 
+        //--- OBSOLETE -----
+
         /// <summary>
-        /// Returns parsed IMAP SEARCH <b>UID (sequence set)</b> key.
+        /// Default constructor.
         /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP SEARCH <b>UID (sequence set)</b> key.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        internal static IMAP_Search_Key_Uid Parse(StringReader r)
+        /// <param name="seqSet">IMAP sequence-set.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>seqSet</b> is null reference.</exception>
+        [Obsolete("Use constructor 'IMAP_Search_Key_Uid(IMAP_t_SeqSet seqSet)' instead.")]
+        public IMAP_Search_Key_Uid(IMAP_SequenceSet seqSet)
         {
-            if(r == null){
-                throw new ArgumentNullException("r");
+            if (seqSet == null)
+            {
+                throw new ArgumentNullException("seqSet");
             }
 
-            var word = r.ReadWord();
-            if (!string.Equals(word,"UID",StringComparison.InvariantCultureIgnoreCase)){
-                throw new ParseException("Parse error: Not a SEARCH 'UID' key.");
-            }
-            r.ReadToFirstChar();
-            var value = r.QuotedReadToDelimiter(' ');
-            if (value == null){
-                throw new ParseException("Parse error: Invalid 'UID' value.");
-            }
-            
-            try{
-                return new IMAP_Search_Key_Uid(IMAP_t_SeqSet.Parse(value));
-            }
-            catch{
-                throw new ParseException("Parse error: Invalid 'UID' value.");
-            }
+            Value = IMAP_t_SeqSet.Parse(seqSet.ToSequenceSetString());
         }
+
+        /// <summary>
+        /// Gets sequence-set value.
+        /// </summary>
+        public IMAP_t_SeqSet Value { get; }
 
         /// <summary>
         /// Returns this as string.
@@ -62,39 +54,54 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Returns parsed IMAP SEARCH <b>UID (sequence set)</b> key.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP SEARCH <b>UID (sequence set)</b> key.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
+        internal static IMAP_Search_Key_Uid Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            var word = r.ReadWord();
+            if (!string.Equals(word, "UID", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ParseException("Parse error: Not a SEARCH 'UID' key.");
+            }
+            r.ReadToFirstChar();
+            var value = r.QuotedReadToDelimiter(' ');
+            if (value == null)
+            {
+                throw new ParseException("Parse error: Invalid 'UID' value.");
+            }
+
+            try
+            {
+                return new IMAP_Search_Key_Uid(IMAP_t_SeqSet.Parse(value));
+            }
+            catch
+            {
+                throw new ParseException("Parse error: Invalid 'UID' value.");
+            }
+        }
+
+        /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
         /// </summary>
         /// <param name="list">Array where to store command parts.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
         {
-            if(list == null){
+            if (list == null)
+            {
                 throw new ArgumentNullException("list");
             }
 
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
-        }
-
-        /// <summary>
-        /// Gets sequence-set value.
-        /// </summary>
-        public IMAP_t_SeqSet Value { get; }
-
-        //--- OBSOLETE -----
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="seqSet">IMAP sequence-set.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>seqSet</b> is null reference.</exception>
-        [Obsolete("Use constructor 'IMAP_Search_Key_Uid(IMAP_t_SeqSet seqSet)' instead.")]
-        public IMAP_Search_Key_Uid(IMAP_SequenceSet seqSet)
-        {
-            if(seqSet == null){
-                throw new ArgumentNullException("seqSet");
-            }
-
-            Value = IMAP_t_SeqSet.Parse(seqSet.ToSequenceSetString());
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, ToString()));
         }
     }
 }

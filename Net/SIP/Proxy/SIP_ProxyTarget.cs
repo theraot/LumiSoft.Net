@@ -14,7 +14,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         /// <param name="targetUri">Target request-URI.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>targetUri</b> is null reference.</exception>
-        public SIP_ProxyTarget(SIP_Uri targetUri) : this(targetUri,null)
+        public SIP_ProxyTarget(SIP_Uri targetUri) : this(targetUri, null)
         {
         }
 
@@ -24,20 +24,20 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="targetUri">Target request-URI.</param>
         /// <param name="flow">Data flow to try for forwarding.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>targetUri</b> is null reference.</exception>
-        public SIP_ProxyTarget(SIP_Uri targetUri,SIP_Flow flow)
+        public SIP_ProxyTarget(SIP_Uri targetUri, SIP_Flow flow)
         {
             TargetUri = targetUri ?? throw new ArgumentNullException("targetUri");
-            Flow      = flow;
+            Flow = flow;
         }
-
-        /// <summary>
-        /// Gets target URI.
-        /// </summary>
-        public SIP_Uri TargetUri { get; }
 
         /// <summary>
         /// Gets data flow. Value null means that new flow must created.
         /// </summary>
         public SIP_Flow Flow { get; }
+
+        /// <summary>
+        /// Gets target URI.
+        /// </summary>
+        public SIP_Uri TargetUri { get; }
     }
 }

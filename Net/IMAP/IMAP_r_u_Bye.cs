@@ -19,6 +19,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Gets BYE reason text.
+        /// </summary>
+        public string Text { get; }
+
+        /// <summary>
         /// Parses BYE response from bye-response string.
         /// </summary>
         /// <param name="byeResponse">Bye response string.</param>
@@ -26,7 +31,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>byeResponse</b> is null reference.</exception>
         public static IMAP_r_u_Bye Parse(string byeResponse)
         {
-            if(byeResponse == null){
+            if (byeResponse == null)
+            {
                 throw new ArgumentNullException("byeResponse");
             }
 
@@ -87,10 +93,5 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
-        /// <summary>
-        /// Gets BYE reason text.
-        /// </summary>
-        public string Text { get; }
     }
 }

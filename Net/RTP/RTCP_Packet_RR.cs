@@ -9,7 +9,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Packet_RR : RTCP_Packet
     {
-        private int                           m_Version       = 2;
+        private int m_Version = 2;
 
         /// <summary>
         /// Default constructor.
@@ -29,66 +29,37 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Parses receiver report(RR) from byte buffer.
+        /// Gets reports blocks.
         /// </summary>
-        /// <param name="buffer">Buffer wihich contains receiver report.</param>
-        /// <param name="offset">Offset in buufer.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        protected override void ParseInternal(byte[] buffer,ref int offset)
+        public List<RTCP_Packet_ReportBlock> ReportBlocks { get; }
+
+        /// <summary>
+        /// Gets number of bytes needed for this packet.
+        /// </summary>
+        public override int Size
         {
-            /* RFC 3550 6.4.2 RR: Receiver Report RTCP Packet.
-                    0                   1                   2                   3
-                    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-            header |V=2|P|    RC   |   PT=RR=201   |             length            |
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                   |                     SSRC of packet sender                     |
-                   +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-            report |                 SSRC_1 (SSRC of first source)                 |
-            block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-              1    | fraction lost |       cumulative number of packets lost       |
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                   |           extended highest sequence number received           |
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                   |                      interarrival jitter                      |
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                   |                         last SR (LSR)                         |
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                   |                   delay since last SR (DLSR)                  |
-                   +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-            report |                 SSRC_2 (SSRC of second source)                |
-            block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-              2    :                               ...                             :
-                   +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
-                   |                  profile-specific extensions                  |
-                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-            */
+            get { return 8 + (24 * ReportBlocks.Count); }
+        }
 
-            if(buffer == null){
-                throw new ArgumentNullException("buffer");
-            }
-            if(offset < 0){
-                throw new ArgumentException("Argument 'offset' value must be >= 0.");
-            }
+        /// <summary>
+        /// Gets or sets sender(local reporting) synchronization source identifier.
+        /// </summary>
+        public uint SSRC { get; set; }
 
-                 m_Version        = buffer[offset] >> 6;
-            bool isPadded         = Convert.ToBoolean((buffer[offset] >> 5) & 0x1);
-            int  reportBlockCount = buffer[offset++] & 0x1F;
-            int  type             = buffer[offset++];            
-            int  length           = buffer[offset++] << 8 | buffer[offset++];
-            if(isPadded){
-                PaddBytesCount = buffer[offset + length];
-            }
+        /// <summary>
+        /// Gets RTCP packet type.
+        /// </summary>
+        public override int Type
+        {
+            get { return RTCP_PacketType.RR; }
+        }
 
-            SSRC = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            for(int i=0;i<reportBlockCount;i++){
-                var reportBlock = new RTCP_Packet_ReportBlock();
-                reportBlock.Parse(buffer,offset);
-                ReportBlocks.Add(reportBlock);
-                offset += 24;
-            }
-            // TODO: profile-specific extensions
+        /// <summary>
+        /// Gets RTCP version.
+        /// </summary>
+        public override int Version
+        {
+            get { return m_Version; }
         }
 
         /// <summary>
@@ -98,7 +69,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="offset">Offset in buffer.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public override void ToByte(byte[] buffer,ref int offset)
+        public override void ToByte(byte[] buffer, ref int offset)
         {
             /* RFC 3550 6.4.2 RR: Receiver Report RTCP Packet.
                     0                   1                   2                   3
@@ -128,15 +99,17 @@ namespace LumiSoft.Net.RTP
                    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             */
 
-            if(buffer == null){
+            if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
             }
-            if(offset < 0){
+            if (offset < 0)
+            {
                 throw new ArgumentException("Argument 'offset' value must be >= 0.");
             }
 
             // NOTE: Size in 32-bit boundary, header not included.
-            int length =  (4 + (ReportBlocks.Count * 24)) / 4;
+            int length = (4 + (ReportBlocks.Count * 24)) / 4;
 
             // V P RC
             buffer[offset++] = (byte)(2 << 6 | 0 << 5 | (ReportBlocks.Count & 0x1F));
@@ -144,15 +117,16 @@ namespace LumiSoft.Net.RTP
             buffer[offset++] = 201;
             // length
             buffer[offset++] = (byte)((length >> 8) & 0xFF);
-            buffer[offset++] = (byte)((length)      & 0xFF);
+            buffer[offset++] = (byte)((length) & 0xFF);
             // SSRC
             buffer[offset++] = (byte)((SSRC >> 24) & 0xFF);
             buffer[offset++] = (byte)((SSRC >> 16) & 0xFF);
-            buffer[offset++] = (byte)((SSRC >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((SSRC)       & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 8) & 0xFF);
+            buffer[offset++] = (byte)((SSRC) & 0xFF);
             // Report blocks
-            foreach(RTCP_Packet_ReportBlock block in ReportBlocks){
-                block.ToByte(buffer,ref offset);
+            foreach (RTCP_Packet_ReportBlock block in ReportBlocks)
+            {
+                block.ToByte(buffer, ref offset);
             }
         }
 
@@ -164,7 +138,7 @@ namespace LumiSoft.Net.RTP
         {
             var retVal = new StringBuilder();
             retVal.AppendLine("Type: RR");
-            retVal.AppendLine("Version: " + m_Version);            
+            retVal.AppendLine("Version: " + m_Version);
             retVal.AppendLine("SSRC: " + SSRC);
             retVal.AppendLine("Report blocks: " + ReportBlocks.Count.ToString());
 
@@ -172,37 +146,70 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Gets RTCP version.
+        /// Parses receiver report(RR) from byte buffer.
         /// </summary>
-        public override int Version
+        /// <param name="buffer">Buffer wihich contains receiver report.</param>
+        /// <param name="offset">Offset in buufer.</param>
+        /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null.</exception>
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
+        protected override void ParseInternal(byte[] buffer, ref int offset)
         {
-            get{ return m_Version; }
-        }
+            /* RFC 3550 6.4.2 RR: Receiver Report RTCP Packet.
+                    0                   1                   2                   3
+                    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            header |V=2|P|    RC   |   PT=RR=201   |             length            |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                     SSRC of packet sender                     |
+                   +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+            report |                 SSRC_1 (SSRC of first source)                 |
+            block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+              1    | fraction lost |       cumulative number of packets lost       |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |           extended highest sequence number received           |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                      interarrival jitter                      |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                         last SR (LSR)                         |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                   delay since last SR (DLSR)                  |
+                   +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+            report |                 SSRC_2 (SSRC of second source)                |
+            block  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+              2    :                               ...                             :
+                   +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+                   |                  profile-specific extensions                  |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            */
 
-        /// <summary>
-        /// Gets RTCP packet type.
-        /// </summary>
-        public override int Type
-        {
-            get{ return RTCP_PacketType.RR; }
-        }
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+            if (offset < 0)
+            {
+                throw new ArgumentException("Argument 'offset' value must be >= 0.");
+            }
 
-        /// <summary>
-        /// Gets or sets sender(local reporting) synchronization source identifier.
-        /// </summary>
-        public uint SSRC { get; set; }
+            m_Version = buffer[offset] >> 6;
+            bool isPadded = Convert.ToBoolean((buffer[offset] >> 5) & 0x1);
+            int reportBlockCount = buffer[offset++] & 0x1F;
+            int type = buffer[offset++];
+            int length = buffer[offset++] << 8 | buffer[offset++];
+            if (isPadded)
+            {
+                PaddBytesCount = buffer[offset + length];
+            }
 
-        /// <summary>
-        /// Gets reports blocks.
-        /// </summary>
-        public List<RTCP_Packet_ReportBlock> ReportBlocks { get; }
-
-        /// <summary>
-        /// Gets number of bytes needed for this packet.
-        /// </summary>
-        public override int Size
-        {
-            get{ return 8 + (24 * ReportBlocks.Count); }
+            SSRC = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            for (int i = 0; i < reportBlockCount; i++)
+            {
+                var reportBlock = new RTCP_Packet_ReportBlock();
+                reportBlock.Parse(buffer, offset);
+                ReportBlocks.Add(reportBlock);
+                offset += 24;
+            }
+            // TODO: profile-specific extensions
         }
     }
 }

@@ -21,29 +21,9 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-        /// Returns parsed IMAP SEARCH <b>CC (string)</b> key.
+        /// Gets CC filter value.
         /// </summary>
-        /// <param name="r">String reader.</param>
-        /// <returns>Returns parsed IMAP SEARCH <b>CC (string)</b> key.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
-        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        internal static IMAP_Search_Key_Cc Parse(StringReader r)
-        {
-            if(r == null){
-                throw new ArgumentNullException("r");
-            }
-
-            var word = r.ReadWord();
-            if (!string.Equals(word,"CC",StringComparison.InvariantCultureIgnoreCase)){
-                throw new ParseException("Parse error: Not a SEARCH 'CC' key.");
-            }
-            var value = IMAP_Utils.ReadString(r);
-            if (value == null){
-                throw new ParseException("Parse error: Invalid 'CC' value.");
-            }
-
-            return new IMAP_Search_Key_Cc(value);
-        }
+        public string Value { get; } = "";
 
         /// <summary>
         /// Returns this as string.
@@ -55,23 +35,47 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
+        /// Returns parsed IMAP SEARCH <b>CC (string)</b> key.
+        /// </summary>
+        /// <param name="r">String reader.</param>
+        /// <returns>Returns parsed IMAP SEARCH <b>CC (string)</b> key.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>r</b> is null reference.</exception>
+        /// <exception cref="ParseException">Is raised when parsing fails.</exception>
+        internal static IMAP_Search_Key_Cc Parse(StringReader r)
+        {
+            if (r == null)
+            {
+                throw new ArgumentNullException("r");
+            }
+
+            var word = r.ReadWord();
+            if (!string.Equals(word, "CC", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ParseException("Parse error: Not a SEARCH 'CC' key.");
+            }
+            var value = IMAP_Utils.ReadString(r);
+            if (value == null)
+            {
+                throw new ParseException("Parse error: Invalid 'CC' value.");
+            }
+
+            return new IMAP_Search_Key_Cc(value);
+        }
+
+        /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
         /// </summary>
         /// <param name="list">Array where to store command parts.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal override void ToCmdParts(List<IMAP_Client_CmdPart> list)
         {
-            if(list == null){
+            if (list == null)
+            {
                 throw new ArgumentNullException("list");
             }
 
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"CC "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant, "CC "));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String, Value));
         }
-
-        /// <summary>
-        /// Gets CC filter value.
-        /// </summary>
-        public string Value { get; } = "";
     }
 }

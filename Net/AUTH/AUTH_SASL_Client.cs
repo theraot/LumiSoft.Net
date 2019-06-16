@@ -7,13 +7,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public abstract class AUTH_SASL_Client
     {
-        /// <summary>
-        /// Continues authentication process.
-        /// </summary>
-        /// <param name="serverResponse">Server sent SASL response.</param>
-        /// <returns>Returns challange request what must be sent to server or null if authentication has completed.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>serverResponse</b> is null reference.</exception>
-        public abstract byte[] Continue(byte[] serverResponse);
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -33,19 +26,26 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
+        /// Gets if the authentication method supports SASL client "inital response".
+        /// </summary>
+        public virtual bool SupportsInitialResponse
+        {
+            get { return false; }
+        }
+
+        /// <summary>
         /// Gets user login name.
         /// </summary>
         public abstract string UserName
         {
             get;
         }
-
         /// <summary>
-        /// Gets if the authentication method supports SASL client "inital response".
+        /// Continues authentication process.
         /// </summary>
-        public virtual bool SupportsInitialResponse
-        {
-            get{ return false; }
-        }
+        /// <param name="serverResponse">Server sent SASL response.</param>
+        /// <returns>Returns challange request what must be sent to server or null if authentication has completed.</returns>
+        /// <exception cref="ArgumentNullException">Is raised when <b>serverResponse</b> is null reference.</exception>
+        public abstract byte[] Continue(byte[] serverResponse);
     }
 }

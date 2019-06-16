@@ -15,7 +15,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_NameAddress
     {
-        private string      m_DisplayName = "";
+        private string m_DisplayName = "";
         private AbsoluteUri m_pUri;
 
         /// <summary>
@@ -42,10 +42,96 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="displayName">Display name.</param>
         /// <param name="uri">Uri.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
-        public SIP_t_NameAddress(string displayName,AbsoluteUri uri)
+        public SIP_t_NameAddress(string displayName, AbsoluteUri uri)
         {
             DisplayName = displayName;
-            Uri         = uri ?? throw new ArgumentNullException("uri");
+            Uri = uri ?? throw new ArgumentNullException("uri");
+        }
+
+        /// <summary>
+        /// Gets or sets display name.
+        /// </summary>
+        public string DisplayName
+        {
+            get { return m_DisplayName; }
+
+            set
+            {
+                if (value == null)
+                {
+                    value = "";
+                }
+
+                m_DisplayName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets if current URI is MAILTO uri.
+        /// </summary>
+        public bool IsMailToUri
+        {
+            get
+            {
+                if (m_pUri.Scheme == UriSchemes.mailto)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets if current URI is SIPS uri.
+        /// </summary>
+        public bool IsSecureSipUri
+        {
+            get
+            {
+                if (m_pUri.Scheme == UriSchemes.sips)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets if current URI is sip or sips URI.
+        /// </summary>
+        public bool IsSipOrSipsUri
+        {
+            get { return IsSipUri || IsSecureSipUri; }
+        }
+
+        /// <summary>
+        /// Gets if current URI is SIP uri.
+        /// </summary>
+        public bool IsSipUri
+        {
+            get
+            {
+                if (m_pUri.Scheme == UriSchemes.sip)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets URI. This can be SIP-URI / SIPS-URI / absoluteURI.
+        /// Examples: sip:ivar@lumisoft.ee,sips:ivar@lumisoft.ee,mailto:ivar@lumisoft.ee, .... .
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
+        public AbsoluteUri Uri
+        {
+            get { return m_pUri; }
+
+            set
+            {
+                m_pUri = value ?? throw new ArgumentNullException("value");
+            }
         }
 
         /// <summary>
@@ -56,13 +142,14 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public void Parse(string value)
         {
-            if(value == null){
+            if (value == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             Parse(new StringReader(value));
         }
-   
+
         /// <summary>
         /// Parses "name-addr" or "addr-spec" from specified reader.
         /// </summary>
@@ -76,24 +163,29 @@ namespace LumiSoft.Net.SIP.Message
                 addr-spec =  SIP-URI / SIPS-URI / absoluteURI
             */
 
-            if(reader == null){
+            if (reader == null)
+            {
                 throw new ArgumentNullException("reader");
             }
 
             reader.ReadToFirstChar();
-                        
+
             // LAQUOT addr-spec RAQUOT
-            if(reader.StartsWith("<")){
+            if (reader.StartsWith("<"))
+            {
                 m_pUri = AbsoluteUri.Parse(reader.ReadParenthesized());
             }
-            else{
+            else
+            {
                 // Read while we get "<","," or EOF.
                 var buf = new StringBuilder();
-                while (true){
+                while (true)
+                {
                     buf.Append(reader.ReadToFirstChar());
 
                     var word = reader.ReadWord();
-                    if (string.IsNullOrEmpty(word)){
+                    if (string.IsNullOrEmpty(word))
+                    {
                         break;
                     }
 
@@ -103,15 +195,17 @@ namespace LumiSoft.Net.SIP.Message
                 reader.ReadToFirstChar();
 
                 // name-addr
-                if(reader.StartsWith("<")){
+                if (reader.StartsWith("<"))
+                {
                     m_DisplayName = buf.ToString().Trim();
-                    m_pUri        = AbsoluteUri.Parse(reader.ReadParenthesized());
+                    m_pUri = AbsoluteUri.Parse(reader.ReadParenthesized());
                 }
                 // addr-spec
-                else{
+                else
+                {
                     m_pUri = AbsoluteUri.Parse(buf.ToString());
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -126,89 +220,13 @@ namespace LumiSoft.Net.SIP.Message
             */
 
             // addr-spec
-            if(string.IsNullOrEmpty(m_DisplayName)){
+            if (string.IsNullOrEmpty(m_DisplayName))
+            {
                 return "<" + m_pUri.ToString() + ">";
             }
             // name-addr
 
             return TextUtils.QuoteString(m_DisplayName) + " <" + m_pUri.ToString() + ">";
-        }
-
-        /// <summary>
-        /// Gets or sets display name.
-        /// </summary>
-        public string DisplayName
-        {
-            get{ return m_DisplayName; }
-
-            set{
-                if(value == null){
-                    value = "";
-                }
-
-                m_DisplayName = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets URI. This can be SIP-URI / SIPS-URI / absoluteURI.
-        /// Examples: sip:ivar@lumisoft.ee,sips:ivar@lumisoft.ee,mailto:ivar@lumisoft.ee, .... .
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Is raised when null reference passed.</exception>
-        public AbsoluteUri Uri
-        {
-            get{ return m_pUri; }
-
-            set{
-                m_pUri = value ?? throw new ArgumentNullException("value");
-            }
-        }
-
-        /// <summary>
-        /// Gets if current URI is sip or sips URI.
-        /// </summary>
-        public bool IsSipOrSipsUri
-        {
-            get{ return IsSipUri || IsSecureSipUri; }
-        }
-
-        /// <summary>
-        /// Gets if current URI is SIP uri.
-        /// </summary>
-        public bool IsSipUri
-        {
-            get{ 
-                if(m_pUri.Scheme == UriSchemes.sip){
-                    return true; 
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets if current URI is SIPS uri.
-        /// </summary>
-        public bool IsSecureSipUri
-        {
-            get{ 
-                if(m_pUri.Scheme == UriSchemes.sips){
-                    return true; 
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets if current URI is MAILTO uri.
-        /// </summary>
-        public bool IsMailToUri
-        {
-            get{ 
-                if(m_pUri.Scheme == UriSchemes.mailto){
-                    return true; 
-                }
-                return false;
-            }
         }
     }
 }

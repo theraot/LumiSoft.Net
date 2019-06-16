@@ -69,44 +69,24 @@
         }
 
         /// <summary>
-        /// This class holds well-known text/xxx media types.
+        /// This class holds well-known message/xxx media types.
         /// </summary>
-        public class Text
+        public class Message
         {
             /// <summary>
-            /// "text/calendar". Defined in RFC 2445.
+            /// "message/rfc822". 
             /// </summary>
-            public static readonly string calendar = "text/calendar";
-        
-            /// <summary>
-            /// "text/css". Defined in RFC 2854
-            /// </summary>
-            public static readonly string css = "text/css";
+            public static readonly string rfc822 = "message/rfc822";
 
             /// <summary>
-            /// "text/html". Defined in RFC 2854.
+            /// "message/disposition-notification". 
             /// </summary>
-            public static readonly string html = "text/html";
+            public static readonly string disposition_notification = "message/disposition-notification";
 
             /// <summary>
-            /// "text/plain". Defined in RFC 2646,2046.
+            /// "message/delivery-status". Defined in RFC 3464.
             /// </summary>
-            public static readonly string plain = "text/plain";
-
-            /// <summary>
-            /// "text/rfc822-headers". Defined in RFC 1892.
-            /// </summary>
-            public static readonly string rfc822_headers = "text/rfc822-headers";
-
-            /// <summary>
-            /// "text/richtext". Defined in RFC 2045,2046.
-            /// </summary>
-            public static readonly string richtext = "text/richtext";
-
-            /// <summary>
-            /// "text/xml". Defined in RFC 3023.
-            /// </summary>
-            public static readonly string xml = "text/xml";
+            public static readonly string delivery_status = "message/delivery-status";
         }
 
         /// <summary>
@@ -147,7 +127,7 @@
             /// <summary>
             /// "multipart/related". Defined in RFC 2387.
             /// </summary>
-            public static readonly string related  = "multipart/related";
+            public static readonly string related = "multipart/related";
 
             /// <summary>
             /// "multipart/report". Defined in RFC 1892.
@@ -166,24 +146,44 @@
         }
 
         /// <summary>
-        /// This class holds well-known message/xxx media types.
+        /// This class holds well-known text/xxx media types.
         /// </summary>
-        public class Message
+        public class Text
         {
             /// <summary>
-            /// "message/rfc822". 
+            /// "text/calendar". Defined in RFC 2445.
             /// </summary>
-            public static readonly string rfc822 = "message/rfc822";
+            public static readonly string calendar = "text/calendar";
 
             /// <summary>
-            /// "message/disposition-notification". 
+            /// "text/css". Defined in RFC 2854
             /// </summary>
-            public static readonly string disposition_notification = "message/disposition-notification";
+            public static readonly string css = "text/css";
 
             /// <summary>
-            /// "message/delivery-status". Defined in RFC 3464.
+            /// "text/html". Defined in RFC 2854.
             /// </summary>
-            public static readonly string delivery_status = "message/delivery-status";
+            public static readonly string html = "text/html";
+
+            /// <summary>
+            /// "text/plain". Defined in RFC 2646,2046.
+            /// </summary>
+            public static readonly string plain = "text/plain";
+
+            /// <summary>
+            /// "text/rfc822-headers". Defined in RFC 1892.
+            /// </summary>
+            public static readonly string rfc822_headers = "text/rfc822-headers";
+
+            /// <summary>
+            /// "text/richtext". Defined in RFC 2045,2046.
+            /// </summary>
+            public static readonly string richtext = "text/richtext";
+
+            /// <summary>
+            /// "text/xml". Defined in RFC 3023.
+            /// </summary>
+            public static readonly string xml = "text/xml";
         }
     }
 }

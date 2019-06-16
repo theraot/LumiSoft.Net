@@ -17,38 +17,13 @@ namespace LumiSoft.Net
         /// <param name="asyncDelegate">Delegate which is called asynchronously.</param>
         /// <param name="callback">Callback to call when the connect operation is complete.</param>
         /// <param name="state">User data.</param>
-        public AsyncResultState(object asyncObject,Delegate asyncDelegate,AsyncCallback callback,object state)
+        public AsyncResultState(object asyncObject, Delegate asyncDelegate, AsyncCallback callback, object state)
         {
-            AsyncObject   = asyncObject;
+            AsyncObject = asyncObject;
             AsyncDelegate = asyncDelegate;
-            m_pCallback      = callback;
-            AsyncState         = state;
+            m_pCallback = callback;
+            AsyncState = state;
         }
-
-        /// <summary>
-        /// Sets AsyncResult value.
-        /// </summary>
-        /// <param name="asyncResult">Asycnhronous result to wrap.</param>
-        public void SetAsyncResult(IAsyncResult asyncResult)
-        {
-            AsyncResult = asyncResult ?? throw new ArgumentNullException("asyncResult");
-        }
-
-        /// <summary>
-        /// This method is called by AsyncDelegate when asynchronous operation completes. 
-        /// </summary>
-        /// <param name="ar">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
-        public void CompletedCallback(IAsyncResult ar)
-        {
-            if(m_pCallback != null){
-                m_pCallback(this);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets caller's async object.
-        /// </summary>
-        public object AsyncObject { get; }
 
         /// <summary>
         /// Gets delegate which is called asynchronously.
@@ -56,14 +31,14 @@ namespace LumiSoft.Net
         public Delegate AsyncDelegate { get; }
 
         /// <summary>
+        /// Gets or sets caller's async object.
+        /// </summary>
+        public object AsyncObject { get; }
+
+        /// <summary>
         /// Gets source asynchronous result what we wrap.
         /// </summary>
         public IAsyncResult AsyncResult { get; private set; }
-
-        /// <summary>
-        /// Gets if the user called the End*() method.
-        /// </summary>
-        public bool IsEndCalled { get; set; }
 
         /// <summary>
         /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
@@ -75,15 +50,15 @@ namespace LumiSoft.Net
         /// </summary>
         public WaitHandle AsyncWaitHandle
         {
-            get{ return AsyncResult.AsyncWaitHandle; }
+            get { return AsyncResult.AsyncWaitHandle; }
         }
 
         /// <summary>
         /// Gets an indication of whether the asynchronous operation completed synchronously.
         /// </summary>
         public bool CompletedSynchronously
-        { 
-            get{ return AsyncResult.CompletedSynchronously; }
+        {
+            get { return AsyncResult.CompletedSynchronously; }
         }
 
         /// <summary>
@@ -91,7 +66,33 @@ namespace LumiSoft.Net
         /// </summary>
         public bool IsCompleted
         {
-            get{ return AsyncResult.IsCompleted; } 
+            get { return AsyncResult.IsCompleted; }
+        }
+
+        /// <summary>
+        /// Gets if the user called the End*() method.
+        /// </summary>
+        public bool IsEndCalled { get; set; }
+
+        /// <summary>
+        /// This method is called by AsyncDelegate when asynchronous operation completes. 
+        /// </summary>
+        /// <param name="ar">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+        public void CompletedCallback(IAsyncResult ar)
+        {
+            if (m_pCallback != null)
+            {
+                m_pCallback(this);
+            }
+        }
+
+        /// <summary>
+        /// Sets AsyncResult value.
+        /// </summary>
+        /// <param name="asyncResult">Asycnhronous result to wrap.</param>
+        public void SetAsyncResult(IAsyncResult asyncResult)
+        {
+            AsyncResult = asyncResult ?? throw new ArgumentNullException("asyncResult");
         }
     }
 }

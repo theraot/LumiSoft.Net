@@ -12,11 +12,21 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         /// <param name="name">Attribute name.</param>
         /// <param name="value">Attribute value.</param>
-        public SDP_Attribute(string name,string value)
+        public SDP_Attribute(string name, string value)
         {
-            Name     = name;
+            Name = name;
             Value = value;
         }
+
+        /// <summary>
+        /// Gets attribute name.
+        /// </summary>
+        public string Name { get; } = "";
+
+        /// <summary>
+        /// Gets or sets attribute value.
+        /// </summary>
+        public string Value { get; set; } = "";
 
         /// <summary>
         /// Parses media from "a" SDP message field.
@@ -38,13 +48,14 @@ namespace LumiSoft.Net.SDP
             name = word ?? throw new Exception("SDP message \"a\" field <attribute> name is missing !");
 
             //--- <value> ----------------------------------------------------------------
-            var value ="";
+            var value = "";
             word = r.ReadToEnd();
-            if(word != null){
+            if (word != null)
+            {
                 value = word;
             }
 
-            return new SDP_Attribute(name,value);
+            return new SDP_Attribute(name, value);
         }
 
         /// <summary>
@@ -57,22 +68,13 @@ namespace LumiSoft.Net.SDP
             // a=<attribute>:<value>
 
             // a=<attribute>
-            if(string.IsNullOrEmpty(Value)){
+            if (string.IsNullOrEmpty(Value))
+            {
                 return "a=" + Name + "\r\n";
             }
             // a=<attribute>:<value>
 
             return "a=" + Name + ":" + Value + "\r\n";
         }
-
-        /// <summary>
-        /// Gets attribute name.
-        /// </summary>
-        public string Name { get; } = "";
-
-        /// <summary>
-        /// Gets or sets attribute value.
-        /// </summary>
-        public string Value { get; set; } = "";
     }
 }

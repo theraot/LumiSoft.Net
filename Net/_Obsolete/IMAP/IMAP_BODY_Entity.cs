@@ -10,10 +10,10 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_BODY_Entity
     {
-        private readonly List<IMAP_BODY_Entity>       m_pChildEntities;
-        private readonly int                          m_ContentSize        = 0;
-        private IMAP_Envelope                m_pEnvelope          = null;
-        private int                          m_ContentLines       = 0;
+        private int m_ContentLines = 0;
+        private readonly int m_ContentSize = 0;
+        private readonly List<IMAP_BODY_Entity> m_pChildEntities;
+        private IMAP_Envelope m_pEnvelope = null;
 
         /// <summary>
         /// Default constructor.
@@ -22,6 +22,93 @@ namespace LumiSoft.Net.IMAP
         {
             m_pChildEntities = new List<IMAP_BODY_Entity>();
         }
+
+        /// <summary>
+        /// Gets child entities. This property is available only if ContentType = multipart/... .
+        /// </summary>
+        public IMAP_BODY_Entity[] ChildEntities
+        {
+            get
+            {
+                //  if((this.ContentType & MediaType_enum.Multipart) == 0){
+                //      throw new Exception("NOTE: ChildEntities property is available only for non-multipart contentype !");
+                //  }
+
+                return m_pChildEntities.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets header field "<b>Content-Description:</b>" value. Returns null if value isn't set.
+        /// </summary>
+        public string ContentDescription { get; } = null;
+
+        /// <summary>
+        /// Gets header field "<b>Content-ID:</b>" value. Returns null if value isn't set.
+        /// </summary>
+        public string ContentID { get; } = null;
+        /*
+        /// <summary>
+        /// Gets content envelope. NOTE: This property is available only for message/xxx content type !
+        /// Yhis value can be also null if no ENVELOPE provided by server.
+        /// </summary>
+        public IMAP_Envelope Envelope
+        {
+            get{ 
+                if(!string.Equals(this.ContentType.Type,"message",StringComparison.InvariantCultureIgnoreCase)){
+                    throw new Exception("NOTE: Envelope property is available only for message/rfc2822 contentype !");
+                }
+
+                return null; 
+            }
+        }*/
+
+        /// <summary>
+        /// Gets content encoded data lines. NOTE: This property is available only for text/xxx content type !
+        /// </summary>
+        public int ContentLines
+        {
+            get
+            {
+                if (!string.Equals(ContentType.Type, "text", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new Exception("NOTE: ContentLines property is available only for text/xxx content type !");
+                }
+
+                return m_ContentSize;
+            }
+        }
+
+        /// <summary>
+        /// Gets content encoded data size. NOTE: This property is available only for non-multipart contentype !
+        /// </summary>
+        public int ContentSize
+        {
+            get
+            {
+                if (string.Equals(ContentType.Type, "multipart", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new Exception("NOTE: ContentSize property is available only for non-multipart contentype !");
+                }
+
+                return m_ContentSize;
+            }
+        }
+
+        /// <summary>
+        /// Gets header field "<b>Content-Transfer-Encoding:</b>" value.
+        /// </summary>
+        public string ContentTransferEncoding { get; } = MIME_TransferEncodings.SevenBit;
+
+        /// <summary>
+        /// Gets header field "<b>Content-Type:</b>" value.
+        /// </summary>
+        public MIME_h_ContentType ContentType { get; } = null;
+
+        /// <summary>
+        /// Gets parent entity of this entity. If this entity is top level, then this property returns null.
+        /// </summary>
+        public IMAP_BODY_Entity ParentEntity { get; } = null;
 
         /// <summary>
         /// Parses entity and it's child entities.
@@ -133,89 +220,7 @@ namespace LumiSoft.Net.IMAP
                         m_ContentLines = Convert.ToInt32(contentLines);
                     }
                 }                
-            }   */         
-        }
-
-        /// <summary>
-        /// Gets parent entity of this entity. If this entity is top level, then this property returns null.
-        /// </summary>
-        public IMAP_BODY_Entity ParentEntity { get; } = null;
-
-        /// <summary>
-        /// Gets child entities. This property is available only if ContentType = multipart/... .
-        /// </summary>
-        public IMAP_BODY_Entity[] ChildEntities
-        {
-            get{ 
-            //  if((this.ContentType & MediaType_enum.Multipart) == 0){
-            //      throw new Exception("NOTE: ChildEntities property is available only for non-multipart contentype !");
-            //  }
-
-                return m_pChildEntities.ToArray(); 
-            }
-        }
-
-        /// <summary>
-        /// Gets header field "<b>Content-Type:</b>" value.
-        /// </summary>
-        public MIME_h_ContentType ContentType { get; } = null;
-
-        /// <summary>
-        /// Gets header field "<b>Content-ID:</b>" value. Returns null if value isn't set.
-        /// </summary>
-        public string ContentID { get; } = null;
-
-        /// <summary>
-        /// Gets header field "<b>Content-Description:</b>" value. Returns null if value isn't set.
-        /// </summary>
-        public string ContentDescription { get; } = null;
-
-        /// <summary>
-        /// Gets header field "<b>Content-Transfer-Encoding:</b>" value.
-        /// </summary>
-        public string ContentTransferEncoding { get; } = MIME_TransferEncodings.SevenBit;
-
-        /// <summary>
-        /// Gets content encoded data size. NOTE: This property is available only for non-multipart contentype !
-        /// </summary>
-        public int ContentSize
-        {
-            get{
-                if(string.Equals(ContentType.Type,"multipart",StringComparison.InvariantCultureIgnoreCase)){
-                    throw new Exception("NOTE: ContentSize property is available only for non-multipart contentype !");
-                }
-
-                return m_ContentSize; 
-            }
-        }
-        /*
-        /// <summary>
-        /// Gets content envelope. NOTE: This property is available only for message/xxx content type !
-        /// Yhis value can be also null if no ENVELOPE provided by server.
-        /// </summary>
-        public IMAP_Envelope Envelope
-        {
-            get{ 
-                if(!string.Equals(this.ContentType.Type,"message",StringComparison.InvariantCultureIgnoreCase)){
-                    throw new Exception("NOTE: Envelope property is available only for message/rfc2822 contentype !");
-                }
-
-                return null; 
-            }
-        }*/
-
-        /// <summary>
-        /// Gets content encoded data lines. NOTE: This property is available only for text/xxx content type !
-        /// </summary>
-        public int ContentLines
-        {
-            get{ 
-                if(!string.Equals(ContentType.Type,"text",StringComparison.InvariantCultureIgnoreCase)){
-                    throw new Exception("NOTE: ContentLines property is available only for text/xxx content type !");
-                }
-
-                return m_ContentSize; 
-            }
+            }   */
         }
     }
 }
