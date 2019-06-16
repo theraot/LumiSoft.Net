@@ -23,12 +23,8 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when <b>charset</b> is null reference.</exception>
         public MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding encoding,Encoding charset)
         {
-            if(charset == null){
-                throw new ArgumentNullException("charset");
-            }
-
             m_Encoding = encoding;
-            m_pCharset = charset;
+            m_pCharset = charset ?? throw new ArgumentNullException("charset");
         }
 
         /// <summary>
@@ -115,8 +111,8 @@ namespace LumiSoft.Net.MIME
             */
 
             if(MustEncode(text)){
-                List<string> parts = new List<string>();
-                if(split){
+                var parts = new List<string>();
+                if (split){
                     int index = 0;
                     // We just split text to 30 char words, then if some chars encoded, we don't exceed 75 chars lenght limit.
                     while(index < text.Length){
@@ -129,12 +125,12 @@ namespace LumiSoft.Net.MIME
                     parts.Add(text);
                 }
 
-                StringBuilder retVal = new StringBuilder();
-                for(int i=0;i<parts.Count;i++){
-                    string part = parts[i];
-                    byte[] data = charset.GetBytes(part);
+                var retVal = new StringBuilder();
+                for (int i=0;i<parts.Count;i++){
+                    var part = parts[i];
+                    var data = charset.GetBytes(part);
 
-                    if(encoding == MIME_EncodedWordEncoding.B){
+                    if (encoding == MIME_EncodedWordEncoding.B){
                         retVal.Append("=?" + charset.WebName + "?B?" + Convert.ToBase64String(data) + "?=");
                     }
                     else{
@@ -212,14 +208,15 @@ namespace LumiSoft.Net.MIME
                     encoded-word := "=?" charset ["*" language] "?" encoded-text "?="
             */
 
-            string retVal = text;
+            var retVal = text;
 
             retVal = encodedword_regex.Replace(retVal,delegate(Match m){
                 // We have encoded word, try to decode it.
                 // Also if we have continuing encoded word, we need to skip all whitespaces between words.
               
-                string encodedWord = m.Value;
-                try{
+                var encodedWord = m.Value;
+                try
+                {
                     if(string.Equals(m.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
                         encodedWord =  MIME_Utils.QDecode(Encoding.GetEncoding(m.Groups["charset"].Value),m.Groups["value"].Value);
                     }
@@ -230,8 +227,8 @@ namespace LumiSoft.Net.MIME
                     // else{
 
                     // No continuing encoded-word, append whitespaces to retval.
-                    Match mNext = encodedword_regex.Match(retVal,m.Index + m.Length);
-                    if(!(mNext.Success && mNext.Index == (m.Index + m.Length))){
+                    var mNext = encodedword_regex.Match(retVal,m.Index + m.Length);
+                    if (!(mNext.Success && mNext.Index == (m.Index + m.Length))){
                         encodedWord += m.Groups["whitespaces"].Value;
                     }
                     // We have continuing encoded-word, so skip all whitespaces.

@@ -89,8 +89,8 @@ namespace LumiSoft.Net.SIP.Stack
                         between the time of sending of the response and receipt of the request, measured in seconds.
                     */
 
-                    SIP_Response tryingResponse = this.Stack.CreateResponse(SIP_ResponseCodes.x100_Trying,this.Request);
-                    if(this.Request.Timestamp != null){
+                    var tryingResponse = this.Stack.CreateResponse(SIP_ResponseCodes.x100_Trying,this.Request);
+                    if (this.Request.Timestamp != null){
                         tryingResponse.Timestamp = new SIP_t_Timestamp(this.Request.Timestamp.Time,(DateTime.Now - this.CreateTime).Seconds);
                     }
 
@@ -544,7 +544,7 @@ namespace LumiSoft.Net.SIP.Stack
                 }
 
                 try{
-                    SIP_Response response = this.Stack.CreateResponse(SIP_ResponseCodes.x487_Request_Terminated,this.Request);
+                    var response = this.Stack.CreateResponse(SIP_ResponseCodes.x487_Request_Terminated,this.Request);
                     this.Stack.TransportLayer.SendResponse(this,response);
 
                     OnCanceled();
@@ -584,7 +584,7 @@ namespace LumiSoft.Net.SIP.Stack
                 try{
                     // Log
                     if(this.Stack.Logger != null){
-                        byte[] requestData = request.ToByteData();
+                        var requestData = request.ToByteData();
 
                         this.Stack.Logger.AddRead(
                             Guid.NewGuid().ToString(),
@@ -605,8 +605,8 @@ namespace LumiSoft.Net.SIP.Stack
                                     If a request retransmission is received while in the "Proceeding" state, the most recent provisional 
                                     response that was received from the TU MUST be passed to the transport layer for retransmission.
                                 */
-                                SIP_Response response = this.LastProvisionalResponse;
-                                if(response != null){
+                                var response = this.LastProvisionalResponse;
+                                if (response != null){
                                     this.Stack.TransportLayer.SendResponse(this,response);
                                 }
                             }

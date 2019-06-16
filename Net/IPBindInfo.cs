@@ -82,8 +82,8 @@ namespace LumiSoft.Net
                 return false;
             }
 
-            IPBindInfo bInfo = (IPBindInfo)obj;
-            if(bInfo.HostName != HostName){
+            var bInfo = (IPBindInfo)obj;
+            if (bInfo.HostName != HostName){
                 return false;
             }
             if(bInfo.Protocol != Protocol){

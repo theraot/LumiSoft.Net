@@ -52,12 +52,12 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // namespace "." r-priority
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Invalid 'r-value' value, 'namespace \".\" r-priority' is missing !");
             }
-            string[] namespace_priority = word.Split('.');
-            if(namespace_priority.Length != 2){
+            var namespace_priority = word.Split('.');
+            if (namespace_priority.Length != 2){
                 throw new SIP_ParseException("Invalid r-value !");
             }
             m_Namespace = namespace_priority[0];

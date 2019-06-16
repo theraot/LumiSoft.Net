@@ -31,8 +31,8 @@ namespace LumiSoft.Net.DNS
         /// <param name="ttl">Time to live in seconds.</param>
         public static DNS_rr_PTR Parse(string name,byte[] reply,ref int offset,int rdLength,int ttl)
         {
-            string domainName = "";
-			if(Dns_Client.GetQName(reply,ref offset,ref domainName)){
+            var domainName = "";
+            if (Dns_Client.GetQName(reply,ref offset,ref domainName)){
 			    return new DNS_rr_PTR(name,domainName,ttl);
             }
 

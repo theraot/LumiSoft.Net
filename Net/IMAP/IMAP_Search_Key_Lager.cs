@@ -32,12 +32,12 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"LARGER",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"LARGER",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'LARGER' key.");
             }
-            string value = r.ReadWord();
-            if(value == null){
+            var value = r.ReadWord();
+            if (value == null){
                 throw new ParseException("Parse error: Invalid 'LARGER' value.");
             }
             int size = 0;

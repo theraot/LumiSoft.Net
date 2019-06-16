@@ -15,11 +15,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>capabilities</b> is null reference.</exception>
         public IMAP_r_u_Capability(string[] capabilities)
         {
-            if(capabilities == null){
-                throw new ArgumentNullException("capabilities");
-            }
-
-            Capabilities = capabilities;
+            Capabilities = capabilities ?? throw new ArgumentNullException("capabilities");
         }
 
         /// <summary>
@@ -82,13 +78,13 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * CAPABILITY IMAP4rev1 STARTTLS AUTH=GSSAPI XPIG-LATIN
             */
 
-            StringReader r = new StringReader(response);
+            var r = new StringReader(response);
             // Eat "*"
             r.ReadWord();
             // Eat "CAPABILITY"
             r.ReadWord();
 
-            string[] capabilities = r.ReadToEnd().Split(' ');
+            var capabilities = r.ReadToEnd().Split(' ');
 
             return new IMAP_r_u_Capability(capabilities);
         }
@@ -101,7 +97,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * CAPABILITY IMAP4rev1 STARTTLS AUTH=GSSAPI XPIG-LATIN
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* CAPABILITY");
             foreach(string capability in Capabilities){
                 retVal.Append(" " + capability);

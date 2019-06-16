@@ -52,7 +52,7 @@ namespace LumiSoft.Net.SIP.Message
             }
     
             // Parse address
-            SIP_t_NameAddress address = new SIP_t_NameAddress();
+            var address = new SIP_t_NameAddress();
             address.Parse(reader);
             Address = address;
 
@@ -66,8 +66,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns></returns>
         public override string ToStringValue()
         {            
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // Add address
             retVal.Append(Address.ToStringValue());
 

@@ -59,7 +59,7 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * STATUS blurdybloop (MESSAGES 231 UIDNEXT 44292)
             */
 
-            StringReader r = new StringReader(response);
+            var r = new StringReader(response);
             // Eat "*"
             r.ReadWord();
             // Eat "STATUS"
@@ -71,9 +71,9 @@ namespace LumiSoft.Net.IMAP
             long folderUid = 0;
             int  unseen    = 0;
 
-            string   folder = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
-            string[] items  = r.ReadParenthesized().Split(' ');
-            for(int i=0;i<items.Length;i+=2){
+            var   folder = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
+            var items  = r.ReadParenthesized().Split(' ');
+            for (int i=0;i<items.Length;i+=2){
                 if(items[i].Equals("MESSAGES",StringComparison.InvariantCultureIgnoreCase)){
                     messages = Convert.ToInt32(items[i + 1]);
                 }
@@ -112,7 +112,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * STATUS blurdybloop (MESSAGES 231 UIDNEXT 44292)
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* STATUS");
             retVal.Append(" " + IMAP_Utils.EncodeMailbox(FolderName,encoding));
             retVal.Append(" (");

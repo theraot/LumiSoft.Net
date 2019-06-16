@@ -57,10 +57,10 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             while(reader.Available > 0){
-                string word = reader.QuotedReadToDelimiter(',');
-                if(word != null && word.Length > 0){
-                    string[] name_value = word.Split(new char[]{'='},2);
-                    if(name_value[0].ToLower() == "nextnonce"){
+                var word = reader.QuotedReadToDelimiter(',');
+                if (word != null && word.Length > 0){
+                    var name_value = word.Split(new char[]{'='},2);
+                    if (name_value[0].ToLower() == "nextnonce"){
                         this.NextNonce = name_value[1];
                     }
                     else if(name_value[0].ToLower() == "qop"){
@@ -97,9 +97,9 @@ namespace LumiSoft.Net.SIP.Message
                 nc-value             =  8LHEX
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
-            if(NextNonce != null){
+            if (NextNonce != null){
                 retVal.Append("nextnonce=" + NextNonce);
             }
 

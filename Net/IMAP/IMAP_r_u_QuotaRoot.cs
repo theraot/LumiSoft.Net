@@ -24,12 +24,9 @@ namespace LumiSoft.Net.IMAP
             if(folder == string.Empty){
                 throw new ArgumentException("Argument 'folder' name must be specified.","folder");
             }
-            if(quotaRoots == null){
-                throw new ArgumentNullException("quotaRoots");
-            }
 
             FolderName = folder;
-            QuotaRoots = quotaRoots;
+            QuotaRoots = quotaRoots ?? throw new ArgumentNullException("quotaRoots");
         }
 
         /// <summary>
@@ -56,17 +53,17 @@ namespace LumiSoft.Net.IMAP
                             S: * QUOTAROOT comp.mail.mime
             */
 
-            StringReader r = new StringReader(response);
+            var r = new StringReader(response);
             // Eat "*"
             r.ReadWord();
             // Eat "QUOTAROOT"
             r.ReadWord();
 
-            string folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
-            List<string> quotaRoots = new List<string>();
-            while(r.Available > 0){
-                string quotaRoot = r.ReadWord();
-                if(quotaRoot != null){
+            var folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
+            var quotaRoots = new List<string>();
+            while (r.Available > 0){
+                var quotaRoot = r.ReadWord();
+                if (quotaRoot != null){
                     quotaRoots.Add(quotaRoot);
                 }
                 else{
@@ -95,7 +92,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * QUOTAROOT INBOX ""
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* QUOTAROOT " + IMAP_Utils.EncodeMailbox(FolderName,encoding));
             foreach(string root in QuotaRoots){
                 retVal.Append(" \"" + root + "\"");

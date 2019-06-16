@@ -32,18 +32,18 @@ namespace LumiSoft.Net.Mime
 		internal Hashtable ParseParameters()
 		{
 			// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... 
-			string[] paramNameValues = TextUtils.SplitQuotedString(m_pHeaderField.EncodedValue,';');
+			var paramNameValues = TextUtils.SplitQuotedString(m_pHeaderField.EncodedValue,';');
 
-			Hashtable retVal = new Hashtable();
-			// Skip value, other entries are parameters
-			for(int i=1;i<paramNameValues.Length;i++){
-				string[] paramNameValue = paramNameValues[i].Trim().Split(new char[]{'='},2);					
-				if(!retVal.ContainsKey(paramNameValue[0].ToLower())){
+            var retVal = new Hashtable();
+            // Skip value, other entries are parameters
+            for (int i=1;i<paramNameValues.Length;i++){
+				var paramNameValue = paramNameValues[i].Trim().Split(new char[]{'='},2);
+                if (!retVal.ContainsKey(paramNameValue[0].ToLower())){
 					if(paramNameValue.Length == 2){
-                        string value = paramNameValue[1];
+                        var value = paramNameValue[1];
 
                         // Quotes-string, unqoute.
-                        if(value.StartsWith("\"")){
+                        if (value.StartsWith("\"")){
                             value = TextUtils.UnQuoteString(paramNameValue[1]);
                         }
 
@@ -65,8 +65,8 @@ namespace LumiSoft.Net.Mime
 		/// <param name="parameters"></param>
 		internal void StoreParameters(string value,Hashtable parameters)
 		{
-			string retVal = value;
-			foreach(DictionaryEntry entry in parameters){
+			var retVal = value;
+            foreach (DictionaryEntry entry in parameters){
 				retVal += ";\t" + entry.Key + "=\"" + entry.Value + "\"";
 			}
 

@@ -18,11 +18,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>mailbox</b> is null reference.</exception>
         public SMTP_MailFrom(string mailbox,int size,string body,SMTP_DSN_Ret ret,string envid)
         {
-            if(mailbox == null){
-                throw new ArgumentNullException("mailbox");
-            }
-
-            Mailbox = mailbox;
+            Mailbox = mailbox ?? throw new ArgumentNullException("mailbox");
             Size    = size;
             Body    = body;
             RET     = ret;

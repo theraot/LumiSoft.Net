@@ -69,11 +69,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public Base64Stream(Stream stream,bool owner,bool addLineBreaks,FileAccess access)
         {
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            m_pStream       = stream;
+            m_pStream       = stream ?? throw new ArgumentNullException("stream");
             m_IsOwner       = owner;
             m_AddLineBreaks = addLineBreaks;
             m_AccessMode    = access;
@@ -179,7 +175,7 @@ namespace LumiSoft.Net.IO
 
             // We havn't any decoded data left, decode new data block.
             if((m_DecodedBlockCount - m_DecodedBlockOffset) == 0){
-                byte[] readBuffer = new byte[m_pDecodedBlock.Length + 3];
+                var readBuffer = new byte[m_pDecodedBlock.Length + 3];
                 int readedCount = m_pStream.Read(readBuffer,0,readBuffer.Length - 3);
                 // We reached end of stream, no more data.
                 if(readedCount == 0){

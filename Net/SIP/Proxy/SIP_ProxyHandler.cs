@@ -32,7 +32,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 return false;
             }
 
-            SIP_Uri requestUri = (SIP_Uri)requestContext.Request.RequestLine.Uri;
+            var requestUri = (SIP_Uri)requestContext.Request.RequestLine.Uri;
 
             long dummy = 0;
             if(requestUri.User.StartsWith("+") || Int64.TryParse(requestUri.User,out dummy)){
@@ -44,7 +44,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
 
                 // Create staefull proxy context for request forwarding.
-                SIP_ProxyContext proxyContext = requestContext.ProxyContext;
+                var proxyContext = requestContext.ProxyContext;
 
                 // Add target server credentials, if any.
                 //proxyContext.Credentials.Add(new NetworkCredential("user","password","domain-realm"));

@@ -32,8 +32,8 @@
                 return false;
             }
 
-            AudioFormat format = (AudioFormat)obj;
-            if(format.SamplesPerSecond != this.SamplesPerSecond){
+            var format = (AudioFormat)obj;
+            if (format.SamplesPerSecond != this.SamplesPerSecond){
                 return false;
             }
             if(format.BitsPerSample != this.BitsPerSample){

@@ -21,14 +21,14 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("buffer");
             }
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
             int offset = 0;
             int bytesInCurrentLine = 1;
             while(offset < count){
                 byte   currentByte = buffer[offset];
-                char[] bits        = new char[8];
-                for(int i=7;i>=0;i--){
+                var bits        = new char[8];
+                for (int i=7;i>=0;i--){
                     bits[i] = ((currentByte >> (7 - i)) & 0x1).ToString()[0];
                 }
                 retVal.Append(bits);

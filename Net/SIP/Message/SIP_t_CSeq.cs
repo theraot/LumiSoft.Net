@@ -70,8 +70,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get sequence number
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Invalid 'CSeq' value, sequence number is missing !");
             }
             try{
@@ -83,10 +83,7 @@ namespace LumiSoft.Net.SIP.Message
 
             // Get request method
             word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'CSeq' value, request method is missing !");
-            }
-            m_RequestMethod = word;
+            m_RequestMethod = word ?? throw new SIP_ParseException("Invalid 'CSeq' value, request method is missing !");
         }
 
         /// <summary>

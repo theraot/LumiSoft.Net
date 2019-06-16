@@ -84,15 +84,15 @@ namespace LumiSoft.Net.IMAP
 			*/
 
             long          seqMaxValue = long.MaxValue;
-            IMAP_t_SeqSet retVal      = new IMAP_t_SeqSet();
+            var retVal      = new IMAP_t_SeqSet();
 
-			//--- Validate sequence-set --------------------------------------------------------//
-			string[] sequenceSets = value.Trim().Split(',');
-			foreach(string sequenceSet in sequenceSets){
+            //--- Validate sequence-set --------------------------------------------------------//
+            var sequenceSets = value.Trim().Split(',');
+            foreach (string sequenceSet in sequenceSets){
 				// seq-range 
 				if(sequenceSet.IndexOf(":") > -1){
-					string[] rangeParts = sequenceSet.Split(':');
-					if(rangeParts.Length == 2){
+					var rangeParts = sequenceSet.Split(':');
+                    if (rangeParts.Length == 2){
                         long start = retVal.Parse_Seq_Number(rangeParts[0],seqMaxValue);
                         long end   = retVal.Parse_Seq_Number(rangeParts[1],seqMaxValue);
                         if(start <= end){

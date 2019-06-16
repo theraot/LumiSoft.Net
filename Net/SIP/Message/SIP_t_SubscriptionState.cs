@@ -145,11 +145,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // substate-value
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("SIP Event 'substate-value' value is missing !");
-            }
-            m_Value = word;
+            var word = reader.ReadWord();
+            m_Value = word ?? throw new SIP_ParseException("SIP Event 'substate-value' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -174,8 +171,8 @@ namespace LumiSoft.Net.SIP.Message
                 event-reason-extension = token
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // substate-value
             retVal.Append(m_Value);
 
@@ -216,8 +213,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Reason
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["reason"];
-                if(parameter != null){
+                var parameter = this.Parameters["reason"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -241,8 +238,8 @@ namespace LumiSoft.Net.SIP.Message
         public int Expires
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["expires"];
-                if(parameter != null){
+                var parameter = this.Parameters["expires"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 
@@ -270,8 +267,8 @@ namespace LumiSoft.Net.SIP.Message
         public int RetryAfter
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["retry-after"];
-                if(parameter != null){
+                var parameter = this.Parameters["retry-after"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 

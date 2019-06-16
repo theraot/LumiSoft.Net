@@ -16,15 +16,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>fetch</b> or <b>dataItem</b> is null reference.</exception>
         public IMAP_Client_e_FetchGetStoreStream(IMAP_r_u_Fetch fetch,IMAP_t_Fetch_r_i dataItem)
         {
-            if(fetch == null){
-                throw new ArgumentNullException("fetch");
-            }
-            if(dataItem == null){
-                throw new ArgumentNullException("dataItem");
-            }
-
-            FetchResponse = fetch;
-            DataItem      = dataItem;
+            FetchResponse = fetch ?? throw new ArgumentNullException("fetch");
+            DataItem      = dataItem ?? throw new ArgumentNullException("dataItem");
         }
 
         /// <summary>

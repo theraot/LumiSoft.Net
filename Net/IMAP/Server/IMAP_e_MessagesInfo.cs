@@ -15,11 +15,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
         internal IMAP_e_MessagesInfo(string folder)
         {
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-
-            Folder = folder;
+            Folder = folder ?? throw new ArgumentNullException("folder");
 
             MessagesInfo = new List<IMAP_MessageInfo>();
         }

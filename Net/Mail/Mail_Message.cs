@@ -147,7 +147,7 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("headerEncoding");
             }
                         
-            Mail_Message retVal = new Mail_Message();
+            var retVal = new Mail_Message();
             retVal.Parse(new SmartStream(stream,false),headerEncoding,new MIME_h_ContentType("text/plain"));
 
             return retVal;
@@ -177,8 +177,8 @@ namespace LumiSoft.Net.Mail
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            List<MIME_Entity> retVal = new List<MIME_Entity>();
-            foreach(MIME_Entity entity in GetAllEntities(includeEmbbedMessage)){
+            var retVal = new List<MIME_Entity>();
+            foreach (MIME_Entity entity in GetAllEntities(includeEmbbedMessage)){
                 MIME_h_ContentType contentType= null;
                 try{
                     contentType = entity.ContentType;
@@ -235,8 +235,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Date");
-                if(h != null){
+                var h = this.Header.GetFirst("Date");
+                if (h != null){
                     try{
                         return MIME_Utils.ParseRfc2822DateTime(((MIME_h_Unstructured)h).Value);
                     }
@@ -257,8 +257,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Date");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Date");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Date");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Date",MIME_Utils.DateTimeToRfc2822(value)));
                     }
                     else{
@@ -282,8 +282,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("From");
-                if(h != null){
+                var h = this.Header.GetFirst("From");
+                if (h != null){
                     if(!(h is Mail_h_MailboxList)){
                         throw new ParseException("Header field 'From' parsing failed.");
                     }
@@ -303,8 +303,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("From");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("From");
-                    if(h == null){
+                    var h = this.Header.GetFirst("From");
+                    if (h == null){
                         this.Header.Add(new Mail_h_MailboxList("From",value));
                     }
                     else{
@@ -327,8 +327,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Sender");
-                if(h != null){
+                var h = this.Header.GetFirst("Sender");
+                if (h != null){
                     if(!(h is Mail_h_Mailbox)){
                         throw new ParseException("Header field 'Sender' parsing failed.");
                     }
@@ -348,8 +348,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Sender");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Sender");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Sender");
+                    if (h == null){
                         this.Header.Add(new Mail_h_Mailbox("Sender",value));
                     }
                     else{
@@ -373,8 +373,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Reply-To");
-                if(h != null){
+                var h = this.Header.GetFirst("Reply-To");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Reply-To' parsing failed.");
                     }
@@ -394,8 +394,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Reply-To");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Reply-To");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Reply-To");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Reply-To",value));
                     }
                     else{
@@ -418,8 +418,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("To");
-                if(h != null){
+                var h = this.Header.GetFirst("To");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'To' parsing failed.");
                     }
@@ -439,8 +439,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("To");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("To");
-                    if(h == null){
+                    var h = this.Header.GetFirst("To");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("To",value));
                     }
                     else{
@@ -463,8 +463,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Cc");
-                if(h != null){
+                var h = this.Header.GetFirst("Cc");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Cc' parsing failed.");
                     }
@@ -484,8 +484,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Cc");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Cc");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Cc");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Cc",value));
                     }
                     else{
@@ -508,8 +508,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Bcc");
-                if(h != null){
+                var h = this.Header.GetFirst("Bcc");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Bcc' parsing failed.");
                     }
@@ -529,8 +529,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Bcc");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Bcc");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Bcc");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Bcc",value));
                     }
                     else{
@@ -553,8 +553,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Message-ID");
-                if(h != null){
+                var h = this.Header.GetFirst("Message-ID");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -570,8 +570,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Message-ID");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Message-ID");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Message-ID");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Message-ID",value));
                     }
                     else{
@@ -593,8 +593,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("In-Reply-To");
-                if(h != null){
+                var h = this.Header.GetFirst("In-Reply-To");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -610,8 +610,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("In-Reply-To");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("In-Reply-To");
-                    if(h == null){
+                    var h = this.Header.GetFirst("In-Reply-To");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("In-Reply-To",value));
                     }
                     else{
@@ -635,8 +635,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("References");
-                if(h != null){
+                var h = this.Header.GetFirst("References");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -652,8 +652,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("References");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("References");
-                    if(h == null){
+                    var h = this.Header.GetFirst("References");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("References",value));
                     }
                     else{
@@ -675,8 +675,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Subject");
-                if(h != null){
+                var h = this.Header.GetFirst("Subject");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -692,8 +692,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Subject");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Subject");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Subject");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Subject",value));
                     }
                     else{
@@ -716,8 +716,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Comments");
-                if(h != null){
+                var h = this.Header.GetFirst("Comments");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -733,8 +733,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Comments");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Comments");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Comments");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Comments",value));
                     }
                     else{
@@ -756,8 +756,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Keywords");
-                if(h != null){
+                var h = this.Header.GetFirst("Keywords");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -773,8 +773,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Keywords");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Keywords");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Keywords");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Keywords",value));
                     }
                     else{
@@ -797,8 +797,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-Date");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-Date");
+                if (h != null){
                     try{
                         return MIME_Utils.ParseRfc2822DateTime(((MIME_h_Unstructured)h).Value);
                     }
@@ -819,8 +819,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-Date");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-Date");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-Date");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Resent-Date",MIME_Utils.DateTimeToRfc2822(value)));
                     }
                     else{
@@ -844,8 +844,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-From");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-From");
+                if (h != null){
                     if(!(h is Mail_h_MailboxList)){
                         throw new ParseException("Header field 'Resent-From' parsing failed.");
                     }
@@ -865,8 +865,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-From");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-From");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-From");
+                    if (h == null){
                         this.Header.Add(new Mail_h_MailboxList("Resent-From",value));
                     }
                     else{
@@ -890,8 +890,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-Sender");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-Sender");
+                if (h != null){
                     if(!(h is Mail_h_Mailbox)){
                         throw new ParseException("Header field 'Resent-Sender' parsing failed.");
                     }
@@ -911,8 +911,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-Sender");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-Sender");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-Sender");
+                    if (h == null){
                         this.Header.Add(new Mail_h_Mailbox("Resent-Sender",value));
                     }
                     else{
@@ -935,8 +935,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-To");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-To");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Resent-To' parsing failed.");
                     }
@@ -956,8 +956,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-To");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-To");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-To");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Resent-To",value));
                     }
                     else{
@@ -980,8 +980,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-Cc");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-Cc");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Resent-Cc' parsing failed.");
                     }
@@ -1001,8 +1001,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-Cc");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-Cc");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-Cc");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Resent-Cc",value));
                     }
                     else{
@@ -1025,8 +1025,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-Bcc");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-Bcc");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Resent-Bcc' parsing failed.");
                     }
@@ -1046,8 +1046,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-Bcc");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-Bcc");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-Bcc");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Resent-Bcc",value));
                     }
                     else{
@@ -1069,8 +1069,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-Reply-To");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-Reply-To");
+                if (h != null){
                     if(!(h is Mail_h_AddressList)){
                         throw new ParseException("Header field 'Resent-Reply-To' parsing failed.");
                     }
@@ -1090,8 +1090,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-Reply-To");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-Reply-To");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-Reply-To");
+                    if (h == null){
                         this.Header.Add(new Mail_h_AddressList("Resent-Reply-To",value));
                     }
                     else{
@@ -1112,8 +1112,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Resent-Message-ID");
-                if(h != null){
+                var h = this.Header.GetFirst("Resent-Message-ID");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1129,8 +1129,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Resent-Message-ID");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Resent-Message-ID");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Resent-Message-ID");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Resent-Message-ID",value));
                     }
                     else{
@@ -1152,8 +1152,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Return-Path");
-                if(h != null){
+                var h = this.Header.GetFirst("Return-Path");
+                if (h != null){
                     if(!(h is Mail_h_ReturnPath)){
                         throw new ParseException("Header field 'Return-Path' parsing failed.");
                     }
@@ -1173,8 +1173,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Return-Path");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Return-Path");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Return-Path");
+                    if (h == null){
                         this.Header.Add(value);
                     }
                     else{
@@ -1197,10 +1197,10 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h[] h = this.Header["Received"];
-                if(h != null){
-                    List<Mail_h_Received> retVal = new List<Mail_h_Received>();
-                    for(int i=0;i<h.Length;i++){
+                var h = this.Header["Received"];
+                if (h != null){
+                    var retVal = new List<Mail_h_Received>();
+                    for (int i=0;i<h.Length;i++){
                         if(!(h[i] is Mail_h_Received)){
                             throw new ParseException("Header field 'Received' parsing failed.");
                         }
@@ -1234,8 +1234,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Disposition-Notification-To");
-                if(h != null){
+                var h = this.Header.GetFirst("Disposition-Notification-To");
+                if (h != null){
                     if(!(h is Mail_h_MailboxList)){
                         throw new ParseException("Header field 'From' parsing failed.");
                     }
@@ -1255,8 +1255,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Disposition-Notification-To");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Disposition-Notification-To");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Disposition-Notification-To");
+                    if (h == null){
                         this.Header.Add(new Mail_h_MailboxList("Disposition-Notification-To",value));
                     }
                     else{
@@ -1278,8 +1278,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Disposition-Notification-Options");
-                if(h != null){
+                var h = this.Header.GetFirst("Disposition-Notification-Options");
+                if (h != null){
                     if(!(h is Mail_h_DispositionNotificationOptions)){
                         throw new ParseException("Header field 'Disposition-Notification-Options' parsing failed.");
                     }
@@ -1299,8 +1299,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Disposition-Notification-Options");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Disposition-Notification-Options");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Disposition-Notification-Options");
+                    if (h == null){
                         this.Header.Add(value);
                     }
                     else{
@@ -1324,8 +1324,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Accept-Language");
-                if(h != null){
+                var h = this.Header.GetFirst("Accept-Language");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1341,8 +1341,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Accept-Language");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Accept-Language");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Accept-Language");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Accept-Language",value));
                     }
                     else{
@@ -1365,8 +1365,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Original-Message-ID");
-                if(h != null){
+                var h = this.Header.GetFirst("Original-Message-ID");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1382,8 +1382,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Original-Message-ID");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Original-Message-ID");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Original-Message-ID");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Original-Message-ID",value));
                     }
                     else{
@@ -1405,8 +1405,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("PICS-Label");
-                if(h != null){
+                var h = this.Header.GetFirst("PICS-Label");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1422,8 +1422,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("PICS-LabelD");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("PICS-Label");
-                    if(h == null){
+                    var h = this.Header.GetFirst("PICS-Label");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("PICS-Label",value));
                     }
                     else{
@@ -1449,8 +1449,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-Archive");
-                if(h != null){
+                var h = this.Header.GetFirst("List-Archive");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1466,8 +1466,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-Archive");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-Archive");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-Archive");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-Archive",value));
                     }
                     else{
@@ -1489,8 +1489,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-Help");
-                if(h != null){
+                var h = this.Header.GetFirst("List-Help");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1506,8 +1506,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-Help");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-Help");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-Help");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-Help",value));
                     }
                     else{
@@ -1529,8 +1529,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-ID");
-                if(h != null){
+                var h = this.Header.GetFirst("List-ID");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1546,8 +1546,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-ID");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-ID");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-ID");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-ID",value));
                     }
                     else{
@@ -1569,8 +1569,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-Owner");
-                if(h != null){
+                var h = this.Header.GetFirst("List-Owner");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1586,8 +1586,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-Owner");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-Owner");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-Owner");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-Owner",value));
                     }
                     else{
@@ -1609,8 +1609,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-Post");
-                if(h != null){
+                var h = this.Header.GetFirst("List-Post");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1626,8 +1626,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-Post");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-Post");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-Post");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-Post",value));
                     }
                     else{
@@ -1649,8 +1649,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-Subscribe");
-                if(h != null){
+                var h = this.Header.GetFirst("List-Subscribe");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1666,8 +1666,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-Subscribe");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-Subscribe");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-Subscribe");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-Subscribe",value));
                     }
                     else{
@@ -1689,8 +1689,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("List-Unsubscribe");
-                if(h != null){
+                var h = this.Header.GetFirst("List-Unsubscribe");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1706,8 +1706,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("List-Unsubscribe");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("List-Unsubscribe");
-                    if(h == null){
+                    var h = this.Header.GetFirst("List-Unsubscribe");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("List-Unsubscribe",value));
                     }
                     else{
@@ -1730,8 +1730,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Message-Context");
-                if(h != null){
+                var h = this.Header.GetFirst("Message-Context");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1747,8 +1747,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Message-Context");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Message-Context");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Message-Context");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Message-Context",value));
                     }
                     else{
@@ -1798,8 +1798,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Importance");
-                if(h != null){
+                var h = this.Header.GetFirst("Importance");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1815,8 +1815,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Importance");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Importance");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Importance");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Importance",value));
                     }
                     else{
@@ -1838,8 +1838,8 @@ namespace LumiSoft.Net.Mail
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                MIME_h h = this.Header.GetFirst("Priority");
-                if(h != null){
+                var h = this.Header.GetFirst("Priority");
+                if (h != null){
                     return ((MIME_h_Unstructured)h).Value;
                 }
 
@@ -1855,8 +1855,8 @@ namespace LumiSoft.Net.Mail
                     this.Header.RemoveAll("Priority");
                 }
                 else{
-                    MIME_h h = this.Header.GetFirst("Priority");
-                    if(h == null){
+                    var h = this.Header.GetFirst("Priority");
+                    if (h == null){
                         this.Header.Add(new MIME_h_Unstructured("Priority",value));
                     }
                     else{

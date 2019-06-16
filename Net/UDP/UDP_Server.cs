@@ -57,18 +57,18 @@ namespace LumiSoft.Net.UDP
                 // We must replace IPAddress.Any to all available IPs, otherwise it's impossible to send 
                 // reply back to UDP packet sender on same local EP where packet received. This is very 
                 // important when clients are behind NAT.
-                List<IPEndPoint> listeningEPs = new List<IPEndPoint>();
-                foreach(IPEndPoint ep in m_pBindings){                    
+                var listeningEPs = new List<IPEndPoint>();
+                foreach (IPEndPoint ep in m_pBindings){                    
                     if(ep.Address.Equals(IPAddress.Any)){
                         // Add localhost.
-                        IPEndPoint epLocalhost = new IPEndPoint(IPAddress.Loopback,ep.Port);
-                        if(!listeningEPs.Contains(epLocalhost)){
+                        var epLocalhost = new IPEndPoint(IPAddress.Loopback,ep.Port);
+                        if (!listeningEPs.Contains(epLocalhost)){
                             listeningEPs.Add(epLocalhost);
                         }
                         // Add all host IPs.
                         foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
-                            IPEndPoint epNew = new IPEndPoint(ip,ep.Port);
-                            if(!listeningEPs.Contains(epNew)){
+                            var epNew = new IPEndPoint(ip,ep.Port);
+                            if (!listeningEPs.Contains(epNew)){
                                 listeningEPs.Add(epNew);
                             }
                         }
@@ -84,12 +84,12 @@ namespace LumiSoft.Net.UDP
                 m_pSockets = new List<Socket>();
                 foreach(IPEndPoint ep in listeningEPs){                    
                     try{
-                        Socket socket = Net_Utils.CreateSocket(ep,ProtocolType.Udp);
+                        var socket = Net_Utils.CreateSocket(ep,ProtocolType.Udp);
                         m_pSockets.Add(socket);
 
                         // Create UDP data receivers.
                         for(int i=0;i<m_ReceiversPerSocket;i++){
-                            UDP_DataReceiver receiver = new UDP_DataReceiver(socket);
+                            var receiver = new UDP_DataReceiver(socket);
                             receiver.PacketReceived += delegate(object s,UDP_e_PacketReceived e){
                                 try{
                                     ProcessUdpPacket(e);

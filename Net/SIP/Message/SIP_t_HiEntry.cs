@@ -77,8 +77,8 @@ namespace LumiSoft.Net.SIP.Message
                 hi-extension = generic-param
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // name-addr
             retVal.Append(m_pAddress.ToStringValue());
 
@@ -111,8 +111,8 @@ namespace LumiSoft.Net.SIP.Message
         public double Index
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["index"];
-                if(parameter != null){
+                var parameter = this.Parameters["index"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 

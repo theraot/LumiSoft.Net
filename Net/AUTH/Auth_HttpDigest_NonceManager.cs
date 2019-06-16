@@ -78,7 +78,7 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns new created nonce.</returns>
         public string CreateNonce()
         {
-            string nonce = Guid.NewGuid().ToString().Replace("-","");
+            var nonce = Guid.NewGuid().ToString().Replace("-","");
             m_pNonces.Add(new NonceEntry(nonce));
 
             return nonce;

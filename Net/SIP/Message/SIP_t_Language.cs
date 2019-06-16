@@ -51,11 +51,8 @@ namespace LumiSoft.Net.SIP.Message
             }
             
             // Parse content-coding
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid Accept-Language value, language-range value is missing !");
-            }
-            m_LanguageRange = word;
+            var word = reader.ReadWord();
+            m_LanguageRange = word ?? throw new SIP_ParseException("Invalid Accept-Language value, language-range value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -73,7 +70,7 @@ namespace LumiSoft.Net.SIP.Message
                 language-range   =  ( ( 1*8ALPHA *( "-" 1*8ALPHA ) ) / "*" )
             */
 
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append(m_LanguageRange);
             retVal.Append(ParametersToString());
 
@@ -103,8 +100,8 @@ namespace LumiSoft.Net.SIP.Message
         public double QValue
         {
             get{
-                SIP_Parameter parameter = this.Parameters["qvalue"];
-                if(parameter != null){
+                var parameter = this.Parameters["qvalue"];
+                if (parameter != null){
                     return Convert.ToDouble(parameter.Value);
                 }
 

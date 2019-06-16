@@ -25,7 +25,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns parsed RTP packet.</returns>
         public static RTP_Packet Parse(byte[] buffer,int size)
         {
-            RTP_Packet packet = new RTP_Packet();
+            var packet = new RTP_Packet();
             packet.ParseInternal(buffer,size);
 
             return packet;
@@ -117,7 +117,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns packet info.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("----- RTP Packet\r\n");
             retVal.Append("Version: " + Version.ToString() + "\r\n");
             retVal.Append("IsMaker: " + IsMarker.ToString() + "\r\n");
@@ -292,8 +292,8 @@ namespace LumiSoft.Net.RTP
         public uint[] Sources
         {
             get{
-                uint[] retVal = new uint[1];
-                if(CSRC != null){
+                var retVal = new uint[1];
+                if (CSRC != null){
                     retVal = new uint[1 + CSRC.Length];
                 }
                 retVal[0] = m_SSRC;
@@ -312,11 +312,7 @@ namespace LumiSoft.Net.RTP
             get{ return m_Data; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Data");
-                }
-
-                m_Data = value; 
+                m_Data = value ?? throw new ArgumentNullException("Data"); 
             }
         }
     }

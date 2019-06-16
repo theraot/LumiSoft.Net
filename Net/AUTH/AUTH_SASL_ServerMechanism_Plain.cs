@@ -69,10 +69,10 @@ namespace LumiSoft.Net.AUTH
             }
             // Parse response
 
-            string[] authzid_authcid_passwd = Encoding.UTF8.GetString(clientResponse).Split('\0');
-            if(authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1])){  
+            var authzid_authcid_passwd = Encoding.UTF8.GetString(clientResponse).Split('\0');
+            if (authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1])){  
                 m_UserName = authzid_authcid_passwd[1];
-                AUTH_e_Authenticate result = OnAuthenticate(authzid_authcid_passwd[0],authzid_authcid_passwd[1],authzid_authcid_passwd[2]);
+                var result = OnAuthenticate(authzid_authcid_passwd[0],authzid_authcid_passwd[1],authzid_authcid_passwd[2]);
                 m_IsAuthenticated = result.IsAuthenticated;
             }
 
@@ -132,9 +132,9 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns authentication result.</returns>
         private AUTH_e_Authenticate OnAuthenticate(string authorizationID,string userName,string password)
         {
-            AUTH_e_Authenticate retVal = new AUTH_e_Authenticate(authorizationID,userName,password);
+            var retVal = new AUTH_e_Authenticate(authorizationID,userName,password);
 
-            if(this.Authenticate != null){
+            if (this.Authenticate != null){
                 this.Authenticate(this,retVal);
             }
 

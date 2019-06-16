@@ -62,11 +62,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// <exception cref="ArgumentNullException">Is raised when <b>session</b></exception>
             public RTP_SessionStatistics(RTP_Session session)
             {
-                if(session == null){
-                    throw new ArgumentNullException("session");
-                }
-
-                m_pSession = session;
+                m_pSession = session ?? throw new ArgumentNullException("session");
             }
 
             /// <summary>
@@ -281,8 +277,8 @@ namespace LumiSoft.Net.RTP.Debug
             public string[] Targets
             {
                 get{
-                    List<string> retVal = new List<string>();
-                    foreach(RTP_Address target in m_pSession.Targets){
+                    var retVal = new List<string>();
+                    foreach (RTP_Address target in m_pSession.Targets){
                         retVal.Add(target.IP + ":" + target.DataPort + "/" + target.ControlPort);
                     }
 
@@ -325,11 +321,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// <exception cref="ArgumentNullException">Is raised when <b>participant</b> null reference.</exception>
             public RTP_ParticipantInfo(RTP_Participant participant)
             {
-                if(participant == null){
-                    throw new ArgumentNullException("participant");
-                }
-
-                m_pParticipant = participant;
+                m_pParticipant = participant ?? throw new ArgumentNullException("participant");
             }
 
             /// <summary>
@@ -440,11 +432,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// <exception cref="ArgumentNullException">Is raised when <b>source</b> is null reference.</exception>
             public RTP_SourceInfo(RTP_Source source)
             {
-                if(source == null){
-                    throw new ArgumentNullException("source");
-                }
-
-                m_pSource = source;
+                m_pSource = source ?? throw new ArgumentNullException("source");
             }
 
             /// <summary>
@@ -532,11 +520,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// <param name="stream">RTP receive stream.</param>
             public RTP_ReceiveStreamInfo(RTP_ReceiveStream stream)
             {
-                if(stream == null){
-                    throw new ArgumentNullException("stream");
-                }
-
-                m_pStream = stream;
+                m_pStream = stream ?? throw new ArgumentNullException("stream");
             }
 
             /// <summary>
@@ -651,11 +635,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
             public RTP_SendStreamInfo(RTP_SendStream stream)
             {
-                if(stream == null){
-                    throw new ArgumentNullException("stream");
-                }
-
-                m_pStream = stream;
+                m_pStream = stream ?? throw new ArgumentNullException("stream");
             }
 
             /// <summary>
@@ -748,11 +728,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// <param name="session">RTP multimedia session.</param>
         public wfrm_RTP_Debug(RTP_MultimediaSession session)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            Session = session;
+            Session = session ?? throw new ArgumentNullException("session");
 
             InitUI();
 
@@ -772,7 +748,7 @@ namespace LumiSoft.Net.RTP.Debug
             m_pTimer.Enabled = true;
 
             foreach(RTP_Session s in Session.Sessions){
-                ComboBoxItem item = new ComboBoxItem("Session: " + s.GetHashCode(),new RTP_SessionStatistics(s));
+                var item = new ComboBoxItem("Session: " + s.GetHashCode(),new RTP_SessionStatistics(s));
                 m_pSessions.Items.Add(item);
             }
             if(m_pSessions.Items.Count > 0){
@@ -807,7 +783,7 @@ namespace LumiSoft.Net.RTP.Debug
             m_pParticipants.FullRowSelect = true;
             m_pParticipants.HideSelection = false;
             m_pParticipants.AfterSelect += new TreeViewEventHandler(m_pParticipants_AfterSelect);
-            TreeNode nodeParticipant = new TreeNode(Session.LocalParticipant.CNAME);
+            var nodeParticipant = new TreeNode(Session.LocalParticipant.CNAME);
             nodeParticipant.Tag = new RTP_ParticipantInfo(Session.LocalParticipant);
             nodeParticipant.Nodes.Add("Sources");
             m_pParticipants.Nodes.Add(nodeParticipant);
@@ -875,7 +851,7 @@ namespace LumiSoft.Net.RTP.Debug
 
             // Move processing to UI thread.
             this.BeginInvoke(new MethodInvoker(delegate(){
-                ListViewItem item = new ListViewItem(e.Exception.Message);
+                var item = new ListViewItem(e.Exception.Message);
                 item.Tag = e.Exception;
                 m_pErrors.Items.Add(item);
             }));
@@ -894,7 +870,7 @@ namespace LumiSoft.Net.RTP.Debug
 
             // Move processing to UI thread.
             this.BeginInvoke(new MethodInvoker(delegate(){
-                ComboBoxItem item = new ComboBoxItem("Session: " + e.Value.GetHashCode(),new RTP_SessionStatistics(e.Value));
+                var item = new ComboBoxItem("Session: " + e.Value.GetHashCode(),new RTP_SessionStatistics(e.Value));
                 m_pSessions.Items.Add(item);
 
                 if(m_pSessions.Items.Count > 0){
@@ -920,7 +896,7 @@ namespace LumiSoft.Net.RTP.Debug
             
             // Move processing to UI thread.
             this.BeginInvoke(new MethodInvoker(delegate(){
-                TreeNode nodeParticipant = new TreeNode(e.Participant.CNAME);
+                var nodeParticipant = new TreeNode(e.Participant.CNAME);
                 nodeParticipant.Tag = new RTP_ParticipantInfo(e.Participant);
                 nodeParticipant.Nodes.Add("Sources");
                 m_pParticipants.Nodes.Add(nodeParticipant);
@@ -940,8 +916,8 @@ namespace LumiSoft.Net.RTP.Debug
 
             // Move processing to UI thread.
             this.BeginInvoke(new MethodInvoker(delegate(){
-                TreeNode nodeParticipant = FindParticipantNode((RTP_Participant)sender);
-                if(nodeParticipant != null){
+                var nodeParticipant = FindParticipantNode((RTP_Participant)sender);
+                if (nodeParticipant != null){
                     nodeParticipant.Remove();
                 }
             }));
@@ -969,12 +945,12 @@ namespace LumiSoft.Net.RTP.Debug
                 else{
                     nodeParticipant = FindParticipantNode(((RTP_Source_Local)e.Source).Participant);
                 }
-                TreeNode nodeSource = nodeParticipant.Nodes[0].Nodes.Add(e.Source.SSRC.ToString());
+                var nodeSource = nodeParticipant.Nodes[0].Nodes.Add(e.Source.SSRC.ToString());
                 nodeSource.Tag = new RTP_SourceInfo(e.Source);
 
                 if(e.Source.State == RTP_SourceState.Active){
-                    TreeNode nodeSourceStream = nodeSource.Nodes.Add("RTP Stream");
-                    if(e.Source is RTP_Source_Local){
+                    var nodeSourceStream = nodeSource.Nodes.Add("RTP Stream");
+                    if (e.Source is RTP_Source_Local){
                         nodeSourceStream.Tag = new RTP_SendStreamInfo(((RTP_Source_Local)e.Source).Stream);
                     }
                     else{
@@ -995,8 +971,8 @@ namespace LumiSoft.Net.RTP.Debug
                 return;
             }
 
-            RTP_Source source = (RTP_Source)sender;
-            if(source.State == RTP_SourceState.Disposed){
+            var source = (RTP_Source)sender;
+            if (source.State == RTP_SourceState.Disposed){
                 return;
             }
 
@@ -1013,8 +989,8 @@ namespace LumiSoft.Net.RTP.Debug
                     foreach(TreeNode nodeSource in nodeParticipant.Nodes[0].Nodes){
                         if(nodeSource.Text == source.SSRC.ToString()){                            
                             if(source.State == RTP_SourceState.Active){
-                                TreeNode nodeSourceStream = nodeSource.Nodes.Add("RTP Stream");
-                                if(source is RTP_Source_Local){
+                                var nodeSourceStream = nodeSource.Nodes.Add("RTP Stream");
+                                if (source is RTP_Source_Local){
                                     nodeSourceStream.Tag = new RTP_SendStreamInfo(((RTP_Source_Local)source).Stream);
                                 }
                                 else{
@@ -1045,8 +1021,8 @@ namespace LumiSoft.Net.RTP.Debug
 
             // Move processing to UI thread.
             this.BeginInvoke(new MethodInvoker(delegate(){
-                TreeNode nodeParticipant = FindParticipantNode((RTP_Participant)sender);
-                if(nodeParticipant != null){
+                var nodeParticipant = FindParticipantNode((RTP_Participant)sender);
+                if (nodeParticipant != null){
                     foreach(TreeNode nodeSource in nodeParticipant.Nodes[0].Nodes){
                         if(nodeSource.Text == ssrc.ToString()){
                             nodeSource.Remove();

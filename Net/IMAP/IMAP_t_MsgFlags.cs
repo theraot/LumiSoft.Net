@@ -75,8 +75,8 @@ namespace LumiSoft.Net.IMAP
                 value = value.Substring(1,value.Length - 2);
             }
 
-            string[] flags     = new string[0];
-            if(!string.IsNullOrEmpty(value)){
+            var flags     = new string[0];
+            if (!string.IsNullOrEmpty(value)){
                 flags = value.Split(' ');
             }
 
@@ -89,10 +89,10 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as flags string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
-            string[] flags = ToArray();
-            for(int i=0;i<flags.Length;i++){
+            var flags = ToArray();
+            for (int i=0;i<flags.Length;i++){
                 if(i > 0){
                     retVal.Append(" ");
                 }

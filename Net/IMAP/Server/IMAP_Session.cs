@@ -68,10 +68,10 @@ namespace LumiSoft.Net.IMAP.Server
                     throw new ArgumentNullException("seqSet");
                 }
 
-                List<IMAP_MessageInfo> retVal = new List<IMAP_MessageInfo>();
-                for(int i=0;i<m_pMessagesInfo.Count;i++){
-                    IMAP_MessageInfo msgInfo = m_pMessagesInfo[i];                    
-                    if(uid){
+                var retVal = new List<IMAP_MessageInfo>();
+                for (int i=0;i<m_pMessagesInfo.Count;i++){
+                    var msgInfo = m_pMessagesInfo[i];
+                    if (uid){
                         if(seqSet.Contains(msgInfo.UID)){
                             retVal.Add(msgInfo);
                         }
@@ -241,21 +241,21 @@ namespace LumiSoft.Net.IMAP.Server
                 
                 // If initial command line ends with literal string, read literal string and remaining command text.
                 if(EndsWithLiteralString(m_InitialCmdLine)){
-                    StringBuilder cmdText     = new StringBuilder();
+                    var cmdText     = new StringBuilder();
                     int           literalSize = GetLiteralSize(m_InitialCmdLine);
 
                     // Add initial command line part to command text.
                     cmdText.Append(RemoveLiteralSpecifier(m_InitialCmdLine));
 
-                    SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                    while(true){
+                    var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                    while (true){
                         #region Read literal string
 
                         // Send "+ Continue".
                         m_pSession.WriteLine("+ Continue.");
 
                         // Read literal string.
-                        MemoryStream msLiteral = new MemoryStream();
+                        var msLiteral = new MemoryStream();
                         m_pSession.TcpStream.ReadFixedCount(msLiteral,literalSize);
                         
                         // Log
@@ -276,7 +276,7 @@ namespace LumiSoft.Net.IMAP.Server
                             throw readLineOP.Error;
                         }
 
-                        string line = readLineOP.LineUtf8;
+                        var line = readLineOP.LineUtf8;
 
                         // Log
                         m_pSession.LogAddRead(readLineOP.BytesInBuffer,line);
@@ -325,8 +325,8 @@ namespace LumiSoft.Net.IMAP.Server
 
                 if(value.EndsWith("}")){
                     int    digitCount = 0;
-                    char[] chars      = value.ToCharArray();
-                    for(int i=chars.Length-2;i>=0;i--)
+                    var chars      = value.ToCharArray();
+                    for (int i=chars.Length-2;i>=0;i--)
                     {
                         // We have literal string start tag.
                         if(chars[i] == '{'){
@@ -548,7 +548,7 @@ namespace LumiSoft.Net.IMAP.Server
                 }
 
                 lock(m_pLock){
-                    QueueItem responseItem = new QueueItem(response,completedAsyncCallback);
+                    var responseItem = new QueueItem(response,completedAsyncCallback);
                     m_pResponses.Enqueue(responseItem);
 
                     // Start sending response, no active response sending.
@@ -744,9 +744,9 @@ namespace LumiSoft.Net.IMAP.Server
                     response = new IMAP_r_u_ServerStatus("OK",this.Server.GreetingText);
                 }
                 
-                IMAP_e_Started e = OnStarted(response);
+                var e = OnStarted(response);
 
-                if(e.Response != null){
+                if (e.Response != null){
                     m_pResponseSender.SendResponseAsync(e.Response);
                 }
 
@@ -843,7 +843,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             try{
-                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
                 // This event is raised only when read next coomand completes asynchronously.
                 readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){                
                     if(ProcessCmd(readLineOP)){
@@ -892,18 +892,18 @@ namespace LumiSoft.Net.IMAP.Server
                     return false;
                 }
                                 
-                string[] cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},3);
-                if(cmd_args.Length < 2){
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},3);
+                if (cmd_args.Length < 2){
                     m_pResponseSender.SendResponseAsync(new IMAP_r_u_ServerStatus("BAD","Error: Command '" + op.LineUtf8 + "' not recognized."));
 
                     return true;
                 }
-                string   cmdTag   = cmd_args[0];
-                string   cmd      = cmd_args[1].ToUpperInvariant();
-                string   args     = cmd_args.Length == 3 ? cmd_args[2] : "";
-        
+                var   cmdTag   = cmd_args[0];
+                var   cmd      = cmd_args[1].ToUpperInvariant();
+                var   args     = cmd_args.Length == 3 ? cmd_args[2] : "";
+
                 // Log.
-                if(this.Server.Logger != null){
+                if (this.Server.Logger != null){
                     // Hide password from log.
                     if(cmd == "LOGIN"){                        
                         this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8.Substring(0,op.LineUtf8.LastIndexOf(' ')) + " <***REMOVED***>",this.LocalEndPoint,this.RemoteEndPoint);
@@ -1112,7 +1112,7 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"OK","Begin TLS negotiation now."));
             
             try{
-                DateTime startTime = DateTime.Now;
+                var startTime = DateTime.Now;
 
                 // Create delegate which is called when SwitchToSecureAsync has completed.
                 Action<SwitchToSecureAsyncOP> switchSecureCompleted = delegate(SwitchToSecureAsyncOP e){
@@ -1136,7 +1136,7 @@ namespace LumiSoft.Net.IMAP.Server
                     }
                 };
 
-                SwitchToSecureAsyncOP op = new SwitchToSecureAsyncOP();
+                var op = new SwitchToSecureAsyncOP();
                 op.CompletedAsync += delegate(object sender,EventArgs<TCP_ServerSession.SwitchToSecureAsyncOP> e){
                     switchSecureCompleted(op);
                 };
@@ -1220,15 +1220,15 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] user_pass = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(user_pass.Length != 2){
+            var user_pass = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (user_pass.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
 
-            IMAP_e_Login e = OnLogin(user_pass[0],user_pass[1]);
-            if(e.IsAuthenticated){
+            var e = OnLogin(user_pass[0],user_pass[1]);
+            if (e.IsAuthenticated){
                 m_pUser = new GenericIdentity(user_pass[0],"IMAP-LOGIN");
 
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"OK","LOGIN completed."));
@@ -1384,14 +1384,14 @@ namespace LumiSoft.Net.IMAP.Server
 
             #region Parse parameters
 
-            string[] arguments = cmdText.Split(' ');
-            if(arguments.Length > 2){
+            var arguments = cmdText.Split(' ');
+            if (arguments.Length > 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
-            byte[] initialClientResponse = new byte[0];
-            if(arguments.Length == 2){
+            var initialClientResponse = new byte[0];
+            if (arguments.Length == 2){
                 if(arguments[1] == "="){
                     // Skip.
                 }
@@ -1406,23 +1406,23 @@ namespace LumiSoft.Net.IMAP.Server
                     }
                 }
             }
-            string mechanism = arguments[0];
+            var mechanism = arguments[0];
 
             #endregion
-                        
-            if(!this.Authentications.ContainsKey(mechanism)){
+
+            if (!this.Authentications.ContainsKey(mechanism)){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Not supported authentication mechanism."));
 
                 return;
             }
 
-            byte[] clientResponse = initialClientResponse;
-            AUTH_SASL_ServerMechanism auth = this.Authentications[mechanism];            
+            var clientResponse = initialClientResponse;
+            var auth = this.Authentications[mechanism];
             auth.Reset();
             while(true){
-                byte[] serverResponse = auth.Continue(clientResponse);
+                var serverResponse = auth.Continue(clientResponse);
                 // Authentication completed.
-                if(auth.IsCompleted){
+                if (auth.IsCompleted){
                     if(auth.IsAuthenticated){
                         m_pUser = new GenericIdentity(auth.UserName,"SASL-" + auth.Name);
                               
@@ -1444,7 +1444,7 @@ namespace LumiSoft.Net.IMAP.Server
                 }
 
                 // Read client response. 
-                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
                 this.TcpStream.ReadLine(readLineOP,false);
                 if(readLineOP.Error != null){
                     throw readLineOP.Error;
@@ -1515,8 +1515,8 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            IMAP_e_Namespace e = OnNamespace(new IMAP_r_ServerStatus(cmdTag,"OK","NAMESPACE command completed."));
-            if(e.NamespaceResponse != null){
+            var e = OnNamespace(new IMAP_r_ServerStatus(cmdTag,"OK","NAMESPACE command completed."));
+            if (e.NamespaceResponse != null){
                 m_pResponseSender.SendResponseAsync(e.NamespaceResponse);
             }
             m_pResponseSender.SendResponseAsync(e.Response);
@@ -1678,26 +1678,26 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(parts.Length != 2){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
 
-            string refName = IMAP_Utils.DecodeMailbox(parts[0]);
-            string folder  = IMAP_Utils.DecodeMailbox(parts[1]);
+            var refName = IMAP_Utils.DecodeMailbox(parts[0]);
+            var folder  = IMAP_Utils.DecodeMailbox(parts[1]);
 
             // Store start time
-			long startTime = DateTime.Now.Ticks;
+            long startTime = DateTime.Now.Ticks;
 
             // Folder separator request.
             if(folder == string.Empty){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_u_List(m_FolderSeparator));
             }
             else{
-                IMAP_e_List e = OnList(refName,folder);
-                foreach(IMAP_r_u_List r in e.Folders){
+                var e = OnList(refName,folder);
+                foreach (IMAP_r_u_List r in e.Folders){
                     m_pResponseSender.SendResponseAsync(r);
                 }
             }
@@ -1767,9 +1767,9 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
-            
-            IMAP_e_Folder e = OnCreate(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","CREATE command completed."));
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+
+            var e = OnCreate(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","CREATE command completed."));
 
             m_pResponseSender.SendResponseAsync(e.Response);
         }
@@ -1838,9 +1838,9 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string folder = IMAP_Utils.DecodeMailbox(cmdText);
-            
-            IMAP_e_Folder e = OnDelete(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","DELETE command completed."));
+            var folder = IMAP_Utils.DecodeMailbox(cmdText);
+
+            var e = OnDelete(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","DELETE command completed."));
 
             m_pResponseSender.SendResponseAsync(e.Response);
         }
@@ -1915,15 +1915,15 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(parts.Length != 2){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
             
-            IMAP_e_Rename e = OnRename(cmdTag,IMAP_Utils.DecodeMailbox(parts[0]),IMAP_Utils.DecodeMailbox(parts[1]));
-            if(e.Response == null){
+            var e = OnRename(cmdTag,IMAP_Utils.DecodeMailbox(parts[0]),IMAP_Utils.DecodeMailbox(parts[1]));
+            if (e.Response == null){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Internal server error: IMAP Server application didn't return any resposne."));
             }
             else{
@@ -1981,21 +1981,21 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(parts.Length != 2){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
 
-            string refName = IMAP_Utils.DecodeMailbox(parts[0]);
-            string folder  = IMAP_Utils.DecodeMailbox(parts[1]);
+            var refName = IMAP_Utils.DecodeMailbox(parts[0]);
+            var folder  = IMAP_Utils.DecodeMailbox(parts[1]);
 
             // Store start time
-			long startTime = DateTime.Now.Ticks;
+            long startTime = DateTime.Now.Ticks;
             
-            IMAP_e_LSub e = OnLSub(refName,folder);
-            foreach(IMAP_r_u_LSub r in e.Folders){
+            var e = OnLSub(refName,folder);
+            foreach (IMAP_r_u_LSub r in e.Folders){
                 m_pResponseSender.SendResponseAsync(r);
             }
             
@@ -2043,10 +2043,10 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
-            
-            IMAP_e_Folder e = OnSubscribe(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","SUBSCRIBE command completed."));
-            
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+
+            var e = OnSubscribe(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","SUBSCRIBE command completed."));
+
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
@@ -2080,10 +2080,10 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
-            
-            IMAP_e_Folder e = OnUnsubscribe(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","UNSUBSCRIBE command completed."));
-            
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+
+            var e = OnUnsubscribe(cmdTag,folder,new IMAP_r_ServerStatus(cmdTag,"OK","UNSUBSCRIBE command completed."));
+
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
@@ -2169,8 +2169,8 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',false,2);
-            if(parts.Length != 2){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',false,2);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
@@ -2179,30 +2179,30 @@ namespace LumiSoft.Net.IMAP.Server
             // Store start time
 			long startTime = DateTime.Now.Ticks;
 
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(parts[0]));
-            if(!(parts[1].StartsWith("(") && parts[1].EndsWith(")"))){
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(parts[0]));
+            if (!(parts[1].StartsWith("(") && parts[1].EndsWith(")"))){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
             }
             else{
-                IMAP_e_Select eSelect = OnSelect(cmdTag,folder);
-                if(eSelect.ErrorResponse != null){
+                var eSelect = OnSelect(cmdTag,folder);
+                if (eSelect.ErrorResponse != null){
                     m_pResponseSender.SendResponseAsync(eSelect.ErrorResponse);
 
                     return;
                 }
 
-                IMAP_e_MessagesInfo eMessagesInfo = OnGetMessagesInfo(folder);
-                   
+                var eMessagesInfo = OnGetMessagesInfo(folder);
+
                 int  msgCount    = -1;
                 int  recentCount = -1;
                 long uidNext     = -1;
                 long folderUid   = -1;
                 int  unseenCount = -1;
 
-                string[] statusItems = parts[1].Substring(1,parts[1].Length - 2).Split(' ');
-                for(int i=0;i<statusItems.Length;i++){
-                    string statusItem = statusItems[i];
-                    if(string.Equals(statusItem,"MESSAGES",StringComparison.InvariantCultureIgnoreCase)){
+                var statusItems = parts[1].Substring(1,parts[1].Length - 2).Split(' ');
+                for (int i=0;i<statusItems.Length;i++){
+                    var statusItem = statusItems[i];
+                    if (string.Equals(statusItem,"MESSAGES",StringComparison.InvariantCultureIgnoreCase)){
                         msgCount = eMessagesInfo.Exists;
                     }
                     else if(string.Equals(statusItem,"RECENT",StringComparison.InvariantCultureIgnoreCase)){
@@ -2373,8 +2373,8 @@ namespace LumiSoft.Net.IMAP.Server
                 m_pSelectedFolder = null;
             }
 
-            string[] args = TextUtils.SplitQuotedString(cmdText,' ');
-            if(args.Length >= 2){
+            var args = TextUtils.SplitQuotedString(cmdText,' ');
+            if (args.Length >= 2){
                 // At moment we don't support UTF-8 mailboxes.
                 if(string.Equals(args[1],"(UTF8)",StringComparison.InvariantCultureIgnoreCase)){
                     m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO",new IMAP_t_orc_Unknown("NOT-UTF-8"),"Mailbox does not support UTF-8 access."));
@@ -2387,11 +2387,11 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             try{
-                string folder = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(cmdText));
+                var folder = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(cmdText));
 
-                IMAP_e_Select e = OnSelect(cmdTag,folder);
-                if(e.ErrorResponse == null){
-                    IMAP_e_MessagesInfo eMessagesInfo = OnGetMessagesInfo(folder);
+                var e = OnSelect(cmdTag,folder);
+                if (e.ErrorResponse == null){
+                    var eMessagesInfo = OnGetMessagesInfo(folder);
 
                     m_pResponseSender.SendResponseAsync(new IMAP_r_u_Exists(eMessagesInfo.Exists));
                     m_pResponseSender.SendResponseAsync(new IMAP_r_u_Recent(eMessagesInfo.Recent));
@@ -2505,8 +2505,8 @@ namespace LumiSoft.Net.IMAP.Server
                 m_pSelectedFolder = null;
             }
 
-            string[] args = TextUtils.SplitQuotedString(cmdText,' ');
-            if(args.Length >= 2){
+            var args = TextUtils.SplitQuotedString(cmdText,' ');
+            if (args.Length >= 2){
                 // At moment we don't support UTF-8 mailboxes.
                 if(string.Equals(args[1],"(UTF8)",StringComparison.InvariantCultureIgnoreCase)){
                     m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO",new IMAP_t_orc_Unknown("NOT-UTF-8"),"Mailbox does not support UTF-8 access."));
@@ -2518,11 +2518,11 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string folder = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(cmdText));
+            var folder = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(cmdText));
 
-            IMAP_e_Select e = OnSelect(cmdTag,folder);
-            if(e.ErrorResponse == null){                 
-                IMAP_e_MessagesInfo eMessagesInfo = OnGetMessagesInfo(folder);
+            var e = OnSelect(cmdTag,folder);
+            if (e.ErrorResponse == null){                 
+                var eMessagesInfo = OnGetMessagesInfo(folder);
 
                 m_pResponseSender.SendResponseAsync(new IMAP_r_u_Exists(eMessagesInfo.Exists));
                 m_pResponseSender.SendResponseAsync(new IMAP_r_u_Recent(eMessagesInfo.Recent));
@@ -2633,7 +2633,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             #region Parse arguments
 
-            StringReader r = new StringReader(cmdText);
+            var r = new StringReader(cmdText);
             r.ReadToFirstChar();
             string folder = null;
             if(r.StartsWith("\"")){
@@ -2643,8 +2643,8 @@ namespace LumiSoft.Net.IMAP.Server
                 folder = IMAP_Utils.DecodeMailbox(r.QuotedReadToDelimiter(' '));
             }
             r.ReadToFirstChar();
-            List<string> flags = new List<string>();
-            if(r.StartsWith("(")){                
+            var flags = new List<string>();
+            if (r.StartsWith("(")){                
                 foreach(string f in r.ReadParenthesized().Split(' ')){
                     if(f.Length > 0 && !flags.Contains(f.Substring(1))){
                         flags.Add(f.Substring(1));
@@ -2652,8 +2652,8 @@ namespace LumiSoft.Net.IMAP.Server
                 }
             }
             r.ReadToFirstChar();
-            DateTime date = DateTime.MinValue;
-            if(!r.StartsWith("{")){
+            var date = DateTime.MinValue;
+            if (!r.StartsWith("{")){
                 date = IMAP_Utils.ParseDate(r.ReadWord());
             }
             int size = Convert.ToInt32(r.ReadParenthesized());
@@ -2665,9 +2665,9 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-            IMAP_e_Append e = OnAppend(folder,flags.ToArray(),date,size,new IMAP_r_ServerStatus(cmdTag,"OK","APPEND command completed in %exectime seconds."));
-            
-            if(e.Response.IsError){
+            var e = OnAppend(folder,flags.ToArray(),date,size,new IMAP_r_ServerStatus(cmdTag,"OK","APPEND command completed in %exectime seconds."));
+
+            if (e.Response.IsError){
                 m_pResponseSender.SendResponseAsync(e.Response);
             }
             else if(e.Stream == null){
@@ -2685,7 +2685,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                         // TODO: Async
                         // Read command line terminating CRLF.
-                        SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                        var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
                         this.TcpStream.ReadLine(readLineOP,false);
                         // Read command line terminating CRLF failed.
                         if(readLineOP.Error != null){
@@ -2754,11 +2754,11 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
 
-            IMAP_e_GetQuotaRoot e = OnGetGuotaRoot(folder,new IMAP_r_ServerStatus(cmdTag,"OK","GETQUOTAROOT command completed."));
+            var e = OnGetGuotaRoot(folder,new IMAP_r_ServerStatus(cmdTag,"OK","GETQUOTAROOT command completed."));
 
-            if(e.QuotaRootResponses.Count > 0){
+            if (e.QuotaRootResponses.Count > 0){
                 foreach(IMAP_r_u_QuotaRoot r in e.QuotaRootResponses){
                     m_pResponseSender.SendResponseAsync(r);
                 }                
@@ -2801,10 +2801,10 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }            
 
-            string quotaRoot = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+            var quotaRoot = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
 
-            IMAP_e_GetQuota e = OnGetQuota(quotaRoot,new IMAP_r_ServerStatus(cmdTag,"OK","QUOTA command completed."));
-            if(e.QuotaResponses.Count > 0){
+            var e = OnGetQuota(quotaRoot,new IMAP_r_ServerStatus(cmdTag,"OK","QUOTA command completed."));
+            if (e.QuotaResponses.Count > 0){
                 foreach(IMAP_r_u_Quota r in e.QuotaResponses){
                     m_pResponseSender.SendResponseAsync(r);
                 }                
@@ -2859,10 +2859,10 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }            
 
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
 
-            IMAP_e_GetAcl e = OnGetAcl(folder,new IMAP_r_ServerStatus(cmdTag,"OK","GETACL command completed."));
-            if(e.AclResponses.Count > 0){
+            var e = OnGetAcl(folder,new IMAP_r_ServerStatus(cmdTag,"OK","GETACL command completed."));
+            if (e.AclResponses.Count > 0){
                 foreach(IMAP_r_u_Acl r in e.AclResponses){
                     m_pResponseSender.SendResponseAsync(r);
                 }                
@@ -2921,16 +2921,16 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }            
 
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(parts.Length != 3){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (parts.Length != 3){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
 
-            string rights = parts[2];
-            IMAP_Flags_SetType setType = IMAP_Flags_SetType.Replace;
-            if(rights.StartsWith("+")){
+            var rights = parts[2];
+            var setType = IMAP_Flags_SetType.Replace;
+            if (rights.StartsWith("+")){
                 setType = IMAP_Flags_SetType.Add;
                 rights = rights.Substring(1);
             }
@@ -2939,7 +2939,7 @@ namespace LumiSoft.Net.IMAP.Server
                 rights = rights.Substring(1);
             }
 
-            IMAP_e_SetAcl e = OnSetAcl(
+            var e = OnSetAcl(
                 IMAP_Utils.DecodeMailbox(parts[0]),
                 IMAP_Utils.DecodeMailbox(parts[1]),
                 setType,
@@ -2987,14 +2987,14 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(parts.Length != 2){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
 
-            IMAP_e_DeleteAcl e = OnDeleteAcl(
+            var e = OnDeleteAcl(
                 IMAP_Utils.DecodeMailbox(parts[0]),
                 IMAP_Utils.DecodeMailbox(parts[1]),
                 new IMAP_r_ServerStatus(cmdTag,"OK","DELETEACL command completed.")
@@ -3050,22 +3050,22 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] parts = TextUtils.SplitQuotedString(cmdText,' ',true);
-            if(parts.Length != 2){
+            var parts = TextUtils.SplitQuotedString(cmdText,' ',true);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
             }
             
 
-            IMAP_e_ListRights e = OnListRights(
+            var e = OnListRights(
                 IMAP_Utils.DecodeMailbox(parts[0]),
                 IMAP_Utils.DecodeMailbox(parts[1]),
                 new IMAP_r_ServerStatus(cmdTag,"OK","LISTRIGHTS command completed.")
             );
 
-            
-            if(e.ListRightsResponse != null){
+
+            if (e.ListRightsResponse != null){
                 m_pResponseSender.SendResponseAsync(e.ListRightsResponse);
             }
             m_pResponseSender.SendResponseAsync(e.Response);
@@ -3105,10 +3105,10 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             
-            string folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
+            var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(cmdText));
 
-            IMAP_e_MyRights e = OnMyRights(folder,new IMAP_r_ServerStatus(cmdTag,"OK","MYRIGHTS command completed."));
-            if(e.MyRightsResponse != null){
+            var e = OnMyRights(folder,new IMAP_r_ServerStatus(cmdTag,"OK","MYRIGHTS command completed."));
+            if (e.MyRightsResponse != null){
                 m_pResponseSender.SendResponseAsync(e.MyRightsResponse);
             }
             m_pResponseSender.SendResponseAsync(e.Response);
@@ -3535,8 +3535,8 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             
-            string[] parts = cmdText.Split(new char[]{' '},2);
-            if(parts.Length != 2){
+            var parts = cmdText.Split(new char[]{' '},2);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
@@ -3554,12 +3554,12 @@ namespace LumiSoft.Net.IMAP.Server
 
             #region Parse data-items
 
-            List<IMAP_t_Fetch_i> dataItems     = new List<IMAP_t_Fetch_i>();
+            var dataItems     = new List<IMAP_t_Fetch_i>();
             bool                 msgDataNeeded = false;
 
             // Remove parenthesizes.
-            string dataItemsString = parts[1].Trim();
-            if(dataItemsString.StartsWith("(") && dataItemsString.EndsWith(")")){
+            var dataItemsString = parts[1].Trim();
+            if (dataItemsString.StartsWith("(") && dataItemsString.EndsWith(")")){
                 dataItemsString = dataItemsString.Substring(1,dataItemsString.Length - 2).Trim();
             }
 
@@ -3568,12 +3568,12 @@ namespace LumiSoft.Net.IMAP.Server
             dataItemsString = dataItemsString.Replace("FAST","FLAGS INTERNALDATE RFC822.SIZE"); 
             dataItemsString = dataItemsString.Replace("FULL","FLAGS INTERNALDATE RFC822.SIZE ENVELOPE BODY");
 
-            StringReader r = new StringReader(dataItemsString);
+            var r = new StringReader(dataItemsString);
 
-            IMAP_Fetch_DataType fetchDataType = IMAP_Fetch_DataType.FullMessage;
+            var fetchDataType = IMAP_Fetch_DataType.FullMessage;
 
             // Parse data-items.
-            while(r.Available > 0){
+            while (r.Available > 0){
                 r.ReadToFirstChar();
 
                 #region BODYSTRUCTURE
@@ -3595,20 +3595,20 @@ namespace LumiSoft.Net.IMAP.Server
 
                     #region Parse <section>
 
-                    string section = r.ReadParenthesized();
-                                                                            
+                    var section = r.ReadParenthesized();
+
                     // Full message wanted.
-                    if(string.IsNullOrEmpty(section)){
+                    if (string.IsNullOrEmpty(section)){
                     }
                     else{
                         // Left-side part-items must be numbers, only last one may be (HEADER,HEADER.FIELDS,HEADER.FIELDS.NOT,MIME,TEXT).
                     
-                        StringReader rSection = new StringReader(section);
-                        string remainingSection = rSection.ReadWord();
-                        while(remainingSection.Length > 0){
-                            string[] section_parts = remainingSection.Split(new char[]{'.'},2);
+                        var rSection = new StringReader(section);
+                        var remainingSection = rSection.ReadWord();
+                        while (remainingSection.Length > 0){
+                            var section_parts = remainingSection.Split(new char[]{'.'},2);
                             // Not part number.
-                            if(!Net_Utils.IsInteger(section_parts[0])){
+                            if (!Net_Utils.IsInteger(section_parts[0])){
                                 // We must have one of the following values here (HEADER,HEADER.FIELDS,HEADER.FIELDS.NOT,MIME,TEXT).
                                 if(remainingSection.Equals("HEADER",StringComparison.InvariantCultureIgnoreCase)){                        
                                 }
@@ -3661,8 +3661,8 @@ namespace LumiSoft.Net.IMAP.Server
                     int maxCount = -1;
                     // Partial data wanted.
                     if(r.StartsWith("<")){
-                        string[] origin = r.ReadParenthesized().Split('.');
-                        if(origin.Length > 2){
+                        var origin = r.ReadParenthesized().Split('.');
+                        if (origin.Length > 2){
                             WriteLine(cmdTag + " BAD Error in arguments.");
 
                             return;
@@ -3816,7 +3816,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             UpdateSelectedFolderAndSendChanges();
 
-            IMAP_e_Fetch fetchEArgs = new IMAP_e_Fetch(
+            var fetchEArgs = new IMAP_e_Fetch(
                 m_pSelectedFolder.Filter(uid,seqSet),
                 fetchDataType,
                 new IMAP_r_ServerStatus(cmdTag,"OK","FETCH command completed in %exectime seconds.")
@@ -3861,17 +3861,17 @@ namespace LumiSoft.Net.IMAP.Server
                     }
                 }*/
 
-                StringBuilder reponseBuffer = new StringBuilder();
+                var reponseBuffer = new StringBuilder();
                 reponseBuffer.Append("* " + e.MessageInfo.SeqNo + " FETCH (");
 
-                Mail_Message message = e.MessageData;
+                var message = e.MessageData;
 
                 // Return requested data-items for the returned message.
-                for(int i=0;i<dataItems.Count;i++){
-                    IMAP_t_Fetch_i dataItem = dataItems[i];
-                                      
+                for (int i=0;i<dataItems.Count;i++){
+                    var dataItem = dataItems[i];
+
                     // Add data-items separator.
-                    if(i > 0){
+                    if (i > 0){
                         reponseBuffer.Append(" ");
                     }
                                        
@@ -3886,7 +3886,7 @@ namespace LumiSoft.Net.IMAP.Server
                     #region BODY[<section>]<<partial>> and BODY.PEEK[<section>]<<partial>>
 
                     else if(dataItem is IMAP_t_Fetch_i_Body || dataItem is IMAP_t_Fetch_i_BodyPeek){
-                        string section  = "";
+                        var section  = "";
                         int    offset   = -1;
                         int    maxCount = -1;
                         if(dataItem is IMAP_t_Fetch_i_Body){
@@ -3909,13 +3909,13 @@ namespace LumiSoft.Net.IMAP.Server
                             // Message data part wanted.
                             else{
                                 // Get specified MIME part.
-                                MIME_Entity entity = GetMimeEntity(message,ParsePartNumberFromSection(section));
-                                if(entity != null){
-                                    string partSpecifier = ParsePartSpecifierFromSection(section);
+                                var entity = GetMimeEntity(message,ParsePartNumberFromSection(section));
+                                if (entity != null){
+                                    var partSpecifier = ParsePartSpecifierFromSection(section);
 
                                     #region HEADER
 
-                                    if(string.Equals(partSpecifier,"HEADER",StringComparison.InvariantCultureIgnoreCase)){                                        
+                                    if (string.Equals(partSpecifier,"HEADER",StringComparison.InvariantCultureIgnoreCase)){                                        
                                         entity.Header.ToStream(tmpFs,new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8),Encoding.UTF8);
                                         // All header fetches must include header terminator(CRLF).
                                         if(tmpFs.Length >0 ){
@@ -3930,13 +3930,13 @@ namespace LumiSoft.Net.IMAP.Server
                                     #region HEADER.FIELDS
 
                                     else if(string.Equals(partSpecifier,"HEADER.FIELDS",StringComparison.InvariantCultureIgnoreCase)){                            
-                                        string   fieldsString = section.Split(new char[]{' '},2)[1];
-                                        string[] fieldNames   = fieldsString.Substring(1,fieldsString.Length - 2).Split(' ');
-                                        foreach(string filedName in fieldNames){
-                                            MIME_h[] fields = entity.Header[filedName];
-                                            if(fields != null){
+                                        var   fieldsString = section.Split(new char[]{' '},2)[1];
+                                        var fieldNames   = fieldsString.Substring(1,fieldsString.Length - 2).Split(' ');
+                                        foreach (string filedName in fieldNames){
+                                            var fields = entity.Header[filedName];
+                                            if (fields != null){
                                                 foreach(MIME_h field in fields){
-                                                    byte[] fieldBytes = Encoding.UTF8.GetBytes(field.ToString(new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8),Encoding.UTF8));
+                                                    var fieldBytes = Encoding.UTF8.GetBytes(field.ToString(new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8),Encoding.UTF8));
                                                     tmpFs.Write(fieldBytes,0,fieldBytes.Length);
                                                 }
                                             }
@@ -3954,9 +3954,9 @@ namespace LumiSoft.Net.IMAP.Server
                                     #region HEADER.FIELDS.NOT
 
                                     else if(string.Equals(partSpecifier,"HEADER.FIELDS.NOT",StringComparison.InvariantCultureIgnoreCase)){
-                                        string   fieldsString = section.Split(new char[]{' '},2)[1];
-                                        string[] fieldNames   = fieldsString.Substring(1,fieldsString.Length - 2).Split(' ');
-                                        foreach(MIME_h field in entity.Header){
+                                        var   fieldsString = section.Split(new char[]{' '},2)[1];
+                                        var fieldNames   = fieldsString.Substring(1,fieldsString.Length - 2).Split(' ');
+                                        foreach (MIME_h field in entity.Header){
                                             bool contains = false;
                                             foreach(string fieldName in fieldNames){
                                                 if(string.Equals(field.Name,fieldName,StringComparison.InvariantCultureIgnoreCase)){
@@ -3966,7 +3966,7 @@ namespace LumiSoft.Net.IMAP.Server
                                             }
 
                                             if(!contains){
-                                                byte[] fieldBytes = Encoding.UTF8.GetBytes(field.ToString(new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8),Encoding.UTF8));
+                                                var fieldBytes = Encoding.UTF8.GetBytes(field.ToString(new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8),Encoding.UTF8));
                                                 tmpFs.Write(fieldBytes,0,fieldBytes.Length);
                                             }
                                         }
@@ -4112,7 +4112,7 @@ namespace LumiSoft.Net.IMAP.Server
                     #region RFC822.HEADER
 
                     else if(dataItem is IMAP_t_Fetch_i_Rfc822Header){
-                        MemoryStream ms = new MemoryStream();
+                        var ms = new MemoryStream();
                         message.Header.ToStream(ms,new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8),Encoding.UTF8);
                         ms.Position = 0;
 
@@ -4394,17 +4394,17 @@ namespace LumiSoft.Net.IMAP.Server
 
             #region Parse arguments
 
-            _CmdReader cmdReader = new _CmdReader(this,cmdText,Encoding.UTF8);            
+            var cmdReader = new _CmdReader(this,cmdText,Encoding.UTF8);
             cmdReader.Start();
 
-            StringReader r = new StringReader(cmdReader.CmdLine);
-            
+            var r = new StringReader(cmdReader.CmdLine);
+
             // See if we have optional CHARSET argument.
-            if(r.StartsWith("CHARSET",false)){
+            if (r.StartsWith("CHARSET",false)){
                 r.ReadWord();
 
-                string charset = r.ReadWord();
-                if(!(string.Equals(charset,"US-ASCII",StringComparison.InvariantCultureIgnoreCase) || string.Equals(charset,"UTF-8",StringComparison.InvariantCultureIgnoreCase))){
+                var charset = r.ReadWord();
+                if (!(string.Equals(charset,"US-ASCII",StringComparison.InvariantCultureIgnoreCase) || string.Equals(charset,"UTF-8",StringComparison.InvariantCultureIgnoreCase))){
                     m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO",new IMAP_t_orc_BadCharset(new string[]{"US-ASCII","UTF-8"}),"Not supported charset."));
 
                     return;
@@ -4414,13 +4414,13 @@ namespace LumiSoft.Net.IMAP.Server
             #endregion
 
             try{
-                IMAP_Search_Key_Group criteria = IMAP_Search_Key_Group.Parse(r);
+                var criteria = IMAP_Search_Key_Group.Parse(r);
 
                 UpdateSelectedFolderAndSendChanges();
                 
-                List<int> matchedValues = new List<int>();
+                var matchedValues = new List<int>();
 
-                IMAP_e_Search searchArgs = new IMAP_e_Search(criteria,new IMAP_r_ServerStatus(cmdTag,"OK","SEARCH completed in %exectime seconds."));
+                var searchArgs = new IMAP_e_Search(criteria,new IMAP_r_ServerStatus(cmdTag,"OK","SEARCH completed in %exectime seconds."));
                 searchArgs.Matched += new EventHandler<EventArgs<long>>(delegate(object s,EventArgs<long> e){
                     if(uid){
                         matchedValues.Add((int)e.Value);
@@ -4522,8 +4522,8 @@ namespace LumiSoft.Net.IMAP.Server
 
             #region Parse arguments
 
-            string[] parts = cmdText.Split(new char[]{' '},3);
-            if(parts.Length != 3){
+            var parts = cmdText.Split(new char[]{' '},3);
+            if (parts.Length != 3){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
@@ -4573,8 +4573,8 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            List<string> flags = new List<string>();
-            foreach(string f in parts[2].Substring(1,parts[2].Length - 2).Split(' ')){
+            var flags = new List<string>();
+            foreach (string f in parts[2].Substring(1,parts[2].Length - 2).Split(' ')){
                 if(f.Length > 0 && !flags.Contains(f.Substring(1))){
                     flags.Add(f.Substring(1));
                 }
@@ -4582,9 +4582,9 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-            IMAP_r_ServerStatus response = new IMAP_r_ServerStatus(cmdTag,"OK","STORE command completed in %exectime seconds.");
-            foreach(IMAP_MessageInfo msgInfo in m_pSelectedFolder.Filter(uid,seqSet)){
-                IMAP_e_Store e = OnStore(msgInfo,setType,flags.ToArray(),response);
+            var response = new IMAP_r_ServerStatus(cmdTag,"OK","STORE command completed in %exectime seconds.");
+            foreach (IMAP_MessageInfo msgInfo in m_pSelectedFolder.Filter(uid,seqSet)){
+                var e = OnStore(msgInfo,setType,flags.ToArray(),response);
                 response = e.Response;
                 if(!string.Equals(e.Response.ResponseCode,"OK",StringComparison.InvariantCultureIgnoreCase)){
                     break;
@@ -4671,8 +4671,8 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] parts = cmdText.Split(new char[]{' '},2);
-            if(parts.Length != 2){
+            var parts = cmdText.Split(new char[]{' '},2);
+            if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
                 return;
@@ -4686,11 +4686,11 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            string targetFolder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(parts[1]));
+            var targetFolder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(parts[1]));
 
             UpdateSelectedFolderAndSendChanges();
 
-            IMAP_e_Copy e = OnCopy(
+            var e = OnCopy(
                 targetFolder,
                 m_pSelectedFolder.Filter(uid,seqSet),
                 new IMAP_r_ServerStatus(cmdTag,"OK","COPY completed.")
@@ -4783,9 +4783,9 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            string[] cmd_cmtText = cmdText.Split(new char[]{' '},2);
-                        
-            if(string.Equals(cmd_cmtText[0],"COPY",StringComparison.InvariantCultureIgnoreCase)){
+            var cmd_cmtText = cmdText.Split(new char[]{' '},2);
+
+            if (string.Equals(cmd_cmtText[0],"COPY",StringComparison.InvariantCultureIgnoreCase)){
                 COPY(true,cmdTag,cmd_cmtText[1]);
             }
             else if(string.Equals(cmd_cmtText[0],"FETCH",StringComparison.InvariantCultureIgnoreCase)){
@@ -4849,13 +4849,13 @@ namespace LumiSoft.Net.IMAP.Server
             // Store start time
 			long startTime = DateTime.Now.Ticks;
             
-            IMAP_r_ServerStatus response = new IMAP_r_ServerStatus(cmdTag,"OK","EXPUNGE completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds.");
-            for(int i=0;i<m_pSelectedFolder.MessagesInfo.Length;i++){
-                IMAP_MessageInfo msgInfo = m_pSelectedFolder.MessagesInfo[i];
-                if(msgInfo.ContainsFlag("Deleted")){
-                    IMAP_e_Expunge e = OnExpunge(msgInfo,response);
+            var response = new IMAP_r_ServerStatus(cmdTag,"OK","EXPUNGE completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds.");
+            for (int i=0;i<m_pSelectedFolder.MessagesInfo.Length;i++){
+                var msgInfo = m_pSelectedFolder.MessagesInfo[i];
+                if (msgInfo.ContainsFlag("Deleted")){
+                    var e = OnExpunge(msgInfo,response);
                     // Expunge failed.
-                    if(!string.Equals(e.Response.ResponseCode,"OK",StringComparison.InvariantCultureIgnoreCase)){
+                    if (!string.Equals(e.Response.ResponseCode,"OK",StringComparison.InvariantCultureIgnoreCase)){
                         m_pResponseSender.SendResponseAsync(e.Response);
 
                         return;
@@ -4962,7 +4962,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus("+","idling"));
 
-            TimerEx timer = new TimerEx(30000,true);
+            var timer = new TimerEx(30000,true);
             timer.Elapsed += new System.Timers.ElapsedEventHandler(delegate(object sender,System.Timers.ElapsedEventArgs e){
                 try{
                     UpdateSelectedFolderAndSendChanges();
@@ -4973,7 +4973,7 @@ namespace LumiSoft.Net.IMAP.Server
             timer.Enabled = true;
 
             // Read client response. 
-            SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
             readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){
                 try{
                     if(readLineOP.Error != null){
@@ -5102,8 +5102,8 @@ namespace LumiSoft.Net.IMAP.Server
                             S: ijkl OK CAPABILITY completed
             */
 
-            List<string> capabilities = new List<string>();
-            if(!this.IsSecureConnection && this.Certificate != null){
+            var capabilities = new List<string>();
+            if (!this.IsSecureConnection && this.Certificate != null){
                 capabilities.Add("STARTTLS");
             }
             foreach(string c in m_pCapabilities){
@@ -5373,18 +5373,18 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
                         
-            IMAP_e_MessagesInfo e = OnGetMessagesInfo(m_pSelectedFolder.Folder);
-            
+            var e = OnGetMessagesInfo(m_pSelectedFolder.Folder);
+
             int currentExists = m_pSelectedFolder.MessagesInfo.Length;
             // Create ID indexed lookup table for new messages.
-            Dictionary<string,string> newMessagesLookup = new Dictionary<string,string>();
-            foreach(IMAP_MessageInfo msgInfo in e.MessagesInfo){
+            var newMessagesLookup = new Dictionary<string,string>();
+            foreach (IMAP_MessageInfo msgInfo in e.MessagesInfo){
                 newMessagesLookup.Add(msgInfo.ID,null);
             }
             
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             // Check deleted messages, send "* n EXPUNGE" for each deleted message.
-            foreach(IMAP_MessageInfo msgInfo in m_pSelectedFolder.MessagesInfo){
+            foreach (IMAP_MessageInfo msgInfo in m_pSelectedFolder.MessagesInfo){
                 // Message deleted.
                 if(!newMessagesLookup.ContainsKey(msgInfo.ID)){
                     retVal.Append("* " + m_pSelectedFolder.GetSeqNo(msgInfo) + " EXPUNGE\r\n");
@@ -5442,9 +5442,9 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("section");
             }
 
-            StringBuilder retVal = new StringBuilder();
-            string[] parts = section.Split('.');
-            foreach(string part in parts){
+            var retVal = new StringBuilder();
+            var parts = section.Split('.');
+            foreach (string part in parts){
                 if(Net_Utils.IsInteger(part)){
                     if(retVal.Length > 0){
                         retVal.Append(".");
@@ -5475,9 +5475,9 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("section");
             }
 
-            StringBuilder retVal = new StringBuilder();
-            string[] parts = section.Split(' ')[0].Split('.');
-            foreach(string part in parts){
+            var retVal = new StringBuilder();
+            var parts = section.Split(' ')[0].Split('.');
+            foreach (string part in parts){
                 if(!Net_Utils.IsInteger(part)){
                     if(retVal.Length > 0){
                         retVal.Append(".");
@@ -5538,12 +5538,12 @@ namespace LumiSoft.Net.IMAP.Server
 			// multipart
 
             MIME_Entity entity = message;
-            string[] parts = partNumber.Split('.');
-            foreach(string part in parts){
+            var parts = partNumber.Split('.');
+            foreach (string part in parts){
                 int mEntryNo = Convert.ToInt32(part) - 1; // Enitites are zero base, mimeEntitySpecifier is 1 based.
                 if(entity.Body is MIME_b_Multipart){
-                    MIME_b_Multipart multipart = (MIME_b_Multipart)entity.Body;
-                    if(mEntryNo > -1 && mEntryNo < multipart.BodyParts.Count){
+                    var multipart = (MIME_b_Multipart)entity.Body;
+                    if (mEntryNo > -1 && mEntryNo < multipart.BodyParts.Count){
                         entity = multipart.BodyParts[mEntryNo];
                     }
                     else{
@@ -5731,12 +5731,12 @@ namespace LumiSoft.Net.IMAP.Server
 
 			*/
 
-            MIME_Encoding_EncodedWord wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
+            var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
             wordEncoder.Split = false;
 
-			StringBuilder retVal = new StringBuilder();
-			// Multipart message
-			if(entity.Body is MIME_b_Multipart){
+			var retVal = new StringBuilder();
+            // Multipart message
+            if (entity.Body is MIME_b_Multipart){
 				retVal.Append("(");
 
 				// Construct child entities.
@@ -5804,8 +5804,8 @@ namespace LumiSoft.Net.IMAP.Server
 				}
 
 				// contentID
-				string contentID = entity.ContentID;
-				if(contentID != null){
+				var contentID = entity.ContentID;
+                if (contentID != null){
 					retVal.Append(" \"" + wordEncoder.Encode(contentID) + "\""); 
 				}
 				else{
@@ -5813,8 +5813,8 @@ namespace LumiSoft.Net.IMAP.Server
 				}
 
 				// contentDescription
-				string contentDescription = entity.ContentDescription;
-				if(contentDescription != null){
+				var contentDescription = entity.ContentDescription;
+                if (contentDescription != null){
 					retVal.Append(" \"" + wordEncoder.Encode(contentDescription) + "\""); 
 				}
 				else{
@@ -5848,9 +5848,9 @@ namespace LumiSoft.Net.IMAP.Server
 				// contentLines ---> FOR ContentType: text/xxx ONLY ###
 				if(entity.Body is MIME_b_Text){                    
 				    long lineCount = 0;
-					StreamLineReader r = new StreamLineReader(new MemoryStream(((MIME_b_SinglepartBase)entity.Body).EncodedData));
-					byte[] line = r.ReadLine();
-					while(line != null){
+					var r = new StreamLineReader(new MemoryStream(((MIME_b_SinglepartBase)entity.Body).EncodedData));
+                    var line = r.ReadLine();
+                    while (line != null){
 						lineCount++;
 
 						line = r.ReadLine();
@@ -5985,8 +5985,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Started OnStarted(IMAP_r_u_ServerStatus response)
         {
-            IMAP_e_Started eArgs = new IMAP_e_Started(response);            
-            if(this.Started != null){                
+            var eArgs = new IMAP_e_Started(response);
+            if (this.Started != null){                
                 this.Started(this,eArgs);
             }
 
@@ -6010,8 +6010,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Login OnLogin(string user,string password)
         {
-            IMAP_e_Login eArgs = new IMAP_e_Login(user,password);            
-            if(this.Login != null){                
+            var eArgs = new IMAP_e_Login(user,password);
+            if (this.Login != null){                
                 this.Login(this,eArgs);
             }
 
@@ -6034,8 +6034,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Namespace OnNamespace(IMAP_r_ServerStatus response)
         {
-            IMAP_e_Namespace eArgs = new IMAP_e_Namespace(response);            
-            if(this.Namespace != null){                
+            var eArgs = new IMAP_e_Namespace(response);
+            if (this.Namespace != null){                
                 this.Namespace(this,eArgs);
             }
 
@@ -6059,8 +6059,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_List OnList(string refName,string folder)
         {
-            IMAP_e_List eArgs = new IMAP_e_List(refName,folder);
-            if(this.List != null){
+            var eArgs = new IMAP_e_List(refName,folder);
+            if (this.List != null){
                 this.List(this,eArgs);
             }
 
@@ -6085,8 +6085,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Folder OnCreate(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Folder eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if(this.Create != null){
+            var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
+            if (this.Create != null){
                 this.Create(this,eArgs);
             }
 
@@ -6111,8 +6111,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Folder OnDelete(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Folder eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if(this.Delete != null){
+            var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
+            if (this.Delete != null){
                 this.Delete(this,eArgs);
             }
 
@@ -6137,8 +6137,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Rename OnRename(string cmdTag,string currentFolder,string newFolder)
         {
-            IMAP_e_Rename eArgs = new IMAP_e_Rename(cmdTag,currentFolder,newFolder);
-            if(this.Rename != null){
+            var eArgs = new IMAP_e_Rename(cmdTag,currentFolder,newFolder);
+            if (this.Rename != null){
                 this.Rename(this,eArgs);
             }
 
@@ -6162,8 +6162,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_LSub OnLSub(string refName,string folder)
         {
-            IMAP_e_LSub eArgs = new IMAP_e_LSub(refName,folder);
-            if(this.LSub != null){
+            var eArgs = new IMAP_e_LSub(refName,folder);
+            if (this.LSub != null){
                 this.LSub(this,eArgs);
             }
 
@@ -6188,8 +6188,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Folder OnSubscribe(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Folder eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if(this.Subscribe != null){
+            var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
+            if (this.Subscribe != null){
                 this.Subscribe(this,eArgs);
             }
 
@@ -6214,8 +6214,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Folder OnUnsubscribe(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Folder eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if(this.Unsubscribe != null){
+            var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
+            if (this.Unsubscribe != null){
                 this.Unsubscribe(this,eArgs);
             }
 
@@ -6239,8 +6239,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Select OnSelect(string cmdTag,string folder)
         {
-            IMAP_e_Select eArgs = new IMAP_e_Select(cmdTag,folder);
-            if(this.Select != null){
+            var eArgs = new IMAP_e_Select(cmdTag,folder);
+            if (this.Select != null){
                 this.Select(this,eArgs);
             }
 
@@ -6263,8 +6263,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_MessagesInfo OnGetMessagesInfo(string folder)
         {
-            IMAP_e_MessagesInfo eArgs = new IMAP_e_MessagesInfo(folder);
-            if(this.GetMessagesInfo != null){
+            var eArgs = new IMAP_e_MessagesInfo(folder);
+            if (this.GetMessagesInfo != null){
                 this.GetMessagesInfo(this,eArgs);
             }
 
@@ -6291,8 +6291,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Append OnAppend(string folder,string[] flags,DateTime date,int size,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Append eArgs = new IMAP_e_Append(folder,flags,date,size,response);
-            if(this.Append != null){
+            var eArgs = new IMAP_e_Append(folder,flags,date,size,response);
+            if (this.Append != null){
                 this.Append(this,eArgs);
             }
 
@@ -6316,8 +6316,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_GetQuotaRoot OnGetGuotaRoot(string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_GetQuotaRoot eArgs = new IMAP_e_GetQuotaRoot(folder,response);
-            if(this.GetQuotaRoot != null){
+            var eArgs = new IMAP_e_GetQuotaRoot(folder,response);
+            if (this.GetQuotaRoot != null){
                 this.GetQuotaRoot(this,eArgs);
             }
 
@@ -6341,8 +6341,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_GetQuota OnGetQuota(string quotaRoot,IMAP_r_ServerStatus response)
         {
-            IMAP_e_GetQuota eArgs = new IMAP_e_GetQuota(quotaRoot,response);
-            if(this.GetQuota != null){
+            var eArgs = new IMAP_e_GetQuota(quotaRoot,response);
+            if (this.GetQuota != null){
                 this.GetQuota(this,eArgs);
             }
 
@@ -6366,8 +6366,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_GetAcl OnGetAcl(string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_GetAcl eArgs = new IMAP_e_GetAcl(folder,response);
-            if(this.GetAcl != null){
+            var eArgs = new IMAP_e_GetAcl(folder,response);
+            if (this.GetAcl != null){
                 this.GetAcl(this,eArgs);
             }
 
@@ -6394,8 +6394,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_SetAcl OnSetAcl(string folder,string identifier,IMAP_Flags_SetType flagsSetType,string rights,IMAP_r_ServerStatus response)
         {
-            IMAP_e_SetAcl eArgs = new IMAP_e_SetAcl(folder,identifier,flagsSetType,rights,response);
-            if(this.SetAcl != null){
+            var eArgs = new IMAP_e_SetAcl(folder,identifier,flagsSetType,rights,response);
+            if (this.SetAcl != null){
                 this.SetAcl(this,eArgs);
             }
 
@@ -6420,8 +6420,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_DeleteAcl OnDeleteAcl(string folder,string identifier,IMAP_r_ServerStatus response)
         {
-            IMAP_e_DeleteAcl eArgs = new IMAP_e_DeleteAcl(folder,identifier,response);
-            if(this.DeleteAcl != null){
+            var eArgs = new IMAP_e_DeleteAcl(folder,identifier,response);
+            if (this.DeleteAcl != null){
                 this.DeleteAcl(this,eArgs);
             }
 
@@ -6446,8 +6446,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_ListRights OnListRights(string folder,string identifier,IMAP_r_ServerStatus response)
         {
-            IMAP_e_ListRights eArgs = new IMAP_e_ListRights(folder,identifier,response);
-            if(this.ListRights != null){
+            var eArgs = new IMAP_e_ListRights(folder,identifier,response);
+            if (this.ListRights != null){
                 this.ListRights(this,eArgs);
             }
 
@@ -6471,8 +6471,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_MyRights OnMyRights(string folder,IMAP_r_ServerStatus response)
         {
-            IMAP_e_MyRights eArgs = new IMAP_e_MyRights(folder,response);
-            if(this.MyRights != null){
+            var eArgs = new IMAP_e_MyRights(folder,response);
+            if (this.MyRights != null){
                 this.MyRights(this,eArgs);
             }
 
@@ -6538,8 +6538,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Store OnStore(IMAP_MessageInfo msgInfo,IMAP_Flags_SetType setType,string[] flags,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Store eArgs = new IMAP_e_Store(m_pSelectedFolder.Folder,msgInfo,setType,flags,response);
-            if(this.Store != null){
+            var eArgs = new IMAP_e_Store(m_pSelectedFolder.Folder,msgInfo,setType,flags,response);
+            if (this.Store != null){
                 this.Store(this,eArgs);
             }
 
@@ -6564,8 +6564,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Copy OnCopy(string targetFolder,IMAP_MessageInfo[] messagesInfo,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Copy eArgs = new IMAP_e_Copy(m_pSelectedFolder.Folder,targetFolder,messagesInfo,response);
-            if(this.Copy != null){
+            var eArgs = new IMAP_e_Copy(m_pSelectedFolder.Folder,targetFolder,messagesInfo,response);
+            if (this.Copy != null){
                 this.Copy(this,eArgs);
             }
 
@@ -6589,8 +6589,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns event args.</returns>
         private IMAP_e_Expunge OnExpunge(IMAP_MessageInfo msgInfo,IMAP_r_ServerStatus response)
         {
-            IMAP_e_Expunge eArgs = new IMAP_e_Expunge(m_pSelectedFolder.Folder,msgInfo,response);
-            if(this.Expunge != null){
+            var eArgs = new IMAP_e_Expunge(m_pSelectedFolder.Folder,msgInfo,response);
+            if (this.Expunge != null){
                 this.Expunge(this,eArgs);
             }
 

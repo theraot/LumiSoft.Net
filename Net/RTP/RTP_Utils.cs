@@ -65,8 +65,8 @@ namespace LumiSoft.Net.RTP
                 independently.
             */
 
-            TimeSpan ts = ((TimeSpan)(value.ToUniversalTime() - new DateTime(1900,1,1,0,0,0)));
-                       
+            var ts = ((TimeSpan)(value.ToUniversalTime() - new DateTime(1900,1,1,0,0,0)));
+
             return ((ulong)(ts.TotalMilliseconds % 1000) << 32) | (uint)(ts.Milliseconds << 22);
         }
     }

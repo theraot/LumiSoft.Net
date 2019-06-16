@@ -23,12 +23,9 @@ namespace LumiSoft.Net
             if(hostName == string.Empty){
                 throw new ArgumentException("Argument 'hostName' value must be specified.","hostName");
             }
-            if(ipAddresses == null){
-                throw new ArgumentNullException("ipAddresses");
-            }
 
             HostName   = hostName;
-            Addresses = ipAddresses;
+            Addresses = ipAddresses ?? throw new ArgumentNullException("ipAddresses");
             Aliases   = (aliases == null ? new string[0] : aliases);
         }
 

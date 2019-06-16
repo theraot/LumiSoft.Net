@@ -23,11 +23,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when <b>provider</b> is null reference.</exception>
         public MIME_h_Collection(MIME_h_Provider provider)
         {
-            if(provider == null){
-                throw new ArgumentNullException("provider");
-            }
-
-            FieldsProvider = provider;
+            FieldsProvider = provider ?? throw new ArgumentNullException("provider");
 
             m_pFields = new List<MIME_h>();
         }
@@ -64,7 +60,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("field");
             }
    
-            MIME_h h = FieldsProvider.Parse(field);
+            var h = FieldsProvider.Parse(field);
             m_pFields.Add(h);
             m_IsModified = true;
 
@@ -285,7 +281,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("stream");
             }
 
-            byte[] header = Encoding.UTF8.GetBytes(ToString(wordEncoder,parmetersCharset,reEncod));
+            var header = Encoding.UTF8.GetBytes(ToString(wordEncoder,parmetersCharset,reEncod));
             stream.Write(header,0,header.Length);
         }
 
@@ -318,8 +314,8 @@ namespace LumiSoft.Net.MIME
         /// <returns>Returns MIME header as string.</returns>
         public string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
-            StringBuilder retVal = new StringBuilder();
-            foreach(MIME_h field in m_pFields){
+            var retVal = new StringBuilder();
+            foreach (MIME_h field in m_pFields){
                 retVal.Append(field.ToString(wordEncoder,parmetersCharset,reEncode));
             }
 
@@ -369,9 +365,9 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("encoding");
             }
 
-            StringBuilder               currentHeader = new StringBuilder();
-            SmartStream.ReadLineAsyncOP readLineOP    = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.ThrowException);
-            while(true){                
+            var               currentHeader = new StringBuilder();
+            var readLineOP    = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.ThrowException);
+            while (true){                
                 stream.ReadLine(readLineOP,false);
                 if(readLineOP.Error != null){
                     throw readLineOP.Error;
@@ -395,10 +391,10 @@ namespace LumiSoft.Net.MIME
 
                     return;
                 }
-                string line = encoding.GetString(readLineOP.Buffer,0,readLineOP.BytesInBuffer);
- 
+                var line = encoding.GetString(readLineOP.Buffer,0,readLineOP.BytesInBuffer);
+
                 // New header field starts.
-                if(currentHeader.Length == 0){
+                if (currentHeader.Length == 0){
                     currentHeader.Append(line);
                 }
                 // Header field continues.
@@ -482,8 +478,8 @@ namespace LumiSoft.Net.MIME
                     throw new ArgumentNullException("name");
                 }
 
-                List<MIME_h> retVal = new List<MIME_h>();
-                foreach(MIME_h field in m_pFields.ToArray()){
+                var retVal = new List<MIME_h>();
+                foreach (MIME_h field in m_pFields.ToArray()){
                     if(string.Compare(name,field.Name,true) == 0){
                         retVal.Add(field);
                     }

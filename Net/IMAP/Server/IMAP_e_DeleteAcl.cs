@@ -18,19 +18,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b>,<b>identifier</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_DeleteAcl(string folder,string identifier,IMAP_r_ServerStatus response)
         {
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-            if(identifier == null){
-                throw new ArgumentNullException("identifier");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            m_pResponse  = response;
-            Folder     = folder;
-            Identifier = identifier;
+            m_pResponse  = response ?? throw new ArgumentNullException("response");
+            Folder     = folder ?? throw new ArgumentNullException("folder");
+            Identifier = identifier ?? throw new ArgumentNullException("identifier");
         }
 
         /// <summary>
@@ -41,12 +31,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

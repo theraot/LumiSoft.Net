@@ -22,12 +22,9 @@ namespace LumiSoft.Net.IMAP
             if(identifier == string.Empty){
                 throw new ArgumentException("Argument 'identifier' value must be specified.","identifier");
             }
-            if(rights == null){
-                throw new ArgumentNullException("rights");
-            }
 
             Identifier = identifier;
-            Rights     = rights;
+            Rights     = rights ?? throw new ArgumentNullException("rights");
         }
 
         /// <summary>

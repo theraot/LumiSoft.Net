@@ -78,7 +78,7 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Parse address
-            SIP_t_NameAddress address = new SIP_t_NameAddress();
+            var address = new SIP_t_NameAddress();
             address.Parse(reader);
             Address = address;
 
@@ -107,8 +107,8 @@ namespace LumiSoft.Net.SIP.Message
                 delta-seconds      =  1*DIGIT
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // Add address
             retVal.Append(Address.ToStringValue());
 
@@ -173,8 +173,8 @@ namespace LumiSoft.Net.SIP.Message
         public int Expires
         {
             get{
-                SIP_Parameter parameter = this.Parameters["expires"];
-                if(parameter != null){
+                var parameter = this.Parameters["expires"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 

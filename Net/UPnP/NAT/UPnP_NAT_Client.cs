@@ -37,7 +37,7 @@ namespace LumiSoft.Net.UPnP.NAT
             */
 
             try{
-                UPnP_Client   client  = new UPnP_Client();
+                var   client  = new UPnP_Client();
                 UPnP_Device[] devices = null;
 
                 // Try to get gateway UPnP info, if it supports it.
@@ -65,14 +65,14 @@ namespace LumiSoft.Net.UPnP.NAT
                 }
 
                 if(devices.Length > 0){
-                    XmlDocument xml = new XmlDocument();
+                    var xml = new XmlDocument();
                     xml.LoadXml(devices[0].DeviceXml);
                 
                     // Loop XML tree by nodes.
-                    List<XmlNode> queue = new List<XmlNode>();
+                    var queue = new List<XmlNode>();
                     queue.Add(xml);
                     while(queue.Count > 0){
-                        XmlNode currentNode = queue[0];
+                        var currentNode = queue[0];
                         queue.RemoveAt(0);
                
                         if(string.Equals("urn:schemas-upnp-org:service:WANPPPConnection:1",currentNode.InnerText,StringComparison.InvariantCultureIgnoreCase)){                        
@@ -122,16 +122,16 @@ namespace LumiSoft.Net.UPnP.NAT
                     NewExternalIPAddress
             */
 
-            string soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
+            var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
             "<s:Body>\r\n" +
             "<u:GetExternalIPAddress xmlns:u=\"" + m_ServiceType + "\"></u:GetExternalIPAddress>\r\n" +
             "</s:Body>\r\n" +
             "</s:Envelope>\r\n";
 
-            string soapResponse = SendCommand("GetExternalIPAddress",soapBody);
+            var soapResponse = SendCommand("GetExternalIPAddress",soapBody);
 
-            XmlReader reader = XmlReader.Create(new System.IO.StringReader(soapResponse));
-            while(reader.Read()){
+            var reader = XmlReader.Create(new System.IO.StringReader(soapResponse));
+            while (reader.Read()){
                 if(string.Equals("NewExternalIPAddress",reader.Name,StringComparison.InvariantCultureIgnoreCase)){
                     return IPAddress.Parse(reader.ReadString());
                 }
@@ -169,10 +169,10 @@ namespace LumiSoft.Net.UPnP.NAT
                     NewLeaseDuration
             */
 
-            List<UPnP_NAT_Map> retVal = new List<UPnP_NAT_Map>();
-            for(int i=0;i<100;i++){
+            var retVal = new List<UPnP_NAT_Map>();
+            for (int i=0;i<100;i++){
                 try{
-                    string soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
+                    var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
                     "<s:Body>\r\n" +
                     "<u:GetGenericPortMappingEntry xmlns:u=\"" + m_ServiceType + "\">\r\n" +
                     "<NewPortMappingIndex>" + i + "</NewPortMappingIndex>\r\n" +
@@ -180,19 +180,19 @@ namespace LumiSoft.Net.UPnP.NAT
                     "</s:Body>\r\n" +
                     "</s:Envelope>\r\n";
 
-                    string soapResponse = SendCommand("GetGenericPortMappingEntry",soapBody);
+                    var soapResponse = SendCommand("GetGenericPortMappingEntry",soapBody);
 
                     bool   enabled       = false;
-                    string protocol      = "";
-                    string remoteHost    = "";
-                    string externalPort  = "";
-                    string internalHost  = "";
+                    var protocol      = "";
+                    var remoteHost    = "";
+                    var externalPort  = "";
+                    var internalHost  = "";
                     int    internalPort  = 0;
-                    string description   = "";
+                    var description   = "";
                     int    leaseDuration = 0;
 
-                    XmlReader reader = XmlReader.Create(new System.IO.StringReader(soapResponse));
-                    while(reader.Read()){
+                    var reader = XmlReader.Create(new System.IO.StringReader(soapResponse));
+                    while (reader.Read()){
                         if(string.Equals("NewRemoteHost",reader.Name,StringComparison.InvariantCultureIgnoreCase)){
                             remoteHost = reader.ReadString();
                         }
@@ -226,9 +226,9 @@ namespace LumiSoft.Net.UPnP.NAT
 
                     // We have UPnP exception.
                     if(x.Response.ContentType.ToLower().IndexOf("text/xml") > -1){
-                        UPnP_Exception uX = UPnP_Exception.Parse(x.Response.GetResponseStream());
+                        var uX = UPnP_Exception.Parse(x.Response.GetResponseStream());
                         // Other error than "Index out of range", we pass it through.
-                        if(uX.ErrorCode != 713){
+                        if (uX.ErrorCode != 713){
                             throw uX; 
                         }
                     }
@@ -290,7 +290,7 @@ namespace LumiSoft.Net.UPnP.NAT
             */
 
             try{
-                string soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
+                var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
                 "<s:Body>\r\n" +
                 "<u:AddPortMapping xmlns:u=\"" + m_ServiceType + "\">\r\n" +
                 "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
@@ -305,7 +305,7 @@ namespace LumiSoft.Net.UPnP.NAT
                 "</s:Body>\r\n" +
                 "</s:Envelope>\r\n";
 
-                string soapResponse = SendCommand("AddPortMapping",soapBody);
+                var soapResponse = SendCommand("AddPortMapping",soapBody);
             }
             catch(WebException x){
                 // We have UPnP exception.
@@ -355,7 +355,7 @@ namespace LumiSoft.Net.UPnP.NAT
             }
 
             try{
-                string soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
+                var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
                 "<s:Body>\r\n" +
                 "<u:DeletePortMapping xmlns:u=\"" + m_ServiceType + "\">\r\n" +
                 "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
@@ -383,9 +383,9 @@ namespace LumiSoft.Net.UPnP.NAT
         /// <returns>Returns UPnP device response.</returns>
         private string SendCommand(string method,string soapData)
         {
-            byte[] requestBody = Encoding.UTF8.GetBytes(soapData);
+            var requestBody = Encoding.UTF8.GetBytes(soapData);
 
-            WebRequest request = WebRequest.Create(m_BaseUrl + m_ControlUrl);
+            var request = WebRequest.Create(m_BaseUrl + m_ControlUrl);
             request.Method = "POST";
             request.Headers.Add("SOAPAction",m_ServiceType + "#" + method);
             request.ContentType = "text/xml; charset=\"utf-8\";";
@@ -395,8 +395,8 @@ namespace LumiSoft.Net.UPnP.NAT
             request.GetRequestStream().Write(requestBody,0,requestBody.Length);
             request.GetRequestStream().Close();
 
-            WebResponse response = request.GetResponse();
-            using(TextReader r = new StreamReader(response.GetResponseStream())){
+            var response = request.GetResponse();
+            using (TextReader r = new StreamReader(response.GetResponseStream())){
                 return r.ReadToEnd();
             }
         }

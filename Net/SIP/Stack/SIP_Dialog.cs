@@ -46,9 +46,6 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b>,<b>transaction</b> or <b>response</b>.</exception>
         internal protected virtual void Init(SIP_Stack stack,SIP_Transaction transaction,SIP_Response response)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
             if(transaction == null){
                 throw new ArgumentNullException("transaction");
             }
@@ -56,7 +53,7 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("response");
             }
 
-            m_pStack = stack;
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
 
             /* RFC 3261 12.1.1.
                 The UAS then constructs the state of the dialog.  This state MUST be
@@ -104,14 +101,14 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pLocalUri = transaction.Request.To.Address.Uri;
                 m_pLocalContact = (SIP_Uri)response.Contact.GetTopMostValue().Address.Uri;
 
-                List<string> allow = new List<string>();
-                foreach(SIP_t_Method m in response.Allow.GetAllValues()){
+                var allow = new List<string>();
+                foreach (SIP_t_Method m in response.Allow.GetAllValues()){
                     allow.Add(m.Method);
                 }
                 m_pRemoteAllow = allow.ToArray();
 
-                List<string> supported = new List<string>();
-                foreach(SIP_t_OptionTag s in response.Supported.GetAllValues()){
+                var supported = new List<string>();
+                foreach (SIP_t_OptionTag s in response.Supported.GetAllValues()){
                     supported.Add(s.OptionTag);
                 }
                 m_pRemoteSupported = supported.ToArray();
@@ -165,14 +162,14 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pLocalUri = transaction.Request.From.Address.Uri;
                 m_pLocalContact = (SIP_Uri)transaction.Request.Contact.GetTopMostValue().Address.Uri;
                 
-                List<string> allow = new List<string>();
-                foreach(SIP_t_Method m in response.Allow.GetAllValues()){
+                var allow = new List<string>();
+                foreach (SIP_t_Method m in response.Allow.GetAllValues()){
                     allow.Add(m.Method);
                 }
                 m_pRemoteAllow = allow.ToArray();
 
-                List<string> supported = new List<string>();
-                foreach(SIP_t_OptionTag s in response.Supported.GetAllValues()){
+                var supported = new List<string>();
+                foreach (SIP_t_OptionTag s in response.Supported.GetAllValues()){
                     supported.Add(s.OptionTag);
                 }
                 m_pRemoteSupported = supported.ToArray();
@@ -333,14 +330,14 @@ namespace LumiSoft.Net.SIP.Stack
             */
 
             lock(SyncRoot){
-                SIP_Request request = m_pStack.CreateRequest(method,new SIP_t_NameAddress("",m_pRemoteUri),new SIP_t_NameAddress("",m_pLocalUri));
+                var request = m_pStack.CreateRequest(method,new SIP_t_NameAddress("",m_pRemoteUri),new SIP_t_NameAddress("",m_pLocalUri));
                 request.Route.RemoveAll();
                 if(m_pRouteSet.Length == 0){
                     request.RequestLine.Uri = m_pRemoteTarget;
                 }
                 else{  
-                    SIP_Uri topmostRoute = ((SIP_Uri)m_pRouteSet[0].Address.Uri);
-                    if(topmostRoute.Param_Lr){
+                    var topmostRoute = ((SIP_Uri)m_pRouteSet[0].Address.Uri);
+                    if (topmostRoute.Param_Lr){
                         request.RequestLine.Uri = m_pRemoteTarget;
                         for(int i=0;i<m_pRouteSet.Length;i++){
                             request.Route.Add(m_pRouteSet[i].ToStringValue());
@@ -386,7 +383,7 @@ namespace LumiSoft.Net.SIP.Stack
 
                 // TODO: Request sender must use dialog sequence numbering if authentication done.
                
-                SIP_RequestSender sender = m_pStack.CreateRequestSender(request,this.Flow);
+                var sender = m_pStack.CreateRequestSender(request,this.Flow);
 
                 return sender;
             }

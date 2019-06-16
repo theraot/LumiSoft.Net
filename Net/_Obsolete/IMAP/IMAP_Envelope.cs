@@ -119,38 +119,38 @@ namespace LumiSoft.Net.IMAP
             r.ReadSpecifiedLength(1);
 
             // Read "date".
-            DateTime date = DateTime.MinValue;
-            string dateS = r.ReadWord();            
-            if(dateS != null){
+            var date = DateTime.MinValue;
+            var dateS = r.ReadWord();
+            if (dateS != null){
                 date = MIME_Utils.ParseRfc2822DateTime(dateS);
             }
 
             // Read "subject".
-            string subject = ReadAndDecodeWord(r.ReadWord());
+            var subject = ReadAndDecodeWord(r.ReadWord());
 
             // Read "from"
-            Mail_t_Address[] from = ReadAddresses(r);
-            
+            var from = ReadAddresses(r);
+
             //Read "sender"
-            Mail_t_Address[] sender = ReadAddresses(r);
-            
+            var sender = ReadAddresses(r);
+
             // Read "reply-to"
-            Mail_t_Address[] replyTo = ReadAddresses(r);
-            
+            var replyTo = ReadAddresses(r);
+
             // Read "to"
-            Mail_t_Address[] to = ReadAddresses(r);
-            
+            var to = ReadAddresses(r);
+
             // Read "cc"
-            Mail_t_Address[] cc = ReadAddresses(r);
-            
+            var cc = ReadAddresses(r);
+
             // Read "bcc"
-            Mail_t_Address[] bcc = ReadAddresses(r);
-            
+            var bcc = ReadAddresses(r);
+
             // Read "in-reply-to"
-            string inReplyTo = r.ReadWord();
-            
+            var inReplyTo = r.ReadWord();
+
             // Read "message-id"
-            string messageID = r.ReadWord();
+            var messageID = r.ReadWord();
 
             // Eat ending ")".
             r.ReadToFirstChar();
@@ -237,38 +237,38 @@ namespace LumiSoft.Net.IMAP
             fetchReader.GetReader().ReadSpecifiedLength(1);
 
             // Read "date".
-            DateTime date = DateTime.MinValue;
-            string dateS = fetchReader.ReadString();            
-            if(dateS != null){
+            var date = DateTime.MinValue;
+            var dateS = fetchReader.ReadString();
+            if (dateS != null){
                 date = MIME_Utils.ParseRfc2822DateTime(dateS);
             }
 
             // Read "subject".
-            string subject =  ReadAndDecodeWord(fetchReader.ReadString());
+            var subject =  ReadAndDecodeWord(fetchReader.ReadString());
 
             // Read "from"
-            Mail_t_Address[] from = ReadAddresses(fetchReader);
-            
+            var from = ReadAddresses(fetchReader);
+
             //Read "sender"
-            Mail_t_Address[] sender = ReadAddresses(fetchReader);
-            
+            var sender = ReadAddresses(fetchReader);
+
             // Read "reply-to"
-            Mail_t_Address[] replyTo = ReadAddresses(fetchReader);
-            
+            var replyTo = ReadAddresses(fetchReader);
+
             // Read "to"
-            Mail_t_Address[] to = ReadAddresses(fetchReader);
-            
+            var to = ReadAddresses(fetchReader);
+
             // Read "cc"
-            Mail_t_Address[] cc = ReadAddresses(fetchReader);
-            
+            var cc = ReadAddresses(fetchReader);
+
             // Read "bcc"
-            Mail_t_Address[] bcc = ReadAddresses(fetchReader);
-            
+            var bcc = ReadAddresses(fetchReader);
+
             // Read "in-reply-to"
-            string inReplyTo = fetchReader.ReadString();
-            
+            var inReplyTo = fetchReader.ReadString();
+
             // Read "message-id"
-            string messageID = fetchReader.ReadString();
+            var messageID = fetchReader.ReadString();
 
             // Eat ending ")".
             fetchReader.GetReader().ReadToFirstChar();
@@ -348,11 +348,11 @@ namespace LumiSoft.Net.IMAP
 
 			// NOTE: all header fields and parameters must in ENCODED form !!!
 
-            MIME_Encoding_EncodedWord wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
+            var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
             wordEncoder.Split = false;
 
-			StringBuilder retVal = new StringBuilder();
-			retVal.Append("ENVELOPE (");
+			var retVal = new StringBuilder();
+            retVal.Append("ENVELOPE (");
 
 			// date
             try{
@@ -370,7 +370,7 @@ namespace LumiSoft.Net.IMAP
 			// subject
 			if(entity.Subject != null){
 				//retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.Subject)));
-                string val = wordEncoder.Encode(entity.Subject);
+                var val = wordEncoder.Encode(entity.Subject);
                 retVal.Append(" {" + val.Length + "}\r\n" + val);
 			}
 			else{
@@ -484,7 +484,7 @@ namespace LumiSoft.Net.IMAP
                 return null;
             }
 
-            List<Mail_t_Address> retVal = new List<Mail_t_Address>();
+            var retVal = new List<Mail_t_Address>();
             // Eat addresses starting "(".
             r.ReadSpecifiedLength(1);
 
@@ -498,10 +498,10 @@ namespace LumiSoft.Net.IMAP
                 // Eat address starting "(".
                 r.ReadSpecifiedLength(1);
 
-                string personalName = ReadAndDecodeWord(r.ReadWord());
-                string atDomainList = r.ReadWord();
-                string mailboxName  = r.ReadWord();
-                string hostName     = r.ReadWord();
+                var personalName = ReadAndDecodeWord(r.ReadWord());
+                var atDomainList = r.ReadWord();
+                var mailboxName  = r.ReadWord();
+                var hostName     = r.ReadWord();
 
                 retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
 
@@ -545,7 +545,7 @@ namespace LumiSoft.Net.IMAP
                 return null;
             }
 
-            List<Mail_t_Address> retVal = new List<Mail_t_Address>();
+            var retVal = new List<Mail_t_Address>();
             // Eat addresses starting "(".
             fetchReader.GetReader().ReadSpecifiedLength(1);
 
@@ -559,10 +559,10 @@ namespace LumiSoft.Net.IMAP
                 // Eat address starting "(".
                 fetchReader.GetReader().ReadSpecifiedLength(1);
 
-                string personalName = ReadAndDecodeWord(fetchReader.ReadString());
-                string atDomainList = fetchReader.ReadString();
-                string mailboxName  = fetchReader.ReadString();
-                string hostName     = fetchReader.ReadString();
+                var personalName = ReadAndDecodeWord(fetchReader.ReadString());
+                var atDomainList = fetchReader.ReadString();
+                var mailboxName  = fetchReader.ReadString();
+                var hostName     = fetchReader.ReadString();
 
                 retVal.Add(new Mail_t_Mailbox(personalName,mailboxName + "@" + hostName));
 
@@ -582,8 +582,8 @@ namespace LumiSoft.Net.IMAP
 		/// <returns></returns>
 		private static string ConstructAddresses(Mail_t_Mailbox[] mailboxes,MIME_Encoding_EncodedWord wordEncoder)
 		{
-			StringBuilder retVal = new StringBuilder();
-			retVal.Append("(");
+			var retVal = new StringBuilder();
+            retVal.Append("(");
 
 			foreach(Mail_t_Mailbox address in mailboxes){                
 				retVal.Append(ConstructAddress(address,wordEncoder));
@@ -610,8 +610,8 @@ namespace LumiSoft.Net.IMAP
 
 			// NOTE: all header fields and parameters must in ENCODED form !!!
 
-			StringBuilder retVal = new StringBuilder();
-			retVal.Append("(");
+			var retVal = new StringBuilder();
+            retVal.Append("(");
 
 			// personal name
             if(address.DisplayName != null){

@@ -24,11 +24,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public QuotedPrintableStream(SmartStream stream,FileAccess access)
         {
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            m_pStream    = stream;
+            m_pStream    = stream ?? throw new ArgumentNullException("stream");
             m_AccessMode = access;
 
             m_pDecodedBuffer = new byte[32000];
@@ -101,7 +97,7 @@ namespace LumiSoft.Net.IO
                 if(m_DecodedOffset >= m_DecodedCount){
                     m_DecodedOffset = 0;
                     m_DecodedCount  = 0;
-                    SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.ThrowException);
+                    var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.ThrowException);
                     m_pStream.ReadLine(readLineOP,false);
                     // IO error reading line.
                     if(readLineOP.Error != null){

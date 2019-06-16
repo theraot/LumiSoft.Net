@@ -31,8 +31,8 @@ namespace LumiSoft.Net.DNS
         /// <param name="ttl">Time to live in seconds.</param>
         public static DNS_rr_CNAME Parse(string name,byte[] reply,ref int offset,int rdLength,int ttl)
         {
-            string alias = "";			
-			if(Dns_Client.GetQName(reply,ref offset,ref alias)){			
+            var alias = "";
+            if (Dns_Client.GetQName(reply,ref offset,ref alias)){			
 				return new DNS_rr_CNAME(name,alias,ttl);
 			}
 

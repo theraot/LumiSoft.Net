@@ -84,8 +84,8 @@ namespace LumiSoft.Net.SIP.Message
                 sip-clean-msg-id    = LDQUOT dot-atom "@" (dot-atom / host) RDQUOT
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // referrer-uri
             retVal.Append(m_pAddress.ToStringValue());
 
@@ -104,11 +104,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_pAddress; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Address");
-                }
-
-                m_pAddress = value;
+                m_pAddress = value ?? throw new ArgumentNullException("Address");
             }
         }
 
@@ -118,8 +114,8 @@ namespace LumiSoft.Net.SIP.Message
         public string CID
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["cid"];
-                if(parameter != null){
+                var parameter = this.Parameters["cid"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

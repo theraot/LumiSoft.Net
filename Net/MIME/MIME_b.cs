@@ -21,11 +21,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public MIME_b(MIME_h_ContentType contentType)
         {
-            if(contentType == null){
-                throw new ArgumentNullException("contentType");
-            }
-
-            m_pContentType = contentType;
+            m_pContentType = contentType ?? throw new ArgumentNullException("contentType");
         }
 
         /// <summary>

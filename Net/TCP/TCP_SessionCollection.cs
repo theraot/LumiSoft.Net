@@ -92,7 +92,7 @@ namespace LumiSoft.Net.TCP
         public T[] ToArray()
         {
             lock(m_pItems){
-                T[] retVal = new T[m_pItems.Count];
+                var retVal = new T[m_pItems.Count];
                 m_pItems.Values.CopyTo(retVal,0);
 
                 return retVal;

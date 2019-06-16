@@ -23,13 +23,10 @@ namespace LumiSoft.Net.SIP.Stack
             if(statusCode < 100 || statusCode > 699){
                 throw new ArgumentException("Argument 'statusCode' value must be >= 100 and <= 699.");
             }
-            if(reason == null){
-                throw new ArgumentNullException("reason");
-            }
 
             m_Version    = "SIP/2.0";
             m_StatusCode = statusCode;
-            m_Reason     = reason;
+            m_Reason     = reason ?? throw new ArgumentNullException("reason");
         }
 
         /// <summary>

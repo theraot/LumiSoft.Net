@@ -15,11 +15,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>message</b> is null reference.</exception>
         internal POP3_e_GetMessageStream(POP3_ServerMessage message)
         {
-            if(message == null){
-                throw new ArgumentNullException("message");
-            }
-
-            Message  = message;
+            Message  = message ?? throw new ArgumentNullException("message");
         }
 
         /// <summary>

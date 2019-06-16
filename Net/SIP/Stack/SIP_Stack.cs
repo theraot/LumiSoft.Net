@@ -137,8 +137,8 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             // Wait while all active transactions has completed.
-            DateTime start = DateTime.Now;
-            while(true){
+            var start = DateTime.Now;
+            while (true){
                 bool activeTransactions = false;
                 foreach(SIP_Transaction tr in m_pTransactionLayer.Transactions){
                     // We have active transactions.
@@ -221,7 +221,7 @@ namespace LumiSoft.Net.SIP.Stack
                 which contains the method, Request-URI, and SIP version.
             */
 
-            SIP_Request request = new SIP_Request(method);
+            var request = new SIP_Request(method);
 
             /*
                 The initial Request-URI of the message SHOULD be set to the value of
@@ -229,7 +229,7 @@ namespace LumiSoft.Net.SIP.Stack
                 method; behavior for setting the Request-URI of REGISTER is given in
                 Section 10.
             */
-            
+
             request.RequestLine.Uri = to.Uri;
 
             /*
@@ -241,7 +241,7 @@ namespace LumiSoft.Net.SIP.Stack
                 schemes (the tel URL (RFC 2806 [9]), for example) when appropriate.
             */
 
-            SIP_t_To t = new SIP_t_To(to);
+            var t = new SIP_t_To(to);
             request.To = t;
 
             /*
@@ -263,7 +263,7 @@ namespace LumiSoft.Net.SIP.Stack
                 See Section 19.3 for details on choosing a tag.
             */
 
-            SIP_t_From f = new SIP_t_From(from);
+            var f = new SIP_t_From(from);
             f.Tag = SIP_Utils.CreateTag();
             request.From = f;
 
@@ -345,7 +345,7 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("request");
             }
 
-            SIP_RequestSender sender = new SIP_RequestSender(this,request,flow);
+            var sender = new SIP_RequestSender(this,request,flow);
             sender.Credentials.AddRange(m_pCredentials);
 
             return sender;
@@ -426,7 +426,7 @@ namespace LumiSoft.Net.SIP.Stack
                 order of those values.            
             */
 
-            SIP_Response response = new SIP_Response(request);
+            var response = new SIP_Response(request);
             response.StatusCode_ReasonPhrase = statusCode_reasonText;
             foreach(SIP_t_ViaParm via in request.Via.GetAllValues()){
                 response.Via.Add(via.ToStringValue());
@@ -458,7 +458,7 @@ namespace LumiSoft.Net.SIP.Stack
                 }
                 
                 if(response.Contact.GetTopMostValue() ==  null && flow != null){
-                    string user = ((SIP_Uri)response.To.Address.Uri).User;
+                    var user = ((SIP_Uri)response.To.Address.Uri).User;
                     response.Contact.Add((flow.IsSecure ? "sips:" : "sip:") + user + "@" + flow.LocalPublicEP.ToString());
                 }
             }
@@ -480,10 +480,10 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("uri");
             }
 
-            List<SIP_Hop>    retVal                 = new List<SIP_Hop>();
-            string           transport              = "";
+            var    retVal                 = new List<SIP_Hop>();
+            var           transport              = "";
             bool             transportSetExplicitly = false;
-            List<DNS_rr_SRV> targetSRV              = new List<DNS_rr_SRV>();
+            var targetSRV              = new List<DNS_rr_SRV>();
 
             /* 4.1 Selecting a Transport Protocol
 
@@ -605,9 +605,9 @@ namespace LumiSoft.Net.SIP.Stack
                 particular request.  That is the case, for example, for requests that
                 exceed the path MTU.
              */
-                    
+
             // TLS usage demanded explicitly.
-            if(forceTLS){
+            if (forceTLS){
                 transportSetExplicitly = true;
                 transport = SIP_Transport.TLS;
             }
@@ -656,8 +656,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 }
                 else{*/
-                    Dictionary<string,DNS_rr_SRV[]> supportedTransports = new Dictionary<string,DNS_rr_SRV[]>();
-                    bool                            srvRecordsAvailable = false;
+                    var supportedTransports = new Dictionary<string,DNS_rr_SRV[]>();
+                bool                            srvRecordsAvailable = false;
 
                     // Query SRV to see what protocols are supported.
                     response = m_pDnsClient.Query("_sips._tcp." + uri.Host,DNS_QType.SRV);
@@ -869,7 +869,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             lock(m_pRegistrations){
-                SIP_UA_Registration registration = new SIP_UA_Registration(this,server,aor,contact,expires);
+                var registration = new SIP_UA_Registration(this,server,aor,contact,expires);
                 registration.Disposed += new EventHandler(delegate(object s,EventArgs e){
                     if(State != SIP_StackState.Disposed){
                         m_pRegistrations.Remove(registration);
@@ -999,11 +999,8 @@ namespace LumiSoft.Net.SIP.Stack
                 if(State == SIP_StackState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(value == null){
-                    throw new ArgumentNullException();
-                }
 
-                m_Realm = value;
+                m_Realm = value ?? throw new ArgumentNullException();
             }
         }
 
@@ -1299,8 +1296,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns></returns>
         internal SIP_ValidateRequestEventArgs OnValidateRequest(SIP_Request request,IPEndPoint remoteEndPoint)
         {
-            SIP_ValidateRequestEventArgs eArgs = new SIP_ValidateRequestEventArgs(request,remoteEndPoint);
-            if(this.ValidateRequest != null){
+            var eArgs = new SIP_ValidateRequestEventArgs(request,remoteEndPoint);
+            if (this.ValidateRequest != null){
                 this.ValidateRequest(this,eArgs);
             }
 

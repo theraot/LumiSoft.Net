@@ -41,8 +41,8 @@ namespace LumiSoft.Net.SIP.UA
                 }
 
                 // Wait till all registrations and calls disposed or wait timeout reached.
-                DateTime start = DateTime.Now;
-                while(m_pCalls.Count > 0){
+                var start = DateTime.Now;
+                while (m_pCalls.Count > 0){
                     System.Threading.Thread.Sleep(500);
 
                     // Timeout, just kill all UA.
@@ -81,8 +81,8 @@ namespace LumiSoft.Net.SIP.UA
                     request itself with a 200 (OK) response.
                 */
 
-                SIP_ServerTransaction trToCancel = m_pStack.TransactionLayer.MatchCancelToTransaction(e.Request);
-                if(trToCancel != null){
+                var trToCancel = m_pStack.TransactionLayer.MatchCancelToTransaction(e.Request);
+                if (trToCancel != null){
                     trToCancel.Cancel();
                     e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,e.Request));
                 }
@@ -97,8 +97,8 @@ namespace LumiSoft.Net.SIP.UA
                 */
                 // TODO:
 
-                SIP_Dialog dialog = m_pStack.TransactionLayer.MatchDialog(e.Request);
-                if(dialog != null){
+                var dialog = m_pStack.TransactionLayer.MatchDialog(e.Request);
+                if (dialog != null){
                     e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,e.Request));
                     dialog.Terminate();
                 }
@@ -111,7 +111,7 @@ namespace LumiSoft.Net.SIP.UA
                 e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x100_Trying,e.Request));
          
                 // Create call.
-                SIP_UA_Call call = new SIP_UA_Call(this,e.ServerTransaction);
+                var call = new SIP_UA_Call(this,e.ServerTransaction);
                 call.StateChanged += new EventHandler(Call_StateChanged);
                 m_pCalls.Add(call);
 
@@ -129,8 +129,8 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="e">Event data.</param>
         private void Call_StateChanged(object sender,EventArgs e)
         {
-            SIP_UA_Call call = (SIP_UA_Call)sender;            
-            if(call.State == SIP_UA_CallState.Terminated){
+            var call = (SIP_UA_Call)sender;
+            if (call.State == SIP_UA_CallState.Terminated){
                 m_pCalls.Remove(call);
             }
         }
@@ -152,7 +152,7 @@ namespace LumiSoft.Net.SIP.UA
             }
 
             lock(m_pLock){
-                SIP_UA_Call call = new SIP_UA_Call(this,invite);
+                var call = new SIP_UA_Call(this,invite);
                 call.StateChanged += new EventHandler(Call_StateChanged);
                 m_pCalls.Add(call);
 

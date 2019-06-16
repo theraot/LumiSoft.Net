@@ -26,16 +26,9 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> or <b>qname</b> is null reference.</exception>
         internal DNS_ClientTransaction(Dns_Client owner,int id,DNS_QType qtype,string qname,int timeout)
         {
-            if(owner == null){
-                throw new ArgumentNullException("owner");
-            }
-            if(qname == null){
-                throw new ArgumentNullException("qname");
-            }
-
-            m_pOwner = owner;
+            m_pOwner = owner ?? throw new ArgumentNullException("owner");
             ID     = id;
-            QName  = qname;
+            QName  = qname ?? throw new ArgumentNullException("qname");
             QType  = qtype;
                         
             CreateTime    = DateTime.Now;
@@ -102,8 +95,8 @@ namespace LumiSoft.Net.DNS.Client
                 try{
                     // Use DNS cache if allowed.
 			        if(Dns_Client.UseDnsCache){ 
-	                    DnsServerResponse response = m_pOwner.Cache.GetFromCache(QName,(int)QType);
-				        if(response != null){
+	                    var response = m_pOwner.Cache.GetFromCache(QName,(int)QType);
+                        if (response != null){
 					        Response = response;
 
                             SetState(DNS_ClientTransactionState.Completed);
@@ -113,13 +106,13 @@ namespace LumiSoft.Net.DNS.Client
 				        }
 			        }   
 
-                    byte[] buffer = new byte[1400];
+                    var buffer = new byte[1400];
                     int count = CreateQuery(buffer,ID,QName,QType,1);
   
                     // Send parallel query to DNS server(s).
                     foreach(string server in Dns_Client.DnsServers){
                         if(Net_Utils.IsIPAddress(server)){
-                            IPAddress ip = IPAddress.Parse(server);
+                            var ip = IPAddress.Parse(server);
                             m_pOwner.Send(ip,buffer,count);
                         }
                     }
@@ -264,21 +257,21 @@ namespace LumiSoft.Net.DNS.Client
 			*/
 
             // Convert unicode domain name. For more info see RFC 5890.
-            System.Globalization.IdnMapping ldn = new System.Globalization.IdnMapping();
+            var ldn = new System.Globalization.IdnMapping();
             qname = ldn.GetAscii(qname);
 
-			string[] labels = qname.Split(new char[] {'.'});
-			int position = 12;
+			var labels = qname.Split(new char[] {'.'});
+            int position = 12;
 					
 			// Copy all domain parts(labels) to query
 			// eg. lumisoft.ee = 2 labels, lumisoft and ee.
 			// format = label.length + label(bytes)
 			foreach(string label in labels){
                 // convert label string to byte array
-                byte[] b = Encoding.ASCII.GetBytes(label);
+                var b = Encoding.ASCII.GetBytes(label);
 
-				// add label lenght to query
-				buffer[position++] = (byte)(b.Length);
+                // add label lenght to query
+                buffer[position++] = (byte)(b.Length);
                 b.CopyTo(buffer,position);
 
 				// Move position by label length

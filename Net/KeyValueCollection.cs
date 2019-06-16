@@ -38,8 +38,8 @@ namespace LumiSoft.Net
         /// <returns>Returns if key found and removed, otherwise false.</returns>
         public bool Remove(K key)
         {
-            V value = default(V);
-            if(m_pDictionary.TryGetValue(key,out value)){
+            var value = default(V);
+            if (m_pDictionary.TryGetValue(key,out value)){
                 m_pDictionary.Remove(key);
                 m_pList.Remove(value);
 

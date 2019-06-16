@@ -14,11 +14,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>flags</b> is null reference.</exception>
         public IMAP_t_orc_PermanentFlags(string[] flags)
         {
-            if(flags == null){
-                throw new ArgumentNullException("flags");
-            }
-
-            Flags = flags;
+            Flags = flags ?? throw new ArgumentNullException("flags");
         }
 
         /// <summary>
@@ -33,15 +29,15 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            string[] code_value = value.Split(new char[]{' '},2);
-            if(!string.Equals("PERMANENTFLAGS",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_value = value.Split(new char[]{' '},2);
+            if (!string.Equals("PERMANENTFLAGS",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid PERMANENTFLAGS response value.","value");
             }
             if(code_value.Length != 2){
                 throw new ArgumentException("Invalid PERMANENTFLAGS response value.","value");
             }
 
-            StringReader r = new StringReader(code_value[1]);
+            var r = new StringReader(code_value[1]);
             r.ReadWord();
 
             return new IMAP_t_orc_PermanentFlags(r.ReadParenthesized().Split(' '));

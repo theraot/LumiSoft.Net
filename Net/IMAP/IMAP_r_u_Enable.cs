@@ -15,11 +15,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>capabilities</b> is null reference.</exception>
         public IMAP_r_u_Enable(string[] capabilities)
         {
-            if(capabilities == null){
-                throw new ArgumentNullException("capabilities");
-            }
-
-            Capabilities = capabilities;
+            Capabilities = capabilities ?? throw new ArgumentNullException("capabilities");
         }
 
         /// <summary>
@@ -51,7 +47,7 @@ namespace LumiSoft.Net.IMAP
                     enable-data   = "ENABLED" *(SP capability)
             */
 
-            StringReader r = new StringReader(enableResponse);
+            var r = new StringReader(enableResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "ENABLED"
@@ -68,7 +64,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example: S: * ENABLED X-GOOD-IDEA
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* ENABLED");
             foreach(string capability in Capabilities){
                 retVal.Append(" " + capability);

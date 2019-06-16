@@ -146,49 +146,49 @@ namespace LumiSoft.Net.RTP
 
             //--- SDES items -----------------------------------
             if(!string.IsNullOrEmpty(CName)){
-                byte[] b = Encoding.UTF8.GetBytes(CName);
+                var b = Encoding.UTF8.GetBytes(CName);
                 buffer[offset++] = 1;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
                 offset += b.Length;
             }
             if(!string.IsNullOrEmpty(m_Name)){
-                byte[] b = Encoding.UTF8.GetBytes(m_Name);
+                var b = Encoding.UTF8.GetBytes(m_Name);
                 buffer[offset++] = 2;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
                 offset += b.Length;
             }
             if(!string.IsNullOrEmpty(m_Email)){
-                byte[] b = Encoding.UTF8.GetBytes(m_Email);
+                var b = Encoding.UTF8.GetBytes(m_Email);
                 buffer[offset++] = 3;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
                 offset += b.Length;
             }
             if(!string.IsNullOrEmpty(m_Phone)){
-                byte[] b = Encoding.UTF8.GetBytes(m_Phone);
+                var b = Encoding.UTF8.GetBytes(m_Phone);
                 buffer[offset++] = 4;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
                 offset += b.Length;
             }
             if(!string.IsNullOrEmpty(m_Location)){
-                byte[] b = Encoding.UTF8.GetBytes(m_Location);
+                var b = Encoding.UTF8.GetBytes(m_Location);
                 buffer[offset++] = 5;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
                 offset += b.Length;
             }
             if(!string.IsNullOrEmpty(m_Tool)){
-                byte[] b = Encoding.UTF8.GetBytes(m_Tool);
+                var b = Encoding.UTF8.GetBytes(m_Tool);
                 buffer[offset++] = 6;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
                 offset += b.Length;
             }
             if(!string.IsNullOrEmpty(m_Note)){
-                byte[] b = Encoding.UTF8.GetBytes(m_Note);
+                var b = Encoding.UTF8.GetBytes(m_Note);
                 buffer[offset++] = 7;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);

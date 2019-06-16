@@ -30,11 +30,11 @@ namespace LumiSoft.Net.ABNF
             // concatenation  =  repetition *(1*c-wsp repetition)
             // repetition     =  [repeat] element
 
-            ABNF_Concatenation retVal = new ABNF_Concatenation();
-            
-            while(true){
-                ABNF_Repetition item = ABNF_Repetition.Parse(reader);
-                if(item != null){
+            var retVal = new ABNF_Concatenation();
+
+            while (true){
+                var item = ABNF_Repetition.Parse(reader);
+                if (item != null){
                     retVal.Items.Add(item);
                 }
                 // We reached end of string.

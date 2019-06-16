@@ -18,15 +18,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>key1</b> or <b>key2</b> is null reference.</exception>
         public IMAP_Search_Key_Or(IMAP_Search_Key key1,IMAP_Search_Key key2)
         {
-            if(key1 == null){
-                throw new ArgumentNullException("key1");
-            }
-            if(key2 == null){
-                throw new ArgumentNullException("key2");
-            }
-
-            SearchKey1 = key1;
-            SearchKey2 = key2;
+            SearchKey1 = key1 ?? throw new ArgumentNullException("key1");
+            SearchKey2 = key2 ?? throw new ArgumentNullException("key2");
         }
 
         /// <summary>
@@ -42,8 +35,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"OR",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"OR",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'OR' key.");
             }
 

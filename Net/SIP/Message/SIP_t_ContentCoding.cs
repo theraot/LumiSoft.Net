@@ -47,11 +47,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get Method
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'content-coding' value, value is missing !");
-            }
-            m_Encoding = word;
+            var word = reader.ReadWord();
+            m_Encoding = word ?? throw new SIP_ParseException("Invalid 'content-coding' value, value is missing !");
         }
 
         /// <summary>

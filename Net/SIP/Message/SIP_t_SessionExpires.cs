@@ -77,8 +77,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // delta-seconds
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Session-Expires delta-seconds value is missing !");
             }
             try{
@@ -104,8 +104,8 @@ namespace LumiSoft.Net.SIP.Message
                 refresher-param  = "refresher" EQUAL  ("uas" / "uac")      
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // delta-seconds
             retVal.Append(m_Expires.ToString());
 
@@ -139,8 +139,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Refresher
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["refresher"];
-                if(parameter != null){
+                var parameter = this.Parameters["refresher"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

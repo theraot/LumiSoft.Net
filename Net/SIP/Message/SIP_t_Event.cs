@@ -59,11 +59,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // event-type
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("SIP Event 'event-type' value is missing !");
-            }
-            m_EventType = word;
+            var word = reader.ReadWord();
+            m_EventType = word ?? throw new SIP_ParseException("SIP Event 'event-type' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -80,8 +77,8 @@ namespace LumiSoft.Net.SIP.Message
                 event-param = generic-param / ( "id" EQUAL token )
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // event-type
             retVal.Append(m_EventType);
 
@@ -118,8 +115,8 @@ namespace LumiSoft.Net.SIP.Message
         public string ID
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["id"];
-                if(parameter != null){
+                var parameter = this.Parameters["id"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

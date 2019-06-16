@@ -34,12 +34,9 @@ namespace LumiSoft.Net.Mail
             if(fieldName == string.Empty){
                 throw new ArgumentException("Argument 'fieldName' value must be specified.");
             }
-            if(mailbox == null){
-                throw new ArgumentNullException("mailbox");
-            }
 
             m_Name     = fieldName;
-            Address = mailbox;
+            Address = mailbox ?? throw new ArgumentNullException("mailbox");
         }
 
         /// <summary>
@@ -55,29 +52,29 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
 
-            MIME_Reader r = new MIME_Reader(name_value[1].Trim());
+            var r = new MIME_Reader(name_value[1].Trim());
 
-            string word = r.QuotedReadToDelimiter(new char[]{',','<',':'});
+            var word = r.QuotedReadToDelimiter(new char[]{',','<',':'});
             // Invalid value.
-            if(word == null){
+            if (word == null){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
             // name-addr
 
             if(r.Peek(true) == '<'){
-                Mail_h_Mailbox h = new Mail_h_Mailbox(name_value[0],new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null,r.ReadParenthesized()));
+                var h = new Mail_h_Mailbox(name_value[0],new Mail_t_Mailbox(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null,r.ReadParenthesized()));
                 h.m_ParseValue = value;
 
                 return h;
             }
             // addr-spec
             else{
-                Mail_h_Mailbox h = new Mail_h_Mailbox(name_value[0],new Mail_t_Mailbox(null,word));
+                var h = new Mail_h_Mailbox(name_value[0],new Mail_t_Mailbox(null,word));
                 h.m_ParseValue = value;
 
                 return h;

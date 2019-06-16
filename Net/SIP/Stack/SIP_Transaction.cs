@@ -27,33 +27,20 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b>,<b>flow</b> or <b>request</b> is null reference.</exception>
         public SIP_Transaction(SIP_Stack stack,SIP_Flow flow,SIP_Request request)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-            if(flow == null){
-                throw new ArgumentNullException("flow");
-            }
-            if(request == null){
-                throw new ArgumentNullException("request");
-            }
-
-            m_pStack     = stack;
-            m_pFlow      = flow;
-            m_pRequest   = request;
+            m_pStack     = stack ?? throw new ArgumentNullException("stack");
+            m_pFlow      = flow ?? throw new ArgumentNullException("flow");
+            m_pRequest   = request ?? throw new ArgumentNullException("request");
             m_Method     = request.RequestLine.Method;
             m_CreateTime = DateTime.Now;
             m_pResponses = new List<SIP_Response>();
 
             // Validate Via:
-            SIP_t_ViaParm via = request.Via.GetTopMostValue();
-            if(via == null){
+            var via = request.Via.GetTopMostValue();
+            if (via == null){
                 throw new ArgumentException("Via: header is missing !");
             }
-            if(via.Branch == null){
-                throw new ArgumentException("Via: header 'branch' parameter is missing !");
-            }
 
-            m_ID  = via.Branch;
+            m_ID  = via.Branch ?? throw new ArgumentException("Via: header 'branch' parameter is missing !");
        
             if(this is SIP_ServerTransaction){
                 /*
@@ -62,8 +49,8 @@ namespace LumiSoft.Net.SIP.Stack
                     For avoiding key collision, we add branch + '-' + 'sent-by' + CANCEL for cancel index key.
                     ACK has also same branch, but we won't do transaction for ACK, so it isn't problem.
                 */
-                string key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
-                if(request.RequestLine.Method == SIP_Methods.CANCEL){
+                var key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
+                if (request.RequestLine.Method == SIP_Methods.CANCEL){
                     key += "-CANCEL";
                 }
                 Key = key;

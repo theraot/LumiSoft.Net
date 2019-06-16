@@ -76,11 +76,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // protocol
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("SIP reason-value 'protocol' value is missing !");
-            }
-            m_Protocol = word;
+            var word = reader.ReadWord();
+            m_Protocol = word ?? throw new SIP_ParseException("SIP reason-value 'protocol' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -102,8 +99,8 @@ namespace LumiSoft.Net.SIP.Message
                 reason-extension  =  generic-param
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // Add protocol
             retVal.Append(m_Protocol);
 
@@ -122,11 +119,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_Protocol; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Protocol");
-                }
-
-                m_Protocol = value;
+                m_Protocol = value ?? throw new ArgumentNullException("Protocol");
             }
         }
 
@@ -161,8 +154,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Text
         {
             get{
-                SIP_Parameter parameter = this.Parameters["text"];
-                if(parameter != null){
+                var parameter = this.Parameters["text"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

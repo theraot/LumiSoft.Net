@@ -64,8 +64,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // mechanism-name
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Invalid 'sec-mechanism', 'mechanism-name' is missing !");
             }
 
@@ -91,8 +91,8 @@ namespace LumiSoft.Net.SIP.Message
                 extension        = generic-param
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // mechanism-name
             retVal.Append(m_Mechanism);
 
@@ -160,8 +160,8 @@ namespace LumiSoft.Net.SIP.Message
         public string D_Alg
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["d-alg"];
-                if(parameter != null){
+                var parameter = this.Parameters["d-alg"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -184,8 +184,8 @@ namespace LumiSoft.Net.SIP.Message
         public string D_Qop
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["d-qop"];
-                if(parameter != null){
+                var parameter = this.Parameters["d-qop"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -208,8 +208,8 @@ namespace LumiSoft.Net.SIP.Message
         public string D_Ver
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["d-ver"];
-                if(parameter != null){
+                var parameter = this.Parameters["d-ver"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

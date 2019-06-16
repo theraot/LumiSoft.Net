@@ -34,12 +34,9 @@ namespace LumiSoft.Net.Mail
             if(filedName == string.Empty){
                 throw new ArgumentException("Argument 'filedName' value must be specified.");
             }
-            if(values == null){
-                throw new ArgumentNullException("values");
-            }
 
             Name       = filedName;
-            Addresses = values;
+            Addresses = values ?? throw new ArgumentNullException("values");
         }
 
         /// <summary>
@@ -55,8 +52,8 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
 
@@ -68,7 +65,7 @@ namespace LumiSoft.Net.Mail
                 mailbox-list  =   (mailbox *("," mailbox)) / obs-mbox-list
             */
 
-            Mail_h_MailboxList retVal = new Mail_h_MailboxList(name_value[0],Mail_t_MailboxList.Parse(name_value[1].Trim()));
+            var retVal = new Mail_h_MailboxList(name_value[0],Mail_t_MailboxList.Parse(name_value[1].Trim()));
             retVal.m_ParseValue = value;
             retVal.Addresses.AcceptChanges();
 
@@ -85,7 +82,7 @@ namespace LumiSoft.Net.Mail
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
             if(reEncode || this.IsModified){
-                StringBuilder retVal = new StringBuilder();
+                var retVal = new StringBuilder();
                 retVal.Append(this.Name + ": ");
                 for(int i=0;i<Addresses.Count;i++){
                     if(i > 0){

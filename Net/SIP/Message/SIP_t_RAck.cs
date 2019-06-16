@@ -75,8 +75,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // response-num
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("RAck response-num value is missing !");
             }
             try{
@@ -100,10 +100,7 @@ namespace LumiSoft.Net.SIP.Message
 
             // Get request method
             word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("RAck Method value is missing !");
-            }
-            m_Method = word;
+            m_Method = word ?? throw new SIP_ParseException("RAck Method value is missing !");
         }
 
         /// <summary>
@@ -161,11 +158,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_Method; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Method");
-                }
-
-                m_Method = value;
+                m_Method = value ?? throw new ArgumentNullException("Method");
             }
         }
     }

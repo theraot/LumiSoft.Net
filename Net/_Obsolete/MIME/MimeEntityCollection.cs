@@ -30,8 +30,8 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public MimeEntity Add()
 		{
-			MimeEntity entity = new MimeEntity();
-			Add(entity);
+			var entity = new MimeEntity();
+            Add(entity);
 
 			return entity;
 		}

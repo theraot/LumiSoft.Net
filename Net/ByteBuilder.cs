@@ -82,7 +82,7 @@ namespace LumiSoft.Net
 
             // Increase buffer if needed.
             while((m_pBuffer.Length - Count) < count){
-                byte[] newBuffer = new byte[m_pBuffer.Length + m_BlockSize];
+                var newBuffer = new byte[m_pBuffer.Length + m_BlockSize];
                 Array.Copy(m_pBuffer,newBuffer,Count);
                 m_pBuffer = newBuffer;
             }
@@ -97,7 +97,7 @@ namespace LumiSoft.Net
         /// <returns>Returns this as byte[] data.</returns>
         public byte[] ToByte()
         {
-            byte[] retVal = new byte[Count];
+            var retVal = new byte[Count];
             Array.Copy(m_pBuffer,retVal,Count);
 
             return retVal;
@@ -117,11 +117,7 @@ namespace LumiSoft.Net
             get{ return m_pCharset; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pCharset = value;
+                m_pCharset = value ?? throw new ArgumentNullException("value");
             }
         }
     }

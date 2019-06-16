@@ -168,8 +168,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentException("Argument 'hostName' value must be specified.","hostName");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(EhloHeloAsyncOP op = new EhloHeloAsyncOP(hostName)){
+            var wait = new ManualResetEvent(false);
+            using (EhloHeloAsyncOP op = new EhloHeloAsyncOP(hostName)){
                 op.CompletedAsync += delegate(object s1,EventArgs<EhloHeloAsyncOP> e1){
                     wait.Set();
                 };
@@ -241,11 +241,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -261,7 +257,7 @@ namespace LumiSoft.Net.SMTP.Client
                                         "250" SP ehlo-line CRLF )
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("EHLO " + m_HostName + "\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("EHLO " + m_HostName + "\r\n");
 
                     // Log
                     m_pSmtpClient.LogAddWrite(buffer.Length,"EHLO " + m_HostName);
@@ -313,7 +309,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         EhloReadResponseCompleted(readResponseOP);
                     };
@@ -361,8 +357,8 @@ namespace LumiSoft.Net.SMTP.Client
 
                             m_pSmtpClient.m_RemoteHostName = m_pReplyLines[0].Text.Split(new char[]{' '},2)[0];
                             m_pSmtpClient.m_IsEsmtpSupported = true;
-                            List<string> esmtpFeatures = new List<string>();
-                            foreach(SMTP_t_ReplyLine line in m_pReplyLines){
+                            var esmtpFeatures = new List<string>();
+                            foreach (SMTP_t_ReplyLine line in m_pReplyLines){
                                 esmtpFeatures.Add(line.Text);
                             }
                             m_pSmtpClient.m_pEsmtpFeatures = esmtpFeatures;
@@ -379,7 +375,7 @@ namespace LumiSoft.Net.SMTP.Client
                             // Log.
                             m_pSmtpClient.LogAddText("EHLO failed, will try HELO.");
                             
-                            byte[] buffer = Encoding.UTF8.GetBytes("HELO " + m_HostName + "\r\n");
+                            var buffer = Encoding.UTF8.GetBytes("HELO " + m_HostName + "\r\n");
 
                             // Log
                             m_pSmtpClient.LogAddWrite(buffer.Length,"HELO " + m_HostName);
@@ -408,7 +404,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read HELO command response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         HeloReadResponseCompleted(readResponseOP);
                     };
@@ -451,8 +447,8 @@ namespace LumiSoft.Net.SMTP.Client
 
                             m_pSmtpClient.m_RemoteHostName = m_pReplyLines[0].Text.Split(new char[]{' '},2)[0];
                             m_pSmtpClient.m_IsEsmtpSupported = true;
-                            List<string> esmtpFeatures = new List<string>();
-                            foreach(SMTP_t_ReplyLine line in m_pReplyLines){
+                            var esmtpFeatures = new List<string>();
+                            foreach (SMTP_t_ReplyLine line in m_pReplyLines){
                                 esmtpFeatures.Add(line.Text);
                             }
                             m_pSmtpClient.m_pEsmtpFeatures = esmtpFeatures;
@@ -598,8 +594,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("Connection is already secure.");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(StartTlsAsyncOP op = new StartTlsAsyncOP(certCallback)){
+            var wait = new ManualResetEvent(false);
+            using (StartTlsAsyncOP op = new StartTlsAsyncOP(certCallback)){
                 op.CompletedAsync += delegate(object s1,EventArgs<StartTlsAsyncOP> e1){
                     wait.Set();
                 };
@@ -660,11 +656,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -684,7 +676,7 @@ namespace LumiSoft.Net.SMTP.Client
                         454 TLS not available due to temporary reason
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("STARTTLS\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("STARTTLS\r\n");
 
                     // Log
                     m_pSmtpClient.LogAddWrite(buffer.Length,"STARTTLS");
@@ -736,7 +728,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         StartTlsReadResponseCompleted(readResponseOP);
                     };
@@ -787,7 +779,7 @@ namespace LumiSoft.Net.SMTP.Client
                             // Log
                             m_pSmtpClient.LogAddText("Starting TLS handshake.");
 
-                            SwitchToSecureAsyncOP switchSecureOP = new SwitchToSecureAsyncOP(m_pCertCallback);
+                            var switchSecureOP = new SwitchToSecureAsyncOP(m_pCertCallback);
                             switchSecureOP.CompletedAsync += delegate(object s,EventArgs<SwitchToSecureAsyncOP> e){
                                 SwitchToSecureCompleted(switchSecureOP);
                             };
@@ -938,8 +930,8 @@ namespace LumiSoft.Net.SMTP.Client
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            List<string> authMethods = new List<string>(this.SaslAuthMethods);
-            if(authMethods.Count == 0){
+            var authMethods = new List<string>(this.SaslAuthMethods);
+            if (authMethods.Count == 0){
                 throw new NotSupportedException("SMTP server does not support authentication.");
             }
 
@@ -980,8 +972,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("sasl");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(AuthAsyncOP op = new AuthAsyncOP(sasl)){
+            var wait = new ManualResetEvent(false);
+            using (AuthAsyncOP op = new AuthAsyncOP(sasl)){
                 op.CompletedAsync += delegate(object s1,EventArgs<AuthAsyncOP> e1){
                     wait.Set();
                 };
@@ -1015,11 +1007,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>sasl</b> is null reference.</exception>
             public AuthAsyncOP(AUTH_SASL_Client sasl)
             {
-                if(sasl == null){
-                    throw new ArgumentNullException("sasl");
-                }
-
-                m_pSASL = sasl;
+                m_pSASL = sasl ?? throw new ArgumentNullException("sasl");
             }
 
             /// <summary>
@@ -1046,11 +1034,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -1068,7 +1052,7 @@ namespace LumiSoft.Net.SMTP.Client
                     */
 
                     if(m_pSASL.SupportsInitialResponse){
-                        byte[] buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
 
                         // Log
                         m_pSmtpClient.LogAddWrite(buffer.Length,Encoding.UTF8.GetString(buffer).TrimEnd());
@@ -1077,7 +1061,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
                     }
                     else{
-                        byte[] buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
 
                         // Log
                         m_pSmtpClient.LogAddWrite(buffer.Length,"AUTH " + m_pSASL.Name);
@@ -1130,7 +1114,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         AuthReadResponseCompleted(readResponseOP);
                     };
@@ -1155,13 +1139,13 @@ namespace LumiSoft.Net.SMTP.Client
                     // Continue authenticating.
                     if(op.ReplyLines[0].ReplyCode == 334){
                         // 334 base64Data, we need to decode it.
-                        byte[] serverResponse = Convert.FromBase64String(op.ReplyLines[0].Text);
+                        var serverResponse = Convert.FromBase64String(op.ReplyLines[0].Text);
 
-                        byte[] clientResponse = m_pSASL.Continue(serverResponse);
+                        var clientResponse = m_pSASL.Continue(serverResponse);
 
                         // We need just send SASL returned auth-response as base64.
-                        byte[] buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
-                        
+                        var buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
+
                         // Log
                         m_pSmtpClient.LogAddWrite(buffer.Length,Convert.ToBase64String(clientResponse));
 
@@ -1293,8 +1277,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("You must connect first.");
             }
             
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(MailFromAsyncOP op = new MailFromAsyncOP(from,messageSize,ret,envid)){
+            var wait = new ManualResetEvent(false);
+            using (MailFromAsyncOP op = new MailFromAsyncOP(from,messageSize,ret,envid)){
                 op.CompletedAsync += delegate(object s1,EventArgs<MailFromAsyncOP> e1){
                     wait.Set();
                 };
@@ -1375,11 +1359,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -1408,7 +1388,7 @@ namespace LumiSoft.Net.SMTP.Client
                     }
 
                     // Build command.
-                    StringBuilder cmd = new StringBuilder();
+                    var cmd = new StringBuilder();
                     cmd.Append("MAIL FROM:<" + m_MailFrom + ">");
                     if(isSizeSupported && m_MessageSize > 0){
                         cmd.Append(" SIZE=" + m_MessageSize.ToString());
@@ -1423,7 +1403,7 @@ namespace LumiSoft.Net.SMTP.Client
                         cmd.Append(" ENVID=" + m_EnvID);
                     }
 
-                    byte[] buffer = Encoding.UTF8.GetBytes(cmd.ToString() + "\r\n");
+                    var buffer = Encoding.UTF8.GetBytes(cmd.ToString() + "\r\n");
 
                     // Log
                     m_pSmtpClient.LogAddWrite(buffer.Length,cmd.ToString());
@@ -1475,7 +1455,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         MailReadResponseCompleted(readResponseOP);
                     };
@@ -1630,8 +1610,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("You must connect first.");
             }
             
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(RcptToAsyncOP op = new RcptToAsyncOP(to,notify,orcpt)){
+            var wait = new ManualResetEvent(false);
+            using (RcptToAsyncOP op = new RcptToAsyncOP(to,notify,orcpt)){
                 op.CompletedAsync += delegate(object s1,EventArgs<RcptToAsyncOP> e1){
                     wait.Set();
                 };
@@ -1718,11 +1698,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -1737,7 +1713,7 @@ namespace LumiSoft.Net.SMTP.Client
 			        */
 
                     // Build command.
-                    StringBuilder cmd = new StringBuilder();
+                    var cmd = new StringBuilder();
                     cmd.Append("RCPT TO:<" + m_To + ">");            
                     if(m_DsnNotify == SMTP_DSN_Notify.NotSpecified){
                     }
@@ -1773,7 +1749,7 @@ namespace LumiSoft.Net.SMTP.Client
                         cmd.Append(" ORCPT=" + m_ORcpt);
                     }
 
-                    byte[] buffer = Encoding.UTF8.GetBytes(cmd.ToString() + "\r\n");
+                    var buffer = Encoding.UTF8.GetBytes(cmd.ToString() + "\r\n");
 
                     // Log
                     m_pSmtpClient.LogAddWrite(buffer.Length,cmd.ToString());
@@ -1825,7 +1801,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         RcptReadResponseCompleted(readResponseOP);
                     };
@@ -1979,8 +1955,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("You must connect first.");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(SendMessageAsyncOP op = new SendMessageAsyncOP(stream,useBdatIfPossibe)){
+            var wait = new ManualResetEvent(false);
+            using (SendMessageAsyncOP op = new SendMessageAsyncOP(stream,useBdatIfPossibe)){
                 op.CompletedAsync += delegate(object s1,EventArgs<SendMessageAsyncOP> e1){
                     wait.Set();
                 };
@@ -2018,11 +1994,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <param name="useBdatIfPossibe">Specifies if BDAT command is used to send message, if remote server supports it.</param>
             public SendMessageAsyncOP(Stream stream,bool useBdatIfPossibe)
             {
-                if(stream == null){
-                    throw new ArgumentNullException("stream");
-                }
-
-                m_pStream = stream;
+                m_pStream = stream ?? throw new ArgumentNullException("stream");
                 m_UseBdat = useBdatIfPossibe;
             }
 
@@ -2053,11 +2025,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -2101,7 +2069,7 @@ namespace LumiSoft.Net.SMTP.Client
                                 S: 250 Ok<CRLF>
                         */
 
-                        byte[] buffer = Encoding.UTF8.GetBytes("DATA\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("DATA\r\n");
 
                         // Log
                         m_pSmtpClient.LogAddWrite(buffer.Length,"DATA");
@@ -2161,7 +2129,7 @@ namespace LumiSoft.Net.SMTP.Client
 
                     // Send data chunk.
                     if(m_BdatBytesInBuffer > 0){
-                        byte[] buffer = Encoding.UTF8.GetBytes("BDAT " + m_BdatBytesInBuffer + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("BDAT " + m_BdatBytesInBuffer + "\r\n");
 
                         // Log
                         m_pSmtpClient.LogAddWrite(buffer.Length,"BDAT " + m_BdatBytesInBuffer);
@@ -2176,7 +2144,7 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                     // EOS, we readed all message data.
                     else{
-                        byte[] buffer = Encoding.UTF8.GetBytes("BDAT 0 LAST\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("BDAT 0 LAST\r\n");
 
                         // Log
                         m_pSmtpClient.LogAddWrite(buffer.Length,"BDAT 0 LAST");
@@ -2202,7 +2170,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read BDAT command response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         BdatReadResponseCompleted(readResponseOP);
                     };
@@ -2275,7 +2243,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read DATA command response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         DataReadResponseCompleted(readResponseOP);
                     };
@@ -2311,7 +2279,7 @@ namespace LumiSoft.Net.SMTP.Client
                         // DATA command succeeded.
                         if(op.ReplyLines[0].ReplyCode == 354){ 
                             // Start sending message.
-                            SmartStream.WritePeriodTerminatedAsyncOP sendMsgOP = new SmartStream.WritePeriodTerminatedAsyncOP(m_pStream);
+                            var sendMsgOP = new SmartStream.WritePeriodTerminatedAsyncOP(m_pStream);
                             sendMsgOP.CompletedAsync += delegate(object s,EventArgs<SmartStream.WritePeriodTerminatedAsyncOP> e){
                                 DataMsgSendingCompleted(sendMsgOP);
                             };
@@ -2357,7 +2325,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.LogAddWrite(op.BytesWritten,"Sent message " + op.BytesWritten + " bytes.");
                                                                        
                         // Read DATA command final response.
-                        ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                        var readResponseOP = new ReadResponseAsyncOP();
                         readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                             DataReadFinalResponseCompleted(readResponseOP);
                         };
@@ -2492,8 +2460,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("You must connect first.");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(RsetAsyncOP op = new RsetAsyncOP()){
+            var wait = new ManualResetEvent(false);
+            using (RsetAsyncOP op = new RsetAsyncOP()){
                 op.CompletedAsync += delegate(object s1,EventArgs<RsetAsyncOP> e1){
                     wait.Set();
                 };
@@ -2550,11 +2518,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -2563,7 +2527,7 @@ namespace LumiSoft.Net.SMTP.Client
                         rset = "REST" CRLF
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("RSET\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("RSET\r\n");
 
                     // Log
                     m_pSmtpClient.LogAddWrite(buffer.Length,"RSET");
@@ -2615,7 +2579,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         RsetReadResponseCompleted(readResponseOP);
                     };
@@ -2753,8 +2717,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("You must connect first.");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(NoopAsyncOP op = new NoopAsyncOP()){
+            var wait = new ManualResetEvent(false);
+            using (NoopAsyncOP op = new NoopAsyncOP()){
                 op.CompletedAsync += delegate(object s1,EventArgs<NoopAsyncOP> e1){
                     wait.Set();
                 };
@@ -2811,11 +2775,7 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -2824,7 +2784,7 @@ namespace LumiSoft.Net.SMTP.Client
                         noop = "NOOP" [ SP String ] CRLF
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("NOOP\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("NOOP\r\n");
 
                     // Log
                     m_pSmtpClient.LogAddWrite(buffer.Length,"NOOP");
@@ -2876,7 +2836,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.TcpStream.EndWrite(ar);
 
                     // Read SMTP server response.
-                    ReadResponseAsyncOP readResponseOP = new ReadResponseAsyncOP();
+                    var readResponseOP = new ReadResponseAsyncOP();
                     readResponseOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                         NoopReadResponseCompleted(readResponseOP);
                     };
@@ -3008,7 +2968,7 @@ namespace LumiSoft.Net.SMTP.Client
         protected override void OnConnected(CompleteConnectCallback callback)
         {            
             // Read SMTP server greeting response.
-            ReadResponseAsyncOP readGreetingOP = new ReadResponseAsyncOP();
+            var readGreetingOP = new ReadResponseAsyncOP();
             readGreetingOP.CompletedAsync += delegate(object s,EventArgs<ReadResponseAsyncOP> e){
                 ReadServerGreetingCompleted(readGreetingOP,callback);
             };
@@ -3043,8 +3003,8 @@ namespace LumiSoft.Net.SMTP.Client
 
                     // SMTP server accepted connection, get greeting text.
                     if(op.ReplyLines[0].ReplyCode == 220){
-                        StringBuilder greetingText = new StringBuilder();
-                        foreach(SMTP_t_ReplyLine line in op.ReplyLines){
+                        var greetingText = new StringBuilder();
+                        foreach (SMTP_t_ReplyLine line in op.ReplyLines){
                             greetingText.AppendLine(line.Text);
                         }
 
@@ -3108,14 +3068,10 @@ namespace LumiSoft.Net.SMTP.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(SMTP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pSmtpClient = owner;
+                m_pSmtpClient = owner ?? throw new ArgumentNullException("owner");
 
                 try{
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){   
                         try{
                             // Response reading completed.
@@ -3192,7 +3148,7 @@ namespace LumiSoft.Net.SMTP.Client
                         // Log.
                         m_pSmtpClient.LogAddRead(op.BytesInBuffer,op.LineUtf8);
 
-                        SMTP_t_ReplyLine replyLine = SMTP_t_ReplyLine.Parse(op.LineUtf8);
+                        var replyLine = SMTP_t_ReplyLine.Parse(op.LineUtf8);
                         m_pReplyLines.Add(replyLine);
 
                         return !replyLine.IsLastLine;
@@ -3302,27 +3258,27 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("message");
             }
 
-            string from = "";
-            if(message.MainEntity.From != null && message.MainEntity.From.Count > 0){
+            var from = "";
+            if (message.MainEntity.From != null && message.MainEntity.From.Count > 0){
                 from = ((MailboxAddress)message.MainEntity.From[0]).EmailAddress;
             }
 
-            List<string> recipients = new List<string>();
-            if(message.MainEntity.To != null){
-				MailboxAddress[] addresses = message.MainEntity.To.Mailboxes;				
-				foreach(MailboxAddress address in addresses){
+            var recipients = new List<string>();
+            if (message.MainEntity.To != null){
+				var addresses = message.MainEntity.To.Mailboxes;
+                foreach (MailboxAddress address in addresses){
 					recipients.Add(address.EmailAddress);
 				}
 			}
 			if(message.MainEntity.Cc != null){
-				MailboxAddress[] addresses = message.MainEntity.Cc.Mailboxes;				
-				foreach(MailboxAddress address in addresses){
+				var addresses = message.MainEntity.Cc.Mailboxes;
+                foreach (MailboxAddress address in addresses){
 					recipients.Add(address.EmailAddress);
 				}
 			}
 			if(message.MainEntity.Bcc != null){
-				MailboxAddress[] addresses = message.MainEntity.Bcc.Mailboxes;				
-				foreach(MailboxAddress address in addresses){
+				var addresses = message.MainEntity.Bcc.Mailboxes;
+                foreach (MailboxAddress address in addresses){
 					recipients.Add(address.EmailAddress);
 				}
 
@@ -3346,27 +3302,27 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("message");
             }
 
-            string from = "";
-            if(message.From != null && message.From.Count > 0){
+            var from = "";
+            if (message.From != null && message.From.Count > 0){
                 from = ((Mail_t_Mailbox)message.From[0]).Address;
             }
 
-            List<string> recipients = new List<string>();
-            if(message.To != null){
-				Mail_t_Mailbox[] addresses = message.To.Mailboxes;	
-				foreach(Mail_t_Mailbox address in addresses){
+            var recipients = new List<string>();
+            if (message.To != null){
+				var addresses = message.To.Mailboxes;
+                foreach (Mail_t_Mailbox address in addresses){
 					recipients.Add(address.Address);
 				}
 			}
 			if(message.Cc != null){
-				Mail_t_Mailbox[] addresses = message.Cc.Mailboxes;				
-				foreach(Mail_t_Mailbox address in addresses){
+				var addresses = message.Cc.Mailboxes;
+                foreach (Mail_t_Mailbox address in addresses){
 					recipients.Add(address.Address);
 				}
 			}
 			if(message.Bcc != null){
-				Mail_t_Mailbox[] addresses = message.Bcc.Mailboxes;				
-				foreach(Mail_t_Mailbox address in addresses){
+				var addresses = message.Bcc.Mailboxes;
+                foreach (Mail_t_Mailbox address in addresses){
 					recipients.Add(address.Address);
 				}
 
@@ -3375,7 +3331,7 @@ namespace LumiSoft.Net.SMTP.Client
 			}
 
             foreach(string recipient in recipients){
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 message.ToStream(ms,new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.Q,Encoding.UTF8),Encoding.UTF8);
                 ms.Position = 0;
                 QuickSend(null,from,recipient,ms);
@@ -3446,27 +3402,27 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("message");
             }
 
-            string from = "";
-            if(message.From != null && message.From.Count > 0){
+            var from = "";
+            if (message.From != null && message.From.Count > 0){
                 from = ((Mail_t_Mailbox)message.From[0]).Address;
             }
 
-            List<string> recipients = new List<string>();
-            if(message.To != null){
-				Mail_t_Mailbox[] addresses = message.To.Mailboxes;	
-				foreach(Mail_t_Mailbox address in addresses){
+            var recipients = new List<string>();
+            if (message.To != null){
+				var addresses = message.To.Mailboxes;
+                foreach (Mail_t_Mailbox address in addresses){
 					recipients.Add(address.Address);
 				}
 			}
 			if(message.Cc != null){
-				Mail_t_Mailbox[] addresses = message.Cc.Mailboxes;				
-				foreach(Mail_t_Mailbox address in addresses){
+				var addresses = message.Cc.Mailboxes;
+                foreach (Mail_t_Mailbox address in addresses){
 					recipients.Add(address.Address);
 				}
 			}
 			if(message.Bcc != null){
-				Mail_t_Mailbox[] addresses = message.Bcc.Mailboxes;				
-				foreach(Mail_t_Mailbox address in addresses){
+				var addresses = message.Bcc.Mailboxes;
+                foreach (Mail_t_Mailbox address in addresses){
 					recipients.Add(address.Address);
 				}
 
@@ -3475,7 +3431,7 @@ namespace LumiSoft.Net.SMTP.Client
 			}
 
             foreach(string recipient in recipients){
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 message.ToStream(ms,new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.Q,Encoding.UTF8),Encoding.UTF8);
                 ms.Position = 0;
                 QuickSendSmartHost(null,host,port,ssl,null,null,from,new string[]{recipient},ms);
@@ -3796,9 +3752,9 @@ namespace LumiSoft.Net.SMTP.Client
             }
                         
             // Choose authentication method, we consider LOGIN as default.
-            string authMethod = "LOGIN";
-            List<string> authMethods = new List<string>(this.SaslAuthMethods);
-            if(authMethods.Contains("DIGEST-MD5")){
+            var authMethod = "LOGIN";
+            var authMethods = new List<string>(this.SaslAuthMethods);
+            if (authMethods.Contains("DIGEST-MD5")){
                 authMethod = "DIGEST-MD5";
             }
             else if(authMethods.Contains("CRAM-MD5")){
@@ -3819,9 +3775,9 @@ namespace LumiSoft.Net.SMTP.Client
                 WriteLine("AUTH LOGIN");
 
                 // Read server response.
-                string line = ReadLine();
+                var line = ReadLine();
                 // Response line must start with 334 or otherwise it's error response.
-				if(!line.StartsWith("334")){
+                if (!line.StartsWith("334")){
 					throw new SMTP_ClientException(line);
 				}
 
@@ -3862,17 +3818,17 @@ namespace LumiSoft.Net.SMTP.Client
                 WriteLine("AUTH CRAM-MD5");
 
                 // Read server response.
-                string line = ReadLine();
+                var line = ReadLine();
                 // Response line must start with 334 or otherwise it's error response.
-				if(!line.StartsWith("334")){
+                if (!line.StartsWith("334")){
 					throw new SMTP_ClientException(line);
 				}
                  								
-				HMACMD5 kMd5         = new HMACMD5(Encoding.ASCII.GetBytes(password));
-				string  passwordHash = Net_Utils.ToHex(kMd5.ComputeHash(Convert.FromBase64String(line.Split(' ')[1]))).ToLower();
-				
+				var kMd5         = new HMACMD5(Encoding.ASCII.GetBytes(password));
+                var  passwordHash = Net_Utils.ToHex(kMd5.ComputeHash(Convert.FromBase64String(line.Split(' ')[1]))).ToLower();
+
                 // Send authentication info to server.
-				WriteLine(Convert.ToBase64String(Encoding.ASCII.GetBytes(userName + " " + passwordHash)));
+                WriteLine(Convert.ToBase64String(Encoding.ASCII.GetBytes(userName + " " + passwordHash)));
 
                 // Read server response.
 				line = ReadLine();
@@ -3897,17 +3853,17 @@ namespace LumiSoft.Net.SMTP.Client
                 WriteLine("AUTH DIGEST-MD5");
 
                 // Read server response.
-                string line = ReadLine();
+                var line = ReadLine();
                 // Response line must start with 334 or otherwise it's error response.
-				if(!line.StartsWith("334")){
+                if (!line.StartsWith("334")){
 					throw new SMTP_ClientException(line);
 				}
 
                 // Parse server challenge.
-                AUTH_SASL_DigestMD5_Challenge challenge = AUTH_SASL_DigestMD5_Challenge.Parse(Encoding.Default.GetString(Convert.FromBase64String(line.Split(' ')[1])));
+                var challenge = AUTH_SASL_DigestMD5_Challenge.Parse(Encoding.Default.GetString(Convert.FromBase64String(line.Split(' ')[1])));
 
                 // Construct our response to server challenge.
-                AUTH_SASL_DigestMD5_Response response = new AUTH_SASL_DigestMD5_Response(
+                var response = new AUTH_SASL_DigestMD5_Response(
                     challenge,
                     challenge.Realm[0],
                     userName,
@@ -3918,7 +3874,7 @@ namespace LumiSoft.Net.SMTP.Client
                 );
 
                 // Send authentication info to server.
-				WriteLine(Convert.ToBase64String(Encoding.Default.GetBytes(response.ToResponse())));
+                WriteLine(Convert.ToBase64String(Encoding.Default.GetBytes(response.ToResponse())));
 
                 // Read server response.
 				line = ReadLine();
@@ -3975,8 +3931,8 @@ namespace LumiSoft.Net.SMTP.Client
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
 
-            AuthenticateDelegate asyncMethod = new AuthenticateDelegate(this.Authenticate);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new AuthenticateDelegate(this.Authenticate);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(userName,password,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4000,8 +3956,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument 'asyncResult' was not returned by a call to the BeginAuthenticate method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4040,8 +3996,8 @@ namespace LumiSoft.Net.SMTP.Client
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            NoopDelegate asyncMethod = new NoopDelegate(this.Noop);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new NoopDelegate(this.Noop);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4065,8 +4021,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginNoop method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4106,8 +4062,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new InvalidOperationException("Connection is already secure.");
             }
 
-            StartTLSDelegate asyncMethod = new StartTLSDelegate(this.StartTLS);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new StartTLSDelegate(this.StartTLS);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4131,8 +4087,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4190,8 +4146,8 @@ namespace LumiSoft.Net.SMTP.Client
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            RcptToDelegate asyncMethod = new RcptToDelegate(this.RcptTo);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new RcptToDelegate(this.RcptTo);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(to,notify,orcpt,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4215,8 +4171,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4276,8 +4232,8 @@ namespace LumiSoft.Net.SMTP.Client
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            MailFromDelegate asyncMethod = new MailFromDelegate(this.MailFrom);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new MailFromDelegate(this.MailFrom);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(from,(int)messageSize,ret,envid,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4301,8 +4257,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4341,8 +4297,8 @@ namespace LumiSoft.Net.SMTP.Client
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            ResetDelegate asyncMethod = new ResetDelegate(this.Reset);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new ResetDelegate(this.Reset);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4366,8 +4322,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4409,8 +4365,8 @@ namespace LumiSoft.Net.SMTP.Client
 
             WriteLine("RSET");
 
-			string line = ReadLine();
-			if(!line.StartsWith("250")){
+			var line = ReadLine();
+            if (!line.StartsWith("250")){
 				throw new SMTP_ClientException(line);
 			}
 
@@ -4446,8 +4402,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("message");
             }
 
-            SendMessageDelegate asyncMethod = new SendMessageDelegate(this.SendMessage);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new SendMessageDelegate(this.SendMessage);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(message,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4471,8 +4427,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginSendMessage method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4512,8 +4468,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentException("Invalid argument 'domain' value, you need to specify domain value.");
             }
             
-            GetDomainHostsDelegate asyncMethod = new GetDomainHostsDelegate(GetDomainHosts);
-            AsyncResultState asyncState = new AsyncResultState(null,asyncMethod,callback,state);
+            var asyncMethod = new GetDomainHostsDelegate(GetDomainHosts);
+            var asyncState = new AsyncResultState(null,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(domain,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -4533,8 +4489,8 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginGetDomainHosts method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -4572,12 +4528,12 @@ namespace LumiSoft.Net.SMTP.Client
                 domain = domain.Substring(domain.IndexOf('@') + 1);
             }
 
-            List<string> retVal = new List<string>();
+            var retVal = new List<string>();
 
             // Get MX records.
-            using(Dns_Client dns = new Dns_Client()){
-                DnsServerResponse response = dns.Query(domain,DNS_QType.MX);
-                if(response.ResponseCode == DNS_RCode.NO_ERROR){
+            using (Dns_Client dns = new Dns_Client()){
+                var response = dns.Query(domain,DNS_QType.MX);
+                if (response.ResponseCode == DNS_RCode.NO_ERROR){
                     foreach(DNS_rr_MX mx in response.GetMXRecords()){
                         // Block invalid MX records.
                         if(!string.IsNullOrEmpty(mx.Host)){

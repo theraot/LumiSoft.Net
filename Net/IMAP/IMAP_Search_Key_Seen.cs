@@ -23,8 +23,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"SEEN",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"SEEN",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'SEEN' key.");
             }
 

@@ -26,11 +26,7 @@ namespace LumiSoft.Net.IMAP.Server
             /// <exception cref="ArgumentNullException">Is raised when <b>msgInfo</b> is null reference.</exception>
             public e_NewMessageData(IMAP_MessageInfo msgInfo,Mail_Message msgData)
             {
-                if(msgInfo == null){
-                    throw new ArgumentNullException("msgInfo");
-                }
-
-                MessageInfo = msgInfo;
+                MessageInfo = msgInfo ?? throw new ArgumentNullException("msgInfo");
                 MessageData = msgData;
             }
 
@@ -56,16 +52,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>messagesInfo</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_Fetch(IMAP_MessageInfo[] messagesInfo,IMAP_Fetch_DataType fetchDataType,IMAP_r_ServerStatus response)
         {
-            if(messagesInfo == null){
-                throw new ArgumentNullException("messagesInfo");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            MessagesInfo = messagesInfo;
+            MessagesInfo = messagesInfo ?? throw new ArgumentNullException("messagesInfo");
             FetchDataType = fetchDataType;
-            m_pResponse     = response;
+            m_pResponse     = response ?? throw new ArgumentNullException("response");
         }
 
         /// <summary>
@@ -103,12 +92,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

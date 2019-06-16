@@ -529,7 +529,7 @@ namespace LumiSoft.Net.SIP.Stack
 
                 // Log
                 if(this.Stack.Logger != null){
-                    byte[] responseData = response.ToByteData();
+                    var responseData = response.ToByteData();
 
                     this.Stack.Logger.AddRead(
                         Guid.NewGuid().ToString(),
@@ -880,7 +880,7 @@ namespace LumiSoft.Net.SIP.Stack
                     requests properly.
             */
 
-            SIP_Request cancelRequest = new SIP_Request(SIP_Methods.CANCEL);
+            var cancelRequest = new SIP_Request(SIP_Methods.CANCEL);
             cancelRequest.RequestLine.Uri = this.Request.RequestLine.Uri;
             cancelRequest.Via.Add(this.Request.Via.GetTopMostValue().ToStringValue());
             cancelRequest.CallID = this.Request.CallID;
@@ -893,7 +893,7 @@ namespace LumiSoft.Net.SIP.Stack
             cancelRequest.MaxForwards = 70;
 
             // We must use same data flow to send CANCEL what sent initial request.
-            SIP_ClientTransaction transaction = this.Stack.TransactionLayer.CreateClientTransaction(this.Flow,cancelRequest,false);
+            var transaction = this.Stack.TransactionLayer.CreateClientTransaction(this.Flow,cancelRequest,false);
             transaction.Start();
         }
 
@@ -928,7 +928,7 @@ namespace LumiSoft.Net.SIP.Stack
                 stateless proxies.
             */
 
-            SIP_Request ackRequest = new SIP_Request(SIP_Methods.ACK);
+            var ackRequest = new SIP_Request(SIP_Methods.ACK);
             ackRequest.RequestLine.Uri = this.Request.RequestLine.Uri;
             ackRequest.Via.AddToTop(this.Request.Via.GetTopMostValue().ToStringValue());
             ackRequest.CallID = this.Request.CallID;

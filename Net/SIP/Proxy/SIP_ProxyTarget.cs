@@ -26,11 +26,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>targetUri</b> is null reference.</exception>
         public SIP_ProxyTarget(SIP_Uri targetUri,SIP_Flow flow)
         {
-            if(targetUri == null){
-                throw new ArgumentNullException("targetUri");
-            }
-
-            TargetUri = targetUri;
+            TargetUri = targetUri ?? throw new ArgumentNullException("targetUri");
             Flow      = flow;
         }
 

@@ -58,14 +58,14 @@ namespace LumiSoft.Net.IMAP
                             S: A003 OK Myrights complete
             */
 
-            StringReader r = new StringReader(myRightsResponse);
+            var r = new StringReader(myRightsResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "MYRIGHTS"
             r.ReadWord();
 
-            string folder = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
-            string rights = r.ReadToEnd().Trim();
+            var folder = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
+            var rights = r.ReadToEnd().Trim();
 
             return new IMAP_Response_MyRights(folder,rights);
         }
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * MYRIGHTS INBOX rwiptsldaex
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* MYRIGHTS \"" + FolderName + "\" \"" + Rights + "\"\r\n");
 
             return retVal.ToString();

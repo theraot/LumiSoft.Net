@@ -26,13 +26,9 @@ namespace LumiSoft.Net.DNS
         /// <exception cref="ArgumentNullException">Is raised when <b>qname</b> is null reference.</exception>
         public DNS_Query(DNS_QClass qclass,DNS_QType qtype,string qname)
         {
-            if(qname == null){
-                throw new ArgumentNullException("qname");
-            }
-
             QueryClass = qclass;
             QueryType  = qtype;
-            QueryName  = qname;
+            QueryName  = qname ?? throw new ArgumentNullException("qname");
         }
 
         /// <summary>

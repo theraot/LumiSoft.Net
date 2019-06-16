@@ -30,8 +30,8 @@ namespace LumiSoft.Net.Mail
                 Dot-string     = Atom *("."  Atom)
             */
 
-            StringBuilder retVal = new StringBuilder();
-            if(reader.Peek(true) == '\"'){
+            var retVal = new StringBuilder();
+            if (reader.Peek(true) == '\"'){
                 retVal.Append("\"" + reader.QuotedString() + "\"");
             }
             else{

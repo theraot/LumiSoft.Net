@@ -13,11 +13,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="stream">RTP send stream.</param>
         public RTP_SendStreamEventArgs(RTP_SendStream stream)
         {
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            Stream = stream;
+            Stream = stream ?? throw new ArgumentNullException("stream");
         }
 
         /// <summary>

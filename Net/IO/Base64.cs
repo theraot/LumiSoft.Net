@@ -61,11 +61,11 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentNullException("value");
             }
 
-            byte[] encBuffer = Encoding.ASCII.GetBytes(value);
-            byte[] buffer    = new byte[encBuffer.Length];
+            var encBuffer = Encoding.ASCII.GetBytes(value);
+            var buffer    = new byte[encBuffer.Length];
 
             int decodedCount = Decode(encBuffer,0,encBuffer.Length,buffer,0,ignoreNonBase64Chars);
-            byte[] retVal = new byte[decodedCount];
+            var retVal = new byte[decodedCount];
             Array.Copy(buffer,retVal,decodedCount);
 
             return retVal;
@@ -87,10 +87,10 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentNullException("data");
             }
 
-            byte[] buffer = new byte[data.Length];
+            var buffer = new byte[data.Length];
 
             int decodedCount = Decode(data,offset,count,buffer,0,ignoreNonBase64Chars);
-            byte[] retVal = new byte[decodedCount];
+            var retVal = new byte[decodedCount];
             Array.Copy(buffer,retVal,decodedCount);
 
             return retVal;
@@ -163,10 +163,10 @@ namespace LumiSoft.Net.IO
 
             int    decodeOffset  = encOffset;
             int    decodedOffset = 0;
-            byte[] base64Block   = new byte[4];
+            var base64Block   = new byte[4];
 
             // Decode while we have data.
-            while((decodeOffset - encOffset) < encCount){
+            while ((decodeOffset - encOffset) < encCount){
                 // Read 4-byte base64 block.
                 int offsetInBlock = 0;
                 while(offsetInBlock < 4){

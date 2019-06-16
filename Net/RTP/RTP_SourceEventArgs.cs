@@ -14,11 +14,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>source</b> is null reference.</exception>
         public RTP_SourceEventArgs(RTP_Source source)
         {
-            if(source == null){
-                throw new ArgumentNullException("source");
-            }
-
-            Source = source;
+            Source = source ?? throw new ArgumentNullException("source");
         }
 
         /// <summary>

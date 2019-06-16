@@ -46,22 +46,22 @@ namespace LumiSoft.Net.Mime
 			if((this.ContentType & MediaType_enum.Multipart) != 0){
 				// There must be be boundary ID (rfc 1341 7.2.1  The Content-Type field for multipart entities requires one parameter,
                 // "boundary", which is used to specify the encapsulation boundary.)
-				string boundaryID = this.ContentType_Boundary;
-				if(boundaryID == null){
+				var boundaryID = this.ContentType_Boundary;
+                if (boundaryID == null){
 					// This is invalid message, just skip this mime entity
 				}
 				else{
 					// There is one or more mime entities
 
                     // Find first boundary start position
-                    SmartStream.ReadLineAsyncOP args = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var args = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     stream.ReadLine(args,false);
                     if(args.Error != null){
                         throw args.Error;
                     }
-                    string lineString = args.LineUtf8;
-				
-					while(lineString != null){
+                    var lineString = args.LineUtf8;
+
+                    while (lineString != null){
 						if(lineString.StartsWith("--" + boundaryID)){
 							break;
 						}
@@ -80,8 +80,8 @@ namespace LumiSoft.Net.Mime
 					// Start parsing child entities of this entity
 					while(true){					
 						// Parse and add child entity
-						MimeEntity childEntity = new MimeEntity();					
-						this.ChildEntities.Add(childEntity);
+						var childEntity = new MimeEntity();
+                        this.ChildEntities.Add(childEntity);
 				
 						// This is last entity, stop parsing
 						if(childEntity.Parse(stream,boundaryID) == false){
@@ -132,11 +132,11 @@ namespace LumiSoft.Net.Mime
 			else{
                 // Boundary is specified, read data to specified boundary.
                 if(!string.IsNullOrEmpty(toBoundary)){
-                    MemoryStream entityData = new MemoryStream();
-                    SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                    var entityData = new MemoryStream();
+                    var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
 
                     // Read entity data while get boundary end tag --boundaryID-- or EOS.
-                    while(true){                        
+                    while (true){                        
                         stream.ReadLine(readLineOP,false);
                         if(readLineOP.Error != null){
                             throw readLineOP.Error;
@@ -152,9 +152,9 @@ namespace LumiSoft.Net.Mime
 
                         // We have boundary start/end tag or just "--" at the beginning of line.
                         if(readLineOP.LineBytesInBuffer >= 2 && readLineOP.Buffer[0] == '-' && readLineOP.Buffer[1] == '-'){
-                            string lineString = readLineOP.LineUtf8;
+                            var lineString = readLineOP.LineUtf8;
                             // We have boundary end tag, no more boundaries.
-                            if(lineString == "--" + toBoundary + "--"){
+                            if (lineString == "--" + toBoundary + "--"){
                                 DataEncoded = entityData.ToArray();
                                 return false;
                             }
@@ -172,7 +172,7 @@ namespace LumiSoft.Net.Mime
                 }
 				// Boundary isn't specified, read data to the stream end. 
 
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 stream.ReadAll(ms);
                 DataEncoded = ms.ToArray();
             }
@@ -187,13 +187,13 @@ namespace LumiSoft.Net.Mime
 		public void ToStream(Stream storeStream)
 		{			
 			// Write headers
-			byte[] data = System.Text.Encoding.Default.GetBytes(FoldHeader(this.HeaderString));
-			storeStream.Write(data,0,data.Length);
+			var data = System.Text.Encoding.Default.GetBytes(FoldHeader(this.HeaderString));
+            storeStream.Write(data,0,data.Length);
 
 			// If multipart entity, write child entities.(multipart entity don't contain data, it contains nested entities )
 			if((this.ContentType & MediaType_enum.Multipart) != 0){
-				string boundary = this.ContentType_Boundary;			
-				foreach(MimeEntity entity in this.ChildEntities){
+				var boundary = this.ContentType_Boundary;
+                foreach (MimeEntity entity in this.ChildEntities){
 					// Write boundary start. Syntax: <CRLF>--BoundaryID<CRLF>
 					data = System.Text.Encoding.Default.GetBytes("\r\n--" + boundary + "\r\n");
 					storeStream.Write(data,0,data.Length);
@@ -234,8 +234,8 @@ namespace LumiSoft.Net.Mime
 		/// <param name="stream">Stream where to store data.</param>
 		public void DataToStream(Stream stream)
 		{
-			byte[] data = this.Data;
-			stream.Write(data,0,data.Length);
+			var data = this.Data;
+            stream.Write(data,0,data.Length);
 		}
 
         /// <summary>
@@ -255,8 +255,8 @@ namespace LumiSoft.Net.Mime
 		/// <param name="stream">Data stream.</param>
 		public void DataFromStream(Stream stream)
 		{
-			byte[] data = new byte[stream.Length];
-			stream.Read(data,0,(int)stream.Length);
+			var data = new byte[stream.Length];
+            stream.Read(data,0,(int)stream.Length);
 
 			this.Data = data;
 		}
@@ -313,11 +313,11 @@ namespace LumiSoft.Net.Mime
 
 			// Just fold header fields what contain <TAB>
 
-			StringBuilder retVal = new StringBuilder();
-			
-			header = header.Replace("\r\n","\n");
-			string[] headerLines = header.Split('\n');		
-			foreach(string headerLine in headerLines){
+			var retVal = new StringBuilder();
+
+            header = header.Replace("\r\n","\n");
+			var headerLines = header.Split('\n');
+            foreach (string headerLine in headerLines){
 				// Folding is needed
 				if(headerLine.IndexOf('\t') > -1){
 					retVal.Append(headerLine.Replace("\t","\r\n\t") + "\r\n");
@@ -418,8 +418,8 @@ namespace LumiSoft.Net.Mime
 			get
             {
                 if(Header.Contains("Content-Type:")){  
-					string contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:")).Value;
-					return MimeUtils.ParseMediaType(contentType);
+					var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:")).Value;
+                    return MimeUtils.ParseMediaType(contentType);
 				}
 
                 return MediaType_enum.NotSpecified;
@@ -436,9 +436,9 @@ namespace LumiSoft.Net.Mime
 					throw new Exception("MediaType_enum.NotSpecified isn't allowed to set !");
 				}
 				
-				string contentType = "";
-				//--- Text/xxx --------------------------------//
-				if(value == MediaType_enum.Text_plain){
+				var contentType = "";
+                //--- Text/xxx --------------------------------//
+                if (value == MediaType_enum.Text_plain){
 					contentType = "text/plain; charset=\"utf-8\"";
 				}
 				else if(value == MediaType_enum.Text_html){
@@ -591,12 +591,12 @@ namespace LumiSoft.Net.Mime
 					throw new Exception("ContentTransferEncoding_enum.NotSpecified isn't allowed to set !");
 				}
 
-				string encoding = MimeUtils.ContentTransferEncodingToString(value);
+				var encoding = MimeUtils.ContentTransferEncodingToString(value);
 
-				// There is entity data specified and encoding changed, we need to convert existing data
-				if(this.DataEncoded != null){
-					ContentTransferEncoding_enum oldEncoding = this.ContentTransferEncoding;
-					if(oldEncoding == ContentTransferEncoding_enum.Unknown || oldEncoding == ContentTransferEncoding_enum.NotSpecified){
+                // There is entity data specified and encoding changed, we need to convert existing data
+                if (this.DataEncoded != null){
+					var oldEncoding = this.ContentTransferEncoding;
+                    if (oldEncoding == ContentTransferEncoding_enum.Unknown || oldEncoding == ContentTransferEncoding_enum.NotSpecified){
 						throw new Exception("Data can't be converted because old encoding '" + MimeUtils.ContentTransferEncodingToString(oldEncoding) + "' is unknown !");
 					}
 
@@ -633,14 +633,14 @@ namespace LumiSoft.Net.Mime
 
 				// Just remove Content-Disposition: header field if exists
 				if(value == ContentDisposition_enum.NotSpecified){
-					HeaderField disposition = Header.GetFirst("Content-Disposition:");
-					if(disposition != null){
+					var disposition = Header.GetFirst("Content-Disposition:");
+                    if (disposition != null){
 						Header.Remove(disposition);
 					}
 				}
 				else{
-					string disposition = MimeUtils.ContentDispositionToString(value);
-					if(Header.Contains("Content-Disposition:")){
+					var disposition = MimeUtils.ContentDispositionToString(value);
+                    if (Header.Contains("Content-Disposition:")){
 						Header.GetFirst("Content-Disposition:").Value = disposition;
 					}
 					else{
@@ -711,8 +711,8 @@ namespace LumiSoft.Net.Mime
 			get
             {
                 if(Header.Contains("Content-Type:")){
-					ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
-					if(contentType.Parameters.Contains("name")){
+					var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
+                    if (contentType.Parameters.Contains("name")){
 						return contentType.Parameters["name"];
 					}
 
@@ -730,8 +730,8 @@ namespace LumiSoft.Net.Mime
 					throw new Exception("Parameter name is available only for ContentType application/xxx !");
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
-				if(contentType.Parameters.Contains("name")){
+				var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
+                if (contentType.Parameters.Contains("name")){
 					contentType.Parameters["name"] = value;
 				}
 				else{
@@ -751,8 +751,8 @@ namespace LumiSoft.Net.Mime
 			get
             {
                 if(Header.Contains("Content-Type:")){
-					ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
-					if(contentType.Parameters.Contains("charset")){
+					var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
+                    if (contentType.Parameters.Contains("charset")){
 						return contentType.Parameters["charset"];
 					}
 
@@ -772,8 +772,8 @@ namespace LumiSoft.Net.Mime
 
 				// There is data specified, we need to convert it because charset changed
 				if(this.DataEncoded != null){
-					string currentCharSet = this.ContentType_CharSet;
-                    if(currentCharSet == null){
+					var currentCharSet = this.ContentType_CharSet;
+                    if (currentCharSet == null){
                         currentCharSet = "ascii";
                     }
 					try{
@@ -783,16 +783,16 @@ namespace LumiSoft.Net.Mime
 						throw new Exception("Data can't be converted because current charset '" + currentCharSet + "' isn't supported !");
 					}
 					try{
-						System.Text.Encoding encoding = System.Text.Encoding.GetEncoding(value);
-						this.Data = encoding.GetBytes(this.DataText);
+						var encoding = System.Text.Encoding.GetEncoding(value);
+                        this.Data = encoding.GetBytes(this.DataText);
 					}
 					catch{
 						throw new Exception("Data can't be converted because new charset '" + value + "' isn't supported !");
 					}
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
-				if(contentType.Parameters.Contains("charset")){
+				var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
+                if (contentType.Parameters.Contains("charset")){
 					contentType.Parameters["charset"] = value;
 				}
 				else{
@@ -811,8 +811,8 @@ namespace LumiSoft.Net.Mime
 			get
             {
                 if(Header.Contains("Content-Type:")){
-					ParametizedHeaderField contentDisposition = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
-					if(contentDisposition.Parameters.Contains("boundary")){
+					var contentDisposition = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
+                    if (contentDisposition.Parameters.Contains("boundary")){
 						return contentDisposition.Parameters["boundary"];
 					}
 
@@ -830,8 +830,8 @@ namespace LumiSoft.Net.Mime
 					throw new Exception("Parameter boundary is available only for ContentType multipart/xxx !");
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
-				if(contentType.Parameters.Contains("boundary")){
+				var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
+                if (contentType.Parameters.Contains("boundary")){
 					contentType.Parameters["boundary"] = value;
 				}
 				else{
@@ -850,8 +850,8 @@ namespace LumiSoft.Net.Mime
 			get
             {
                 if(Header.Contains("Content-Disposition:")){
-					ParametizedHeaderField contentDisposition = new ParametizedHeaderField(Header.GetFirst("Content-Disposition:"));
-					if(contentDisposition.Parameters.Contains("filename")){
+					var contentDisposition = new ParametizedHeaderField(Header.GetFirst("Content-Disposition:"));
+                    if (contentDisposition.Parameters.Contains("filename")){
 						return MimeUtils.DecodeWords(contentDisposition.Parameters["filename"]);
 					}
 
@@ -866,8 +866,8 @@ namespace LumiSoft.Net.Mime
 					throw new Exception("Please specify Content-Disposition first !");
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Disposition:"));
-				if(contentType.Parameters.Contains("filename")){
+				var contentType = new ParametizedHeaderField(Header.GetFirst("Content-Disposition:"));
+                if (contentType.Parameters.Contains("filename")){
 					contentType.Parameters["filename"] = MimeUtils.EncodeWord(value);
 				}
 				else{
@@ -945,8 +945,8 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 
                     // Create and bound address-list to existing header field
-                    HeaderField field = Header.GetFirst("To:");
-                    AddressList list = new AddressList();
+                    var field = Header.GetFirst("To:");
+                    var list = new AddressList();
                     list.Parse(field.EncodedValue);
                     list.BoundedHeaderField = field;
 
@@ -972,8 +972,8 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField to = Header.GetFirst("To:");
-				if(to == null){
+				var to = Header.GetFirst("To:");
+                if (to == null){
 					to = new HeaderField("To:",value.ToAddressListString());
 					Header.Add(to);
 				}
@@ -1001,8 +1001,8 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 
                     // Create and bound address-list to existing header field
-                    HeaderField field = Header.GetFirst("Cc:");
-                    AddressList list = new AddressList();
+                    var field = Header.GetFirst("Cc:");
+                    var list = new AddressList();
                     list.Parse(field.EncodedValue);
                     list.BoundedHeaderField = field;
 
@@ -1028,8 +1028,8 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField cc = Header.GetFirst("Cc:");
-				if(cc == null){
+				var cc = Header.GetFirst("Cc:");
+                if (cc == null){
 					cc = new HeaderField("Cc:",value.ToAddressListString());
 					Header.Add(cc);
 				}
@@ -1057,8 +1057,8 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 
                     // Create and bound address-list to existing header field
-                    HeaderField field = Header.GetFirst("Bcc:");
-                    AddressList list = new AddressList();
+                    var field = Header.GetFirst("Bcc:");
+                    var list = new AddressList();
                     list.Parse(field.EncodedValue);
                     list.BoundedHeaderField = field;
 
@@ -1084,8 +1084,8 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField bcc = Header.GetFirst("Bcc:");
-				if(bcc == null){
+				var bcc = Header.GetFirst("Bcc:");
+                if (bcc == null){
 					bcc = new HeaderField("Bcc:",value.ToAddressListString());
 					Header.Add(bcc);
 				}
@@ -1113,8 +1113,8 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 
                     // Create and bound address-list to existing header field
-                    HeaderField field = Header.GetFirst("From:");
-                    AddressList list = new AddressList();
+                    var field = Header.GetFirst("From:");
+                    var list = new AddressList();
                     list.Parse(field.EncodedValue);                        
                     list.BoundedHeaderField = field;
 
@@ -1140,8 +1140,8 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField from = Header.GetFirst("From:");
-				if(from == null){
+				var from = Header.GetFirst("From:");
+                if (from == null){
 					from = new HeaderField("From:",value.ToAddressListString());
 					Header.Add(from);
 				}
@@ -1193,8 +1193,8 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 
                     // Create and bound address-list to existing header field
-                    HeaderField field = Header.GetFirst("Reply-To:");
-                    AddressList list = new AddressList();
+                    var field = Header.GetFirst("Reply-To:");
+                    var list = new AddressList();
                     list.Parse(field.Value);
                     list.BoundedHeaderField = field;
 
@@ -1220,8 +1220,8 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField replyTo = Header.GetFirst("Reply-To:");
-				if(replyTo == null){
+				var replyTo = Header.GetFirst("Reply-To:");
+                if (replyTo == null){
 					replyTo = new HeaderField("Reply-To:",value.ToAddressListString());
 					Header.Add(replyTo);
 				}
@@ -1314,8 +1314,8 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ 
 				// Decode Data
-				ContentTransferEncoding_enum encoding = this.ContentTransferEncoding;
-				if(encoding == ContentTransferEncoding_enum.Base64){
+				var encoding = this.ContentTransferEncoding;
+                if (encoding == ContentTransferEncoding_enum.Base64){
 					return Core.Base64Decode(this.DataEncoded);				
 				}
 
@@ -1331,8 +1331,8 @@ namespace LumiSoft.Net.Mime
 					return;
 				}
 				
-				ContentTransferEncoding_enum encoding = this.ContentTransferEncoding;
-				this.DataEncoded = EncodeData(value,encoding);
+				var encoding = this.ContentTransferEncoding;
+                this.DataEncoded = EncodeData(value,encoding);
 			}
 		}
 
@@ -1348,9 +1348,9 @@ namespace LumiSoft.Net.Mime
 				}
 
 				try{
-					string charSet = this.ContentType_CharSet;
-					// Charset isn't specified, use system default
-					if(charSet == null){
+					var charSet = this.ContentType_CharSet;
+                    // Charset isn't specified, use system default
+                    if (charSet == null){
 						return System.Text.Encoding.Default.GetString(this.Data);
 					}
 
@@ -1369,8 +1369,8 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Check charset
-				string charSet = this.ContentType_CharSet;
-				if(charSet == null){
+				var charSet = this.ContentType_CharSet;
+                if (charSet == null){
 					throw new Exception("Please specify CharSet property first !");
 				}
                                

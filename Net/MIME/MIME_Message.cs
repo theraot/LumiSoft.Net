@@ -91,7 +91,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("headerEncoding");
             }
 
-            MIME_Message retVal = new MIME_Message();
+            var retVal = new MIME_Message();
             retVal.Parse(new SmartStream(stream,false),headerEncoding,new MIME_h_ContentType("text/plain"));
 
             return retVal;
@@ -109,14 +109,14 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("file");
             }
 
-            MIME_Entity retVal = new MIME_Entity();
-            MIME_b_Application body = new MIME_b_Application(MIME_MediaTypes.Application.octet_stream);
+            var retVal = new MIME_Entity();
+            var body = new MIME_b_Application(MIME_MediaTypes.Application.octet_stream);
             retVal.Body = body;
             body.SetDataFromFile(file,MIME_TransferEncodings.Base64);
             retVal.ContentType.Param_Name = Path.GetFileName(file);
 
-            FileInfo fileInfo = new FileInfo(file);
-            MIME_h_ContentDisposition disposition = new MIME_h_ContentDisposition(MIME_DispositionTypes.Attachment);
+            var fileInfo = new FileInfo(file);
+            var disposition = new MIME_h_ContentDisposition(MIME_DispositionTypes.Attachment);
             disposition.Param_FileName         = Path.GetFileName(file);
             disposition.Param_Size             = fileInfo.Length;
             disposition.Param_CreationDate     = fileInfo.CreationTime;
@@ -143,13 +143,13 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("fileName");
             }
 
-            MIME_Entity retVal = new MIME_Entity();
-            MIME_b_Application body = new MIME_b_Application(MIME_MediaTypes.Application.octet_stream);
+            var retVal = new MIME_Entity();
+            var body = new MIME_b_Application(MIME_MediaTypes.Application.octet_stream);
             retVal.Body = body;
             body.SetData(stream,MIME_TransferEncodings.Base64);
             retVal.ContentType.Param_Name = Path.GetFileName(fileName);
 
-            MIME_h_ContentDisposition disposition = new MIME_h_ContentDisposition(MIME_DispositionTypes.Attachment);
+            var disposition = new MIME_h_ContentDisposition(MIME_DispositionTypes.Attachment);
             disposition.Param_FileName         = Path.GetFileName(fileName);
             disposition.Param_Size             = stream.CanSeek ? (stream.Length - stream.Position) : -1;
             //disposition.Param_CreationDate     = fileInfo.CreationTime;
@@ -172,20 +172,20 @@ namespace LumiSoft.Net.MIME
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            List<MIME_Entity>  retVal       = new List<MIME_Entity>();
-            List<MIME_Entity> entitiesQueue = new List<MIME_Entity>();
+            var  retVal       = new List<MIME_Entity>();
+            var entitiesQueue = new List<MIME_Entity>();
             entitiesQueue.Add(this);
             
             while(entitiesQueue.Count > 0){
-                MIME_Entity currentEntity = entitiesQueue[0];
+                var currentEntity = entitiesQueue[0];
                 entitiesQueue.RemoveAt(0);
         
                 retVal.Add(currentEntity);
 
                 // Current entity is multipart entity, add it's body-parts for processing.
                 if(this.Body != null && currentEntity.Body.GetType().IsSubclassOf(typeof(MIME_b_Multipart))){
-                    MIME_EntityCollection bodyParts = ((MIME_b_Multipart)currentEntity.Body).BodyParts;
-                    for(int i=0;i<bodyParts.Count;i++){
+                    var bodyParts = ((MIME_b_Multipart)currentEntity.Body).BodyParts;
+                    for (int i=0;i<bodyParts.Count;i++){
                         entitiesQueue.Insert(i,bodyParts[i]);
                     }
                 }
@@ -242,20 +242,20 @@ namespace LumiSoft.Net.MIME
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                List<MIME_Entity> retVal        = new List<MIME_Entity>();
-                List<MIME_Entity> entitiesQueue = new List<MIME_Entity>();
+                var retVal        = new List<MIME_Entity>();
+                var entitiesQueue = new List<MIME_Entity>();
                 entitiesQueue.Add(this);
             
                 while(entitiesQueue.Count > 0){
-                    MIME_Entity currentEntity = entitiesQueue[0];
+                    var currentEntity = entitiesQueue[0];
                     entitiesQueue.RemoveAt(0);
         
                     retVal.Add(currentEntity);
 
                     // Current entity is multipart entity, add it's body-parts for processing.
                     if(this.Body != null && currentEntity.Body.GetType().IsSubclassOf(typeof(MIME_b_Multipart))){
-                        MIME_EntityCollection bodyParts = ((MIME_b_Multipart)currentEntity.Body).BodyParts;
-                        for(int i=0;i<bodyParts.Count;i++){
+                        var bodyParts = ((MIME_b_Multipart)currentEntity.Body).BodyParts;
+                        for (int i=0;i<bodyParts.Count;i++){
                             entitiesQueue.Insert(i,bodyParts[i]);
                         }
                     }

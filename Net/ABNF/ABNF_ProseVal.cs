@@ -56,9 +56,9 @@ namespace LumiSoft.Net.ABNF
 
             // TODO: *c-wsp
 
-            StringBuilder value = new StringBuilder();
+            var value = new StringBuilder();
 
-            while(true){
+            while (true){
                 // We reached end of stream, no closing DQUOTE.
                 if(reader.Peek() == -1){
                     throw new ParseException("Invalid ABNF 'prose-val' value '" + reader.ReadToEnd() + "'.");

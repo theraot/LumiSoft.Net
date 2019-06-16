@@ -48,9 +48,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="e">Request event arguments.</param>
         internal void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {
-            SIP_Request request = e.Request;
+            var request = e.Request;
 
-            if(request.RequestLine.Method == SIP_Methods.CANCEL){
+            if (request.RequestLine.Method == SIP_Methods.CANCEL){
                 /* RFC 3261 9.2.
                     If the UAS did not find a matching transaction for the CANCEL
                     according to the procedure above, it SHOULD respond to the CANCEL
@@ -61,8 +61,8 @@ namespace LumiSoft.Net.SIP.Proxy
                     request itself with a 200 (OK) response.
                 */
 
-                SIP_ServerTransaction trToCancel = m_pProxy.Stack.TransactionLayer.MatchCancelToTransaction(e.Request);
-                if(trToCancel != null){
+                var trToCancel = m_pProxy.Stack.TransactionLayer.MatchCancelToTransaction(e.Request);
+                if (trToCancel != null){
                     trToCancel.Cancel();
                     //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x200_Ok));
                 }
@@ -114,7 +114,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     into this downstream request before sending it.
                 */
 
-                SIP_Request b2buaRequest = e.Request.Copy();
+                var b2buaRequest = e.Request.Copy();
                 b2buaRequest.Via.RemoveAll();
                 b2buaRequest.MaxForwards = 70;                
                 b2buaRequest.CallID = SIP_t_CallID.CreateCallID().CallID;
@@ -129,8 +129,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Remove our Authorization header if it's there.
                 foreach(SIP_SingleValueHF<SIP_t_Credentials> header in b2buaRequest.ProxyAuthorization.HeaderFields){
                     try{
-                        Auth_HttpDigest digest = new Auth_HttpDigest(header.ValueX.AuthData,b2buaRequest.RequestLine.Method);
-                        if(m_pProxy.Stack.Realm == digest.Realm){
+                        var digest = new Auth_HttpDigest(header.ValueX.AuthData,b2buaRequest.RequestLine.Method);
+                        if (m_pProxy.Stack.Realm == digest.Realm){
                             b2buaRequest.ProxyAuthorization.Remove(header);
                         }
                     }
@@ -183,7 +183,7 @@ namespace LumiSoft.Net.SIP.Proxy
         internal void AddCall(SIP_Dialog caller,SIP_Dialog calee)
         {
             lock(m_pCalls){
-                SIP_B2BUA_Call call = new SIP_B2BUA_Call(this,caller,calee);
+                var call = new SIP_B2BUA_Call(this,caller,calee);
                 m_pCalls.Add(call);
 
                 OnCallCreated(call);

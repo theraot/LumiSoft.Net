@@ -65,19 +65,9 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>localEP</b>, <b>localEP</b> or <b>clock</b> is null reference.</exception>
         internal RTP_Session(RTP_MultimediaSession session,RTP_Address localEP,RTP_Clock clock)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-            if(localEP == null){
-                throw new ArgumentNullException("localEP");
-            }
-            if(clock == null){
-                throw new ArgumentNullException("clock");
-            }
-
-            m_pSession  = session;
-            m_pLocalEP  = localEP;
-            m_pRtpClock = clock;
+            m_pSession  = session ?? throw new ArgumentNullException("session");
+            m_pLocalEP  = localEP ?? throw new ArgumentNullException("localEP");
+            m_pRtpClock = clock ?? throw new ArgumentNullException("clock");
 
             m_pLocalSources = new List<RTP_Source_Local>();
             m_pTargets = new List<RTP_Address>();
@@ -157,19 +147,19 @@ namespace LumiSoft.Net.RTP
             }
 
             // Generate BYE packet(s).
-            RTCP_CompoundPacket compundPacket = new RTCP_CompoundPacket();
-            RTCP_Packet_RR rr = new RTCP_Packet_RR();
+            var compundPacket = new RTCP_CompoundPacket();
+            var rr = new RTCP_Packet_RR();
             rr.SSRC = m_pRtcpSource.SSRC;
             compundPacket.Packets.Add(rr);
             int sourcesProcessed = 0;
             while(sourcesProcessed < m_pLocalSources.Count){
-                uint[] sources = new uint[Math.Min(m_pLocalSources.Count - sourcesProcessed,31)];
-                for(int i=0;i<sources.Length;i++){
+                var sources = new uint[Math.Min(m_pLocalSources.Count - sourcesProcessed,31)];
+                for (int i=0;i<sources.Length;i++){
                     sources[i] = m_pLocalSources[sourcesProcessed].SSRC;
                     sourcesProcessed++;
                 }
 
-                RTCP_Packet_BYE bye = new RTCP_Packet_BYE();
+                var bye = new RTCP_Packet_BYE();
                 bye.Sources = sources;
                 compundPacket.Packets.Add(bye);
             }
@@ -217,7 +207,7 @@ namespace LumiSoft.Net.RTP
             m_pMembers.Add(m_pRtcpSource.SSRC,m_pRtcpSource);
 
             // Create RTP data receiver.
-            UDP_DataReceiver rtpDataReceiver = new UDP_DataReceiver(m_pRtpSocket);
+            var rtpDataReceiver = new UDP_DataReceiver(m_pRtpSocket);
             rtpDataReceiver.PacketReceived += delegate(object s1,UDP_e_PacketReceived e1){
                 ProcessRtp(e1.Buffer,e1.Count,e1.RemoteEP);
             };
@@ -225,7 +215,7 @@ namespace LumiSoft.Net.RTP
             m_pUdpDataReceivers.Add(rtpDataReceiver);
             rtpDataReceiver.Start();
             // Create RTCP data receiver.
-            UDP_DataReceiver rtcpDataReceiver = new UDP_DataReceiver(m_pRtcpSocket);
+            var rtcpDataReceiver = new UDP_DataReceiver(m_pRtcpSocket);
             rtcpDataReceiver.PacketReceived += delegate(object s1,UDP_e_PacketReceived e1){
                 ProcessRtcp(e1.Buffer,e1.Count,e1.RemoteEP);
             };
@@ -263,7 +253,7 @@ namespace LumiSoft.Net.RTP
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            RTP_Source_Local source = CreateLocalSource();
+            var source = CreateLocalSource();
             source.CreateStream();
 
             OnNewSendStream(source.Stream);
@@ -354,8 +344,8 @@ namespace LumiSoft.Net.RTP
             rtcpEP = null;
 
             try{
-                STUN_Result rtpResult = STUN_Client.Query(server,port,m_pRtpSocket);
-                if(rtpResult.NetType == STUN_NetType.FullCone || rtpResult.NetType == STUN_NetType.PortRestrictedCone || rtpResult.NetType == STUN_NetType.RestrictedCone){                                        
+                var rtpResult = STUN_Client.Query(server,port,m_pRtpSocket);
+                if (rtpResult.NetType == STUN_NetType.FullCone || rtpResult.NetType == STUN_NetType.PortRestrictedCone || rtpResult.NetType == STUN_NetType.RestrictedCone){                                        
                     rtpEP  = rtpResult.PublicEndPoint;
                     rtcpEP = STUN_Client.GetPublicEP(server,port,m_pRtcpSocket);
                                                
@@ -384,10 +374,10 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("packet");
             }
                         
-            byte[] packetBytes = packet.ToByte();
+            var packetBytes = packet.ToByte();
 
             // Send packet to each remote target.
-            foreach(RTP_Address target in this.Targets){
+            foreach (RTP_Address target in this.Targets){
                 try{
                     m_pRtcpSocket.SendTo(packetBytes,packetBytes.Length,SocketFlags.None,target.RtcpEP);
 
@@ -438,7 +428,7 @@ namespace LumiSoft.Net.RTP
                 }
             }
                         
-            byte[] packetBytes = new byte[m_MTU];
+            var packetBytes = new byte[m_MTU];
             int count = 0;
             packet.ToByte(packetBytes,ref count);
 
@@ -504,21 +494,21 @@ namespace LumiSoft.Net.RTP
             m_RtcpAvgPacketSize = (1/16) * count + (15/16) * m_RtcpAvgPacketSize;
 
             try{
-                RTCP_CompoundPacket compoundPacket = RTCP_CompoundPacket.Parse(buffer,count);
+                var compoundPacket = RTCP_CompoundPacket.Parse(buffer,count);
                 // Process each RTCP packet.
-                foreach(RTCP_Packet packet in compoundPacket.Packets){
+                foreach (RTCP_Packet packet in compoundPacket.Packets){
                     if(packet.Type == RTCP_PacketType.APP){
-                        RTCP_Packet_APP app = ((RTCP_Packet_APP)packet);
+                        var app = ((RTCP_Packet_APP)packet);
 
-                        RTP_Source_Remote source = GetOrCreateSource(true,app.Source,null,remoteEP);
-                        if(source != null){
+                        var source = GetOrCreateSource(true,app.Source,null,remoteEP);
+                        if (source != null){
                             source.SetLastRtcpPacket(DateTime.Now);
                             source.OnAppPacket(app);
                         }
                     }
                     else if(packet.Type == RTCP_PacketType.BYE){
-                        RTCP_Packet_BYE bye = ((RTCP_Packet_BYE)packet);
-                        
+                        var bye = ((RTCP_Packet_BYE)packet);
+
                         bool membersChanges = false;
                         foreach(uint src in bye.Sources){
                             RTP_Source source = GetOrCreateSource(true,src,null,remoteEP);
@@ -536,8 +526,8 @@ namespace LumiSoft.Net.RTP
                         }
                     }
                     else if(packet.Type == RTCP_PacketType.RR){
-                        RTCP_Packet_RR rr = ((RTCP_Packet_RR)packet);
-                            
+                        var rr = ((RTCP_Packet_RR)packet);
+
                         RTP_Source source = GetOrCreateSource(true,rr.SSRC,null,remoteEP);
                         if(source != null){
                             source.SetLastRtcpPacket(DateTime.Now);
@@ -557,7 +547,7 @@ namespace LumiSoft.Net.RTP
                             if(source != null){
                                 source.SetLastRtcpPacket(DateTime.Now);
 
-                                RTP_Participant_Remote participant = m_pSession.GetOrCreateParticipant(string.IsNullOrEmpty(sdes.CName) ? "null" : sdes.CName);
+                                var participant = m_pSession.GetOrCreateParticipant(string.IsNullOrEmpty(sdes.CName) ? "null" : sdes.CName);
 
                                 // Map participant to source.
                                 ((RTP_Source_Remote)source).SetParticipant(participant);
@@ -571,10 +561,10 @@ namespace LumiSoft.Net.RTP
                         }
                     }
                     else if(packet.Type == RTCP_PacketType.SR){
-                        RTCP_Packet_SR sr = ((RTCP_Packet_SR)packet);
+                        var sr = ((RTCP_Packet_SR)packet);
 
-                        RTP_Source_Remote source = GetOrCreateSource(true,sr.SSRC,null,remoteEP);
-                        if(source != null){
+                        var source = GetOrCreateSource(true,sr.SSRC,null,remoteEP);
+                        if (source != null){
                             source.SetLastRtcpPacket(DateTime.Now);
                             source.OnSenderReport(new RTCP_Report_Sender(sr));
 
@@ -631,7 +621,7 @@ namespace LumiSoft.Net.RTP
             m_RtpBytesReceived += count;
 
             try{
-                RTP_Packet packet = RTP_Packet.Parse(buffer,count);
+                var packet = RTP_Packet.Parse(buffer,count);
 
                 RTP_Source source = GetOrCreateSource(false,packet.SSRC,null,remoteEP);
                 if(source != null){                    
@@ -667,7 +657,7 @@ namespace LumiSoft.Net.RTP
                 ssrc = RTP_Utils.GenerateSSRC();
             }
 
-            RTP_Source_Local source = new RTP_Source_Local(this,ssrc,m_pLocalEP.RtcpEP,m_pLocalEP.RtpEP);
+            var source = new RTP_Source_Local(this,ssrc,m_pLocalEP.RtcpEP,m_pLocalEP.RtpEP);
             source.Disposing += new EventHandler(delegate(object s,EventArgs e){
                 m_pSenders.Remove(source.SSRC);
                 m_pMembers.Remove(source.SSRC);    
@@ -801,15 +791,15 @@ namespace LumiSoft.Net.RTP
                     }
                     m_pMembers.Add(source.SSRC,source);
 
-                    RTCP_CompoundPacket compoundPacket = new RTCP_CompoundPacket();
-                    RTCP_Packet_RR rr = new RTCP_Packet_RR();
+                    var compoundPacket = new RTCP_CompoundPacket();
+                    var rr = new RTCP_Packet_RR();
                     rr.SSRC = m_pRtcpSource.SSRC;
                     compoundPacket.Packets.Add(rr);
-                    RTCP_Packet_SDES sdes = new RTCP_Packet_SDES();
-                    RTCP_Packet_SDES_Chunk sdes_chunk = new RTCP_Packet_SDES_Chunk(source.SSRC,m_pSession.LocalParticipant.CNAME);
+                    var sdes = new RTCP_Packet_SDES();
+                    var sdes_chunk = new RTCP_Packet_SDES_Chunk(source.SSRC,m_pSession.LocalParticipant.CNAME);
                     sdes.Chunks.Add(sdes_chunk);
                     compoundPacket.Packets.Add(sdes);
-                    RTCP_Packet_BYE bye = new RTCP_Packet_BYE();
+                    var bye = new RTCP_Packet_BYE();
                     bye.Sources = new uint[]{oldSSRC};
                     bye.LeavingReason = "Collision, changing SSRC.";
                     compoundPacket.Packets.Add(bye);
@@ -964,7 +954,7 @@ namespace LumiSoft.Net.RTP
                 only a secondary concern.
             */
             
-            DateTime timeNext = m_RtcpLastTransmission == DateTime.MinValue ? DateTime.Now : m_RtcpLastTransmission.AddMilliseconds(m_pRtcpTimer.Interval);
+            var timeNext = m_RtcpLastTransmission == DateTime.MinValue ? DateTime.Now : m_RtcpLastTransmission.AddMilliseconds(m_pRtcpTimer.Interval);
 
             Schedule((int)Math.Max((m_pMembers.Count / m_PMembersCount) * ((TimeSpan)(timeNext - DateTime.Now)).TotalSeconds,2));
             
@@ -999,7 +989,7 @@ namespace LumiSoft.Net.RTP
             bool membersUpdated = false;
                          
             // Senders check.
-            RTP_Source[] senders = new RTP_Source[m_pSenders.Count];
+            var senders = new RTP_Source[m_pSenders.Count];
             m_pSenders.Values.CopyTo(senders,0);
             foreach(RTP_Source sender in senders){
                 // Sender has not sent RTP data since last two RTCP intervals.
@@ -1068,13 +1058,13 @@ namespace LumiSoft.Net.RTP
             try{
                 m_pRtcpSource.SetLastRtcpPacket(DateTime.Now);
                                 
-                RTCP_CompoundPacket compundPacket = new RTCP_CompoundPacket();
+                var compundPacket = new RTCP_CompoundPacket();
 
                 RTCP_Packet_RR rr = null;
 
                 // Find active send streams.
-                List<RTP_SendStream> activeSendStreams = new List<RTP_SendStream>();
-                foreach(RTP_SendStream stream in this.SendStreams){
+                var activeSendStreams = new List<RTP_SendStream>();
+                foreach (RTP_SendStream stream in this.SendStreams){
                     if(stream.RtcpCyclesSinceWeSent < 2){
                         activeSendStreams.Add(stream);
                         we_sent = true;
@@ -1087,9 +1077,9 @@ namespace LumiSoft.Net.RTP
                 if(we_sent){
                     // Create SR for each active send stream.
                     for(int i=0;i<activeSendStreams.Count;i++){
-                        RTP_SendStream sendStream = activeSendStreams[i];
+                        var sendStream = activeSendStreams[i];
 
-                        RTCP_Packet_SR sr = new RTCP_Packet_SR(sendStream.Source.SSRC);
+                        var sr = new RTCP_Packet_SR(sendStream.Source.SSRC);
                         sr.NtpTimestamp      = RTP_Utils.DateTimeToNTP64(DateTime.Now);
                         sr.RtpTimestamp      = m_pRtpClock.RtpTimestamp;
                         sr.SenderPacketCount = (uint)sendStream.RtpPacketsSent;
@@ -1107,9 +1097,9 @@ namespace LumiSoft.Net.RTP
                     // Report blocks added later.                
                 }
 
-                RTCP_Packet_SDES sdes = new RTCP_Packet_SDES();
+                var sdes = new RTCP_Packet_SDES();
                 // Add default SSRC.
-                RTCP_Packet_SDES_Chunk sdesChunk = new RTCP_Packet_SDES_Chunk(m_pRtcpSource.SSRC,m_pSession.LocalParticipant.CNAME);
+                var sdesChunk = new RTCP_Packet_SDES_Chunk(m_pRtcpSource.SSRC,m_pSession.LocalParticipant.CNAME);
                 // Add next optional SDES item, if any. (We round-robin optional items)
                 m_pSession.LocalParticipant.AddNextOptionalSdesItem(sdesChunk);
                 sdes.Chunks.Add(sdesChunk);   
@@ -1123,9 +1113,9 @@ namespace LumiSoft.Net.RTP
                     Report up to 31 active senders, if more senders, reoprt next with next interval.
                     Report oldest not reported first,then ventually all sources will be reported with this algorythm.
                 */
-                RTP_Source[]        senders             = this.Senders;
-                DateTime[]          acitveSourceRRTimes = new DateTime[senders.Length];
-                RTP_ReceiveStream[] activeSenders       = new RTP_ReceiveStream[senders.Length];
+                var        senders             = this.Senders;
+                var          acitveSourceRRTimes = new DateTime[senders.Length];
+                var activeSenders       = new RTP_ReceiveStream[senders.Length];
                 int                 activeSenderCount   = 0;
                 foreach(RTP_Source sender in senders){
                     // Remote sender sent RTP data during last RTCP interval.
@@ -1156,7 +1146,7 @@ namespace LumiSoft.Net.RTP
 
                 // Timeout conflicting transport addresses, if not conflicting any more.
                 lock(m_pConflictingEPs){
-                    string[] keys = new string[m_pConflictingEPs.Count];
+                    var keys = new string[m_pConflictingEPs.Count];
                     m_pConflictingEPs.Keys.CopyTo(keys,0);
                     foreach(string key in keys){
                         if(m_pConflictingEPs[key].AddMinutes(3) < DateTime.Now){
@@ -1368,7 +1358,7 @@ namespace LumiSoft.Net.RTP
                 }
 
                 lock(m_pMembers){
-                    RTP_Source[] sources = new RTP_Source[m_pMembers.Count];
+                    var sources = new RTP_Source[m_pMembers.Count];
                     m_pMembers.Values.CopyTo(sources,0);
 
                     return sources;
@@ -1388,7 +1378,7 @@ namespace LumiSoft.Net.RTP
                 }
 
                 lock(m_pSenders){
-                    RTP_Source[] sources = new RTP_Source[m_pSenders.Count];
+                    var sources = new RTP_Source[m_pSenders.Count];
                     m_pSenders.Values.CopyTo(sources,0);
 
                     return sources;
@@ -1408,8 +1398,8 @@ namespace LumiSoft.Net.RTP
                 }
 
                 lock(m_pLocalSources){
-                    List<RTP_SendStream> retVal = new List<RTP_SendStream>();
-                    foreach(RTP_Source_Local source in m_pLocalSources){
+                    var retVal = new List<RTP_SendStream>();
+                    foreach (RTP_Source_Local source in m_pLocalSources){
                         if(source.Stream != null){
                             retVal.Add(source.Stream);
                         }
@@ -1432,8 +1422,8 @@ namespace LumiSoft.Net.RTP
                 }
 
                 lock(m_pSenders){
-                    List<RTP_ReceiveStream> retVal = new List<RTP_ReceiveStream>();
-                    foreach(RTP_Source source in m_pSenders.Values){
+                    var retVal = new List<RTP_ReceiveStream>();
+                    foreach (RTP_Source source in m_pSenders.Values){
                         if(!source.IsLocal){
                             retVal.Add(((RTP_Source_Remote)source).Stream);
                         }

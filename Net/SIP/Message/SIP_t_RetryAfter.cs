@@ -60,8 +60,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // delta-seconds
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("SIP Retry-After 'delta-seconds' value is missing !");
             }
             try{
@@ -86,8 +86,8 @@ namespace LumiSoft.Net.SIP.Message
                 retry-param = ("duration" EQUAL delta-seconds) / generic-param
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // delta-seconds
             retVal.Append(m_Time);
 
@@ -123,8 +123,8 @@ namespace LumiSoft.Net.SIP.Message
         public int Duration
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["duration"];
-                if(parameter != null){
+                var parameter = this.Parameters["duration"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 

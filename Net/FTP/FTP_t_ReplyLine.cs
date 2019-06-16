@@ -50,8 +50,8 @@ namespace LumiSoft.Net.FTP
                 isLastLine = (line[3] == ' ');
             }
 
-            string text = "";
-            if(line.Length > 5){
+            var text = "";
+            if (line.Length > 5){
                 text = line.Substring(4);
             }
 

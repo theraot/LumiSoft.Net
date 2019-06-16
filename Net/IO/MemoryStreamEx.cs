@@ -135,7 +135,7 @@ namespace LumiSoft.Net.IO
 
             // We need switch to temporary file.
             if(m_pStream is MemoryStream && (m_pStream.Position + count) > m_MaxMemSize){
-                FileStream fs = new FileStream(Path.GetTempPath() + "ls-" + Guid.NewGuid().ToString().Replace("-","") + ".tmp",FileMode.Create,FileAccess.ReadWrite,FileShare.Read,32000,FileOptions.DeleteOnClose);
+                var fs = new FileStream(Path.GetTempPath() + "ls-" + Guid.NewGuid().ToString().Replace("-","") + ".tmp",FileMode.Create,FileAccess.ReadWrite,FileShare.Read,32000,FileOptions.DeleteOnClose);
 
                 m_pStream.Position = 0;
                 Net_Utils.StreamCopy(m_pStream,fs,8000);

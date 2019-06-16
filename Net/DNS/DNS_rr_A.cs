@@ -32,8 +32,8 @@ namespace LumiSoft.Net.DNS
         {
             // IPv4 = byte byte byte byte
 
-			byte[] ip = new byte[rdLength];
-			Array.Copy(reply,offset,ip,0,rdLength);
+			var ip = new byte[rdLength];
+            Array.Copy(reply,offset,ip,0,rdLength);
             offset += rdLength;
             
 			return new DNS_rr_A(name,new IPAddress(ip),ttl);

@@ -69,19 +69,19 @@ namespace LumiSoft.Net.MIME
 
             // We need to buffer all body data, otherwise we don't know if we have readed all data 
             // from stream.
-            MemoryStream msBuffer = new MemoryStream();
+            var msBuffer = new MemoryStream();
             Net_Utils.StreamCopy(stream,msBuffer,32000);
             msBuffer.Position = 0;
 
-            SmartStream parseStream = new SmartStream(msBuffer,true);
+            var parseStream = new SmartStream(msBuffer,true);
 
-            MIME_b_MessageDeliveryStatus retVal = new MIME_b_MessageDeliveryStatus();
+            var retVal = new MIME_b_MessageDeliveryStatus();
             //Pare per-message fields.
             retVal.MessageFields.Parse(parseStream);
 
             // Parse per-recipient fields.
             while(parseStream.Position - parseStream.BytesInReadBuffer < parseStream.Length){
-                MIME_h_Collection recipientFields = new MIME_h_Collection(new MIME_h_Provider());
+                var recipientFields = new MIME_h_Collection(new MIME_h_Provider());
                 recipientFields.Parse(parseStream);
                 retVal.RecipientBlocks.Add(recipientFields);                
             }                     

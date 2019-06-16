@@ -77,16 +77,16 @@ namespace LumiSoft.Net.IMAP
                             S: a001 OK Listrights completed
             */
 
-            StringReader r = new StringReader(listRightsResponse);
+            var r = new StringReader(listRightsResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "LISTRIGHTS"
             r.ReadWord();
 
-            string folder     = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
-            string identifier = r.ReadWord(true);
-            string reqRights  = r.ReadWord(true);
-            string optRights  = r.ReadWord(true);
+            var folder     = IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord(true));
+            var identifier = r.ReadWord(true);
+            var reqRights  = r.ReadWord(true);
+            var optRights  = r.ReadWord(true);
 
             return new IMAP_r_u_ListRights(folder,identifier,reqRights,optRights);
         }
@@ -109,7 +109,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * LISTRIGHTS ~/Mail/saved smith la r swicdkxte
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* LISTRIGHTS " + IMAP_Utils.EncodeMailbox(FolderName,encoding) + " \"" + RequiredRights + "\" " + OptionalRights + "\r\n");
             
             return retVal.ToString();

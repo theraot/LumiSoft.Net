@@ -63,11 +63,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // callid
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("SIP Target-Dialog 'callid' value is missing !");
-            }
-            m_CallID = word;
+            var word = reader.ReadWord();
+            m_CallID = word ?? throw new SIP_ParseException("SIP Target-Dialog 'callid' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -86,8 +83,8 @@ namespace LumiSoft.Net.SIP.Message
                 local-param   = "local-tag" EQUAL token
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // callid
             retVal.Append(m_CallID);
 
@@ -124,8 +121,8 @@ namespace LumiSoft.Net.SIP.Message
         public string RemoteTag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["remote-tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["remote-tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -148,8 +145,8 @@ namespace LumiSoft.Net.SIP.Message
         public string LocalTag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["local-tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["local-tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

@@ -15,15 +15,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when any of the arguments is null.</exception>
         public SIP_ResponseSentEventArgs(SIP_ServerTransaction transaction,SIP_Response response)
         {
-            if(transaction == null){
-                throw new ArgumentNullException("transaction");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            ServerTransaction = transaction;
-            Response    = response;
+            ServerTransaction = transaction ?? throw new ArgumentNullException("transaction");
+            Response    = response ?? throw new ArgumentNullException("response");
         }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns "info" value.</returns>
         public override string ToStringValue()
         {
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append("<" + m_Uri + ">");
             retVal.Append(ParametersToString());
 
@@ -81,8 +81,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Purpose
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["purpose"];
-                if(parameter != null){
+                var parameter = this.Parameters["purpose"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

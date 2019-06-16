@@ -33,12 +33,12 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"SENTBEFORE",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"SENTBEFORE",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'SENTBEFORE' key.");
             }
-            string value = r.ReadWord();
-            if(value == null){
+            var value = r.ReadWord();
+            if (value == null){
                 throw new ParseException("Parse error: Invalid 'SENTBEFORE' value.");
             }
             DateTime date;

@@ -23,7 +23,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns participant as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
             retVal.AppendLine("CNAME: " + this.CNAME);            
             if(!string.IsNullOrEmpty(Name)){

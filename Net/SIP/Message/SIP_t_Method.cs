@@ -49,11 +49,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get Method
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'Method' value, value is missing !");
-            }
-            m_Method = word;
+            var word = reader.ReadWord();
+            m_Method = word ?? throw new SIP_ParseException("Invalid 'Method' value, value is missing !");
         }
 
         /// <summary>

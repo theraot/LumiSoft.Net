@@ -29,12 +29,9 @@ namespace LumiSoft.Net.AUTH
             if(userName == string.Empty){
                 throw new ArgumentException("Argument 'username' value must be specified.","userName");
             }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
 
             m_UserName = userName;
-            m_Password = password;
+            m_Password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>
@@ -122,9 +119,9 @@ namespace LumiSoft.Net.AUTH
                 m_State++;
                 m_IsCompleted = true;
 
-                HMACMD5 kMd5         = new HMACMD5(Encoding.UTF8.GetBytes(m_Password));
-				string  passwordHash = Net_Utils.ToHex(kMd5.ComputeHash(serverResponse)).ToLower();
-				
+                var kMd5         = new HMACMD5(Encoding.UTF8.GetBytes(m_Password));
+                var  passwordHash = Net_Utils.ToHex(kMd5.ComputeHash(serverResponse)).ToLower();
+
                 return Encoding.UTF8.GetBytes(m_UserName + " " + passwordHash);
             }
 

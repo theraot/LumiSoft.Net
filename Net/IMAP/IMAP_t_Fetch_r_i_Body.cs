@@ -17,13 +17,9 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public IMAP_t_Fetch_r_i_Body(string section,int offset,Stream stream)
         {
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
             BodySection = section;
             Offset  = offset;
-            Stream = stream;
+            Stream = stream ?? throw new ArgumentNullException("stream");
         }
 
         /// <summary>
@@ -33,11 +29,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         internal void SetStream(Stream stream)
         {
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            Stream = stream;
+            Stream = stream ?? throw new ArgumentNullException("stream");
         }
 
         /// <summary>

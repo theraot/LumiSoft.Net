@@ -24,19 +24,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>proxy</b>, <b>request</b> or <b>flow</b> is null reference.</exception>
         internal SIP_RequestContext(SIP_Proxy proxy,SIP_Request request,SIP_Flow flow)
         {
-            if(proxy == null){
-                throw new ArgumentNullException("proxy");
-            }
-            if(request == null){
-                throw new ArgumentNullException("request");
-            }
-            if(flow == null){
-                throw new ArgumentNullException("flow");
-            }
-
-            m_pProxy   = proxy;
-            Request = request;
-            m_pFlow    = flow;
+            m_pProxy   = proxy ?? throw new ArgumentNullException("proxy");
+            Request = request ?? throw new ArgumentNullException("request");
+            m_pFlow    = flow ?? throw new ArgumentNullException("flow");
 
             Targets = new List<SIP_ProxyTarget>();
         }

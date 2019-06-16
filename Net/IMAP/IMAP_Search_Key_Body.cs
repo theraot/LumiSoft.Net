@@ -19,11 +19,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public IMAP_Search_Key_Body(string value)
         {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            Value = value;
+            Value = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
@@ -39,12 +35,12 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"BODY",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"BODY",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'BODY' key.");
             }
-            string value = IMAP_Utils.ReadString(r);
-            if(value == null){
+            var value = IMAP_Utils.ReadString(r);
+            if (value == null){
                 throw new ParseException("Parse error: Invalid 'BODY' value.");
             }
 

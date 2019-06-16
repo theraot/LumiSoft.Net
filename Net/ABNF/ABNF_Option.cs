@@ -29,10 +29,10 @@ namespace LumiSoft.Net.ABNF
 
             // TODO: *c-wsp
 
-            ABNF_Option retVal = new ABNF_Option();
+            var retVal = new ABNF_Option();
 
             // We reached end of stream, no closing "]".
-            if(reader.Peek() == -1){
+            if (reader.Peek() == -1){
                 throw new ParseException("Invalid ABNF 'option' value '" + reader.ReadToEnd() + "'.");
             }
          

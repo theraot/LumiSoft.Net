@@ -22,9 +22,6 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b> or <b>aor</b> is null reference.</exception>
         public SIP_Registration(string userName,string aor)
         {
-            if(userName == null){
-                throw new ArgumentNullException("userName");
-            }
             if(aor == null){
                 throw new ArgumentNullException("aor");
             }
@@ -32,7 +29,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentException("Argument 'aor' value must be specified.");
             }
 
-            UserName = userName;
+            UserName = userName ?? throw new ArgumentNullException("userName");
             AOR      = aor;
 
             CreateTime = DateTime.Now;
@@ -85,9 +82,9 @@ namespace LumiSoft.Net.SIP.Proxy
 
             lock(m_pLock){
                 foreach(SIP_t_ContactParam contact in contacts){
-                    SIP_RegistrationBinding binding = GetBinding(contact.Address.Uri);
+                    var binding = GetBinding(contact.Address.Uri);
                     // Add binding.
-                    if(binding == null){
+                    if (binding == null){
                         binding = new SIP_RegistrationBinding(this,contact.Address.Uri);
                         m_pBindings.Add(binding);
                     }
@@ -166,7 +163,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_RegistrationBinding[] Bindings
         {
             get{
-                SIP_RegistrationBinding[] retVal = m_pBindings.ToArray();
+                var retVal = m_pBindings.ToArray();
 
                 // Sort by qvalue, higer qvalue means higher priority.
                 Array.Sort(retVal);

@@ -72,16 +72,16 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("stream");
             }
 
-            string responseS = ToString(mailboxEncoding);
-            byte[] response  = Encoding.UTF8.GetBytes(responseS);
+            var responseS = ToString(mailboxEncoding);
+            var response  = Encoding.UTF8.GetBytes(responseS);
 
             // Log.
-            if(session != null){
+            if (session != null){
                 session.LogAddWrite(response.Length,responseS.TrimEnd());
             }
 
             // Starts writing response to stream.
-            IAsyncResult ar = stream.BeginWrite(
+            var ar = stream.BeginWrite(
                 response,
                 0,
                 response.Length,
@@ -106,7 +106,7 @@ namespace LumiSoft.Net.IMAP
                 null
             );
             // Completed synchronously, process result.
-            if(ar.CompletedSynchronously){
+            if (ar.CompletedSynchronously){
                 stream.EndWrite(ar);
 
                 return false;

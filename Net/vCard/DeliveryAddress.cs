@@ -44,7 +44,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         private void Changed()
         {
-            string value = "" +
+            var value = "" +
                 m_PostOfficeAddress + ";" +
                 m_ExtendedAddress + ";" +
                 m_Street + ";" +
@@ -63,8 +63,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="item">vCard ADR item.</param>
         internal static DeliveryAddress Parse(Item item)
         {
-            DeliveryAddressType_enum type = DeliveryAddressType_enum.NotSpecified;
-            if(item.ParametersString.ToUpper().IndexOf("PREF") != -1){
+            var type = DeliveryAddressType_enum.NotSpecified;
+            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1){
                 type |= DeliveryAddressType_enum.Preferred;
             }
             if(item.ParametersString.ToUpper().IndexOf("DOM") != -1){
@@ -86,7 +86,7 @@ namespace LumiSoft.Net.Mime.vCard
                 type |= DeliveryAddressType_enum.Work;
             }
 
-            string[] items = item.DecodedValue.Split(';');            
+            var items = item.DecodedValue.Split(';');
             return new DeliveryAddress(
                 item,
                 type,
@@ -107,8 +107,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         internal static string AddressTypeToString(DeliveryAddressType_enum type)
         {
-            string retVal = "";
-            if((type & DeliveryAddressType_enum.Domestic) != 0){
+            var retVal = "";
+            if ((type & DeliveryAddressType_enum.Domestic) != 0){
                 retVal += "DOM,";
             }
             if((type & DeliveryAddressType_enum.Home) != 0){

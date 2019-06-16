@@ -122,7 +122,7 @@ namespace LumiSoft.Net.UPnP.Client
                 UDA version 1.1.
             */
 
-            StringBuilder query = new StringBuilder();
+            var query = new StringBuilder();
             query.Append("M-SEARCH * HTTP/1.1\r\n");
             query.Append("HOST: 239.255.255.250:1900\r\n");
             query.Append("MAN: \"ssdp:discover\"\r\n");
@@ -136,19 +136,19 @@ namespace LumiSoft.Net.UPnP.Client
 
                 socket.SendTo(Encoding.UTF8.GetBytes(query.ToString()),new IPEndPoint(IPAddress.Broadcast,1900));
 
-                List<string> deviceLocations = new List<string>();    
-                byte[]       buffer          = new byte[32000];
-                DateTime     startTime       = DateTime.Now;
+                var deviceLocations = new List<string>();
+                var       buffer          = new byte[32000];
+                var     startTime       = DateTime.Now;
                 // Receive responses while timeout reached.
-                while(startTime.AddMilliseconds(timeout) > DateTime.Now){
+                while (startTime.AddMilliseconds(timeout) > DateTime.Now){
                     // We have response, read it.
                     if(socket.Poll(1,SelectMode.SelectRead)){
                         int countReceived = socket.Receive(buffer);
 
-                        string[] responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');                    
-                        foreach(string responseLine in responseLines){
-                            string[] name_value = responseLine.Split(new char[]{':'},2);
-                            if(string.Equals(name_value[0],"location",StringComparison.InvariantCultureIgnoreCase)){
+                        var responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');
+                        foreach (string responseLine in responseLines){
+                            var name_value = responseLine.Split(new char[]{':'},2);
+                            if (string.Equals(name_value[0],"location",StringComparison.InvariantCultureIgnoreCase)){
                                 deviceLocations.Add(name_value[1].Trim());
                             }
                         }
@@ -156,8 +156,8 @@ namespace LumiSoft.Net.UPnP.Client
                 }
 
                 // Create devices.
-                List<UPnP_Device> devices = new List<UPnP_Device>();
-                foreach(string location in deviceLocations){
+                var devices = new List<UPnP_Device>();
+                foreach (string location in deviceLocations){
                     try{
                         devices.Add(new UPnP_Device(location));
                     }
@@ -189,7 +189,7 @@ namespace LumiSoft.Net.UPnP.Client
             using(Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
                 socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.IpTimeToLive,2);
                
-                StringBuilder query = new StringBuilder();
+                var query = new StringBuilder();
                 query.Append("M-SEARCH * HTTP/1.1\r\n");
                 query.Append("MAN: \"ssdp:discover\"\r\n");
                 query.Append("MX: 1\r\n");
@@ -198,19 +198,19 @@ namespace LumiSoft.Net.UPnP.Client
 
                 socket.SendTo(Encoding.UTF8.GetBytes(query.ToString()),new IPEndPoint(ip,1900));
 
-                List<string> deviceLocations = new List<string>();    
-                byte[]       buffer          = new byte[32000];
-                DateTime     startTime       = DateTime.Now;
+                var deviceLocations = new List<string>();
+                var       buffer          = new byte[32000];
+                var     startTime       = DateTime.Now;
                 // Receive responses while timeout reached.
-                while(startTime.AddMilliseconds(timeout) > DateTime.Now){
+                while (startTime.AddMilliseconds(timeout) > DateTime.Now){
                     // We have response, read it.
                     if(socket.Poll(1,SelectMode.SelectRead)){
                         int countReceived = socket.Receive(buffer);
 
-                        string[] responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');                    
-                        foreach(string responseLine in responseLines){
-                            string[] name_value = responseLine.Split(new char[]{':'},2);
-                            if(string.Equals(name_value[0],"location",StringComparison.InvariantCultureIgnoreCase)){
+                        var responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');
+                        foreach (string responseLine in responseLines){
+                            var name_value = responseLine.Split(new char[]{':'},2);
+                            if (string.Equals(name_value[0],"location",StringComparison.InvariantCultureIgnoreCase)){
                                 deviceLocations.Add(name_value[1].Trim());
                             }
                         }
@@ -218,8 +218,8 @@ namespace LumiSoft.Net.UPnP.Client
                 }
 
                 // Create devices.
-                List<UPnP_Device> devices = new List<UPnP_Device>();
-                foreach(string location in deviceLocations){
+                var devices = new List<UPnP_Device>();
+                foreach (string location in deviceLocations){
                     try{
                         devices.Add(new UPnP_Device(location));
                     }

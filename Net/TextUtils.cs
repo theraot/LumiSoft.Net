@@ -22,9 +22,9 @@ namespace LumiSoft.Net
                 return text;
             }
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
-            for(int i=0;i<text.Length;i++){
+            for (int i=0;i<text.Length;i++){
                 char c = text[i];
 
                 if(c == '\\'){
@@ -90,8 +90,8 @@ namespace LumiSoft.Net
                 return "";
             }
 
-            char[] chars = new char[endPosInText - startPosInText];
-            
+            var chars = new char[endPosInText - startPosInText];
+
             int posInChars = 0;
             bool charIsEscaped = false;
             for(int i=startPosInText;i<endPosInText;i++){
@@ -127,7 +127,7 @@ namespace LumiSoft.Net
 		public static string EscapeString(string text,char[] charsToEscape)
         {
             // Create worst scenario buffer, assume all chars must be escaped
-            char[] buffer = new char[text.Length * 2];
+            var buffer = new char[text.Length * 2];
             int nChars = 0;
             foreach(char c in text){
                 foreach(char escapeChar in charsToEscape){
@@ -153,7 +153,7 @@ namespace LumiSoft.Net
         public static string UnEscapeString(string text)
         {
             // Create worst scenarion buffer, non of the chars escaped.
-            char[] buffer = new char[text.Length];
+            var buffer = new char[text.Length];
             int nChars = 0;
             bool escapedCahr = false;
             foreach(char c in text){
@@ -211,7 +211,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("text");
             }
 
-			List<string>  splitParts     = new List<string>();  // Holds splitted parts
+			var  splitParts     = new List<string>();  // Holds splitted parts
             int           startPos       = 0;
 			bool          inQuotedString = false;               // Holds flag if position is quoted string or not
             char          lastChar       = '0';
@@ -298,9 +298,9 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public static string[] SplitString(string text,char splitChar)
 		{
-			ArrayList splitParts = new ArrayList();  // Holds splitted parts
+			var splitParts = new ArrayList();  // Holds splitted parts
 
-			int lastSplitPoint = 0;
+            int lastSplitPoint = 0;
 			int textLength     = text.Length;
 			for(int i=0;i<textLength;i++){
 				if(text[i] == splitChar){
@@ -315,8 +315,8 @@ namespace LumiSoft.Net
 				splitParts.Add(text.Substring(lastSplitPoint));
 			}
 
-			string[] retVal = new string[splitParts.Count];
-			splitParts.CopyTo(retVal,0);
+			var retVal = new string[splitParts.Count];
+            splitParts.CopyTo(retVal,0);
 
 			return retVal;
 		}
@@ -340,8 +340,8 @@ namespace LumiSoft.Net
                 DIGIT    =  %x30-39             ; 0-9
             */
 
-            char[] tokenChars = new char[]{'-','.','!','%','*','_','+','`','\'','~'};
-            foreach(char c in value){
+            var tokenChars = new char[]{'-','.','!','%','*','_','+','`','\'','~'};
+            foreach (char c in value){
                 // We don't have letter or digit, so we only may have token char.
                 if(!((c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A) || (c >= 0x30 && c <= 0x39))){
                     bool validTokenChar = false;

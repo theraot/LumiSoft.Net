@@ -17,9 +17,6 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public SIP_Hop(IPEndPoint ep,string transport)
         {
-            if(ep == null){
-                throw new ArgumentNullException("ep");
-            }
             if(transport == null){
                 throw new ArgumentNullException("transport");
             }
@@ -27,7 +24,7 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentException("Argument 'transport' value must be specified.");
             }
 
-            EndPoint = ep;
+            EndPoint = ep ?? throw new ArgumentNullException("ep");
             Transport = transport;
         }
 

@@ -15,11 +15,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>flags</b> is null reference.</exception>
         public IMAP_r_u_Flags(string[] flags)
         {
-            if(flags == null){
-                throw new ArgumentNullException("flags");
-            }
-
-            Flags = flags;
+            Flags = flags ?? throw new ArgumentNullException("flags");
         }
 
         /// <summary>
@@ -48,7 +44,7 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
             */
 
-            StringReader r = new StringReader(response.Split(new char[]{' '},3)[2]);
+            var r = new StringReader(response.Split(new char[]{' '},3)[2]);
 
             return new IMAP_r_u_Flags(r.ReadParenthesized().Split(' '));
         }
@@ -61,7 +57,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* FLAGS (");
             for(int i=0;i<Flags.Length;i++){
                 if(i > 0){

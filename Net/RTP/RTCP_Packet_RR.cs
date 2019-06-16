@@ -83,7 +83,7 @@ namespace LumiSoft.Net.RTP
 
             SSRC = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
             for(int i=0;i<reportBlockCount;i++){
-                RTCP_Packet_ReportBlock reportBlock = new RTCP_Packet_ReportBlock();
+                var reportBlock = new RTCP_Packet_ReportBlock();
                 reportBlock.Parse(buffer,offset);
                 ReportBlocks.Add(reportBlock);
                 offset += 24;
@@ -162,7 +162,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns RR packet as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.AppendLine("Type: RR");
             retVal.AppendLine("Version: " + m_Version);            
             retVal.AppendLine("SSRC: " + SSRC);

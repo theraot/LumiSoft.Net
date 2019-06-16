@@ -36,26 +36,17 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised when any of the arguments contains invalid value.</exception>
         internal SIP_UA_Registration(SIP_Stack stack,SIP_Uri server,string aor,AbsoluteUri contact,int expires)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-            if(server == null){
-                throw new ArgumentNullException("server");
-            }
             if(aor == null){
                 throw new ArgumentNullException("aor");
             }
             if(aor == string.Empty){
                 throw new ArgumentException("Argument 'aor' value must be specified.");
             }
-            if(contact == null){
-                throw new ArgumentNullException("contact");
-            }
 
-            m_pStack          = stack;
-            m_pServer         = server;
+            m_pStack          = stack ?? throw new ArgumentNullException("stack");
+            m_pServer         = server ?? throw new ArgumentNullException("server");
             m_AOR             = aor;
-            m_pContact        = contact;
+            m_pContact        = contact ?? throw new ArgumentNullException("contact");
             m_RefreshInterval = expires;
 
             m_pContacts = new List<AbsoluteUri>();
@@ -136,12 +127,12 @@ namespace LumiSoft.Net.SIP.Stack
             if(this.AutoFixContact && (m_pContact is SIP_Uri)){
                 // If Via: received or rport paramter won't match to our sent-by, use received and rport to construct new contact value.
                    
-                SIP_Uri       cContact    = ((SIP_Uri)m_pContact);
-                IPAddress     cContactIP  = Net_Utils.IsIPAddress(cContact.Host) ? IPAddress.Parse(cContact.Host) : null;
-                SIP_t_ViaParm via         = e.Response.Via.GetTopMostValue();
-                if(via != null && cContactIP != null){
-                    IPEndPoint ep = new IPEndPoint(via.Received != null ? via.Received : cContactIP,via.RPort > 0 ? via.RPort : cContact.Port);
-                    if(!cContactIP.Equals(ep.Address) || cContact.Port != via.RPort){
+                var       cContact    = ((SIP_Uri)m_pContact);
+                var     cContactIP  = Net_Utils.IsIPAddress(cContact.Host) ? IPAddress.Parse(cContact.Host) : null;
+                var via         = e.Response.Via.GetTopMostValue();
+                if (via != null && cContactIP != null){
+                    var ep = new IPEndPoint(via.Received != null ? via.Received : cContactIP,via.RPort > 0 ? via.RPort : cContact.Port);
+                    if (!cContactIP.Equals(ep.Address) || cContact.Port != via.RPort){
                         // Unregister old contact.
                         BeginUnregister(false);
 
@@ -211,7 +202,7 @@ namespace LumiSoft.Net.SIP.Stack
                              "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
             */
 
-            SIP_Request register = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
+            var register = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
             register.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
             register.Route.Add(m_pServer.ToString());
             register.Contact.Add("<" + this.Contact + ">;expires=" + m_RefreshInterval);
@@ -243,7 +234,7 @@ namespace LumiSoft.Net.SIP.Stack
                                  "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
                 */
 
-                SIP_Request unregister = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
+                var unregister = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
                 unregister.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
                 unregister.Route.Add(m_pServer.ToString());
                 unregister.Contact.Add("<" + this.Contact + ">;expires=0");

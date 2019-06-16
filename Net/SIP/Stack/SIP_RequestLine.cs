@@ -26,12 +26,9 @@ namespace LumiSoft.Net.SIP.Stack
             if(!SIP_Utils.IsToken(method)){
                 throw new ArgumentException("Argument 'method' value must be token.");
             }
-            if(uri == null){
-                throw new ArgumentNullException("uri");
-            }
 
             m_Method  = method.ToUpper();
-            m_pUri    = uri;
+            m_pUri    = uri ?? throw new ArgumentNullException("uri");
             m_Version = "SIP/2.0";
         }
 
@@ -77,11 +74,7 @@ namespace LumiSoft.Net.SIP.Stack
             get{ return m_pUri; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Uri");
-                }
-
-                m_pUri = value;
+                m_pUri = value ?? throw new ArgumentNullException("Uri");
             }
         }
 

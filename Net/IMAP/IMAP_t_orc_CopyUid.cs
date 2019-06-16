@@ -16,16 +16,9 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceSeqSet</b> or <b>targetSeqSet</b> is null reference.</exception>
         public IMAP_t_orc_CopyUid(long targetMailboxUid,IMAP_t_SeqSet sourceSeqSet,IMAP_t_SeqSet targetSeqSet)
         {
-            if(sourceSeqSet == null){
-                throw new ArgumentNullException("sourceSeqSet");
-            }
-            if(targetSeqSet == null){
-                throw new ArgumentNullException("targetSeqSet");
-            }
-
             TargetMailboxUid = targetMailboxUid;
-            SourceSeqSet    = sourceSeqSet;
-            TargetSeqSet    = targetSeqSet;
+            SourceSeqSet    = sourceSeqSet ?? throw new ArgumentNullException("sourceSeqSet");
+            TargetSeqSet    = targetSeqSet ?? throw new ArgumentNullException("targetSeqSet");
         }
 
         /// <summary>
@@ -50,8 +43,8 @@ namespace LumiSoft.Net.IMAP
                     mailbox with the stated UID(s).
             */
 
-            string[] code_mailboxUid_sourceSeqSet_targetSeqSet = value.Split(new char[]{' '},4);
-            if(!string.Equals("COPYUID",code_mailboxUid_sourceSeqSet_targetSeqSet[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_mailboxUid_sourceSeqSet_targetSeqSet = value.Split(new char[]{' '},4);
+            if (!string.Equals("COPYUID",code_mailboxUid_sourceSeqSet_targetSeqSet[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid COPYUID response value.","value");
             }
             if(code_mailboxUid_sourceSeqSet_targetSeqSet.Length != 4){

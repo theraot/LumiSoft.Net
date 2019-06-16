@@ -28,12 +28,9 @@ namespace LumiSoft.Net.AUTH
             if(userName == string.Empty){
                 throw new ArgumentException("Argument 'username' value must be specified.","userName");
             }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
 
             m_UserName = userName;
-            m_Password = password;
+            m_Password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>

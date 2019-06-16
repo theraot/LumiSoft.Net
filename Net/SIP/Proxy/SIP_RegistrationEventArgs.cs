@@ -14,11 +14,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>registration</b> is null reference.</exception>
         public SIP_RegistrationEventArgs(SIP_Registration registration)
         {
-            if(registration == null){
-                throw new ArgumentNullException("registration");
-            }
-
-            Registration = registration;
+            Registration = registration ?? throw new ArgumentNullException("registration");
         }
 
         /// <summary>

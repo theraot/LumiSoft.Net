@@ -29,19 +29,16 @@ namespace LumiSoft.Net.SDP
             // a=<attribute>:<value>
 
             // Remove a=
-            StringReader r = new StringReader(aValue);
+            var r = new StringReader(aValue);
             r.QuotedReadToDelimiter('=');
 
             //--- <attribute> ------------------------------------------------------------
-            string name = "";
-            string word = r.QuotedReadToDelimiter(':');
-            if(word == null){
-                throw new Exception("SDP message \"a\" field <attribute> name is missing !");
-            }
-            name = word;
+            var name = "";
+            var word = r.QuotedReadToDelimiter(':');
+            name = word ?? throw new Exception("SDP message \"a\" field <attribute> name is missing !");
 
             //--- <value> ----------------------------------------------------------------
-            string value ="";
+            var value ="";
             word = r.ReadToEnd();
             if(word != null){
                 value = word;

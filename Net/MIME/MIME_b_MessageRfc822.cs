@@ -43,7 +43,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("stream");
             }
 
-            MIME_b_MessageRfc822 retVal = new MIME_b_MessageRfc822();
+            var retVal = new MIME_b_MessageRfc822();
             retVal.m_pMessage = Mail_Message.ParseFromStream(stream);
 
             return retVal;

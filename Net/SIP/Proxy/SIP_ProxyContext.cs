@@ -42,16 +42,9 @@ namespace LumiSoft.Net.SIP.Proxy
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> or <b>targetURI</b> is null reference.</exception>
             public TargetHandler(SIP_ProxyContext owner,SIP_Flow flow,SIP_Uri targetUri,bool addRecordRoute,bool isRecursed)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-                if(targetUri == null){
-                    throw new ArgumentNullException("targetUri");
-                }
-
-                m_pOwner         = owner; 
+                m_pOwner         = owner ?? throw new ArgumentNullException("owner"); 
                 m_pFlow          = flow;
-                m_pTargetUri     = targetUri;
+                m_pTargetUri     = targetUri ?? throw new ArgumentNullException("targetUri");
                 IsRecordingRoute = addRecordRoute;
                 IsRecursed     = isRecursed;
                                 
@@ -213,8 +206,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 
                 // NOTE: ACK don't add Record-route header.
                 if(m_pHops.Count > 0 && IsRecordingRoute && m_pRequest.RequestLine.Method != SIP_Methods.ACK){
-                    string recordRoute = m_pOwner.Proxy.Stack.TransportLayer.GetRecordRoute(m_pHops.Peek().Transport);
-                    if(recordRoute != null){
+                    var recordRoute = m_pOwner.Proxy.Stack.TransportLayer.GetRecordRoute(m_pHops.Peek().Transport);
+                    if (recordRoute != null){
                         m_pRequest.RecordRoute.Add(recordRoute);
                     }
                 }
@@ -485,8 +478,8 @@ namespace LumiSoft.Net.SIP.Proxy
                     throw new InvalidOperationException("No more hop(s).");
                 }
 
-                SIP_Hop hop = m_pHops.Dequeue();
-                
+                var hop = m_pHops.Dequeue();
+
                 SendToFlow(m_pOwner.Proxy.Stack.TransportLayer.GetOrCreateFlow(hop.Transport,null,hop.EndPoint),m_pRequest.Copy());
             }
 
@@ -516,7 +509,7 @@ namespace LumiSoft.Net.SIP.Proxy
                               target-flow = flowID                        
                 */
                 if(IsRecordingRoute && request.From.Tag != null && request.RecordRoute.GetAllValues().Length > 0){
-                    string flowInfo = request.From.Tag + ":" + m_pOwner.ServerTransaction.Flow.ID + "/" + flow.ID;
+                    var flowInfo = request.From.Tag + ":" + m_pOwner.ServerTransaction.Flow.ID + "/" + flow.ID;
                     ((SIP_Uri)request.RecordRoute.GetTopMostValue().Address.Uri).Parameters.Add("flowInfo",flowInfo);
                 }
 
@@ -699,15 +692,6 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal SIP_ProxyContext(SIP_Proxy proxy,SIP_ServerTransaction transaction,SIP_Request request,bool addRecordRoute,SIP_ForkingMode forkingMode,bool isB2BUA,bool noCancel,bool noRecurse,SIP_ProxyTarget[] targets)
         {
-            if(proxy == null){
-                throw new ArgumentNullException("proxy");
-            }
-            if(transaction == null){
-                throw new ArgumentNullException("transaction");
-            }
-            if(request == null){
-                throw new ArgumentNullException("request");
-            }
             if(targets == null){
                 throw new ArgumentNullException("targets");
             }
@@ -715,13 +699,13 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentException("Argumnet 'targets' must contain at least 1 value.");
             }
 
-            m_pProxy = proxy;
+            m_pProxy = proxy ?? throw new ArgumentNullException("proxy");
 
-            m_pServerTransaction = transaction;
+            m_pServerTransaction = transaction ?? throw new ArgumentNullException("transaction");
             m_pServerTransaction.Canceled += new EventHandler(m_pServerTransaction_Canceled);
             m_pServerTransaction.Disposed += new EventHandler(m_pServerTransaction_Disposed);
 
-            m_pRequest       = request;
+            m_pRequest       = request ?? throw new ArgumentNullException("request");
             m_AddRecordRoute = addRecordRoute;
             m_ForkingMode    = forkingMode;
             m_IsB2BUA        = isB2BUA;
@@ -852,7 +836,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Only use destination with the highest q value.
                 // We already have ordered highest to lowest, so just get first destination.
                 if(m_ForkingMode == SIP_ForkingMode.None){
-                    TargetHandler handler = m_pTargets.Dequeue();
+                    var handler = m_pTargets.Dequeue();
                     m_pTargetsHandlers.Add(handler);
                     handler.Start();
                 }
@@ -860,14 +844,14 @@ namespace LumiSoft.Net.SIP.Proxy
                 else if(m_ForkingMode == SIP_ForkingMode.Parallel){
                     // NOTE: If target count == 1 and transport exception, target may Dispose proxy context., so we need to handle it.
                     while(!IsDisposed && m_pTargets.Count > 0){
-                        TargetHandler handler = m_pTargets.Dequeue();
+                        var handler = m_pTargets.Dequeue();
                         m_pTargetsHandlers.Add(handler);
                         handler.Start();
                     }
                 }
                 // Start processing destinations with highest q value to lowest.
                 else if(m_ForkingMode == SIP_ForkingMode.Sequential){
-                    TargetHandler handler = m_pTargets.Dequeue();
+                    var handler = m_pTargets.Dequeue();
                     m_pTargetsHandlers.Add(handler);
                     handler.Start();
                 }
@@ -992,7 +976,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
                 if(response.StatusCodeType == SIP_StatusCodeType.Redirection && !m_NoRecurse && !handler.IsRecursed){
                     // Get SIP contacts and remove them from response.
-                    SIP_t_ContactParam[] contacts = response.Contact.GetAllValues();
+                    var contacts = response.Contact.GetAllValues();
                     // Remove all contacts from response, we add non-SIP URIs back.
                     response.Contact.RemoveAll();
                     foreach(SIP_t_ContactParam contact in contacts){
@@ -1015,14 +999,14 @@ namespace LumiSoft.Net.SIP.Proxy
                     if(m_pTargets.Count > 0){
                         if(m_ForkingMode == SIP_ForkingMode.Parallel){
                             while(m_pTargets.Count > 0){
-                                TargetHandler h = m_pTargets.Dequeue();
+                                var h = m_pTargets.Dequeue();
                                 m_pTargetsHandlers.Add(handler);
                                 h.Start();
                             }
                         }
                         // Just fork next.
                         else{
-                            TargetHandler h = m_pTargets.Dequeue();
+                            var h = m_pTargets.Dequeue();
                             m_pTargetsHandlers.Add(handler);
                             h.Start();
                         }
@@ -1087,7 +1071,7 @@ namespace LumiSoft.Net.SIP.Proxy
                         // Do nothing, 6xx is already handled in setp 5.
                     }
                     else if(m_pTargets.Count > 0){
-                        TargetHandler h = m_pTargets.Dequeue();
+                        var h = m_pTargets.Dequeue();
                         m_pTargetsHandlers.Add(handler);
                         h.Start();
 
@@ -1200,10 +1184,10 @@ namespace LumiSoft.Net.SIP.Proxy
                     this upstream response before sending it.
                 */
                 
-                SIP_Request originalRequest = m_pServerTransaction.Request;
+                var originalRequest = m_pServerTransaction.Request;
 
                 // We need to use caller original request to construct response from proxied response.
-                SIP_Response b2buaResponse = response.Copy();
+                var b2buaResponse = response.Copy();
                 b2buaResponse.Via.RemoveAll();
                 b2buaResponse.Via.AddToTop(originalRequest.Via.GetTopMostValue().ToStringValue());
                 b2buaResponse.CallID = originalRequest.CallID;

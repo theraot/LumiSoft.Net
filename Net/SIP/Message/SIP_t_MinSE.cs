@@ -66,8 +66,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Parse address
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Min-SE delta-seconds value is missing !");
             }
             try{
@@ -91,8 +91,8 @@ namespace LumiSoft.Net.SIP.Message
                 Min-SE = delta-seconds *(SEMI generic-param)
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // Add address
             retVal.Append(m_Time.ToString());
 

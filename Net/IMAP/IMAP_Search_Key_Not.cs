@@ -17,11 +17,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>key</b> is null reference.</exception>
         public IMAP_Search_Key_Not(IMAP_Search_Key key)
         {
-            if(key == null){
-                throw new ArgumentNullException("key");
-            }
-
-            SearchKey = key;
+            SearchKey = key ?? throw new ArgumentNullException("key");
         }
 
         /// <summary>
@@ -37,8 +33,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"NOT",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"NOT",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'NOT' key.");
             }
 

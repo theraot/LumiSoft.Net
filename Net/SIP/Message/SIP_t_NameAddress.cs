@@ -44,12 +44,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
         public SIP_t_NameAddress(string displayName,AbsoluteUri uri)
         {
-            if(uri == null){
-                throw new ArgumentNullException("uri");
-            }
-
             this.DisplayName = displayName;
-            this.Uri         = uri;
+            this.Uri         = uri ?? throw new ArgumentNullException("uri");
         }
 
         /// <summary>
@@ -92,12 +88,12 @@ namespace LumiSoft.Net.SIP.Message
             }
             else{
                 // Read while we get "<","," or EOF.
-                StringBuilder buf = new StringBuilder();
-                while(true){
+                var buf = new StringBuilder();
+                while (true){
                     buf.Append(reader.ReadToFirstChar());
 
-                    string word = reader.ReadWord();
-                    if(string.IsNullOrEmpty(word)){
+                    var word = reader.ReadWord();
+                    if (string.IsNullOrEmpty(word)){
                         break;
                     }
 
@@ -164,11 +160,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_pUri; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pUri = value;
+                m_pUri = value ?? throw new ArgumentNullException("value");
             }
         }
 

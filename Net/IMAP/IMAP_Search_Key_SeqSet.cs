@@ -18,11 +18,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>seqSet</b> is null reference.</exception>
         public IMAP_Search_Key_SeqSet(IMAP_t_SeqSet seqSet)
         {
-            if(seqSet == null){
-                throw new ArgumentNullException("seqSet");
-            }
-
-            Value = seqSet;
+            Value = seqSet ?? throw new ArgumentNullException("seqSet");
         }
 
         /// <summary>
@@ -39,8 +35,8 @@ namespace LumiSoft.Net.IMAP
             }
 
             r.ReadToFirstChar();
-            string value = r.QuotedReadToDelimiter(' ');
-            if(value == null){
+            var value = r.QuotedReadToDelimiter(' ');
+            if (value == null){
                 throw new ParseException("Parse error: Invalid 'sequence-set' value.");
             }
             

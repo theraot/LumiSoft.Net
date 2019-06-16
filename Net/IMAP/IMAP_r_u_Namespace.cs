@@ -18,11 +18,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>personalNamespaces</b> is null reference.</exception>
         public IMAP_r_u_Namespace(IMAP_Namespace_Entry[] personalNamespaces,IMAP_Namespace_Entry[] otherUsersNamespaces,IMAP_Namespace_Entry[] sharedNamespaces)
         {
-            if(personalNamespaces == null){
-                throw new ArgumentNullException("personalNamespaces");
-            }
-
-            PersonalNamespaces   = personalNamespaces;
+            PersonalNamespaces   = personalNamespaces ?? throw new ArgumentNullException("personalNamespaces");
             OtherUsersNamespaces = otherUsersNamespaces;
             SharedNamespaces     = sharedNamespaces;
         }
@@ -64,7 +60,7 @@ namespace LumiSoft.Net.IMAP
                     S: A001 OK NAMESPACE command completed
             */
 
-            StringReader r = new StringReader(response);
+            var r = new StringReader(response);
             // Eat "*"
             r.ReadWord();
             // Eat "NAMESPACE"
@@ -72,11 +68,11 @@ namespace LumiSoft.Net.IMAP
             
             // Personal namespaces
             r.ReadToFirstChar();
-            List<IMAP_Namespace_Entry> personal = new List<IMAP_Namespace_Entry>();
-            if(r.SourceString.StartsWith("(")){
-                StringReader rList = new StringReader(r.ReadParenthesized());
-                while(rList.Available > 0){
-                    string[] items = TextUtils.SplitQuotedString(rList.ReadParenthesized(),' ',true);
+            var personal = new List<IMAP_Namespace_Entry>();
+            if (r.SourceString.StartsWith("(")){
+                var rList = new StringReader(r.ReadParenthesized());
+                while (rList.Available > 0){
+                    var items = TextUtils.SplitQuotedString(rList.ReadParenthesized(),' ',true);
                     personal.Add(new IMAP_Namespace_Entry(items[0],items[1][0]));
                 }
             }
@@ -87,11 +83,11 @@ namespace LumiSoft.Net.IMAP
 
             // Other users namespaces
             r.ReadToFirstChar();
-            List<IMAP_Namespace_Entry> other = new List<IMAP_Namespace_Entry>();
-            if(r.SourceString.StartsWith("(")){
-                StringReader rList = new StringReader(r.ReadParenthesized());
-                while(rList.Available > 0){
-                    string[] items = TextUtils.SplitQuotedString(rList.ReadParenthesized(),' ',true);
+            var other = new List<IMAP_Namespace_Entry>();
+            if (r.SourceString.StartsWith("(")){
+                var rList = new StringReader(r.ReadParenthesized());
+                while (rList.Available > 0){
+                    var items = TextUtils.SplitQuotedString(rList.ReadParenthesized(),' ',true);
                     other.Add(new IMAP_Namespace_Entry(items[0],items[1][0]));
                 }
             }
@@ -102,11 +98,11 @@ namespace LumiSoft.Net.IMAP
 
             // Shared namespaces
             r.ReadToFirstChar();
-            List<IMAP_Namespace_Entry> shared = new List<IMAP_Namespace_Entry>();
-            if(r.SourceString.StartsWith("(")){
-                StringReader rList = new StringReader(r.ReadParenthesized());
-                while(rList.Available > 0){
-                    string[] items = TextUtils.SplitQuotedString(rList.ReadParenthesized(),' ',true);
+            var shared = new List<IMAP_Namespace_Entry>();
+            if (r.SourceString.StartsWith("(")){
+                var rList = new StringReader(r.ReadParenthesized());
+                while (rList.Available > 0){
+                    var items = TextUtils.SplitQuotedString(rList.ReadParenthesized(),' ',true);
                     shared.Add(new IMAP_Namespace_Entry(items[0],items[1][0]));
                 }
             }
@@ -126,7 +122,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * NAMESPACE (("" "/")) NIL (("Public Folders/" "/"))
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* NAMESPACE ");
             if(PersonalNamespaces != null && PersonalNamespaces.Length > 0){
                 retVal.Append("(");

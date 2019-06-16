@@ -33,9 +33,9 @@ namespace LumiSoft.Net.WebDav
                 throw new ParseException("Invalid DAV:propstat value.");
             }
 
-            WebDav_PropStat retVAl = new WebDav_PropStat();
+            var retVAl = new WebDav_PropStat();
 
-            foreach(XmlNode node in propstatNode.ChildNodes){
+            foreach (XmlNode node in propstatNode.ChildNodes){
                 if(string.Equals(node.LocalName,"status",StringComparison.InvariantCultureIgnoreCase)){
                     retVAl.Status = node.ChildNodes[0].Value;
                 }

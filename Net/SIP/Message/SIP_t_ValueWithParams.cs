@@ -32,10 +32,10 @@ namespace LumiSoft.Net.SIP.Message
                 // We have parameter
                 if(reader.SourceString.StartsWith(";")){
                     reader.ReadSpecifiedLength(1);
-                    string paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
-                    if(paramString != ""){
-                        string[] name_value = paramString.Split(new char[]{'='},2);
-                        if(name_value.Length == 2){
+                    var paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
+                    if (paramString != ""){
+                        var name_value = paramString.Split(new char[]{'='},2);
+                        if (name_value.Length == 2){
                            this.Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
                         }
                         else{
@@ -60,8 +60,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns parameters string.</returns>
         protected string ParametersToString()
         {
-            StringBuilder retVal = new StringBuilder();
-            foreach(SIP_Parameter parameter in Parameters){
+            var retVal = new StringBuilder();
+            foreach (SIP_Parameter parameter in Parameters){
                 if(!string.IsNullOrEmpty(parameter.Value)){
                     if(TextUtils.IsToken(parameter.Value)){
                         retVal.Append(";" + parameter.Name + "=" + parameter.Value);

@@ -19,22 +19,16 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public SMTP_e_Ehlo(SMTP_Session session,string domain,SMTP_Reply reply)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
             if(domain == null){
                 throw new ArgumentNullException("domain");
             }
             if(domain == string.Empty){
                 throw new ArgumentException("Argument 'domain' value must be sepcified.","domain");
             }
-            if(reply == null){
-                throw new ArgumentNullException("reply");
-            }
 
-            Session = session;
+            Session = session ?? throw new ArgumentNullException("session");
             Domain   = domain;
-            m_pReply   = reply;
+            m_pReply   = reply ?? throw new ArgumentNullException("reply");
         }
 
         /// <summary>
@@ -56,11 +50,7 @@ namespace LumiSoft.Net.SMTP.Server
             get{ return m_pReply; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Reply");
-                }
-
-                m_pReply = value;
+                m_pReply = value ?? throw new ArgumentNullException("Reply");
             }
         }
     }

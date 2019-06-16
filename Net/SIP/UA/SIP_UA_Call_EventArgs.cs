@@ -15,11 +15,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <exception cref="ArgumentNullException">Is called when <b>call</b> is null reference.</exception>
         public SIP_UA_Call_EventArgs(SIP_UA_Call call)
         {
-            if(call == null){
-                throw new ArgumentNullException("call");
-            }
-
-            Call = call;
+            Call = call ?? throw new ArgumentNullException("call");
         }
 
         /// <summary>

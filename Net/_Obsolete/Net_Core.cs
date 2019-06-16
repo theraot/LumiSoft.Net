@@ -58,13 +58,14 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ip");
             }
 
-            string retVal = ip.ToString();
-			try{
-                Dns_Client dns = new Dns_Client();
-                DnsServerResponse response = dns.Query(ip.ToString(),DNS_QType.PTR);
-                if(response.ResponseCode == DNS_RCode.NO_ERROR){
-                    DNS_rr_PTR[] ptrs = response.GetPTRRecords();
-                    if(ptrs.Length > 0){
+            var retVal = ip.ToString();
+            try
+            {
+                var dns = new Dns_Client();
+                var response = dns.Query(ip.ToString(),DNS_QType.PTR);
+                if (response.ResponseCode == DNS_RCode.NO_ERROR){
+                    var ptrs = response.GetPTRRecords();
+                    if (ptrs.Length > 0){
                         retVal = ptrs[0].DomainName;
                     }                    
                 }
@@ -83,8 +84,8 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public static string GetArgsText(string input,string cmdTxtToRemove)
 		{
-			string buff = input.Trim();
-			if(buff.Length >= cmdTxtToRemove.Length){
+			var buff = input.Trim();
+            if (buff.Length >= cmdTxtToRemove.Length){
 				buff = buff.Substring(cmdTxtToRemove.Length);
 			}
 			buff = buff.Trim();
@@ -192,8 +193,8 @@ namespace LumiSoft.Net
 			}
 
 			// Convert chars to bytes
-			byte[] base64LoockUpTable = new byte[64];
-			for(int i=0;i<64;i++){
+			var base64LoockUpTable = new byte[64];
+            for (int i=0;i<64;i++){
 				base64LoockUpTable[i] = (byte)base64Chars[i];
 			}
 						
@@ -210,9 +211,9 @@ namespace LumiSoft.Net
 			}
 
 			// Construc return valu buffer
-			byte[] retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];  // * 2 - CRLF
+			var retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];  // * 2 - CRLF
 
-			int lineBytes = 0;
+            int lineBytes = 0;
 			// Loop all 3 bye blocks
 			int position = 0; 
 			for(int i=0;i<data.Length;i+=3){
@@ -320,8 +321,8 @@ namespace LumiSoft.Net
 			}
 
 			//--- Create decode table ---------------------//
-			byte[] decodeTable = new byte[128];
-			for(int i=0;i<128;i++){
+			var decodeTable = new byte[128];
+            for (int i=0;i<128;i++){
 				int mappingIndex = -1;
 				for(int bc=0;bc<base64Chars.Length;bc++){
 					if(i == base64Chars[bc]){
@@ -339,13 +340,13 @@ namespace LumiSoft.Net
 			}
 			//---------------------------------------------//
 
-			byte[] decodedDataBuffer  = new byte[((base64Data.Length * 6) / 8) + 4];
-			int    decodedBytesCount  = 0;
+			var decodedDataBuffer  = new byte[((base64Data.Length * 6) / 8) + 4];
+            int    decodedBytesCount  = 0;
 			int    nByteInBase64Block = 0;
-			byte[] decodedBlock       = new byte[3];
-			byte[] base64Block        = new byte[4];
+			var decodedBlock       = new byte[3];
+            var base64Block        = new byte[4];
 
-			for(int i=0;i<base64Data.Length;i++){
+            for (int i=0;i<base64Data.Length;i++){
 				byte b = base64Data[i];
 
 				// Read 4 byte base64 block and process it 			
@@ -403,8 +404,8 @@ namespace LumiSoft.Net
 
 			// There is some decoded bytes, construct return value
 			if(decodedBytesCount > -1){
-				byte[] retVal = new byte[decodedBytesCount];
-				Array.Copy(decodedDataBuffer,0,retVal,0,decodedBytesCount);
+				var retVal = new byte[decodedBytesCount];
+                Array.Copy(decodedDataBuffer,0,retVal,0,decodedBytesCount);
 				return retVal;
 			}
 			// There is no decoded bytes
@@ -442,8 +443,8 @@ namespace LumiSoft.Net
 
 			int lineLength = 0;
 			// Encode bytes <= 33 , >= 126 and 61 (=)
-			MemoryStream retVal = new MemoryStream();
-			foreach(byte b in data){
+			var retVal = new MemoryStream();
+            foreach (byte b in data){
 				// Suggested line length is exceeded, add soft line break
 				if(lineLength > 75){
 					retVal.Write(new byte[]{(byte)'=',(byte)'\r',(byte)'\n'},0,3);
@@ -532,15 +533,15 @@ namespace LumiSoft.Net
 					with the Quoted-Printable encoding, "soft" line breaks
 			*/
 
-			MemoryStream msRetVal = new MemoryStream();
-			MemoryStream msSourceStream = new MemoryStream(data);
+			var msRetVal = new MemoryStream();
+            var msSourceStream = new MemoryStream(data);
 
-			int b = msSourceStream.ReadByte();
+            int b = msSourceStream.ReadByte();
 			while(b > -1){
 				// Encoded 8-bit byte(=XX) or soft line break(=CRLF)
 				if(b == '='){
-					byte[] buffer = new byte[2];
-					int nCount = msSourceStream.Read(buffer,0,2);
+					var buffer = new byte[2];
+                    int nCount = msSourceStream.Read(buffer,0,2);
 					if(nCount == 2){
 						// Soft line break, line splitted, just skip CRLF
 						if(buffer[0] == '\r' && buffer[1] == '\n'){
@@ -610,8 +611,8 @@ namespace LumiSoft.Net
 					=?iso-8859-1?B?bORs5D8=?=
 			*/
 
-			StringBuilder retVal = new StringBuilder();
-			int offset = 0;
+			var retVal = new StringBuilder();
+            int offset = 0;
 			while(offset < text.Length){
 				// Search start and end of canonical entry
 				int iStart = text.IndexOf("=?",offset);
@@ -629,13 +630,13 @@ namespace LumiSoft.Net
 
 					while(true){
 						// Check if it is encoded entry
-						string[] charset_type_text = text.Substring(iStart + 2,iEnd - iStart - 2).Split('?');
-						if(charset_type_text.Length == 3){
+						var charset_type_text = text.Substring(iStart + 2,iEnd - iStart - 2).Split('?');
+                        if (charset_type_text.Length == 3){
 							// Try to parse encoded text
 							try{
-								Encoding enc = Encoding.GetEncoding(charset_type_text[0]);
-								// QEncoded text
-								if(charset_type_text[1].ToLower() == "q"){
+								var enc = Encoding.GetEncoding(charset_type_text[0]);
+                                // QEncoded text
+                                if (charset_type_text[1].ToLower() == "q"){
 									retVal.Append(Core.QDecode(enc,charset_type_text[2]));
 								}
 								// Base64 encoded text
@@ -702,8 +703,8 @@ namespace LumiSoft.Net
 
 			// Contains non ascii chars, must to encode.
 			if(!IsAscii(str)){
-				string retVal = "=?" + charSet + "?" + "B?";
-				retVal += Convert.ToBase64String(System.Text.Encoding.GetEncoding(charSet).GetBytes(str));
+				var retVal = "=?" + charSet + "?" + "B?";
+                retVal += Convert.ToBase64String(System.Text.Encoding.GetEncoding(charSet).GetBytes(str));
 				retVal += "?=";
 
 				return retVal;
@@ -742,14 +743,14 @@ namespace LumiSoft.Net
 			*/
 
 			// Base64 chars, except '/' is replaced with ','
-			char[] base64Chars = new char[]{
+			var base64Chars = new char[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
 			};
 
-			MemoryStream retVal = new MemoryStream();
-			for(int i=0;i<text.Length;i++){
+            var retVal = new MemoryStream();
+            for (int i=0;i<text.Length;i++){
 				char c = text[i];
 
 				// The character "&" (0x26) is represented by the two-octet sequence "&-".
@@ -766,8 +767,8 @@ namespace LumiSoft.Net
 					// For example: öö may not encoded as &APY-&APY-, but must be &APYA9g-.
 
 					// Get all continuous chars that need encoding and encode them as one block
-					MemoryStream encodeBlock = new MemoryStream();
-					for(int ic=i;ic<text.Length;ic++){
+					var encodeBlock = new MemoryStream();
+                    for (int ic=i;ic<text.Length;ic++){
 						char cC = text[ic];
 
 						// Allowed char
@@ -781,8 +782,8 @@ namespace LumiSoft.Net
                     }
 
 					// Ecode block
-					byte[] encodedData = Core.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
-					retVal.WriteByte((byte)'&');
+					var encodedData = Core.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
+                    retVal.WriteByte((byte)'&');
 					retVal.Write(encodedData,0,encodedData.Length);
 					retVal.WriteByte((byte)'-');
 				}
@@ -821,14 +822,14 @@ namespace LumiSoft.Net
 			*/
 
             // Base64 chars, except '/' is replaced with ','
-			char[] base64Chars = new char[]{
+			var base64Chars = new char[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
 			};
 
-			StringBuilder retVal = new StringBuilder();
-			for(int i=0;i<text.Length;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<text.Length;i++){
 				char c = text[i];
 
 				// Encoded block or escaped &
@@ -864,12 +865,12 @@ namespace LumiSoft.Net
 					// Decode block
 					else{
 						// Get encoded block
-						byte[] encodedBlock = System.Text.Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
-		
-						// Convert to UTF-16 char						
-						byte[] decodedData = Core.Base64DecodeEx(encodedBlock,base64Chars);
-						char[] decodedChars = new char[decodedData.Length / 2];                        
-						for(int iC=0;iC<decodedChars.Length;iC++){
+						var encodedBlock = System.Text.Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
+
+                        // Convert to UTF-16 char						
+                        var decodedData = Core.Base64DecodeEx(encodedBlock,base64Chars);
+                        var decodedChars = new char[decodedData.Length / 2];
+                        for (int iC=0;iC<decodedChars.Length;iC++){
 							decodedChars[iC] = (char)(decodedData[iC * 2] << 8 | decodedData[(iC * 2) + 1]);
 						}
                         
@@ -942,11 +943,11 @@ namespace LumiSoft.Net
         /// <returns></returns>
         public static int CompareIP(IPAddress source,IPAddress destination)
         {
-            byte[] sourceIpBytes      = source.GetAddressBytes();
-            byte[] destinationIpBytes = destination.GetAddressBytes();
+            var sourceIpBytes      = source.GetAddressBytes();
+            var destinationIpBytes = destination.GetAddressBytes();
 
             // IPv4 and IPv6
-            if(sourceIpBytes.Length < destinationIpBytes.Length){
+            if (sourceIpBytes.Length < destinationIpBytes.Length){
                 return 1;
             }
             // IPv6 and IPv4
@@ -999,9 +1000,9 @@ namespace LumiSoft.Net
             }
 
 			if(ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork){
-				byte[] ipBytes = ip.GetAddressBytes();
+				var ipBytes = ip.GetAddressBytes();
 
-				/* Private IPs:
+                /* Private IPs:
 					First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
 					First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
 					First Octet = 10 (Example: 10.X.X.X)
@@ -1009,7 +1010,7 @@ namespace LumiSoft.Net
 
 				*/
 
-				if(ipBytes[0] == 192 && ipBytes[1] == 168){
+                if (ipBytes[0] == 192 && ipBytes[1] == 168){
 					return true;
 				}
 				if(ipBytes[0] == 172 && ipBytes[1] >= 16 && ipBytes[1] <= 31){
@@ -1035,20 +1036,20 @@ namespace LumiSoft.Net
         [Obsolete("Use Net_Utils.CreateSocket instead of it")]
         public static Socket CreateSocket(IPEndPoint localEP,ProtocolType protocolType)
         {
-            SocketType socketType = SocketType.Stream;
-            if(protocolType == ProtocolType.Udp){
+            var socketType = SocketType.Stream;
+            if (protocolType == ProtocolType.Udp){
                 socketType = SocketType.Dgram;
             }
                         
             if(localEP.AddressFamily == AddressFamily.InterNetwork){
-                Socket socket = new Socket(AddressFamily.InterNetwork,socketType,protocolType);
+                var socket = new Socket(AddressFamily.InterNetwork,socketType,protocolType);
                 socket.Bind(localEP);
 
                 return socket;
             }
 
             if(localEP.AddressFamily == AddressFamily.InterNetworkV6){
-                Socket socket = new Socket(AddressFamily.InterNetworkV6,socketType,protocolType);
+                var socket = new Socket(AddressFamily.InterNetworkV6,socketType,protocolType);
                 socket.Bind(localEP);
 
                 return socket;
@@ -1093,14 +1094,14 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public static byte[] ToHex(byte[] data)
 		{
-			char[] hexChars = new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+			var hexChars = new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
-			MemoryStream retVal = new MemoryStream(data.Length * 2);
-			foreach(byte b in data){
-				byte[] hexByte = new byte[2];
-                
-				// left 4 bit of byte
-				hexByte[0] = (byte)hexChars[(b & 0xF0) >> 4];
+            var retVal = new MemoryStream(data.Length * 2);
+            foreach (byte b in data){
+				var hexByte = new byte[2];
+
+                // left 4 bit of byte
+                hexByte[0] = (byte)hexChars[(b & 0xF0) >> 4];
 
 				// right 4 bit of byte
 				hexByte[1] = (byte)hexChars[b & 0x0F];
@@ -1123,12 +1124,12 @@ namespace LumiSoft.Net
 				throw new Exception("Illegal hex data, hex data must be in two bytes pairs, for example: 0F,FF,A3,... .");
 			}
 
-			MemoryStream retVal = new MemoryStream(hexData.Length / 2);
-			// Loop hex value pairs
-			for(int i=0;i<hexData.Length;i+=2){
-				byte[] hexPairInDecimal = new byte[2];
-				// We need to convert hex char to decimal number, for example F = 15
-				for(int h=0;h<2;h++){
+			var retVal = new MemoryStream(hexData.Length / 2);
+            // Loop hex value pairs
+            for (int i=0;i<hexData.Length;i+=2){
+				var hexPairInDecimal = new byte[2];
+                // We need to convert hex char to decimal number, for example F = 15
+                for (int h=0;h<2;h++){
 					if(((char)hexData[i + h]) == '0'){
 						hexPairInDecimal[h] = 0;
 					}
@@ -1196,9 +1197,9 @@ namespace LumiSoft.Net
         public static string ComputeMd5(string text,bool hex)
         {
             System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();			
-			byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(text));
+			var hash = md5.ComputeHash(Encoding.Default.GetBytes(text));
 
-            if(hex){
+            if (hex){
 			    return ToHexString(System.Text.Encoding.Default.GetString(hash)).ToLower();
             }
 

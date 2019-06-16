@@ -86,12 +86,12 @@ namespace LumiSoft.Net.AUTH
         /// <param name="digestResponse">Client returned digest response.</param>
         private void Parse(string digestResponse)
         {
-            string[] parameters = TextUtils.SplitQuotedString(digestResponse,',');
-            foreach(string parameter in parameters){
-                string[] name_value = parameter.Split(new char[]{'='},2);
-                string   name       = name_value[0].Trim();
+            var parameters = TextUtils.SplitQuotedString(digestResponse,',');
+            foreach (string parameter in parameters){
+                var name_value = parameter.Split(new char[]{'='},2);
+                var   name       = name_value[0].Trim();
 
-                if(name_value.Length == 2){
+                if (name_value.Length == 2){
                     if(name.ToLower() == "realm"){
                         m_Realm = TextUtils.UnQuoteString(name_value[1]);
                     }
@@ -162,10 +162,10 @@ namespace LumiSoft.Net.AUTH
                 specified.
             */
 
-            string a1 = "";
-            string a2 = "";
+            var a1 = "";
+            var a2 = "";
             // Create A1
-            if(this.Algorithm == "" || this.Algorithm.ToLower() == "md5"){
+            if (this.Algorithm == "" || this.Algorithm.ToLower() == "md5"){
                 a1 = userName + ":" + this.Realm + ":" + password;
             }
             else if(this.Algorithm.ToLower() == "md5-sess"){
@@ -254,8 +254,8 @@ namespace LumiSoft.Net.AUTH
                 unc = unqoute string
             */
 
-            string A1 = "";
-            if(string.IsNullOrEmpty(this.Algorithm) || this.Algorithm.ToLower() == "md5"){
+            var A1 = "";
+            if (string.IsNullOrEmpty(this.Algorithm) || this.Algorithm.ToLower() == "md5"){
                 A1 = userName + ":" + this.Realm + ":" + password;
             }
             else if(this.Algorithm.ToLower() == "md5-sess"){
@@ -265,8 +265,8 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentException("Invalid 'algorithm' value '" + this.Algorithm + "'.");
             }
 
-            string A2 = "";
-            if(string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
+            var A2 = "";
+            if (string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
                 A2 = this.RequestMethod + ":" + this.Uri;
             }
             else{
@@ -295,7 +295,7 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns digest string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("realm=\"" + m_Realm + "\",");
             retVal.Append("username=\"" + m_UserName + "\",");
             if(!string.IsNullOrEmpty(Qop)){
@@ -329,8 +329,8 @@ namespace LumiSoft.Net.AUTH
         {            
             // digest realm="",qop="",nonce="",opaque=""
 
-            StringBuilder retVal = new StringBuilder();
-            if(addAuthMethod){
+            var retVal = new StringBuilder();
+            if (addAuthMethod){
                 retVal.Append("digest ");
             }
             retVal.Append("realm=" + TextUtils.QuoteString(m_Realm) + ",");
@@ -365,16 +365,16 @@ namespace LumiSoft.Net.AUTH
             */
 
             
-            string response = "";
-            if(string.IsNullOrEmpty(m_Password)){
+            var response = "";
+            if (string.IsNullOrEmpty(m_Password)){
                 response = Response;
             }
             else{
                 response = CalculateResponse(m_UserName,m_Password);
             }
 
-            StringBuilder authData = new StringBuilder();
-            if(addAuthMethod){
+            var authData = new StringBuilder();
+            if (addAuthMethod){
                 authData.Append("digest ");
             }
             authData.Append("realm=\"" + m_Realm + "\",");
@@ -401,8 +401,8 @@ namespace LumiSoft.Net.AUTH
                 authData.Append("charset=" + m_Charset + ",");
             }
 
-            string retVal = authData.ToString().Trim();
-            if(retVal.EndsWith(",")){
+            var retVal = authData.ToString().Trim();
+            if (retVal.EndsWith(",")){
                 retVal = retVal.Substring(0,retVal.Length - 1);
             }
 

@@ -59,10 +59,10 @@ namespace LumiSoft.Net.DNS.Client
 		{
 			try{
 				if(m_pCache.Contains(qname + qtype)){
-					DnsCacheEntry entry = (DnsCacheEntry)m_pCache[qname + qtype];
+					var entry = (DnsCacheEntry)m_pCache[qname + qtype];
 
-					// If cache object isn't expired
-					if(entry.Time.AddSeconds(CacheTime) > DateTime.Now){
+                    // If cache object isn't expired
+                    if (entry.Time.AddSeconds(CacheTime) > DateTime.Now){
 						return entry.Answers;
 					}
 				}
@@ -115,10 +115,10 @@ namespace LumiSoft.Net.DNS.Client
 		public static byte[] SerializeCache()
 		{
             lock(m_pCache){
-			    MemoryStream retVal = new MemoryStream();
+			    var retVal = new MemoryStream();
 
-			    BinaryFormatter b = new BinaryFormatter();
-			    b.Serialize(retVal,m_pCache);
+                var b = new BinaryFormatter();
+                b.Serialize(retVal,m_pCache);
 
 			    return retVal.ToArray();
             }
@@ -131,10 +131,10 @@ namespace LumiSoft.Net.DNS.Client
 		public static void DeSerializeCache(byte[] cacheData)
 		{
             lock(m_pCache){
-			    MemoryStream retVal = new MemoryStream(cacheData);
+			    var retVal = new MemoryStream(cacheData);
 
-			    BinaryFormatter b = new BinaryFormatter();
-			    m_pCache = (Hashtable)b.Deserialize(retVal);
+                var b = new BinaryFormatter();
+                m_pCache = (Hashtable)b.Deserialize(retVal);
             }
 		}
 

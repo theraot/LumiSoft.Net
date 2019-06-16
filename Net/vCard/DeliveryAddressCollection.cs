@@ -38,7 +38,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="country">Country.</param>
         public void Add(DeliveryAddressType_enum type,string postOfficeAddress,string extendedAddress,string street,string locality,string region,string postalCode,string country)
         {   
-            string value = "" +
+            var value = "" +
                 postOfficeAddress + ";" +
                 extendedAddress + ";" +
                 street + ";" +
@@ -47,7 +47,7 @@ namespace LumiSoft.Net.Mime.vCard
                 postalCode + ";" +
                 country;
 
-            Item item = m_pOwner.Items.Add("ADR",DeliveryAddress.AddressTypeToString(type),"");
+            var item = m_pOwner.Items.Add("ADR",DeliveryAddress.AddressTypeToString(type),"");
             item.SetDecodedValue(value);
             m_pCollection.Add(new DeliveryAddress(item,type,postOfficeAddress,extendedAddress,street,locality,region,postalCode,country));
         }

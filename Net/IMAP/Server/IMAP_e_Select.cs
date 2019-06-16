@@ -16,15 +16,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>cmdTag</b> or <b>folder</b> is null reference.</exception>
         internal IMAP_e_Select(string cmdTag,string folder)
         {
-            if(cmdTag == null){
-                throw new ArgumentNullException("cmdTag");
-            }
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-
-            CmdTag = cmdTag;
-            Folder = folder;
+            CmdTag = cmdTag ?? throw new ArgumentNullException("cmdTag");
+            Folder = folder ?? throw new ArgumentNullException("folder");
 
             Flags = new List<string>();
             PermanentFlags = new List<string>();

@@ -15,11 +15,7 @@ namespace LumiSoft.Net.IMAP
         /// <param name="values">Search maching messages seqNo/UID(Depeneds on UID SEARCH) list.</param>
         public IMAP_r_u_Search(int[] values)
         {
-            if(values == null){
-                throw new ArgumentNullException("values");
-            }
-
-            Values = values;
+            Values = values ?? throw new ArgumentNullException("values");
         }
 
         /// <summary>
@@ -46,8 +42,8 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * SEARCH 2 3 6
             */
 
-            List<int> values = new List<int>();
-            if(response.Split(' ').Length > 2){
+            var values = new List<int>();
+            if (response.Split(' ').Length > 2){
                 foreach(string value in response.Split(new char[]{' '},3)[2].Split(' ')){
                     values.Add(Convert.ToInt32(value));
                 }
@@ -64,7 +60,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * SEARCH 2 3 6
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* SEARCH");
             foreach(int i in Values){
                 retVal.Append(" " + i.ToString());

@@ -56,11 +56,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // callid
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Replaces 'callid' value is missing !");
-            }
-            m_CallID = word;
+            var word = reader.ReadWord();
+            m_CallID = word ?? throw new SIP_ParseException("Replaces 'callid' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -80,8 +77,8 @@ namespace LumiSoft.Net.SIP.Message
                 early-flag      = "early-only"    
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // delta-seconds
             retVal.Append(m_CallID);
 
@@ -100,11 +97,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_CallID; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("CallID");
-                }
-
-                m_CallID = value;
+                m_CallID = value ?? throw new ArgumentNullException("CallID");
             }
         }
 
@@ -114,8 +107,8 @@ namespace LumiSoft.Net.SIP.Message
         public string ToTag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["to-tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["to-tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -138,8 +131,8 @@ namespace LumiSoft.Net.SIP.Message
         public string FromTag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["from-tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["from-tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

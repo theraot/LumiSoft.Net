@@ -45,14 +45,11 @@ namespace LumiSoft.Net.AUTH
             if(userName == string.Empty){
                 throw new ArgumentException("Argument 'username' value must be specified.","userName");
             }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
 
             m_Protocol   = protocol;
             m_ServerName = server;
             m_UserName   = userName;
-            m_Password   = password;
+            m_Password   = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>
@@ -91,7 +88,7 @@ namespace LumiSoft.Net.AUTH
                 m_State++;
 
                 // Parse server challenge.
-                AUTH_SASL_DigestMD5_Challenge challenge = AUTH_SASL_DigestMD5_Challenge.Parse(Encoding.UTF8.GetString(serverResponse));
+                var challenge = AUTH_SASL_DigestMD5_Challenge.Parse(Encoding.UTF8.GetString(serverResponse));
 
                 // Construct our response to server challenge.
                 m_pResponse = new AUTH_SASL_DigestMD5_Response(

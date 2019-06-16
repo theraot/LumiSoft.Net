@@ -16,11 +16,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         internal IMAP_e_Namespace(IMAP_r_ServerStatus response)
         {
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            m_pResponse = response;
+            m_pResponse = response ?? throw new ArgumentNullException("response");
         }
 
         /// <summary>
@@ -36,12 +32,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
     }

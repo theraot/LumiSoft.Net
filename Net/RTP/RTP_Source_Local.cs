@@ -48,8 +48,8 @@ namespace LumiSoft.Net.RTP
 
             packet.Source = this.SSRC;
 
-            RTCP_CompoundPacket p = new RTCP_CompoundPacket();
-            RTCP_Packet_RR rr = new RTCP_Packet_RR();
+            var p = new RTCP_CompoundPacket();
+            var rr = new RTCP_Packet_RR();
             rr.SSRC = this.SSRC;
             p.Packets.Add(packet);
 
@@ -68,11 +68,11 @@ namespace LumiSoft.Net.RTP
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
-            RTCP_CompoundPacket packet = new RTCP_CompoundPacket();
-            RTCP_Packet_RR rr = new RTCP_Packet_RR();
+            var packet = new RTCP_CompoundPacket();
+            var rr = new RTCP_Packet_RR();
             rr.SSRC = this.SSRC;
             packet.Packets.Add(rr);
-            RTCP_Packet_BYE bye = new RTCP_Packet_BYE();
+            var bye = new RTCP_Packet_BYE();
             bye.Sources = new uint[]{this.SSRC};
             if(!string.IsNullOrEmpty(closeReason)){
                 bye.LeavingReason = closeReason;

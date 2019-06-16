@@ -24,15 +24,15 @@ namespace LumiSoft.Net.UPnP
 
         private void Init(string url)
         {
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.Load(url);
 
-            StringWriter xmlString = new StringWriter();
+            var xmlString = new StringWriter();
             xml.WriteTo(new XmlTextWriter(xmlString));
             DeviceXml = xmlString.ToString();
 
             // Set up namespace manager for XPath   
-            XmlNamespaceManager ns = new XmlNamespaceManager(xml.NameTable);   
+            var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("n",xml.ChildNodes[1].NamespaceURI);
 
             BaseUrl          = xml.SelectSingleNode("n:root/n:URLBase",ns).InnerText;

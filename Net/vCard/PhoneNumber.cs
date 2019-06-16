@@ -36,8 +36,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="item">vCard TEL item.</param>
         internal static PhoneNumber Parse(Item item)
         {
-            PhoneNumberType_enum type = PhoneNumberType_enum.NotSpecified;
-            if(item.ParametersString.ToUpper().IndexOf("PREF") != -1){
+            var type = PhoneNumberType_enum.NotSpecified;
+            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1){
                 type |= PhoneNumberType_enum.Preferred;
             }
             if(item.ParametersString.ToUpper().IndexOf("HOME") != -1){
@@ -90,8 +90,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         internal static string PhoneTypeToString(PhoneNumberType_enum type)
         {
-            string retVal = "";
-            if((type & PhoneNumberType_enum.BBS) != 0){
+            var retVal = "";
+            if ((type & PhoneNumberType_enum.BBS) != 0){
                 retVal += "BBS,";
             }
             if((type & PhoneNumberType_enum.Car) != 0){

@@ -66,11 +66,8 @@ namespace LumiSoft.Net.SIP.Message
 
             // absoluteURI
             try{
-                string word = reader.ReadParenthesized();
-                if(word == null){
-                    throw new SIP_ParseException("Invalid Identity-Info 'absoluteURI' value !");
-                }
-                m_Uri = word;
+                var word = reader.ReadParenthesized();
+                m_Uri = word ?? throw new SIP_ParseException("Invalid Identity-Info 'absoluteURI' value !");
             }
             catch{
                 throw new SIP_ParseException("Invalid Identity-Info 'absoluteURI' value !");
@@ -94,8 +91,8 @@ namespace LumiSoft.Net.SIP.Message
                 ident-info-extension = generic-param
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // absoluteURI
             retVal.Append("<" + m_Uri + ">");
 
@@ -132,8 +129,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Alg
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["alg"];
-                if(parameter != null){
+                var parameter = this.Parameters["alg"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

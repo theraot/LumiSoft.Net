@@ -35,11 +35,7 @@ namespace LumiSoft.Net.SIP.Stack
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal SIP_FlowManager(SIP_TransportLayer owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pOwner = owner;
+                m_pOwner = owner ?? throw new ArgumentNullException("owner");
 
                 m_pFlows = new Dictionary<string,SIP_Flow>();
 
@@ -85,7 +81,7 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
                         catch(ObjectDisposedException x){
-                            string dummy = x.Message;
+                            var dummy = x.Message;
                         }
                     }
                 }
@@ -113,9 +109,9 @@ namespace LumiSoft.Net.SIP.Stack
                     throw new ArgumentNullException("transport");
                 }
                                                             
-                string flowID = localEP.ToString() + "-" + remoteEP.ToString() + "-" + transport.ToString();
+                var flowID = localEP.ToString() + "-" + remoteEP.ToString() + "-" + transport.ToString();
 
-                lock(m_pLock){
+                lock (m_pLock){
                     SIP_Flow flow = null;
                     if(m_pFlows.TryGetValue(flowID,out flow)){
                         return flow;
@@ -166,10 +162,10 @@ namespace LumiSoft.Net.SIP.Stack
                     throw new ArgumentNullException("session");
                 }
 
-                string flowID = session.LocalEndPoint.ToString() + "-" + session.RemoteEndPoint.ToString() + "-" + (session.IsSecureConnection ? SIP_Transport.TLS : SIP_Transport.TCP);
+                var flowID = session.LocalEndPoint.ToString() + "-" + session.RemoteEndPoint.ToString() + "-" + (session.IsSecureConnection ? SIP_Transport.TLS : SIP_Transport.TCP);
 
-                lock(m_pLock){
-                    SIP_Flow flow = new SIP_Flow(m_pOwner.Stack,session);
+                lock (m_pLock){
+                    var flow = new SIP_Flow(m_pOwner.Stack,session);
                     m_pFlows.Add(flowID,flow);
                     flow.IsDisposing += new EventHandler(delegate(object s,EventArgs e){
                         lock(m_pLock){
@@ -234,7 +230,7 @@ namespace LumiSoft.Net.SIP.Stack
             {
                 get{
                     lock(m_pLock){
-                        SIP_Flow[] retVal = new SIP_Flow[m_pFlows.Count];
+                        var retVal = new SIP_Flow[m_pFlows.Count];
                         m_pFlows.Values.CopyTo(retVal,0);
 
                         return retVal;
@@ -273,11 +269,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b> is null reference.</exception>
         internal SIP_TransportLayer(SIP_Stack stack)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-
-            Stack = stack;
+            Stack = stack ?? throw new ArgumentNullException("stack");
           
             UdpServer = new UDP_Server();
             UdpServer.PacketReceived += new EventHandler<UDP_e_PacketReceived>(m_pUdpServer_PacketReceived);
@@ -327,7 +319,7 @@ namespace LumiSoft.Net.SIP.Stack
         private void m_pUdpServer_PacketReceived(object sender,UDP_e_PacketReceived e)
         {
             try{
-                SIP_Flow flow = m_pFlowManager.GetOrCreateFlow(true,(IPEndPoint)e.Socket.LocalEndPoint,e.RemoteEP,SIP_Transport.UDP);
+                var flow = m_pFlowManager.GetOrCreateFlow(true,(IPEndPoint)e.Socket.LocalEndPoint,e.RemoteEP,SIP_Transport.UDP);
                 flow.OnUdpPacketReceived(e);
             }
             catch(Exception x){
@@ -468,15 +460,15 @@ namespace LumiSoft.Net.SIP.Stack
                         forward them, while a UA will discard, for example).
                     */
                                         
-                    SIP_ClientTransaction transaction =  Stack.TransactionLayer.MatchClientTransaction(response);
+                    var transaction =  Stack.TransactionLayer.MatchClientTransaction(response);
                     // Allow client transaction to process response.
-                    if(transaction != null){
+                    if (transaction != null){
                         transaction.ProcessResponse(flow,response);                        
                     }
                     else{
                         // Pass response to dialog.
-                        SIP_Dialog dialog = Stack.TransactionLayer.MatchDialog(response);
-                        if(dialog != null){
+                        var dialog = Stack.TransactionLayer.MatchDialog(response);
+                        if (dialog != null){
                             dialog.ProcessResponse(response);
                         }
                         // Pass response to core.
@@ -516,9 +508,9 @@ namespace LumiSoft.Net.SIP.Stack
                     }
 
                     // TODO: Is that needed, core can reject message as it would like.
-                    SIP_ValidateRequestEventArgs eArgs = Stack.OnValidateRequest(request,flow.RemoteEP);
+                    var eArgs = Stack.OnValidateRequest(request,flow.RemoteEP);
                     // Request rejected, return response.
-                    if(eArgs.ResponseCode != null){
+                    if (eArgs.ResponseCode != null){
                         SendResponse(Stack.CreateResponse(eArgs.ResponseCode,request));
 
                         return;
@@ -565,24 +557,24 @@ namespace LumiSoft.Net.SIP.Stack
                         this processing takes place independent of the transport protocol.
                     */
 
-                    SIP_t_ViaParm via = request.Via.GetTopMostValue();
+                    var via = request.Via.GetTopMostValue();
                     via.Received = flow.RemoteEP.Address;
                     if(via.RPort == 0){
                         via.RPort = flow.RemoteEP.Port;
                     }
 
                     bool processed = false;
-                    SIP_ServerTransaction transaction = Stack.TransactionLayer.MatchServerTransaction(request);
+                    var transaction = Stack.TransactionLayer.MatchServerTransaction(request);
                     // Pass request to matched server transaction.
-                    if(transaction != null){
+                    if (transaction != null){
                         transaction.ProcessRequest(flow,request);
 
                         processed = true;
                     }
                     else{
-                        SIP_Dialog dialog = Stack.TransactionLayer.MatchDialog(request);
+                        var dialog = Stack.TransactionLayer.MatchDialog(request);
                         // Pass request to dialog.
-                        if(dialog != null){
+                        if (dialog != null){
                             processed = dialog.ProcessRequest(new SIP_RequestReceivedEventArgs(Stack,flow,request));
                         }
                     }
@@ -591,7 +583,7 @@ namespace LumiSoft.Net.SIP.Stack
                     if(!processed){
                         // Log
                         if(Stack.Logger != null){
-                            byte[] requestData = request.ToByteData();
+                            var requestData = request.ToByteData();
 
                             Stack.Logger.AddRead(
                                 Guid.NewGuid().ToString(),
@@ -612,7 +604,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
             catch(SocketException s){
                 // Skip all socket errors here
-                string dummy = s.Message;
+                var dummy = s.Message;
             }
             catch(Exception x){
                 Stack.OnError(x);
@@ -703,8 +695,8 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("request");
             }
 
-            SIP_Hop[] hops = Stack.GetHops((SIP_Uri)request.RequestLine.Uri,request.ToByteData().Length,false);
-            if(hops.Length == 0){
+            var hops = Stack.GetHops((SIP_Uri)request.RequestLine.Uri,request.ToByteData().Length,false);
+            if (hops.Length == 0){
                 throw new SIP_TransportException("No target hops for URI '" + request.RequestLine.Uri.ToString() + "'.");
             }
 
@@ -785,7 +777,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             // Set sent-by
-            SIP_t_ViaParm via = request.Via.GetTopMostValue();
+            var via = request.Via.GetTopMostValue();
             via.ProtocolTransport = flow.Transport;
             // Via sent-by is used only to send responses when request maker data flow is not active.
             // Normally this never used, so just report first local listening point as sent-by.
@@ -833,7 +825,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             // Log.
             if(Stack.Logger != null){
-                byte[] requestData = request.ToByteData();
+                var requestData = request.ToByteData();
 
                 Stack.Logger.AddWrite(
                     Guid.NewGuid().ToString(),
@@ -991,19 +983,19 @@ namespace LumiSoft.Net.SIP.Stack
                 extract this information and use it to forward the response.
             */
 
-            SIP_t_ViaParm via = response.Via.GetTopMostValue();
-            if(via == null){
+            var via = response.Via.GetTopMostValue();
+            if (via == null){
                 throw new ArgumentException("Argument 'response' does not contain required Via: header field.");
             }
 
             // TODO: If transport is not supported.            
             //throw new SIP_TransportException("Not supported transport '" + via.ProtocolTransport + "'.");
 
-            string logID         = Guid.NewGuid().ToString();
-            string transactionID = transaction == null ? "" : transaction.ID;
-            
+            var logID         = Guid.NewGuid().ToString();
+            var transactionID = transaction == null ? "" : transaction.ID;
+
             // Try to get local IP end point which we should use to send response back.            
-            if(transaction != null && transaction.Request.LocalEndPoint != null){
+            if (transaction != null && transaction.Request.LocalEndPoint != null){
                 localEP = transaction.Request.LocalEndPoint;
             }
 
@@ -1016,15 +1008,15 @@ namespace LumiSoft.Net.SIP.Stack
                 localEP = Net_Utils.ParseIPEndPoint(via.Parameters["localEP"].Value);
             }
             
-            byte[] responseData = response.ToByteData();
+            var responseData = response.ToByteData();
 
             /* First try active flow to send response, thats not 100% as RFC says, but works better in any case.
                RFC says that for TCP and TLS only, we do it for any transport.
             */
 
-            if(transaction != null){
+            if (transaction != null){
                 try{
-                    SIP_Flow flow = transaction.Flow;
+                    var flow = transaction.Flow;
                     flow.Send(response);
 
                     if(Stack.Logger != null){
@@ -1069,8 +1061,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     // Stateless
                     else{
-                        string flowID = via.Parameters["connectionID"].Value;
-                        if(flowID != null){
+                        var flowID = via.Parameters["connectionID"].Value;
+                        if (flowID != null){
                             flow = m_pFlowManager[flowID];
                         }
                     }
@@ -1182,9 +1174,9 @@ namespace LumiSoft.Net.SIP.Stack
                     results in a failure, the next entry on the list is tried.
                 */
 
-            SIP_t_ViaParm via = response.Via.GetTopMostValue();
+            var via = response.Via.GetTopMostValue();
 
-            if(via.SentBy.IsIPAddress){
+            if (via.SentBy.IsIPAddress){
                 SendResponseToHost(logID,transactionID,localEP,via.SentBy.Host,via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
             else if(via.SentBy.Port != -1){
@@ -1193,8 +1185,8 @@ namespace LumiSoft.Net.SIP.Stack
             else{
                 try{
                     // Query SRV records.
-                    string srvQuery = "";
-                    if(via.ProtocolTransport == SIP_Transport.UDP){
+                    var srvQuery = "";
+                    if (via.ProtocolTransport == SIP_Transport.UDP){
                         srvQuery = "_sip._udp." + via.SentBy.Host;
                     }
                     else if(via.ProtocolTransport == SIP_Transport.TCP){
@@ -1203,17 +1195,18 @@ namespace LumiSoft.Net.SIP.Stack
                     else if(via.ProtocolTransport == SIP_Transport.UDP){
                         srvQuery = "_sips._tcp." + via.SentBy.Host;
                     }
-                    DnsServerResponse dnsResponse = Stack.Dns.Query(srvQuery,DNS_QType.SRV);
-                    if(dnsResponse.ResponseCode != DNS_RCode.NO_ERROR){
+                    var dnsResponse = Stack.Dns.Query(srvQuery,DNS_QType.SRV);
+                    if (dnsResponse.ResponseCode != DNS_RCode.NO_ERROR){
                         throw new SIP_TransportException("Dns error: " + dnsResponse.ResponseCode.ToString());
                     }
-                    DNS_rr_SRV[] srvRecords = dnsResponse.GetSRVRecords();
+                    var srvRecords = dnsResponse.GetSRVRecords();
 
                     // Use SRV records.
-                    if(srvRecords.Length > 0){
+                    if (srvRecords.Length > 0){
                         for(int i=0;i<srvRecords.Length;i++){
-                            DNS_rr_SRV srv = srvRecords[i];
-                            try{
+                            var srv = srvRecords[i];
+                            try
+                            {
                                 if(Stack.Logger != null){
                                     Stack.Logger.AddText(logID,"Starts sending response to DNS SRV record '" + srv.Target + "'.");
                                 }
@@ -1277,12 +1270,13 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 }
 
-                byte[] responseData = response.ToByteData();
+                var responseData = response.ToByteData();
 
-                for(int i=0;i<targets.Length;i++){
-                    IPEndPoint remoteEP = new IPEndPoint(targets[i],port);
-                    try{                         
-                        SIP_Flow flow = GetOrCreateFlow(transport,localEP,remoteEP);
+                for (int i=0;i<targets.Length;i++){
+                    var remoteEP = new IPEndPoint(targets[i],port);
+                    try
+                    {                         
+                        var flow = GetOrCreateFlow(transport,localEP,remoteEP);
                         flow.Send(response);
                         // localEP = flow.LocalEP;
                        
@@ -1504,9 +1498,9 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pBinds = value; 
                     
                     // Create listening points.
-                    List<IPEndPoint> udpListeningPoints = new List<IPEndPoint>();
-                    List<IPBindInfo> tcpListeningPoints = new List<IPBindInfo>();
-                    foreach(IPBindInfo bindInfo in m_pBinds){
+                    var udpListeningPoints = new List<IPEndPoint>();
+                    var tcpListeningPoints = new List<IPBindInfo>();
+                    foreach (IPBindInfo bindInfo in m_pBinds){
                         if(bindInfo.Protocol == BindInfoProtocol.UDP){
                             udpListeningPoints.Add(new IPEndPoint(bindInfo.IP,bindInfo.Port));
                         }

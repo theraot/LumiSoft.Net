@@ -76,10 +76,10 @@ namespace LumiSoft.Net.ABNF
                 throw new ParseException("Invalid ABNF 'dec-val' value '" + reader.ReadToEnd() + "'.");
             }
 
-            ValueType     valueType = ValueType.Single;
-            List<int>     values    = new List<int>();
-            StringBuilder b         = new StringBuilder();
-            while(true)
+            var     valueType = ValueType.Single;
+            var     values    = new List<int>();
+            var b         = new StringBuilder();
+            while (true)
             {
                 // We reached end of string.
                 if(reader.Peek() == -1){

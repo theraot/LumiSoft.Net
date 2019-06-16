@@ -23,8 +23,8 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("value");
             }
             
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
 

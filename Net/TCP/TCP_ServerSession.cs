@@ -114,7 +114,7 @@ namespace LumiSoft.Net.TCP
                 // Log
                 LogAddText("Starting SSL negotiation now.");
 
-                DateTime startTime = DateTime.Now;
+                var startTime = DateTime.Now;
 
                 // Create delegate which is called when SwitchToSecureAsync has completed.
                 Action<SwitchToSecureAsyncOP> switchSecureCompleted = delegate(SwitchToSecureAsyncOP e){
@@ -138,7 +138,7 @@ namespace LumiSoft.Net.TCP
                     }
                 };
 
-                SwitchToSecureAsyncOP op = new SwitchToSecureAsyncOP();
+                var op = new SwitchToSecureAsyncOP();
                 op.CompletedAsync += delegate(object sender,EventArgs<TCP_ServerSession.SwitchToSecureAsyncOP> e){
                     switchSecureCompleted(op);
                 };
@@ -176,8 +176,8 @@ namespace LumiSoft.Net.TCP
                 throw new InvalidOperationException("There is no certificate specified.");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(SwitchToSecureAsyncOP op = new SwitchToSecureAsyncOP()){
+            var wait = new ManualResetEvent(false);
+            using (SwitchToSecureAsyncOP op = new SwitchToSecureAsyncOP()){
                 op.CompletedAsync += delegate(object s1,EventArgs<SwitchToSecureAsyncOP> e1){
                     wait.Set();
                 };
@@ -229,11 +229,7 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(TCP_ServerSession owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pTcpSession = owner;
+                m_pTcpSession = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -442,8 +438,8 @@ namespace LumiSoft.Net.TCP
             }
             
             try{
-                object logger = this.Server.GetType().GetProperty("Logger").GetValue(this.Server,null);
-                if(logger != null){
+                var logger = this.Server.GetType().GetProperty("Logger").GetValue(this.Server,null);
+                if (logger != null){
                     ((Logger)logger).AddText(
                         this.ID,
                         this.AuthenticatedUserIdentity,
@@ -469,8 +465,8 @@ namespace LumiSoft.Net.TCP
             }
             
             try{
-                object logger = this.Server.GetType().GetProperty("Logger").GetValue(this.Server,null);
-                if(logger != null){
+                var logger = this.Server.GetType().GetProperty("Logger").GetValue(this.Server,null);
+                if (logger != null){
                     ((Logger)logger).AddException(
                         this.ID,
                         this.AuthenticatedUserIdentity,

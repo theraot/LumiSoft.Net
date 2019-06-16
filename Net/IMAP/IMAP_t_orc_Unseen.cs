@@ -28,8 +28,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            string[] code_value = value.Split(new char[]{' '},2);
-            if(!string.Equals("UNSEEN",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_value = value.Split(new char[]{' '},2);
+            if (!string.Equals("UNSEEN",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid UNSEEN response value.","value");
             }
             if(code_value.Length != 2){

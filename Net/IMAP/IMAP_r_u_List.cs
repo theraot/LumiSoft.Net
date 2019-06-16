@@ -18,11 +18,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public IMAP_r_u_List(string folder,char delimiter,string[] attributes)
         {
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-
-            FolderName = folder;
+            FolderName = folder ?? throw new ArgumentNullException("folder");
             HierarchyDelimiter  = delimiter;
             if(attributes != null){
                 FolderAttributes = attributes;
@@ -98,15 +94,15 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * LIST (\Noselect) "/" ~/Mail/foo
             */
 
-            StringReader r = new StringReader(listResponse);
+            var r = new StringReader(listResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "LIST"
             r.ReadWord();
 
-            string attributes = r.ReadParenthesized();
-            string delimiter  = r.ReadWord();
-            string folder     = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(r.ReadToEnd().Trim()));
+            var attributes = r.ReadParenthesized();
+            var delimiter  = r.ReadWord();
+            var folder     = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(r.ReadToEnd().Trim()));
 
             return new IMAP_r_u_List(folder,delimiter[0],attributes == string.Empty ? new string[0] : attributes.Split(' '));
         }
@@ -140,7 +136,7 @@ namespace LumiSoft.Net.IMAP
                 return "* LIST (\\Noselect) \"/\" \"\"\r\n";
             }
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* LIST (");
             if(FolderAttributes != null){
                 for(int i=0;i<FolderAttributes.Length;i++){

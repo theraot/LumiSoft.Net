@@ -25,11 +25,7 @@ namespace LumiSoft.Net.MIME
             /// <exception cref="ArgumentNullException">Is raised when <b>name</b> is null reference.</exception>
             public _ParameterBuilder(string name)
             {
-                if(name == null){
-                    throw new ArgumentNullException("name");
-                }
-
-                Name = name;
+                Name = name ?? throw new ArgumentNullException("name");
 
                 m_pParts = new SortedList<int,string>();
             }
@@ -45,7 +41,7 @@ namespace LumiSoft.Net.MIME
                 // We should have charset and language information available.
                 if(encoded && index == 0){
                     // Syntax: <charset>'<language>'<value>
-                    string[] charset_language_value = value.Split('\'');
+                    var charset_language_value = value.Split('\'');
                     m_pEncoding = Encoding.GetEncoding(charset_language_value[0]);
                     value = charset_language_value[2];
                 }
@@ -61,8 +57,8 @@ namespace LumiSoft.Net.MIME
             public MIME_h_Parameter GetParamter()
             {
                 // Concate parts values and decode value. (SortedList takes care for sorting part indexes)
-                StringBuilder value = new StringBuilder();
-                foreach(KeyValuePair<int,string> v in m_pParts){
+                var value = new StringBuilder();
+                foreach (KeyValuePair<int,string> v in m_pParts){
                     value.Append(v.Value);
                 }
 
@@ -89,11 +85,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
         public MIME_h_ParameterCollection(MIME_h owner)
         {
-            if(owner == null){
-                throw new ArgumentNullException("owner");
-            }
-
-            Owner = owner;
+            Owner = owner ?? throw new ArgumentNullException("owner");
 
             m_pParameters = new Dictionary<string,MIME_h_Parameter>(StringComparer.CurrentCultureIgnoreCase);
         }
@@ -129,7 +121,7 @@ namespace LumiSoft.Net.MIME
         /// <returns>Returns header fields parameters array.</returns>
         public MIME_h_Parameter[] ToArray()
         {
-            MIME_h_Parameter[] retVal = new MIME_h_Parameter[m_pParameters.Count];
+            var retVal = new MIME_h_Parameter[m_pParameters.Count];
             m_pParameters.Values.CopyTo(retVal,0);
 
             return retVal;
@@ -161,8 +153,8 @@ namespace LumiSoft.Net.MIME
                 charset = Encoding.Default;
             }
 
-            StringBuilder retVal = new StringBuilder();
-            foreach(MIME_h_Parameter parameter in this.ToArray()){
+            var retVal = new StringBuilder();
+            foreach (MIME_h_Parameter parameter in this.ToArray()){
                 if(string.IsNullOrEmpty(parameter.Value)){
                     retVal.Append(";\r\n\t" + parameter.Name);
                 }
@@ -172,13 +164,13 @@ namespace LumiSoft.Net.MIME
                 }
                 // We need to encode/split value.
                 else{
-                    byte[] byteValue = charset.GetBytes(parameter.Value);
+                    var byteValue = charset.GetBytes(parameter.Value);
 
-                    List<string> values = new List<string>();            
+                    var values = new List<string>();
                     // Do encoding/splitting.
                     int    offset    = 0;
-                    char[] valueBuff = new char[50];
-                    foreach(byte b in byteValue){                                        
+                    var valueBuff = new char[50];
+                    foreach (byte b in byteValue){                                        
                         // We need split value as RFC 2231 says.
                         if(offset >= (50 - 3)){
                             values.Add(new string(valueBuff,0,offset));
@@ -276,17 +268,17 @@ namespace LumiSoft.Net.MIME
                     MUST be present even when the fields are left blank.
             */
 
-            KeyValueCollection<string,_ParameterBuilder> parameters = new KeyValueCollection<string,_ParameterBuilder>();
+            var parameters = new KeyValueCollection<string,_ParameterBuilder>();
 
             // Parse all parameter parts.
-            string[] parameterParts = TextUtils.SplitQuotedString(reader.ToEnd(),';');
-            foreach(string part in parameterParts){
+            var parameterParts = TextUtils.SplitQuotedString(reader.ToEnd(),';');
+            foreach (string part in parameterParts){
                 if(string.IsNullOrEmpty(part)){
                     continue;
                 }
 
-                string[] name_value = part.Trim().Split(new char[]{'='},2);
-                string   paramName  = name_value[0].Trim();
+                var name_value = part.Trim().Split(new char[]{'='},2);
+                var   paramName  = name_value[0].Trim();
                 string   paramValue = null;
                 if(name_value.Length == 2){
                     paramValue = TextUtils.UnQuoteString(name_value[1].Trim());
@@ -294,7 +286,7 @@ namespace LumiSoft.Net.MIME
                 // Valueless parameter.
                 //else{
                                 
-                string[] nameParts = paramName.Split('*');
+                var nameParts = paramName.Split('*');
                 int      index     = 0;
                 bool     encoded   = nameParts.Length == 3;
                 // Get multi value parameter index.
@@ -344,8 +336,8 @@ namespace LumiSoft.Net.MIME
             }
 
             int    offset        = 0;
-            byte[] decodedBuffer = new byte[text.Length];            
-            for(int i=0;i<text.Length;i++){
+            var decodedBuffer = new byte[text.Length];
+            for (int i=0;i<text.Length;i++){
                 if(text[i] == '%'){
                     decodedBuffer[offset++] = byte.Parse(text[i + 1].ToString() + text[i + 2].ToString(),System.Globalization.NumberStyles.HexNumber);
                     i += 2;

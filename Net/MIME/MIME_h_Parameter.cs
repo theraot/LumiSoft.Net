@@ -16,11 +16,7 @@ namespace LumiSoft.Net.MIME
         /// <param name="value">Parameter value. Value null means not specified.</param>
         public MIME_h_Parameter(string name,string value)
         {
-            if(name == null){
-                throw new ArgumentNullException("name");
-            }
-
-            Name  = name;
+            Name  = name ?? throw new ArgumentNullException("name");
             m_Value = value;
         }
 

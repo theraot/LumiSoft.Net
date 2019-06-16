@@ -36,7 +36,7 @@ namespace LumiSoft.Net.IMAP
                 r = new StringReader(r.ReadParenthesized());
             }            
 
-            IMAP_Search_Key_Group retVal = new IMAP_Search_Key_Group();
+            var retVal = new IMAP_Search_Key_Group();
 
             r.ReadToFirstChar();
             while(r.Available > 0){
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("(");
             for(int i=0;i<Keys.Count;i++){
                 if(i > 0){

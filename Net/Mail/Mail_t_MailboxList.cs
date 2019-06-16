@@ -41,12 +41,12 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            MIME_Reader        r      = new MIME_Reader(value);
-            Mail_t_MailboxList retVal = new Mail_t_MailboxList();
-            while(true){
-                string word = r.QuotedReadToDelimiter(new char[]{',','<'});
+            var        r      = new MIME_Reader(value);
+            var retVal = new Mail_t_MailboxList();
+            while (true){
+                var word = r.QuotedReadToDelimiter(new char[]{',','<'});
                 // We processed all data.
-                if(string.IsNullOrEmpty(word) && r.Available == 0){
+                if (string.IsNullOrEmpty(word) && r.Available == 0){
                     break;
                 }
                 // name-addr
@@ -141,8 +141,8 @@ namespace LumiSoft.Net.Mail
         /// <returns>Returns address-list as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
-            for(int i=0;i<m_pList.Count;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<m_pList.Count;i++){
                 if(i == (m_pList.Count - 1)){
                     retVal.Append(m_pList[i].ToString());
                 }

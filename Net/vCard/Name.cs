@@ -44,9 +44,9 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="item">vCard N item.</param>
         internal static Name Parse(Item item)
         {       
-            string[] items = item.DecodedValue.Split(';');
-            Name name = new Name();
-            if(items.Length >= 1){
+            var items = item.DecodedValue.Split(';');
+            var name = new Name();
+            if (items.Length >= 1){
                 name.LastName = items[0];
             }
             if(items.Length >= 2){

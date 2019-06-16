@@ -37,11 +37,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get Method
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'event-type' value, event-type is missing !");
-            }
-            m_EventType = word;
+            var word = reader.ReadWord();
+            m_EventType = word ?? throw new SIP_ParseException("Invalid 'event-type' value, event-type is missing !");
         }
 
         /// <summary>
@@ -62,11 +59,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_EventType; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("EventType");
-                }
-
-                m_EventType = value;
+                m_EventType = value ?? throw new ArgumentNullException("EventType");
             }
         }
     }

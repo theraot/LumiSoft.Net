@@ -116,7 +116,7 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pSessions          = new TCP_SessionCollection<Relay_Session>();
             m_pConnectionsPerIP  = new Dictionary<IPAddress,long>();
 
-            Thread tr1 = new Thread(new ThreadStart(this.Run));
+            var tr1 = new Thread(new ThreadStart(this.Run));
             tr1.Start();
 
             m_pTimerTimeout = new TimerEx(30000);
@@ -166,8 +166,8 @@ namespace LumiSoft.Net.SMTP.Relay
                             if(binding.IP == IPAddress.Any){
                                 foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
                                     if(ip.AddressFamily == AddressFamily.InterNetwork){
-                                        IPBindInfo b = new IPBindInfo(binding.HostName,binding.Protocol,ip,25);
-                                        if(!m_pLocalEndPointIPv4.Contains(b)){
+                                        var b = new IPBindInfo(binding.HostName,binding.Protocol,ip,25);
+                                        if (!m_pLocalEndPointIPv4.Contains(b)){
                                             m_pLocalEndPointIPv4.Add(b);
                                         }
                                     }
@@ -176,16 +176,16 @@ namespace LumiSoft.Net.SMTP.Relay
                             else if(binding.IP == IPAddress.IPv6Any){
                                 foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
                                     if(ip.AddressFamily == AddressFamily.InterNetworkV6){
-                                        IPBindInfo b = new IPBindInfo(binding.HostName,binding.Protocol,ip,25);
-                                        if(!m_pLocalEndPointIPv6.Contains(b)){
+                                        var b = new IPBindInfo(binding.HostName,binding.Protocol,ip,25);
+                                        if (!m_pLocalEndPointIPv6.Contains(b)){
                                             m_pLocalEndPointIPv6.Add(b);
                                         }
                                     }
                                 }
                             }
                             else{
-                                IPBindInfo b = new IPBindInfo(binding.HostName,binding.Protocol,binding.IP,25);
-                                if(binding.IP.AddressFamily == AddressFamily.InterNetwork){
+                                var b = new IPBindInfo(binding.HostName,binding.Protocol,binding.IP,25);
+                                if (binding.IP.AddressFamily == AddressFamily.InterNetwork){
                                     if(!m_pLocalEndPointIPv4.Contains(b)){
                                         m_pLocalEndPointIPv4.Add(b);
                                     }
@@ -229,7 +229,7 @@ namespace LumiSoft.Net.SMTP.Relay
                         // Create new session for queued relay item.
                         else{
                             if(m_RelayMode == Relay_Mode.Dns){
-                                Relay_Session session = new Relay_Session(this,item);
+                                var session = new Relay_Session(this,item);
                                 m_pSessions.Add(session);
                                 ThreadPool.QueueUserWorkItem(new WaitCallback(session.Start));
                             }
@@ -243,7 +243,7 @@ namespace LumiSoft.Net.SMTP.Relay
                                     smartHosts = m_pSmartHosts.ToCurrentOrderArray();
                                 }
 
-                                Relay_Session session = new Relay_Session(this,item,smartHosts);
+                                var session = new Relay_Session(this,item,smartHosts);
                                 m_pSessions.Add(session);
                                 ThreadPool.QueueUserWorkItem(new WaitCallback(session.Start));
                             }                            
@@ -636,11 +636,8 @@ namespace LumiSoft.Net.SMTP.Relay
                 if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(value == null){
-                    throw new ArgumentNullException("DnsClient");
-                }
 
-                m_pDsnClient = value;
+                m_pDsnClient = value ?? throw new ArgumentNullException("DnsClient");
             }
         }
 

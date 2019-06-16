@@ -14,11 +14,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public IMAP_t_orc_Unknown(string value)
         {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            Value = value;
+            Value = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>

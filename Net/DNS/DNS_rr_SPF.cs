@@ -32,9 +32,9 @@ namespace LumiSoft.Net.DNS
         {
             // SPF RR
 
-            string text = Dns_Client.ReadCharacterString(reply,ref offset);
+            var text = Dns_Client.ReadCharacterString(reply,ref offset);
 
-			return new DNS_rr_SPF(name,text,ttl);
+            return new DNS_rr_SPF(name,text,ttl);
         }
 
         /// <summary>

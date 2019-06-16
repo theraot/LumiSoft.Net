@@ -40,9 +40,9 @@ namespace LumiSoft.Net.RTP
 
             lock(m_pOtionalItemsRoundRobin){
                 if(m_pOtionalItemsRoundRobin.Count > 0){
-                    string itemName = m_pOtionalItemsRoundRobin.Next();
+                    var itemName = m_pOtionalItemsRoundRobin.Next();
 
-                    if(itemName == "name"){
+                    if (itemName == "name"){
                         sdes.Name = m_Name;
                     }
                     else if(itemName == "email"){

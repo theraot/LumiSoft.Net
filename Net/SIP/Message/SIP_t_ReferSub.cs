@@ -66,8 +66,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // refer-sub-value
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Refer-Sub refer-sub-value value is missing !");
             }
             try{
@@ -93,8 +93,8 @@ namespace LumiSoft.Net.SIP.Message
                 exten           = generic-param        
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // refer-sub-value
             retVal.Append(Value.ToString());
 

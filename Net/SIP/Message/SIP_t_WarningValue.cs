@@ -60,8 +60,8 @@ namespace LumiSoft.Net.SIP.Message
                 throw new ArgumentNullException("reader");
             }
 
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Invalid 'warning-value' value, warn-code is missing !");
             }
             try{
@@ -72,10 +72,7 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'warning-value' value, warn-agent is missing !");
-            }
-            this.Agent = word;
+            this.Agent = word ?? throw new SIP_ParseException("Invalid 'warning-value' value, warn-agent is missing !");
 
             word = reader.ReadToEnd();
             if(word == null){

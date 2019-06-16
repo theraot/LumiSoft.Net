@@ -53,15 +53,15 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("responseLine");
             }
 
-            string[]   parts        = responseLine.Split(new char[]{' '},3);
-            string     commandTag   = parts[0];
-            string     responseCode = parts[1];
+            var   parts        = responseLine.Split(new char[]{' '},3);
+            var     commandTag   = parts[0];
+            var     responseCode = parts[1];
             IMAP_t_orc optResponse  = null;
-            string     responseText = parts[2];
+            var     responseText = parts[2];
 
             // Optional status code.
-            if(parts[2].StartsWith("[")){
-                StringReader r = new StringReader(parts[2]);
+            if (parts[2].StartsWith("[")){
+                var r = new StringReader(parts[2]);
                 optResponse  = IMAP_t_orc.Parse(r.ReadParenthesized());
                 responseText = r.ReadToEnd();
             }
@@ -75,7 +75,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* " + ResponseCode + " ");            
             if(OptionalResponse != null){
                 retVal.Append("[" + OptionalResponse.ToString() + "] ");
@@ -137,7 +137,7 @@ namespace LumiSoft.Net.IMAP
                     return null;
                 }
 
-                string[] code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
+                var code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
 
                 return code_args.Length == 2 ? code_args[1] : "";
             }

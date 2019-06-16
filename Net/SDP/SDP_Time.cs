@@ -43,12 +43,12 @@ namespace LumiSoft.Net.SDP
             long endTime   = 0;
  
             // Remove t=
-            StringReader r = new StringReader(tValue);
+            var r = new StringReader(tValue);
             r.QuotedReadToDelimiter('=');
 
             //--- <start-time> ------------------------------------------------------------
-            string word = r.ReadWord();
-            if(word == null){
+            var word = r.ReadWord();
+            if (word == null){
                 throw new Exception("SDP message \"t\" field <start-time> value is missing !");
             }
             startTime = Convert.ToInt64(word);

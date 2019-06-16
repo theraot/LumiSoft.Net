@@ -19,8 +19,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            string responseCode = value.Split(' ')[0];
-            if(string.Equals("ALERT",responseCode,StringComparison.InvariantCultureIgnoreCase)){
+            var responseCode = value.Split(' ')[0];
+            if (string.Equals("ALERT",responseCode,StringComparison.InvariantCultureIgnoreCase)){
                 return IMAP_t_orc_Alert.Parse(value);
             }
 

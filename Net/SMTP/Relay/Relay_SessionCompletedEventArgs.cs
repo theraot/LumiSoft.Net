@@ -15,11 +15,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null.</exception>
         public Relay_SessionCompletedEventArgs(Relay_Session session,Exception exception)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            Session   = session;
+            Session   = session ?? throw new ArgumentNullException("session");
             Exception = exception;
         }
 

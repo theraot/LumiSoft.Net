@@ -59,11 +59,11 @@ namespace LumiSoft.Net.Mime
 				Ivar Lumi <ivar@lumisoft.ee>
 			*/
 			
-			string name = "";
-			string emailAddress = mailbox;
+			var name = "";
+            var emailAddress = mailbox;
 
-			// Email address is between <> and remaining left part is display name
-			if(mailbox.IndexOf("<") > -1 && mailbox.IndexOf(">") > -1){
+            // Email address is between <> and remaining left part is display name
+            if (mailbox.IndexOf("<") > -1 && mailbox.IndexOf(">") > -1){
 				name = MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(mailbox.Substring(0,mailbox.LastIndexOf("<"))));
                 emailAddress = mailbox.Substring(mailbox.LastIndexOf("<") + 1, mailbox.Length - mailbox.LastIndexOf("<") - 2).Trim();
 			}
@@ -94,8 +94,8 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public string ToMailboxAddressString()
         {
-            string retVal = "";
-            if(m_DisplayName.Length > 0){
+            var retVal = "";
+            if (m_DisplayName.Length > 0){
                 if(Core.IsAscii(m_DisplayName)){
                     retVal = TextUtils.QuoteString(m_DisplayName) + " ";
                 }
@@ -132,8 +132,8 @@ namespace LumiSoft.Net.Mime
 		public string MailboxString
 		{
 			get{ 
-				string retVal = "";
-				if(this.DisplayName != ""){
+				var retVal = "";
+                if (this.DisplayName != ""){
 					retVal += TextUtils.QuoteString(this.DisplayName) + " ";
 				}
                 retVal += "<" + this.EmailAddress + ">";

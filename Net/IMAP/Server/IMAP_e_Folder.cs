@@ -25,16 +25,10 @@ namespace LumiSoft.Net.IMAP.Server
             if(cmdTag == string.Empty){
                 throw new ArgumentException("Argument 'cmdTag' value must be specified.","cmdTag");
             }
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-         
-            Response = response;
+
+            Response = response ?? throw new ArgumentNullException("response");
             CmdTag    = cmdTag;
-            Folder    = folder;
+            Folder    = folder ?? throw new ArgumentNullException("folder");
         }
 
         /// <summary>

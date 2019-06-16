@@ -89,12 +89,12 @@ namespace LumiSoft.Net.IMAP
 			*/
 
 			//--- Validate sequence-set --------------------------------------------------------//
-			string[] sequenceSets = sequenceSetString.Trim().Split(',');
-			foreach(string sequenceSet in sequenceSets){
+			var sequenceSets = sequenceSetString.Trim().Split(',');
+            foreach (string sequenceSet in sequenceSets){
 				// seq-range 
 				if(sequenceSet.IndexOf(":") > -1){
-					string[] rangeParts = sequenceSet.Split(':');
-					if(rangeParts.Length == 2){
+					var rangeParts = sequenceSet.Split(':');
+                    if (rangeParts.Length == 2){
                         long start = Parse_Seq_Number(rangeParts[0],seqMaxValue);
                         long end   = Parse_Seq_Number(rangeParts[1],seqMaxValue);
                         if(start <= end){

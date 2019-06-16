@@ -51,8 +51,8 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns SMTP server reply as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
-            for(int i=0;i<ReplyLines.Length;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<ReplyLines.Length;i++){
                 // Last line.
                 if(i == (ReplyLines.Length - 1)){
                     retVal.Append(ReplyCode + " " + ReplyLines[i] + "\r\n");

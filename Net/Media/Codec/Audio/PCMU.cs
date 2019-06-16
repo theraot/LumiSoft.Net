@@ -86,8 +86,8 @@ namespace LumiSoft.Net.Media.Codec.Audio
             }
 
             int    offsetInRetVal = 0;
-            byte[] retVal         = new byte[count / 2];
-            while(offsetInRetVal < retVal.Length){
+            var retVal         = new byte[count / 2];
+            while (offsetInRetVal < retVal.Length){
                 // Little-Endian - lower byte,higer byte.
                 short pcm = (short)(buffer[offset + 1] << 8 | buffer[offset]);
                 offset += 2;
@@ -120,8 +120,8 @@ namespace LumiSoft.Net.Media.Codec.Audio
             }
 
             int    offsetInRetVal = 0;
-            byte[] retVal         = new byte[count * 2];
-            for(int i=offset;i<buffer.Length;i++){
+            var retVal         = new byte[count * 2];
+            for (int i=offset;i<buffer.Length;i++){
                 short pcm = MuLawDecompressTable[buffer[i]];                
                 retVal[offsetInRetVal++] = (byte)(pcm      & 0xFF);
                 retVal[offsetInRetVal++] = (byte)(pcm >> 8 & 0xFF);

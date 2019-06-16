@@ -64,9 +64,9 @@ namespace LumiSoft.Net.ICMP
         [Obsolete("Will be removed !")]
 		public static string ToStringEx(EchoMessage[] messages)
 		{
-			string retVal = "";
+			var retVal = "";
 
-			foreach(EchoMessage m in messages){
+            foreach (EchoMessage m in messages){
 				retVal += m.ToStringEx() + "\r\n";
 			}
 
@@ -115,40 +115,41 @@ namespace LumiSoft.Net.ICMP
 		/// <returns></returns>
 		public static EchoMessage[] Trace(IPAddress ip,int timeout)
 		{
-			List<EchoMessage> retVal = new List<EchoMessage>();
+			var retVal = new List<EchoMessage>();
 
-			//Create Raw ICMP Socket 
-			Socket s = new Socket(AddressFamily.InterNetwork,SocketType.Raw,ProtocolType.Icmp);
-			
-			IPEndPoint ipdest = new IPEndPoint(ip,80);			
-			EndPoint endpoint = (EndPoint)(new IPEndPoint(System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[0],80));
-													
-			ushort id         = (ushort)DateTime.Now.Millisecond;
-			byte[] sendPacket = CreatePacket(id);
+            //Create Raw ICMP Socket 
+            var s = new Socket(AddressFamily.InterNetwork,SocketType.Raw,ProtocolType.Icmp);
 
-			int continuesNoReply = 0;
+            var ipdest = new IPEndPoint(ip,80);
+            var endpoint = (EndPoint)(new IPEndPoint(System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[0],80));
+
+            ushort id         = (ushort)DateTime.Now.Millisecond;
+			var sendPacket = CreatePacket(id);
+
+            int continuesNoReply = 0;
 			//send requests with increasing number of TTL
 			for(int ittl=1;ittl<=30; ittl++){
-				byte[] buffer = new byte[1024];
-				
-				try{
+				var buffer = new byte[1024];
+
+                try
+                {
 					//Socket options to set TTL and Timeouts 
 					s.SetSocketOption(SocketOptionLevel.IP,SocketOptionName.IpTimeToLive      ,ittl);
 					s.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.SendTimeout   ,timeout); 
 					s.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.ReceiveTimeout,timeout); 
 
 					//Get current time
-					DateTime startTime = DateTime.Now;
+					var startTime = DateTime.Now;
 
-					//Send Request
-					s.SendTo(sendPacket,sendPacket.Length,SocketFlags.None,ipdest);
+                    //Send Request
+                    s.SendTo(sendPacket,sendPacket.Length,SocketFlags.None,ipdest);
 				
 					//Receive				
 					s.ReceiveFrom(buffer,buffer.Length,SocketFlags.None,ref endpoint);
 
 					//Calculate time required
-					TimeSpan ts = DateTime.Now - startTime;
-					retVal.Add(new EchoMessage(((IPEndPoint)endpoint).Address,ittl,ts.Milliseconds));
+					var ts = DateTime.Now - startTime;
+                    retVal.Add(new EchoMessage(((IPEndPoint)endpoint).Address,ittl,ts.Milliseconds));
 
 					// Endpoint reached
 					if(buffer[20] == (byte)ICMP_Type.EchoReply){
@@ -185,28 +186,28 @@ namespace LumiSoft.Net.ICMP
 		public static EchoMessage Ping(IPAddress ip,int timeout)
 		{
             //Create Raw ICMP Socket 
-			Socket s = new Socket(AddressFamily.InterNetwork,SocketType.Raw,ProtocolType.Icmp);
-			
-			IPEndPoint ipdest = new IPEndPoint(ip,80);			
-			EndPoint endpoint = (EndPoint)(new IPEndPoint(System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[0],80));
-													
-			ushort id         = (ushort)DateTime.Now.Millisecond;
-			byte[] sendPacket = CreatePacket(id);
+			var s = new Socket(AddressFamily.InterNetwork,SocketType.Raw,ProtocolType.Icmp);
 
-			//Socket options to set TTL and Timeouts 
-			s.SetSocketOption(SocketOptionLevel.IP,SocketOptionName.IpTimeToLive      ,30);
+            var ipdest = new IPEndPoint(ip,80);
+            var endpoint = (EndPoint)(new IPEndPoint(System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[0],80));
+
+            ushort id         = (ushort)DateTime.Now.Millisecond;
+			var sendPacket = CreatePacket(id);
+
+            //Socket options to set TTL and Timeouts 
+            s.SetSocketOption(SocketOptionLevel.IP,SocketOptionName.IpTimeToLive      ,30);
 			s.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.SendTimeout   ,timeout); 
 			s.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.ReceiveTimeout,timeout); 
 
 			//Get current time
-			DateTime startTime = DateTime.Now;
+			var startTime = DateTime.Now;
 
-			//Send Request
-			s.SendTo(sendPacket,sendPacket.Length,SocketFlags.None,ipdest);
+            //Send Request
+            s.SendTo(sendPacket,sendPacket.Length,SocketFlags.None,ipdest);
 				
 			//Receive
-			byte[] buffer = new byte[1024];
-			s.ReceiveFrom(buffer,buffer.Length,SocketFlags.None,ref endpoint);
+			var buffer = new byte[1024];
+            s.ReceiveFrom(buffer,buffer.Length,SocketFlags.None,ref endpoint);
             			
 			// Endpoint reached
 			if(buffer[20] == (byte)ICMP_Type.EchoReply){				
@@ -217,8 +218,8 @@ namespace LumiSoft.Net.ICMP
 			}
 
             //Calculate time elapsed
-			TimeSpan ts = DateTime.Now - startTime;
-			return new EchoMessage(((IPEndPoint)endpoint).Address,0,ts.Milliseconds);
+			var ts = DateTime.Now - startTime;
+            return new EchoMessage(((IPEndPoint)endpoint).Address,0,ts.Milliseconds);
         }
 
         private static byte[] CreatePacket(ushort id)
@@ -234,8 +235,8 @@ namespace LumiSoft.Net.ICMP
 			 +---------------+---------------+---------------+---------------+
 			*/
 
-			byte[] packet = new byte[8 + 2];
-			packet[0] = (byte)ICMP_Type.Echo; // Type
+			var packet = new byte[8 + 2];
+            packet[0] = (byte)ICMP_Type.Echo; // Type
 			packet[1] = 0;  // Code
 			packet[2] = 0;  // Checksum
 			packet[3] = 0;  // Checksum

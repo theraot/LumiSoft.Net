@@ -17,15 +17,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>quotaRootName</b> or <b>entries</b> is null reference.</exception>
         public IMAP_r_u_Quota(string quotaRootName,IMAP_Quota_Entry[] entries)
         {
-            if(quotaRootName == null){
-                throw new ArgumentNullException("quotaRootName");
-            }
-            if(entries == null){
-                throw new ArgumentNullException("entries");
-            }
-
-            QuotaRootName = quotaRootName;
-            Entries      = entries;
+            QuotaRootName = quotaRootName ?? throw new ArgumentNullException("quotaRootName");
+            Entries      = entries ?? throw new ArgumentNullException("entries");
         }
 
         /// <summary>
@@ -60,16 +53,16 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * QUOTA "" (STORAGE 10 512)
             */
 
-            StringReader r = new StringReader(response);
+            var r = new StringReader(response);
             // Eat "*"
             r.ReadWord();
             // Eat "QUOTA"
             r.ReadWord();
 
-            string                 name    = r.ReadWord();
-            string[]               items   = r.ReadParenthesized().Split(' ');
-            List<IMAP_Quota_Entry> entries = new List<IMAP_Quota_Entry>();
-            for(int i=0;i<items.Length;i+=3){
+            var                 name    = r.ReadWord();
+            var               items   = r.ReadParenthesized().Split(' ');
+            var entries = new List<IMAP_Quota_Entry>();
+            for (int i=0;i<items.Length;i+=3){
                 entries.Add(new IMAP_Quota_Entry(items[i],Convert.ToInt64(items[i + 1]),Convert.ToInt64(items[i + 2])));
             }
 
@@ -84,7 +77,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * QUOTA "" (STORAGE 10 512)
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* QUOTA \"" + QuotaRootName + "\" (");
             for(int i=0;i<Entries.Length;i++){
                 if(i > 0){

@@ -40,7 +40,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("stream");
             }
 
-            MIME_b_ApplicationPkcs7Mime retVal = new MIME_b_ApplicationPkcs7Mime();
+            var retVal = new MIME_b_ApplicationPkcs7Mime();
             Net_Utils.StreamCopy(stream,retVal.EncodedStream,32000);
 
             return retVal;
@@ -56,7 +56,7 @@ namespace LumiSoft.Net.MIME
                 return null;
             }
 
-            SignedCms signedCms = new SignedCms();
+            var signedCms = new SignedCms();
             signedCms.Decode(this.Data);
 
             return signedCms.Certificates;
@@ -80,7 +80,7 @@ namespace LumiSoft.Net.MIME
             }
 
             try{
-                SignedCms signedCms = new SignedCms();
+                var signedCms = new SignedCms();
                 signedCms.Decode(this.Data);
                 signedCms.CheckSignature(true);
 
@@ -105,7 +105,7 @@ namespace LumiSoft.Net.MIME
             }
 
             if(this.Data != null){
-                SignedCms signedCms = new SignedCms();
+                var signedCms = new SignedCms();
                 signedCms.Decode(this.Data);
 
                 return MIME_Message.ParseFromStream(new MemoryStream(signedCms.ContentInfo.Content));
@@ -130,10 +130,10 @@ namespace LumiSoft.Net.MIME
                 throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=enveloped-data.");
             }
 
-            EnvelopedCms envelopedCms = new EnvelopedCms();          
+            var envelopedCms = new EnvelopedCms();
             envelopedCms.Decode(this.Data);
 
-            X509Certificate2Collection certificates = new X509Certificate2Collection(cert);
+            var certificates = new X509Certificate2Collection(cert);
             envelopedCms.Decrypt(certificates);
 
             return MIME_Message.ParseFromStream(new MemoryStream(envelopedCms.Encode()));

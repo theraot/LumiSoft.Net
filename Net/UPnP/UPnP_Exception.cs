@@ -38,14 +38,14 @@ namespace LumiSoft.Net.UPnP
             string errorText = null;
 
             try{
-                XmlDocument xml = new XmlDocument();
+                var xml = new XmlDocument();
                 xml.Load(stream);
                 
                 // Loop XML tree by nodes.
-                List<XmlNode> queue = new List<XmlNode>();
+                var queue = new List<XmlNode>();
                 queue.Add(xml);
                 while(queue.Count > 0){
-                    XmlNode currentNode = queue[0];
+                    var currentNode = queue[0];
                     queue.RemoveAt(0);
                
                     if(string.Equals("UPnPError",currentNode.Name,StringComparison.InvariantCultureIgnoreCase)){                        

@@ -26,12 +26,9 @@ namespace LumiSoft.Net.MIME
             if(name == string.Empty){
                 throw new ArgumentException("Argument 'name' value must be specified.","name");
             }
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
 
             m_Name  = name;
-            m_Value = value;
+            m_Value = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
@@ -54,10 +51,10 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("value");
             }
 
-            MIME_h_Unstructured retVal = new MIME_h_Unstructured();
+            var retVal = new MIME_h_Unstructured();
 
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value[0].Trim() == string.Empty){
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value[0].Trim() == string.Empty){
                 throw new ParseException("Invalid header field '" + value + "' syntax.");
             }
 
@@ -117,11 +114,7 @@ namespace LumiSoft.Net.MIME
             get{ return m_Value; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_Value = value;
+                m_Value = value ?? throw new ArgumentNullException("value");
                 // Reset parse value.
                 m_ParseValue = null;
             }

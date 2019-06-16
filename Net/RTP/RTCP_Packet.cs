@@ -52,7 +52,7 @@ namespace LumiSoft.Net.RTP
 
             // SR
             if(type == RTCP_PacketType.SR){
-                RTCP_Packet_SR packet = new RTCP_Packet_SR();
+                var packet = new RTCP_Packet_SR();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
@@ -60,28 +60,28 @@ namespace LumiSoft.Net.RTP
             // RR
 
             if(type == RTCP_PacketType.RR){
-                RTCP_Packet_RR packet = new RTCP_Packet_RR();
+                var packet = new RTCP_Packet_RR();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
             // SDES
             if(type == RTCP_PacketType.SDES){
-                RTCP_Packet_SDES packet = new RTCP_Packet_SDES();
+                var packet = new RTCP_Packet_SDES();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
             // BYE
             if(type == RTCP_PacketType.BYE){
-                RTCP_Packet_BYE packet = new RTCP_Packet_BYE();
+                var packet = new RTCP_Packet_BYE();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;
             }
             // APP
             if(type == RTCP_PacketType.APP){
-                RTCP_Packet_APP packet = new RTCP_Packet_APP();
+                var packet = new RTCP_Packet_APP();
                 packet.ParseInternal(buffer,ref offset);
 
                 return packet;

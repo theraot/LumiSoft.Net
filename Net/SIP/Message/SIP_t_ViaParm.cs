@@ -118,8 +118,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // protocol-name
-            string word = reader.QuotedReadToDelimiter('/');
-            if(word == null){
+            var word = reader.QuotedReadToDelimiter('/');
+            if (word == null){
                 throw new SIP_ParseException("Via header field protocol-name is missing !");
             }
             this.ProtocolName = word.Trim();
@@ -181,7 +181,7 @@ namespace LumiSoft.Net.SIP.Message
                 Via: SIP / 2.0 / UDP 127.0.0.1:58716;branch=z9hG4bK-d87543-4d7e71216b27df6e-1--d87543-
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append(this.ProtocolName + "/" + this.ProtocolVersion + "/" + this.ProtocolTransport + " ");
             retVal.Append(this.SentBy.ToString());
             retVal.Append(this.ParametersToString());
@@ -246,11 +246,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_pSentBy; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pSentBy = value;
+                m_pSentBy = value ?? throw new ArgumentNullException("value");
             }
         }
 
@@ -280,8 +276,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Branch
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["branch"];
-                if(parameter != null){
+                var parameter = this.Parameters["branch"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -308,8 +304,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Comp
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["comp"];
-                if(parameter != null){
+                var parameter = this.Parameters["comp"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -332,8 +328,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Maddr
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["maddr"];
-                if(parameter != null){
+                var parameter = this.Parameters["maddr"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -356,8 +352,8 @@ namespace LumiSoft.Net.SIP.Message
         public IPAddress Received
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["received"];
-                if(parameter != null){
+                var parameter = this.Parameters["received"];
+                if (parameter != null){
                     return IPAddress.Parse(parameter.Value);
                 }
 
@@ -380,8 +376,8 @@ namespace LumiSoft.Net.SIP.Message
         public int RPort
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["rport"];
-                if(parameter != null)
+                var parameter = this.Parameters["rport"];
+                if (parameter != null)
                 {
                     if(parameter.Value == ""){
                         return 0;
@@ -412,8 +408,8 @@ namespace LumiSoft.Net.SIP.Message
         public int Ttl
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["ttl"];
-                if(parameter != null){
+                var parameter = this.Parameters["ttl"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);                    
                 }
 

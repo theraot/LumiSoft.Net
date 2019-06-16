@@ -14,11 +14,7 @@ namespace LumiSoft.Net.Log
         /// <exception cref="ArgumentNullException">Is raised when <b>logEntry</b> is null.</exception>
         public WriteLogEventArgs(LogEntry logEntry)
         {
-            if(logEntry == null){
-                throw new ArgumentNullException("logEntry");
-            }
-
-            LogEntry = logEntry;
+            LogEntry = logEntry ?? throw new ArgumentNullException("logEntry");
         }
 
         /// <summary>

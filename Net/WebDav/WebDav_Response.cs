@@ -37,9 +37,9 @@ namespace LumiSoft.Net.WebDav
                 throw new ParseException("Invalid DAV:response value.");
             }
 
-            WebDav_Response retVal = new WebDav_Response();
+            var retVal = new WebDav_Response();
 
-            foreach(XmlNode node in reponseNode.ChildNodes){
+            foreach (XmlNode node in reponseNode.ChildNodes){
                 if(string.Equals(node.LocalName,"href",StringComparison.InvariantCultureIgnoreCase)){
                     retVal.HRef = node.ChildNodes[0].Value;
                 }

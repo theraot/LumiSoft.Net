@@ -105,19 +105,19 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
 
-            Mail_h_Received retVal = new Mail_h_Received("a","b",DateTime.MinValue);
+            var retVal = new Mail_h_Received("a","b",DateTime.MinValue);
 
-            MIME_Reader r = new MIME_Reader(name_value[1]);
+            var r = new MIME_Reader(name_value[1]);
 
-            while(true){
-                string word = r.Word();
+            while (true){
+                var word = r.Word();
                 // We processed all data.
-                if(word == null && r.Available == 0){
+                if (word == null && r.Available == 0){
                     break;
                 }
                 // We have comment, just eat it.
@@ -151,8 +151,8 @@ namespace LumiSoft.Net.Mail
 
                         r.ToFirstChar();
                         if(r.StartsWith("(")){
-                            string[] parts = r.ReadParenthesized().Split(' ');
-                            if(parts.Length == 1){
+                            var parts = r.ReadParenthesized().Split(' ');
+                            if (parts.Length == 1){
                                 if(Net_Utils.IsIPAddress(parts[0])){
                                     retVal.m_pFrom_TcpInfo = new Mail_t_TcpInfo(IPAddress.Parse(parts[0]),null);
                                 }
@@ -169,8 +169,8 @@ namespace LumiSoft.Net.Mail
 
                         r.ToFirstChar();
                         if(r.StartsWith("(")){
-                            string[] parts = r.ReadParenthesized().Split(' ');
-                            if(parts.Length == 1){
+                            var parts = r.ReadParenthesized().Split(' ');
+                            if (parts.Length == 1){
                                 if(Net_Utils.IsIPAddress(parts[0])){
                                     retVal.m_pBy_TcpInfo = new Mail_t_TcpInfo(IPAddress.Parse(parts[0]),null);
                                 }
@@ -206,8 +206,8 @@ namespace LumiSoft.Net.Mail
                             retVal.m_For = r.ReadParenthesized();
                         }
                         else{
-                            string mailbox = Mail_Utils.SMTP_Mailbox(r);
-                            if(mailbox == null){
+                            var mailbox = Mail_Utils.SMTP_Mailbox(r);
+                            if (mailbox == null){
                                 throw new ParseException("Invalid Received: For parameter value '" + r.ToEnd() + "'.");
                             }
                             retVal.m_For = mailbox;  
@@ -235,7 +235,7 @@ namespace LumiSoft.Net.Mail
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
             if(reEncode || this.IsModified){
-                StringBuilder retVal = new StringBuilder();
+                var retVal = new StringBuilder();
 
                 retVal.Append("Received: ");
                 retVal.Append("from " + m_From);

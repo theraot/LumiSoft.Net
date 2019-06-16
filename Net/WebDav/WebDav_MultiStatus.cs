@@ -31,7 +31,7 @@ namespace LumiSoft.Net.WebDav
                 throw new ArgumentNullException("stream");
             }            
            
-            XmlDocument response = new XmlDocument();
+            var response = new XmlDocument();
             response.Load(stream);
                       
             // Invalid response.
@@ -39,10 +39,10 @@ namespace LumiSoft.Net.WebDav
                 throw new ParseException("Invalid DAV:multistatus value.");
             }
        
-            WebDav_MultiStatus retVal = new WebDav_MultiStatus();
+            var retVal = new WebDav_MultiStatus();
 
             // Parse responses.
-            foreach(XmlNode responseNode in response.ChildNodes[1].ChildNodes){
+            foreach (XmlNode responseNode in response.ChildNodes[1].ChildNodes){
                 retVal.Responses.Add(WebDav_Response.Parse(responseNode));
             }
 

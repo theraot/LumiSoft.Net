@@ -57,15 +57,15 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * LSUB () "." #news.comp.mail.misc
             */
 
-            StringReader r = new StringReader(lSubResponse);
+            var r = new StringReader(lSubResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "LSUB"
             r.ReadWord();
 
-            string attributes = r.ReadParenthesized();
-            string delimiter  = r.ReadWord();
-            string folder     = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(r.ReadToEnd().Trim()));
+            var attributes = r.ReadParenthesized();
+            var delimiter  = r.ReadWord();
+            var folder     = TextUtils.UnQuoteString(IMAP_Utils.DecodeMailbox(r.ReadToEnd().Trim()));
 
             return new IMAP_r_u_LSub(folder,delimiter[0],attributes == string.Empty ? new string[0] : attributes.Split(' '));
         }
@@ -88,7 +88,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * LSUB (\Noselect) "/" ~/Mail/foo
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* LSUB (");
             if(FolderAttributes != null){
                 for(int i=0;i<FolderAttributes.Length;i++){

@@ -38,8 +38,8 @@ namespace LumiSoft.Net.IMAP
                   mailbox with that UID.
             */
 
-            string[] code_mailboxUid_msgUid = value.Split(new char[]{' '},3);
-            if(!string.Equals("APPENDUID",code_mailboxUid_msgUid[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_mailboxUid_msgUid = value.Split(new char[]{' '},3);
+            if (!string.Equals("APPENDUID",code_mailboxUid_msgUid[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid APPENDUID response value.","value");
             }
             if(code_mailboxUid_msgUid.Length != 3){

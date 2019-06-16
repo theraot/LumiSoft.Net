@@ -118,7 +118,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("clock");
             }
 
-            RTP_Session session = new RTP_Session(this,localEP,clock);
+            var session = new RTP_Session(this,localEP,clock);
             session.Disposed += new EventHandler(delegate(object s,EventArgs e){
                 m_pSessions.Remove((RTP_Session)s);
             });
@@ -206,7 +206,7 @@ namespace LumiSoft.Net.RTP
                 }
 
                 lock(m_pParticipants){
-                    RTP_Participant_Remote[] retVal = new RTP_Participant_Remote[m_pParticipants.Count];
+                    var retVal = new RTP_Participant_Remote[m_pParticipants.Count];
                     m_pParticipants.Values.CopyTo(retVal,0);
 
                     return retVal;

@@ -65,7 +65,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns "error-uri" value.</returns>
         public override string ToStringValue()
         {
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append("<" + m_Uri + ">");
             retVal.Append(ParametersToString());
 

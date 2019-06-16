@@ -74,15 +74,15 @@ namespace LumiSoft.Net.SDP
         /// <returns></returns>
         public static SDP_MediaDescription Parse(string mValue)
         {
-            SDP_MediaDescription media = new SDP_MediaDescription();
+            var media = new SDP_MediaDescription();
 
             // m=<media> <port>/<number of ports> <proto> <fmt> ...
-            StringReader r = new StringReader(mValue);
+            var r = new StringReader(mValue);
             r.QuotedReadToDelimiter('=');
 
             //--- <media> ------------------------------------------------------------
-            string word = r.ReadWord();
-            if(word == null){
+            var word = r.ReadWord();
+            if (word == null){
                 throw new Exception("SDP message \"m\" field <media> value is missing !");
             }
             media.MediaType = word;
@@ -93,7 +93,7 @@ namespace LumiSoft.Net.SDP
                 throw new Exception("SDP message \"m\" field <port> value is missing !");
             }
             if(word.IndexOf('/') > -1){
-                string[] port_nPorts = word.Split('/');
+                var port_nPorts = word.Split('/');
                 media.Port = Convert.ToInt32(port_nPorts[0]);
                 media.m_NumberOfPorts = Convert.ToInt32(port_nPorts[1]);
             }
@@ -133,8 +133,8 @@ namespace LumiSoft.Net.SDP
 
             // Remove all old stream mode attributes.
             for(int i=0;i<Attributes.Count;i++){
-                SDP_Attribute sdpAttribute = Attributes[i];
-                if(string.Equals(sdpAttribute.Name,"sendrecv",StringComparison.InvariantCultureIgnoreCase)){
+                var sdpAttribute = Attributes[i];
+                if (string.Equals(sdpAttribute.Name,"sendrecv",StringComparison.InvariantCultureIgnoreCase)){
                     Attributes.RemoveAt(i);
                     i--;
                 }
@@ -174,8 +174,8 @@ namespace LumiSoft.Net.SDP
 
             // m=<media> <port>/<number of ports> <proto> <fmt> ...
 
-            StringBuilder retVal = new StringBuilder();
-            if(NumberOfPorts > 1){
+            var retVal = new StringBuilder();
+            if (NumberOfPorts > 1){
                 retVal.Append("m=" + MediaType + " " + Port + "/" + NumberOfPorts + " " + Protocol);
             }
             else{

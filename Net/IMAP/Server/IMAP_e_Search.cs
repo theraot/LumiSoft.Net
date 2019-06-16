@@ -20,12 +20,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>criteria</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_Search(IMAP_Search_Key criteria,IMAP_r_ServerStatus response)
         {
-            if(criteria == null){
-                throw new ArgumentNullException("criteria");
-            }
-
             m_pResponse = response;
-            Criteria = criteria;
+            Criteria = criteria ?? throw new ArgumentNullException("criteria");
         }
 
         /// <summary>
@@ -45,12 +41,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

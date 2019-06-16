@@ -66,7 +66,7 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Parse address
-            SIP_t_CallID callID = new SIP_t_CallID();
+            var callID = new SIP_t_CallID();
             callID.Parse(reader);
             m_pCallID = callID;
 
@@ -95,8 +95,8 @@ namespace LumiSoft.Net.SIP.Message
                 from-tag   = "from-tag" EQUAL token 
             */
 
-            StringBuilder retVal = new StringBuilder();
-            
+            var retVal = new StringBuilder();
+
             // Add address
             retVal.Append(m_pCallID.ToStringValue());
 
@@ -115,11 +115,7 @@ namespace LumiSoft.Net.SIP.Message
             get{ return m_pCallID; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("CallID");
-                }
-
-                m_pCallID = value;
+                m_pCallID = value ?? throw new ArgumentNullException("CallID");
             }
         }
 
@@ -130,8 +126,8 @@ namespace LumiSoft.Net.SIP.Message
         public string ToTag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["to-tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["to-tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -155,8 +151,8 @@ namespace LumiSoft.Net.SIP.Message
         public string FromTag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["from-tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["from-tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

@@ -26,15 +26,8 @@ namespace LumiSoft.Net.SMTP
         /// <exception cref="ArgumentNullException">Is raised when <b>localPart</b> or <b>domain</b> is null reference.</exception>
         public SMTP_t_Mailbox(string localPart,string domain)
         {
-            if(localPart == null){
-                throw new ArgumentNullException("localPart");
-            }
-            if(domain == null){
-                throw new ArgumentNullException("domain");
-            }
-
-            LocalPart = localPart;
-            Domain    = domain;
+            LocalPart = localPart ?? throw new ArgumentNullException("localPart");
+            Domain    = domain ?? throw new ArgumentNullException("domain");
         }
 
         /*

@@ -100,15 +100,8 @@ namespace LumiSoft.Net.MIME
             /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> or <b>boundary</b> is null reference.</exception>
             public _MultipartReader(SmartStream stream,string boundary)
             {
-                if(stream == null){
-                    throw new ArgumentNullException("stream");
-                }
-                if(boundary == null){
-                    throw new ArgumentNullException("boundary");
-                }
-
-                m_pStream  = stream;
-                m_Boundary = boundary;
+                m_pStream  = stream ?? throw new ArgumentNullException("stream");
+                m_Boundary = boundary ?? throw new ArgumentNullException("boundary");
 
                 m_pReadLineOP   = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.ThrowException);
                 m_pTextPreamble = new StringBuilder();
@@ -151,9 +144,9 @@ namespace LumiSoft.Net.MIME
                         }
 // Check if we have boundary start/end.
                         if(m_pReadLineOP.Buffer[0] == '-'){
-                            string boundary = m_pReadLineOP.LineUtf8;
+                            var boundary = m_pReadLineOP.LineUtf8;
                             // We have readed all MIME entity body parts.
-                            if("--" + m_Boundary + "--" == boundary){
+                            if ("--" + m_Boundary + "--" == boundary){
                                 ReaderState = State.Done;
 
                                 // Last CRLF is no part of preamble, but is part of boundary-tag.
@@ -529,7 +522,7 @@ namespace LumiSoft.Net.MIME
                 throw new ParseException("Multipart entity has not required 'boundary' paramter.");
             }
             
-            MIME_b_Multipart retVal = new MIME_b_Multipart(owner.ContentType);
+            var retVal = new MIME_b_Multipart(owner.ContentType);
             ParseInternal(owner,owner.ContentType.TypeWithSubtype,stream,retVal);
 
             return retVal;
@@ -562,9 +555,9 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("body");
             }
 
-            _MultipartReader multipartReader = new _MultipartReader(stream,owner.ContentType.Param_Boundary);       
-            while(multipartReader.Next()){
-                MIME_Entity entity = new MIME_Entity();
+            var multipartReader = new _MultipartReader(stream,owner.ContentType.Param_Boundary);
+            while (multipartReader.Next()){
+                var entity = new MIME_Entity();
                 entity.Parse(new SmartStream(multipartReader,false),Encoding.UTF8,body.DefaultBodyPartContentType);
                 body.BodyParts.Add(entity);
                 entity.SetParent(owner);
@@ -614,28 +607,28 @@ namespace LumiSoft.Net.MIME
 
             // Set "preamble" text if any.
             if(!string.IsNullOrEmpty(TextPreamble)){
-                byte[] preableBytes = Encoding.UTF8.GetBytes(TextPreamble);
+                var preableBytes = Encoding.UTF8.GetBytes(TextPreamble);
                 stream.Write(preableBytes,0,preableBytes.Length);
             }
 
             for(int i=0;i<BodyParts.Count;i++){
-                MIME_Entity bodyPart = BodyParts[i];
+                var bodyPart = BodyParts[i];
                 // Start new body part.
-                byte[] bStart = Encoding.UTF8.GetBytes("\r\n--" + this.Entity.ContentType.Param_Boundary + "\r\n");
+                var bStart = Encoding.UTF8.GetBytes("\r\n--" + this.Entity.ContentType.Param_Boundary + "\r\n");
                 stream.Write(bStart,0,bStart.Length);
                 
                 bodyPart.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
 
                 // Last body part, close boundary.
                 if(i == (BodyParts.Count - 1)){
-                    byte[] bEnd = Encoding.UTF8.GetBytes("\r\n--" + this.Entity.ContentType.Param_Boundary + "--\r\n");
+                    var bEnd = Encoding.UTF8.GetBytes("\r\n--" + this.Entity.ContentType.Param_Boundary + "--\r\n");
                     stream.Write(bEnd,0,bEnd.Length);
                 }
             }
 
             // Set "epilogoue" text if any.
             if(!string.IsNullOrEmpty(TextEpilogue)){
-                byte[] epilogoueBytes = Encoding.UTF8.GetBytes(TextEpilogue);
+                var epilogoueBytes = Encoding.UTF8.GetBytes(TextEpilogue);
                 stream.Write(epilogoueBytes,0,epilogoueBytes.Length);
             }
         }
@@ -659,7 +652,7 @@ namespace LumiSoft.Net.MIME
             */
 
             get{ 
-                MIME_h_ContentType retVal = new MIME_h_ContentType("text/plain");
+                var retVal = new MIME_h_ContentType("text/plain");
                 retVal.Param_Charset = "US-ASCII";
 
                 return retVal; 

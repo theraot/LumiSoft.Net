@@ -181,11 +181,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -227,7 +223,7 @@ namespace LumiSoft.Net.POP3.Client
                             S: .
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("CAPA\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("CAPA\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"CAPA");
@@ -279,7 +275,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         CapaReadResponseCompleted(op);
                     };
@@ -315,7 +311,7 @@ namespace LumiSoft.Net.POP3.Client
                         // Server returned success response.
                         if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             // Read capa-list.
-                            SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                             readLineOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                                 try{
                                     ReadMultiLineResponseLineCompleted(readLineOP);
@@ -546,11 +542,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -573,7 +565,7 @@ namespace LumiSoft.Net.POP3.Client
                              S: -ERR Command not permitted when TLS active
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("STLS\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("STLS\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"STLS");
@@ -625,7 +617,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         StlsReadResponseCompleted(op);
                     };
@@ -663,7 +655,7 @@ namespace LumiSoft.Net.POP3.Client
                             // Log
                             m_pPop3Client.LogAddText("Starting TLS handshake.");
 
-                            SwitchToSecureAsyncOP switchSecureOP = new SwitchToSecureAsyncOP(m_pCertCallback);
+                            var switchSecureOP = new SwitchToSecureAsyncOP(m_pCertCallback);
                             switchSecureOP.CompletedAsync += delegate(object s,EventArgs<SwitchToSecureAsyncOP> e){
                                 SwitchToSecureCompleted(switchSecureOP);
                             };
@@ -864,12 +856,9 @@ namespace LumiSoft.Net.POP3.Client
                 if(user == string.Empty){
                     throw new ArgumentException("Argument 'user' value must be specified.","user");
                 }
-                if(password == null){
-                    throw new ArgumentNullException("password");
-                }
 
                 m_User     = user;
-                m_Password = password;
+                m_Password = password ?? throw new ArgumentNullException("password");
             }
 
             /// <summary>
@@ -896,16 +885,12 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
                 try{
-                    byte[] buffer = Encoding.UTF8.GetBytes("USER " + m_User + "\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("USER " + m_User + "\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"USER " + m_User);
@@ -957,7 +942,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         UserReadResponseCompleted(op);
                     };
@@ -992,7 +977,7 @@ namespace LumiSoft.Net.POP3.Client
                                             
                         // Server returned success response.
                         if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){                        
-                            byte[] buffer = Encoding.UTF8.GetBytes("PASS " + m_Password + "\r\n");
+                            var buffer = Encoding.UTF8.GetBytes("PASS " + m_Password + "\r\n");
 
                             // Log
                             m_pPop3Client.LogAddWrite(buffer.Length,"PASS <***REMOVED***>");
@@ -1026,7 +1011,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         PassReadResponseCompleted(op);
                     };
@@ -1062,7 +1047,7 @@ namespace LumiSoft.Net.POP3.Client
                         // Server returned success response.
                         if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){                        
                             // Start filling messages info.
-                            POP3_Client.FillMessagesAsyncOP fillOP = new FillMessagesAsyncOP();
+                            var fillOP = new FillMessagesAsyncOP();
                             fillOP.CompletedAsync += delegate(object sender,EventArgs<FillMessagesAsyncOP> e){
                                 FillMessagesCompleted(fillOP);
                             };
@@ -1242,11 +1227,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>sasl</b> is null reference.</exception>
             public AuthAsyncOP(AUTH_SASL_Client sasl)
             {
-                if(sasl == null){
-                    throw new ArgumentNullException("sasl");
-                }
-
-                m_pSASL = sasl;
+                m_pSASL = sasl ?? throw new ArgumentNullException("sasl");
             }
 
             /// <summary>
@@ -1273,11 +1254,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -1298,7 +1275,7 @@ namespace LumiSoft.Net.POP3.Client
                     */
 
                     if(m_pSASL.SupportsInitialResponse){
-                        byte[] buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
 
                         // Log
                         m_pPop3Client.LogAddWrite(buffer.Length,Encoding.UTF8.GetString(buffer).TrimEnd());
@@ -1307,7 +1284,7 @@ namespace LumiSoft.Net.POP3.Client
                         m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
                     }
                     else{
-                        byte[] buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
 
                         // Log
                         m_pPop3Client.LogAddWrite(buffer.Length,"AUTH " + m_pSASL.Name);
@@ -1360,7 +1337,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         AuthReadResponseCompleted(op);
                     };
@@ -1396,7 +1373,7 @@ namespace LumiSoft.Net.POP3.Client
                         // Authentication succeeded.
                         if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             // Start filling messages info.
-                            POP3_Client.FillMessagesAsyncOP fillOP = new FillMessagesAsyncOP();
+                            var fillOP = new FillMessagesAsyncOP();
                             fillOP.CompletedAsync += delegate(object sender,EventArgs<FillMessagesAsyncOP> e){
                                 FillMessagesCompleted(fillOP);
                             };
@@ -1407,12 +1384,12 @@ namespace LumiSoft.Net.POP3.Client
                         // Continue authenticating.
                         else if(op.LineUtf8.StartsWith("+")){
                             // + base64Data, we need to decode it.
-                            byte[] serverResponse = Convert.FromBase64String(op.LineUtf8.Split(new char[]{' '},2)[1]);
+                            var serverResponse = Convert.FromBase64String(op.LineUtf8.Split(new char[]{' '},2)[1]);
 
-                            byte[] clientResponse = m_pSASL.Continue(serverResponse);
+                            var clientResponse = m_pSASL.Continue(serverResponse);
 
                             // We need just send SASL returned auth-response as base64.
-                            byte[] buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
+                            var buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
 
                             // Log
                             m_pPop3Client.LogAddWrite(buffer.Length,Convert.ToBase64String(clientResponse));
@@ -1604,11 +1581,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -1631,7 +1604,7 @@ namespace LumiSoft.Net.POP3.Client
                             S: +OK
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("NOOP\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("NOOP\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"NOOP");
@@ -1683,7 +1656,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         NoopReadResponseCompleted(op);
                     };
@@ -1876,11 +1849,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -1904,7 +1873,7 @@ namespace LumiSoft.Net.POP3.Client
                             S: +OK maildrop has 2 messages (320 octets)
 			        */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("RSET\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("RSET\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"RSET");
@@ -1956,7 +1925,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         RsetReadResponseCompleted(op);
                     };
@@ -2117,17 +2086,13 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
                 try{
                     // Start executing LIST command.
-                    POP3_Client.ListAsyncOP listOP = new ListAsyncOP();
+                    var listOP = new ListAsyncOP();
                     listOP.CompletedAsync += delegate(object sender,EventArgs<ListAsyncOP> e){
                         ListCompleted(listOP);
                     };
@@ -2192,7 +2157,7 @@ namespace LumiSoft.Net.POP3.Client
 
                         // Try to UID's for messages(If server supports UIDL).
                         // Start executing LIST command.
-                        POP3_Client.UidlAsyncOP uidlOP = new UidlAsyncOP();
+                        var uidlOP = new UidlAsyncOP();
                         uidlOP.CompletedAsync += delegate(object sender,EventArgs<UidlAsyncOP> e){
                             UidlCompleted(uidlOP);
                         };
@@ -2228,7 +2193,7 @@ namespace LumiSoft.Net.POP3.Client
 
                         // Fill messages UID info.
                         foreach(string responseLine in op.ResponseLines){
-                            string[] seqNo_Uid = responseLine.Trim().Split(new char[]{' '});
+                            var seqNo_Uid = responseLine.Trim().Split(new char[]{' '});
                             m_pPop3Client.m_pMessages[Convert.ToInt32(seqNo_Uid[0]) - 1].SetUID(seqNo_Uid[1]);
                         }
 
@@ -2355,11 +2320,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -2427,7 +2388,7 @@ namespace LumiSoft.Net.POP3.Client
                              S: -ERR no such message, only 2 messages in maildrop
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("LIST\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("LIST\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"LIST");
@@ -2479,7 +2440,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         ListReadResponseCompleted(op);
                     };
@@ -2515,7 +2476,7 @@ namespace LumiSoft.Net.POP3.Client
                         // Server returned success response.
                         if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             // Read capa-list.
-                            SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                             readLineOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                                 try{
                                     ReadMultiLineResponseLineCompleted(readLineOP);
@@ -2725,11 +2686,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(POP3_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pPop3Client = owner;
+                m_pPop3Client = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -2795,7 +2752,7 @@ namespace LumiSoft.Net.POP3.Client
                           S: -ERR no such message, only 2 messages in maildrop
                     */
 
-                    byte[] buffer = Encoding.UTF8.GetBytes("UIDL\r\n");
+                    var buffer = Encoding.UTF8.GetBytes("UIDL\r\n");
 
                     // Log
                     m_pPop3Client.LogAddWrite(buffer.Length,"UIDL");
@@ -2847,7 +2804,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.TcpStream.EndWrite(ar);
 
                     // Read POP3 server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         UidlReadResponseCompleted(op);
                     };
@@ -2883,7 +2840,7 @@ namespace LumiSoft.Net.POP3.Client
                         // Server returned success response.
                         if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             // Read capa-list.
-                            SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                             readLineOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                                 try{
                                     ReadMultiLineResponseLineCompleted(readLineOP);
@@ -3056,7 +3013,7 @@ namespace LumiSoft.Net.POP3.Client
         protected override void OnConnected(CompleteConnectCallback callback)
         {  
             // Read POP3 server greeting response.
-            SmartStream.ReadLineAsyncOP readGreetingOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+            var readGreetingOP = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
             readGreetingOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                 ReadServerGreetingCompleted(readGreetingOP,callback);
             };
@@ -3081,7 +3038,7 @@ namespace LumiSoft.Net.POP3.Client
                 }
                 // Greeting reading succeded.
                 else{
-                    string line = op.LineUtf8;
+                    var line = op.LineUtf8;
 
                     // Log.
                     LogAddRead(op.BytesInBuffer,line);
@@ -3276,8 +3233,8 @@ namespace LumiSoft.Net.POP3.Client
                         
             WriteLine("STLS");
                         
-            string line = ReadLine();
-			if(!line.ToUpper().StartsWith("+OK")){
+            var line = ReadLine();
+            if (!line.ToUpper().StartsWith("+OK")){
 				throw new POP3_ClientException(line);
 			}
 
@@ -3311,8 +3268,8 @@ namespace LumiSoft.Net.POP3.Client
                 throw new InvalidOperationException("Connection is already secure.");
             }
 
-            StartTLSDelegate asyncMethod = new StartTLSDelegate(this.StartTLS);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new StartTLSDelegate(this.StartTLS);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -3336,8 +3293,8 @@ namespace LumiSoft.Net.POP3.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -3377,13 +3334,13 @@ namespace LumiSoft.Net.POP3.Client
             
 			// Supports APOP, use it.
 			if(tryApop && m_ApopHashKey.Length > 0){
-                string hexHash = Net_Utils.ComputeMd5(m_ApopHashKey + password,true);
-                                
-				int countWritten = this.TcpStream.WriteLine("APOP " + userName + " " + hexHash);
+                var hexHash = Net_Utils.ComputeMd5(m_ApopHashKey + password,true);
+
+                int countWritten = this.TcpStream.WriteLine("APOP " + userName + " " + hexHash);
                 LogAddWrite(countWritten,"APOP " + userName + " " + hexHash);
 
-                string line = this.ReadLine();
-				if(line.StartsWith("+OK")){
+                var line = this.ReadLine();
+                if (line.StartsWith("+OK")){
 					m_pAuthdUserIdentity = new GenericIdentity(userName,"apop");
 				}
 				else{
@@ -3395,8 +3352,8 @@ namespace LumiSoft.Net.POP3.Client
 				int countWritten = this.TcpStream.WriteLine("USER " + userName);
                 LogAddWrite(countWritten,"USER " + userName);
 
-                string line = this.ReadLine();
-				if(line.StartsWith("+OK")){                    
+                var line = this.ReadLine();
+                if (line.StartsWith("+OK")){                    
 					countWritten = this.TcpStream.WriteLine("PASS " + password);
                     LogAddWrite(countWritten,"PASS <***REMOVED***>");
 
@@ -3447,8 +3404,8 @@ namespace LumiSoft.Net.POP3.Client
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
 
-            AuthenticateDelegate asyncMethod = new AuthenticateDelegate(this.Authenticate);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new AuthenticateDelegate(this.Authenticate);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(userName,password,tryApop,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -3472,8 +3429,8 @@ namespace LumiSoft.Net.POP3.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginAuthenticate method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -3512,8 +3469,8 @@ namespace LumiSoft.Net.POP3.Client
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            NoopDelegate asyncMethod = new NoopDelegate(this.Noop);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new NoopDelegate(this.Noop);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -3537,8 +3494,8 @@ namespace LumiSoft.Net.POP3.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginNoop method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -3580,8 +3537,8 @@ namespace LumiSoft.Net.POP3.Client
 				throw new InvalidOperationException("The RSET command is only valid in authenticated state.");
 			}
 
-            ResetDelegate asyncMethod = new ResetDelegate(this.Reset);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new ResetDelegate(this.Reset);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -3605,8 +3562,8 @@ namespace LumiSoft.Net.POP3.Client
                 throw new ArgumentNullException("asyncResult");
             }
 
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -3686,8 +3643,8 @@ namespace LumiSoft.Net.POP3.Client
             WriteLine("LIST");
 
 			// Read first line of reply, check if it's ok.
-			string line = ReadLine();
-			if(line.StartsWith("+OK")){
+			var line = ReadLine();
+            if (line.StartsWith("+OK")){
 				// Read lines while get only '.' on line itshelf.
 				while(true){
 					line = ReadLine();
@@ -3697,7 +3654,7 @@ namespace LumiSoft.Net.POP3.Client
 						break;
 					}
 
-                    string[] no_size = line.Trim().Split(new char[]{' '});
+                    var no_size = line.Trim().Split(new char[]{' '});
                     m_pMessages.Add(Convert.ToInt32(no_size[1]));
                 }
 			}
@@ -3734,7 +3691,7 @@ namespace LumiSoft.Net.POP3.Client
 						break;
 					}
 
-                    string[] no_uid = line.Trim().Split(new char[]{' '});                        
+                    var no_uid = line.Trim().Split(new char[]{' '});
                     m_pMessages[Convert.ToInt32(no_uid[0]) - 1].SetUID(no_uid[1]);
                 }
 			}

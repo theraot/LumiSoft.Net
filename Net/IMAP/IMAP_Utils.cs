@@ -26,7 +26,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("flagsToAdd");
             }
 
-            List<string> retVal = new List<string>();
+            var retVal = new List<string>();
             retVal.AddRange(flags);
 
             foreach(string flagToAdd in flagsToAdd){
@@ -62,8 +62,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("flagsToRemove");
             }
 
-            List<string> retVal = new List<string>();
-            foreach(string flag in flags){
+            var retVal = new List<string>();
+            foreach (string flag in flags){
                 bool remove = false;
                 foreach(string flagToRemove in flagsToRemove){
                     if(string.Equals(flag,flagToRemove,StringComparison.InvariantCultureIgnoreCase)){
@@ -87,8 +87,8 @@ namespace LumiSoft.Net.IMAP
 		/// <returns></returns>
 		public static string ACL_to_String(IMAP_ACL_Flags flags)
 		{
-			string retVal = "";
-			if((flags & IMAP_ACL_Flags.l) != 0){
+			var retVal = "";
+            if ((flags & IMAP_ACL_Flags.l) != 0){
 				retVal += "l";
 			}
 			if((flags & IMAP_ACL_Flags.r) != 0){
@@ -126,8 +126,8 @@ namespace LumiSoft.Net.IMAP
 		/// <returns></returns>
 		public static IMAP_ACL_Flags ACL_From_String(string aclString)
 		{
-			IMAP_ACL_Flags retVal = IMAP_ACL_Flags.None;
-			aclString = aclString.ToLower();
+			var retVal = IMAP_ACL_Flags.None;
+            aclString = aclString.ToLower();
 			if(aclString.IndexOf('l') > -1){
 				retVal |= IMAP_ACL_Flags.l;
 			}
@@ -199,8 +199,8 @@ namespace LumiSoft.Net.IMAP
 		/// <returns></returns>
 		public static string DateTimeToString(DateTime date)
 		{			
-			string retVal = "";
-			retVal += date.ToString("dd-MMM-yyyy HH:mm:ss",System.Globalization.CultureInfo.InvariantCulture);
+			var retVal = "";
+            retVal += date.ToString("dd-MMM-yyyy HH:mm:ss",System.Globalization.CultureInfo.InvariantCulture);
 			retVal += " " + date.ToString("zzz",System.Globalization.CultureInfo.InvariantCulture).Replace(":","");
 
 			return retVal;
@@ -235,14 +235,14 @@ namespace LumiSoft.Net.IMAP
 			*/
 
 			// Base64 chars, except '/' is replaced with ','
-			char[] base64Chars = new char[]{
+			var base64Chars = new char[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
 			};
 
-			MemoryStream retVal = new MemoryStream();
-			for(int i=0;i<text.Length;i++){
+            var retVal = new MemoryStream();
+            for (int i=0;i<text.Length;i++){
 				char c = text[i];
 
 				// The character "&" (0x26) is represented by the two-octet sequence "&-".
@@ -259,8 +259,8 @@ namespace LumiSoft.Net.IMAP
 					// For example: öö may not encoded as &APY-&APY-, but must be &APYA9g-.
 
 					// Get all continuous chars that need encoding and encode them as one block
-					MemoryStream encodeBlock = new MemoryStream();
-					for(int ic=i;ic<text.Length;ic++){
+					var encodeBlock = new MemoryStream();
+                    for (int ic=i;ic<text.Length;ic++){
 						char cC = text[ic];
 
 						// Allowed char
@@ -274,8 +274,8 @@ namespace LumiSoft.Net.IMAP
                     }
 
 					// Ecode block
-					byte[] encodedData = Net_Utils.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
-					retVal.WriteByte((byte)'&');
+					var encodedData = Net_Utils.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
+                    retVal.WriteByte((byte)'&');
 					retVal.Write(encodedData,0,encodedData.Length);
 					retVal.WriteByte((byte)'-');
 				}
@@ -313,14 +313,14 @@ namespace LumiSoft.Net.IMAP
 			*/
 
             // Base64 chars, except '/' is replaced with ','
-			char[] base64Chars = new char[]{
+			var base64Chars = new char[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
 			};
 
-			StringBuilder retVal = new StringBuilder();
-			for(int i=0;i<text.Length;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<text.Length;i++){
 				char c = text[i];
 
 				// Encoded block or escaped &
@@ -356,12 +356,12 @@ namespace LumiSoft.Net.IMAP
 					// Decode block
 					else{
 						// Get encoded block
-						byte[] encodedBlock = System.Text.Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
-		
-						// Convert to UTF-16 char						
-						byte[] decodedData = Net_Utils.Base64DecodeEx(encodedBlock,base64Chars);
-						char[] decodedChars = new char[decodedData.Length / 2];                        
-						for(int iC=0;iC<decodedChars.Length;iC++){
+						var encodedBlock = System.Text.Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
+
+                        // Convert to UTF-16 char						
+                        var decodedData = Net_Utils.Base64DecodeEx(encodedBlock,base64Chars);
+                        var decodedChars = new char[decodedData.Length / 2];
+                        for (int iC=0;iC<decodedChars.Length;iC++){
 							decodedChars[iC] = (char)(decodedData[iC * 2] << 8 | decodedData[(iC * 2) + 1]);
 						}
                         
@@ -525,10 +525,10 @@ namespace LumiSoft.Net.IMAP
 
             // We must use IMAP literal string.
             if(hasControlChars || (!utf8StringSupported && has8BitChars)){
-                byte[] buffer2 = charset.GetBytes(value);
-                byte[] buffer1 = Encoding.ASCII.GetBytes("{" + buffer2.Length + "}\r\n");
-                
-                byte[] buffer = new byte[buffer1.Length + buffer2.Length];
+                var buffer2 = charset.GetBytes(value);
+                var buffer1 = Encoding.ASCII.GetBytes("{" + buffer2.Length + "}\r\n");
+
+                var buffer = new byte[buffer1.Length + buffer2.Length];
                 Array.Copy(buffer1,buffer,buffer1.Length);
                 Array.Copy(buffer2,0,buffer,buffer1.Length,buffer2.Length);
 
@@ -567,10 +567,10 @@ namespace LumiSoft.Net.IMAP
             }
             // string/astring/nstring
 
-            string word = reader.ReadWord();
-                
+            var word = reader.ReadWord();
+
             // nstring
-            if(string.Equals(word,"NIL",StringComparison.InvariantCultureIgnoreCase)){
+            if (string.Equals(word,"NIL",StringComparison.InvariantCultureIgnoreCase)){
                 return null;
             }
 
@@ -618,9 +618,9 @@ namespace LumiSoft.Net.IMAP
         [Obsolete("Use class IMAP_t_MsgFlags instead.")]
         public static string[] MessageFlagsToStringArray(IMAP_MessageFlags msgFlags)
         {
-            List<string> retVal = new List<string>();
+            var retVal = new List<string>();
 
-            if(((int)IMAP_MessageFlags.Answered & (int)msgFlags) != 0){
+            if (((int)IMAP_MessageFlags.Answered & (int)msgFlags) != 0){
 				retVal.Add("\\ANSWERED");
 			}
 			if(((int)IMAP_MessageFlags.Flagged & (int)msgFlags) != 0){
@@ -647,8 +647,8 @@ namespace LumiSoft.Net.IMAP
         [Obsolete("Use method 'MessageFlagsToStringArray' instead.")]
 		public static string MessageFlagsToString(IMAP_MessageFlags msgFlags)
 		{
-			string retVal = "";
-			if(((int)IMAP_MessageFlags.Answered & (int)msgFlags) != 0){
+			var retVal = "";
+            if (((int)IMAP_MessageFlags.Answered & (int)msgFlags) != 0){
 				retVal += " \\ANSWERED";
 			}
 			if(((int)IMAP_MessageFlags.Flagged & (int)msgFlags) != 0){

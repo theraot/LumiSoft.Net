@@ -14,11 +14,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>dirName</b> is null reference.</exception>
         public FTP_e_Rmd(string dirName)
         {
-            if(dirName == null){
-                throw new ArgumentNullException("dirName");
-            }
-
-            DirName = dirName;
+            DirName = dirName ?? throw new ArgumentNullException("dirName");
         }
 
         /// <summary>

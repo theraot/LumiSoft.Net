@@ -77,7 +77,7 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * 23 FETCH (FLAGS (\Seen) RFC822.SIZE 44827)
             */
                         
-            StringReader r = new StringReader(line);
+            var r = new StringReader(line);
 
             // Eat '*'
             r.ReadWord();
@@ -110,13 +110,13 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("stream");
             }
 
-            StringBuilder buffer = new StringBuilder();
+            var buffer = new StringBuilder();
             buffer.Append("* " + SeqNo + " FETCH (");
 
             for(int i=0;i<m_pDataItems.Count;i++){
-                IMAP_t_Fetch_r_i dataItem = m_pDataItems[i];
+                var dataItem = m_pDataItems[i];
 
-                if(i > 0){
+                if (i > 0){
                     buffer.Append(" ");
                 }
 
@@ -133,16 +133,16 @@ namespace LumiSoft.Net.IMAP
 
             buffer.Append(")\r\n");
             
-            string responseS = buffer.ToString();
-            byte[] response  = Encoding.UTF8.GetBytes(responseS);
+            var responseS = buffer.ToString();
+            var response  = Encoding.UTF8.GetBytes(responseS);
 
             // Log.
-            if(session != null){
+            if (session != null){
                 session.LogAddWrite(response.Length,responseS.TrimEnd());
             }
 
             // Starts writing response to stream.
-            IAsyncResult ar = stream.BeginWrite(
+            var ar = stream.BeginWrite(
                 response,
                 0,
                 response.Length,
@@ -167,7 +167,7 @@ namespace LumiSoft.Net.IMAP
                 null
             );
             // Completed synchronously, process result.
-            if(ar.CompletedSynchronously){
+            if (ar.CompletedSynchronously){
                 stream.EndWrite(ar);
 
                 return false;
@@ -240,7 +240,7 @@ namespace LumiSoft.Net.IMAP
                     r.ReadWord();
 
                     // Read body-section.
-                    string section = r.ReadParenthesized();
+                    var section = r.ReadParenthesized();
 
                     // Read origin if any.
                     int offset = -1;
@@ -248,11 +248,11 @@ namespace LumiSoft.Net.IMAP
                         offset = Convert.ToInt32(r.ReadParenthesized().Split(' ')[0]);
                     }                                                     
                     
-                    IMAP_t_Fetch_r_i_Body dataItem = new IMAP_t_Fetch_r_i_Body(section,offset,new MemoryStreamEx(32000));
+                    var dataItem = new IMAP_t_Fetch_r_i_Body(section,offset,new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
                                         
                     // Raise event, allow user to specify store stream.
-                    IMAP_Client_e_FetchGetStoreStream eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
                     if(eArgs.Stream != null){                        
@@ -280,7 +280,7 @@ namespace LumiSoft.Net.IMAP
                     string envelope = null;
                     while(true){ 
                         // Create temporary reader(we don't want to read partial ENVELOPE data from reader).
-                        StringReader tmpReader = new StringReader(r.SourceString);
+                        var tmpReader = new StringReader(r.SourceString);
 
                         // Eat ENVELOPE word.
                         tmpReader.ReadWord();
@@ -335,11 +335,11 @@ namespace LumiSoft.Net.IMAP
                     r.ReadWord();
                     r.ReadToFirstChar();
 
-                    IMAP_t_Fetch_r_i_Rfc822 dataItem = new IMAP_t_Fetch_r_i_Rfc822(new MemoryStreamEx(32000));
+                    var dataItem = new IMAP_t_Fetch_r_i_Rfc822(new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
                                         
                     // Raise event, allow user to specify store stream.
-                    IMAP_Client_e_FetchGetStoreStream eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
                     if(eArgs.Stream != null){                        
@@ -368,11 +368,11 @@ namespace LumiSoft.Net.IMAP
                     r.ReadWord();
                     r.ReadToFirstChar();
 
-                    IMAP_t_Fetch_r_i_Rfc822Header dataItem = new IMAP_t_Fetch_r_i_Rfc822Header(new MemoryStreamEx(32000));
+                    var dataItem = new IMAP_t_Fetch_r_i_Rfc822Header(new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
                                         
                     // Raise event, allow user to specify store stream.
-                    IMAP_Client_e_FetchGetStoreStream eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
                     if(eArgs.Stream != null){                        
@@ -408,11 +408,11 @@ namespace LumiSoft.Net.IMAP
                     r.ReadWord();
                     r.ReadToFirstChar();
 
-                    IMAP_t_Fetch_r_i_Rfc822Text dataItem = new IMAP_t_Fetch_r_i_Rfc822Text(new MemoryStreamEx(32000));
+                    var dataItem = new IMAP_t_Fetch_r_i_Rfc822Text(new MemoryStreamEx(32000));
                     m_pDataItems.Add(dataItem);
                                         
                     // Raise event, allow user to specify store stream.
-                    IMAP_Client_e_FetchGetStoreStream eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
+                    var eArgs = new IMAP_Client_e_FetchGetStoreStream(this,dataItem);
                     imap.OnFetchGetStoreStream(eArgs);
                     // User specified own stream, use it.
                     if(eArgs.Stream != null){                        
@@ -490,12 +490,12 @@ namespace LumiSoft.Net.IMAP
             }
 
             if(r.SourceString.EndsWith("}") && r.SourceString.IndexOf("{") > -1){
-                MemoryStream stream = new MemoryStream();
-                string size = r.SourceString.Substring(r.SourceString.LastIndexOf("{") + 1,r.SourceString.Length - r.SourceString.LastIndexOf("{") - 2);
+                var stream = new MemoryStream();
+                var size = r.SourceString.Substring(r.SourceString.LastIndexOf("{") + 1,r.SourceString.Length - r.SourceString.LastIndexOf("{") - 2);
                 // Remove {n} from string.
                 r.RemoveFromEnd(r.SourceString.Length - r.SourceString.LastIndexOf('{'));
                                 
-                IMAP_Client.ReadStringLiteralAsyncOP op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(size));
+                var op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(size));
                 op.CompletedAsync += delegate(object sender,EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e){
                     try{
                         // Read string literal failed.
@@ -584,7 +584,7 @@ namespace LumiSoft.Net.IMAP
             // Data value is returned as string-literal.
 
             if(r.StartsWith("{",false)){
-                IMAP_Client.ReadStringLiteralAsyncOP op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(r.ReadParenthesized()));
+                var op = new IMAP_Client.ReadStringLiteralAsyncOP(stream,Convert.ToInt32(r.ReadParenthesized()));
                 op.CompletedAsync += delegate(object sender,EventArgs<IMAP_Client.ReadStringLiteralAsyncOP> e){
                     try{
                         // Read string literal failed.
@@ -634,7 +634,7 @@ namespace LumiSoft.Net.IMAP
                 return true;
             }
             // Data is quoted-string.
-            byte[] data = Encoding.UTF8.GetBytes(r.ReadWord());
+            var data = Encoding.UTF8.GetBytes(r.ReadWord());
             stream.Write(data,0,data.Length);
 
             return false;
@@ -660,7 +660,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("callback");
             }
 
-            SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[64000],SizeExceededAction.JunkAndThrowException);
+            var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[64000],SizeExceededAction.JunkAndThrowException);
             readLineOP.Completed += delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){
                 try{
                     // Read line failed.
@@ -752,8 +752,8 @@ namespace LumiSoft.Net.IMAP
         public IMAP_t_Fetch_r_i_Body[] Body
         {
             get{
-                List<IMAP_t_Fetch_r_i_Body> retVal = new List<IMAP_t_Fetch_r_i_Body>();
-                foreach(IMAP_t_Fetch_r_i item in m_pDataItems){
+                var retVal = new List<IMAP_t_Fetch_r_i_Body>();
+                foreach (IMAP_t_Fetch_r_i item in m_pDataItems){
                     if(item is IMAP_t_Fetch_r_i_Body){
                         retVal.Add((IMAP_t_Fetch_r_i_Body)item);
                     }

@@ -124,7 +124,7 @@ namespace LumiSoft.Net.RTP
             }
             // reason for leaving
             if(!string.IsNullOrEmpty(LeavingReason)){
-                byte[] reasonBytes = Encoding.UTF8.GetBytes(LeavingReason);
+                var reasonBytes = Encoding.UTF8.GetBytes(LeavingReason);
                 buffer[offset++] = (byte)reasonBytes.Length;
                 Array.Copy(reasonBytes,0,buffer,offset,reasonBytes.Length);
                 offset += reasonBytes.Length;

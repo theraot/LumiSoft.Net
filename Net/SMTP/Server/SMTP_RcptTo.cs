@@ -16,11 +16,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>mailbox</b> is null reference.</exception>
         public SMTP_RcptTo(string mailbox,SMTP_DSN_Notify notify,string orcpt)
         {
-            if(mailbox == null){
-                throw new ArgumentNullException("mailbox");
-            }
-
-            Mailbox = mailbox;
+            Mailbox = mailbox ?? throw new ArgumentNullException("mailbox");
             Notify  = notify;
             ORCPT   = orcpt;
         }

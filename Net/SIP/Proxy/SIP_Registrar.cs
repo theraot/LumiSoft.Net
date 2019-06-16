@@ -31,11 +31,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>proxy</b> is null reference.</exception>
         internal SIP_Registrar(SIP_Proxy proxy)
         {
-            if(proxy == null){
-                throw new ArgumentNullException("proxy");
-            }
-
-            Proxy = proxy;
+            Proxy = proxy ?? throw new ArgumentNullException("proxy");
             m_pStack = Proxy.Stack;
 
             m_pRegistrations = new SIP_RegistrationCollection();
@@ -103,8 +99,8 @@ namespace LumiSoft.Net.SIP.Proxy
         public void SetRegistration(string aor,SIP_t_ContactParam[] contacts,SIP_Flow flow)
         {
             lock(m_pRegistrations){
-                SIP_Registration registration = m_pRegistrations[aor];
-                if(registration == null){
+                var registration = m_pRegistrations[aor];
+                if (registration == null){
                     registration = new SIP_Registration("system",aor);
                     m_pRegistrations.Add(registration);
                     OnAorRegistered(registration);
@@ -228,14 +224,14 @@ namespace LumiSoft.Net.SIP.Proxy
                    registrar.  The response SHOULD include a Date header field.
             */
 
-            SIP_ServerTransaction transaction = e.ServerTransaction;
-            SIP_Request           request     = e.Request;
+            var transaction = e.ServerTransaction;
+            var           request     = e.Request;
             SIP_Uri               to          = null;
-            string                userName    = "";
+            var                userName    = "";
 
             // Probably we need to do validate in SIP stack.
 
-            if(SIP_Utils.IsSipOrSipsUri(request.To.Address.Uri.ToString())){
+            if (SIP_Utils.IsSipOrSipsUri(request.To.Address.Uri.ToString())){
                 to = (SIP_Uri)request.To.Address.Uri;
             }
             else{
@@ -285,8 +281,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
 
                 // Remove bindings.
-                SIP_Registration reg = m_pRegistrations[to.Address];
-                if(reg != null){
+                var reg = m_pRegistrations[to.Address];
+                if (reg != null){
                     foreach(SIP_RegistrationBinding b in reg.Bindings){
                         if(request.CallID != b.CallID || request.CSeq.SequenceNumber > b.CSeqNo){
                             b.Remove();
@@ -297,8 +293,8 @@ namespace LumiSoft.Net.SIP.Proxy
 
             if(starContact == null){
                 bool             newReg = false;
-                SIP_Registration reg    = m_pRegistrations[to.Address];
-                if(reg == null){
+                var reg    = m_pRegistrations[to.Address];
+                if (reg == null){
                     newReg = true;
                     reg    = new SIP_Registration(userName,to.Address);
                     m_pRegistrations.Add(reg);
@@ -317,14 +313,14 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                     // We must accept 0 values - means remove contact.
                     if(c.Expires != 0 && c.Expires < Proxy.Stack.MinimumExpireTime){
-                        SIP_Response resp = m_pStack.CreateResponse(SIP_ResponseCodes.x423_Interval_Too_Brief,request);
+                        var resp = m_pStack.CreateResponse(SIP_ResponseCodes.x423_Interval_Too_Brief,request);
                         resp.MinExpires = Proxy.Stack.MinimumExpireTime;
                         transaction.SendResponse(resp);
                         return;
                     }
 
-                    SIP_RegistrationBinding currentBinding = reg.GetBinding(c.Address.Uri);
-                    if(currentBinding != null && currentBinding.CallID == request.CallID && request.CSeq.SequenceNumber < currentBinding.CSeqNo){
+                    var currentBinding = reg.GetBinding(c.Address.Uri);
+                    if (currentBinding != null && currentBinding.CallID == request.CallID && request.CSeq.SequenceNumber < currentBinding.CSeqNo){
                         transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": CSeq value out of order.",request));
                         return;
                     }                    
@@ -342,10 +338,10 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            SIP_Response response = m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,request);
+            var response = m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,request);
             response.Date = DateTime.Now;
-            SIP_Registration registration = m_pRegistrations[to.Address];
-            if(registration != null){
+            var registration = m_pRegistrations[to.Address];
+            if (registration != null){
                 foreach(SIP_RegistrationBinding b in registration.Bindings){
                     // Don't list expired bindings what wait to be disposed.
                     if(b.TTL > 1){
@@ -370,7 +366,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{
                 lock(m_pRegistrations){
-                    SIP_Registration[] retVal = new SIP_Registration[m_pRegistrations.Count];
+                    var retVal = new SIP_Registration[m_pRegistrations.Count];
                     m_pRegistrations.Values.CopyTo(retVal,0);
 
                     return retVal;

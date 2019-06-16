@@ -45,11 +45,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get Method
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new ArgumentException("Invalid 'option-tag' value, value is missing !");
-            }
-            m_OptionTag = word;
+            var word = reader.ReadWord();
+            m_OptionTag = word ?? throw new ArgumentException("Invalid 'option-tag' value, value is missing !");
         }
 
         /// <summary>

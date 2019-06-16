@@ -514,9 +514,6 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentException">Is raised when any of the aruments has invalid value.</exception>
         public _WaveIn(AudioInDevice device,int samplesPerSec,int bitsPerSample,int channels,int bufferSize)
         {
-            if(device == null){
-                throw new ArgumentNullException("device");
-            }
             if(samplesPerSec < 8000){
                 throw new ArgumentException("Argument 'samplesPerSec' value must be >= 8000.");
             }
@@ -527,7 +524,7 @@ namespace LumiSoft.Net.Media
                 throw new ArgumentException("Argument 'channels' value must be >= 1.");
             }
 
-            m_pInDevice     = device;
+            m_pInDevice     = device ?? throw new ArgumentNullException("device");
             m_SamplesPerSec = samplesPerSec;
             m_BitsPerSample = bitsPerSample;
             m_Channels      = channels;
@@ -536,7 +533,7 @@ namespace LumiSoft.Net.Media
             m_pBuffers      = new Dictionary<long,BufferItem>();
 
             // Try to open wav device.            
-            WAVEFORMATEX format = new WAVEFORMATEX();
+            var format = new WAVEFORMATEX();
             format.wFormatTag      = WavFormat.PCM;
             format.nChannels       = (ushort)m_Channels;
             format.nSamplesPerSec  = (uint)samplesPerSec;                        
@@ -652,8 +649,8 @@ namespace LumiSoft.Net.Media
                             return;
                         }
 
-                        BufferItem bufferItem = m_pBuffers[dwParam1.ToInt64()];
-                          
+                        var bufferItem = m_pBuffers[dwParam1.ToInt64()];
+
                         OnAudioFrameReceived(bufferItem.EventArgs);
                                        
                         bufferItem.Queue(true);
@@ -675,7 +672,7 @@ namespace LumiSoft.Net.Media
         private void CreateBuffers()
         {               
             while(m_pBuffers.Count < 10){
-                BufferItem bufferItem = new BufferItem(m_pWavDevHandle,m_BufferSize);                    
+                var bufferItem = new BufferItem(m_pWavDevHandle,m_BufferSize);
                 m_pBuffers.Add(bufferItem.HeaderHandle.AddrOfPinnedObject().ToInt64(),bufferItem);
                 bufferItem.Queue(false);
             } 
@@ -687,12 +684,12 @@ namespace LumiSoft.Net.Media
         public static AudioInDevice[] Devices
         {
             get{
-                List<AudioInDevice> retVal = new List<AudioInDevice>();
+                var retVal = new List<AudioInDevice>();
                 // Get all available output devices and their info.                
                 int devicesCount = waveInGetNumDevs();
                 for(int i=0;i<devicesCount;i++){
-                    WAVEOUTCAPS pwoc = new WAVEOUTCAPS();
-                    if(waveInGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
+                    var pwoc = new WAVEOUTCAPS();
+                    if (waveInGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
                         retVal.Add(new AudioInDevice(i,pwoc.szPname,pwoc.wChannels));
                     }
                 }

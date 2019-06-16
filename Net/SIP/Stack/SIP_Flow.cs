@@ -51,23 +51,14 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentException">Is raised whena any of the arguments has invalid value.</exception>
         internal SIP_Flow(SIP_Stack stack,bool isServer,IPEndPoint localEP,IPEndPoint remoteEP,string transport)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-            if(localEP == null){
-                throw new ArgumentNullException("localEP");
-            }
-            if(remoteEP == null){
-                throw new ArgumentNullException("remoteEP");
-            }
             if(transport == null){
                 throw new ArgumentNullException("transport");
             }
 
-            m_pStack    = stack;
+            m_pStack    = stack ?? throw new ArgumentNullException("stack");
             m_IsServer  = isServer;
-            m_pLocalEP  = localEP;
-            m_pRemoteEP = remoteEP;
+            m_pLocalEP  = localEP ?? throw new ArgumentNullException("localEP");
+            m_pRemoteEP = remoteEP ?? throw new ArgumentNullException("remoteEP");
             m_Transport = transport.ToUpper();
 
             m_CreateTime   = DateTime.Now;
@@ -84,15 +75,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b> or <b>session</b> is null reference.</exception>
         internal SIP_Flow(SIP_Stack stack,TCP_Session session)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            m_pStack      = stack;
-            m_pTcpSession = session;
+            m_pStack      = stack ?? throw new ArgumentNullException("stack");
+            m_pTcpSession = session ?? throw new ArgumentNullException("session");
 
             m_IsServer     = true;            
             m_pLocalEP     = session.LocalEndPoint;
@@ -197,7 +181,7 @@ namespace LumiSoft.Net.SIP.Stack
         internal void Start()
         {        
             // Move processing to thread pool.
-            AutoResetEvent startLock = new AutoResetEvent(false);
+            var startLock = new AutoResetEvent(false);
             ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){
                 lock(m_pLock){
                     startLock.Set();
@@ -205,7 +189,7 @@ namespace LumiSoft.Net.SIP.Stack
                     // TCP / TLS client, connect to remote end point.
                     if(!m_IsServer && m_Transport != SIP_Transport.UDP){
                         try{
-                            TCP_Client client = new TCP_Client();
+                            var client = new TCP_Client();
                             client.Connect(m_pLocalEP,m_pRemoteEP,m_Transport == SIP_Transport.TLS);
 
                             m_pTcpSession = client;
@@ -311,7 +295,7 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pMessage.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
 
                     m_pMessage.Position = 0;
-                    string contentLengthValue = LumiSoft.Net.MIME.MIME_Utils.ParseHeaderField("Content-Length:",m_pMessage);
+                    var contentLengthValue = LumiSoft.Net.MIME.MIME_Utils.ParseHeaderField("Content-Length:",m_pMessage);
                     m_pMessage.Position = m_pMessage.Length;
 
                     int contentLength = 0;
@@ -328,7 +312,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     // Message with no body.
                     else{
-                        byte[] messageData = m_pMessage.ToArray();
+                        var messageData = m_pMessage.ToArray();
                         // Wait for new SIP message. 
                         BeginReadHeader();
                         
@@ -350,7 +334,7 @@ namespace LumiSoft.Net.SIP.Stack
             try{
                 m_pTcpSession.TcpStream.EndReadFixedCount(asyncResult);
 
-                byte[] messageData = m_pMessage.ToArray();
+                var messageData = m_pMessage.ToArray();
                 // Wait for new SIP message. 
                 BeginReadHeader();
 
@@ -374,7 +358,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             m_LastActivity = DateTime.Now;
 
-            byte[] data = new byte[e.Count];
+            var data = new byte[e.Count];
             Array.Copy(e.Buffer,data,e.Count);
 
             m_pStack.TransportLayer.OnMessageReceived(this,data);
@@ -464,17 +448,17 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pLocalPublicEP = this.LocalEP;
 
                     try{
-                        AutoResetEvent completionWaiter = new AutoResetEvent(false);
-                        // Create OPTIONS request
-                        SIP_Request optionsRequest = m_pStack.CreateRequest(SIP_Methods.OPTIONS,new SIP_t_NameAddress("sip:ping@publicIP.com"),new SIP_t_NameAddress("sip:ping@publicIP.com"));
-                        optionsRequest.MaxForwards = 0;
-                        SIP_ClientTransaction optionsTransaction = m_pStack.TransactionLayer.CreateClientTransaction(this,optionsRequest,true);
-                        optionsTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(delegate(object s,SIP_ResponseReceivedEventArgs e){
-                            SIP_t_ViaParm via = e.Response.Via.GetTopMostValue();       
-                
-                            IPEndPoint publicEP = new IPEndPoint(via.Received == null ? this.LocalEP.Address : via.Received,via.RPort > 0 ? via.RPort : this.LocalEP.Port);
+                        var completionWaiter = new AutoResetEvent(false);
+                    // Create OPTIONS request
+                    var optionsRequest = m_pStack.CreateRequest(SIP_Methods.OPTIONS,new SIP_t_NameAddress("sip:ping@publicIP.com"),new SIP_t_NameAddress("sip:ping@publicIP.com"));
+                    optionsRequest.MaxForwards = 0;
+                        var optionsTransaction = m_pStack.TransactionLayer.CreateClientTransaction(this,optionsRequest,true);
+                    optionsTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(delegate(object s,SIP_ResponseReceivedEventArgs e){
+                            var via = e.Response.Via.GetTopMostValue();
+
+                            var publicEP = new IPEndPoint(via.Received == null ? this.LocalEP.Address : via.Received,via.RPort > 0 ? via.RPort : this.LocalEP.Port);
                             // Set public EP port only if public IP is also different from local EP.
-                            if(!this.LocalEP.Address.Equals(publicEP.Address)){
+                            if (!this.LocalEP.Address.Equals(publicEP.Address)){
                                 m_pLocalPublicEP = publicEP;
                             }
 

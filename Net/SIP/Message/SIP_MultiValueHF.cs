@@ -32,8 +32,8 @@ namespace LumiSoft.Net.SIP.Message
         {
             Values.Clear();
             
-            StringReader r = new StringReader(value);
-            while(r.Available > 0){
+            var r = new StringReader(value);
+            while (r.Available > 0){
                 r.ReadToFirstChar();
                 // If we have COMMA, just consume it, it last value end.
                 if(r.StartsWith(",")){
@@ -41,7 +41,7 @@ namespace LumiSoft.Net.SIP.Message
                 }
 
                 // Allow xxx-param to pasre 1 value from reader.
-                T param = new T();
+                var param = new T();
                 param.Parse(r);
                 Values.Add(param);                
             }
@@ -53,9 +53,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns></returns>
         private string ToStringValue()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             // Syntax: xxx-parm *(COMMA xxx-parm)
-            for(int i=0;i<Values.Count;i++){
+            for (int i=0;i<Values.Count;i++){
                 retVal.Append(Values[i].ToStringValue());
 
                 // Don't add comma for last item.

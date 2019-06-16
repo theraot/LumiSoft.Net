@@ -37,9 +37,9 @@ namespace LumiSoft.Net.WebDav
                 throw new ParseException("Invalid DAV:prop value.");
             }
 
-            WebDav_Prop retVal = new WebDav_Prop();
+            var retVal = new WebDav_Prop();
 
-            foreach(XmlNode node in propNode.ChildNodes){
+            foreach (XmlNode node in propNode.ChildNodes){
                 // Resource type property.
                 if(string.Equals(node.LocalName,"resourcetype",StringComparison.InvariantCultureIgnoreCase)){
                     retVal.m_pProperties.Add(WebDav_p_ResourceType.Parse(node));

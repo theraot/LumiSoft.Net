@@ -26,11 +26,7 @@ namespace LumiSoft.Net.UDP
         /// <exception cref="ArgumentNullException">Is raised when <b>socket</b> is null reference.</exception>
         public UDP_DataReceiver(Socket socket)
         {
-            if(socket == null){
-                throw new ArgumentNullException("socket");
-            }
-
-            m_pSocket = socket;
+            m_pSocket = socket ?? throw new ArgumentNullException("socket");
         }
 
         /// <summary>

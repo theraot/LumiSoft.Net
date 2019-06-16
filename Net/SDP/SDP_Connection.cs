@@ -53,34 +53,25 @@ namespace LumiSoft.Net.SDP
         {
             // c=<nettype> <addrtype> <connection-address>
 
-            string netType          = "";
-            string addrType         = "";
-            string connectionAddress = "";
+            var netType          = "";
+            var addrType         = "";
+            var connectionAddress = "";
 
             // Remove c=
-            StringReader r = new StringReader(cValue);
+            var r = new StringReader(cValue);
             r.QuotedReadToDelimiter('=');
 
             //--- <nettype> ------------------------------------------------------------
-            string word = r.ReadWord();
-            if(word == null){
-                throw new Exception("SDP message \"c\" field <nettype> value is missing !");
-            }
-            netType = word;
+            var word = r.ReadWord();
+            netType = word ?? throw new Exception("SDP message \"c\" field <nettype> value is missing !");
 
             //--- <addrtype> -----------------------------------------------------------
             word = r.ReadWord();
-            if(word == null){
-                throw new Exception("SDP message \"c\" field <addrtype> value is missing !");
-            }
-            addrType = word;
+            addrType = word ?? throw new Exception("SDP message \"c\" field <addrtype> value is missing !");
 
             //--- <connection-address> -------------------------------------------------
             word = r.ReadWord();
-            if(word == null){
-                throw new Exception("SDP message \"c\" field <connection-address> value is missing !");
-            }
-            connectionAddress = word;
+            connectionAddress = word ?? throw new Exception("SDP message \"c\" field <connection-address> value is missing !");
 
             return new SDP_Connection(netType,addrType,connectionAddress);
         }

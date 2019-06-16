@@ -26,15 +26,8 @@ namespace LumiSoft.Net.AUTH
             /// <exception cref="ArgumentNullException">Is raised when <b>domain</b> or <b>host</b> is null reference.</exception>
             public MessageType1(string domain,string host)
             {
-                if(domain == null){
-                    throw new ArgumentNullException("domain");
-                }
-                if(host == null){
-                    throw new ArgumentNullException("host");
-                }
-
-                m_Domain = domain;
-                m_Host   = host;
+                m_Domain = domain ?? throw new ArgumentNullException("domain");
+                m_Host   = host ?? throw new ArgumentNullException("host");
             }
 
             /// <summary>
@@ -100,7 +93,7 @@ namespace LumiSoft.Net.AUTH
                 short dom_len  = (short) m_Domain.Length; 
                 short host_len = (short) m_Host.Length; 
 
-                byte[] data = new byte[32 + dom_len + host_len];
+                var data = new byte[32 + dom_len + host_len];
 
                 data[0]  = (byte)'N';
                 data[1]  = (byte)'T';
@@ -136,10 +129,10 @@ namespace LumiSoft.Net.AUTH
                 data [28] = 0x20; 
                 data [29] = 0x00; 
 
-                byte[] host = Encoding.ASCII.GetBytes(m_Host.ToUpper(CultureInfo.InvariantCulture)); 
+                var host = Encoding.ASCII.GetBytes(m_Host.ToUpper(CultureInfo.InvariantCulture));
                 Buffer.BlockCopy(host,0,data,32,host.Length); 
 
-                byte[] domain = Encoding.ASCII.GetBytes(m_Domain.ToUpper(CultureInfo.InvariantCulture)); 
+                var domain = Encoding.ASCII.GetBytes(m_Domain.ToUpper(CultureInfo.InvariantCulture));
                 Buffer.BlockCopy(domain,0,data,dom_off,domain.Length); 
 
                 return data; 
@@ -219,7 +212,7 @@ namespace LumiSoft.Net.AUTH
                          +-------+-------+-------+-------+
                 */
 
-                byte[] nonce = new byte[8];
+                var nonce = new byte[8];
                 Buffer.BlockCopy(data,24,nonce,0,8);
 
                 return new MessageType2(nonce);
@@ -253,27 +246,11 @@ namespace LumiSoft.Net.AUTH
             /// <exception cref="ArgumentNullException">Is raised when <b>domain</b>,<b>user</b>,<b>host</b>,<b>lm</b> or <b>nt</b> is null reference.</exception>
             public MessageType3(string domain,string user,string host,byte[] lm,byte[] nt)
             {
-                if(domain == null){
-                    throw new ArgumentNullException("domain");
-                }
-                if(user == null){
-                    throw new ArgumentNullException("user");
-                }
-                if(host == null){
-                    throw new ArgumentNullException("host");
-                }
-                if(lm == null){
-                    throw new ArgumentNullException("lm");
-                }
-                if(nt == null){
-                    throw new ArgumentNullException("nt");
-                }
-
-                m_Domain = domain;
-                m_User   = user;
-                m_Host   = host;
-                m_LM     = lm;
-                m_NT     = nt;
+                m_Domain = domain ?? throw new ArgumentNullException("domain");
+                m_User   = user ?? throw new ArgumentNullException("user");
+                m_Host   = host ?? throw new ArgumentNullException("host");
+                m_LM     = lm ?? throw new ArgumentNullException("lm");
+                m_NT     = nt ?? throw new ArgumentNullException("nt");
             }
 
             /// <summary>
@@ -386,12 +363,12 @@ namespace LumiSoft.Net.AUTH
                              +-------+-------+-------+-------+
                 */
                 
-                byte[] domain = Encoding.Unicode.GetBytes(m_Domain.ToUpper(CultureInfo.InvariantCulture)); 
-                byte[] user   = Encoding.Unicode.GetBytes(m_User); 
-                byte[] host   = Encoding.Unicode.GetBytes(m_Host.ToUpper(CultureInfo.InvariantCulture)); 
-                
-                byte[] data = new byte[64 + domain.Length + user.Length + host.Length + 24 + 24];
-                
+                var domain = Encoding.Unicode.GetBytes(m_Domain.ToUpper(CultureInfo.InvariantCulture));
+                var user   = Encoding.Unicode.GetBytes(m_User);
+                var host   = Encoding.Unicode.GetBytes(m_Host.ToUpper(CultureInfo.InvariantCulture));
+
+                var data = new byte[64 + domain.Length + user.Length + host.Length + 24 + 24];
+
                 data[0]  = (byte)'N';
                 data[1]  = (byte)'T';
                 data[2]  = (byte)'L';
@@ -495,12 +472,12 @@ namespace LumiSoft.Net.AUTH
                     throw new ArgumentNullException("password");
                 }
 
-                byte[] lmBuffer     = new byte[21];
+                var lmBuffer     = new byte[21];
                 byte[] magic        = {0x4B,0x47,0x53,0x21,0x40,0x23,0x24,0x25};   
                 byte[] nullEncMagic = {0xAA,0xD3,0xB4,0x35,0xB5,0x14,0x04,0xEE};  
 
                 // create Lan Manager password 
-                DES des = DES.Create (); 
+                var des = DES.Create ();
                 des.Mode = CipherMode.ECB; 
 
                 // Note: In .NET DES cannot accept a weak key 
@@ -542,9 +519,9 @@ namespace LumiSoft.Net.AUTH
                 }
 
                 
-                byte[] ntBuffer = new byte[21];
-                _MD4 md4 = _MD4.Create(); 
-                byte[] hash = md4.ComputeHash(Encoding.Unicode.GetBytes(password)); 
+                var ntBuffer = new byte[21];
+                var md4 = _MD4.Create();
+                var hash = md4.ComputeHash(Encoding.Unicode.GetBytes(password));
                 Buffer.BlockCopy(hash,0,ntBuffer,0,16);
 
                 return calc_resp(nonce,ntBuffer);
@@ -558,12 +535,12 @@ namespace LumiSoft.Net.AUTH
                  * bytes are stored in the results array.
                 */
 
-                byte[] response = new byte[24]; 
-                DES des = DES.Create();
+                var response = new byte[24];
+                var des = DES.Create();
                 des.Mode = CipherMode.ECB;
 
                 des.Key = setup_des_key(data,0); 
-                ICryptoTransform ct = des.CreateEncryptor(); 
+                var ct = des.CreateEncryptor();
                 ct.TransformBlock(nonce,0,8,response,0); 
 
                 des.Key = setup_des_key(data,7); 
@@ -579,7 +556,7 @@ namespace LumiSoft.Net.AUTH
 
             private static byte[] setup_des_key(byte[] key56bits,int position) 
             {                 
-                byte[] key = new byte [8]; 
+                var key = new byte [8];
                 key [0] = key56bits [position]; 
                 key [1] = (byte) ((key56bits [position] << 7) | (key56bits [position + 1] >> 1)); 
                 key [2] = (byte) ((key56bits [position + 1] << 6) | (key56bits [position + 2] >> 2)); 
@@ -594,10 +571,10 @@ namespace LumiSoft.Net.AUTH
 
             private static byte[] PasswordToKey(string password,int position) 
             { 
-                byte[] key7 = new byte[7]; 
+                var key7 = new byte[7];
                 int len = System.Math.Min(password.Length - position, 7); 
                 Encoding.ASCII.GetBytes(password.ToUpper(CultureInfo.CurrentCulture),position,len,key7,0); 
-                byte[] key8 = setup_des_key(key7,0); 
+                var key8 = setup_des_key(key7,0);
 
                 return key8;
             }
@@ -618,19 +595,9 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>domain</b>,<b>userName</b> or <b>passowrd</b> is null reference.</exception>
         public AUTH_SASL_Client_Ntlm(string domain,string userName,string password)
         {
-            if(domain == null){
-                throw new ArgumentNullException("domain");
-            }
-            if(userName == null){
-                throw new ArgumentNullException("userName");
-            }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
-
-            m_Domain   = domain;
-            m_UserName = userName;
-            m_Password = password;
+            m_Domain   = domain ?? throw new ArgumentNullException("domain");
+            m_UserName = userName ?? throw new ArgumentNullException("userName");
+            m_Password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>
@@ -665,7 +632,7 @@ namespace LumiSoft.Net.AUTH
                 m_State++;
                 m_IsCompleted = true;
 
-                byte[] nonce = MessageType2.Parse(serverResponse).Nonce;
+                var nonce = MessageType2.Parse(serverResponse).Nonce;
 
                 return new MessageType3(
                     m_Domain,

@@ -43,11 +43,11 @@ namespace LumiSoft.Net.Mime.vCard
 
             if(NeedEncode(value)){
                 // Remove encoding and charset parameters
-                string newParmString = "";
-                string[] parameters = ParametersString.ToLower().Split(';');
-                foreach(string parameter in parameters){
-                    string[] name_value = parameter.Split('=');
-                    if(name_value[0] == "encoding" || name_value[0] == "charset"){                        
+                var newParmString = "";
+                var parameters = ParametersString.ToLower().Split(';');
+                foreach (string parameter in parameters){
+                    var name_value = parameter.Split('=');
+                    if (name_value[0] == "encoding" || name_value[0] == "charset"){                        
                     }
                     else if(parameter.Length > 0){
                         newParmString += parameter + ";";
@@ -118,8 +118,8 @@ namespace LumiSoft.Net.Mime.vCard
             if(data.Length > 76){
                 int startPosition       = 0;
                 int lastPossibleFoldPos = -1;
-                StringBuilder retVal = new StringBuilder();
-                for(int i=0;i<data.Length;i++){
+                var retVal = new StringBuilder();
+                for (int i=0;i<data.Length;i++){
                     char c = data[i];
                     // We have possible fold point
                     if(c == ' ' || c == '\t'){
@@ -182,13 +182,13 @@ namespace LumiSoft.Net.Mime.vCard
             */
 
             get{ 
-                string data     = Value;
+                var data     = Value;
                 string encoding = null;
                 string charset  = null;
-                string[] parameters = ParametersString.ToLower().Split(';');
-                foreach(string parameter in parameters){
-                    string[] name_value = parameter.Split('=');
-                    if(name_value[0] == "encoding" && name_value.Length > 1){
+                var parameters = ParametersString.ToLower().Split(';');
+                foreach (string parameter in parameters){
+                    var name_value = parameter.Split('=');
+                    if (name_value[0] == "encoding" && name_value.Length > 1){
                         encoding = name_value[1];
                     }
                     else if(name_value[0] == "charset" && name_value.Length > 1){

@@ -49,7 +49,7 @@ namespace LumiSoft.Net.MIME
                 throw new ParseException("Multipart entity has not required 'boundary' paramter.");
             }
             
-            MIME_b_MultipartDigest retVal = new MIME_b_MultipartDigest(owner.ContentType);
+            var retVal = new MIME_b_MultipartDigest(owner.ContentType);
             ParseInternal(owner,owner.ContentType.TypeWithSubtype,stream,retVal);
 
             return retVal;
@@ -66,7 +66,7 @@ namespace LumiSoft.Net.MIME
             */
 
             get{ 
-                MIME_h_ContentType retVal = new MIME_h_ContentType("message/rfc822");
+                var retVal = new MIME_h_ContentType("message/rfc822");
 
                 return retVal; 
             }

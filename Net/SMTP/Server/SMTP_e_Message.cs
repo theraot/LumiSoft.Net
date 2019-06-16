@@ -17,11 +17,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
         public SMTP_e_Message(SMTP_Session session)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            Session = session;
+            Session = session ?? throw new ArgumentNullException("session");
         }
 
         /// <summary>
@@ -37,12 +33,8 @@ namespace LumiSoft.Net.SMTP.Server
         {
             get{ return m_pStream; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("Stream");
-                }
-
-                m_pStream = value; 
+            set{
+                m_pStream = value ?? throw new ArgumentNullException("Stream"); 
             }
         }
     }

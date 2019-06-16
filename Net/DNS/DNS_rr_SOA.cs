@@ -96,14 +96,14 @@ namespace LumiSoft.Net.DNS
 
 			//---- Parse record -------------------------------------------------------------//
 			// MNAME
-			string nameserver = "";			
-			Dns_Client.GetQName(reply,ref offset,ref nameserver);
+			var nameserver = "";
+            Dns_Client.GetQName(reply,ref offset,ref nameserver);
 
 			// RNAME
-			string adminMailBox = "";			
-			Dns_Client.GetQName(reply,ref offset,ref adminMailBox);
-			char[] adminMailBoxAr = adminMailBox.ToCharArray();
-			for(int i=0;i<adminMailBoxAr.Length;i++){			
+			var adminMailBox = "";
+            Dns_Client.GetQName(reply,ref offset,ref adminMailBox);
+			var adminMailBoxAr = adminMailBox.ToCharArray();
+            for (int i=0;i<adminMailBoxAr.Length;i++){			
 				if(adminMailBoxAr[i] == '.'){
 					adminMailBoxAr[i] = '@';
 					break;

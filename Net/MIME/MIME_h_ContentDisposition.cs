@@ -89,16 +89,16 @@ namespace LumiSoft.Net.MIME
             // We should not have encoded words here, but some email clients do this, so encoded them if any.
             value = MIME_Encoding_EncodedWord.DecodeS(value);
 
-            MIME_h_ContentDisposition retVal = new MIME_h_ContentDisposition();
-            
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var retVal = new MIME_h_ContentDisposition();
+
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
 
-            MIME_Reader r = new MIME_Reader(name_value[1]);
-            string type = r.Token();
-            if(type == null){
+            var r = new MIME_Reader(name_value[1]);
+            var type = r.Token();
+            if (type == null){
                 throw new ParseException("Invalid Content-Disposition: header field value '" + value + "'.");
             }
             retVal.DispositionType = type.Trim();
@@ -170,8 +170,8 @@ namespace LumiSoft.Net.MIME
         public DateTime Param_CreationDate
         {
             get{ 
-                string value = this.Parameters["creation-date"];
-                if(value == null){
+                var value = this.Parameters["creation-date"];
+                if (value == null){
                     return DateTime.MinValue;
                 }
 
@@ -194,8 +194,8 @@ namespace LumiSoft.Net.MIME
         public DateTime Param_ModificationDate
         {
             get{
-                string value = this.Parameters["modification-date"];
-                if(value == null){
+                var value = this.Parameters["modification-date"];
+                if (value == null){
                     return DateTime.MinValue;
                 }
 
@@ -218,8 +218,8 @@ namespace LumiSoft.Net.MIME
         public DateTime Param_ReadDate
         {
             get{
-                string value = this.Parameters["read-date"];
-                if(value == null){
+                var value = this.Parameters["read-date"];
+                if (value == null){
                     return DateTime.MinValue;
                 }
 
@@ -242,8 +242,8 @@ namespace LumiSoft.Net.MIME
         public long Param_Size
         {
             get{
-                string value = this.Parameters["size"];
-                if(value == null){
+                var value = this.Parameters["size"];
+                if (value == null){
                     return -1;
                 }
 

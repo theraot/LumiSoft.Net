@@ -18,11 +18,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>quotaRoot</b> is null reference.</exception>
         internal IMAP_e_GetQuota(string quotaRoot,IMAP_r_ServerStatus response)
         {
-            if(quotaRoot == null){
-                throw new ArgumentNullException("quotaRoot");
-            }
-
-            QuotaRoot = quotaRoot;
+            QuotaRoot = quotaRoot ?? throw new ArgumentNullException("quotaRoot");
             m_pResponse = response;
 
             QuotaResponses = new List<IMAP_r_u_Quota>();
@@ -41,12 +37,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

@@ -57,9 +57,9 @@ namespace LumiSoft.Net.POP3.Server
                     reply = "+OK " + this.Server.GreetingText;
                 }
 
-                POP3_e_Started e = OnStarted(reply);
+                var e = OnStarted(reply);
 
-                if(!string.IsNullOrEmpty(e.Response)){
+                if (!string.IsNullOrEmpty(e.Response)){
                     WriteLine(reply.ToString());
                 }
 
@@ -147,7 +147,7 @@ namespace LumiSoft.Net.POP3.Server
             }
 
             try{
-                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
                 // This event is raised only when read next coomand completes asynchronously.
                 readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){                
                     if(ProcessCmd(readLineOP)){
@@ -192,12 +192,12 @@ namespace LumiSoft.Net.POP3.Server
                     return false;
                 }
                                 
-                string[] cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
-                string   cmd      = cmd_args[0].ToUpperInvariant();
-                string   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
+                var   cmd      = cmd_args[0].ToUpperInvariant();
+                var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
 
                 // Log.
-                if(this.Server.Logger != null){
+                if (this.Server.Logger != null){
                     // Hide password from log.
                     if(cmd == "PASS"){
                         this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,"PASS <***REMOVED***>",this.LocalEndPoint,this.RemoteEndPoint);
@@ -435,12 +435,12 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
                         
-            POP3_e_Authenticate e = OnAuthenticate(m_UserName,cmdText);
-            if(e.IsAuthenticated){
+            var e = OnAuthenticate(m_UserName,cmdText);
+            if (e.IsAuthenticated){
                 m_pUser = new GenericIdentity(m_UserName,"POP3-USER/PASS");
 
                 // Get mailbox messages.
-                POP3_e_GetMessagesInfo eMessages = OnGetMessagesInfo();
+                var eMessages = OnGetMessagesInfo();
                 int seqNo = 1;
                 foreach(POP3_ServerMessage message in eMessages.Messages){
                     message.SequenceNumber = seqNo++;
@@ -554,7 +554,7 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            string mechanism = cmdText;
+            var mechanism = cmdText;
 
             /* MS specific or someone knows where in RFC let me know about this.
                 Empty AUTH commands causes authentication mechanisms listing. 
@@ -565,8 +565,8 @@ namespace LumiSoft.Net.POP3.Server
                 
                 http://msdn.microsoft.com/en-us/library/cc239199.aspx
             */
-            if(string.IsNullOrEmpty(mechanism)){
-                StringBuilder resp = new StringBuilder();
+            if (string.IsNullOrEmpty(mechanism)){
+                var resp = new StringBuilder();
                 resp.Append("+OK\r\n");
                 foreach(AUTH_SASL_ServerMechanism m in m_pAuthentications.Values){
                     resp.Append(m.Name + "\r\n");
@@ -583,18 +583,18 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            byte[] clientResponse = new byte[0];
-            AUTH_SASL_ServerMechanism auth = this.Authentications[mechanism];
+            var clientResponse = new byte[0];
+            var auth = this.Authentications[mechanism];
             auth.Reset();
             while(true){
-                byte[] serverResponse = auth.Continue(clientResponse);
+                var serverResponse = auth.Continue(clientResponse);
                 // Authentication completed.
-                if(auth.IsCompleted){
+                if (auth.IsCompleted){
                     if(auth.IsAuthenticated){
                         m_pUser = new GenericIdentity(auth.UserName,"SASL-" + auth.Name);
 
                         // Get mailbox messages.
-                        POP3_e_GetMessagesInfo eMessages = OnGetMessagesInfo();
+                        var eMessages = OnGetMessagesInfo();
                         int seqNo = 1;
                         foreach(POP3_ServerMessage message in eMessages.Messages){
                             message.SequenceNumber = seqNo++;
@@ -619,7 +619,7 @@ namespace LumiSoft.Net.POP3.Server
                 }
 
                 // Read client response. 
-                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
                 this.TcpStream.ReadLine(readLineOP,false);
                 if(readLineOP.Error != null){
                     throw readLineOP.Error;
@@ -729,10 +729,10 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            string[] args = cmdText.Split(' ');
+            var args = cmdText.Split(' ');
 
             // List whole mailbox.
-            if(string.IsNullOrEmpty(cmdText)){
+            if (string.IsNullOrEmpty(cmdText)){
                 // Calculate count and total size in bytes, exclude marked for deletion messages.
                 int count = 0;
                 int size  = 0;
@@ -743,7 +743,7 @@ namespace LumiSoft.Net.POP3.Server
                     }
                 }
 
-                StringBuilder response = new StringBuilder();
+                var response = new StringBuilder();
                 response.Append("+OK " + count + " messages (" + size + " bytes).\r\n");
                 foreach(POP3_ServerMessage msg in m_pMessages){
                     response.Append(msg.SequenceNumber + " " + msg.Size + "\r\n");
@@ -818,10 +818,10 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            string[] args = cmdText.Split(' ');
+            var args = cmdText.Split(' ');
 
             // List whole mailbox.
-            if(string.IsNullOrEmpty(cmdText)){
+            if (string.IsNullOrEmpty(cmdText)){
                 // Calculate count and total size in bytes, exclude marked for deletion messages.
                 int count = 0;
                 int size  = 0;
@@ -832,7 +832,7 @@ namespace LumiSoft.Net.POP3.Server
                     }
                 }
 
-                StringBuilder response = new StringBuilder();
+                var response = new StringBuilder();
                 response.Append("+OK " + count + " messages (" + size + " bytes).\r\n");
                 foreach(POP3_ServerMessage msg in m_pMessages){
                     response.Append(msg.SequenceNumber + " " + msg.UID + "\r\n");
@@ -907,9 +907,9 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            string[] args = cmdText.Split(' ');
+            var args = cmdText.Split(' ');
 
-            if(args.Length != 2 || !Net_Utils.IsInteger(args[0]) || !Net_Utils.IsInteger(args[1])){
+            if (args.Length != 2 || !Net_Utils.IsInteger(args[0]) || !Net_Utils.IsInteger(args[1])){
                 WriteLine("-ERR Error in arguments.");
 
                 return;
@@ -924,10 +924,10 @@ namespace LumiSoft.Net.POP3.Server
                     return;
                 }
 
-                POP3_e_GetTopOfMessage e = OnGetTopOfMessage(msg,Convert.ToInt32(args[1]));
+                var e = OnGetTopOfMessage(msg,Convert.ToInt32(args[1]));
 
                 // User didn't provide us message stream, assume that message deleted(for example by IMAP during this POP3 session).
-                if(e.Data == null){
+                if (e.Data == null){
                     WriteLine("-ERR no such message.");
                 }
                 else{
@@ -979,9 +979,9 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            string[] args = cmdText.Split(' ');
+            var args = cmdText.Split(' ');
 
-            if(args.Length != 1 || !Net_Utils.IsInteger(args[0])){
+            if (args.Length != 1 || !Net_Utils.IsInteger(args[0])){
                 WriteLine("-ERR Error in arguments.");
 
                 return;
@@ -996,10 +996,10 @@ namespace LumiSoft.Net.POP3.Server
                     return;
                 }
 
-                POP3_e_GetMessageStream e = OnGetMessageStream(msg);
+                var e = OnGetMessageStream(msg);
 
                 // User didn't provide us message stream, assume that message deleted(for example by IMAP during this POP3 session).
-                if(e.MessageStream == null){
+                if (e.MessageStream == null){
                     WriteLine("-ERR no such message.");
                 }
                 else{
@@ -1052,9 +1052,9 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            string[] args = cmdText.Split(' ');
+            var args = cmdText.Split(' ');
 
-            if(args.Length != 1 || !Net_Utils.IsInteger(args[0])){
+            if (args.Length != 1 || !Net_Utils.IsInteger(args[0])){
                 WriteLine("-ERR Error in arguments.");
 
                 return;
@@ -1208,14 +1208,14 @@ namespace LumiSoft.Net.POP3.Server
                 return;
             }
 
-            StringBuilder capaResponse = new StringBuilder();
-			capaResponse.Append("+OK Capability list follows\r\n");
+            var capaResponse = new StringBuilder();
+            capaResponse.Append("+OK Capability list follows\r\n");
 			capaResponse.Append("PIPELINING\r\n");
 			capaResponse.Append("UIDL\r\n");
 			capaResponse.Append("TOP\r\n");
 
-            StringBuilder sasl = new StringBuilder();
-            foreach(AUTH_SASL_ServerMechanism authMechanism in this.Authentications.Values){
+            var sasl = new StringBuilder();
+            foreach (AUTH_SASL_ServerMechanism authMechanism in this.Authentications.Values){
                 if(!authMechanism.RequireSSL || (authMechanism.RequireSSL && this.IsSecureConnection)){
                     sasl.Append(authMechanism.Name + " ");
                 }
@@ -1384,9 +1384,9 @@ namespace LumiSoft.Net.POP3.Server
         /// <returns>Returns event args.</returns>
         private POP3_e_Started OnStarted(string reply)
         {
-            POP3_e_Started eArgs = new POP3_e_Started(reply);
+            var eArgs = new POP3_e_Started(reply);
 
-            if(this.Started != null){                
+            if (this.Started != null){                
                 this.Started(this,eArgs);
             }
 
@@ -1406,9 +1406,9 @@ namespace LumiSoft.Net.POP3.Server
         /// <returns>Returns event args.</returns>
         private POP3_e_Authenticate OnAuthenticate(string user,string password)
         {
-            POP3_e_Authenticate eArgs = new POP3_e_Authenticate(user,password);
+            var eArgs = new POP3_e_Authenticate(user,password);
 
-            if(this.Authenticate != null){
+            if (this.Authenticate != null){
                 this.Authenticate(this,eArgs);
             }
 
@@ -1426,9 +1426,9 @@ namespace LumiSoft.Net.POP3.Server
         /// <returns>Returns event args.</returns>
         private POP3_e_GetMessagesInfo OnGetMessagesInfo()
         {
-            POP3_e_GetMessagesInfo eArgs = new POP3_e_GetMessagesInfo();
+            var eArgs = new POP3_e_GetMessagesInfo();
 
-            if(this.GetMessagesInfo != null){
+            if (this.GetMessagesInfo != null){
                 this.GetMessagesInfo(this,eArgs);
             }
 
@@ -1448,9 +1448,9 @@ namespace LumiSoft.Net.POP3.Server
         /// <returns>Returns event args.</returns>
         private POP3_e_GetTopOfMessage OnGetTopOfMessage(POP3_ServerMessage message,int lines)
         {
-            POP3_e_GetTopOfMessage eArgs = new POP3_e_GetTopOfMessage(message,lines);
+            var eArgs = new POP3_e_GetTopOfMessage(message,lines);
 
-            if(this.GetTopOfMessage != null){
+            if (this.GetTopOfMessage != null){
                 this.GetTopOfMessage(this,eArgs);
             }
 
@@ -1469,9 +1469,9 @@ namespace LumiSoft.Net.POP3.Server
         /// <returns>Returns event arguments.</returns>
         private POP3_e_GetMessageStream OnGetMessageStream(POP3_ServerMessage message)
         {
-            POP3_e_GetMessageStream eArgs = new POP3_e_GetMessageStream(message);
+            var eArgs = new POP3_e_GetMessageStream(message);
 
-            if(this.GetMessageStream != null){
+            if (this.GetMessageStream != null){
                 this.GetMessageStream(this,eArgs);
             }
 

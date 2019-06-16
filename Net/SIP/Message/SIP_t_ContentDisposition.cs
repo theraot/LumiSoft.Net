@@ -67,11 +67,8 @@ namespace LumiSoft.Net.SIP.Message
             }
             
             // disp-type
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("SIP Content-Disposition 'disp-type' value is missing !");
-            }
-            m_DispositionType = word;
+            var word = reader.ReadWord();
+            m_DispositionType = word ?? throw new SIP_ParseException("SIP Content-Disposition 'disp-type' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -83,7 +80,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns "Content-Disposition" value.</returns>
         public override string ToStringValue()
         {
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append(m_DispositionType);
             retVal.Append(ParametersToString());
 
@@ -116,8 +113,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Handling
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["handling"];
-                if(parameter != null){
+                var parameter = this.Parameters["handling"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

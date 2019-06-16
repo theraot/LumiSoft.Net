@@ -147,8 +147,8 @@ namespace LumiSoft.Net.MIME
                 This is the default value -- that is, "Content-Transfer-Encoding: 7BIT" is assumed if the
                 Content-Transfer-Encoding header field is not present.
             */
-            string transferEncoding = MIME_TransferEncodings.SevenBit;
-            if(this.Entity.ContentTransferEncoding != null){
+            var transferEncoding = MIME_TransferEncodings.SevenBit;
+            if (this.Entity.ContentTransferEncoding != null){
                 transferEncoding = this.Entity.ContentTransferEncoding.ToLowerInvariant();
             }
 
@@ -190,7 +190,7 @@ namespace LumiSoft.Net.MIME
 
             if(string.Equals(transferEncoding,MIME_TransferEncodings.QuotedPrintable,StringComparison.InvariantCultureIgnoreCase)){
                 using(MemoryStreamEx fs = new MemoryStreamEx(32000)){
-                    QuotedPrintableStream encoder = new QuotedPrintableStream(new SmartStream(fs,false),FileAccess.ReadWrite);
+                    var encoder = new QuotedPrintableStream(new SmartStream(fs,false),FileAccess.ReadWrite);
                     Net_Utils.StreamCopy(stream,encoder,32000);
                     encoder.Flush();
                     fs.Position = 0;
@@ -199,7 +199,7 @@ namespace LumiSoft.Net.MIME
             }
             else if(string.Equals(transferEncoding,MIME_TransferEncodings.Base64,StringComparison.InvariantCultureIgnoreCase)){
                 using(MemoryStreamEx fs = new MemoryStreamEx(32000)){
-                    Base64Stream encoder = new Base64Stream(fs,false,true,FileAccess.ReadWrite);                                     
+                    var encoder = new Base64Stream(fs,false,true,FileAccess.ReadWrite);
                     Net_Utils.StreamCopy(stream,encoder,32000);
                     encoder.Finish();
                     fs.Position = 0;
@@ -262,7 +262,7 @@ namespace LumiSoft.Net.MIME
         public byte[] EncodedData
         {
             get{ 
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 Net_Utils.StreamCopy(this.GetEncodedDataStream(),ms,32000);
 
                 return ms.ToArray();
@@ -278,7 +278,7 @@ namespace LumiSoft.Net.MIME
         public byte[] Data
         {
             get{
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 Net_Utils.StreamCopy(this.GetDataStream(),ms,32000);
 
                 return ms.ToArray(); 

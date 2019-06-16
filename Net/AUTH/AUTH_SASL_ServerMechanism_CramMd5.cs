@@ -121,14 +121,14 @@ namespace LumiSoft.Net.AUTH
             }
 
             // Parse client response. response = userName SP hash.
-            string[] user_hash = Encoding.UTF8.GetString(clientResponse).Split(' ');
-            if(user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0])){
+            var user_hash = Encoding.UTF8.GetString(clientResponse).Split(' ');
+            if (user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0])){
                 m_UserName = user_hash[0];
-                AUTH_e_UserInfo result = OnGetUserInfo(user_hash[0]);
-                if(result.UserExists){
+                var result = OnGetUserInfo(user_hash[0]);
+                if (result.UserExists){
                     // hash = Hex(HmacMd5(hashKey,password))
-                    string hash = Net_Utils.ToHex(HmacMd5(m_Key,result.Password));
-                    if(hash == user_hash[1]){
+                    var hash = Net_Utils.ToHex(HmacMd5(m_Key,result.Password));
+                    if (hash == user_hash[1]){
                         m_IsAuthenticated = true;
                     }
                 }
@@ -147,9 +147,9 @@ namespace LumiSoft.Net.AUTH
 		/// <returns>Returns MD5 hash.</returns>
 		private byte[] HmacMd5(string hashKey,string text)
 		{
-			HMACMD5 kMd5 = new HMACMD5(Encoding.Default.GetBytes(text));
-			
-			return kMd5.ComputeHash(Encoding.ASCII.GetBytes(hashKey));
+			var kMd5 = new HMACMD5(Encoding.Default.GetBytes(text));
+
+            return kMd5.ComputeHash(Encoding.ASCII.GetBytes(hashKey));
 		}
 
         /// <summary>
@@ -201,9 +201,9 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns specified user info.</returns>
         private AUTH_e_UserInfo OnGetUserInfo(string userName)
         {
-            AUTH_e_UserInfo retVal = new AUTH_e_UserInfo(userName);
+            var retVal = new AUTH_e_UserInfo(userName);
 
-            if(this.GetUserInfo != null){
+            if (this.GetUserInfo != null){
                 this.GetUserInfo(this,retVal);
             }
 

@@ -100,8 +100,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns></returns>
         public T[] GetAllValues()
         {
-            List<T> retVal = new List<T>();
-            foreach(SIP_SingleValueHF<T> hf in m_pFields){
+            var retVal = new List<T>();
+            foreach (SIP_SingleValueHF<T> hf in m_pFields){
                 retVal.Add(hf.ValueX);
             }
 

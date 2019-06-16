@@ -98,8 +98,8 @@ namespace LumiSoft.Net
                 return "";
             }
 
-            StringBuilder retVal = new StringBuilder();
-            for(int i=0;i<values.Length;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<values.Length;i++){
                 if(i > 0){
                     retVal.Append(delimiter);
                 }
@@ -129,7 +129,7 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Argument 'blockSize' value must be >= 1024.");
             }
 
-            byte[] buffer      = new byte[blockSize];
+            var buffer      = new byte[blockSize];
             long   totalReaded = 0;            
             while(true){
                 int readedCount = source.Read(buffer,0,buffer.Length);
@@ -156,11 +156,11 @@ namespace LumiSoft.Net
         /// </returns>
         public static int CompareIP(IPAddress source,IPAddress destination)
         {
-            byte[] sourceIpBytes      = source.GetAddressBytes();
-            byte[] destinationIpBytes = destination.GetAddressBytes();
+            var sourceIpBytes      = source.GetAddressBytes();
+            var destinationIpBytes = destination.GetAddressBytes();
 
             // IPv4 and IPv6
-            if(sourceIpBytes.Length < destinationIpBytes.Length){
+            if (sourceIpBytes.Length < destinationIpBytes.Length){
                 return 1;
             }
             // IPv6 and IPv4
@@ -219,8 +219,8 @@ namespace LumiSoft.Net
             }
 
             if(ip.AddressFamily == AddressFamily.InterNetwork){
-                byte[] bytes = ip.GetAddressBytes();
-                if(bytes[0] >= 224 && bytes[0] <= 239){
+                var bytes = ip.GetAddressBytes();
+                if (bytes[0] >= 224 && bytes[0] <= 239){
                     return true;
                 }
             }
@@ -256,9 +256,9 @@ namespace LumiSoft.Net
             }
 
 			if(ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork){
-				byte[] ipBytes = ip.GetAddressBytes();
+				var ipBytes = ip.GetAddressBytes();
 
-				/* Private IPs:
+                /* Private IPs:
 					First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
 					First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
 					First Octet = 10 (Example: 10.X.X.X)
@@ -266,7 +266,7 @@ namespace LumiSoft.Net
 
 				*/
 
-				if(ipBytes[0] == 192 && ipBytes[1] == 168){
+                if (ipBytes[0] == 192 && ipBytes[1] == 168){
 					return true;
 				}
 				if(ipBytes[0] == 172 && ipBytes[1] >= 16 && ipBytes[1] <= 31){
@@ -297,7 +297,7 @@ namespace LumiSoft.Net
             }
 
             try{
-                string[] ip_port = value.Split(':');
+                var ip_port = value.Split(':');
 
                 return new IPEndPoint(IPAddress.Parse(ip_port[0]),Convert.ToInt32(ip_port[1]));
             }
@@ -356,8 +356,8 @@ namespace LumiSoft.Net
                 }
             }
             catch(NotSupportedException nX){
-                string dummy = nX.Message;
-                
+                var dummy = nX.Message;
+
                 return false;
             }
         }
@@ -375,20 +375,20 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("localEP");
             }
 
-            SocketType socketType = SocketType.Stream;
-            if(protocolType == ProtocolType.Udp){
+            var socketType = SocketType.Stream;
+            if (protocolType == ProtocolType.Udp){
                 socketType = SocketType.Dgram;
             }
                         
             if(localEP.AddressFamily == AddressFamily.InterNetwork){
-                Socket socket = new Socket(AddressFamily.InterNetwork,socketType,protocolType);
+                var socket = new Socket(AddressFamily.InterNetwork,socketType,protocolType);
                 socket.Bind(localEP);
 
                 return socket;
             }
 
             if(localEP.AddressFamily == AddressFamily.InterNetworkV6){
-                Socket socket = new Socket(AddressFamily.InterNetworkV6,socketType,protocolType);
+                var socket = new Socket(AddressFamily.InterNetworkV6,socketType,protocolType);
                 socket.Bind(localEP);
 
                 return socket;
@@ -442,12 +442,12 @@ namespace LumiSoft.Net
 				throw new Exception("Illegal hex data, hex data must be in two bytes pairs, for example: 0F,FF,A3,... .");
 			}
 
-			MemoryStream retVal = new MemoryStream(hexData.Length / 2);
-			// Loop hex value pairs
-			for(int i=0;i<hexData.Length;i+=2){
-				byte[] hexPairInDecimal = new byte[2];
-				// We need to convert hex char to decimal number, for example F = 15
-				for(int h=0;h<2;h++){
+			var retVal = new MemoryStream(hexData.Length / 2);
+            // Loop hex value pairs
+            for (int i=0;i<hexData.Length;i+=2){
+				var hexPairInDecimal = new byte[2];
+                // We need to convert hex char to decimal number, for example F = 15
+                for (int h=0;h<2;h++){
 					if(((char)hexData[i + h]) == '0'){
 						hexPairInDecimal[h] = 0;
 					}
@@ -517,7 +517,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("data");
             }
 
-            Base64 base64 = new Base64();
+            var base64 = new Base64();
 
             return base64.Decode(data,true);
         }
@@ -534,7 +534,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("data");
             }
 
-            Base64 base64 = new Base64();
+            var base64 = new Base64();
 
             return base64.Decode(data,0,data.Length,true);
         }
@@ -604,8 +604,8 @@ namespace LumiSoft.Net
 			}
 
 			// Convert chars to bytes
-			byte[] base64LoockUpTable = new byte[64];
-			for(int i=0;i<64;i++){
+			var base64LoockUpTable = new byte[64];
+            for (int i=0;i<64;i++){
 				base64LoockUpTable[i] = (byte)base64Chars[i];
 			}
 						
@@ -622,9 +622,9 @@ namespace LumiSoft.Net
 			}
 
 			// Construc return valu buffer
-			byte[] retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];  // * 2 - CRLF
+			var retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];  // * 2 - CRLF
 
-			int lineBytes = 0;
+            int lineBytes = 0;
 			// Loop all 3 bye blocks
 			int position = 0; 
 			for(int i=0;i<data.Length;i+=3){
@@ -721,8 +721,8 @@ namespace LumiSoft.Net
 			}
 
 			//--- Create decode table ---------------------//
-			byte[] decodeTable = new byte[128];
-			for(int i=0;i<128;i++){
+			var decodeTable = new byte[128];
+            for (int i=0;i<128;i++){
 				int mappingIndex = -1;
 				for(int bc=0;bc<base64Chars.Length;bc++){
 					if(i == base64Chars[bc]){
@@ -740,13 +740,13 @@ namespace LumiSoft.Net
 			}
 			//---------------------------------------------//
 
-			byte[] decodedDataBuffer  = new byte[((base64Data.Length * 6) / 8) + 4];
-			int    decodedBytesCount  = 0;
+			var decodedDataBuffer  = new byte[((base64Data.Length * 6) / 8) + 4];
+            int    decodedBytesCount  = 0;
 			int    nByteInBase64Block = 0;
-			byte[] decodedBlock       = new byte[3];
-			byte[] base64Block        = new byte[4];
+			var decodedBlock       = new byte[3];
+            var base64Block        = new byte[4];
 
-			for(int i=0;i<base64Data.Length;i++){
+            for (int i=0;i<base64Data.Length;i++){
 				byte b = base64Data[i];
 
 				// Read 4 byte base64 block and process it 			
@@ -804,8 +804,8 @@ namespace LumiSoft.Net
 
 			// There is some decoded bytes, construct return value
 			if(decodedBytesCount > -1){
-				byte[] retVal = new byte[decodedBytesCount];
-				Array.Copy(decodedDataBuffer,0,retVal,0,decodedBytesCount);
+				var retVal = new byte[decodedBytesCount];
+                Array.Copy(decodedDataBuffer,0,retVal,0,decodedBytesCount);
 				return retVal;
 			}
 			// There is no decoded bytes
@@ -827,9 +827,9 @@ namespace LumiSoft.Net
             }
 
             System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();			
-			byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(text));
+			var hash = md5.ComputeHash(Encoding.Default.GetBytes(text));
 
-            if(hex){
+            if (hex){
 			    return ToHex(hash).ToLower();
             }
 
@@ -851,8 +851,8 @@ namespace LumiSoft.Net
                 }
             }
             catch(NotSupportedException nX){
-                string dummy = nX.Message;
-                
+                var dummy = nX.Message;
+
                 return false;
             }
         }

@@ -16,14 +16,11 @@ namespace LumiSoft.Net.POP3.Server
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal POP3_e_GetTopOfMessage(POP3_ServerMessage message,int lines)
         {
-            if(message == null){
-                throw new ArgumentNullException("message");
-            }
             if(lines < 0){
                 throw new ArgumentException("Argument 'lines' value must be >= 0.","lines");
             }
 
-            Message  = message;
+            Message  = message ?? throw new ArgumentNullException("message");
             LineCount = lines;
         }
 

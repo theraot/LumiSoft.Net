@@ -54,18 +54,18 @@ namespace LumiSoft.Net.Mail
                 group-list      =   mailbox-list / CFWS / obs-group-list
             */
 
-            MIME_Reader        r      = new MIME_Reader(value);
-            Mail_t_AddressList retVal = new Mail_t_AddressList();
-            while(true){
-                string word = r.QuotedReadToDelimiter(new char[]{',','<',':'});
+            var        r      = new MIME_Reader(value);
+            var retVal = new Mail_t_AddressList();
+            while (true){
+                var word = r.QuotedReadToDelimiter(new char[]{',','<',':'});
                 // We processed all data.
-                if(word == null && r.Available == 0){
+                if (word == null && r.Available == 0){
                     break;
                 }
                 // group
 
                 if(r.Peek(true) == ':'){
-                    Mail_t_Group group = new Mail_t_Group(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null);
+                    var group = new Mail_t_Group(word != null ? MIME_Encoding_EncodedWord.DecodeS(TextUtils.UnQuoteString(word)) : null);
                     // Consume ':'
                     r.Char(true);
            
@@ -193,8 +193,8 @@ namespace LumiSoft.Net.Mail
         /// <returns>Returns address-list as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
-            for(int i=0;i<m_pList.Count;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<m_pList.Count;i++){
                 if(i == (m_pList.Count - 1)){
                     retVal.Append(m_pList[i].ToString());
                 }
@@ -259,8 +259,8 @@ namespace LumiSoft.Net.Mail
         public Mail_t_Mailbox[] Mailboxes
         {
             get{
-                List<Mail_t_Mailbox> retVal = new List<Mail_t_Mailbox>();
-                foreach(Mail_t_Address address in this){
+                var retVal = new List<Mail_t_Mailbox>();
+                foreach (Mail_t_Address address in this){
                     if(address is Mail_t_Mailbox){
                         retVal.Add((Mail_t_Mailbox)address);
                     }

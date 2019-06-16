@@ -23,11 +23,7 @@ namespace LumiSoft.Net.Mail
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
         public Mail_t_TcpInfo(IPAddress ip,string hostName)
         {
-            if(ip == null){
-                throw new ArgumentNullException("ip");
-            }
-
-            IP      = ip;
+            IP      = ip ?? throw new ArgumentNullException("ip");
             HostName = hostName;
         }
 

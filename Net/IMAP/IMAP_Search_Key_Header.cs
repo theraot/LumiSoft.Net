@@ -24,15 +24,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>fieldName</b> or <b>value</b> is null reference.</exception>
         public IMAP_Search_Key_Header(string fieldName,string value)
         {
-            if(fieldName == null){
-                throw new ArgumentNullException("fieldName");
-            }
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            FieldName = fieldName;
-            Value     = value;
+            FieldName = fieldName ?? throw new ArgumentNullException("fieldName");
+            Value     = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
@@ -48,16 +41,16 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"HEADER",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"HEADER",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'HEADER' key.");
             }
-            string fieldName = IMAP_Utils.ReadString(r);
-            if(fieldName == null){
+            var fieldName = IMAP_Utils.ReadString(r);
+            if (fieldName == null){
                 throw new ParseException("Parse error: Invalid 'HEADER' field-name value.");
             }
-            string value = IMAP_Utils.ReadString(r);
-            if(value == null){
+            var value = IMAP_Utils.ReadString(r);
+            if (value == null){
                 throw new ParseException("Parse error: Invalid 'HEADER' string value.");
             }
 

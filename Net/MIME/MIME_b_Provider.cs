@@ -53,8 +53,9 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("defaultContentType");
             }
 
-            string mediaType = defaultContentType.TypeWithSubtype;
-            try{
+            var mediaType = defaultContentType.TypeWithSubtype;
+            try
+            {
                 if(owner.ContentType != null){
                     mediaType = owner.ContentType.TypeWithSubtype;
                 }
@@ -74,8 +75,8 @@ namespace LumiSoft.Net.MIME
             else{
                 // Registered list of mediaTypes are available: http://www.iana.org/assignments/media-types/.
 
-                string mediaRootType = mediaType.Split('/')[0].ToLowerInvariant();
-                if(mediaRootType == "application"){
+                var mediaRootType = mediaType.Split('/')[0].ToLowerInvariant();
+                if (mediaRootType == "application"){
                     bodyType = typeof(MIME_b_Application);
                 }
                 else if(mediaRootType == "audio"){

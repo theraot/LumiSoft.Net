@@ -37,15 +37,8 @@ namespace LumiSoft.Net.FTP.Server
             /// <exception cref="ArgumentNullException">Is raised when <b>session</b> or <b>stream</b> is null reference.</exception>
             public DataConnection(FTP_Session session,Stream stream,bool read_write)
             {
-                if(session == null){
-                    throw new ArgumentNullException("session");
-                }
-                if(stream == null){
-                    throw new ArgumentNullException("stream");
-                }
-
-                m_pSession   = session;
-                m_pStream    = stream;
+                m_pSession   = session ?? throw new ArgumentNullException("session");
+                m_pStream    = stream ?? throw new ArgumentNullException("stream");
                 m_Read_Write = read_write;
             }
 
@@ -92,7 +85,7 @@ namespace LumiSoft.Net.FTP.Server
                     WriteLine("150 Waiting data connection on port '" + ((IPEndPoint)m_pSession.m_pPassiveSocket.LocalEndPoint).Port + "'.");
                                                             
                     // Start connection wait timeout timer.
-                    TimerEx timer = new TimerEx(10000,false);
+                    var timer = new TimerEx(10000,false);
                     timer.Elapsed += delegate(object sender,System.Timers.ElapsedEventArgs e){
                         WriteLine("550 Data connection wait timeout.");
                         Dispose();
@@ -243,9 +236,9 @@ namespace LumiSoft.Net.FTP.Server
                     reply = "220 " + this.Server.GreetingText;
                 }
 
-                FTP_e_Started e = OnStarted(reply);
+                var e = OnStarted(reply);
 
-                if(!string.IsNullOrEmpty(e.Response)){
+                if (!string.IsNullOrEmpty(e.Response)){
                     WriteLine(reply.ToString());
                 }
 
@@ -331,7 +324,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             try{
-                SmartStream.ReadLineAsyncOP readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+                var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
                 // This event is raised only when read next coomand completes asynchronously.
                 readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate(object sender,EventArgs<SmartStream.ReadLineAsyncOP> e){                
                     if(ProcessCmd(readLineOP)){
@@ -376,12 +369,12 @@ namespace LumiSoft.Net.FTP.Server
                     return false;
                 }
                                 
-                string[] cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
-                string   cmd      = cmd_args[0].ToUpperInvariant();
-                string   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
+                var   cmd      = cmd_args[0].ToUpperInvariant();
+                var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
 
                 // Log.
-                if(this.Server.Logger != null){
+                if (this.Server.Logger != null){
                     // Hide password from log.
                     if(cmd == "PASS"){
                         this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,"PASS <***REMOVED***>",this.LocalEndPoint,this.RemoteEndPoint);
@@ -509,13 +502,13 @@ namespace LumiSoft.Net.FTP.Server
 				return;
 			}
 
-			string[] param = argsText.Split(new char[]{' '});
+			var param = argsText.Split(new char[]{' '});
 
-			// There must be only one parameter - userName
-			if(argsText.Length > 0 && param.Length == 1){
-				string userName = param[0];
-							
-				WriteLine("331 Password required or user:'" + userName + "'");
+            // There must be only one parameter - userName
+            if (argsText.Length > 0 && param.Length == 1){
+				var userName = param[0];
+
+                WriteLine("331 Password required or user:'" + userName + "'");
 				m_UserName = userName;
 			}
 			else{
@@ -541,14 +534,14 @@ namespace LumiSoft.Net.FTP.Server
 				return;
 			}
 
-			string[] param = argsText.Split(new char[]{' '});
+			var param = argsText.Split(new char[]{' '});
 
-			// There may be only one parameter - password
-			if(param.Length == 1){
-				string password = param[0];
-									
-				// Authenticate user
-				if(OnAuthenticate(m_UserName,password).IsAuthenticated){
+            // There may be only one parameter - password
+            if (param.Length == 1){
+				var password = param[0];
+
+                // Authenticate user
+                if (OnAuthenticate(m_UserName,password).IsAuthenticated){
 					WriteLine("230 Password ok");
 
                     m_pUser = new GenericIdentity(m_UserName,"FTP-USER/PASS");
@@ -585,7 +578,7 @@ namespace LumiSoft.Net.FTP.Server
 				file group designator.
 			*/
 
-            FTP_e_Cwd eArgs = new FTP_e_Cwd(argsText);
+            var eArgs = new FTP_e_Cwd(argsText);
             OnCwd(eArgs);
 
             // API didn't provide response.
@@ -623,7 +616,7 @@ namespace LumiSoft.Net.FTP.Server
 				shall be identical to the reply codes of CWD.
 			*/
 
-            FTP_e_Cdup eArgs = new FTP_e_Cdup();
+            var eArgs = new FTP_e_Cdup();
             OnCdup(eArgs);
 
             // API didn't provide response.
@@ -734,7 +727,7 @@ namespace LumiSoft.Net.FTP.Server
 				contents of the file at the server site shall be unaffected.
 			*/
                         
-            FTP_e_GetFile eArgs = new FTP_e_GetFile(argsText);
+            var eArgs = new FTP_e_GetFile(argsText);
             OnGetFile(eArgs);
 
             // Error getting directory listing.
@@ -779,7 +772,7 @@ namespace LumiSoft.Net.FTP.Server
 				contents of the file at the server site shall be unaffected.
 			*/
 
-            FTP_e_Stor eArgs = new FTP_e_Stor(argsText);
+            var eArgs = new FTP_e_Stor(argsText);
             OnStor(eArgs);
 
             // Opearation failed.
@@ -824,7 +817,7 @@ namespace LumiSoft.Net.FTP.Server
 				delete?"), it should be provided by the user-FTP process.
 			*/
 
-            FTP_e_Dele eArgs = new FTP_e_Dele(argsText);
+            var eArgs = new FTP_e_Dele(argsText);
             OnDele(eArgs);
 
             // API didn't provide response.
@@ -863,7 +856,7 @@ namespace LumiSoft.Net.FTP.Server
 				pathname shall be created at the server site.
 			*/
 			
-			FTP_e_Appe eArgs = new FTP_e_Appe(argsText);
+			var eArgs = new FTP_e_Appe(argsText);
             OnAppe(eArgs);
 
             // Opearation failed.
@@ -921,7 +914,7 @@ namespace LumiSoft.Net.FTP.Server
                    are not permitted.
             */
 
-            FTP_e_GetFileSize eArgs = new FTP_e_GetFileSize(argsText);
+            var eArgs = new FTP_e_GetFileSize(argsText);
             OnGetFileSize(eArgs);
 
             // Error completing operation.
@@ -989,7 +982,7 @@ namespace LumiSoft.Net.FTP.Server
 				renamed.
 			*/
 
-            FTP_e_Rnto eArgs = new FTP_e_Rnto(m_RenameFrom,argsText);
+            var eArgs = new FTP_e_Rnto(m_RenameFrom,argsText);
             OnRnto(eArgs);
 
             // API didn't provide response.
@@ -1026,7 +1019,7 @@ namespace LumiSoft.Net.FTP.Server
 				the pathname is relative).
 			*/
 			
-            FTP_e_Rmd eArgs = new FTP_e_Rmd(argsText);
+            var eArgs = new FTP_e_Rmd(argsText);
             OnRmd(eArgs);
 
             // API didn't provide response.
@@ -1063,7 +1056,7 @@ namespace LumiSoft.Net.FTP.Server
 				the pathname is relative).
 			*/
 
-			FTP_e_Mkd eArgs = new FTP_e_Mkd(argsText);
+			var eArgs = new FTP_e_Mkd(argsText);
             OnMkd(eArgs);
 
             // API didn't provide response.
@@ -1105,7 +1098,7 @@ namespace LumiSoft.Net.FTP.Server
 				in a program, but may be quite useful to a human user.
 			*/
 
-            FTP_e_GetDirListing eArgs = new FTP_e_GetDirListing(argsText);
+            var eArgs = new FTP_e_GetDirListing(argsText);
             OnGetDirListing(eArgs);
 
             // Error getting directory listing.
@@ -1117,15 +1110,15 @@ namespace LumiSoft.Net.FTP.Server
             // Listing succeeded.
             else{
                 // Build directory listing.
-                MemoryStreamEx retVal = new MemoryStreamEx(8000);
-                foreach(FTP_ListItem item in eArgs.Items){
+                var retVal = new MemoryStreamEx(8000);
+                foreach (FTP_ListItem item in eArgs.Items){
                     if(item.IsDir){
-                        byte[] data = Encoding.UTF8.GetBytes(item.Modified.ToString("MM-dd-yy HH:mm") + " <DIR> " + item.Name + "\r\n");
-					    retVal.Write(data,0,data.Length);
+                        var data = Encoding.UTF8.GetBytes(item.Modified.ToString("MM-dd-yy HH:mm") + " <DIR> " + item.Name + "\r\n");
+                        retVal.Write(data,0,data.Length);
 					}
 					else{
-                        byte[] data = Encoding.UTF8.GetBytes(item.Modified.ToString("MM-dd-yy HH:mm") + " " + item.Size.ToString() + " " + item.Name + "\r\n");
-					    retVal.Write(data,0,data.Length);
+                        var data = Encoding.UTF8.GetBytes(item.Modified.ToString("MM-dd-yy HH:mm") + " " + item.Size.ToString() + " " + item.Name + "\r\n");
+                        retVal.Write(data,0,data.Length);
 					}
                 }
                 retVal.Position = 0;                
@@ -1163,7 +1156,7 @@ namespace LumiSoft.Net.FTP.Server
 				the implementation of a "multiple get" function.
 			*/
 
-			FTP_e_GetDirListing eArgs = new FTP_e_GetDirListing(argsText);
+			var eArgs = new FTP_e_GetDirListing(argsText);
             OnGetDirListing(eArgs);
 
             // Error getting directory listing.
@@ -1175,9 +1168,9 @@ namespace LumiSoft.Net.FTP.Server
             // Listing succeeded.
             else{
                 // Build directory listing.
-                MemoryStreamEx retVal = new MemoryStreamEx(8000);
-                foreach(FTP_ListItem item in eArgs.Items){
-                    byte[] data = Encoding.UTF8.GetBytes(item.Name + "\r\n");
+                var retVal = new MemoryStreamEx(8000);
+                foreach (FTP_ListItem item in eArgs.Items){
+                    var data = Encoding.UTF8.GetBytes(item.Name + "\r\n");
                     retVal.Write(data,0,data.Length);
                 }
                 retVal.Position = 0;                
@@ -1263,15 +1256,15 @@ namespace LumiSoft.Net.FTP.Server
 				return;
 			}
 
-			string[] parts = argsText.Split(',');
-			if(parts.Length != 6){
+			var parts = argsText.Split(',');
+            if (parts.Length != 6){
 				WriteLine("550 Invalid arguments.");
 
 				return;
 			}
 
-			string ip   = parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3];
-			int    port = (Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5]);
+			var ip   = parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3];
+            int    port = (Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5]);
 
 			m_pDataConEndPoint = new IPEndPoint(IPAddress.Parse(ip),port);
 
@@ -1478,7 +1471,7 @@ namespace LumiSoft.Net.FTP.Server
                         S> 211 END
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("211-Extensions supported:\r\n");
             retVal.Append(" SIZE\r\n");
             retVal.Append("211 End of extentions.\r\n");
@@ -1673,9 +1666,9 @@ namespace LumiSoft.Net.FTP.Server
         /// <returns>Returns event args.</returns>
         private FTP_e_Started OnStarted(string reply)
         {
-            FTP_e_Started eArgs = new FTP_e_Started(reply);
+            var eArgs = new FTP_e_Started(reply);
 
-            if(this.Started != null){                
+            if (this.Started != null){                
                 this.Started(this,eArgs);
             }
 
@@ -1695,9 +1688,9 @@ namespace LumiSoft.Net.FTP.Server
         /// <returns>Returns event args.</returns>
         private FTP_e_Authenticate OnAuthenticate(string user,string password)
         {
-            FTP_e_Authenticate eArgs = new FTP_e_Authenticate(user,password);
+            var eArgs = new FTP_e_Authenticate(user,password);
 
-            if(this.Authenticate != null){
+            if (this.Authenticate != null){
                 this.Authenticate(this,eArgs);
             }
 

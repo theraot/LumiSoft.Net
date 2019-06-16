@@ -53,8 +53,8 @@ namespace LumiSoft.Net.DNS.Client
 		{
 			// Try to get default NIC dns servers.
 			try{
-				List<IPAddress> dnsServers = new List<IPAddress>();
-                foreach(NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces()){
+				var dnsServers = new List<IPAddress>();
+                foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces()){
                     if(nic.OperationalStatus == OperationalStatus.Up){
                         foreach(IPAddress ip in nic.GetIPProperties().DnsAddresses){
                             if(ip.AddressFamily == AddressFamily.InterNetwork){
@@ -95,7 +95,7 @@ namespace LumiSoft.Net.DNS.Client
 
             // Create UDP data receivers.
             for(int i=0;i<5;i++){
-                UDP_DataReceiver ipv4Receiver = new UDP_DataReceiver(m_pIPv4Socket);
+                var ipv4Receiver = new UDP_DataReceiver(m_pIPv4Socket);
                 ipv4Receiver.PacketReceived += delegate(object s1,UDP_e_PacketReceived e1){
                     ProcessUdpPacket(e1);
                 };
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.DNS.Client
                 ipv4Receiver.Start();
 
                 if(m_pIPv6Socket != null){
-                    UDP_DataReceiver ipv6Receiver = new UDP_DataReceiver(m_pIPv6Socket);
+                    var ipv6Receiver = new UDP_DataReceiver(m_pIPv6Socket);
                     ipv6Receiver.PacketReceived += delegate(object s1,UDP_e_PacketReceived e1){
                         ProcessUdpPacket(e1);
                     };
@@ -177,11 +177,11 @@ namespace LumiSoft.Net.DNS.Client
             }
 
             if(queryType == DNS_QType.PTR){
-				string ip = queryText;
+				var ip = queryText;
 
-				// See if IP is ok.
-				IPAddress ipA = IPAddress.Parse(ip);		
-				queryText = "";
+                // See if IP is ok.
+                var ipA = IPAddress.Parse(ip);
+                queryText = "";
 
 				// IPv6
 				if(ipA.AddressFamily == AddressFamily.InterNetworkV6){
@@ -189,8 +189,8 @@ namespace LumiSoft.Net.DNS.Client
 					// would be
 					// b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.IP6.ARPA
 					
-					char[] ipChars = ip.Replace(":","").ToCharArray();
-					for(int i=ipChars.Length - 1;i>-1;i--){
+					var ipChars = ip.Replace(":","").ToCharArray();
+                    for (int i=ipChars.Length - 1;i>-1;i--){
 						queryText += ipChars[i] + ".";
 					}
 					queryText += "IP6.ARPA";
@@ -201,9 +201,9 @@ namespace LumiSoft.Net.DNS.Client
 					// would be
 					// 186.221.35.213.in-addr.arpa
 
-					string[] ipParts = ip.Split('.');
-					//--- Reverse IP ----------
-					for(int i=3;i>-1;i--){
+					var ipParts = ip.Split('.');
+                    //--- Reverse IP ----------
+                    for (int i=3;i>-1;i--){
 						queryText += ipParts[i] + ".";
 					}
 					queryText += "in-addr.arpa";
@@ -223,7 +223,7 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            DNS_ClientTransaction retVal = new DNS_ClientTransaction(this,transactionID,queryType,queryText,timeout);
+            var retVal = new DNS_ClientTransaction(this,transactionID,queryType,queryText,timeout);
             retVal.StateChanged += delegate(object s1,EventArgs<DNS_ClientTransaction> e1){
                 if(retVal.State == DNS_ClientTransactionState.Disposed){
                     lock(m_pTransactions){
@@ -270,9 +270,9 @@ namespace LumiSoft.Net.DNS.Client
             }
 
             DnsServerResponse retVal = null;
-            ManualResetEvent  wait   = new ManualResetEvent(false);
+            var  wait   = new ManualResetEvent(false);
 
-            DNS_ClientTransaction transaction = CreateTransaction(queryType,queryText,timeout);            
+            var transaction = CreateTransaction(queryType,queryText,timeout);
             transaction.Timeout += delegate(object s,EventArgs e){
                 wait.Set();
             };
@@ -310,8 +310,8 @@ namespace LumiSoft.Net.DNS.Client
                 throw new ArgumentNullException("hostNameOrIP");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(Dns_Client.GetHostAddressesAsyncOP op = new Dns_Client.GetHostAddressesAsyncOP(hostNameOrIP)){
+            var wait = new ManualResetEvent(false);
+            using (Dns_Client.GetHostAddressesAsyncOP op = new Dns_Client.GetHostAddressesAsyncOP(hostNameOrIP)){
                 op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetHostAddressesAsyncOP> e1){
                     wait.Set();
                 };
@@ -349,11 +349,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>hostNameOrIP</b> is null reference.</exception>
             public GetHostAddressesAsyncOP(string hostNameOrIP)
             {
-                if(hostNameOrIP == null){
-                    throw new ArgumentNullException("hostNameOrIP");
-                }
-
-                m_HostNameOrIP = hostNameOrIP;
+                m_HostNameOrIP = hostNameOrIP ?? throw new ArgumentNullException("hostNameOrIP");
 
                 m_pIPv4Addresses = new List<IPAddress>();
                 m_pIPv6Addresses = new List<IPAddress>();
@@ -428,7 +424,7 @@ namespace LumiSoft.Net.DNS.Client
 			    }
                 // Query A/AAAA records.
                 else{
-                    DNS_ClientTransaction transaction_A = dnsClient.CreateTransaction(DNS_QType.A,m_HostNameOrIP,2000);
+                    var transaction_A = dnsClient.CreateTransaction(DNS_QType.A,m_HostNameOrIP,2000);
                     transaction_A.StateChanged += delegate(object s1,EventArgs<DNS_ClientTransaction> e1){ 
                         if(e1.Value.State == DNS_ClientTransactionState.Completed){
                             lock(m_pLock){ 
@@ -463,7 +459,7 @@ namespace LumiSoft.Net.DNS.Client
                     };
                     transaction_A.Start();
 
-                    DNS_ClientTransaction transaction_AAAA = dnsClient.CreateTransaction(DNS_QType.AAAA,m_HostNameOrIP,2000);
+                    var transaction_AAAA = dnsClient.CreateTransaction(DNS_QType.AAAA,m_HostNameOrIP,2000);
                     transaction_AAAA.StateChanged += delegate(object s1,EventArgs<DNS_ClientTransaction> e1){
                         if(e1.Value.State == DNS_ClientTransactionState.Completed){
                             lock(m_pLock){
@@ -585,7 +581,7 @@ namespace LumiSoft.Net.DNS.Client
                     }
 
                     // We list IPv4 addresses before IPv6.
-                    List<IPAddress> retVal = new List<IPAddress>();
+                    var retVal = new List<IPAddress>();
                     retVal.AddRange(m_pIPv4Addresses);
                     retVal.AddRange(m_pIPv6Addresses);
 
@@ -665,8 +661,8 @@ namespace LumiSoft.Net.DNS.Client
                 throw new ArgumentNullException("hostNames");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(Dns_Client.GetHostsAddressesAsyncOP op = new Dns_Client.GetHostsAddressesAsyncOP(hostNames,resolveAny)){
+            var wait = new ManualResetEvent(false);
+            using (Dns_Client.GetHostsAddressesAsyncOP op = new Dns_Client.GetHostsAddressesAsyncOP(hostNames,resolveAny)){
                 op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetHostsAddressesAsyncOP> e1){
                     wait.Set();
                 };
@@ -715,11 +711,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>hostNames</b> is null reference.</exception>
             public GetHostsAddressesAsyncOP(string[] hostNames,bool resolveAny)
             {
-                if(hostNames == null){
-                    throw new ArgumentNullException("hostNames");
-                }
-
-                m_pHostNames = hostNames;
+                m_pHostNames = hostNames ?? throw new ArgumentNullException("hostNames");
                 m_ResolveAny = resolveAny;
 
                 m_pIpLookupQueue = new Dictionary<int,GetHostAddressesAsyncOP>();
@@ -761,9 +753,9 @@ namespace LumiSoft.Net.DNS.Client
 
                 // Create look up operations for hosts. The "opList" copy array is needed because
                 // when we start asyn OP, m_pIpLookupQueue may be altered when OP completes.
-                Dictionary<int,GetHostAddressesAsyncOP> opList = new Dictionary<int,GetHostAddressesAsyncOP>();
-                for(int i=0;i<m_pHostNames.Length;i++){
-                    GetHostAddressesAsyncOP op = new GetHostAddressesAsyncOP(m_pHostNames[i]);
+                var opList = new Dictionary<int,GetHostAddressesAsyncOP>();
+                for (int i=0;i<m_pHostNames.Length;i++){
+                    var op = new GetHostAddressesAsyncOP(m_pHostNames[i]);
                     m_pIpLookupQueue.Add(i,op);
                     opList.Add(i,op);
                 }
@@ -839,8 +831,8 @@ namespace LumiSoft.Net.DNS.Client
                         if(m_pIpLookupQueue.Count == 0){
                             // We wanted resolve any, so some host names may not be resolved and are null, remove them from response.
                             if(m_ResolveAny){
-                                List<HostEntry> retVal = new List<HostEntry>();
-                                foreach(HostEntry host in m_pHostEntries){
+                                var retVal = new List<HostEntry>();
+                                foreach (HostEntry host in m_pHostEntries){
                                     if(host != null){
                                         retVal.Add(host);
                                     }
@@ -984,8 +976,8 @@ namespace LumiSoft.Net.DNS.Client
                 throw new ArgumentException("Argument 'domain' value must be specified.","domain");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(Dns_Client.GetEmailHostsAsyncOP op = new Dns_Client.GetEmailHostsAsyncOP(domain)){
+            var wait = new ManualResetEvent(false);
+            using (Dns_Client.GetEmailHostsAsyncOP op = new Dns_Client.GetEmailHostsAsyncOP(domain)){
                 op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetEmailHostsAsyncOP> e1){
                     wait.Set();
                 };
@@ -1130,14 +1122,14 @@ namespace LumiSoft.Net.DNS.Client
                 }
 
                 // Try to get MX records.
-                DNS_ClientTransaction transaction_MX = dnsClient.CreateTransaction(DNS_QType.MX,domain,2000);
+                var transaction_MX = dnsClient.CreateTransaction(DNS_QType.MX,domain,2000);
                 transaction_MX.StateChanged += delegate(object s1,EventArgs<DNS_ClientTransaction> e1){
                     try{
                         if(e1.Value.State == DNS_ClientTransactionState.Completed){
                             // No errors.
                             if(e1.Value.Response.ResponseCode == DNS_RCode.NO_ERROR){
-                                List<DNS_rr_MX> mxRecords = new List<DNS_rr_MX>();
-                                foreach(DNS_rr_MX mx in e1.Value.Response.GetMXRecords()){
+                                var mxRecords = new List<DNS_rr_MX>();
+                                foreach (DNS_rr_MX mx in e1.Value.Response.GetMXRecords()){
                                     // Skip invalid MX records.
                                     if(string.IsNullOrEmpty(mx.Host)){
                                     }
@@ -1151,16 +1143,16 @@ namespace LumiSoft.Net.DNS.Client
                                     m_pHosts = new HostEntry[mxRecords.Count];
                                     
                                     // Create name to index map, so we can map asynchronous A/AAAA lookup results back to MX priority index.
-                                    Dictionary<string,int> name_to_index_map = new Dictionary<string,int>();
-                                    List<string>           lookupQueue       = new List<string>();
+                                    var name_to_index_map = new Dictionary<string,int>();
+                                    var           lookupQueue       = new List<string>();
 
                                     // Process MX records.
-                                    for(int i=0;i<m_pHosts.Length;i++){
-                                        DNS_rr_MX mx = mxRecords[i];
-                                    
-                                        IPAddress[] ips = Get_A_or_AAAA_FromResponse(mx.Host,e1.Value.Response);
+                                    for (int i=0;i<m_pHosts.Length;i++){
+                                        var mx = mxRecords[i];
+
+                                        var ips = Get_A_or_AAAA_FromResponse(mx.Host,e1.Value.Response);
                                         // No A or AAAA records in addtional answers section for MX, we need todo new query for that.
-                                        if(ips.Length == 0){
+                                        if (ips.Length == 0){
                                             name_to_index_map[mx.Host] = i;
                                             lookupQueue.Add(mx.Host);
                                         }
@@ -1171,7 +1163,7 @@ namespace LumiSoft.Net.DNS.Client
 
                                     // We have MX records which A or AAAA records not provided in DNS response, lookup them.
                                     if(lookupQueue.Count > 0){
-                                        GetHostsAddressesAsyncOP op = new GetHostsAddressesAsyncOP(lookupQueue.ToArray(),true);
+                                        var op = new GetHostsAddressesAsyncOP(lookupQueue.ToArray(),true);
                                         // This event is raised when lookup completes asynchronously.
                                         op.CompletedAsync += delegate(object s2,EventArgs<GetHostsAddressesAsyncOP> e2){
                                             LookupCompleted(op,name_to_index_map);
@@ -1201,10 +1193,10 @@ namespace LumiSoft.Net.DNS.Client
                                     m_pHosts = new HostEntry[1];
 
                                     // Create name to index map, so we can map asynchronous A/AAAA lookup results back to MX priority index.
-                                    Dictionary<string,int> name_to_index_map = new Dictionary<string,int>();
+                                    var name_to_index_map = new Dictionary<string,int>();
                                     name_to_index_map.Add(domain,0);
 
-                                    GetHostsAddressesAsyncOP op = new GetHostsAddressesAsyncOP(new string[]{domain});
+                                    var op = new GetHostsAddressesAsyncOP(new string[]{domain});
                                     // This event is raised when lookup completes asynchronously.
                                     op.CompletedAsync += delegate(object s2,EventArgs<GetHostsAddressesAsyncOP> e2){
                                         LookupCompleted(op,name_to_index_map);
@@ -1250,10 +1242,10 @@ namespace LumiSoft.Net.DNS.Client
                     throw new ArgumentNullException("response");
                 }
 
-                List<IPAddress> aList = new List<IPAddress>();
-                List<IPAddress> aaaaList = new List<IPAddress>();
+                var aList = new List<IPAddress>();
+                var aaaaList = new List<IPAddress>();
 
-                foreach(DNS_rr rr in response.AdditionalAnswers){
+                foreach (DNS_rr rr in response.AdditionalAnswers){
                     if(string.Equals(name,rr.Name,StringComparison.InvariantCultureIgnoreCase)){
                         if(rr is DNS_rr_A){
                             aList.Add(((DNS_rr_A)rr).IP);
@@ -1305,8 +1297,8 @@ namespace LumiSoft.Net.DNS.Client
                 op.Dispose();
 
                 // Remove unresolved DNS entries from response.
-                List<HostEntry> retVal = new List<HostEntry>();
-                foreach(HostEntry host in m_pHosts){
+                var retVal = new List<HostEntry>();
+                foreach (HostEntry host in m_pHosts){
                     if(host != null){
                         retVal.Add(host);
                     }
@@ -1455,7 +1447,7 @@ namespace LumiSoft.Net.DNS.Client
                     return;
                 }
                                 
-                DnsServerResponse serverResponse = ParseQuery(e.Buffer);
+                var serverResponse = ParseQuery(e.Buffer);
                 DNS_ClientTransaction transaction = null;
                 // Pass response to transaction.
                 if(m_pTransactions.TryGetValue(serverResponse.ID,out transaction)){
@@ -1482,7 +1474,7 @@ namespace LumiSoft.Net.DNS.Client
             bool retVal = GetQNameI(reply,ref offset,ref name);
 
             // Convert domain name to unicode. For more info see RFC 5890.
-            System.Globalization.IdnMapping ldn = new System.Globalization.IdnMapping();
+            var ldn = new System.Globalization.IdnMapping();
             name = ldn.GetUnicode(name);
 
             return retVal;
@@ -1590,9 +1582,9 @@ namespace LumiSoft.Net.DNS.Client
 		
 			// Get reply code
 			int       id                     = (reply[0]  << 8 | reply[1]);
-			OPCODE    opcode                 = (OPCODE)((reply[2] >> 3) & 15);
-			DNS_RCode replyCode              = (DNS_RCode)(reply[3]  & 15);	
-			int       queryCount             = (reply[4]  << 8 | reply[5]);
+			var    opcode                 = (OPCODE)((reply[2] >> 3) & 15);
+            var replyCode              = (DNS_RCode)(reply[3]  & 15);
+            int       queryCount             = (reply[4]  << 8 | reply[5]);
 			int       answerCount            = (reply[6]  << 8 | reply[7]);
 			int       authoritiveAnswerCount = (reply[8]  << 8 | reply[9]);
 			int       additionalAnswerCount  = (reply[10] << 8 | reply[11]);
@@ -1602,8 +1594,8 @@ namespace LumiSoft.Net.DNS.Client
 
 			//----- Parse question part ------------//
 			for(int q=0;q<queryCount;q++){
-				string dummy = "";
-				GetQName(reply,ref pos,ref dummy);
+				var dummy = "";
+                GetQName(reply,ref pos,ref dummy);
 				//qtype + qclass
 				pos += 4;
 			}
@@ -1612,11 +1604,11 @@ namespace LumiSoft.Net.DNS.Client
 			// 1) parse answers
 			// 2) parse authoritive answers
 			// 3) parse additional answers
-			List<DNS_rr> answers = ParseAnswers(reply,answerCount,ref pos);
-			List<DNS_rr> authoritiveAnswers = ParseAnswers(reply,authoritiveAnswerCount,ref pos);
-			List<DNS_rr> additionalAnswers = ParseAnswers(reply,additionalAnswerCount,ref pos);
+			var answers = ParseAnswers(reply,answerCount,ref pos);
+            var authoritiveAnswers = ParseAnswers(reply,authoritiveAnswerCount,ref pos);
+            var additionalAnswers = ParseAnswers(reply,additionalAnswerCount,ref pos);
 
-			return new DnsServerResponse(true,id,replyCode,answers,authoritiveAnswers,additionalAnswers);
+            return new DnsServerResponse(true,id,replyCode,answers,authoritiveAnswers,additionalAnswers);
 		}
 
         /// <summary>
@@ -1652,11 +1644,11 @@ namespace LumiSoft.Net.DNS.Client
 			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 			*/
 
-			List<DNS_rr> answers = new List<DNS_rr>();
-			//---- Start parsing answers ------------------------------------------------------------------//
-			for(int i=0;i<answerCount;i++){        
-				string name = "";
-				if(!GetQName(reply,ref offset,ref name)){
+			var answers = new List<DNS_rr>();
+            //---- Start parsing answers ------------------------------------------------------------------//
+            for (int i=0;i<answerCount;i++){        
+				var name = "";
+                if (!GetQName(reply,ref offset,ref name)){
 					break;
 				}
                                 
@@ -1725,7 +1717,7 @@ namespace LumiSoft.Net.DNS.Client
             */
 
             int dataLength = (int)data[offset++];
-            string retVal = Encoding.Default.GetString(data,offset,dataLength);
+            var retVal = Encoding.Default.GetString(data,offset,dataLength);
             offset += dataLength;
 
             return retVal;
@@ -1752,8 +1744,8 @@ namespace LumiSoft.Net.DNS.Client
 		public static string[] DnsServers
 		{
 			get{
-                string[] retVal = new string[m_DnsServers.Length];
-                for(int i=0;i<m_DnsServers.Length;i++){
+                var retVal = new string[m_DnsServers.Length];
+                for (int i=0;i<m_DnsServers.Length;i++){
                     retVal[i] = m_DnsServers[i].ToString();
                 }
 
@@ -1765,8 +1757,8 @@ namespace LumiSoft.Net.DNS.Client
                     throw new ArgumentNullException();
                 }
 
-                IPAddress[] retVal = new IPAddress[value.Length];
-                for(int i=0;i<value.Length;i++){
+                var retVal = new IPAddress[value.Length];
+                for (int i=0;i<value.Length;i++){
                     retVal[i] = IPAddress.Parse(value[i]);
                 }
 
@@ -1799,10 +1791,10 @@ namespace LumiSoft.Net.DNS.Client
                 throw new ArgumentNullException("hosts");
             }
 
-            List<IPAddress> retVal = new List<IPAddress>();
-            foreach(string host in hosts){
-                IPAddress[] addresses = Resolve(host);
-                foreach(IPAddress ip in addresses){
+            var retVal = new List<IPAddress>();
+            foreach (string host in hosts){
+                var addresses = Resolve(host);
+                foreach (IPAddress ip in addresses){
                     if(!retVal.Contains(ip)){
                         retVal.Add(ip);
                     }
@@ -1839,11 +1831,11 @@ namespace LumiSoft.Net.DNS.Client
 
             // hostName_IP must be host name, try to resolve it's IP
             using(Dns_Client dns = new Dns_Client()){
-                DnsServerResponse resp = dns.Query(host,DNS_QType.A);
-                if(resp.ResponseCode == DNS_RCode.NO_ERROR){
-                    DNS_rr_A[] records = resp.GetARecords();
-                    IPAddress[] retVal = new IPAddress[records.Length];
-                    for(int i=0;i<records.Length;i++){
+                var resp = dns.Query(host,DNS_QType.A);
+                if (resp.ResponseCode == DNS_RCode.NO_ERROR){
+                    var records = resp.GetARecords();
+                    var retVal = new IPAddress[records.Length];
+                    for (int i=0;i<records.Length;i++){
                         retVal[i] = records[i].IP;
                     }
 

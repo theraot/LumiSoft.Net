@@ -30,11 +30,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
         internal RTP_Source(RTP_Session session,uint ssrc)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-
-            m_pSession = session;
+            m_pSession = session ?? throw new ArgumentNullException("session");
             m_SSRC     = ssrc;
         }
 

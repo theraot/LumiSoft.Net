@@ -31,7 +31,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         public byte[] ToByte()
         {
-            MemoryStream ms = new MemoryStream();
+            var ms = new MemoryStream();
             ToStream(ms);
             return ms.ToArray();
         }
@@ -59,14 +59,14 @@ namespace LumiSoft.Net.Mime.vCard
                 END:VCARD<CRLF>
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("BEGIN:VCARD\r\n");
             foreach(Item item in Items){
                 retVal.Append(item.ToItemString() + "\r\n");
             }
             retVal.Append("END:VCARD\r\n");
 
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(retVal.ToString());
+            var data = System.Text.Encoding.UTF8.GetBytes(retVal.ToString());
             stream.Write(data,0,data.Length);
         }
 
@@ -75,9 +75,9 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         /// <param name="file">vCard file with path.</param>
         public static List<vCard> ParseMultiple(string file) {
-            List<vCard> vCards = new List<vCard>();
-            List<string> fileStrings = new List<string>();
-            string line = "";
+            var vCards = new List<vCard>();
+            var fileStrings = new List<string>();
+            var line = "";
             bool hasBeginTag = false;
             using (FileStream fs = File.OpenRead(file)) {
                 TextReader r = new StreamReader(fs, System.Text.Encoding.Default);          
@@ -90,7 +90,7 @@ namespace LumiSoft.Net.Mime.vCard
                         fileStrings.Add(line);
                         if (line != null && line.ToUpper() == "END:VCARD") {
                             // on END line process the Vcard, reinitialize, and will repeat the same thing for any others.
-                            vCard singleVcard = new vCard();
+                            var singleVcard = new vCard();
                             singleVcard.ParseStrings(fileStrings);
                             vCards.Add(singleVcard);
                             fileStrings.Clear();
@@ -108,8 +108,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="file">vCard file with path.</param>
         public void Parse(string file)
         {
-            List<string> fileStrings = new List<string>();
-            string[] fileStringArray = File.ReadAllLines(file,System.Text.Encoding.Default);
+            var fileStrings = new List<string>();
+            var fileStringArray = File.ReadAllLines(file,System.Text.Encoding.Default);
             foreach (string fileString in fileStringArray) {
                 fileStrings.Add(fileString);
             }
@@ -121,8 +121,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         /// <param name="stream">Stream what contains vCard.</param>
         public void Parse(FileStream stream) {
-            List<string> fileStrings = new List<string>();
-            string line = "";
+            var fileStrings = new List<string>();
+            var line = "";
             TextReader r = new StreamReader(stream, System.Text.Encoding.Default); 
             while (line != null) {
                 line = r.ReadLine();
@@ -142,15 +142,15 @@ namespace LumiSoft.Net.Mime.vCard
             m_pEmailAddresses = null;
 
             int lineCount = 0;
-            string line = fileStrings[lineCount];
+            var line = fileStrings[lineCount];
             // Find row BEGIN:VCARD
-            while(line != null && line.ToUpper() != "BEGIN:VCARD"){
+            while (line != null && line.ToUpper() != "BEGIN:VCARD"){
                 line = fileStrings[lineCount++];
             }
             // Read first vCard line after BEGIN:VCARD
             line = fileStrings[lineCount++];
             while(line != null && line.ToUpper() != "END:VCARD"){
-                StringBuilder item = new StringBuilder();
+                var item = new StringBuilder();
                 item.Append(line);
                 // Get next line, see if item continues (folded line).
                 line = fileStrings[lineCount++];
@@ -159,17 +159,17 @@ namespace LumiSoft.Net.Mime.vCard
                     line = fileStrings[lineCount++];
                 }
 
-                string[] name_value = item.ToString().Split(new char[]{':'},2);
+                var name_value = item.ToString().Split(new char[]{':'},2);
 
                 // Item syntax: name[*(;parameter)]:value
-                string[] name_params = name_value[0].Split(new char[]{';'},2);
-                string   name        = name_params[0];
-                string   parameters  = "";
-                if(name_params.Length == 2){
+                var name_params = name_value[0].Split(new char[]{';'},2);
+                var   name        = name_params[0];
+                var   parameters  = "";
+                if (name_params.Length == 2){
                     parameters = name_params[1];
                 }
-                string value = "";
-                if(name_value.Length == 2){
+                var value = "";
+                if (name_value.Length == 2){
                     value = name_value[1];
                 }
                 Items.Add(name,parameters,value);
@@ -187,8 +187,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string Version
         {
             get{ 
-                Item item = Items.GetFirst("VERSION");
-                if(item != null){
+                var item = Items.GetFirst("VERSION");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -204,8 +204,8 @@ namespace LumiSoft.Net.Mime.vCard
         public Name Name
         {
             get{ 
-                Item item = Items.GetFirst("N");
-                if(item != null){
+                var item = Items.GetFirst("N");
+                if (item != null){
                     return Name.Parse(item);
                 }
 
@@ -228,8 +228,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string FormattedName
         {
             get{ 
-                Item item = Items.GetFirst("FN");
-                if(item != null){
+                var item = Items.GetFirst("FN");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -245,8 +245,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string NickName
         {
             get{ 
-                Item item = Items.GetFirst("NICKNAME");
-                if(item != null){
+                var item = Items.GetFirst("NICKNAME");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -262,8 +262,8 @@ namespace LumiSoft.Net.Mime.vCard
         public Image Photo
         {
             get{ 
-                Item item = Items.GetFirst("PHOTO");
-                if(item != null){                    
+                var item = Items.GetFirst("PHOTO");
+                if (item != null){                    
                     return Image.FromStream(new MemoryStream(System.Text.Encoding.Default.GetBytes(item.DecodedValue)));
                 }
 
@@ -272,7 +272,7 @@ namespace LumiSoft.Net.Mime.vCard
 
             set{ 
                 if(value != null){
-                    MemoryStream ms = new MemoryStream();
+                    var ms = new MemoryStream();
                     value.Save(ms,System.Drawing.Imaging.ImageFormat.Jpeg);
                                         
                     Items.SetValue("PHOTO","ENCODING=b;TYPE=JPEG",Convert.ToBase64String(ms.ToArray()));
@@ -289,10 +289,10 @@ namespace LumiSoft.Net.Mime.vCard
         public DateTime BirthDate
         {
             get{ 
-                Item item = Items.GetFirst("BDAY");
-                if(item != null){
-                    string date = item.DecodedValue.Replace("-","");
-                    string[] dateFormats = new string[]{
+                var item = Items.GetFirst("BDAY");
+                if (item != null){
+                    var date = item.DecodedValue.Replace("-","");
+                    var dateFormats = new string[]{
                         "yyyyMMdd",
                         "yyyyMMddz"
                     };
@@ -363,8 +363,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string Title
         {
             get{ 
-                Item item = Items.GetFirst("TITLE");
-                if(item != null){
+                var item = Items.GetFirst("TITLE");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -380,8 +380,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string Role
         {
             get{ 
-                Item item = Items.GetFirst("ROLE");
-                if(item != null){
+                var item = Items.GetFirst("ROLE");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -397,8 +397,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string Organization
         {
             get{ 
-                Item item = Items.GetFirst("ORG");
-                if(item != null){
+                var item = Items.GetFirst("ORG");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -414,8 +414,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string NoteText
         {
             get{ 
-                Item item = Items.GetFirst("NOTE");
-                if(item != null){
+                var item = Items.GetFirst("NOTE");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -431,8 +431,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string UID
         {
             get{ 
-                Item item = Items.GetFirst("UID");
-                if(item != null){
+                var item = Items.GetFirst("UID");
+                if (item != null){
                     return item.DecodedValue;
                 }
 
@@ -448,8 +448,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string HomeURL
         {
             get{ 
-                Item[] items = Items.Get("URL");
-                foreach(Item item in items){
+                var items = Items.Get("URL");
+                foreach (Item item in items){
                     if(item.ParametersString == "" || item.ParametersString.ToUpper().IndexOf("HOME") > -1){
                         return item.DecodedValue;
                     }
@@ -459,8 +459,8 @@ namespace LumiSoft.Net.Mime.vCard
             }
 
             set{
-                Item[] items = Items.Get("URL");
-                foreach(Item item in items){
+                var items = Items.Get("URL");
+                foreach (Item item in items){
                     if(item.ParametersString.ToUpper().IndexOf("HOME") > -1){
                         if(value != null){
                             item.Value = value;
@@ -485,8 +485,8 @@ namespace LumiSoft.Net.Mime.vCard
         public string WorkURL
         {
             get{ 
-                Item[] items = Items.Get("URL");
-                foreach(Item item in items){
+                var items = Items.Get("URL");
+                foreach (Item item in items){
                     if(item.ParametersString.ToUpper().IndexOf("WORK") > -1){
                         return item.DecodedValue;
                     }
@@ -496,8 +496,8 @@ namespace LumiSoft.Net.Mime.vCard
             }
 
             set{ 
-                Item[] items = Items.Get("URL");
-                foreach(Item item in items){
+                var items = Items.Get("URL");
+                foreach (Item item in items){
                     if(item.ParametersString.ToUpper().IndexOf("WORK") > -1){
                         if(value != null){
                             item.Value = value;

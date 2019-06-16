@@ -67,8 +67,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get time
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("Invalid 'Timestamp' value, time is missing !");
             }
             Time = Convert.ToDecimal(word);

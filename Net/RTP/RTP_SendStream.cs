@@ -23,11 +23,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>source</b> is null reference.</exception>
         internal RTP_SendStream(RTP_Source_Local source)
         {
-            if(source == null){
-                throw new ArgumentNullException("source");
-            }
-
-            m_pSource = source;
+            m_pSource = source ?? throw new ArgumentNullException("source");
 
             /* RFC 3550 4.
                 The initial value of the sequence number SHOULD be random (unpredictable) to make known-plaintext 

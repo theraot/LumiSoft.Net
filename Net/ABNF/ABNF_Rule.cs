@@ -25,12 +25,9 @@ namespace LumiSoft.Net.ABNF
             if(!ValidateName(name)){
                 throw new ArgumentException("Invalid argument 'name' value. Value must be 'rulename =  ALPHA *(ALPHA / DIGIT / \"-\")'.");
             }
-            if(elements == null){
-                throw new ArgumentNullException("elements");
-            }
 
             Name      = name;
-            Elements = elements;
+            Elements = elements ?? throw new ArgumentNullException("elements");
         }
 
         /// <summary>
@@ -44,12 +41,12 @@ namespace LumiSoft.Net.ABNF
                 throw new ArgumentNullException("value");
             }
 
-            string[] name_value = value.Split(new char[]{'='},2);
-            if(name_value.Length != 2){
+            var name_value = value.Split(new char[]{'='},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid ABNF rule '" + value + "'.");
             }
 
-            ABNF_Rule retVal = new ABNF_Rule(name_value[0].Trim(),ABNF_Alternation.Parse(new System.IO.StringReader(name_value[1])));
+            var retVal = new ABNF_Rule(name_value[0].Trim(),ABNF_Alternation.Parse(new System.IO.StringReader(name_value[1])));
 
             return retVal;
         }

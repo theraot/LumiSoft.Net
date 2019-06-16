@@ -96,15 +96,8 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal Relay_Session(Relay_Server server,Relay_QueueItem realyItem)
         {
-            if(server == null){
-                throw new ArgumentNullException("server");
-            }
-            if(realyItem == null){
-                throw new ArgumentNullException("realyItem");
-            }
-
-            m_pServer    = server;
-            m_pRelayItem = realyItem;
+            m_pServer    = server ?? throw new ArgumentNullException("server");
+            m_pRelayItem = realyItem ?? throw new ArgumentNullException("realyItem");
 
             m_SessionID         = Guid.NewGuid().ToString();
             m_SessionCreateTime = DateTime.Now;
@@ -122,19 +115,9 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal Relay_Session(Relay_Server server,Relay_QueueItem realyItem,Relay_SmartHost[] smartHosts)
         {
-            if(server == null){
-                throw new ArgumentNullException("server");
-            }
-            if(realyItem == null){
-                throw new ArgumentNullException("realyItem");
-            }
-            if(smartHosts == null){
-                throw new ArgumentNullException("smartHosts");
-            }
-
-            m_pServer     = server;
-            m_pRelayItem  = realyItem;
-            m_pSmartHosts = smartHosts;
+            m_pServer     = server ?? throw new ArgumentNullException("server");
+            m_pRelayItem  = realyItem ?? throw new ArgumentNullException("realyItem");
+            m_pSmartHosts = smartHosts ?? throw new ArgumentNullException("smartHosts");
                         
             m_RelayMode         = Relay_Mode.SmartHost;
             m_SessionID         = Guid.NewGuid().ToString();
@@ -208,7 +191,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
                 // Resolve email target hosts.               
                 if(m_RelayMode == Relay_Mode.Dns){
-                    Dns_Client.GetEmailHostsAsyncOP op = new Dns_Client.GetEmailHostsAsyncOP(m_pRelayItem.To);
+                    var op = new Dns_Client.GetEmailHostsAsyncOP(m_pRelayItem.To);
                     op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetEmailHostsAsyncOP> e1){
                         EmailHostsResolveCompleted(m_pRelayItem.To,op);
                     };
@@ -218,12 +201,12 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
                 // Resolve smart hosts IP addresses.
                 else if(m_RelayMode == Relay_Mode.SmartHost){
-                    string[] smartHosts = new string[m_pSmartHosts.Length];
-                    for(int i=0;i<m_pSmartHosts.Length;i++){
+                    var smartHosts = new string[m_pSmartHosts.Length];
+                    for (int i=0;i<m_pSmartHosts.Length;i++){
                         smartHosts[i] = m_pSmartHosts[i].Host;
                     }
 
-                    Dns_Client.GetHostsAddressesAsyncOP op = new Dns_Client.GetHostsAddressesAsyncOP(smartHosts);
+                    var op = new Dns_Client.GetHostsAddressesAsyncOP(smartHosts);
                     op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetHostsAddressesAsyncOP> e1){
                         SmartHostsResolveCompleted(op);
                     };
@@ -292,8 +275,8 @@ namespace LumiSoft.Net.SMTP.Relay
                 Dispose(op.Error);
             }
             else{
-                StringBuilder buf = new StringBuilder();
-                foreach(HostEntry host in op.Hosts){
+                var buf = new StringBuilder();
+                foreach (HostEntry host in op.Hosts){
                     foreach(IPAddress ip in host.Addresses){
                         m_pTargets.Add(new Relay_Target(host.HostName,new IPEndPoint(ip,25)));
                     }
@@ -325,9 +308,9 @@ namespace LumiSoft.Net.SMTP.Relay
             }
             else{
                 for(int i=0;i<op.HostEntries.Length;i++){
-                    Relay_SmartHost smartHost = m_pSmartHosts[i];
+                    var smartHost = m_pSmartHosts[i];
 
-                    foreach(IPAddress ip in op.HostEntries[i].Addresses){
+                    foreach (IPAddress ip in op.HostEntries[i].Addresses){
                         m_pTargets.Add(new Relay_Target(smartHost.Host,new IPEndPoint(ip,smartHost.Port),smartHost.SslMode,smartHost.UserName,smartHost.Password));
                     }
                 }                
@@ -440,7 +423,7 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pSmtpClient.LocalHostName = m_pLocalBindInfo.HostName;
 
             // Start connecting to remote end point.
-            TCP_Client.ConnectAsyncOP connectOP = new TCP_Client.ConnectAsyncOP(new IPEndPoint(m_pLocalBindInfo.IP,0),m_pActiveTarget.Target,false,null);
+            var connectOP = new TCP_Client.ConnectAsyncOP(new IPEndPoint(m_pLocalBindInfo.IP,0),m_pActiveTarget.Target,false,null);
             connectOP.CompletedAsync += delegate(object s,EventArgs<TCP_Client.ConnectAsyncOP> e){
                 ConnectCompleted(connectOP);
             };
@@ -483,8 +466,8 @@ namespace LumiSoft.Net.SMTP.Relay
                 // Connect suceeded.
                 else{
                     // Do EHLO/HELO.
-                    string hostName = string.IsNullOrEmpty(m_pLocalBindInfo.HostName) ? Dns.GetHostName() : m_pLocalBindInfo.HostName;
-                    SMTP_Client.EhloHeloAsyncOP ehloOP = new SMTP_Client.EhloHeloAsyncOP(hostName);
+                    var hostName = string.IsNullOrEmpty(m_pLocalBindInfo.HostName) ? Dns.GetHostName() : m_pLocalBindInfo.HostName;
+                    var ehloOP = new SMTP_Client.EhloHeloAsyncOP(hostName);
                     ehloOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.EhloHeloAsyncOP> e){
                         EhloCommandCompleted(ehloOP);
                     };
@@ -516,7 +499,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 else{
                     // Start TLS requested, start switching to secure.
                     if(!m_pSmtpClient.IsSecureConnection && m_pActiveTarget.SslMode == SslMode.TLS){
-                        SMTP_Client.StartTlsAsyncOP startTlsOP = new SMTP_Client.StartTlsAsyncOP(null);
+                        var startTlsOP = new SMTP_Client.StartTlsAsyncOP(null);
                         startTlsOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.StartTlsAsyncOP> e){
                             StartTlsCommandCompleted(startTlsOP);
                         };
@@ -526,7 +509,7 @@ namespace LumiSoft.Net.SMTP.Relay
                     }
                     // Authentication requested, start authenticating.
                     else if(!string.IsNullOrEmpty(m_pActiveTarget.UserName)){
-                        SMTP_Client.AuthAsyncOP authOP = new SMTP_Client.AuthAsyncOP(m_pSmtpClient.AuthGetStrongestMethod(m_pActiveTarget.UserName,m_pActiveTarget.Password));                        
+                        var authOP = new SMTP_Client.AuthAsyncOP(m_pSmtpClient.AuthGetStrongestMethod(m_pActiveTarget.UserName,m_pActiveTarget.Password));
                         authOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.AuthAsyncOP> e){
                             AuthCommandCompleted(authOP);
                         };
@@ -544,7 +527,7 @@ namespace LumiSoft.Net.SMTP.Relay
                             // Stream doesn't support seeking.
                         }
 
-                        SMTP_Client.MailFromAsyncOP mailOP = new SMTP_Client.MailFromAsyncOP(
+                        var mailOP = new SMTP_Client.MailFromAsyncOP(
                             this.From,
                             messageSize,
                             IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
@@ -581,7 +564,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
                 else{
                     // Do EHLO/HELO.
-                    SMTP_Client.EhloHeloAsyncOP ehloOP = new SMTP_Client.EhloHeloAsyncOP(null);
+                    var ehloOP = new SMTP_Client.EhloHeloAsyncOP(null);
                     ehloOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.EhloHeloAsyncOP> e){
                         EhloCommandCompleted(ehloOP);
                     };
@@ -619,7 +602,7 @@ namespace LumiSoft.Net.SMTP.Relay
                         // Stream doesn't support seeking.
                     }
 
-                    SMTP_Client.MailFromAsyncOP mailOP = new SMTP_Client.MailFromAsyncOP(
+                    var mailOP = new SMTP_Client.MailFromAsyncOP(
                         this.From,
                         messageSize,
                         IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
@@ -654,7 +637,7 @@ namespace LumiSoft.Net.SMTP.Relay
                     Dispose(op.Error);
                 }
                 else{
-                    SMTP_Client.RcptToAsyncOP rcptOP = new SMTP_Client.RcptToAsyncOP(
+                    var rcptOP = new SMTP_Client.RcptToAsyncOP(
                         this.To,
                         IsDsnSupported() ? m_pRelayItem.DSN_Notify : SMTP_DSN_Notify.NotSpecified,
                         IsDsnSupported() ? m_pRelayItem.OriginalRecipient : null
@@ -689,7 +672,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
                 else{
                     // Start sending message.
-                    SMTP_Client.SendMessageAsyncOP sendMsgOP = new SMTP_Client.SendMessageAsyncOP(m_pRelayItem.MessageStream,false);
+                    var sendMsgOP = new SMTP_Client.SendMessageAsyncOP(m_pRelayItem.MessageStream,false);
                     sendMsgOP.CompletedAsync += delegate(object s,EventArgs<SMTP_Client.SendMessageAsyncOP> e){
                         MessageSendingCompleted(sendMsgOP);
                     };

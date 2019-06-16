@@ -23,7 +23,7 @@ namespace LumiSoft.Net.WebDav.Client
                 throw new ArgumentNullException("requestUri");
             }
 
-            StringBuilder requestContentString = new StringBuilder();
+            var requestContentString = new StringBuilder();
             requestContentString.Append("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n");
             requestContentString.Append("<propfind xmlns=\"DAV:\">\r\n");
             requestContentString.Append("<prop>\r\n");
@@ -38,9 +38,9 @@ namespace LumiSoft.Net.WebDav.Client
             requestContentString.Append("</prop>\r\n");
             requestContentString.Append("</propfind>\r\n");
 
-            byte[] requestContent = Encoding.UTF8.GetBytes(requestContentString.ToString());
+            var requestContent = Encoding.UTF8.GetBytes(requestContentString.ToString());
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
             request.Method = "PROPFIND";
             request.ContentType = "application/xml";
             request.ContentLength = requestContent.Length;
@@ -68,11 +68,11 @@ namespace LumiSoft.Net.WebDav.Client
                 throw new ArgumentNullException("uri");
             }
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = "MKCOL";
             request.Credentials = Credentials;
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            var response = (HttpWebResponse)request.GetResponse();
         }
 
         /// <summary>
@@ -88,11 +88,11 @@ namespace LumiSoft.Net.WebDav.Client
                 throw new ArgumentNullException("uri");
             }
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = "GET";
             request.Credentials = Credentials;
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            var response = (HttpWebResponse)request.GetResponse();
             contentSize = response.ContentLength;
 
             return response.GetResponseStream();
@@ -117,7 +117,7 @@ namespace LumiSoft.Net.WebDav.Client
                 throw new ArgumentNullException("uri");
             }
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = "DELETE";
             request.Credentials = Credentials;
 
@@ -143,9 +143,9 @@ namespace LumiSoft.Net.WebDav.Client
             // All this because ms is so lazy, tries to write all data to memory, instead switching to temp file if bigger 
             // data sent.
             try{
-                HttpWebRequest dummy  = (HttpWebRequest)HttpWebRequest.Create(targetUri);
-			    // Set the username and the password.
-			    dummy.Credentials = Credentials;
+                var dummy  = (HttpWebRequest)HttpWebRequest.Create(targetUri);
+                // Set the username and the password.
+                dummy.Credentials = Credentials;
 			    dummy.PreAuthenticate = true;
 			    dummy.Method = "HEAD";
 			    ((HttpWebResponse)dummy.GetResponse()).Close(); 
@@ -153,7 +153,7 @@ namespace LumiSoft.Net.WebDav.Client
             catch{
             }
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(targetUri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(targetUri);
             request.Method = "PUT";
             request.ContentType = "application/octet-stream";
             request.Credentials = Credentials;
@@ -188,7 +188,7 @@ namespace LumiSoft.Net.WebDav.Client
                 throw new ArgumentNullException(targetUri);
             }
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(sourceUri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(sourceUri);
             request.Method = "COPY";
             request.Headers.Add("Destination: " + targetUri);
             request.Headers.Add("Overwrite: " + (overwrite ? "T" : "F"));
@@ -218,7 +218,7 @@ namespace LumiSoft.Net.WebDav.Client
                 throw new ArgumentNullException(targetUri);
             }
 
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(sourceUri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(sourceUri);
             request.Method = "MOVE";
             request.Headers.Add("Destination: " + targetUri);
             request.Headers.Add("Overwrite: " + (overwrite ? "T" : "F"));

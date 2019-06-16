@@ -32,11 +32,7 @@ namespace LumiSoft.Net.SIP.Debug
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b> is null reference.</exception>
         public wfrm_SIP_Debug(SIP_Stack stack)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-
-            m_pStack = stack;
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
             m_pStack.Logger.WriteLog += new EventHandler<LumiSoft.Net.Log.WriteLogEventArgs>(Logger_WriteLog);
 
             InitUI();
@@ -60,7 +56,7 @@ namespace LumiSoft.Net.SIP.Debug
             m_pTabLog_Toolbar.Dock = DockStyle.Top;
             m_pTab.TabPages["log"].Controls.Add(m_pTabLog_Toolbar);
             // Log button
-            ToolStripButton tabLog_Toolbar_Log = new ToolStripButton("Log");
+            var tabLog_Toolbar_Log = new ToolStripButton("Log");
             tabLog_Toolbar_Log.Name = "log";
             tabLog_Toolbar_Log.Tag = "log";
             tabLog_Toolbar_Log.Checked = true;
@@ -69,7 +65,7 @@ namespace LumiSoft.Net.SIP.Debug
             });
             m_pTabLog_Toolbar.Items.Add(tabLog_Toolbar_Log);
             // Log Data button
-            ToolStripButton tabLog_Toolbar_LogData = new ToolStripButton("Log Data");
+            var tabLog_Toolbar_LogData = new ToolStripButton("Log Data");
             tabLog_Toolbar_LogData.Name = "logdata";
             tabLog_Toolbar_LogData.Tag = "logdata";
             tabLog_Toolbar_LogData.Checked = true;
@@ -78,13 +74,13 @@ namespace LumiSoft.Net.SIP.Debug
             });
             m_pTabLog_Toolbar.Items.Add(tabLog_Toolbar_LogData);
             // Clear button
-            ToolStripButton tabLog_Toolbar_Clear = new ToolStripButton("Clear");
+            var tabLog_Toolbar_Clear = new ToolStripButton("Clear");
             tabLog_Toolbar_Clear.Tag = "clear";
             tabLog_Toolbar_Clear.Click += new EventHandler(m_pTabLog_Toolbar_Click);
             m_pTabLog_Toolbar.Items.Add(tabLog_Toolbar_Clear);
             // Filter
             m_pTabLog_Toolbar.Items.Add(new ToolStripLabel("Filter:")); 
-            ToolStripTextBox tabLog_Toolbar_Filter = new ToolStripTextBox();
+            var tabLog_Toolbar_Filter = new ToolStripTextBox();
             tabLog_Toolbar_Filter.Name = "filter";
             tabLog_Toolbar_Filter.AutoSize = false;
             tabLog_Toolbar_Filter.Size = new Size(150,20);
@@ -101,7 +97,7 @@ namespace LumiSoft.Net.SIP.Debug
 
             m_pTabTransactions_Toolbar = new ToolStrip();
             m_pTabTransactions_Toolbar.Dock = DockStyle.Top;
-            ToolStripButton tabTransactions_Toolbar_Refresh = new ToolStripButton("Refresh");
+            var tabTransactions_Toolbar_Refresh = new ToolStripButton("Refresh");
             tabTransactions_Toolbar_Refresh.Tag = "refresh";
             tabTransactions_Toolbar_Refresh.Click += new EventHandler(m_pTabTransactions_Toolbar_Click);
             m_pTabTransactions_Toolbar.Items.Add(tabTransactions_Toolbar_Refresh);
@@ -123,7 +119,7 @@ namespace LumiSoft.Net.SIP.Debug
 
             m_pTabDialogs_Toolbar = new ToolStrip();
             m_pTabDialogs_Toolbar.Dock = DockStyle.Top;
-            ToolStripButton tabDialogs_Toolbar_Refresh = new ToolStripButton("Refresh");
+            var tabDialogs_Toolbar_Refresh = new ToolStripButton("Refresh");
             tabDialogs_Toolbar_Refresh.Tag = "refresh";
             tabDialogs_Toolbar_Refresh.Click += new EventHandler(m_pTabDialogs_Toolbar_Click);
             m_pTabDialogs_Toolbar.Items.Add(tabDialogs_Toolbar_Refresh);
@@ -145,7 +141,7 @@ namespace LumiSoft.Net.SIP.Debug
 
             m_pTabFlows_Toolbar = new ToolStrip();
             m_pTabFlows_Toolbar.Dock = DockStyle.Top;
-            ToolStripButton tabFlows_Toolbar_Refresh = new ToolStripButton("Refresh");
+            var tabFlows_Toolbar_Refresh = new ToolStripButton("Refresh");
             tabFlows_Toolbar_Refresh.Tag = "refresh";
             tabFlows_Toolbar_Refresh.Click += new EventHandler(m_pTabFlows_Toolbar_Click);
             m_pTabFlows_Toolbar.Items.Add(tabFlows_Toolbar_Refresh);
@@ -182,8 +178,8 @@ namespace LumiSoft.Net.SIP.Debug
                     return;
                 }
 
-                string text = e.LogEntry.Text + "\n";
-                if(((ToolStripButton)m_pTabLog_Toolbar.Items["logdata"]).Checked && e.LogEntry.Data != null){
+                var text = e.LogEntry.Text + "\n";
+                if (((ToolStripButton)m_pTabLog_Toolbar.Items["logdata"]).Checked && e.LogEntry.Data != null){
                     text = text + "<begin>\r\n" + Encoding.Default.GetString(e.LogEntry.Data) + "<end>\r\n";
                 }
 
@@ -211,9 +207,9 @@ namespace LumiSoft.Net.SIP.Debug
         /// <param name="e">Event data.</param>
         private void m_pTabLog_Toolbar_Click(object sender,EventArgs e)
         {
-            ToolStripButton button = (ToolStripButton)sender;
+            var button = (ToolStripButton)sender;
 
-            if(button.Tag.ToString() == "clear"){
+            if (button.Tag.ToString() == "clear"){
                 m_pTabLog_Text.Text = "";
             }
         }
@@ -225,14 +221,14 @@ namespace LumiSoft.Net.SIP.Debug
         /// <param name="e">Event data.</param>
         private void m_pTabTransactions_Toolbar_Click(object sender,EventArgs e)
         {
-            ToolStripButton button = (ToolStripButton)sender;
+            var button = (ToolStripButton)sender;
 
-            if(button.Tag.ToString() == "refresh"){
+            if (button.Tag.ToString() == "refresh"){
                 m_pTabTransactions_List.Items.Clear();
 
                 foreach(SIP_ClientTransaction tr in m_pStack.TransactionLayer.ClientTransactions){
                     try{
-                        ListViewItem it = new ListViewItem("false");
+                        var it = new ListViewItem("false");
                         it.SubItems.Add(tr.Method);
                         it.SubItems.Add(tr.State.ToString());
                         it.SubItems.Add(tr.CreateTime.ToString("HH:mm:ss"));
@@ -245,7 +241,7 @@ namespace LumiSoft.Net.SIP.Debug
 
                 foreach(SIP_ServerTransaction tr in m_pStack.TransactionLayer.ServerTransactions){
                     try{
-                        ListViewItem it = new ListViewItem("true");
+                        var it = new ListViewItem("true");
                         it.SubItems.Add(tr.Method);
                         it.SubItems.Add(tr.State.ToString());
                         it.SubItems.Add(tr.CreateTime.ToString("HH:mm:ss"));
@@ -265,14 +261,14 @@ namespace LumiSoft.Net.SIP.Debug
         /// <param name="e">Event data.</param>
         private void m_pTabDialogs_Toolbar_Click(object sender,EventArgs e)
         {
-            ToolStripButton button = (ToolStripButton)sender;
+            var button = (ToolStripButton)sender;
 
-            if(button.Tag.ToString() == "refresh"){
+            if (button.Tag.ToString() == "refresh"){
                 m_pTabDialogs_List.Items.Clear();
 
                 foreach(SIP_Dialog dialog in m_pStack.TransactionLayer.Dialogs){
                     try{
-                        ListViewItem it = new ListViewItem((dialog is SIP_Dialog_Invite ? "INVITE" : ""));
+                        var it = new ListViewItem((dialog is SIP_Dialog_Invite ? "INVITE" : ""));
                         it.SubItems.Add(dialog.State.ToString());
                         it.SubItems.Add(dialog.CreateTime.ToString());
                         it.SubItems.Add(dialog.ID);
@@ -296,12 +292,12 @@ namespace LumiSoft.Net.SIP.Debug
                 return;
             }
 
-            Form frm = new Form();
+            var frm = new Form();
             frm.Size = new Size(400,500);
             frm.StartPosition = FormStartPosition.CenterScreen;
             frm.Text = "Dialog Properties";
             
-            PropertyGrid propertyGrid = new PropertyGrid();
+            var propertyGrid = new PropertyGrid();
             propertyGrid.Dock = DockStyle.Fill;
             propertyGrid.SelectedObject = m_pTabDialogs_List.SelectedItems[0].Tag;
             frm.Controls.Add(propertyGrid);
@@ -316,14 +312,14 @@ namespace LumiSoft.Net.SIP.Debug
         /// <param name="e">Event data.</param>
         private void m_pTabFlows_Toolbar_Click(object sender,EventArgs e)
         {
-            ToolStripButton button = (ToolStripButton)sender;
+            var button = (ToolStripButton)sender;
 
-            if(button.Tag.ToString() == "refresh"){
+            if (button.Tag.ToString() == "refresh"){
                 m_pTabFlows_List.Items.Clear();
 
                 foreach(SIP_Flow flow in m_pStack.TransportLayer.Flows){
                     try{
-                        ListViewItem it = new ListViewItem(flow.Transport);
+                        var it = new ListViewItem(flow.Transport);
                         it.SubItems.Add(flow.LocalEP.ToString());
                         it.SubItems.Add(flow.RemoteEP.ToString());
                         it.SubItems.Add(flow.LastActivity.ToString("HH:mm:ss"));
@@ -366,8 +362,8 @@ namespace LumiSoft.Net.SIP.Debug
 				if(pattern.StartsWith("*")){
 					// *xxx*xxx
 					if(pattern.IndexOf("*",1) > -1){
-						string indexOfPart = pattern.Substring(1,pattern.IndexOf("*",1) - 1);
-						if(text.IndexOf(indexOfPart) == -1){
+						var indexOfPart = pattern.Substring(1,pattern.IndexOf("*",1) - 1);
+                        if (text.IndexOf(indexOfPart) == -1){
 							return false;
 						}
 
@@ -381,10 +377,10 @@ namespace LumiSoft.Net.SIP.Debug
 				}
 				// xxx*[xxx...]
 				else if(pattern.IndexOfAny(new char[]{'*'}) > -1){
-					string startPart = pattern.Substring(0,pattern.IndexOfAny(new char[]{'*'}));
-		
-					// Text must startwith
-					if(!text.StartsWith(startPart)){
+					var startPart = pattern.Substring(0,pattern.IndexOfAny(new char[]{'*'}));
+
+                    // Text must startwith
+                    if (!text.StartsWith(startPart)){
 						return false;
 					}
 

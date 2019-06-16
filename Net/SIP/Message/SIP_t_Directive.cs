@@ -135,8 +135,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get Method
-            string word = reader.ReadWord();
-            if(word == null){
+            var word = reader.ReadWord();
+            if (word == null){
                 throw new SIP_ParseException("'directive' value is missing !");
             }
             if(word.ToLower() == "proxy"){

@@ -30,20 +30,10 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentNullException">Is raised when <b>audioInDevice</b>,<b>codecs</b> or <b>stream</b> is null reference.</exception>
         public AudioIn_RTP(AudioInDevice audioInDevice,int audioFrameSize,Dictionary<int,AudioCodec> codecs,RTP_SendStream stream)
         {
-            if(audioInDevice == null){
-                throw new ArgumentNullException("audioInDevice");
-            }
-            if(codecs == null){
-                throw new ArgumentNullException("codecs");
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-
-            m_pAudioInDevice = audioInDevice;
+            m_pAudioInDevice = audioInDevice ?? throw new ArgumentNullException("audioInDevice");
             m_AudioFrameSize = audioFrameSize;
-            m_pAudioCodecs   = codecs;
-            m_pRTP_Stream    = stream;
+            m_pAudioCodecs   = codecs ?? throw new ArgumentNullException("codecs");
+            m_pRTP_Stream    = stream ?? throw new ArgumentNullException("stream");
 
             m_pRTP_Stream.Session.PayloadChanged += new EventHandler(m_pRTP_Stream_PayloadChanged);
             m_pAudioCodecs.TryGetValue(m_pRTP_Stream.Session.Payload,out m_pActiveCodec);
@@ -109,7 +99,7 @@ namespace LumiSoft.Net.Media
                 }
 
                 if(m_pActiveCodec != null){
-                    RTP_Packet rtpPacket = new RTP_Packet();
+                    var rtpPacket = new RTP_Packet();
                     rtpPacket.Data = m_pActiveCodec.Encode(e.Value,0,e.Value.Length);
                     rtpPacket.Timestamp = m_RtpTimeStamp;
  	        
@@ -207,11 +197,8 @@ namespace LumiSoft.Net.Media
                 if(this.IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(value == null){
-                    throw new ArgumentNullException("AudioInDevice");
-                }
 
-                m_pAudioInDevice = value;
+                m_pAudioInDevice = value ?? throw new ArgumentNullException("AudioInDevice");
 
                 if(this.IsRunning){
                     Stop();
@@ -272,11 +259,8 @@ namespace LumiSoft.Net.Media
                 if(this.IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(value == null){
-                    throw new ArgumentNullException("AudioCodecs");
-                }
 
-                m_pAudioCodecs = value;
+                m_pAudioCodecs = value ?? throw new ArgumentNullException("AudioCodecs");
             }
         }
 

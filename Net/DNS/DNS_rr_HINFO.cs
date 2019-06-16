@@ -49,12 +49,12 @@ namespace LumiSoft.Net.DNS
 			*/
 
 			// CPU
-			string cpu = Dns_Client.ReadCharacterString(reply,ref offset);
+			var cpu = Dns_Client.ReadCharacterString(reply,ref offset);
 
-			// OS
-			string os = Dns_Client.ReadCharacterString(reply,ref offset);
+            // OS
+            var os = Dns_Client.ReadCharacterString(reply,ref offset);
 
-			return new DNS_rr_HINFO(name,cpu,os,ttl);
+            return new DNS_rr_HINFO(name,cpu,os,ttl);
         }
 
         /// <summary>

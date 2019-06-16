@@ -29,10 +29,10 @@ namespace LumiSoft.Net.ABNF
 
             // TODO: *c-wsp
 
-            ABFN_Group retVal = new ABFN_Group();
+            var retVal = new ABFN_Group();
 
             // We reached end of stream, no closing ")".
-            if(reader.Peek() == -1){
+            if (reader.Peek() == -1){
                 throw new ParseException("Invalid ABNF 'group' value '" + reader.ReadToEnd() + "'.");
             }
          

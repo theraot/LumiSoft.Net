@@ -27,19 +27,9 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentNullException">Is raised when <b>audioOutDevice</b>,<b>stream</b> or <b>codecs</b> is null reference.</exception>
         public AudioOut_RTP(AudioOutDevice audioOutDevice,RTP_ReceiveStream stream,Dictionary<int,AudioCodec> codecs)
         {
-            if(audioOutDevice == null){
-                throw new ArgumentNullException("audioOutDevice");
-            }
-            if(stream == null){
-                throw new ArgumentNullException("stream");
-            }
-            if(codecs == null){
-                throw new ArgumentNullException("codecs");
-            }
-
-            m_pAudioOutDevice = audioOutDevice;
-            m_pRTP_Stream     = stream;
-            m_pAudioCodecs    = codecs;
+            m_pAudioOutDevice = audioOutDevice ?? throw new ArgumentNullException("audioOutDevice");
+            m_pRTP_Stream     = stream ?? throw new ArgumentNullException("stream");
+            m_pAudioCodecs    = codecs ?? throw new ArgumentNullException("codecs");
         }
 
         /// <summary>
@@ -91,7 +81,7 @@ namespace LumiSoft.Net.Media
                 }
 
                 // Decode RTP audio frame and queue it for play out.
-                byte[] decodedData = codec.Decode(e.Packet.Data,0,e.Packet.Data.Length);
+                var decodedData = codec.Decode(e.Packet.Data,0,e.Packet.Data.Length);
                 m_pAudioOut.Write(decodedData,0,decodedData.Length);
             }
             catch(Exception x){
@@ -182,11 +172,8 @@ namespace LumiSoft.Net.Media
                 if(this.IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(value == null){
-                    throw new ArgumentNullException("AudioOutDevice");
-                }
 
-                m_pAudioOutDevice = value;
+                m_pAudioOutDevice = value ?? throw new ArgumentNullException("AudioOutDevice");
 
                 if(this.IsRunning){
                     Stop();

@@ -46,9 +46,9 @@ namespace LumiSoft.Net {
 
 		public static new _MD4 Create (string hashName) 
 		{
-			object o = CryptoConfig.CreateFromName (hashName);
-			// in case machine.config isn't configured to use any MD4 implementation
-			if (o == null) {
+			var o = CryptoConfig.CreateFromName (hashName);
+            // in case machine.config isn't configured to use any MD4 implementation
+            if (o == null) {
 				o = new MD4Managed ();
 			}
 			return (_MD4) o;
@@ -142,8 +142,8 @@ namespace LumiSoft.Net {
 		protected override byte[] HashFinal ()
 		{
 			/* Save number of bits */
-			byte[] bits = new byte [8];
-			Encode (bits, count);
+			var bits = new byte [8];
+            Encode (bits, count);
 
 			/* Pad out to 56 mod 64. */
 			uint index = ((count [0] >> 3) & 0x3f);
@@ -167,8 +167,8 @@ namespace LumiSoft.Net {
 		private byte[] Padding (int nLength) 
 		{
 			if (nLength > 0) {
-				byte[] padding = new byte [nLength];
-				padding [0] = 0x80;
+				var padding = new byte [nLength];
+                padding [0] = 0x80;
 				return padding;
 			}
 			return null;

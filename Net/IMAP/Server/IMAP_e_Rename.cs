@@ -16,19 +16,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>cmdTag</b>,<b>currentFolder</b> or <b>newFolder</b> is null reference.</exception>
         internal IMAP_e_Rename(string cmdTag,string currentFolder,string newFolder)
         {
-            if(cmdTag == null){
-                throw new ArgumentNullException("cmdTag");
-            }
-            if(currentFolder == null){
-                throw new ArgumentNullException("currentFolder");
-            }
-            if(newFolder == null){
-                throw new ArgumentNullException("newFolder");
-            }
-
-            CmdTag        = cmdTag;
-            CurrentFolder = currentFolder;
-            NewFolder     = newFolder;
+            CmdTag        = cmdTag ?? throw new ArgumentNullException("cmdTag");
+            CurrentFolder = currentFolder ?? throw new ArgumentNullException("currentFolder");
+            NewFolder     = newFolder ?? throw new ArgumentNullException("newFolder");
         }
 
         /// <summary>

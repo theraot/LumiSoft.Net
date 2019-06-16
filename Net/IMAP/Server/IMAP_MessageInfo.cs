@@ -29,13 +29,10 @@ namespace LumiSoft.Net.IMAP.Server
             if(uid < 1){
                 throw new ArgumentException("Argument 'uid' value must be >= 1.","uid");
             }
-            if(flags == null){
-                throw new ArgumentNullException("flags");
-            }
 
             ID           = id;
             UID          = uid;
-            Flags       = flags;
+            Flags       = flags ?? throw new ArgumentNullException("flags");
             Size         = size;
             InternalDate = internalDate;
         }
@@ -66,7 +63,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns IMAP flags string.</returns>
         internal string FlagsToImapString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("(");
             for(int i=0;i<Flags.Length;i++){
                 if(i > 0){

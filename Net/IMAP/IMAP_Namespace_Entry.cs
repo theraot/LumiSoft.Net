@@ -16,11 +16,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public IMAP_Namespace_Entry(string name,char delimiter)
         {
-            if(name == null){
-                throw new ArgumentNullException("name");
-            }
-
-            NamespaceName = name;
+            NamespaceName = name ?? throw new ArgumentNullException("name");
         }
 
         /// <summary>

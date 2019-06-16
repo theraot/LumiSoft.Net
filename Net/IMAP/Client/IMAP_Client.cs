@@ -134,7 +134,7 @@ namespace LumiSoft.Net.IMAP.Client
                     // Force inhereted class to fill command line info.
                     OnInitCmdLine(owner);
 
-                    SendCmdAndReadRespAsyncOP op = new SendCmdAndReadRespAsyncOP(CmdLines.ToArray(),m_pCallback);
+                    var op = new SendCmdAndReadRespAsyncOP(CmdLines.ToArray(),m_pCallback);
                     op.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         try{
                             // Command send/receive failed.
@@ -466,10 +466,10 @@ namespace LumiSoft.Net.IMAP.Client
                         STARTTLS. 
                     */
 
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " STARTTLS\r\n");
-                    string cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
+                    var cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " STARTTLS\r\n");
+                    var cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         ProcessCmdResult(e.Value);
                     };
@@ -534,7 +534,7 @@ namespace LumiSoft.Net.IMAP.Client
                         // IMAP server returned success response.
                         else{
                             // Start TLS/SSl handshake.
-                            TCP_Client.SwitchToSecureAsyncOP tlsOP = new SwitchToSecureAsyncOP(m_pCertCallback);
+                            var tlsOP = new SwitchToSecureAsyncOP(m_pCertCallback);
                             tlsOP.CompletedAsync += delegate(object sender,EventArgs<SwitchToSecureAsyncOP> e){
                                 if(e.Value.Error != null){
                                     m_pException = e.Value.Error;
@@ -799,10 +799,10 @@ namespace LumiSoft.Net.IMAP.Client
                         automatic capabilities.
                     */
 
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " LOGIN " + TextUtils.QuoteString(m_User) + " " + TextUtils.QuoteString(m_Password) + "\r\n");
-                    string cmdLineLog = (m_pImapClient.m_CommandIndex - 1).ToString("d5") + " LOGIN " + TextUtils.QuoteString(m_User) + " <PASSWORD-REMOVED>";
+                    var cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " LOGIN " + TextUtils.QuoteString(m_User) + " " + TextUtils.QuoteString(m_Password) + "\r\n");
+                    var cmdLineLog = (m_pImapClient.m_CommandIndex - 1).ToString("d5") + " LOGIN " + TextUtils.QuoteString(m_User) + " <PASSWORD-REMOVED>";
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         try{
                             // Command send/receive failed.
@@ -1099,8 +1099,8 @@ namespace LumiSoft.Net.IMAP.Client
                     */
 
                     if(m_pSASL.SupportsInitialResponse && m_pImapClient.SupportsCapability("SASL-IR")){
-                        byte[] buffer = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " AUTHENTICATE " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
-                            
+                        var buffer = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " AUTHENTICATE " + m_pSASL.Name + " " + Convert.ToBase64String(m_pSASL.Continue(null)) + "\r\n");
+
                         // Log
                         m_pImapClient.LogAddWrite(buffer.Length,Encoding.UTF8.GetString(buffer).TrimEnd());
 
@@ -1108,7 +1108,7 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pImapClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthenticateCommandSendingCompleted,null);
                     }
                     else{
-                        byte[] buffer = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " AUTHENTICATE " + m_pSASL.Name + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " AUTHENTICATE " + m_pSASL.Name + "\r\n");
 
                         // Log
                         m_pImapClient.LogAddWrite(buffer.Length,(m_pImapClient.m_CommandIndex++).ToString("d5") + " AUTHENTICATE " + m_pSASL.Name);
@@ -1161,7 +1161,7 @@ namespace LumiSoft.Net.IMAP.Client
                     m_pImapClient.TcpStream.EndWrite(ar);
 
                     // Read IMAP server response.
-                    SmartStream.ReadLineAsyncOP op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                    var op = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                     op.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                         AuthenticateReadResponseCompleted(op);
                     };
@@ -1189,12 +1189,12 @@ namespace LumiSoft.Net.IMAP.Client
                     // Continue authenticating.
                     if(op.LineUtf8.StartsWith("+")){
                         // + base64Data, we need to decode it.
-                        byte[] serverResponse = Convert.FromBase64String(op.LineUtf8.Split(new char[]{' '},2)[1]);
+                        var serverResponse = Convert.FromBase64String(op.LineUtf8.Split(new char[]{' '},2)[1]);
 
-                        byte[] clientResponse = m_pSASL.Continue(serverResponse);
+                        var clientResponse = m_pSASL.Continue(serverResponse);
 
                         // We need just send SASL returned auth-response as base64.
-                        byte[] buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
+                        var buffer = Encoding.UTF8.GetBytes(Convert.ToBase64String(clientResponse) + "\r\n");
 
                         // Log
                         m_pImapClient.LogAddWrite(buffer.Length,Convert.ToBase64String(clientResponse));
@@ -1316,7 +1316,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new InvalidOperationException("This command is not valid in IDLE state, you need stop idling before calling this command.");
             }
 
-            List<IMAP_r_u_Namespace> retVal = new List<IMAP_r_u_Namespace>();
+            var retVal = new List<IMAP_r_u_Namespace>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -1389,7 +1389,7 @@ namespace LumiSoft.Net.IMAP.Client
                         S: A001 OK NAMESPACE command completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " NAMESPACE" + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " NAMESPACE" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -1458,7 +1458,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new InvalidOperationException("This command is not valid in IDLE state, you need stop idling before calling this command.");
             }
 
-            List<IMAP_r_u_List> retVal = new List<IMAP_r_u_List>();
+            var retVal = new List<IMAP_r_u_List>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -1649,11 +1649,11 @@ namespace LumiSoft.Net.IMAP.Client
                 */
 
                 if(m_Filter != null){
-                    byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LIST \"\" " + IMAP_Utils.EncodeMailbox(m_Filter,imap.m_MailboxEncoding) + "\r\n");
+                    var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LIST \"\" " + IMAP_Utils.EncodeMailbox(m_Filter,imap.m_MailboxEncoding) + "\r\n");
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
                 else{
-                    byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LIST \"\" \"*\"\r\n");
+                    var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LIST \"\" \"*\"\r\n");
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
             }
@@ -1822,7 +1822,7 @@ namespace LumiSoft.Net.IMAP.Client
                         level are created.
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " CREATE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " CREATE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -1992,7 +1992,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A687 OK DELETE Completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " DELETE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " DELETE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -2184,7 +2184,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A685 OK LIST completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " RENAME " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + IMAP_Utils.EncodeMailbox(m_NewFolder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " RENAME " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + IMAP_Utils.EncodeMailbox(m_NewFolder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -2253,7 +2253,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new InvalidOperationException("This command is not valid in IDLE state, you need stop idling before calling this command.");
             }
             
-            List<IMAP_r_u_LSub> retVal = new List<IMAP_r_u_LSub>();
+            var retVal = new List<IMAP_r_u_LSub>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -2351,11 +2351,11 @@ namespace LumiSoft.Net.IMAP.Client
                 */
 
                 if(m_Filter != null){
-                    byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LSUB \"\" " + IMAP_Utils.EncodeMailbox(m_Filter,imap.m_MailboxEncoding) + "\r\n");
+                    var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LSUB \"\" " + IMAP_Utils.EncodeMailbox(m_Filter,imap.m_MailboxEncoding) + "\r\n");
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
                 else{
-                    byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LSUB \"\" \"*\"\r\n");
+                    var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LSUB \"\" \"*\"\r\n");
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
             }
@@ -2503,7 +2503,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A002 OK SUBSCRIBE completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " SUBSCRIBE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " SUBSCRIBE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -2639,7 +2639,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A002 OK UNSUBSCRIBE completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " UNSUBSCRIBE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " UNSUBSCRIBE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -2709,7 +2709,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'folder' value must be specified.","folder");
             }
 
-            List<IMAP_r_u_Status> retVal = new List<IMAP_r_u_Status>();
+            var retVal = new List<IMAP_r_u_Status>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -2840,7 +2840,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A042 OK STATUS completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " STATUS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " (MESSAGES RECENT UIDNEXT UIDVALIDITY UNSEEN)\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " STATUS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " (MESSAGES RECENT UIDNEXT UIDVALIDITY UNSEEN)\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -3063,10 +3063,10 @@ namespace LumiSoft.Net.IMAP.Client
                     // Set new folder as selected folder.
                     m_pImapClient.m_pSelectedFolder = new IMAP_Client_SelectedFolder(m_Folder);
                     
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " SELECT " + IMAP_Utils.EncodeMailbox(m_Folder,m_pImapClient.m_MailboxEncoding) + "\r\n");
-                    string cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
+                    var cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " SELECT " + IMAP_Utils.EncodeMailbox(m_Folder,m_pImapClient.m_MailboxEncoding) + "\r\n");
+                    var cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         ProecessCmdResult(e.Value);
                     };
@@ -3381,10 +3381,10 @@ namespace LumiSoft.Net.IMAP.Client
                     // Set new folder as selected folder.
                     m_pImapClient.m_pSelectedFolder = new IMAP_Client_SelectedFolder(m_Folder);
                     
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " EXAMINE " + IMAP_Utils.EncodeMailbox(m_Folder,m_pImapClient.m_MailboxEncoding) + "\r\n");
-                    string cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
+                    var cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " EXAMINE " + IMAP_Utils.EncodeMailbox(m_Folder,m_pImapClient.m_MailboxEncoding) + "\r\n");
+                    var cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         ProecessCmdResult(e.Value);
                     };
@@ -3590,7 +3590,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'folder' value must be specified.","folder");
             }
 
-            List<IMAP_r> retVal = new List<IMAP_r>();
+            var retVal = new List<IMAP_r>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -3673,7 +3673,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A003 OK Getquota completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETQUOTAROOT " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETQUOTAROOT " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -3740,7 +3740,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("quotaRootName");
             }            
 
-            List<IMAP_r_u_Quota> retVal = new List<IMAP_r_u_Quota>();
+            var retVal = new List<IMAP_r_u_Quota>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -3814,7 +3814,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A003 OK Getquota completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETQUOTA " + IMAP_Utils.EncodeMailbox(m_QuotaRootName,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETQUOTA " + IMAP_Utils.EncodeMailbox(m_QuotaRootName,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -3911,7 +3911,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'folder' value must be specified.","folder");
             }
 
-            List<IMAP_r_u_Acl> retVal = new List<IMAP_r_u_Acl>();
+            var retVal = new List<IMAP_r_u_Acl>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -3992,7 +3992,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A002 OK Getacl complete                
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETACL " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETACL " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -4168,7 +4168,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A036 BAD The q right is not supported
                 */
 
-                StringBuilder command = new StringBuilder();
+                var command = new StringBuilder();
                 command.Append((imap.m_CommandIndex++).ToString("d5"));            
                 command.Append(" SETACL");
                 command.Append(" " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding));
@@ -4186,7 +4186,7 @@ namespace LumiSoft.Net.IMAP.Client
                     throw new NotSupportedException("Not supported argument 'setType' value '" + m_FlagsSetType.ToString() + "'.");
                 }
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes(command.ToString());
+                var cmdLine = Encoding.UTF8.GetBytes(command.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -4338,7 +4338,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: B002 OK Deleteacl complete
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " DELETEACL " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + TextUtils.QuoteString(m_Identifier) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " DELETEACL " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + TextUtils.QuoteString(m_Identifier) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -4415,7 +4415,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'identifier' value must be specified.","identifier");
             }
 
-            List<IMAP_r_u_ListRights> retVal = new List<IMAP_r_u_ListRights>();
+            var retVal = new List<IMAP_r_u_ListRights>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -4512,7 +4512,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: a005 Listrights successful
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LISTRIGHTS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + TextUtils.QuoteString(m_Identifier) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LISTRIGHTS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + TextUtils.QuoteString(m_Identifier) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -4582,7 +4582,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'folder' value must be specified.","folder");
             }
 
-            List<IMAP_r_u_MyRights> retVal = new List<IMAP_r_u_MyRights>();
+            var retVal = new List<IMAP_r_u_MyRights>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -4656,7 +4656,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A003 OK Myrights complete
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " MYRIGHTS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " MYRIGHTS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -4972,14 +4972,14 @@ namespace LumiSoft.Net.IMAP.Client
                         envelope information.
                     */
 
-                    StringBuilder command = new StringBuilder();
+                    var command = new StringBuilder();
                     command.Append((m_pImapClient.m_CommandIndex++).ToString("d5"));            
                     command.Append(" APPEND");
                     command.Append(" " + IMAP_Utils.EncodeMailbox(m_Folder,m_pImapClient.m_MailboxEncoding));
                     if(m_pFlags != null){
                         command.Append(" (");
-                        string[] flags = m_pFlags.ToArray();
-                        for(int i=0;i<flags.Length;i++){
+                        var flags = m_pFlags.ToArray();
+                        for (int i=0;i<flags.Length;i++){
                             if(i > 0){
                                 command.Append(" ");
                             }
@@ -4992,10 +4992,10 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                     command.Append(" {" + m_Count + "}\r\n");
 
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes(command.ToString());
-                    string cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
+                    var cmdLine    = Encoding.UTF8.GetBytes(command.ToString());
+                    var cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         ProcessCmdSendingResult(args);
                     };
@@ -5054,7 +5054,7 @@ namespace LumiSoft.Net.IMAP.Client
                         // IMAP server returned continue response.
                         if(op.FinalResponse.IsContinue){
                             // Send message literal.
-                            SmartStream.WriteStreamAsyncOP writeOP = new SmartStream.WriteStreamAsyncOP(m_pStream,m_Count);
+                            var writeOP = new SmartStream.WriteStreamAsyncOP(m_pStream,m_Count);
                             writeOP.CompletedAsync += delegate(object sender,EventArgs<SmartStream.WriteStreamAsyncOP> e){
                                 ProcessMsgSendingResult(writeOP);
                             };
@@ -5100,7 +5100,7 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pImapClient.LogAddWrite(m_Count,"Wrote " + m_Count + " bytes.");
 
                         // Send remaining command line(which is CRLF) and read response.
-                        SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(new byte[]{(int)'\r',(int)'\n'},"",m_pCallback);
+                        var args = new SendCmdAndReadRespAsyncOP(new byte[]{(int)'\r',(int)'\n'},"",m_pCallback);
                         args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                             if(args.Error != null){
                                 m_pException = args.Error;
@@ -5289,7 +5289,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'capabilities' must contain at least 1 value.","capabilities");
             }
 
-            List<IMAP_r_u_Enable> retVal = new List<IMAP_r_u_Enable>();
+            var retVal = new List<IMAP_r_u_Enable>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -5360,14 +5360,14 @@ namespace LumiSoft.Net.IMAP.Client
                     each extension remains active until the IMAP connection is closed.
                 */
 
-                StringBuilder cmd = new StringBuilder();
+                var cmd = new StringBuilder();
                 cmd.Append((imap.m_CommandIndex++).ToString("d5") + " ENABLE");
                 foreach(string capability in m_pCapabilities){
                     cmd.Append(" " + capability);
                 }
                 cmd.Append("\r\n");
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes(cmd.ToString());
+                var cmdLine = Encoding.UTF8.GetBytes(cmd.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -5434,7 +5434,7 @@ namespace LumiSoft.Net.IMAP.Client
                 The "ENABLE UTF8=ACCEPT" command MUST only be used in the authenticated state.
             */
 
-            IMAP_r_u_Enable[] response = Enable(new string[]{"UTF8=ACCEPT"});
+            var response = Enable(new string[]{"UTF8=ACCEPT"});
 
             // Per specification we may send "utf8-quoted" string when server reports "UTF8=ACCEPT" or "UTF8=ALL" without
             // sending "ENABLE UTF8=ACCEPT" command. We just enable sending or receiving utf-8 once this command is called.
@@ -5569,10 +5569,10 @@ namespace LumiSoft.Net.IMAP.Client
 
                     */
                     
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " CLOSE\r\n");
-                    string cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
+                    var cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " CLOSE\r\n");
+                    var cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         ProecessCmdResult(e.Value);
                     };
@@ -5867,7 +5867,7 @@ namespace LumiSoft.Net.IMAP.Client
                         safely ignore the newly transmitted envelope.
                 */
 
-                StringBuilder command = new StringBuilder();
+                var command = new StringBuilder();
                 command.Append((imap.m_CommandIndex++).ToString("d5"));
                 if(m_Uid){
                     command.Append(" UID");
@@ -5881,7 +5881,7 @@ namespace LumiSoft.Net.IMAP.Client
                 }
                 command.Append(")\r\n");
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes(command.ToString());
+                var cmdLine = Encoding.UTF8.GetBytes(command.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -5955,7 +5955,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("criteria");
             }
             
-            List<int> retVal = new List<int>();
+            var retVal = new List<int>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -6060,8 +6060,8 @@ namespace LumiSoft.Net.IMAP.Client
                     NOTE: Literal data is sent only when server responds "+ Continue ..."
                 */
                 
-                ByteBuilder currentCmdLine = new ByteBuilder();
-                List<ByteBuilder> cmdLines = new List<ByteBuilder>();                
+                var currentCmdLine = new ByteBuilder();
+                var cmdLines = new List<ByteBuilder>();
                 cmdLines.Add(currentCmdLine);
 
                 currentCmdLine.Append((imap.m_CommandIndex++).ToString("d5"));
@@ -6074,7 +6074,7 @@ namespace LumiSoft.Net.IMAP.Client
                 }
                 currentCmdLine.Append(" (");
                 //--- Build search items --------------------------------------------
-                List<IMAP_Client_CmdPart> cmdParts = new List<IMAP_Client_CmdPart>();
+                var cmdParts = new List<IMAP_Client_CmdPart>();
                 m_pCriteria.ToCmdParts(cmdParts);
                 foreach(IMAP_Client_CmdPart cmdPart in cmdParts){
                     // Command part is string constant.
@@ -6108,8 +6108,8 @@ namespace LumiSoft.Net.IMAP.Client
                 currentCmdLine.Append(")\r\n");
 
                 // Set command lines and their log lines.
-                List<string> logLines = new List<string>();
-                foreach(ByteBuilder cmdLine in cmdLines){
+                var logLines = new List<string>();
+                foreach (ByteBuilder cmdLine in cmdLines){
                     this.CmdLines.Add(new CmdLine(cmdLine.ToByte(),Encoding.UTF8.GetString(cmdLine.ToByte()).TrimEnd()));
                 }
             }
@@ -6306,7 +6306,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: A003 OK STORE completed
                 */
 
-                StringBuilder command = new StringBuilder();
+                var command = new StringBuilder();
                 command.Append((imap.m_CommandIndex++).ToString("d5"));
                 if(m_Uid){
                     command.Append(" UID");
@@ -6330,8 +6330,8 @@ namespace LumiSoft.Net.IMAP.Client
                 }
                 if(m_pMsgFlags != null){
                     command.Append(" (");
-                    string[] flags = m_pMsgFlags.ToArray();
-                    for(int i=0;i<flags.Length;i++){
+                    var flags = m_pMsgFlags.ToArray();
+                    for (int i=0;i<flags.Length;i++){
                         if(i > 0){
                             command.Append(" ");
                         }
@@ -6343,7 +6343,7 @@ namespace LumiSoft.Net.IMAP.Client
                     command.Append(" ()\r\n");
                 }
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes(command.ToString());
+                var cmdLine = Encoding.UTF8.GetBytes(command.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -6543,11 +6543,11 @@ namespace LumiSoft.Net.IMAP.Client
                 */
                 
                 if(m_Uid){
-                    byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " UID COPY " + m_pSeqSet.ToString() + " " + IMAP_Utils.EncodeMailbox(m_TargetFolder,imap.m_MailboxEncoding) + "\r\n");
+                    var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " UID COPY " + m_pSeqSet.ToString() + " " + IMAP_Utils.EncodeMailbox(m_TargetFolder,imap.m_MailboxEncoding) + "\r\n");
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
                 else{
-                    byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " COPY " + m_pSeqSet.ToString() + " " + IMAP_Utils.EncodeMailbox(m_TargetFolder,imap.m_MailboxEncoding) + "\r\n");
+                    var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " COPY " + m_pSeqSet.ToString() + " " + IMAP_Utils.EncodeMailbox(m_TargetFolder,imap.m_MailboxEncoding) + "\r\n");
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
             }
@@ -6744,7 +6744,7 @@ namespace LumiSoft.Net.IMAP.Client
                     response for further explanation.
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " EXPUNGE" + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " EXPUNGE" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -6841,7 +6841,7 @@ namespace LumiSoft.Net.IMAP.Client
                 }
                 m_DoneSent = true;
 
-                byte[] cmdLine = Encoding.ASCII.GetBytes("DONE\r\n");
+                var cmdLine = Encoding.ASCII.GetBytes("DONE\r\n");
 
                 // Log
                 m_pImapClient.LogAddWrite(cmdLine.Length,"DONE");
@@ -6936,10 +6936,10 @@ namespace LumiSoft.Net.IMAP.Client
 
                     m_pImapClient.m_pIdle = this;
                     
-                    byte[] cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " IDLE\r\n");
-                    string cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
+                    var cmdLine    = Encoding.UTF8.GetBytes((m_pImapClient.m_CommandIndex++).ToString("d5") + " IDLE\r\n");
+                    var cmdLineLog = Encoding.UTF8.GetString(cmdLine).TrimEnd();
 
-                    SendCmdAndReadRespAsyncOP args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
+                    var args = new SendCmdAndReadRespAsyncOP(cmdLine,cmdLineLog,m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<SendCmdAndReadRespAsyncOP> e){
                         ProecessCmdResult(e.Value);
                     };
@@ -7003,7 +7003,7 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                         // IMAP server returned "+" continue response.
                         else if(op.FinalResponse.IsContinue){
-                            ReadFinalResponseAsyncOP readFinalRespOP = new ReadFinalResponseAsyncOP(m_pCallback);
+                            var readFinalRespOP = new ReadFinalResponseAsyncOP(m_pCallback);
                             readFinalRespOP.CompletedAsync += delegate(object sender,EventArgs<ReadFinalResponseAsyncOP> e){
                                 ProcessReadFinalResponseResult(e.Value);
                             };
@@ -7171,7 +7171,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new InvalidOperationException("This command is not valid in IDLE state, you need stop idling before calling this command.");
             }
 
-            List<IMAP_r_u_Capability> retVal = new List<IMAP_r_u_Capability>();
+            var retVal = new List<IMAP_r_u_Capability>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -7265,7 +7265,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 S: ijkl OK CAPABILITY completed
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " CAPABILITY" + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " CAPABILITY" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -7373,7 +7373,7 @@ namespace LumiSoft.Net.IMAP.Client
                     to reset any inactivity autologout timer on the server.            
                 */
 
-                byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " NOOP" + "\r\n");
+                var cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " NOOP" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
         }
@@ -7416,7 +7416,7 @@ namespace LumiSoft.Net.IMAP.Client
         protected override void OnConnected(CompleteConnectCallback callback)
         {
             // Read IMAP server greeting.
-            ReadResponseAsyncOP op = new ReadResponseAsyncOP();
+            var op = new ReadResponseAsyncOP();
             op.CompletedAsync += delegate(object sender,EventArgs<IMAP_Client.ReadResponseAsyncOP> e){
                 ProcessGreetingResult(op,callback);
             };
@@ -7443,10 +7443,10 @@ namespace LumiSoft.Net.IMAP.Client
                 // Operation succeeded.
                 else{
                     if(op.Response is IMAP_r_u_ServerStatus){
-                        IMAP_r_u_ServerStatus statusResp = (IMAP_r_u_ServerStatus)op.Response;
+                        var statusResp = (IMAP_r_u_ServerStatus)op.Response;
 
                         // IMAP server rejected connection.
-                        if(statusResp.IsError){
+                        if (statusResp.IsError){
                             error = new IMAP_ClientException(statusResp.ResponseCode,statusResp.ResponseText);
                         }
                         else{
@@ -7599,7 +7599,7 @@ namespace LumiSoft.Net.IMAP.Client
                         throw new Exception("Internal error: No next IMAP command line.");
                     }
 
-                    CmdLine cmdLine = m_pCmdLines.Dequeue();
+                    var cmdLine = m_pCmdLines.Dequeue();
 
                     // Log
                     m_pImapClient.LogAddWrite(cmdLine.Data.Length,cmdLine.LogText);
@@ -7623,7 +7623,7 @@ namespace LumiSoft.Net.IMAP.Client
                 try{
                     m_pImapClient.TcpStream.EndWrite(ar);
 
-                    ReadFinalResponseAsyncOP args = new ReadFinalResponseAsyncOP(m_pCallback);
+                    var args = new ReadFinalResponseAsyncOP(m_pCallback);
                     args.CompletedAsync += delegate(object sender,EventArgs<ReadFinalResponseAsyncOP> e){
                         try{
                             // Command failed.
@@ -7904,20 +7904,20 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                     // Line reading succeeded.
                     else{
-                        string responseLine = op.LineUtf8;
+                        var responseLine = op.LineUtf8;
 
                         // Log.
                         m_pImapClient.LogAddRead(op.BytesInBuffer,responseLine);
 
                         // Untagged response.
                         if(responseLine.StartsWith("*")){
-                            string[] parts = responseLine.Split(new char[]{' '},4);
-                            string   word  = responseLine.Split(' ')[1];
+                            var parts = responseLine.Split(new char[]{' '},4);
+                            var   word  = responseLine.Split(' ')[1];
 
                             // OK,NO,BAD,PREAUTH,BYE
 
-                            if(word.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
-                                IMAP_r_u_ServerStatus statusResponse = IMAP_r_u_ServerStatus.Parse(responseLine);
+                            if (word.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
+                                var statusResponse = IMAP_r_u_ServerStatus.Parse(responseLine);
                                 m_pResponse = statusResponse;
 
                                 // Process optional response-codes(7.2). ALERT,BADCHARSET,CAPABILITY,PARSE,PERMANENTFLAGS,READ-ONLY,
@@ -8034,7 +8034,7 @@ namespace LumiSoft.Net.IMAP.Client
                             else if(Net_Utils.IsInteger(word) && parts[2].Equals("FETCH",StringComparison.InvariantCultureIgnoreCase)){
                                 // FETCH parsing may complete asynchornously, the method FetchParsingCompleted is called when parsing has completed.
 
-                                IMAP_r_u_Fetch fetch = new IMAP_r_u_Fetch(1);                                
+                                var fetch = new IMAP_r_u_Fetch(1);
                                 m_pResponse = fetch;
                                 fetch.ParseAsync(m_pImapClient,responseLine,this.FetchParsingCompleted);
 
@@ -8243,7 +8243,7 @@ namespace LumiSoft.Net.IMAP.Client
                 SetState(AsyncOP_State.Active);
 
                 try{                    
-                    ReadResponseAsyncOP args = new ReadResponseAsyncOP();
+                    var args = new ReadResponseAsyncOP();
                     args.CompletedAsync += delegate(object sender,EventArgs<ReadResponseAsyncOP> e){
                         try{
                             ResponseReadingCompleted(e.Value);
@@ -8705,8 +8705,8 @@ namespace LumiSoft.Net.IMAP.Client
 			    }
 
                 // Empty folder name forces server to return hierarchy delimiter.
-                IMAP_r_u_List[] retVal = GetFolders("");
-                if(retVal.Length == 0){
+                var retVal = GetFolders("");
+                if (retVal.Length == 0){
                     throw new Exception("Unexpected result: IMAP server didn't return LIST response for [... LIST \"\" \"\"].");
                 }
 
@@ -8851,36 +8851,36 @@ namespace LumiSoft.Net.IMAP.Client
                 The client MUST be prepared to accept any response at all times.
             */
                         
-            SmartStream.ReadLineAsyncOP args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+            var args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
 
-            while(true){
+            while (true){
                 // Read response line.
                 this.TcpStream.ReadLine(args,false);
                 if(args.Error != null){
                     throw args.Error;
                 }
-                string responseLine = args.LineUtf8;
+                var responseLine = args.LineUtf8;
 
                 // Log
                 LogAddRead(args.BytesInBuffer,responseLine);
 
                 // Untagged response.
                 if(responseLine.StartsWith("*")){
-                    string[] parts = responseLine.Split(new char[]{' '},4);
-                    string   word  = responseLine.Split(' ')[1];
+                    var parts = responseLine.Split(new char[]{' '},4);
+                    var   word  = responseLine.Split(' ')[1];
 
                     // OK,NO,BAD,PREAUTH,BYE
 
-                    if(word.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
-                        IMAP_r_u_ServerStatus response = IMAP_r_u_ServerStatus.Parse(responseLine);
+                    if (word.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
+                        var response = IMAP_r_u_ServerStatus.Parse(responseLine);
 
                         // Process optional response-codes(7.2). ALERT,BADCHARSET,CAPABILITY,PARSE,PERMANENTFLAGS,READ-ONLY,
                         // READ-WRITE,TRYCREATE,UIDNEXT,UIDVALIDITY,UNSEEN
 
-                        if(!string.IsNullOrEmpty(response.OptionalResponseCode)){
+                        if (!string.IsNullOrEmpty(response.OptionalResponseCode)){
                             if(response.OptionalResponseCode.Equals("PERMANENTFLAGS",StringComparison.InvariantCultureIgnoreCase)){
                                 if(folderInfo != null){
-                                    StringReader r = new StringReader(response.OptionalResponseArgs);
+                                    var r = new StringReader(response.OptionalResponseArgs);
 
                                     folderInfo.SetPermanentFlags(r.ReadParenthesized().Split(' '));
                                 }
@@ -8987,7 +8987,7 @@ namespace LumiSoft.Net.IMAP.Client
                         */
 
                         if(folderInfo != null){
-                            StringReader r = new StringReader(responseLine.Split(new char[]{' '},3)[2]);
+                            var r = new StringReader(responseLine.Split(new char[]{' '},3)[2]);
 
                             folderInfo.SetFlags(r.ReadParenthesized().Split(' '));
                         }
@@ -9021,7 +9021,7 @@ namespace LumiSoft.Net.IMAP.Client
                             fetchHandler = new IMAP_Client_FetchHandler();
                         }
 
-                        _FetchResponseReader r = new _FetchResponseReader(this,responseLine,fetchHandler);
+                        var r = new _FetchResponseReader(this,responseLine,fetchHandler);
                         r.Start();                        
                     }
                     else if(word.Equals("ACL",StringComparison.InvariantCultureIgnoreCase)){
@@ -9102,7 +9102,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new InvalidOperationException("Not selected state, you need to select some folder first.");
             }
 
-            StringBuilder command = new StringBuilder();
+            var command = new StringBuilder();
             command.Append((m_CommandIndex++).ToString("d5"));
             if(uid){
                 command.Append(" UID");
@@ -9116,13 +9116,13 @@ namespace LumiSoft.Net.IMAP.Client
             SendCommand(command.ToString());
 
             // Read IMAP server response.
-            List<int> retVal = new List<int>();
-            IMAP_r_ServerStatus response = ReadFinalResponse(delegate(object sender,EventArgs<IMAP_r_u> e){
+            var retVal = new List<int>();
+            var response = ReadFinalResponse(delegate(object sender,EventArgs<IMAP_r_u> e){
                 if(e.Value is IMAP_r_u_Search){
                     retVal.AddRange(((IMAP_r_u_Search)e.Value).Values);
                 }
             });
-            if(!response.ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
+            if (!response.ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
                 throw new IMAP_ClientException(response.ResponseCode,response.ResponseText);
             }
            
@@ -9193,7 +9193,7 @@ namespace LumiSoft.Net.IMAP.Client
                     safely ignore the newly transmitted envelope.
             */
 
-            StringBuilder command = new StringBuilder();
+            var command = new StringBuilder();
             command.Append((m_CommandIndex++).ToString("d5"));
             if(uid){
                 command.Append(" UID");
@@ -9209,8 +9209,8 @@ namespace LumiSoft.Net.IMAP.Client
      
             SendCommand(command.ToString());
 
-            IMAP_r_ServerStatus response = ReadResponse(null,null,null,null,null,null,null,null,null,null,null,null,handler,null);
-            if(!response.ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
+            var response = ReadResponse(null,null,null,null,null,null,null,null,null,null,null,null,handler,null);
+            if (!response.ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase)){
                 throw new IMAP_ClientException(response.ResponseCode,response.ResponseText);
             }
         }
@@ -9386,7 +9386,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("quotaRootName");
             }
 
-            List<IMAP_r_u_Quota> retVal = new List<IMAP_r_u_Quota>();
+            var retVal = new List<IMAP_r_u_Quota>();
 
             // Create callback. It is called for each untagged IMAP server response.
             EventHandler<EventArgs<IMAP_r_u>> callback = delegate(object sender,EventArgs<IMAP_r_u> e){
@@ -9479,7 +9479,7 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pFetchReader.ReadWord();
 
                         // Read body-section.
-                        string section = m_pFetchReader.ReadParenthesized();
+                        var section = m_pFetchReader.ReadParenthesized();
 
                         // Read origin if any.
                         int offset = -1;
@@ -9488,7 +9488,7 @@ namespace LumiSoft.Net.IMAP.Client
                         }
 
                         // Get Message store stream.
-                        IMAP_Client_Fetch_Body_EArgs eArgs = new IMAP_Client_Fetch_Body_EArgs(section,offset);
+                        var eArgs = new IMAP_Client_Fetch_Body_EArgs(section,offset);
                         m_pHandler.OnBody(eArgs);
 
                         // We don't have BODY[].
@@ -9529,9 +9529,9 @@ namespace LumiSoft.Net.IMAP.Client
                         // Eat FLAGS word.
                         m_pFetchReader.ReadWord();
 
-                        string   flagsList = m_pFetchReader.ReadParenthesized();
-                        string[] flags     = new string[0];
-                        if(!string.IsNullOrEmpty(flagsList)){
+                        var   flagsList = m_pFetchReader.ReadParenthesized();
+                        var flags     = new string[0];
+                        if (!string.IsNullOrEmpty(flagsList)){
                             flags = flagsList.Split(' ');
                         }
 
@@ -9549,7 +9549,7 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pFetchReader.ReadToFirstChar();
 
                         // Get Message store stream.
-                        IMAP_Client_Fetch_Rfc822_EArgs eArgs = new IMAP_Client_Fetch_Rfc822_EArgs();
+                        var eArgs = new IMAP_Client_Fetch_Rfc822_EArgs();
                         m_pHandler.OnRfc822(eArgs);
 
                         // We don't have RFC822.
@@ -9688,7 +9688,7 @@ namespace LumiSoft.Net.IMAP.Client
                 // string-literal.
 
                 if(m_pFetchReader.StartsWith("{")){
-                    string retVal = m_pImap.ReadStringLiteral(Convert.ToInt32(m_pFetchReader.ReadParenthesized()));
+                    var retVal = m_pImap.ReadStringLiteral(Convert.ToInt32(m_pFetchReader.ReadParenthesized()));
 
                     // Read continuing FETCH line.
                     m_pFetchReader = new StringReader(m_pImap.ReadLine());
@@ -9713,7 +9713,7 @@ namespace LumiSoft.Net.IMAP.Client
                 quoted-string  = DQUOTE string DQUOTE    - Normal quoted-string.
             */
 
-            string retVal = this.TcpStream.ReadFixedCountString(count);            
+            var retVal = this.TcpStream.ReadFixedCountString(count);
             LogAddRead(count,"Readed string-literal " + count.ToString() + " bytes.");
 
             return retVal;
@@ -9748,7 +9748,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("command");
             }
 
-            byte[] buffer = Encoding.UTF8.GetBytes(command);                                  
+            var buffer = Encoding.UTF8.GetBytes(command);
             this.TcpStream.Write(buffer,0,buffer.Length);
             LogAddWrite(command.TrimEnd().Length,command.TrimEnd());
         }
@@ -9761,8 +9761,8 @@ namespace LumiSoft.Net.IMAP.Client
         [Obsolete("deprecated")]
         private IMAP_r_ServerStatus ReadFinalResponse(EventHandler<EventArgs<IMAP_r_u>> callback)
         {
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(ReadFinalResponseAsyncOP op = new ReadFinalResponseAsyncOP(callback)){
+            var wait = new ManualResetEvent(false);
+            using (ReadFinalResponseAsyncOP op = new ReadFinalResponseAsyncOP(callback)){
                 op.CompletedAsync += delegate(object s1,EventArgs<ReadFinalResponseAsyncOP> e1){
                     wait.Set();
                 };

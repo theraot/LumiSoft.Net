@@ -75,7 +75,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             lock(m_pRegistrations){
                 for(int i=0;i<m_pRegistrations.Count;i++){
-                    SIP_Registration registration = m_pRegistrations[i];
+                    var registration = m_pRegistrations[i];
 
                     // Force registration to remove all its expired contacts.
                     registration.RemoveExpiredBindings();

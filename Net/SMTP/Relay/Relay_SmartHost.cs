@@ -61,8 +61,8 @@ namespace LumiSoft.Net.SMTP.Relay
                 return false;
             }
 
-            Relay_SmartHost smartHost = (Relay_SmartHost)obj;
-            if(Host != smartHost.Host){
+            var smartHost = (Relay_SmartHost)obj;
+            if (Host != smartHost.Host){
                 return false;
             }
 

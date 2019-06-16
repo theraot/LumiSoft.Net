@@ -58,11 +58,7 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="ArgumentNullException">Is raised when <b>socket</b> is null reference.</exception>
             public TCP_Acceptor(Socket socket)
             {
-                if(socket == null){
-                    throw new ArgumentNullException("socket");
-                }
-
-                m_pSocket = socket;
+                m_pSocket = socket ?? throw new ArgumentNullException("socket");
 
                 Tags = new Dictionary<string,object>();
             }
@@ -436,12 +432,12 @@ namespace LumiSoft.Net.TCP
                         socket.Bind(new IPEndPoint(bind.IP,bind.Port));
                         socket.Listen(100);
                                                 
-                        ListeningPoint listeningPoint = new ListeningPoint(socket,bind);
+                        var listeningPoint = new ListeningPoint(socket,bind);
                         m_pListeningPoints.Add(listeningPoint);
 
                         // Create TCP connection acceptors.
                         for(int i=0;i<10;i++){
-                            TCP_Acceptor acceptor = new TCP_Server<T>.TCP_Acceptor(socket);
+                            var acceptor = new TCP_Server<T>.TCP_Acceptor(socket);
                             acceptor.Tags["bind"] = bind;
                             acceptor.ConnectionAccepted += delegate(object s1,EventArgs<Socket> e1){
                                 // NOTE: We may not use 'bind' variable here, foreach changes it's value before we reach here.
@@ -483,7 +479,7 @@ namespace LumiSoft.Net.TCP
             m_ConnectionsProcessed++;
                                 
             try{
-                T session = new T();
+                var session = new T();
                 session.Init(this,socket,bindInfo.HostName,bindInfo.SslMode == SslMode.SSL,bindInfo.Certificate);
 
                 // Maximum allowed connections exceeded, reject connection.
@@ -580,8 +576,8 @@ namespace LumiSoft.Net.TCP
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                List<IPEndPoint> retVal = new List<IPEndPoint>();
-                foreach(IPBindInfo bind in this.Bindings){
+                var retVal = new List<IPEndPoint>();
+                foreach (IPBindInfo bind in this.Bindings){
                     if(bind.IP.Equals(IPAddress.Any)){
                         foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
                             if(ip.AddressFamily == AddressFamily.InterNetwork && !retVal.Contains(new IPEndPoint(ip,bind.Port))){

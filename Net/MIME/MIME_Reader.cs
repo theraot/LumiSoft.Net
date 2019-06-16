@@ -26,11 +26,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null.</exception>
         public MIME_Reader(string value)
         {
-            if(value == null){
-                throw new ArgumentNullException("value");
-            }
-
-            m_Source = value;
+            m_Source = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
@@ -45,8 +41,8 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-            StringBuilder retVal = new StringBuilder();
-            while(true){
+            var retVal = new StringBuilder();
+            while (true){
                 int peekChar = Peek(false);
                 // We reached end of string.
                 if(peekChar == -1){
@@ -83,11 +79,11 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-            StringBuilder retVal = new StringBuilder();
-            while(true){
-                string atom = Atom();
+            var retVal = new StringBuilder();
+            while (true){
+                var atom = Atom();
                 // We reached end of string.
-                if(atom == null){
+                if (atom == null){
                     break;
                 }
 
@@ -121,8 +117,8 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-            StringBuilder retVal = new StringBuilder();
-            while(true){
+            var retVal = new StringBuilder();
+            while (true){
                 int peekChar = Peek(false);
                 // We reached end of string.
                 if(peekChar == -1){
@@ -164,7 +160,7 @@ namespace LumiSoft.Net.MIME
                 throw new InvalidOperationException("No 'comment' value available.");
             }
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
             // Remove '('.
             Char(false);
@@ -243,11 +239,11 @@ namespace LumiSoft.Net.MIME
                 throw new InvalidOperationException("No encoded-word available.");
             }
 
-            StringBuilder retVal = new StringBuilder();
-            while(true){
-                Match match = encodedword_regex.Match(m_Source,Position);
-                if(match.Success && match.Index == Position){
-                    string encodedWord = m_Source.Substring(Position,match.Length);
+            var retVal = new StringBuilder();
+            while (true){
+                var match = encodedword_regex.Match(m_Source,Position);
+                if (match.Success && match.Index == Position){
+                    var encodedWord = m_Source.Substring(Position,match.Length);
                     // Move index over encoded-word.
                     Position += match.Length;
 
@@ -312,7 +308,7 @@ namespace LumiSoft.Net.MIME
             // Read start DQUOTE.
             Char(false);
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             bool escape = false;
             while(true){
                 int intC = Char(false);
@@ -384,15 +380,16 @@ namespace LumiSoft.Net.MIME
             if(peek == '='){
                 return EncodedWord();
             }
-            string word = Atom();
-            if(word == null){
+            var word = Atom();
+            if (word == null){
                 return null;
             }
                 
             // Try to encode invalid encoded-words if any mixed in text.
             word = encodedword_regex.Replace(word,delegate(Match m){
-                string encodedWord = m.Value;
-                try{
+                var encodedWord = m.Value;
+                try
+                {
                     if(string.Equals(m.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
                         return MIME_Utils.QDecode(Encoding.GetEncoding(m.Groups["charset"].Value),m.Groups["value"].Value);
                     }
@@ -429,8 +426,8 @@ namespace LumiSoft.Net.MIME
         {
             // NOTE: Never call Peek or Char method here or stack overflow !
 
-            StringBuilder retVal = new StringBuilder();
-            while(true){
+            var retVal = new StringBuilder();
+            while (true){
                 int peekChar = -1;
                 if(Position > m_Source.Length - 1){
                     peekChar = -1;
@@ -515,7 +512,7 @@ namespace LumiSoft.Net.MIME
                 return null;
             }
 
-            string retVal = m_Source.Substring(Position);
+            var retVal = m_Source.Substring(Position);
             Position = m_Source.Length;
 
             return retVal;
@@ -729,7 +726,7 @@ namespace LumiSoft.Net.MIME
                     {
                         // There isn't nested parenthesis closing chars left, this is closing char what we want.
 						if(nestedStartingCharCounter == 0){
-                            string retVal = m_Source.Substring(Position,i - Position);
+                            var retVal = m_Source.Substring(Position,i - Position);
                             Position = i + 1;
 
 				            return retVal;
@@ -765,8 +762,8 @@ namespace LumiSoft.Net.MIME
 
             ToFirstChar();
 
-			StringBuilder currentSplitBuffer = new StringBuilder(); // Holds active
-			bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
+			var currentSplitBuffer = new StringBuilder(); // Holds active
+            bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
 			char          lastChar           = (char)0;
 
 			for(int i=Position;i<m_Source.Length;i++){

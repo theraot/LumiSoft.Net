@@ -44,9 +44,9 @@ namespace LumiSoft.Net.ABNF
                 throw new ParseException("Invalid ABNF 'rulename' value '" + reader.ReadToEnd() + "'.");
             }
 
-            StringBuilder ruleName = new StringBuilder();
+            var ruleName = new StringBuilder();
 
-            while(true)
+            while (true)
             {
                 // We reached end of string.
                 if(reader.Peek() == -1){

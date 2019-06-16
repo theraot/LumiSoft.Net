@@ -26,12 +26,8 @@ namespace LumiSoft.Net.Mail
         /// <exception cref="ArgumentNullException">Is raised when <b>address</b> is null reference.</exception>
         public Mail_t_Mailbox(string displayName,string address)
         {
-            if(address == null){
-                throw new ArgumentNullException("address");
-            }
-
             DisplayName = displayName;
-            Address     = address;
+            Address     = address ?? throw new ArgumentNullException("address");
         }
 
         /// <summary>
@@ -47,12 +43,12 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            MIME_Reader        r      = new MIME_Reader(value);
-            Mail_t_MailboxList retVal = new Mail_t_MailboxList();
-            while(true){
-                string word = r.QuotedReadToDelimiter(new char[]{',','<'});
+            var        r      = new MIME_Reader(value);
+            var retVal = new Mail_t_MailboxList();
+            while (true){
+                var word = r.QuotedReadToDelimiter(new char[]{',','<'});
                 // We processed all data.
-                if(string.IsNullOrEmpty(word) && r.Available == 0){
+                if (string.IsNullOrEmpty(word) && r.Available == 0){
                     throw new ParseException("Not valid 'mailbox' value '" + value + "'.");
                 }
                 // name-addr
@@ -110,7 +106,7 @@ namespace LumiSoft.Net.Mail
         public string LocalPart
         {
             get{ 
-                string[] localpart_domain = Address.Split('@');
+                var localpart_domain = Address.Split('@');
 
                 return localpart_domain[0]; 
             }
@@ -122,9 +118,9 @@ namespace LumiSoft.Net.Mail
         public string Domain
         {
             get{ 
-                string[] localpart_domain = Address.Split('@');
+                var localpart_domain = Address.Split('@');
 
-                if(localpart_domain.Length == 2){
+                if (localpart_domain.Length == 2){
                     return localpart_domain[1]; 
                 }
 

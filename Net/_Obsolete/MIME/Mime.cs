@@ -158,8 +158,8 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public static Mime Parse(Stream stream)
 		{
-			Mime mime = new Mime();
-			mime.MainEntity.Parse(new SmartStream(stream,false),null);
+			var mime = new Mime();
+            mime.MainEntity.Parse(new SmartStream(stream,false),null);
 
 			return mime;
 		}
@@ -190,10 +190,10 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public static Mime CreateSimple(AddressList from,AddressList to,string subject,string bodyText,string bodyHtml,string[] attachmentFileNames)
 		{
-			Mime m = new Mime();
+			var m = new Mime();
 
-			MimeEntity mainEntity = m.MainEntity;
-			mainEntity.From = from;
+            var mainEntity = m.MainEntity;
+            mainEntity.From = from;
 			mainEntity.To = to;
 			mainEntity.Subject = subject;
 
@@ -203,27 +203,27 @@ namespace LumiSoft.Net.Mime
 				if(bodyText != null && bodyHtml != null){
 					mainEntity.ContentType = MediaType_enum.Multipart_alternative;
 
-					MimeEntity textEntity = mainEntity.ChildEntities.Add();
-					textEntity.ContentType = MediaType_enum.Text_plain;
+					var textEntity = mainEntity.ChildEntities.Add();
+                    textEntity.ContentType = MediaType_enum.Text_plain;
 					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textEntity.DataText = bodyText;
 
-					MimeEntity textHtmlEntity = mainEntity.ChildEntities.Add();
-					textHtmlEntity.ContentType = MediaType_enum.Text_html;
+					var textHtmlEntity = mainEntity.ChildEntities.Add();
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
 					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textHtmlEntity.DataText = bodyHtml;
 				}
 				// There is only body text
 				else if(bodyText != null){
-					MimeEntity textEntity = mainEntity;
-					textEntity.ContentType = MediaType_enum.Text_plain;
+					var textEntity = mainEntity;
+                    textEntity.ContentType = MediaType_enum.Text_plain;
 					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textEntity.DataText = bodyText;
 				}
 				// There is only body html text
 				else if(bodyHtml != null){
-					MimeEntity textHtmlEntity = mainEntity;
-					textHtmlEntity.ContentType = MediaType_enum.Text_html;
+					var textHtmlEntity = mainEntity;
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
 					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textHtmlEntity.DataText = bodyHtml;
 				}
@@ -234,37 +234,37 @@ namespace LumiSoft.Net.Mime
 
 				// If bodyText and bodyHtml both specified
 				if(bodyText != null && bodyHtml != null){
-					MimeEntity multiPartAlternativeEntity = mainEntity.ChildEntities.Add();
-					multiPartAlternativeEntity.ContentType = MediaType_enum.Multipart_alternative;
+					var multiPartAlternativeEntity = mainEntity.ChildEntities.Add();
+                    multiPartAlternativeEntity.ContentType = MediaType_enum.Multipart_alternative;
 
-					MimeEntity textEntity = multiPartAlternativeEntity.ChildEntities.Add();
-					textEntity.ContentType = MediaType_enum.Text_plain;
+					var textEntity = multiPartAlternativeEntity.ChildEntities.Add();
+                    textEntity.ContentType = MediaType_enum.Text_plain;
 					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textEntity.DataText = bodyText;
 
-					MimeEntity textHtmlEntity = multiPartAlternativeEntity.ChildEntities.Add();
-					textHtmlEntity.ContentType = MediaType_enum.Text_html;
+					var textHtmlEntity = multiPartAlternativeEntity.ChildEntities.Add();
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
 					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textHtmlEntity.DataText = bodyHtml;
 				}
 				// There is only body text
 				else if(bodyText != null){
-					MimeEntity textEntity = mainEntity.ChildEntities.Add();
-					textEntity.ContentType = MediaType_enum.Text_plain;
+					var textEntity = mainEntity.ChildEntities.Add();
+                    textEntity.ContentType = MediaType_enum.Text_plain;
 					textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textEntity.DataText = bodyText;
 				}
 				// There is only body html text
 				else if(bodyHtml != null){
-					MimeEntity textHtmlEntity = mainEntity.ChildEntities.Add();
-					textHtmlEntity.ContentType = MediaType_enum.Text_html;
+					var textHtmlEntity = mainEntity.ChildEntities.Add();
+                    textHtmlEntity.ContentType = MediaType_enum.Text_html;
 					textHtmlEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
 					textHtmlEntity.DataText = bodyHtml;
 				}
 
 				foreach(string fileName in attachmentFileNames){
-					MimeEntity attachmentEntity = mainEntity.ChildEntities.Add();
-					attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
+					var attachmentEntity = mainEntity.ChildEntities.Add();
+                    attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
 					attachmentEntity.ContentDisposition = ContentDisposition_enum.Attachment;
 					attachmentEntity.ContentTransferEncoding = ContentTransferEncoding_enum.Base64;
 					attachmentEntity.ContentDisposition_FileName = Core.GetFileNameFromPath(fileName);
@@ -347,8 +347,8 @@ namespace LumiSoft.Net.Mime
 		public MimeEntity[] MimeEntities
 		{
 			get{ 
-				List<MimeEntity> allEntities = new List<MimeEntity>();
-				allEntities.Add(MainEntity);
+				var allEntities = new List<MimeEntity>();
+                allEntities.Add(MainEntity);
 				GetEntities(MainEntity.ChildEntities,allEntities);
 
 				return allEntities.ToArray(); 
@@ -364,9 +364,9 @@ namespace LumiSoft.Net.Mime
 		public MimeEntity[] Attachments
 		{
 			get{                
-                List<MimeEntity> attachments = new List<MimeEntity>();
-				MimeEntity[] entities = this.MimeEntities;
-				foreach(MimeEntity entity in entities){
+                var attachments = new List<MimeEntity>();
+                var entities = this.MimeEntities;
+                foreach (MimeEntity entity in entities){
                     if(entity.ContentDisposition == ContentDisposition_enum.Attachment){
                         attachments.Add(entity);
                     }
@@ -399,8 +399,8 @@ namespace LumiSoft.Net.Mime
 					}
 				}
 				else{
-					MimeEntity[] entities = this.MimeEntities;
-					foreach(MimeEntity entity in entities){
+					var entities = this.MimeEntities;
+                    foreach (MimeEntity entity in entities){
 						if(entity.ContentType == MediaType_enum.Text_plain){
 							return entity.DataText;
 						}
@@ -441,8 +441,8 @@ namespace LumiSoft.Net.Mime
 		public string BodyHtml
 		{
 			get{
-				MimeEntity[] entities = this.MimeEntities;
-				foreach(MimeEntity entity in entities){
+				var entities = this.MimeEntities;
+                foreach (MimeEntity entity in entities){
 					if(entity.ContentType == MediaType_enum.Text_html){
 						return entity.DataText;
 					}

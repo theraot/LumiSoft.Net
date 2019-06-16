@@ -33,7 +33,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("BODY.PEEK[");
             if(Section != null){
                 retVal.Append(Section);

@@ -58,8 +58,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         public void Set(string fieldName,string value)
         {
-            SIP_HeaderField h = this.GetFirst(fieldName);
-            if(h != null){
+            var h = this.GetFirst(fieldName);
+            if (h != null){
                 h.Value = value;
             }
             else{
@@ -106,8 +106,8 @@ namespace LumiSoft.Net.SIP.Message
 		public void RemoveAll(string fieldName)
 		{
 			for(int i=0;i<m_pHeaderFields.Count;i++){
-				SIP_HeaderField h = (SIP_HeaderField)m_pHeaderFields[i];
-				if(h.Name.ToLower() == fieldName.ToLower()){
+				var h = (SIP_HeaderField)m_pHeaderFields[i];
+                if (h.Name.ToLower() == fieldName.ToLower()){
 					m_pHeaderFields.Remove(h);
 					i--;
 				}
@@ -171,8 +171,8 @@ namespace LumiSoft.Net.SIP.Message
 		/// <returns></returns>
 		public SIP_HeaderField[] Get(string fieldName)
 		{
-            List<SIP_HeaderField> fields = new List<SIP_HeaderField>();
-			foreach(SIP_HeaderField h in m_pHeaderFields){
+            var fields = new List<SIP_HeaderField>();
+            foreach (SIP_HeaderField h in m_pHeaderFields){
 				if(h.Name.ToLower() == fieldName.ToLower()){
 					fields.Add(h);
 				}
@@ -222,10 +222,10 @@ namespace LumiSoft.Net.SIP.Message
 
 			m_pHeaderFields.Clear();
 
-			StreamLineReader r = new StreamLineReader(stream);
+			var r = new StreamLineReader(stream);
             r.CRLF_LinesOnly = false;
-			string line = r.ReadLineString();
-			while(line != null){
+			var line = r.ReadLineString();
+            while (line != null){
 				// End of header reached
 				if(line == ""){
 					break;
@@ -233,8 +233,8 @@ namespace LumiSoft.Net.SIP.Message
 
 				// Store current header line and read next. We need to read 1 header line to ahead,
 				// because of multiline header fields.
-				string headerField = line; 
-				line = r.ReadLineString();
+				var headerField = line;
+                line = r.ReadLineString();
 
 				// See if header field is multiline. See comment above.				
 				while(line != null && (line.StartsWith("\t") || line.StartsWith(" "))){
@@ -242,9 +242,9 @@ namespace LumiSoft.Net.SIP.Message
 					line = r.ReadLineString();
 				}
 
-				string[] name_value = headerField.Split(new char[]{':'},2);
-				// There must be header field name and value, otherwise invalid header field
-				if(name_value.Length == 2){
+				var name_value = headerField.Split(new char[]{':'},2);
+                // There must be header field name and value, otherwise invalid header field
+                if (name_value.Length == 2){
 			        Add(name_value[0] + ":",name_value[1].Trim());
                 }
 			}
@@ -256,8 +256,8 @@ namespace LumiSoft.Net.SIP.Message
 		/// <returns>Returns SIP message header as string.</returns>
 		public string ToHeaderString()
 		{
-			StringBuilder headerString = new StringBuilder();
-			foreach(SIP_HeaderField f in this){                
+			var headerString = new StringBuilder();
+            foreach (SIP_HeaderField f in this){                
 				headerString.Append(f.Name + " " + f.Value + "\r\n");
 			}
             headerString.Append("\r\n");
@@ -273,10 +273,10 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns right type header field.</returns>
         private SIP_HeaderField GetheaderField(string name,string value)
         {
-            string nameLower = name.Replace(":","").ToLower().Trim();
+            var nameLower = name.Replace(":","").ToLower().Trim();
 
             //--- Replace short names to long -------//
-            if(nameLower == "i"){
+            if (nameLower == "i"){
                 nameLower = "call-id";
             }
             else if(nameLower == "m"){

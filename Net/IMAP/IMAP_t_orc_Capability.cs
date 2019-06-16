@@ -14,11 +14,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>capabilities</b> is null reference.</exception>
         public IMAP_t_orc_Capability(string[] capabilities)
         {
-            if(capabilities == null){
-                throw new ArgumentNullException("capabilities");
-            }
-
-            Capabilities = capabilities;
+            Capabilities = capabilities ?? throw new ArgumentNullException("capabilities");
         }
 
         /// <summary>
@@ -33,8 +29,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            string[] code_value = value.Split(new char[]{' '},2);
-            if(!string.Equals("CAPABILITY",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_value = value.Split(new char[]{' '},2);
+            if (!string.Equals("CAPABILITY",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid CAPABILITY response value.","value");
             }
             if(code_value.Length != 2){

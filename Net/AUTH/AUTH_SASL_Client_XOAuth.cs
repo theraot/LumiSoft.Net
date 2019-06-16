@@ -23,19 +23,9 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b>,<b>requestUri</b> or <b>requestUriParameters</b> is null reference.</exception>
         public AUTH_SASL_Client_XOAuth(string userName,string requestUri,KeyValueCollection<string,string> requestUriParameters)
         {
-            if(userName == null){
-                throw new ArgumentNullException("userName");
-            }
-            if(requestUri == null){
-                throw new ArgumentNullException("requestUri");
-            }
-            if(requestUriParameters == null){
-                throw new ArgumentNullException("requestUriParameters");
-            }
-
-            UserName              = userName;
-            m_RequestUri            = requestUri;
-            m_pRequestUriParameters = requestUriParameters;
+            UserName              = userName ?? throw new ArgumentNullException("userName");
+            m_RequestUri            = requestUri ?? throw new ArgumentNullException("requestUri");
+            m_pRequestUriParameters = requestUriParameters ?? throw new ArgumentNullException("requestUriParameters");
         }
 
         /// <summary>
@@ -54,7 +44,7 @@ namespace LumiSoft.Net.AUTH
             if(m_State == 0){
                 m_IsCompleted = true;
 
-                StringBuilder retVal = new StringBuilder();
+                var retVal = new StringBuilder();
                 retVal.Append("GET " + m_RequestUri + " ");
                 bool first = true;
                 foreach(KeyValuePair<string,string> p in m_pRequestUriParameters){
@@ -93,10 +83,10 @@ namespace LumiSoft.Net.AUTH
                unreserved = ALPHA, DIGIT, '-', '.', '_', '~'
             */
 
-            byte[] valueUtf8 = Encoding.UTF8.GetBytes(value);
+            var valueUtf8 = Encoding.UTF8.GetBytes(value);
 
-            StringBuilder retVal = new StringBuilder();
-            foreach(byte b in valueUtf8){
+            var retVal = new StringBuilder();
+            foreach (byte b in valueUtf8){
                 // unreserverd
                 if((b >= 65 && b <= 90) || (b >= 97 && b <= 122)|| (b >= 48 && b <= 57) || b == '-' || b == '.' || b == '_' || b == '~'){
                     retVal.Append((char)b);

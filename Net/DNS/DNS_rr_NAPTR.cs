@@ -65,13 +65,13 @@ namespace LumiSoft.Net.DNS
 
             int preference = reply[offset++] << 8 | reply[offset++];
 
-            string flags = Dns_Client.ReadCharacterString(reply,ref offset);
+            var flags = Dns_Client.ReadCharacterString(reply,ref offset);
 
-            string services = Dns_Client.ReadCharacterString(reply,ref offset);
+            var services = Dns_Client.ReadCharacterString(reply,ref offset);
 
-            string regexp = Dns_Client.ReadCharacterString(reply,ref offset);
-            
-            string replacement = "";
+            var regexp = Dns_Client.ReadCharacterString(reply,ref offset);
+
+            var replacement = "";
             Dns_Client.GetQName(reply,ref offset,ref replacement);
 
             return new DNS_rr_NAPTR(name,order,preference,flags,services,regexp,replacement,ttl);

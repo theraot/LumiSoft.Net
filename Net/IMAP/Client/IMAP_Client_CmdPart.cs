@@ -18,12 +18,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
         public IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type type,string data)
         {
-            if(data == null){
-                throw new ArgumentNullException("data");
-            }
-
             Type  = type;
-            Value = data;
+            Value = data ?? throw new ArgumentNullException("data");
         }
 
         /// <summary>

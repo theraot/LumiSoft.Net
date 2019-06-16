@@ -15,11 +15,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>path</b> is null reference.</exception>
         public FTP_e_GetDirListing(string path)
         {
-            if(path == null){
-                throw new ArgumentNullException("path");
-            }
-
-            Path = path;
+            Path = path ?? throw new ArgumentNullException("path");
 
             Items = new List<FTP_ListItem>();
         }

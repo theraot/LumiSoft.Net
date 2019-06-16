@@ -53,10 +53,10 @@ namespace LumiSoft.Net.RTP
 
             int offset = 0;
 
-            RTCP_CompoundPacket packet = new RTCP_CompoundPacket();
-            while(offset < count){
-                RTCP_Packet p = RTCP_Packet.Parse(buffer,ref offset,true);
-                if(p != null){
+            var packet = new RTCP_CompoundPacket();
+            while (offset < count){
+                var p = RTCP_Packet.Parse(buffer,ref offset,true);
+                if (p != null){
                     packet.Packets.Add(p);
                 }
             }
@@ -70,7 +70,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns compound packet as raw byte data.</returns>
         public byte[] ToByte()
         {
-            byte[] retVal = new byte[this.TotalSize];
+            var retVal = new byte[this.TotalSize];
             int    offset = 0;
             ToByte(retVal,ref offset);
 
@@ -127,8 +127,8 @@ namespace LumiSoft.Net.RTP
 
             // Check version and padding.
             for(int i=0;i<Packets.Count;i++){
-                RTCP_Packet packet = Packets[i];
-                if(packet.Version != 2){
+                var packet = Packets[i];
+                if (packet.Version != 2){
                     throw new ArgumentException("RTP version field must equal 2.");
                 }
                 if(i < (Packets.Count - 1) && packet.IsPadded){

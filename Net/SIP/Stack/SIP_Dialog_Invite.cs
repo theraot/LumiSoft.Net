@@ -150,16 +150,16 @@ namespace LumiSoft.Net.SIP.Stack
                     if((this.State == SIP_DialogState.Early && m_pActiveInvite is SIP_ClientTransaction) || this.State == SIP_DialogState.Confirmed){
                         this.SetState(SIP_DialogState.Terminating,true);
 
-                        SIP_Request bye = CreateRequest(SIP_Methods.BYE);
-                        if(!string.IsNullOrEmpty(reason)){
-                            SIP_t_ReasonValue r = new SIP_t_ReasonValue();
+                        var bye = CreateRequest(SIP_Methods.BYE);
+                        if (!string.IsNullOrEmpty(reason)){
+                            var r = new SIP_t_ReasonValue();
                             r.Protocol = "SIP";
                             r.Text = reason;
                             bye.Reason.Add(r.ToStringValue());
                         }
 
                         // Send BYE, just wait BYE to complete, we don't care about response code.
-                        SIP_RequestSender sender = CreateRequestSender(bye);
+                        var sender = CreateRequestSender(bye);
                         sender.Completed += delegate(object s,EventArgs a){
                             this.SetState(SIP_DialogState.Terminated,true);
                         };

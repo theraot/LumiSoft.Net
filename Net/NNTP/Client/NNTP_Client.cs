@@ -84,12 +84,12 @@ namespace LumiSoft.Net.NNTP.Client
             WriteLine("LIST");
 
             // Read server response
-			string responseLine = ReadLine();
-            if(!responseLine.StartsWith("215")){
+			var responseLine = ReadLine();
+            if (!responseLine.StartsWith("215")){
                 throw new Exception(responseLine);
             }
 
-            List<string> newsGroups = new List<string>();
+            var newsGroups = new List<string>();
             responseLine = ReadLine();
             while(responseLine != "."){
                 newsGroups.Add(responseLine.Split(' ')[0]);
@@ -152,8 +152,8 @@ namespace LumiSoft.Net.NNTP.Client
             WriteLine("POST");
 
             // Read server response
-			string responseLine = ReadLine();
-            if(!responseLine.StartsWith("340")){
+			var responseLine = ReadLine();
+            if (!responseLine.StartsWith("340")){
                 throw new Exception(responseLine);
             }
 
@@ -173,8 +173,8 @@ namespace LumiSoft.Net.NNTP.Client
         protected override void OnConnected()
         {
             // Read first line of reply, check if it's ok.
-			string responseLine = ReadLine();
-            if(!responseLine.StartsWith("200")){
+			var responseLine = ReadLine();
+            if (!responseLine.StartsWith("200")){
                 throw new Exception(responseLine);
             }
         }

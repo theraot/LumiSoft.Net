@@ -38,8 +38,8 @@ namespace LumiSoft.Net
         /// <exception cref="ArgumentException">Is raised when <b>value</b> is not valid SIP or SIPS URI.</exception>
         public new static SIP_Uri Parse(string value)
         {
-            AbsoluteUri uri = AbsoluteUri.Parse(value);
-            if(uri is SIP_Uri){
+            var uri = AbsoluteUri.Parse(value);
+            if (uri is SIP_Uri){
                 return (SIP_Uri)uri;
             }
 
@@ -111,9 +111,9 @@ namespace LumiSoft.Net
                 return false;
             }
 
-            SIP_Uri sipUri = (SIP_Uri)obj;
+            var sipUri = (SIP_Uri)obj;
 
-            if(this.IsSecure && !sipUri.IsSecure){
+            if (this.IsSecure && !sipUri.IsSecure){
                 return false;
             }
 
@@ -170,7 +170,7 @@ namespace LumiSoft.Net
                 throw new SIP_ParseException("Specified value is invalid SIP-URI !");
             }
 
-            StringReader r = new StringReader(value);
+            var r = new StringReader(value);
 
             // IsSecure
             this.IsSecure = r.QuotedReadToDelimiter(':').ToLower() == "sips";
@@ -181,7 +181,7 @@ namespace LumiSoft.Net
             }
             
             // Gets host[:port]
-            string[] host_port = r.QuotedReadToDelimiter(new char[]{';','?'},false).Split(':');
+            var host_port = r.QuotedReadToDelimiter(new char[]{';','?'},false).Split(':');
             this.Host = host_port[0];
             // Optional port specified
             if(host_port.Length == 2){
@@ -191,11 +191,11 @@ namespace LumiSoft.Net
             // We have parameters and/or header
             if(r.Available > 0){
                 // Get parameters
-                string[] parameters = TextUtils.SplitQuotedString(r.QuotedReadToDelimiter('?'),';');
-                foreach(string parameter in parameters){
+                var parameters = TextUtils.SplitQuotedString(r.QuotedReadToDelimiter('?'),';');
+                foreach (string parameter in parameters){
                     if(parameter.Trim() != ""){
-                        string[] name_value = parameter.Trim().Split(new char[]{'='},2);
-                        if(name_value.Length == 2){
+                        var name_value = parameter.Trim().Split(new char[]{'='},2);
+                        if (name_value.Length == 2){
                             this.Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
                         }
                         else{
@@ -219,8 +219,8 @@ namespace LumiSoft.Net
         {
             // Syntax: sip:/sips: username@host *[;parameter] [?header *[&header]]
 
-            StringBuilder retVal = new StringBuilder();
-            if(this.IsSecure){
+            var retVal = new StringBuilder();
+            if (this.IsSecure){
                 retVal.Append("sips:");
             }
             else{
@@ -345,8 +345,8 @@ namespace LumiSoft.Net
         public int Param_Cause
         {
             get{
-                SIP_Parameter parameter = this.Parameters["cause"];
-                if(parameter != null){
+                var parameter = this.Parameters["cause"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 
@@ -369,8 +369,8 @@ namespace LumiSoft.Net
         public string Param_Comp
         {
             get{
-                SIP_Parameter parameter = this.Parameters["comp"];
-                if(parameter != null){
+                var parameter = this.Parameters["comp"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -393,8 +393,8 @@ namespace LumiSoft.Net
         public string Param_ContentType
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["content-type"];
-                if(parameter != null){
+                var parameter = this.Parameters["content-type"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -419,8 +419,8 @@ namespace LumiSoft.Net
         public int Param_Delay
         {
             get{
-                SIP_Parameter parameter = this.Parameters["delay"];
-                if(parameter != null){
+                var parameter = this.Parameters["delay"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 
@@ -446,8 +446,8 @@ namespace LumiSoft.Net
         public int Param_Duration
         {
             get{
-                SIP_Parameter parameter = this.Parameters["duration"];
-                if(parameter != null){
+                var parameter = this.Parameters["duration"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 
@@ -471,8 +471,8 @@ namespace LumiSoft.Net
         public string Param_Locale
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["locale"];
-                if(parameter != null){
+                var parameter = this.Parameters["locale"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -497,8 +497,8 @@ namespace LumiSoft.Net
         public bool Param_Lr
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["lr"];
-                if(parameter != null){
+                var parameter = this.Parameters["lr"];
+                if (parameter != null){
                     return true;
                 }
 
@@ -524,8 +524,8 @@ namespace LumiSoft.Net
         public string Param_Maddr
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["maddr"];
-                if(parameter != null){
+                var parameter = this.Parameters["maddr"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -548,8 +548,8 @@ namespace LumiSoft.Net
         public string Param_Method
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["method"];
-                if(parameter != null){
+                var parameter = this.Parameters["method"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -575,8 +575,8 @@ namespace LumiSoft.Net
         public string Param_Play
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["play"];
-                if(parameter != null){
+                var parameter = this.Parameters["play"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -601,8 +601,8 @@ namespace LumiSoft.Net
         public int Param_Repeat
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["ttl"];
-                if(parameter != null)
+                var parameter = this.Parameters["ttl"];
+                if (parameter != null)
                 {
                     if(parameter.Value.ToLower() == "forever"){
                         return int.MaxValue;
@@ -633,8 +633,8 @@ namespace LumiSoft.Net
         public string Param_Target
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["target"];
-                if(parameter != null){
+                var parameter = this.Parameters["target"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -659,8 +659,8 @@ namespace LumiSoft.Net
         public string Param_Transport
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["transport"];
-                if(parameter != null){
+                var parameter = this.Parameters["transport"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -687,8 +687,8 @@ namespace LumiSoft.Net
         public int Param_Ttl
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["ttl"];
-                if(parameter != null){
+                var parameter = this.Parameters["ttl"];
+                if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
 
@@ -711,8 +711,8 @@ namespace LumiSoft.Net
         public string Param_User
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["user"];
-                if(parameter != null){
+                var parameter = this.Parameters["user"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 
@@ -735,8 +735,8 @@ namespace LumiSoft.Net
         public string Param_Voicexml
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["voicexml"];
-                if(parameter != null){
+                var parameter = this.Parameters["voicexml"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

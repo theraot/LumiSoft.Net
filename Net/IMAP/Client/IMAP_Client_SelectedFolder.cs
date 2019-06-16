@@ -32,7 +32,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <returns>Returns this object as human readable string.</returns>
         public override string ToString()
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.AppendLine("Name: "                + this.Name);
             retVal.AppendLine("UidValidity: "         + this.UidValidity);
             retVal.AppendLine("Flags: "               + StringArrayToString(this.Flags));
@@ -125,9 +125,9 @@ namespace LumiSoft.Net.IMAP.Client
         /// <returns>Returns string array as comma separated value.</returns>
         private string StringArrayToString(string[] value)
         {
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
-            for(int i=0;i<value.Length;i++){
+            for (int i=0;i<value.Length;i++){
                 // Last item.
                 if(i == (value.Length - 1)){
                     retVal.Append(value[i]);

@@ -484,9 +484,6 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ArgumentException">Is raised when any of the aruments has invalid value.</exception>
             public WaveOut(AudioOutDevice outputDevice,int samplesPerSec,int bitsPerSample,int channels)
             {
-                if(outputDevice == null){
-                    throw new ArgumentNullException("outputDevice");
-                }
                 if(samplesPerSec < 8000){
                     throw new ArgumentException("Argument 'samplesPerSec' value must be >= 8000.");
                 }
@@ -497,7 +494,7 @@ namespace LumiSoft.Net.Media
                     throw new ArgumentException("Argument 'channels' value must be >= 1.");
                 }
 
-                m_pOutDevice    = outputDevice;
+                m_pOutDevice    = outputDevice ?? throw new ArgumentNullException("outputDevice");
                 m_SamplesPerSec = samplesPerSec;
                 m_BitsPerSample = bitsPerSample;
                 m_Channels      = channels;
@@ -505,7 +502,7 @@ namespace LumiSoft.Net.Media
                 m_pPlayItems    = new List<PlayItem>();
             
                 // Try to open wav device.            
-                WAVEFORMATEX format = new WAVEFORMATEX();
+                var format = new WAVEFORMATEX();
                 format.wFormatTag      = 0x0001; // PCM - 0x0001
                 format.nChannels       = (ushort)m_Channels;
                 format.nSamplesPerSec  = (uint)samplesPerSec;                        
@@ -595,7 +592,7 @@ namespace LumiSoft.Net.Media
 
                 try{            
                     lock(m_pPlayItems){
-                        PlayItem item = m_pPlayItems[0];
+                        var item = m_pPlayItems[0];
                         WavMethods.waveOutUnprepareHeader(m_pWavDevHandle,item.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(item.Header));                    
                         m_pPlayItems.Remove(item);
                         BytesBuffered -= item.DataSize;
@@ -628,11 +625,11 @@ namespace LumiSoft.Net.Media
                 }
 
                 //--- Queue specified audio block for play. --------------------------------------------------------
-                byte[]   data       = new byte[count];
+                var   data       = new byte[count];
                 Array.Copy(audioData,offset,data,0,count);
-                GCHandle dataHandle = GCHandle.Alloc(data,GCHandleType.Pinned);
+                var dataHandle = GCHandle.Alloc(data,GCHandleType.Pinned);
 
-                WAVEHDR wavHeader = new WAVEHDR();
+                var wavHeader = new WAVEHDR();
                 wavHeader.lpData          = dataHandle.AddrOfPinnedObject();
                 wavHeader.dwBufferLength  = (uint)data.Length;
                 wavHeader.dwBytesRecorded = 0;
@@ -641,11 +638,11 @@ namespace LumiSoft.Net.Media
                 wavHeader.dwLoops         = 0;
                 wavHeader.lpNext          = IntPtr.Zero;
                 wavHeader.reserved        = 0;
-                GCHandle headerHandle = GCHandle.Alloc(wavHeader,GCHandleType.Pinned);
+                var headerHandle = GCHandle.Alloc(wavHeader,GCHandleType.Pinned);
                 int result = 0;        
                 result = WavMethods.waveOutPrepareHeader(m_pWavDevHandle,headerHandle.AddrOfPinnedObject(),Marshal.SizeOf(wavHeader));
                 if(result == MMSYSERR.NOERROR){
-                    PlayItem item = new PlayItem(ref headerHandle,ref dataHandle,data.Length);
+                    var item = new PlayItem(ref headerHandle,ref dataHandle,data.Length);
                     m_pPlayItems.Add(item);
 
                     BytesBuffered += data.Length;
@@ -678,12 +675,12 @@ namespace LumiSoft.Net.Media
             public static AudioOutDevice[] Devices
             {
                 get{
-                    List<AudioOutDevice> retVal = new List<AudioOutDevice>();
+                    var retVal = new List<AudioOutDevice>();
                     // Get all available output devices and their info.
                     int devicesCount = WavMethods.waveOutGetNumDevs();
                     for(int i=0;i<devicesCount;i++){
-                        WAVEOUTCAPS pwoc = new WAVEOUTCAPS();
-                        if(WavMethods.waveOutGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
+                        var pwoc = new WAVEOUTCAPS();
+                        if (WavMethods.waveOutGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
                             retVal.Add(new AudioOutDevice(i,pwoc.szPname,pwoc.wChannels));
                         }
                     }
@@ -764,15 +761,8 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentNullException">Is raised when <b>device</b> or <b>format</b> is null reference.</exception>
         public AudioOut(AudioOutDevice device,AudioFormat format)
         {
-            if(device == null){
-                throw new ArgumentNullException("device");
-            }
-            if(format == null){
-                throw new ArgumentNullException("format");
-            }
-
-            m_pDevice      = device;
-            m_pAudioFormat = format;
+            m_pDevice      = device ?? throw new ArgumentNullException("device");
+            m_pAudioFormat = format ?? throw new ArgumentNullException("format");
 
             m_pWaveOut = new WaveOut(device,format.SamplesPerSecond,format.BitsPerSample,format.Channels);
         }
@@ -788,9 +778,6 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public AudioOut(AudioOutDevice device,int samplesPerSec,int bitsPerSample,int channels)
         {
-            if(device == null){
-                throw new ArgumentNullException("device");
-            }
             if(samplesPerSec < 1){
                 throw new ArgumentException("Argument 'samplesPerSec' value must be >= 1.","samplesPerSec");
             }
@@ -801,7 +788,7 @@ namespace LumiSoft.Net.Media
                 throw new ArgumentException("Argument 'channels' value must be >= 1.","channels");
             }
 
-            m_pDevice      = device;
+            m_pDevice      = device ?? throw new ArgumentNullException("device");
             m_pAudioFormat = new AudioFormat(samplesPerSec,bitsPerSample,channels);
 
             m_pWaveOut = new WaveOut(device,samplesPerSec,bitsPerSample,channels);

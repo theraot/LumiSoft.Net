@@ -54,7 +54,7 @@ namespace LumiSoft.Net.RTP
 
             // Read chunks
             for(int i=0;i<sourceCount;i++){
-                RTCP_Packet_SDES_Chunk chunk = new RTCP_Packet_SDES_Chunk();
+                var chunk = new RTCP_Packet_SDES_Chunk();
                 chunk.Parse(buffer,ref offset);
                 Chunks.Add(chunk);
             }

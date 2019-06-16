@@ -14,12 +14,8 @@ namespace LumiSoft.Net
 		/// <param name="source">Source string.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>source</b> is null.</exception>
 		public StringReader(string source)
-		{	
-            if(source == null){
-                throw new ArgumentNullException("source");
-            }
-
-            OriginalString = source;
+		{
+            OriginalString = source ?? throw new ArgumentNullException("source");
 			SourceString   = source;
 		}
 
@@ -48,8 +44,8 @@ namespace LumiSoft.Net
                 }
             }
      
-            string whiteSpaceChars = SourceString.Substring(0,whiteSpaces);
-			SourceString = SourceString.Substring(whiteSpaces);
+            var whiteSpaceChars = SourceString.Substring(0,whiteSpaces);
+            SourceString = SourceString.Substring(whiteSpaces);
 
             return whiteSpaceChars;
 		}
@@ -66,8 +62,8 @@ namespace LumiSoft.Net
 		public string ReadSpecifiedLength(int length)
     {
         if(SourceString.Length >= length){
-				string retVal = SourceString.Substring(0,length);
-				SourceString = SourceString.Substring(length);
+				var retVal = SourceString.Substring(0,length);
+                SourceString = SourceString.Substring(length);
 
 				return retVal;
 			}
@@ -108,8 +104,8 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public string QuotedReadToDelimiter(char[] delimiters,bool removeDelimiter)
 		{
-			StringBuilder currentSplitBuffer = new StringBuilder(); // Holds active
-			bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
+			var currentSplitBuffer = new StringBuilder(); // Holds active
+            bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
             bool          doEscape           = false;
 
 			for(int i=0;i<SourceString.Length;i++){
@@ -140,10 +136,10 @@ namespace LumiSoft.Net
 
 				    // Current char is split char and it isn't in quoted string, do split
 				    if(!inQuotedString && isDelimiter){
-					    string retVal = currentSplitBuffer.ToString();
-                                
-					    // Remove readed string + delimiter from source string
-                        if(removeDelimiter){
+					    var retVal = currentSplitBuffer.ToString();
+
+                        // Remove readed string + delimiter from source string
+                        if (removeDelimiter){
 					        SourceString = SourceString.Substring(i + 1);
                         }
                         // Remove readed string
@@ -231,8 +227,8 @@ namespace LumiSoft.Net
                 wordLength++;
             }
 				
-            string retVal = SourceString.Substring(0,wordLength);
-            if(removeWordTerminator){
+            var retVal = SourceString.Substring(0,wordLength);
+            if (removeWordTerminator){
                 if(SourceString.Length >= wordLength + 1){
                     SourceString = SourceString.Substring(wordLength + 1);
                 }
@@ -319,7 +315,7 @@ namespace LumiSoft.Net
 				throw new Exception("There is no closing parenthesize for '" + SourceString + "' !");
 			}
 
-            string retVal = SourceString.Substring(1,closingCharIndex - 1);
+            var retVal = SourceString.Substring(1,closingCharIndex - 1);
             SourceString = SourceString.Substring(closingCharIndex + 1);
 
             return retVal;
@@ -335,7 +331,7 @@ namespace LumiSoft.Net
 				return null;
 			}
 
-            string retVal = SourceString;
+            var retVal = SourceString;
             SourceString = "";
 
             return retVal;
@@ -422,8 +418,8 @@ namespace LumiSoft.Net
             if(char.IsSeparator(SourceString[0])){
                 return false;
             }
-            char[] wordTerminators = new char[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'};
-            foreach(char c in wordTerminators){
+            var wordTerminators = new char[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'};
+            foreach (char c in wordTerminators){
                 if(c == SourceString[0]){
                     return false;
                 }

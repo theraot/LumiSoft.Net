@@ -68,8 +68,8 @@ namespace LumiSoft.Net.AUTH
             if(m_State == 0){
                 m_State++;
                 
-                AUTH_SASL_DigestMD5_Challenge callenge = new AUTH_SASL_DigestMD5_Challenge(new string[]{m_Realm},m_Nonce,new string[]{"auth"},false);
-     
+                var callenge = new AUTH_SASL_DigestMD5_Challenge(new string[]{m_Realm},m_Nonce,new string[]{"auth"},false);
+
                 return Encoding.UTF8.GetBytes(callenge.ToChallenge());
             }
 
@@ -77,16 +77,16 @@ namespace LumiSoft.Net.AUTH
                 m_State++;
 
                 try{
-                    AUTH_SASL_DigestMD5_Response response = AUTH_SASL_DigestMD5_Response.Parse(Encoding.UTF8.GetString(clientResponse));
+                    var response = AUTH_SASL_DigestMD5_Response.Parse(Encoding.UTF8.GetString(clientResponse));
 
                     // Check realm and nonce value.
-                    if(m_Realm != response.Realm || m_Nonce != response.Nonce){
+                    if (m_Realm != response.Realm || m_Nonce != response.Nonce){
                         return Encoding.UTF8.GetBytes("rspauth=\"\"");
                     }
 
                     m_UserName = response.UserName;
-                    AUTH_e_UserInfo result = OnGetUserInfo(response.UserName);
-                    if(result.UserExists){            
+                    var result = OnGetUserInfo(response.UserName);
+                    if (result.UserExists){            
                         if(response.Authenticate(result.UserName,result.Password)){
                             m_IsAuthenticated = true;
 
@@ -170,9 +170,9 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns specified user info.</returns>
         private AUTH_e_UserInfo OnGetUserInfo(string userName)
         {
-            AUTH_e_UserInfo retVal = new AUTH_e_UserInfo(userName);
+            var retVal = new AUTH_e_UserInfo(userName);
 
-            if(this.GetUserInfo != null){
+            if (this.GetUserInfo != null){
                 this.GetUserInfo(this,retVal);
             }
 

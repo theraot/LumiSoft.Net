@@ -14,11 +14,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>participant</b> is null reference.</exception>
         public RTP_ParticipantEventArgs(RTP_Participant_Remote participant)
         {
-            if(participant == null){
-                throw new ArgumentNullException("participant");
-            }
-
-            Participant = participant;
+            Participant = participant ?? throw new ArgumentNullException("participant");
         }
 
         /// <summary>

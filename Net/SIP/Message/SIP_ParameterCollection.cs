@@ -68,8 +68,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="name">Parameter name.</param>
         public void Remove(string name)
         {
-            SIP_Parameter parameter = this[name];
-            if(parameter != null){
+            var parameter = this[name];
+            if (parameter != null){
                 m_pCollection.Remove(parameter);
             }
         }
@@ -81,8 +81,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns true if collection contains specified parameter.</returns>
         public bool Contains(string name)
         {
-            SIP_Parameter parameter = this[name];
-            if(parameter != null){
+            var parameter = this[name];
+            if (parameter != null){
                 return true;
             }
 

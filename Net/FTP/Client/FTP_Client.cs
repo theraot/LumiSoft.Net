@@ -172,8 +172,8 @@ namespace LumiSoft.Net.FTP.Client
                     m_pOwner.LogAddText("FTP Active data channel waiting FTP server connect to '" + m_pSocket.LocalEndPoint.ToString() + "'.");
                     
                     //--- Wait ftp server connection -----------------------------//
-			        DateTime startTime = DateTime.Now;
-				    while(!m_pSocket.Poll(0,SelectMode.SelectRead)){
+			        var startTime = DateTime.Now;
+                    while (!m_pSocket.Poll(0,SelectMode.SelectRead)){
 				        System.Threading.Thread.Sleep(50);
 
 					    if(startTime.AddSeconds(waitTime) < DateTime.Now){
@@ -185,7 +185,7 @@ namespace LumiSoft.Net.FTP.Client
 				    //-----------------------------------------------------------//
                     
                     // Accpet FTP server connection.
-                    Socket socket = m_pSocket.Accept();
+                    var socket = m_pSocket.Accept();
 
                     m_pOwner.LogAddText("FTP Active data channel established, localEP='" + socket.LocalEndPoint.ToString() + "' remoteEP='" + socket.RemoteEndPoint.ToString() + "'.");
 
@@ -260,8 +260,8 @@ namespace LumiSoft.Net.FTP.Client
             private long TransferStream(Stream source,Stream target)
             {
                 long   totalReadedCount = 0;
-                byte[] buffer           = new byte[32000];
-                while(true){
+                var buffer           = new byte[32000];
+                while (true){
                     int readedCount = source.Read(buffer,0,buffer.Length);
                     // End of stream reached, we readed all data sucessfully.
                     if(readedCount == 0){
@@ -365,8 +365,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("REIN");
 
-            string[] response = ReadResponse();
-			if(!response[0].StartsWith("2")){
+            var response = ReadResponse();
+            if (!response[0].StartsWith("2")){
 				throw new FTP_ClientException(response[0]);
 			}
         }
@@ -400,8 +400,8 @@ namespace LumiSoft.Net.FTP.Client
 
 			WriteLine("USER " + userName);
 
-            string[] response = ReadResponse();
-            if(response[0].StartsWith("331")){
+            var response = ReadResponse();
+            if (response[0].StartsWith("331")){
                 WriteLine("PASS " + password);
 
                 /* FTP server may give multiline reply here
@@ -438,8 +438,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("NOOP"); 
 
-			string[] response = ReadResponse();
-			if(!response[0].StartsWith("2")){
+			var response = ReadResponse();
+            if (!response[0].StartsWith("2")){
 				throw new FTP_ClientException(response[0]);
 			}
         }
@@ -461,8 +461,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("ABOR");
 
-            string line = ReadLine();
-			if(!line.StartsWith("2")){
+            var line = ReadLine();
+            if (!line.StartsWith("2")){
 				throw new FTP_ClientException(line);
 			}
         }
@@ -485,12 +485,12 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("PWD");
 
-            string[] response = ReadResponse();
-            if(!response[0].StartsWith("2")){
+            var response = ReadResponse();
+            if (!response[0].StartsWith("2")){
                 throw new FTP_ClientException(response[0]);
             }
 
-            StringReader r = new StringReader(response[0]);
+            var r = new StringReader(response[0]);
             // Skip status code.
             r.ReadWord();
 
@@ -523,8 +523,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("CWD " + path);
 
-            string[] response = ReadResponse();
-            if(!response[0].StartsWith("2")){
+            var response = ReadResponse();
+            if (!response[0].StartsWith("2")){
                 throw new FTP_ClientException(response[0]);
             }            
         }
@@ -561,10 +561,10 @@ namespace LumiSoft.Net.FTP.Client
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
 
-            List<FTP_ListItem> retVal = new List<FTP_ListItem>();
+            var retVal = new List<FTP_ListItem>();
 
             // Set transfer mode
-			SetTransferType(TransferType.Binary);
+            SetTransferType(TransferType.Binary);
                          
             if(m_TransferMode == FTP_TransferMode.Passive){
                 Pasv();
@@ -591,12 +591,12 @@ namespace LumiSoft.Net.FTP.Client
                     WriteLine("MLSD " + path);
                 }
 
-			    string[] response = ReadResponse();
-                if(!response[0].StartsWith("1")){
+			    var response = ReadResponse();
+                if (!response[0].StartsWith("1")){
                     throw new FTP_ClientException(response[0]);
                 }
 
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 m_pDataConnection.ReadAll(ms);
 
                 response = ReadResponse();
@@ -604,31 +604,31 @@ namespace LumiSoft.Net.FTP.Client
                     throw new FTP_ClientException(response[0]);
                 }
 
-                byte[] lineBuffer = new byte[8000];
+                var lineBuffer = new byte[8000];
                 ms.Position = 0;
-                SmartStream mlsdStream = new SmartStream(ms,true);
-                while(true){
-                    SmartStream.ReadLineAsyncOP args = new SmartStream.ReadLineAsyncOP(lineBuffer,SizeExceededAction.JunkAndThrowException);
+                var mlsdStream = new SmartStream(ms,true);
+                while (true){
+                    var args = new SmartStream.ReadLineAsyncOP(lineBuffer,SizeExceededAction.JunkAndThrowException);
                     mlsdStream.ReadLine(args,false);
                     if(args.Error != null){
                         throw args.Error;
                     }
-                    string line = args.LineUtf8;
+                    var line = args.LineUtf8;
 
                     // We reached end of stream, we readed whole list sucessfully.
-                    if(line == null){
+                    if (line == null){
                         break;
                     }
 
-                    string[] parameters = line.Substring(0,line.LastIndexOf(';')).Split(';');
-                    string   name       = line.Substring(line.LastIndexOf(';') + 1).Trim();
+                    var parameters = line.Substring(0,line.LastIndexOf(';')).Split(';');
+                    var   name       = line.Substring(line.LastIndexOf(';') + 1).Trim();
 
-                    string   type     = "";
+                    var   type     = "";
                     long     size     = 0;
-                    DateTime modified = DateTime.MinValue;
-                    foreach(string parameter in parameters){
-                        string[] name_value = parameter.Split('=');
-                        if(name_value[0].ToLower() == "type"){
+                    var modified = DateTime.MinValue;
+                    foreach (string parameter in parameters){
+                        var name_value = parameter.Split('=');
+                        if (name_value[0].ToLower() == "type"){
                             type = name_value[1].ToLower();
                         }
                         else if(name_value[0].ToLower() == "size"){
@@ -655,12 +655,12 @@ namespace LumiSoft.Net.FTP.Client
                     WriteLine("LIST " + path);
                 }
 
-			    string[] response = ReadResponse();
-                if(!response[0].StartsWith("1")){
+			    var response = ReadResponse();
+                if (!response[0].StartsWith("1")){
                     throw new FTP_ClientException(response[0]);
                 }
 
-                MemoryStream ms = new MemoryStream();
+                var ms = new MemoryStream();
                 m_pDataConnection.ReadAll(ms);
                         
                 response = ReadResponse();
@@ -669,13 +669,13 @@ namespace LumiSoft.Net.FTP.Client
                 }
                                                 
                 ms.Position = 0;
-                SmartStream listStream =  new SmartStream(ms,true);
-                                            
-                string[] winDateFormats = new string[]{"M-d-yy h:mmtt","MM-dd-yy HH:mm"};
-                string[] unixFormats    = new string[]{"MMM d H:mm","MMM d yyyy"};
+                var listStream =  new SmartStream(ms,true);
 
-                SmartStream.ReadLineAsyncOP args = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
-                while(true){
+                var winDateFormats = new string[]{"M-d-yy h:mmtt","MM-dd-yy HH:mm"};
+                var unixFormats    = new string[]{"MMM d H:mm","MMM d yyyy"};
+
+                var args = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
+                while (true){
                     listStream.ReadLine(args,false);
                     if(args.Error != null){
                         throw args.Error;
@@ -684,12 +684,12 @@ namespace LumiSoft.Net.FTP.Client
                     if(args.BytesInBuffer == 0){
                         break;
                     }
-                    string line = args.LineUtf8;
+                    var line = args.LineUtf8;
 
                     // Dedect listing.
-                    string listingType = "unix";                    
-                    if(line != null){
-                        StringReader r = new StringReader(line);
+                    var listingType = "unix";
+                    if (line != null){
+                        var r = new StringReader(line);
                         DateTime modified;
                         if(DateTime.TryParseExact(r.ReadWord() + " " + r.ReadWord(),winDateFormats,System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None,out modified)){
                             listingType = "win";
@@ -702,10 +702,10 @@ namespace LumiSoft.Net.FTP.Client
                             // MM-dd-yy hh:mm <DIR> directoryName
                             // MM-dd-yy hh:mm size  fileName
                                         
-                            StringReader r = new StringReader(line);
+                            var r = new StringReader(line);
                             // Read date
-                            DateTime modified = DateTime.ParseExact(r.ReadWord() + " " + r.ReadWord(),winDateFormats,System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
-                     
+                            var modified = DateTime.ParseExact(r.ReadWord() + " " + r.ReadWord(),winDateFormats,System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
+
                             r.ReadToFirstChar();
                             // We have directory.
                             if(r.StartsWith("<dir>",false)){
@@ -728,16 +728,16 @@ namespace LumiSoft.Net.FTP.Client
                             // "d"directoryAtttributes xx xx xx 0 MMM d HH:mm/yyyy directoryName
                             // fileAtttributes xx xx xx fileSize MMM d HH:mm/yyyy fileName
                                         
-                            StringReader r = new StringReader(line);
-                            string attributes = r.ReadWord();
+                            var r = new StringReader(line);
+                            var attributes = r.ReadWord();
                             r.ReadWord();
                             r.ReadWord();
                             r.ReadWord();
                             long size = Convert.ToInt64(r.ReadWord());                
-                            DateTime modified = DateTime.ParseExact(r.ReadWord() + " " + r.ReadWord() + " " + r.ReadWord(),unixFormats,System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
+                            var modified = DateTime.ParseExact(r.ReadWord() + " " + r.ReadWord() + " " + r.ReadWord(),unixFormats,System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
                             r.ReadToFirstChar();
-                            string name = r.ReadToEnd();
-                            if(name != "." && name != ".."){
+                            var name = r.ReadToEnd();
+                            if (name != "." && name != ".."){
                                 if(attributes.StartsWith("d")){
                                     retVal.Add(new FTP_ListItem(name,0,modified,true));
                                 }
@@ -839,8 +839,8 @@ namespace LumiSoft.Net.FTP.Client
             // Send RETR command
 		    WriteLine("RETR " + path);
 
-			string[] response = ReadResponse();
-            if(!response[0].StartsWith("1")){
+			var response = ReadResponse();
+            if (!response[0].StartsWith("1")){
                 throw new FTP_ClientException(response[0]);
             }
 
@@ -901,8 +901,8 @@ namespace LumiSoft.Net.FTP.Client
             // Send APPE command
 		    WriteLine("APPE " + path);
 
-			string[] response = ReadResponse();
-            if(!response[0].StartsWith("1")){
+			var response = ReadResponse();
+            if (!response[0].StartsWith("1")){
                 throw new FTP_ClientException(response[0]);
             }
 
@@ -1002,8 +1002,8 @@ namespace LumiSoft.Net.FTP.Client
             // Send STOR command
 		    WriteLine("STOR " + path);
 
-			string[] response = ReadResponse();
-            if(!response[0].StartsWith("1")){
+			var response = ReadResponse();
+            if (!response[0].StartsWith("1")){
                 throw new FTP_ClientException(response[0]);
             }
 
@@ -1046,8 +1046,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("DELE " + path);
 
-			string reply = ReadLine();
-			if(!reply.StartsWith("250")){
+			var reply = ReadLine();
+            if (!reply.StartsWith("250")){
 				throw new FTP_ClientException(reply);
 			}
         }
@@ -1085,8 +1085,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("RNFR " + fromPath);
 
-			string reply = ReadLine();
-			if(!reply.StartsWith("350")){
+			var reply = ReadLine();
+            if (!reply.StartsWith("350")){
 				throw new FTP_ClientException(reply);
 			}
 
@@ -1124,8 +1124,8 @@ namespace LumiSoft.Net.FTP.Client
 
             WriteLine("MKD " + path);
 
-			string reply = ReadLine();
-			if(!reply.StartsWith("257")){
+			var reply = ReadLine();
+            if (!reply.StartsWith("257")){
 				throw new FTP_ClientException(reply);
 			}
         }
@@ -1156,8 +1156,8 @@ namespace LumiSoft.Net.FTP.Client
             
             WriteLine("RMD " + path);
 
-			string reply = ReadLine();
-			if(!reply.StartsWith("250")){
+			var reply = ReadLine();
+            if (!reply.StartsWith("250")){
 				throw new FTP_ClientException(reply);
 			}
         }
@@ -1178,8 +1178,8 @@ namespace LumiSoft.Net.FTP.Client
                 throw new ArgumentException("Not supported argument 'type' value '" + type.ToString() + "'.");
             }
 
-            string[] response = ReadResponse();
-            if(!response[0].StartsWith("2")){
+            var response = ReadResponse();
+            if (!response[0].StartsWith("2")){
                 throw new FTP_ClientException(response[0]);
             }
 		}
@@ -1214,13 +1214,13 @@ namespace LumiSoft.Net.FTP.Client
         {
             WriteLine("PASV");
 
-            string[] response = ReadResponse();
-            if(!response[0].StartsWith("227")){
+            var response = ReadResponse();
+            if (!response[0].StartsWith("227")){
                 throw new FTP_ClientException(response[0]);
             }
 
             // Parse IP:port from 227 Entering Passive Mode (192,168,1,10,1,10).
-			string[] parts = response[0].Substring(response[0].IndexOf("(") + 1,response[0].IndexOf(")") - response[0].IndexOf("(") - 1).Split(',');
+			var parts = response[0].Substring(response[0].IndexOf("(") + 1,response[0].IndexOf(")") - response[0].IndexOf("(") - 1).Split(',');
 
             m_pDataConnection.SwitchToPassive(new IPEndPoint(IPAddress.Parse(parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3]),(Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5])));
         }
@@ -1274,17 +1274,17 @@ namespace LumiSoft.Net.FTP.Client
                     226 Transfer complete
             */
 
-            List<string> retVal = new List<string>();
+            var retVal = new List<string>();
 
-            string response = ReadLine();
+            var response = ReadLine();
             // Server closed connection for some reason.
-            if(response == null){
+            if (response == null){
                 throw new Exception("Remote host disconnected connection unexpectedly.");
             }
 
             // Multiline response.
             if(response.Length >= 4 && response[3] == '-'){
-                string responseCode = response.Substring(0,3);
+                var responseCode = response.Substring(0,3);
                 retVal.Add(response);
 
                 // Read while we get final response line. RESPONSE-CODE SP [optional-text] CRLF
@@ -1331,9 +1331,9 @@ namespace LumiSoft.Net.FTP.Client
 			 	220<SP>final row<CRLF>			  
 			*/
 
-            string line = ReadLine();
-            if(line.StartsWith("220")){
-                StringBuilder greetText = new StringBuilder();
+            var line = ReadLine();
+            if (line.StartsWith("220")){
+                var greetText = new StringBuilder();
                 greetText.Append(line.Substring(4));
 
                 // Read multiline greet text.

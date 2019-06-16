@@ -30,9 +30,6 @@ namespace LumiSoft.Net.SIP.UA
         /// <exception cref="ArgumentException">Is raised when any of the argumnets has invalid value.</exception>
         internal SIP_UA_Call(SIP_UA ua,SIP_Request invite)
         {
-            if(ua == null){
-                throw new ArgumentNullException("ua");
-            }
             if(invite == null){
                 throw new ArgumentNullException("invite");
             }
@@ -40,7 +37,7 @@ namespace LumiSoft.Net.SIP.UA
                 throw new ArgumentException("Argument 'invite' is not INVITE request.");
             }
 
-            m_pUA        = ua;
+            m_pUA        = ua ?? throw new ArgumentNullException("ua");
             m_pInvite    = invite;
             LocalUri  = invite.From.Address.Uri;
             RemoteUri = invite.To.Address.Uri;
@@ -59,15 +56,8 @@ namespace LumiSoft.Net.SIP.UA
         /// <exception cref="ArgumentNullException">Is riased when <b>ua</b> or <b>invite</b> is null reference.</exception>
         internal SIP_UA_Call(SIP_UA ua,SIP_ServerTransaction invite)
         {
-            if(ua == null){
-                throw new ArgumentNullException("ua");
-            }
-            if(invite == null){
-                throw new ArgumentNullException("invite");
-            }
-
-            m_pUA = ua;
-            m_pInitialInviteTransaction = invite;
+            m_pUA = ua ?? throw new ArgumentNullException("ua");
+            m_pInitialInviteTransaction = invite ?? throw new ArgumentNullException("invite");
             LocalUri  = invite.Request.To.Address.Uri;
             RemoteUri = invite.Request.From.Address.Uri;
             m_pInitialInviteTransaction.Canceled += new EventHandler(delegate(object sender,EventArgs e){
@@ -233,8 +223,8 @@ namespace LumiSoft.Net.SIP.UA
                 throw new InvalidOperationException("Accept method can be called only in 'SIP_UA_CallState.WaitingToAccept' state.");
             }
 
-            SIP_Response response = m_pUA.Stack.CreateResponse(SIP_ResponseCodes.x180_Ringing,m_pInitialInviteTransaction.Request,m_pInitialInviteTransaction.Flow);
-            if(sdp != null){
+            var response = m_pUA.Stack.CreateResponse(SIP_ResponseCodes.x180_Ringing,m_pInitialInviteTransaction.Request,m_pInitialInviteTransaction.Flow);
+            if (sdp != null){
                 response.ContentType = "application/sdp";
                 response.Data = sdp.ToByte();
 
@@ -258,15 +248,12 @@ namespace LumiSoft.Net.SIP.UA
             if(State != SIP_UA_CallState.WaitingToAccept){
                 throw new InvalidOperationException("Accept method can be called only in 'SIP_UA_CallState.WaitingToAccept' state.");
             }
-            if(sdp == null){
-                throw new ArgumentNullException("sdp");
-            }
 
-            LocalSDP = sdp;
+            LocalSDP = sdp ?? throw new ArgumentNullException("sdp");
 
             // TODO: We must add Contact header and SDP to response.
 
-            SIP_Response response = m_pUA.Stack.CreateResponse(SIP_ResponseCodes.x200_Ok,m_pInitialInviteTransaction.Request,m_pInitialInviteTransaction.Flow);            
+            var response = m_pUA.Stack.CreateResponse(SIP_ResponseCodes.x200_Ok,m_pInitialInviteTransaction.Request,m_pInitialInviteTransaction.Flow);
             response.ContentType = "application/sdp";
             response.Data = sdp.ToByte();
             m_pInitialInviteTransaction.SendResponse(response);

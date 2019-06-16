@@ -38,15 +38,8 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is riased when <b>session</b> or <b>ssrc</b> is null reference.</exception>
         internal RTP_ReceiveStream(RTP_Session session,RTP_Source ssrc,ushort packetSeqNo)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-            if(ssrc == null){
-                throw new ArgumentNullException("ssrc");
-            }
-
-            m_pSession = session;
-            m_pSSRC = ssrc;
+            m_pSession = session ?? throw new ArgumentNullException("session");
+            m_pSSRC = ssrc ?? throw new ArgumentNullException("ssrc");
 
             // RFC 3550 A.1.
             InitSeq(packetSeqNo);
@@ -227,12 +220,8 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>report</b> is null reference.</exception>
         internal void SetSR(RTCP_Report_Sender report)
         {
-            if(report == null){
-                throw new ArgumentNullException("report");
-            }
-
             m_LastSRTime = DateTime.Now;
-            m_pLastSR = report;
+            m_pLastSR = report ?? throw new ArgumentNullException("report");
 
             OnSenderReport();
         }
@@ -306,7 +295,7 @@ namespace LumiSoft.Net.RTP
                 fraction = (lost_interval << 8) / expected_interval;
             }
 
-            RTCP_Packet_ReportBlock rr = new RTCP_Packet_ReportBlock(this.SSRC.SSRC);
+            var rr = new RTCP_Packet_ReportBlock(this.SSRC.SSRC);
             rr.FractionLost            = (uint)fraction;
             rr.CumulativePacketsLost   = (uint)this.PacketsLost;
             rr.ExtendedHighestSeqNo    = extHighestSeqNo;

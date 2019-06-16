@@ -24,38 +24,16 @@ namespace LumiSoft.Net.AUTH
         /// <param name="digestUri">Digest URI.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>challenge</b>,<b>realm</b>,<b>password</b>,<b>nonce</b>,<b>qop</b> or <b>digestUri</b> is null reference.</exception>
         public AUTH_SASL_DigestMD5_Response(AUTH_SASL_DigestMD5_Challenge challenge,string realm,string userName,string password,string cnonce,int nonceCount,string qop,string digestUri)
-        {    
-            if(challenge == null){
-                throw new ArgumentNullException("challenge");
-            }
-            if(realm == null){
-                throw new ArgumentNullException("realm");
-            }
-            if(userName == null){
-                throw new ArgumentNullException("userName");
-            }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
-            if(cnonce == null){
-                throw new ArgumentNullException("cnonce");
-            }
-            if(qop == null){
-                throw new ArgumentNullException("qop");
-            }
-            if(digestUri == null){
-                throw new ArgumentNullException("digestUri");
-            }
-
-            m_pChallenge = challenge;
-            Realm      = realm;
-            UserName   = userName;
-            m_Password   = password;
+        {
+            m_pChallenge = challenge ?? throw new ArgumentNullException("challenge");
+            Realm      = realm ?? throw new ArgumentNullException("realm");
+            UserName   = userName ?? throw new ArgumentNullException("userName");
+            m_Password   = password ?? throw new ArgumentNullException("password");
             Nonce      = m_pChallenge.Nonce;
-            Cnonce     = cnonce;
+            Cnonce     = cnonce ?? throw new ArgumentNullException("cnonce");
             NonceCount = nonceCount;
-            Qop        = qop;
-            DigestUri  = digestUri;                        
+            Qop        = qop ?? throw new ArgumentNullException("qop");
+            DigestUri  = digestUri ?? throw new ArgumentNullException("digestUri");                        
             Response   = CalculateResponse(userName,password);
             Charset    = challenge.Charset;
         }
@@ -113,17 +91,17 @@ namespace LumiSoft.Net.AUTH
                 authzid-value    = qdstr-val
             */    
             
-            AUTH_SASL_DigestMD5_Response retVal = new AUTH_SASL_DigestMD5_Response();
+            var retVal = new AUTH_SASL_DigestMD5_Response();
 
             // Set default values.
             retVal.Realm = "";
 
-            string[] parameters = TextUtils.SplitQuotedString(digestResponse,',');
-            foreach(string parameter in parameters){
-                string[] name_value = parameter.Split(new char[]{'='},2);
-                string   name       = name_value[0].Trim();
+            var parameters = TextUtils.SplitQuotedString(digestResponse,',');
+            foreach (string parameter in parameters){
+                var name_value = parameter.Split(new char[]{'='},2);
+                var   name       = name_value[0].Trim();
 
-                if(name_value.Length == 2){
+                if (name_value.Length == 2){
                     if(name.ToLower() == "username"){
                         retVal.UserName = TextUtils.UnQuoteString(name_value[1]);
                     }
@@ -244,7 +222,7 @@ namespace LumiSoft.Net.AUTH
                 authzid-value    = qdstr-val
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("username=\"" + this.UserName + "\"");
             retVal.Append(",realm=\"" + this.Realm + "\"");
             retVal.Append(",nonce=\"" + this.Nonce + "\"");
@@ -425,20 +403,20 @@ namespace LumiSoft.Net.AUTH
             */
   
             if(string.IsNullOrEmpty(this.Authzid)){
-                byte[] user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
-                byte[] nonce_cnonce   = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce);
+                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
+                var nonce_cnonce   = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce);
 
-                byte[] retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
+                var retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
                 Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
                 Array.Copy(nonce_cnonce,0,retVal,user_realm_pwd.Length,nonce_cnonce.Length);
 
                 return retVal;
             }
             else{
-                byte[] user_realm_pwd       = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
-                byte[] nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce + ":" + this.Authzid);
+                var user_realm_pwd       = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
+                var nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce + ":" + this.Authzid);
 
-                byte[] retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
+                var retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
                 Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
                 Array.Copy(nonce_cnonce_authzid,0,retVal,user_realm_pwd.Length,nonce_cnonce_authzid.Length);
 

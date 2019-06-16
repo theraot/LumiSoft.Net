@@ -21,8 +21,8 @@ namespace LumiSoft.Net.SIP
         public static string ParseAddress(string to)
         {
             try{
-                string retVal = to;
-                if(to.IndexOf('<') > -1 && to.IndexOf('<') < to.IndexOf('>')){
+                var retVal = to;
+                if (to.IndexOf('<') > -1 && to.IndexOf('<') < to.IndexOf('>')){
                     retVal = to.Substring(to.IndexOf('<') + 1,to.IndexOf('>') - to.IndexOf('<') - 1);
                 }
                 // Remove sip:
@@ -53,7 +53,7 @@ namespace LumiSoft.Net.SIP
                 // We need to strip off "method-param" and "header" URI parameters".
                 // Currently we do it for sip or sips uri, do we need todo it for others too ?
 
-                SIP_Uri sUri = (SIP_Uri)uri;
+                var sUri = (SIP_Uri)uri;
                 sUri.Parameters.Remove("method");
                 sUri.Header = null;
 
@@ -97,9 +97,9 @@ namespace LumiSoft.Net.SIP
                 }
 
                 if(IsSipOrSipsUri(uri)){
-                    SIP_Uri sipUri = SIP_Uri.Parse(uri);
+                    var sipUri = SIP_Uri.Parse(uri);
                     // RFC 3398 12. If user part starts with +, it's tel: URI.
-                    if(sipUri.User.StartsWith("+")){
+                    if (sipUri.User.StartsWith("+")){
                         return true;
                     }
                     // RFC 3398 12.
@@ -125,8 +125,8 @@ namespace LumiSoft.Net.SIP
         {
             foreach(SIP_SingleValueHF<SIP_t_Credentials> authorization in request.ProxyAuthorization.HeaderFields){
                 if(authorization.ValueX.Method.ToLower() == "digest"){
-                    Auth_HttpDigest authDigest = new Auth_HttpDigest(authorization.ValueX.AuthData,request.RequestLine.Method);
-                    if(authDigest.Realm.ToLower() == realm.ToLower()){
+                    var authDigest = new Auth_HttpDigest(authorization.ValueX.AuthData,request.RequestLine.Method);
+                    if (authDigest.Realm.ToLower() == realm.ToLower()){
                         return authorization.ValueX;
                     }
                 }
@@ -237,8 +237,8 @@ namespace LumiSoft.Net.SIP
                 throw new ArgumentNullException("list");
             }
 
-            StringBuilder retVal = new StringBuilder();
-            for(int i=0;i<list.Count;i++){
+            var retVal = new StringBuilder();
+            for (int i=0;i<list.Count;i++){
                 if(i == 0){
                     retVal.Append(list[i]);
                 }

@@ -18,19 +18,9 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>realm</b>,<b>nonce</b> or <b>qopOptions</b> is null reference.</exception>
         public AUTH_SASL_DigestMD5_Challenge(string[] realm,string nonce,string[] qopOptions,bool stale)
         {
-            if(realm == null){
-                throw new ArgumentNullException("realm");
-            }
-            if(nonce == null){
-                throw new ArgumentNullException("nonce");
-            }
-            if(qopOptions == null){
-                throw new ArgumentNullException("qopOptions");
-            }
-
-            Realm      = realm;
-            Nonce      = nonce;
-            QopOptions = qopOptions;
+            Realm      = realm ?? throw new ArgumentNullException("realm");
+            Nonce      = nonce ?? throw new ArgumentNullException("nonce");
+            QopOptions = qopOptions ?? throw new ArgumentNullException("qopOptions");
             Stale      = stale;
             Charset    = "utf-8";
             Algorithm  = "md5-sess";
@@ -56,14 +46,14 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentNullException("challenge");
             }
 
-            AUTH_SASL_DigestMD5_Challenge retVal = new AUTH_SASL_DigestMD5_Challenge();
+            var retVal = new AUTH_SASL_DigestMD5_Challenge();
 
-            string[] parameters = TextUtils.SplitQuotedString(challenge,',');
-            foreach(string parameter in parameters){
-                string[] name_value = parameter.Split(new char[]{'='},2);
-                string   name       = name_value[0].Trim();
+            var parameters = TextUtils.SplitQuotedString(challenge,',');
+            foreach (string parameter in parameters){
+                var name_value = parameter.Split(new char[]{'='},2);
+                var   name       = name_value[0].Trim();
 
-                if(name_value.Length == 2){
+                if (name_value.Length == 2){
                     if(name.ToLower() == "realm"){
                         retVal.Realm = TextUtils.UnQuoteString(name_value[1]).Split(',');
                     }
@@ -139,7 +129,7 @@ namespace LumiSoft.Net.AUTH
                 auth-param        = token "=" ( token | quoted-string )
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("realm=\"" + Net_Utils.ArrayToString(this.Realm,",") + "\"");
             retVal.Append(",nonce=\"" + this.Nonce + "\"");
             if(this.QopOptions != null){

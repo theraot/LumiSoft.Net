@@ -36,8 +36,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="item">vCard EMAIL item.</param>
         internal static EmailAddress Parse(Item item)
         {
-            EmailAddressType_enum type = EmailAddressType_enum.NotSpecified;
-            if(item.ParametersString.ToUpper().IndexOf("PREF") != -1){
+            var type = EmailAddressType_enum.NotSpecified;
+            if (item.ParametersString.ToUpper().IndexOf("PREF") != -1){
                 type |= EmailAddressType_enum.Preferred;
             }
             if(item.ParametersString.ToUpper().IndexOf("INTERNET") != -1){
@@ -57,8 +57,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         internal static string EmailTypeToString(EmailAddressType_enum type)
         {
-            string retVal = "";
-            if((type & EmailAddressType_enum.Internet) != 0){
+            var retVal = "";
+            if ((type & EmailAddressType_enum.Internet) != 0){
                 retVal += "INTERNET,";
             }
             if((type & EmailAddressType_enum.Preferred) != 0){

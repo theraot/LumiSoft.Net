@@ -85,7 +85,7 @@ namespace LumiSoft.Net.Media
             /// <returns>Returns this as string.</returns>
             public override string ToString()
             {
-                StringBuilder retVal = new StringBuilder();
+                var retVal = new StringBuilder();
                 retVal.AppendLine("ChunkSize: " + ChunkSize);
                 retVal.AppendLine("AudioFormat: " + AudioFormat);
                 retVal.AppendLine("Channels: " + NumberOfChannels);
@@ -188,11 +188,7 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ArgumentNullException">Is raised when <b>reader</b> is null reference.</exception>
             public WavReader(BinaryReader reader)
             {
-                if(reader == null){
-                    throw new ArgumentNullException("reader");
-                }
-
-                m_pBinaryReader = reader;
+                m_pBinaryReader = reader ?? throw new ArgumentNullException("reader");
             }
 
             /// <summary>
@@ -201,9 +197,9 @@ namespace LumiSoft.Net.Media
             /// <returns>Returns 4 char chunk ID or null if end of stream reached.</returns>
             public string Read_ChunkID()
             {
-                char[] chars = m_pBinaryReader.ReadChars(4);
+                var chars = m_pBinaryReader.ReadChars(4);
 
-                if(chars.Length == 0){
+                if (chars.Length == 0){
                     return null;
                 }
 
@@ -216,7 +212,7 @@ namespace LumiSoft.Net.Media
             /// <returns>Returns RIFF chunk.</returns>
             public RIFF_Chunk Read_RIFF()
             {
-                RIFF_Chunk retVal = new RIFF_Chunk();
+                var retVal = new RIFF_Chunk();
                 retVal.Parse(m_pBinaryReader);
 
                 return retVal;
@@ -228,7 +224,7 @@ namespace LumiSoft.Net.Media
             /// <returns>Returns fmt chunk.</returns>
             public fmt_Chunk Read_fmt()
             {
-                fmt_Chunk retVal = new fmt_Chunk();
+                var retVal = new fmt_Chunk();
                 retVal.Parse(m_pBinaryReader);
 
                 return retVal;
@@ -240,7 +236,7 @@ namespace LumiSoft.Net.Media
             /// <returns>Returns data chunk.</returns>
             public data_Chunk Read_data()
             {
-                data_Chunk retVal = new data_Chunk();
+                var retVal = new data_Chunk();
                 retVal.Parse(m_pBinaryReader);
 
                 return retVal;
@@ -268,11 +264,7 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentNullException">Is raised when <b>device</b> is null reference.</exception>
         public WavePlayer(AudioOutDevice device)
         {
-            if(device == null){
-                throw new ArgumentNullException("device");
-            }
-
-            m_pOutputDevice = device;
+            m_pOutputDevice = device ?? throw new ArgumentNullException("device");
         }
 
         /// <summary>
@@ -311,17 +303,17 @@ namespace LumiSoft.Net.Media
 
             ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){                        
                 using(BinaryReader waveFile = new BinaryReader(stream)){
-                    WavReader wavReader = new WavReader(waveFile);
+                    var wavReader = new WavReader(waveFile);
 
-                    if(!string.Equals(wavReader.Read_ChunkID(),"riff",StringComparison.InvariantCultureIgnoreCase)){
+                    if (!string.Equals(wavReader.Read_ChunkID(),"riff",StringComparison.InvariantCultureIgnoreCase)){
                         throw new ArgumentNullException("Invalid wave file, RIFF header missing.");
                     }
-                    RIFF_Chunk riff = wavReader.Read_RIFF();
-                                        
+                    var riff = wavReader.Read_RIFF();
+
                     wavReader.Read_ChunkID();                    
-                    fmt_Chunk fmt = wavReader.Read_fmt();
-                                                                      
-                    using(AudioOut player = new AudioOut(m_pOutputDevice,fmt.SampleRate,fmt.BitsPerSample,fmt.NumberOfChannels)){
+                    var fmt = wavReader.Read_fmt();
+
+                    using (AudioOut player = new AudioOut(m_pOutputDevice,fmt.SampleRate,fmt.BitsPerSample,fmt.NumberOfChannels)){
                         long audioStartOffset = waveFile.BaseStream.Position;
 
                         // Loop audio playing for specified times.
@@ -330,20 +322,20 @@ namespace LumiSoft.Net.Media
 
                             // Read wave chunks.
                             while(true){
-                                string chunkID = wavReader.Read_ChunkID();
+                                var chunkID = wavReader.Read_ChunkID();
 
                                 // EOS reached.
-                                if(chunkID == null || (waveFile.BaseStream.Length - waveFile.BaseStream.Position) < 4){
+                                if (chunkID == null || (waveFile.BaseStream.Length - waveFile.BaseStream.Position) < 4){
                                     break;
                                 }
                                 // Wave data chunk.
 
                                 if(string.Equals(chunkID,"data",StringComparison.InvariantCultureIgnoreCase)){
-                                    data_Chunk data = wavReader.Read_data();
+                                    var data = wavReader.Read_data();
 
                                     int    totalReaded = 0;
-                                    byte[] buffer      = new byte[8000];
-                                    while(totalReaded < data.ChunkSize){
+                                    var buffer      = new byte[8000];
+                                    while (totalReaded < data.ChunkSize){
                                         if(m_Stop){
                                             m_IsPlaying = false;
 

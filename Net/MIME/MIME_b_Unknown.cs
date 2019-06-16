@@ -47,7 +47,7 @@ namespace LumiSoft.Net.MIME
                 mediaType = "unparsable/unparsable";
             }
 
-            MIME_b_Unknown retVal = new MIME_b_Unknown(mediaType);
+            var retVal = new MIME_b_Unknown(mediaType);
             Net_Utils.StreamCopy(stream,retVal.EncodedStream,32000);
 
             return retVal;

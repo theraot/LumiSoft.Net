@@ -81,7 +81,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns "From" value.</returns>
         public override string ToStringValue()
         {
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append(Address.ToStringValue()); 
             retVal.Append(this.ParametersToString());
 
@@ -101,8 +101,8 @@ namespace LumiSoft.Net.SIP.Message
         public string Tag
         {
             get{ 
-                SIP_Parameter parameter = this.Parameters["tag"];
-                if(parameter != null){
+                var parameter = this.Parameters["tag"];
+                if (parameter != null){
                     return parameter.Value;
                 }
 

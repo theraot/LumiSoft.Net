@@ -82,8 +82,8 @@ namespace LumiSoft.Net.TCP
                 throw new ArgumentException("Argument 'port' value must be >= 1.");
             }
 
-            IPAddress[] ips = System.Net.Dns.GetHostAddresses(host);
-            for(int i=0;i<ips.Length;i++){
+            var ips = System.Net.Dns.GetHostAddresses(host);
+            for (int i=0;i<ips.Length;i++){
                 try{
                     Connect(null,new IPEndPoint(ips[i],port),ssl);
                     break;
@@ -152,8 +152,8 @@ namespace LumiSoft.Net.TCP
                 throw new ArgumentNullException("remoteEP");
             }
 
-            ManualResetEvent wait = new ManualResetEvent(false);
-            using(ConnectAsyncOP op = new ConnectAsyncOP(localEP,remoteEP,ssl,certCallback)){
+            var wait = new ManualResetEvent(false);
+            using (ConnectAsyncOP op = new ConnectAsyncOP(localEP,remoteEP,ssl,certCallback)){
                 op.CompletedAsync += delegate(object s1,EventArgs<ConnectAsyncOP> e1){
                     wait.Set();
                 };
@@ -195,12 +195,8 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null reference.</exception>
             public ConnectAsyncOP(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl,RemoteCertificateValidationCallback certCallback)
             {
-                if(remoteEP == null){
-                    throw new ArgumentNullException("localEP");
-                }
-
                 m_pLocalEP      = localEP;
-                m_pRemoteEP     = remoteEP;
+                m_pRemoteEP     = remoteEP ?? throw new ArgumentNullException("localEP");
                 m_SSL           = ssl;
                 m_pCertCallback = certCallback;
             }
@@ -235,11 +231,7 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(TCP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pTcpClient = owner;
+                m_pTcpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -576,8 +568,8 @@ namespace LumiSoft.Net.TCP
                 throw new InvalidOperationException("TCP client is not connected.");
             }
 
-            DisconnectDelegate asyncMethod = new DisconnectDelegate(this.Disconnect);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new DisconnectDelegate(this.Disconnect);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -600,8 +592,8 @@ namespace LumiSoft.Net.TCP
                 throw new ArgumentNullException("asyncResult");
             }
             
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginDisconnect method.");
             }
             if(castedAsyncResult.IsEndCalled){
@@ -638,7 +630,7 @@ namespace LumiSoft.Net.TCP
 
             // FIX ME: if ssl switching fails, it closes source stream or otherwise if ssl successful, source stream leaks.
 
-            SslStream sslStream = new SslStream(m_pTcpStream.SourceStream,true,this.RemoteCertificateValidationCallback);
+            var sslStream = new SslStream(m_pTcpStream.SourceStream,true,this.RemoteCertificateValidationCallback);
             sslStream.AuthenticateAsClient("dummy");
 
             // Close old stream, but leave source stream open.
@@ -710,11 +702,7 @@ namespace LumiSoft.Net.TCP
             /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> is null reference.</exception>
             internal bool Start(TCP_Client owner)
             {
-                if(owner == null){
-                    throw new ArgumentNullException("owner");
-                }
-
-                m_pTcpClient = owner;
+                m_pTcpClient = owner ?? throw new ArgumentNullException("owner");
 
                 SetState(AsyncOP_State.Active);
 
@@ -906,13 +894,13 @@ namespace LumiSoft.Net.TCP
         /// <returns>Returns readed line.</returns>
         protected string ReadLine()
         {
-            SmartStream.ReadLineAsyncOP args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+            var args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
             this.TcpStream.ReadLine(args,false);
             if(args.Error != null){
                 throw args.Error;
             }
-            string line = args.LineUtf8;
-            if(args.BytesInBuffer > 0){
+            var line = args.LineUtf8;
+            if (args.BytesInBuffer > 0){
                 LogAddRead(args.BytesInBuffer,line);
             }
             else{
@@ -1257,8 +1245,8 @@ namespace LumiSoft.Net.TCP
                 throw new ArgumentException("Argument 'port' value must be >= 1.");
             }
 
-            BeginConnectHostDelegate asyncMethod = new BeginConnectHostDelegate(this.Connect);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new BeginConnectHostDelegate(this.Connect);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(host,port,ssl,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -1308,8 +1296,8 @@ namespace LumiSoft.Net.TCP
                 throw new ArgumentNullException("remoteEP");
             }
             
-            BeginConnectEPDelegate asyncMethod = new BeginConnectEPDelegate(this.Connect);
-            AsyncResultState asyncState = new AsyncResultState(this,asyncMethod,callback,state);
+            var asyncMethod = new BeginConnectEPDelegate(this.Connect);
+            var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(localEP,remoteEP,ssl,new AsyncCallback(asyncState.CompletedCallback),null));
 
             return asyncState;
@@ -1333,8 +1321,8 @@ namespace LumiSoft.Net.TCP
                 throw new ArgumentNullException("asyncResult");
             }
                         
-            AsyncResultState castedAsyncResult = asyncResult as AsyncResultState;
-            if(castedAsyncResult == null || castedAsyncResult.AsyncObject != this){                
+            var castedAsyncResult = asyncResult as AsyncResultState;
+            if (castedAsyncResult == null || castedAsyncResult.AsyncObject != this){                
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginConnect method.");
             }
             if(castedAsyncResult.IsEndCalled){

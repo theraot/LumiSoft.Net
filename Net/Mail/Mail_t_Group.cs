@@ -37,8 +37,8 @@ namespace LumiSoft.Net.Mail
         /// <returns>Returns address as string value.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder)
         {
-            StringBuilder retVal = new StringBuilder();
-            if(string.IsNullOrEmpty(DisplayName)){
+            var retVal = new StringBuilder();
+            if (string.IsNullOrEmpty(DisplayName)){
                 retVal.Append(":");
             }
             else{

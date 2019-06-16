@@ -85,8 +85,8 @@ namespace LumiSoft.Net.Mime
 			// Can't use standard String.Split() because commas in quoted strings must be skiped.
 			// Example: "ivar, test" <ivar@lumisoft.ee>,"xxx" <ivar2@lumisoft.ee>
 
-			string[] mailboxes = TextUtils.SplitQuotedString(mailboxList,',');
-			foreach(string mailbox in mailboxes){
+			var mailboxes = TextUtils.SplitQuotedString(mailboxList,',');
+            foreach (string mailbox in mailboxes){
 				m_pMailboxes.Add(MailboxAddress.Parse(mailbox));
 			}
 		}
@@ -97,8 +97,8 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public string ToMailboxListString()
 		{
-			string retVal = "";
-			for(int i=0;i<m_pMailboxes.Count;i++){
+			var retVal = "";
+            for (int i=0;i<m_pMailboxes.Count;i++){
 				// For last address don't add , and <TAB>
 				if(i == (m_pMailboxes.Count - 1)){
 					retVal += ((MailboxAddress)m_pMailboxes[i]).ToMailboxAddressString();

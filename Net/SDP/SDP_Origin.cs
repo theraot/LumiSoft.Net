@@ -75,8 +75,8 @@ namespace LumiSoft.Net.SDP
             }
             value = value.Substring(2);
 
-            string[] values = value.Split(' ');
-            if(values.Length != 6){
+            var values = value.Split(' ');
+            if (values.Length != 6){
                 throw new ParseException("Invalid SDP Origin('o=') value '" + value + "'.");
             }
 

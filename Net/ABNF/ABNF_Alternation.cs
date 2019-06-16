@@ -29,11 +29,11 @@ namespace LumiSoft.Net.ABNF
 
             // alternation = concatenation *(*c-wsp "/" *c-wsp concatenation)
 
-            ABNF_Alternation retVal = new ABNF_Alternation();
+            var retVal = new ABNF_Alternation();
 
-            while(true){
-                ABNF_Concatenation item = ABNF_Concatenation.Parse(reader);
-                if(item != null){
+            while (true){
+                var item = ABNF_Concatenation.Parse(reader);
+                if (item != null){
                     retVal.Items.Add(item);
                 }
 

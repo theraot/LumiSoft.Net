@@ -188,12 +188,12 @@ namespace LumiSoft.Net.IMAP
 
 			*/
 
-            MIME_Encoding_EncodedWord wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
+            var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B,Encoding.UTF8);
             wordEncoder.Split = false;
 
-			StringBuilder retVal = new StringBuilder();
-			// Multipart message
-			if(entity.Body is MIME_b_Multipart){
+			var retVal = new StringBuilder();
+            // Multipart message
+            if (entity.Body is MIME_b_Multipart){
 				retVal.Append("(");
 
 				// Construct child entities.
@@ -261,8 +261,8 @@ namespace LumiSoft.Net.IMAP
 				}
 
 				// contentID
-				string contentID = entity.ContentID;
-				if(contentID != null){
+				var contentID = entity.ContentID;
+                if (contentID != null){
 					retVal.Append(" \"" + wordEncoder.Encode(contentID) + "\""); 
 				}
 				else{
@@ -270,8 +270,8 @@ namespace LumiSoft.Net.IMAP
 				}
 
 				// contentDescription
-				string contentDescription = entity.ContentDescription;
-				if(contentDescription != null){
+				var contentDescription = entity.ContentDescription;
+                if (contentDescription != null){
 					retVal.Append(" \"" + wordEncoder.Encode(contentDescription) + "\""); 
 				}
 				else{
@@ -305,9 +305,9 @@ namespace LumiSoft.Net.IMAP
 				// contentLines ---> FOR ContentType: text/xxx ONLY ###
 				if(entity.Body is MIME_b_Text){                    
 				    long lineCount = 0;
-					StreamLineReader r = new StreamLineReader(new MemoryStream(((MIME_b_SinglepartBase)entity.Body).EncodedData));
-					byte[] line = r.ReadLine();
-					while(line != null){
+					var r = new StreamLineReader(new MemoryStream(((MIME_b_SinglepartBase)entity.Body).EncodedData));
+                    var line = r.ReadLine();
+                    while (line != null){
 						lineCount++;
 
 						line = r.ReadLine();
@@ -362,8 +362,8 @@ namespace LumiSoft.Net.IMAP
         public IMAP_BODY_Entity[] Entities
         {
             get{ 
-                List<IMAP_BODY_Entity> allEntities = new List<IMAP_BODY_Entity>();
-				allEntities.Add(MainEntity);
+                var allEntities = new List<IMAP_BODY_Entity>();
+                allEntities.Add(MainEntity);
 				GetEntities(MainEntity.ChildEntities,allEntities);
 
 				return allEntities.ToArray();
@@ -381,9 +381,9 @@ namespace LumiSoft.Net.IMAP
         //     *) Content-Disposition: filename = "" is specified  (RFC 2822 message)<p/>
 
             get{ 
-                List<IMAP_BODY_Entity> attachments = new List<IMAP_BODY_Entity>();
-				IMAP_BODY_Entity[] entities = this.Entities;
-				foreach(IMAP_BODY_Entity entity in entities){
+                var attachments = new List<IMAP_BODY_Entity>();
+                var entities = this.Entities;
+                foreach (IMAP_BODY_Entity entity in entities){
                     if(entity.ContentType != null){
                         foreach(MIME_h_Parameter parameter in entity.ContentType.Parameters){
                             if(parameter.Name.ToLower() == "name"){

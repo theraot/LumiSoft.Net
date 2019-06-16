@@ -47,11 +47,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>sipStack</b> is null reference.</exception>
         public SIP_Proxy(SIP_Stack stack)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-
-            m_pStack = stack;
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
             m_pStack.RequestReceived += new EventHandler<SIP_RequestReceivedEventArgs>(m_pStack_RequestReceived);
             m_pStack.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pStack_ResponseReceived);
 
@@ -107,8 +103,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="e">Request event arguments.</param>
         private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {            
-            SIP_Request request = e.Request;
-            try{
+            var request = e.Request;
+            try
+            {
                 // Statefull
                 if((m_ProxyMode & SIP_ProxyMode.Statefull) != 0){
                     // Statefull proxy is transaction statefull proxy only, 
@@ -126,8 +123,8 @@ namespace LumiSoft.Net.SIP.Proxy
                     */
                     if(e.Request.RequestLine.Method == SIP_Methods.CANCEL){
                         // Don't do server transaction before we get CANCEL matching transaction.
-                        SIP_ServerTransaction trToCancel = m_pStack.TransactionLayer.MatchCancelToTransaction(e.Request);
-                        if(trToCancel != null){
+                        var trToCancel = m_pStack.TransactionLayer.MatchCancelToTransaction(e.Request);
+                        if (trToCancel != null){
                             trToCancel.Cancel();
                             e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,request));
                         }
@@ -225,9 +222,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="addRecordRoute">If true Record-Route header field is added.</param>
         internal void ForwardRequest(bool statefull,SIP_RequestReceivedEventArgs e,bool addRecordRoute)
         {
-            SIP_RequestContext requestContext = new SIP_RequestContext(this,e.Request,e.Flow);
+            var requestContext = new SIP_RequestContext(this,e.Request,e.Flow);
 
-            SIP_Request request = e.Request;
+            var request = e.Request;
             SIP_Uri     route   = null;
                         
             /* RFC 3261 16.
@@ -276,8 +273,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 // If To: field is registrar AOR and request-URI is local registration contact, skip authentication.
                 bool skipAuth = false;
                 if(request.To.Address.IsSipOrSipsUri){
-                    SIP_Registration registration = m_pRegistrar.GetRegistration(((SIP_Uri)request.To.Address.Uri).Address);
-                    if(registration != null){
+                    var registration = m_pRegistrar.GetRegistration(((SIP_Uri)request.To.Address.Uri).Address);
+                    if (registration != null){
                         if(registration.GetBinding(request.RequestLine.Uri) != null){
                             skipAuth = true;
                         }
@@ -340,7 +337,7 @@ namespace LumiSoft.Net.SIP.Proxy
             // Strict route - handle it.
             if((request.RequestLine.Uri is SIP_Uri) && IsRecordRoute(((SIP_Uri)request.RequestLine.Uri)) && request.Route.GetAllValues().Length > 0){
                 request.RequestLine.Uri = request.Route.GetAllValues()[request.Route.GetAllValues().Length - 1].Address.Uri;
-                SIP_t_AddressParam[] routes = request.Route.GetAllValues();
+                var routes = request.Route.GetAllValues();
                 route = (SIP_Uri)routes[routes.Length - 1].Address.Uri;
                 request.Route.RemoveLastValue();
             }
@@ -360,10 +357,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             if(e.Request.RequestLine.Method == SIP_Methods.REGISTER){
-                SIP_Uri requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
+                var requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
                 // REGISTER is meant for us.
-                if(this.OnIsLocalUri(requestUri.Host)){
+                if (this.OnIsLocalUri(requestUri.Host)){
                     if((m_ProxyMode & SIP_ProxyMode.Registrar) != 0){
                         m_pRegistrar.Register(e);
 
@@ -409,10 +406,10 @@ namespace LumiSoft.Net.SIP.Proxy
             // Local SIP
 
             if(e.Request.RequestLine.Uri is SIP_Uri){                        
-                SIP_Uri requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
+                var requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
                 // Proxy is not responsible for the domain in the Request-URI.
-                if(!this.OnIsLocalUri(requestUri.Host)){
+                if (!this.OnIsLocalUri(requestUri.Host)){
                     /* NAT traversal.
                         When we do record routing, store request sender flow info and request target flow info.
                         Now the tricky part, how proxy later which flow is target (because both sides can send requests).
@@ -425,13 +422,13 @@ namespace LumiSoft.Net.SIP.Proxy
                     */
 
                     SIP_Flow targetFlow = null;
-                    string flowInfo = (route != null && route.Parameters["flowInfo"] != null) ? route.Parameters["flowInfo"].Value : null;
-                    if(flowInfo != null && request.To.Tag != null){
-                        string flow1Tag = flowInfo.Substring(0,flowInfo.IndexOf(':'));
-                        string flow1ID  = flowInfo.Substring(flowInfo.IndexOf(':') + 1,flowInfo.IndexOf('/') - flowInfo.IndexOf(':') - 1);
-                        string flow2ID  = flowInfo.Substring(flowInfo.IndexOf('/') + 1);
-                                             
-                        if(flow1Tag == request.To.Tag){
+                    var flowInfo = (route != null && route.Parameters["flowInfo"] != null) ? route.Parameters["flowInfo"].Value : null;
+                    if (flowInfo != null && request.To.Tag != null){
+                        var flow1Tag = flowInfo.Substring(0,flowInfo.IndexOf(':'));
+                        var flow1ID  = flowInfo.Substring(flowInfo.IndexOf(':') + 1,flowInfo.IndexOf('/') - flowInfo.IndexOf(':') - 1);
+                        var flow2ID  = flowInfo.Substring(flowInfo.IndexOf('/') + 1);
+
+                        if (flow1Tag == request.To.Tag){
                             targetFlow = m_pStack.TransportLayer.GetFlow(flow1ID);
                         }
                         else{;
@@ -444,10 +441,10 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Proxy is responsible for the domain in the Request-URI.
                 else{
                     // Try to get AOR from registrar.
-                    SIP_Registration registration = m_pRegistrar.GetRegistration(requestUri.Address);
+                    var registration = m_pRegistrar.GetRegistration(requestUri.Address);
 
                     // We have AOR specified in request-URI in registrar server.
-                    if(registration != null){
+                    if (registration != null){
                         // Add all AOR SIP contacts to target set.
                         foreach(SIP_RegistrationBinding binding in registration.Bindings){
                             if(binding.ContactURI is SIP_Uri && binding.TTL > 0){
@@ -477,10 +474,10 @@ namespace LumiSoft.Net.SIP.Proxy
             // x.1 Process custom request handlers, if any.
             foreach(SIP_ProxyHandler handler in this.Handlers){
                 try{
-                    SIP_ProxyHandler h = handler;
+                    var h = handler;
 
                     // Reusing existing handler not allowed, create new instance of handler.
-                    if(!handler.IsReusable){
+                    if (!handler.IsReusable){
                         h = (SIP_ProxyHandler)System.Activator.CreateInstance(handler.GetType());
                     }
 
@@ -502,7 +499,7 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             if (statefull){
-                SIP_ProxyContext proxyContext = this.CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
+                var proxyContext = this.CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
                 proxyContext.Start();
             }
             else{
@@ -538,7 +535,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 bool      isStrictRoute = false;
                 SIP_Hop[] hops          = null;
 
-                SIP_Request forwardRequest = request.Copy();
+                var forwardRequest = request.Copy();
 
                 forwardRequest.RequestLine.Uri = requestContext.Targets[0].TargetUri;
 
@@ -650,9 +647,9 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
                 catch(SIP_TransportException x){
-                    string dummy = x.Message;
+                    var dummy = x.Message;
 
-                    if(forwardRequest.RequestLine.Method != SIP_Methods.ACK){
+                    if (forwardRequest.RequestLine.Method != SIP_Methods.ACK){
                         /* RFC 3261 16.9 Handling Transport Errors
                             If the transport layer notifies a proxy of an error when it tries to
                             forward a request (see Section 18.4), the proxy MUST behave as if the
@@ -685,20 +682,20 @@ namespace LumiSoft.Net.SIP.Proxy
         {            
             userName = null;
          
-            SIP_t_Credentials credentials = SIP_Utils.GetCredentials(e.Request,m_pStack.Realm);
+            var credentials = SIP_Utils.GetCredentials(e.Request,m_pStack.Realm);
             // No credentials for our realm.
-            if(credentials == null){
-                SIP_Response notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required,e.Request);
+            if (credentials == null){
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required,e.Request);
                 notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
                     
                 e.ServerTransaction.SendResponse(notAuthenticatedResponse);
                 return false;
             }
                                        
-            Auth_HttpDigest auth = new Auth_HttpDigest(credentials.AuthData,e.Request.RequestLine.Method);
+            var auth = new Auth_HttpDigest(credentials.AuthData,e.Request.RequestLine.Method);
             // Check opaque validity.
-            if(auth.Opaque != m_Opaque){
-                SIP_Response notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Opaque value won't match !",e.Request);
+            if (auth.Opaque != m_Opaque){
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Opaque value won't match !",e.Request);
                 notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
 
                 // Send response
@@ -707,7 +704,7 @@ namespace LumiSoft.Net.SIP.Proxy
             }
             // Check nonce validity.
             if(!m_pStack.DigestNonceManager.NonceExists(auth.Nonce)){
-                SIP_Response notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Invalid nonce value !",e.Request);
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Invalid nonce value !",e.Request);
                 notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
 
                 // Send response
@@ -718,10 +715,10 @@ namespace LumiSoft.Net.SIP.Proxy
 
             m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
 
-            SIP_AuthenticateEventArgs eArgs = this.OnAuthenticate(auth);
+            var eArgs = this.OnAuthenticate(auth);
             // Authenticate failed.
-            if(!eArgs.Authenticated){
-                SIP_Response notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Authentication failed.",e.Request);
+            if (!eArgs.Authenticated){
+                var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Authentication failed.",e.Request);
                 notAuthenticatedResponse.ProxyAuthenticate.Add(new Auth_HttpDigest(m_pStack.Realm,m_pStack.DigestNonceManager.CreateNonce(),m_Opaque).ToChallange());
                     
                 // Send response
@@ -783,7 +780,7 @@ namespace LumiSoft.Net.SIP.Proxy
         internal SIP_ProxyContext CreateProxyContext(SIP_RequestContext requestContext,SIP_ServerTransaction transaction,SIP_Request request,bool addRecordRoute)
         {            
             // Create proxy context that will be responsible for forwarding request.
-            SIP_ProxyContext proxyContext = new SIP_ProxyContext(
+            var proxyContext = new SIP_ProxyContext(
                 this,
                 transaction,
                 request,
@@ -950,8 +947,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <returns></returns>
         internal SIP_AuthenticateEventArgs OnAuthenticate(Auth_HttpDigest auth)
         {
-            SIP_AuthenticateEventArgs eArgs = new SIP_AuthenticateEventArgs(auth);
-            if(this.Authenticate != null){
+            var eArgs = new SIP_AuthenticateEventArgs(auth);
+            if (this.Authenticate != null){
                 this.Authenticate(eArgs);
             }
 

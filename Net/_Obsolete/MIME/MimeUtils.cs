@@ -95,10 +95,11 @@ namespace LumiSoft.Net.Mime
             int second      = -1;
             int zoneMinutes = -1;
 
-            StringReader s = new StringReader(date);
+            var s = new StringReader(date);
 
             //--- Pase date --------------------------------------------------------------------//
-            try{
+            try
+            {
                 day = Convert.ToInt32(s.ReadWord(true,new char[]{'.','-',' '},true));
             }
             catch{
@@ -141,9 +142,9 @@ namespace LumiSoft.Net.Mime
                 if(s.StartsWith(":")){
                     s.ReadSpecifiedLength(1);
                     try{
-                        string secondString = s.ReadWord(true,new char[]{' '},true);
+                        var secondString = s.ReadWord(true,new char[]{' '},true);
                         // Milli seconds specified, remove them.
-                        if(secondString.IndexOf('.') > -1){
+                        if (secondString.IndexOf('.') > -1){
                             secondString = secondString.Substring(0,secondString.IndexOf('.'));
                         }
                         second = Convert.ToInt32(secondString);
@@ -155,8 +156,8 @@ namespace LumiSoft.Net.Mime
 
                 s.ReadToFirstChar();
                 if(s.Available > 3){
-                    string timezone = s.SourceString.Replace(":","");
-                    if(timezone.StartsWith("+") || timezone.StartsWith("-")){
+                    var timezone = s.SourceString.Replace(":","");
+                    if (timezone.StartsWith("+") || timezone.StartsWith("-")){
                         bool utc_add_time = timezone.StartsWith("+");
 
                         // Remove +/- sign
@@ -188,7 +189,7 @@ namespace LumiSoft.Net.Mime
                                     
             // Convert time to UTC
             if(hour != -1 && minute != -1 && second != -1){
-                DateTime d = new DateTime(year,month,day,hour,minute,second).AddMinutes(zoneMinutes);
+                var d = new DateTime(year,month,day,hour,minute,second).AddMinutes(zoneMinutes);
                 return new DateTime(d.Year,d.Month,d.Day,d.Hour,d.Minute,d.Second,DateTimeKind.Utc).ToLocalTime();
             }
 
@@ -219,11 +220,11 @@ namespace LumiSoft.Net.Mime
 				line with nothing preceding the CRLF).
 			*/
 
-			byte[] crlf = new byte[]{(byte)'\r',(byte)'\n'};
-			MemoryStream msHeaders = new MemoryStream();
-			StreamLineReader r = new StreamLineReader(entryStrm);
-			byte[] lineData = r.ReadLine();
-			while(lineData != null){
+			var crlf = new byte[]{(byte)'\r',(byte)'\n'};
+            var msHeaders = new MemoryStream();
+            var r = new StreamLineReader(entryStrm);
+            var lineData = r.ReadLine();
+            while (lineData != null){
 				if(lineData.Length == 0){
 					break;
 				}
@@ -283,15 +284,15 @@ namespace LumiSoft.Net.Mime
 			*/
 
 			using(TextReader r = new StreamReader(new MemoryStream(System.Text.Encoding.Default.GetBytes(headers)))){
-				string line = r.ReadLine();
-				while(line != null){
+				var line = r.ReadLine();
+                while (line != null){
 					// Find line where field begins
 					if(line.ToUpper().StartsWith(fieldName.ToUpper())){
 						// Remove field name and start reading value
-						string fieldValue = line.Substring(fieldName.Length).Trim();
+						var fieldValue = line.Substring(fieldName.Length).Trim();
 
-						// see if multi line value. See commnt above.
-						line = r.ReadLine();
+                        // see if multi line value. See commnt above.
+                        line = r.ReadLine();
 						while(line != null && (line.StartsWith("\t") || line.StartsWith(" "))){
 							fieldValue += line;
 							line = r.ReadLine();
@@ -318,9 +319,9 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public static string ParseHeaderFiledParameter(string fieldName,string parameterName,string headers)
 		{
-			string mainFiled = ParseHeaderField(fieldName,headers);
-			// Parse sub field value
-			if(mainFiled.Length > 0){
+			var mainFiled = ParseHeaderField(fieldName,headers);
+            // Parse sub field value
+            if (mainFiled.Length > 0){
 				int index = mainFiled.ToUpper().IndexOf(parameterName.ToUpper());
 				if(index > -1){	
 					mainFiled = mainFiled.Substring(index + parameterName.Length + 1); // Remove "subFieldName="
@@ -354,9 +355,9 @@ namespace LumiSoft.Net.Mime
 				return MediaType_enum.NotSpecified;
 			}
 
-			string contentType = TextUtils.SplitString(headerFieldValue,';')[0].ToLower();
-			//--- Text/xxx --------------------------------//
-			if(contentType.IndexOf("text/plain") > -1){
+			var contentType = TextUtils.SplitString(headerFieldValue,';')[0].ToLower();
+            //--- Text/xxx --------------------------------//
+            if (contentType.IndexOf("text/plain") > -1){
 				return MediaType_enum.Text_plain;
 			}
 
@@ -550,8 +551,8 @@ namespace LumiSoft.Net.Mime
 				return ContentTransferEncoding_enum.NotSpecified;
 			}
 
-			string encoding = headerFieldValue.ToLower();
-			if(encoding == "7bit"){
+			var encoding = headerFieldValue.ToLower();
+            if (encoding == "7bit"){
 				return ContentTransferEncoding_enum._7bit;
 			}
 
@@ -610,8 +611,8 @@ namespace LumiSoft.Net.Mime
 				return ContentDisposition_enum.NotSpecified;
 			}
 
-			string disposition = headerFieldValue.ToLower();
-			if(disposition.IndexOf("attachment") > -1){
+			var disposition = headerFieldValue.ToLower();
+            if (disposition.IndexOf("attachment") > -1){
 				return ContentDisposition_enum.Attachment;
 			}
 
@@ -753,17 +754,17 @@ namespace LumiSoft.Net.Mime
                 =?iso-8859-1?q?this=20is=20some=20text?=
             */
 
-            StringReader  r      = new StringReader(text);
-            StringBuilder retVal = new StringBuilder();
+            var  r      = new StringReader(text);
+            var retVal = new StringBuilder();
 
             // We need to loop all words, if encoded word, decode it, othwerwise just append to return value.
             bool lastIsEncodedWord = false;
             while(r.Available > 0){
-                string whiteSpaces = r.ReadToFirstChar();
+                var whiteSpaces = r.ReadToFirstChar();
 
                 // Probably is encoded-word, we try to parse it.
-                if(r.StartsWith("=?") && r.SourceString.IndexOf("?=") > -1){
-                    StringBuilder encodedWord = new StringBuilder();
+                if (r.StartsWith("=?") && r.SourceString.IndexOf("?=") > -1){
+                    var encodedWord = new StringBuilder();
                     string        decodedWord = null;
 
                     try{
@@ -773,23 +774,23 @@ namespace LumiSoft.Net.Mime
                         encodedWord.Append(r.ReadSpecifiedLength(2));
 
                         // Read charset
-                        string charset = r.QuotedReadToDelimiter('?');
+                        var charset = r.QuotedReadToDelimiter('?');
                         encodedWord.Append(charset + "?");
 
                         // Read encoding
-                        string encoding = r.QuotedReadToDelimiter('?');
+                        var encoding = r.QuotedReadToDelimiter('?');
                         encodedWord.Append(encoding + "?");
 
                         // Read text
-                        string encodedText = r.QuotedReadToDelimiter('?');
+                        var encodedText = r.QuotedReadToDelimiter('?');
                         encodedWord.Append(encodedText + "?");
 
                         // We must have remaining '=' here
                         if(r.StartsWith("=")){
                             encodedWord.Append(r.ReadSpecifiedLength(1));
 
-                            Encoding c = Encoding.GetEncoding(charset);
-                            if(encoding.ToLower() == "q"){
+                            var c = Encoding.GetEncoding(charset);
+                            if (encoding.ToLower() == "q"){
                                 decodedWord = Core.QDecode(c,encodedText);
                             }
                             else if(encoding.ToLower() == "b"){
@@ -854,8 +855,8 @@ namespace LumiSoft.Net.Mime
 			// quoted strings, encode full text.
 
 			if(text.IndexOf("\"") > -1){
-				string retVal = text;
-				int offset = 0;							
+				var retVal = text;
+                int offset = 0;							
 				while(offset < retVal.Length - 1){
 					int quoteStartIndex = retVal.IndexOf("\"",offset);
 					// There is no more qouted strings, but there are some text left
@@ -868,14 +869,14 @@ namespace LumiSoft.Net.Mime
 						break;
 					}
 
-					string leftPart = retVal.Substring(0,quoteStartIndex);
-					string rightPart = retVal.Substring(quoteEndIndex + 1);
-					string quotedString = retVal.Substring(quoteStartIndex + 1,quoteEndIndex - quoteStartIndex - 1);
+					var leftPart = retVal.Substring(0,quoteStartIndex);
+                    var rightPart = retVal.Substring(quoteEndIndex + 1);
+                    var quotedString = retVal.Substring(quoteStartIndex + 1,quoteEndIndex - quoteStartIndex - 1);
 
-					// Encode only not ASCII text
-					if(!Core.IsAscii(quotedString)){
-						string quotedStringCEncoded = Core.CanonicalEncode(quotedString,"utf-8");
-						retVal = leftPart + "\"" + quotedStringCEncoded + "\"" + rightPart;
+                    // Encode only not ASCII text
+                    if (!Core.IsAscii(quotedString)){
+						var quotedStringCEncoded = Core.CanonicalEncode(quotedString,"utf-8");
+                        retVal = leftPart + "\"" + quotedStringCEncoded + "\"" + rightPart;
 						offset += quoteEndIndex + 1 + quotedStringCEncoded.Length - quotedString.Length;
 					}
 					else{
@@ -921,8 +922,8 @@ namespace LumiSoft.Net.Mime
             if(data.Length > 76){
                 int startPosition       = 0;
                 int lastPossibleFoldPos = -1;
-                StringBuilder retVal = new StringBuilder();
-                for(int i=0;i<data.Length;i++){
+                var retVal = new StringBuilder();
+                for (int i=0;i<data.Length;i++){
                     char c = data[i];
                     // We have possible fold point
                     if(c == ' ' || c == '\t'){

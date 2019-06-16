@@ -19,7 +19,7 @@ namespace LumiSoft.Net.POP3.Client
             }
 
             // <status-code> SP <response-text>
-            string[] code_text = responseLine.Split(new char[]{ },2);
+            var code_text = responseLine.Split(new char[]{ },2);
             StatusCode = code_text[0];
             if(code_text.Length == 2){
                 ResponseText = code_text[1];

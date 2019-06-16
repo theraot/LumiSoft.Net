@@ -15,11 +15,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>text</b> is null reference.</exception>
         public IMAP_r_u_Bye(string text)
         {
-            if(text == null){
-                throw new ArgumentNullException("text");
-            }
-
-            Text = text;
+            Text = text ?? throw new ArgumentNullException("text");
         }
 
         /// <summary>
@@ -69,7 +65,7 @@ namespace LumiSoft.Net.IMAP
                Example:    S: * BYE Autologout; idle for too long
             */
 
-            StringReader r = new StringReader(byeResponse);
+            var r = new StringReader(byeResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "BYE"
@@ -86,7 +82,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:  S: * BYE Autologout; idle for too long
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* BYE " + Text + "\r\n");
 
             return retVal.ToString();

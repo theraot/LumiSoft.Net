@@ -14,11 +14,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public IMAP_ClientException(IMAP_r_ServerStatus response) : base(response.ToString())
         {
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            Response = response;            
+            Response = response ?? throw new ArgumentNullException("response");            
         }
 
         /// <summary>

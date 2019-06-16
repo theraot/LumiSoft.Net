@@ -33,8 +33,8 @@ namespace LumiSoft.Net.DNS
         {
             // Name server name
 
-			string server = "";			
-			if(Dns_Client.GetQName(reply,ref offset,ref server)){			
+			var server = "";
+            if (Dns_Client.GetQName(reply,ref offset,ref server)){			
 				return new DNS_rr_NS(name,server,ttl);
 			}
 

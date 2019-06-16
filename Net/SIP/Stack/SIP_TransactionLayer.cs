@@ -24,11 +24,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b> is null reference.</exception>
         internal SIP_TransactionLayer(SIP_Stack stack)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-
-            m_pStack = stack;
+            m_pStack = stack ?? throw new ArgumentNullException("stack");
 
             m_pClientTransactions = new Dictionary<string,SIP_ClientTransaction>();
             m_pServerTransactions = new Dictionary<string,SIP_ServerTransaction>();
@@ -92,7 +88,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             // Add Via:
             if(addVia){
-                SIP_t_ViaParm via = new SIP_t_ViaParm();
+                var via = new SIP_t_ViaParm();
                 via.ProtocolName = "SIP";
                 via.ProtocolVersion = "2.0";
                 via.ProtocolTransport = flow.Transport;
@@ -103,7 +99,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
                         
             lock(m_pClientTransactions){
-                SIP_ClientTransaction transaction = new SIP_ClientTransaction(m_pStack,flow,request);              
+                var transaction = new SIP_ClientTransaction(m_pStack,flow,request);
                 m_pClientTransactions.Add(transaction.Key,transaction);
                 transaction.StateChanged += new EventHandler(delegate(object s,EventArgs e){
                     if(transaction.State == SIP_TransactionState.Terminated){
@@ -113,8 +109,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 });
 
-                SIP_Dialog dialog = MatchDialog(request);
-                if(dialog != null){
+                var dialog = MatchDialog(request);
+                if (dialog != null){
                     dialog.AddTransaction(transaction);
                 }
 
@@ -143,7 +139,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             lock(m_pServerTransactions){
-                SIP_ServerTransaction transaction = new SIP_ServerTransaction(m_pStack,flow,request);
+                var transaction = new SIP_ServerTransaction(m_pStack,flow,request);
                 m_pServerTransactions.Add(transaction.Key,transaction);
                 transaction.StateChanged += new EventHandler(delegate(object s,EventArgs e){
                     if(transaction.State == SIP_TransactionState.Terminated){
@@ -153,8 +149,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 });
 
-                SIP_Dialog dialog = MatchDialog(request);
-                if(dialog != null){
+                var dialog = MatchDialog(request);
+                if (dialog != null){
                     dialog.AddTransaction(transaction);
                 }
 
@@ -189,8 +185,8 @@ namespace LumiSoft.Net.SIP.Stack
                 For avoiding key collision, we add branch + '-' + 'sent-by' + CANCEL for cancel index key.
                 ACK has also same branch, but we won't do transaction for ACK, so it isn't problem.
             */
-            string key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
-            if(request.RequestLine.Method == SIP_Methods.CANCEL){
+            var key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
+            if (request.RequestLine.Method == SIP_Methods.CANCEL){
                 key += "-CANCEL";
             }
 
@@ -226,8 +222,8 @@ namespace LumiSoft.Net.SIP.Stack
 
             SIP_ClientTransaction retVal = null;
 
-            string transactionID = response.Via.GetTopMostValue().Branch + "-" + response.CSeq.RequestMethod;
-            lock(m_pClientTransactions){
+            var transactionID = response.Via.GetTopMostValue().Branch + "-" + response.CSeq.RequestMethod;
+            lock (m_pClientTransactions){
                 m_pClientTransactions.TryGetValue(transactionID,out retVal);
             }
             
@@ -267,8 +263,8 @@ namespace LumiSoft.Net.SIP.Stack
                 For avoiding key collision, we add branch + '-' + 'sent-by' + CANCEL for cancel index key.
                 ACK has also same branch, but we won't do transaction for ACK, so it isn't problem.
             */
-            string key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
-            if(request.RequestLine.Method == SIP_Methods.CANCEL){
+            var key = request.Via.GetTopMostValue().Branch + '-' + request.Via.GetTopMostValue().SentBy;
+            if (request.RequestLine.Method == SIP_Methods.CANCEL){
                 key += "-CANCEL";
             }
 
@@ -304,8 +300,8 @@ namespace LumiSoft.Net.SIP.Stack
 
             // NOTE: There we don't add '-CANCEL' because we want to get CANCEL matching transaction, not CANCEL
             //       transaction itself.
-            string key = cancelRequest.Via.GetTopMostValue().Branch + '-' + cancelRequest.Via.GetTopMostValue().SentBy;            
-            lock(m_pServerTransactions){
+            var key = cancelRequest.Via.GetTopMostValue().Branch + '-' + cancelRequest.Via.GetTopMostValue().SentBy;
+            lock (m_pServerTransactions){
                 m_pServerTransactions.TryGetValue(key,out retVal);
             }
 
@@ -328,8 +324,8 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("response");
             }
 
-            string dialogID = "";
-            if(transaction is SIP_ServerTransaction){
+            var dialogID = "";
+            if (transaction is SIP_ServerTransaction){
                 dialogID = response.CallID + "-" + response.To.Tag + "-" + response.From.Tag;
             }
             else{
@@ -390,12 +386,12 @@ namespace LumiSoft.Net.SIP.Stack
             SIP_Dialog dialog = null;
 
             try{
-                string callID    = request.CallID;
-                string localTag  = request.To.Tag;
-                string remoteTag = request.From.Tag;                                        
-                if(callID != null && localTag != null && remoteTag != null){
-                    string dialogID = callID + "-" + localTag + "-" + remoteTag;
-                    lock(m_pDialogs){                        
+                var callID    = request.CallID;
+                var localTag  = request.To.Tag;
+                var remoteTag = request.From.Tag;
+                if (callID != null && localTag != null && remoteTag != null){
+                    var dialogID = callID + "-" + localTag + "-" + remoteTag;
+                    lock (m_pDialogs){                        
                         m_pDialogs.TryGetValue(dialogID,out dialog);
                     }
                 }
@@ -421,12 +417,12 @@ namespace LumiSoft.Net.SIP.Stack
             SIP_Dialog dialog = null;
 
             try{
-                string callID  = response.CallID;
-                string fromTag = response.From.Tag; 
-                string toTag   = response.To.Tag;                                       
-                if(callID != null && fromTag != null && toTag != null){
-                    string dialogID = callID + "-" + fromTag + "-" + toTag;
-                    lock(m_pDialogs){
+                var callID  = response.CallID;
+                var fromTag = response.From.Tag;
+                var toTag   = response.To.Tag;
+                if (callID != null && fromTag != null && toTag != null){
+                    var dialogID = callID + "-" + fromTag + "-" + toTag;
+                    lock (m_pDialogs){
                         m_pDialogs.TryGetValue(dialogID,out dialog);
                     }
                 }
@@ -443,7 +439,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Transaction[] Transactions
         {
             get{
-                List<SIP_Transaction> retVal = new List<SIP_Transaction>();
+                var retVal = new List<SIP_Transaction>();
                 retVal.AddRange(this.ClientTransactions);
                 retVal.AddRange(this.ServerTransactions);
 
@@ -458,7 +454,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 lock(m_pClientTransactions){
-                    SIP_ClientTransaction[] retVal = new SIP_ClientTransaction[m_pClientTransactions.Values.Count];
+                    var retVal = new SIP_ClientTransaction[m_pClientTransactions.Values.Count];
                     m_pClientTransactions.Values.CopyTo(retVal,0);
 
                     return retVal; 
@@ -473,7 +469,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 lock(m_pServerTransactions){
-                    SIP_ServerTransaction[] retVal = new SIP_ServerTransaction[m_pServerTransactions.Values.Count];
+                    var retVal = new SIP_ServerTransaction[m_pServerTransactions.Values.Count];
                     m_pServerTransactions.Values.CopyTo(retVal,0);
 
                     return retVal; 
@@ -488,7 +484,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 lock(m_pDialogs){
-                    SIP_Dialog[] retVal = new SIP_Dialog[m_pDialogs.Values.Count];
+                    var retVal = new SIP_Dialog[m_pDialogs.Values.Count];
                     m_pDialogs.Values.CopyTo(retVal,0);
 
                     return retVal; 

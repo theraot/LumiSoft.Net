@@ -32,9 +32,9 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="email">Email address.</param>
         public EmailAddress Add(EmailAddressType_enum type,string email)
         {            
-            Item item = m_pOwner.Items.Add("EMAIL",EmailAddress.EmailTypeToString(type),"");
+            var item = m_pOwner.Items.Add("EMAIL",EmailAddress.EmailTypeToString(type),"");
             item.SetDecodedValue(email);
-            EmailAddress emailAddress = new EmailAddress(item,type,email);
+            var emailAddress = new EmailAddress(item,type,email);
             m_pCollection.Add(emailAddress);
 
             return emailAddress;

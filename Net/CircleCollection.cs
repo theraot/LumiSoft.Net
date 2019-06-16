@@ -101,7 +101,7 @@ namespace LumiSoft.Net
             }
 
             lock(m_pItems){
-                T item = m_pItems[m_Index];
+                var item = m_pItems[m_Index];
 
                 m_Index++;
                 if(m_Index >= m_pItems.Count){
@@ -131,8 +131,8 @@ namespace LumiSoft.Net
         {
             lock(m_pItems){
                 int index  = m_Index;
-                T[] retVal = new T[m_pItems.Count];
-                for(int i=0;i<m_pItems.Count;i++){
+                var retVal = new T[m_pItems.Count];
+                for (int i=0;i<m_pItems.Count;i++){
                     retVal[i] = m_pItems[index];
 
                     index++;

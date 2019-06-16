@@ -53,11 +53,8 @@ namespace LumiSoft.Net.SIP.Message
             }
             
             // Parse content-coding
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid Content-Language value, language-tag value is missing !");
-            }
-            m_LanguageTag = word;
+            var word = reader.ReadWord();
+            m_LanguageTag = word ?? throw new SIP_ParseException("Invalid Content-Language value, language-tag value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -76,7 +73,7 @@ namespace LumiSoft.Net.SIP.Message
                 subtag           =  1*8ALPHA
             */
 
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append(m_LanguageTag);
             retVal.Append(ParametersToString());
 

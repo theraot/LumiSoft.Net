@@ -19,8 +19,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            string[] code_value = value.Split(new char[]{' '},2);
-            if(!string.Equals("TRYCREATE",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_value = value.Split(new char[]{' '},2);
+            if (!string.Equals("TRYCREATE",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid TRYCREATE response value.","value");
             }
 

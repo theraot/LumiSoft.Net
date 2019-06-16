@@ -27,13 +27,10 @@ namespace LumiSoft.Net.ABNF
             if(min > max){
                 throw new ArgumentException("Argument 'min' value must be <= argument 'max' value.");
             }
-            if(element == null){
-                throw new ArgumentNullException("element");
-            }
 
             Min      = min;
             Max      = max;
-            Element = element;
+            Element = element ?? throw new ArgumentNullException("element");
         }
 
         /// <summary>
@@ -58,8 +55,8 @@ namespace LumiSoft.Net.ABNF
 
             // --- range ------------------------------------
             if(char.IsDigit((char)reader.Peek())){
-                StringBuilder minString = new StringBuilder();
-                while(char.IsDigit((char)reader.Peek())){
+                var minString = new StringBuilder();
+                while (char.IsDigit((char)reader.Peek())){
                     minString.Append((char)reader.Read());
                 }
                 min = Convert.ToInt32(minString.ToString());
@@ -68,8 +65,8 @@ namespace LumiSoft.Net.ABNF
                 reader.Read();
             }
             if(char.IsDigit((char)reader.Peek())){
-                StringBuilder maxString = new StringBuilder();
-                while(char.IsDigit((char)reader.Peek())){
+                var maxString = new StringBuilder();
+                while (char.IsDigit((char)reader.Peek())){
                     maxString.Append((char)reader.Read());
                 }
                 max = Convert.ToInt32(maxString.ToString());

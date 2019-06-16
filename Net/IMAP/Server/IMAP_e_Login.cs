@@ -15,15 +15,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>user</b> or <b>password</b> is null reference.</exception>
         internal IMAP_e_Login(string user,string password)
         {
-            if(user == null){
-                throw new ArgumentNullException("user");
-            }
-            if(password == null){
-                throw new ArgumentNullException("password");
-            }
-
-            UserName     = user;
-            Password = password;
+            UserName     = user ?? throw new ArgumentNullException("user");
+            Password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>

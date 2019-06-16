@@ -20,24 +20,11 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b>,<b>identifier</b>,<b>rights</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_SetAcl(string folder,string identifier,IMAP_Flags_SetType flagsSetType,string rights,IMAP_r_ServerStatus response)
         {
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-            if(identifier == null){
-                throw new ArgumentNullException("identifier");
-            }
-            if(rights == null){
-                throw new ArgumentNullException("rights");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            m_pResponse  = response;
-            Folder     = folder;
-            Identifier = identifier;
+            m_pResponse  = response ?? throw new ArgumentNullException("response");
+            Folder     = folder ?? throw new ArgumentNullException("folder");
+            Identifier = identifier ?? throw new ArgumentNullException("identifier");
             FlagsSetType    = flagsSetType;
-            Rights     = rights;
+            Rights     = rights ?? throw new ArgumentNullException("rights");
         }
 
         /// <summary>
@@ -48,12 +35,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

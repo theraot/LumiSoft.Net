@@ -14,11 +14,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentNullException">Is raised when <b>charsets</b> is null reference.</exception>
         public IMAP_t_orc_BadCharset(string[] charsets)
         {
-            if(charsets == null){
-                throw new ArgumentNullException("charsets");
-            }
-
-            Charsets = charsets;
+            Charsets = charsets ?? throw new ArgumentNullException("charsets");
         }
 
         /// <summary>
@@ -33,8 +29,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            string[] code_value = value.Split(new char[]{' '},2);
-            if(!string.Equals("BADCHARSET",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
+            var code_value = value.Split(new char[]{' '},2);
+            if (!string.Equals("BADCHARSET",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid BADCHARSET response value.","value");
             }
 

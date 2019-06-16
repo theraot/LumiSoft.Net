@@ -13,11 +13,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="packet">RTP packet.</param>
         public RTP_PacketEventArgs(RTP_Packet packet)
         {
-            if(packet == null){
-                throw new ArgumentNullException("packet");
-            }
-
-            Packet = packet;
+            Packet = packet ?? throw new ArgumentNullException("packet");
         }
 
         /// <summary>

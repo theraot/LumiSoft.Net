@@ -66,8 +66,8 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException(mediaType);
             }
 
-            string[] type_subtype = mediaType.Split(new char[]{'/',},2);
-            if(type_subtype.Length == 2){
+            var type_subtype = mediaType.Split(new char[]{'/',},2);
+            if (type_subtype.Length == 2){
                 if(type_subtype[0] == "" || !MIME_Reader.IsToken(type_subtype[0])){
                     throw new ArgumentException("Invalid argument 'mediaType' value '" + mediaType + "', value must be token.");
                 }                
@@ -110,16 +110,16 @@ namespace LumiSoft.Net.MIME
             // We should not have encoded words here, but some email clients do this, so encoded them if any.
             value = MIME_Encoding_EncodedWord.DecodeS(value);
 
-            MIME_h_ContentType retVal = new MIME_h_ContentType();
-            
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var retVal = new MIME_h_ContentType();
+
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
             
-            MIME_Reader r = new MIME_Reader(name_value[1]);
-            string type = r.Token();
-            if(type == null){
+            var r = new MIME_Reader(name_value[1]);
+            var type = r.Token();
+            if (type == null){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
             retVal.Type = type;
@@ -128,8 +128,8 @@ namespace LumiSoft.Net.MIME
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
 
-            string subtype = r.Token();
-            if(subtype == null){
+            var subtype = r.Token();
+            if (subtype == null){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
             retVal.SubType = subtype;
@@ -157,7 +157,7 @@ namespace LumiSoft.Net.MIME
                 return m_ParseValue;
             }
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("Content-Type: " + Type + "/" + SubType);
             retVal.Append(Parameters.ToString(parmetersCharset));
             retVal.Append("\r\n");

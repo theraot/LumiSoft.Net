@@ -32,7 +32,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="number">Phone number.</param>
         public void Add(PhoneNumberType_enum type,string number)
         {            
-            Item item = m_pOwner.Items.Add("TEL",PhoneNumber.PhoneTypeToString(type),number);            
+            var item = m_pOwner.Items.Add("TEL",PhoneNumber.PhoneTypeToString(type),number);
             m_pCollection.Add(new PhoneNumber(item,type,number));
         }
 

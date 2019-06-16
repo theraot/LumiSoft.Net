@@ -19,23 +19,10 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceFolder</b>,<b>targetFolder</b>,<b>messagesInfo</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_Copy(string sourceFolder,string targetFolder,IMAP_MessageInfo[] messagesInfo,IMAP_r_ServerStatus response)
         {
-            if(sourceFolder == null){
-                throw new ArgumentNullException("sourceFolder");
-            }
-            if(targetFolder == null){
-                throw new ArgumentNullException("targetFolder");
-            }
-            if(messagesInfo == null){
-                throw new ArgumentNullException("messagesInfo");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            m_pResponse     = response;
-            SourceFolder  = sourceFolder;
-            TargetFolder  = targetFolder;
-            MessagesInfo = messagesInfo;
+            m_pResponse     = response ?? throw new ArgumentNullException("response");
+            SourceFolder  = sourceFolder ?? throw new ArgumentNullException("sourceFolder");
+            TargetFolder  = targetFolder ?? throw new ArgumentNullException("targetFolder");
+            MessagesInfo = messagesInfo ?? throw new ArgumentNullException("messagesInfo");
         }
 
         /// <summary>
@@ -46,12 +33,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

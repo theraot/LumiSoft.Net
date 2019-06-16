@@ -37,7 +37,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns new cloned request.</returns>
         public SIP_Response Copy()
         {
-            SIP_Response retVal = SIP_Response.Parse(this.ToByteData());
+            var retVal = SIP_Response.Parse(this.ToByteData());
 
             return retVal;
         }
@@ -114,13 +114,13 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("stream");
             }
 
-            SIP_Response retVal = new SIP_Response();
+            var retVal = new SIP_Response();
 
             // Parse Response-line
-            StreamLineReader r = new StreamLineReader(stream);
+            var r = new StreamLineReader(stream);
             r.Encoding = "utf-8";
-            string[] version_code_text = r.ReadLineString().Split(new char[]{' '},3);
-            if(version_code_text.Length != 3){
+            var version_code_text = r.ReadLineString().Split(new char[]{' '},3);
+            if (version_code_text.Length != 3){
                 throw new SIP_ParseException("Invalid SIP Status-Line syntax ! Syntax: {SIP-Version SP Status-Code SP Reason-Phrase}.");
             }
             // SIP-Version
@@ -157,7 +157,7 @@ namespace LumiSoft.Net.SIP.Stack
             // Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
 
             // Add response-line
-            byte[] responseLine = Encoding.UTF8.GetBytes("SIP/" + this.SipVersion.ToString("f1").Replace(',','.') + " " + this.StatusCode + " " + this.ReasonPhrase + "\r\n");
+            var responseLine = Encoding.UTF8.GetBytes("SIP/" + this.SipVersion.ToString("f1").Replace(',','.') + " " + this.StatusCode + " " + this.ReasonPhrase + "\r\n");
             stream.Write(responseLine,0,responseLine.Length);
 
             // Add SIP-message
@@ -170,7 +170,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns></returns>
         public byte[] ToByteData()
         {              
-            MemoryStream retVal = new MemoryStream();
+            var retVal = new MemoryStream();
             ToStream(retVal);
 
             return retVal.ToArray();
@@ -261,11 +261,7 @@ namespace LumiSoft.Net.SIP.Stack
             get{ return m_ReasonPhrase; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("ReasonPhrase");
-                }
-
-                m_ReasonPhrase = value;
+                m_ReasonPhrase = value ?? throw new ArgumentNullException("ReasonPhrase");
             }
         }
 
@@ -283,8 +279,8 @@ namespace LumiSoft.Net.SIP.Stack
                     throw new ArgumentNullException("StatusCode_ReasonPhrase");
                 }
 
-                string[] code_reason = value.Split(new char[]{' '},2);
-                if(code_reason.Length != 2){
+                var code_reason = value.Split(new char[]{' '},2);
+                if (code_reason.Length != 2){
                     throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Reason-Phrase value !");
                 }
                 try{

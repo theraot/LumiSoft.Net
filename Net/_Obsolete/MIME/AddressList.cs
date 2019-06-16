@@ -94,8 +94,8 @@ namespace LumiSoft.Net.Mime
 		{
 			addressList = addressList.Trim();
 				
-			StringReader reader = new StringReader(addressList);
-			while(reader.SourceString.Length > 0){
+			var reader = new StringReader(addressList);
+            while (reader.SourceString.Length > 0){
 				// See if mailbox or group. If ',' is before ':', then mailbox
 				// Example: xxx@domain.com,	group:xxxgroup@domain.com;
 				int commaIndex = TextUtils.QuotedIndexOf(reader.SourceString,','); 
@@ -107,15 +107,15 @@ namespace LumiSoft.Net.Mime
                     //System.Windows.Forms.MessageBox.Show(reader.SourceString + "#" + reader.OriginalString);
 
 					// Read to ',' or to end if last element
-                    MailboxAddress address = MailboxAddress.Parse(reader.QuotedReadToDelimiter(','));
-					m_pAddresses.Add(address);
+                    var address = MailboxAddress.Parse(reader.QuotedReadToDelimiter(','));
+                    m_pAddresses.Add(address);
 					address.Owner = this;
 				}
 					// Group
 				else{
 					// Read to ';', this is end of group
-                    GroupAddress address = GroupAddress.Parse(reader.QuotedReadToDelimiter(';'));
-					m_pAddresses.Add(address);
+                    var address = GroupAddress.Parse(reader.QuotedReadToDelimiter(';'));
+                    m_pAddresses.Add(address);
                     address.Owner = this;
 
 					// If there are next items, remove first comma because it's part of group address
@@ -134,8 +134,8 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public string ToAddressListString()
 		{
-			StringBuilder retVal = new StringBuilder();
-			for(int i=0;i<m_pAddresses.Count;i++){
+			var retVal = new StringBuilder();
+            for (int i=0;i<m_pAddresses.Count;i++){
 				if(m_pAddresses[i] is MailboxAddress){
 					// For last address don't add , and <TAB>
 					if(i == (m_pAddresses.Count - 1)){
@@ -185,8 +185,8 @@ namespace LumiSoft.Net.Mime
 		public MailboxAddress[] Mailboxes
 		{
 			get{ 
-				ArrayList adressesAll = new ArrayList();
-				foreach(Address adress in this){
+				var adressesAll = new ArrayList();
+                foreach (Address adress in this){
 					if(!adress.IsGroupAddress){
 						adressesAll.Add((MailboxAddress)adress);
 					}
@@ -197,8 +197,8 @@ namespace LumiSoft.Net.Mime
 					}
 				}
 
-				MailboxAddress[] retVal = new MailboxAddress[adressesAll.Count];
-				adressesAll.CopyTo(retVal);
+				var retVal = new MailboxAddress[adressesAll.Count];
+                adressesAll.CopyTo(retVal);
 
 				return retVal;
 			}

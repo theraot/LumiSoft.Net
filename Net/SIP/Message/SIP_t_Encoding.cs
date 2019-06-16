@@ -53,11 +53,8 @@ namespace LumiSoft.Net.SIP.Message
             }
             
             // Parse content-coding
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'encoding' value is missing !");
-            }
-            m_ContentEncoding = word;
+            var word = reader.ReadWord();
+            m_ContentEncoding = word ?? throw new SIP_ParseException("Invalid 'encoding' value is missing !");
 
             // Parse parameters
             ParseParameters(reader);
@@ -76,7 +73,7 @@ namespace LumiSoft.Net.SIP.Message
                 content-coding   =  token
             */
 
-            StringBuilder retVal = new StringBuilder();           
+            var retVal = new StringBuilder();
             retVal.Append(m_ContentEncoding);
             retVal.Append(ParametersToString());
 
@@ -109,8 +106,8 @@ namespace LumiSoft.Net.SIP.Message
         public double QValue
         {
             get{
-                SIP_Parameter parameter = this.Parameters["qvalue"];
-                if(parameter != null){
+                var parameter = this.Parameters["qvalue"];
+                if (parameter != null){
                     return Convert.ToDouble(parameter.Value);
                 }
 

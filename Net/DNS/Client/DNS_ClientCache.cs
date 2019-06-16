@@ -21,11 +21,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
             public CacheEntry(DnsServerResponse response,DateTime expires)
             {
-                if(response == null){
-                    throw new ArgumentNullException("response");
-                }
-
-                Response = response;
+                Response = response ?? throw new ArgumentNullException("response");
                 Expires   = expires;
             }
 
@@ -75,8 +71,8 @@ namespace LumiSoft.Net.DNS.Client
         {
             lock(m_pCache){
                 // Copy entries to new array.
-                List<KeyValuePair<string,CacheEntry>> values = new List<KeyValuePair<string,CacheEntry>>();
-                foreach(KeyValuePair<string,CacheEntry> entry in m_pCache){
+                var values = new List<KeyValuePair<string,CacheEntry>>();
+                foreach (KeyValuePair<string,CacheEntry> entry in m_pCache){
                     values.Add(entry);
                 }
 

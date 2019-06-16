@@ -82,7 +82,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="e">Event data.</param>
         private void m_pCallee_ResponseReceived(object sender,SIP_ResponseReceivedEventArgs e)
         {
-            SIP_ServerTransaction serverTransaction = (SIP_ServerTransaction)e.ClientTransaction.Tag;
+            var serverTransaction = (SIP_ServerTransaction)e.ClientTransaction.Tag;
             //SIP_Response response = serverTransaction.Request.CreateResponse(e.Response.StatusCode_ReasonPhrase);
             //CopyMessage(e.Response,response,new string[]{"Via:","Call-Id:","To:","From:","CSeq:","Contact:","Route:","Record-Route:","Allow:","Supported:"});
             //serverTransaction.SendResponse(response);
@@ -134,7 +134,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="e">Event data.</param>
         private void m_pCaller_ResponseReceived(object sender,SIP_ResponseReceivedEventArgs e)
         {
-            SIP_ServerTransaction serverTransaction = (SIP_ServerTransaction)e.ClientTransaction.Tag;
+            var serverTransaction = (SIP_ServerTransaction)e.ClientTransaction.Tag;
             //SIP_Response response = serverTransaction.Request.CreateResponse(e.Response.StatusCode_ReasonPhrase);
             //CopyMessage(e.Response,response,new string[]{"Via:","Call-Id:","To:","From:","CSeq:","Contact:","Route:","Record-Route:","Allow:","Supported:"});
             //serverTransaction.SendResponse(response);

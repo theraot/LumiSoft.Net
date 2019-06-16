@@ -28,11 +28,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>replyLines</b> is null reference.</exception>
         public SMTP_ClientException(SMTP_t_ReplyLine[] replyLines) : base(replyLines[0].ToString().TrimEnd())
         {
-            if(replyLines == null){
-                throw new ArgumentNullException("replyLines");
-            }
-
-            ReplyLines = replyLines;            
+            ReplyLines = replyLines ?? throw new ArgumentNullException("replyLines");            
         }
 
         /// <summary>

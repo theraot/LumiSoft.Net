@@ -31,7 +31,7 @@ namespace LumiSoft.Net
 		{   
             // TODO: Allow to buffer source stream reads
       
-            byte[] buffer      = m_Buffer;
+            var buffer      = m_Buffer;
             int    posInBuffer = 0;
 
 			int prevByte    = m_StrmSource.ReadByte();
@@ -39,14 +39,14 @@ namespace LumiSoft.Net
 			while(prevByte > -1){
 			    // CRLF line found
 				if((prevByte == (byte)'\r' && (byte)currByteInt == (byte)'\n')){
-                    byte[] retVal = new byte[posInBuffer];
+                    var retVal = new byte[posInBuffer];
                     Array.Copy(buffer,retVal,posInBuffer);
 					return retVal;
 				}
                 // LF line found and only LF lines allowed
 
                 if(!CRLF_LinesOnly && currByteInt == '\n'){
-                    byte[] retVal = new byte[posInBuffer + 1];
+                    var retVal = new byte[posInBuffer + 1];
                     Array.Copy(buffer,retVal,posInBuffer + 1);
                     retVal[posInBuffer] = (byte)prevByte;
                     return retVal;
@@ -54,7 +54,7 @@ namespace LumiSoft.Net
 
                 // Buffer is full, add addition m_ReadBufferSize bytes
                 if(posInBuffer == buffer.Length){
-                    byte[] newBuffer = new byte[buffer.Length + m_ReadBufferSize];
+                    var newBuffer = new byte[buffer.Length + m_ReadBufferSize];
                     Array.Copy(buffer,newBuffer,buffer.Length);
                     buffer = newBuffer;
                 }
@@ -68,7 +68,7 @@ namespace LumiSoft.Net
             
 			// Line isn't terminated with <CRLF> and has some bytes left, return them.
 			if(posInBuffer > 0){
-			    byte[] retVal = new byte[posInBuffer];
+			    var retVal = new byte[posInBuffer];
                 Array.Copy(buffer,retVal,posInBuffer);
 				return retVal;
 			}
@@ -82,8 +82,8 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public string ReadLineString()
 		{
-			byte[] line = ReadLine();
-			if(line != null)
+			var line = ReadLine();
+            if (line != null)
             {
                 if(m_Encoding == null || m_Encoding == ""){
 					return System.Text.Encoding.Default.GetString(line);					

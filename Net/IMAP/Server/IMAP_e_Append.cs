@@ -21,21 +21,11 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is riased when <b>folder</b>,<b>flags</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_Append(string folder,string[] flags,DateTime date,int size,IMAP_r_ServerStatus response)
         {
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-            if(flags == null){
-                throw new ArgumentNullException("flags");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-
-            Folder    = folder;
-            Flags    = flags;
+            Folder    = folder ?? throw new ArgumentNullException("folder");
+            Flags    = flags ?? throw new ArgumentNullException("flags");
             InternalDate      = date;
             Size      = size;
-            m_pResponse = response;
+            m_pResponse = response ?? throw new ArgumentNullException("response");
         }
 
         /// <summary>
@@ -46,12 +36,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

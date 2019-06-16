@@ -16,11 +16,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>fileName</b> is null reference.</exception>
         public FTP_e_GetFileSize(string fileName)
         {
-            if(fileName == null){
-                throw new ArgumentNullException("fileName");
-            }
-
-            FileName = fileName;
+            FileName = fileName ?? throw new ArgumentNullException("fileName");
         }
 
         /// <summary>

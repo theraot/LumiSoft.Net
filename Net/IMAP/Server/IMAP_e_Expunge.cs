@@ -18,19 +18,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <exception cref="ArgumentNullException">Is riased when <b>folder</b>,<b>msgInfo</b> or <b>response</b> is null reference.</exception>
         internal IMAP_e_Expunge(string folder,IMAP_MessageInfo msgInfo,IMAP_r_ServerStatus response)
         {
-            if(folder == null){
-                throw new ArgumentNullException("folder");
-            }
-            if(msgInfo == null){
-                throw new ArgumentNullException("msgInfo");
-            }
-            if(response == null){
-                throw new ArgumentNullException("response");
-            }
-            
-            m_pResponse = response;
-            Folder    = folder;
-            MessageInfo  = msgInfo;
+            m_pResponse = response ?? throw new ArgumentNullException("response");
+            Folder    = folder ?? throw new ArgumentNullException("folder");
+            MessageInfo  = msgInfo ?? throw new ArgumentNullException("msgInfo");
         }
 
         /// <summary>
@@ -41,12 +31,8 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get{ return m_pResponse; }
 
-            set{ 
-                if(value == null){
-                    throw new ArgumentNullException("value");
-                }
-
-                m_pResponse = value; 
+            set{
+                m_pResponse = value ?? throw new ArgumentNullException("value"); 
             }
         }
 

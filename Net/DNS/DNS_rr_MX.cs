@@ -56,8 +56,8 @@ namespace LumiSoft.Net.DNS
 
 			int pref = reply[offset++] << 8 | reply[offset++];
 		
-			string server = "";			
-			if(Dns_Client.GetQName(reply,ref offset,ref server)){
+			var server = "";
+            if (Dns_Client.GetQName(reply,ref offset,ref server)){
 				return new DNS_rr_MX(name,pref,server,ttl);
 			}
 
@@ -79,8 +79,8 @@ namespace LumiSoft.Net.DNS
                 throw new ArgumentException("Argument obj is not MX_Record !");
             }
 
-            DNS_rr_MX mx = (DNS_rr_MX)obj;
-            if(this.Preference > mx.Preference){
+            var mx = (DNS_rr_MX)obj;
+            if (this.Preference > mx.Preference){
                 return 1;
             }
 

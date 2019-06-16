@@ -15,15 +15,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>sourcePath</b> or <b>targetPath</b> is null reference.</exception>
         public FTP_e_Rnto(string sourcePath,string targetPath)
         {
-            if(sourcePath == null){
-                throw new ArgumentNullException("sourcePath");
-            }
-            if(targetPath == null){
-                throw new ArgumentNullException("targetPath");
-            }
-
-            SourcePath = sourcePath;
-            TargetPath = targetPath;
+            SourcePath = sourcePath ?? throw new ArgumentNullException("sourcePath");
+            TargetPath = targetPath ?? throw new ArgumentNullException("targetPath");
         }
 
         /// <summary>

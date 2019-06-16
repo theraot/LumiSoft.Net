@@ -17,15 +17,8 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>session</b> or <b>reply</b> is null reference.</exception>
         public SMTP_e_Started(SMTP_Session session,SMTP_Reply reply)
         {
-            if(session == null){
-                throw new ArgumentNullException("session");
-            }
-            if(reply == null){
-                throw new ArgumentNullException("reply");
-            }
-
-            Session = session;
-            m_pReply   = reply;
+            Session = session ?? throw new ArgumentNullException("session");
+            m_pReply   = reply ?? throw new ArgumentNullException("reply");
         }
 
         /// <summary>
@@ -42,11 +35,7 @@ namespace LumiSoft.Net.SMTP.Server
             get{ return m_pReply; }
 
             set{
-                if(value == null){
-                    throw new ArgumentNullException("Reply");
-                }
-
-                m_pReply = value;
+                m_pReply = value ?? throw new ArgumentNullException("Reply");
             }
         }
     }

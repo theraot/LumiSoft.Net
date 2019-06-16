@@ -18,9 +18,6 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid values.</exception>
         public RTP_Address(IPAddress ip,int dataPort,int controlPort)
         {
-            if(ip == null){
-                throw new ArgumentNullException("ip");
-            }
             if(dataPort < IPEndPoint.MinPort || dataPort > IPEndPoint.MaxPort){
                 throw new ArgumentException("Argument 'dataPort' value must be between '" + IPEndPoint.MinPort + "' and '" + IPEndPoint.MaxPort + "'.");
             }
@@ -31,7 +28,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Arguments 'dataPort' and 'controlPort' values must be different.");
             }
 
-            IP         = ip;
+            IP         = ip ?? throw new ArgumentNullException("ip");
             DataPort    = dataPort;
             ControlPort = controlPort;
 
@@ -90,9 +87,9 @@ namespace LumiSoft.Net.RTP
             }
 
             if(obj is RTP_Address){
-                RTP_Address a = (RTP_Address)obj;
+                var a = (RTP_Address)obj;
 
-                if(a.IP.Equals(this.IP) && a.ControlPort == this.ControlPort && a.DataPort == this.DataPort){
+                if (a.IP.Equals(this.IP) && a.ControlPort == this.ControlPort && a.DataPort == this.DataPort){
                     return true;
                 }
             }

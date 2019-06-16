@@ -21,15 +21,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> or <b>contactUri</b> is null reference.</exception>
         internal SIP_RegistrationBinding(SIP_Registration owner,AbsoluteUri contactUri)
         {
-            if(owner == null){
-                throw new ArgumentNullException("owner");
-            }
-            if(contactUri == null){
-                throw new ArgumentNullException("contactUri");
-            }
-
-            m_pRegistration = owner;
-            ContactURI    = contactUri;
+            m_pRegistration = owner ?? throw new ArgumentNullException("owner");
+            ContactURI    = contactUri ?? throw new ArgumentNullException("contactUri");
         }
 
         /// <summary>
@@ -49,9 +42,7 @@ namespace LumiSoft.Net.SIP.Proxy
             if(qvalue < 0 || qvalue > 1){
                 throw new ArgumentException("Argument 'qvalue' value must be >= 0.000 and <= 1.000");
             }
-            if(callID == null){
-                throw new ArgumentNullException("callID");
-            }
+
             if(cseqNo < 0){
                 throw new ArgumentException("Argument 'cseqNo' value must be >= 0.");
             }
@@ -59,7 +50,7 @@ namespace LumiSoft.Net.SIP.Proxy
             Flow    = flow;
             m_Expires  = expires;
             QValue   = qvalue;
-            CallID   = callID;
+            CallID   = callID ?? throw new ArgumentNullException("callID");
             CSeqNo   = cseqNo;
 
             LastUpdate = DateTime.Now;
@@ -79,7 +70,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <returns>Returns contact header value.</returns>
         public string ToContactValue()
         {
-            SIP_t_ContactParam retVal = new SIP_t_ContactParam();
+            var retVal = new SIP_t_ContactParam();
             retVal.Parse(new StringReader(ContactURI.ToString()));
             retVal.Expires = m_Expires;
 
@@ -102,8 +93,8 @@ namespace LumiSoft.Net.SIP.Proxy
 
             // We must reverse values, because greater value mean higer priority.
 
-            SIP_RegistrationBinding compareValue = (SIP_RegistrationBinding)obj;
-            if(compareValue.QValue == this.QValue){
+            var compareValue = (SIP_RegistrationBinding)obj;
+            if (compareValue.QValue == this.QValue){
                 return 0;
             }
 

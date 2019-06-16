@@ -21,7 +21,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns call ID value.</returns>
         public static SIP_t_CallID CreateCallID()
         {
-            SIP_t_CallID callID = new SIP_t_CallID();
+            var callID = new SIP_t_CallID();
             callID.CallID = Guid.NewGuid().ToString().Replace("-","");
 
             return callID;
@@ -57,11 +57,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get Method
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'callid' value, callid is missing !");
-            }
-            m_CallID = word;
+            var word = reader.ReadWord();
+            m_CallID = word ?? throw new SIP_ParseException("Invalid 'callid' value, callid is missing !");
         }
 
         /// <summary>

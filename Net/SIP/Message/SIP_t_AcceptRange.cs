@@ -61,11 +61,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Parse m-type
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'accept-range' value, m-type is missing !");
-            }
-            this.MediaType = word;
+            var word = reader.ReadWord();
+            this.MediaType = word ?? throw new SIP_ParseException("Invalid 'accept-range' value, m-type is missing !");
 
             // Parse media and accept parameters !!! thats confusing part, RFC invalid.
             bool media_accept = true;
@@ -80,12 +77,12 @@ namespace LumiSoft.Net.SIP.Message
 
                 if(reader.SourceString.StartsWith(";")){
                     reader.ReadSpecifiedLength(1);
-                    string paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
-                    if(paramString != ""){
-                        string[] name_value = paramString.Split(new char[]{'='},2);
-                        string name  = name_value[0].Trim();
-                        string value = "";
-                        if(name_value.Length == 2){
+                    var paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
+                    if (paramString != ""){
+                        var name_value = paramString.Split(new char[]{'='},2);
+                        var name  = name_value[0].Trim();
+                        var value = "";
+                        if (name_value.Length == 2){
                             value = name_value[1];
                         }
 
@@ -122,7 +119,7 @@ namespace LumiSoft.Net.SIP.Message
                 accept-params = SEMI "q" EQUAL qvalue *(SEMI generic-param)
             */
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append(m_MediaType);
             foreach(SIP_Parameter parameter in MediaParameters){
                 if(parameter.Value != null){
@@ -182,8 +179,8 @@ namespace LumiSoft.Net.SIP.Message
         public double QValue
         {
             get{
-                SIP_Parameter parameter = this.Parameters["qvalue"];
-                if(parameter != null){
+                var parameter = this.Parameters["qvalue"];
+                if (parameter != null){
                     return Convert.ToDouble(parameter.Value);
                 }
 

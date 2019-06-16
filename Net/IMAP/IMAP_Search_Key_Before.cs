@@ -32,12 +32,12 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("r");
             }
 
-            string word = r.ReadWord();
-            if(!string.Equals(word,"BEFORE",StringComparison.InvariantCultureIgnoreCase)){
+            var word = r.ReadWord();
+            if (!string.Equals(word,"BEFORE",StringComparison.InvariantCultureIgnoreCase)){
                 throw new ParseException("Parse error: Not a SEARCH 'BEFORE' key.");
             }
-            string value = r.ReadWord();
-            if(value == null){
+            var value = r.ReadWord();
+            if (value == null){
                 throw new ParseException("Parse error: Invalid 'BEFORE' value.");
             }
             DateTime date;

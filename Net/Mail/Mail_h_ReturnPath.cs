@@ -40,14 +40,14 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            string[] name_value = value.Split(new char[]{':'},2);
-            if(name_value.Length != 2){
+            var name_value = value.Split(new char[]{':'},2);
+            if (name_value.Length != 2){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
 
-            Mail_h_ReturnPath retVal = new Mail_h_ReturnPath(null);
+            var retVal = new Mail_h_ReturnPath(null);
 
-            MIME_Reader r = new MIME_Reader(name_value[1].Trim());
+            var r = new MIME_Reader(name_value[1].Trim());
             r.ToFirstChar();
             // Return-Path missing <>, some server won't be honor RFC.
             if(!r.StartsWith("<")){

@@ -75,7 +75,7 @@ namespace LumiSoft.Net.AUTH
             }
             m_Password = Encoding.UTF8.GetString(clientResponse);
 
-            AUTH_e_Authenticate result = OnAuthenticate("",m_UserName,m_Password);
+            var result = OnAuthenticate("",m_UserName,m_Password);
             m_IsAuthenticated = result.IsAuthenticated;
             m_IsCompleted = true;
 
@@ -133,9 +133,9 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns authentication result.</returns>
         private AUTH_e_Authenticate OnAuthenticate(string authorizationID,string userName,string password)
         {
-            AUTH_e_Authenticate retVal = new AUTH_e_Authenticate(authorizationID,userName,password);
+            var retVal = new AUTH_e_Authenticate(authorizationID,userName,password);
 
-            if(this.Authenticate != null){
+            if (this.Authenticate != null){
                 this.Authenticate(this,retVal);
             }
 

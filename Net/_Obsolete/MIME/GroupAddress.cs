@@ -28,11 +28,11 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public static GroupAddress Parse(string group)
 		{
-			GroupAddress g = new GroupAddress();
+			var g = new GroupAddress();
 
-			// Syntax: display-name':'[mailbox *(',' mailbox)]';'
-			string[] parts = TextUtils.SplitQuotedString(group,':');
-			if(parts.Length > -1){
+            // Syntax: display-name':'[mailbox *(',' mailbox)]';'
+            var parts = TextUtils.SplitQuotedString(group,':');
+            if (parts.Length > -1){
 				g.DisplayName = TextUtils.UnQuoteString(parts[0]);				
 			}
 			if(parts.Length > 1){

@@ -157,7 +157,7 @@ namespace LumiSoft.Net.STUN.Message
             */
 
             // We allocate 512 for header, that should be more than enough.
-            byte[] msg = new byte[512];
+            var msg = new byte[512];
 
             int offset = 0;
 
@@ -244,7 +244,7 @@ namespace LumiSoft.Net.STUN.Message
                 StoreEndPoint(AttributeType.ChangedAddress,this.ChangedAddress,msg,ref offset);
             }
             else if(this.UserName != null){
-                byte[] userBytes = Encoding.ASCII.GetBytes(this.UserName);
+                var userBytes = Encoding.ASCII.GetBytes(this.UserName);
 
                 // Attribute header
                 msg[offset++] = (int)AttributeType.Username >> 8;
@@ -256,7 +256,7 @@ namespace LumiSoft.Net.STUN.Message
                 offset += userBytes.Length;
             }
             else if(this.Password != null){
-                byte[] userBytes = Encoding.ASCII.GetBytes(this.UserName);
+                var userBytes = Encoding.ASCII.GetBytes(this.UserName);
 
                 // Attribute header
                 msg[offset++] = (int)AttributeType.Password >> 8;
@@ -278,7 +278,7 @@ namespace LumiSoft.Net.STUN.Message
                     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                 */
 
-                byte[] reasonBytes = Encoding.ASCII.GetBytes(this.ErrorCode.ReasonText);
+                var reasonBytes = Encoding.ASCII.GetBytes(this.ErrorCode.ReasonText);
 
                 // Header
                 msg[offset++] = 0;
@@ -306,7 +306,7 @@ namespace LumiSoft.Net.STUN.Message
             msg[3] = (byte)((offset - 20) & 0xFF);
 
             // Make reatval with actual size.
-            byte[] retVal = new byte[offset];
+            var retVal = new byte[offset];
             Array.Copy(msg,retVal,retVal.Length);
         
             return retVal;
@@ -332,7 +332,7 @@ namespace LumiSoft.Net.STUN.Message
             */
 
             // Type
-            AttributeType type = (AttributeType)(data[offset++] << 8 | data[offset++]);
+            var type = (AttributeType)(data[offset++] << 8 | data[offset++]);
 
             // Length
             int length = (data[offset++] << 8 | data[offset++]);
@@ -465,7 +465,7 @@ namespace LumiSoft.Net.STUN.Message
             int port = (data[offset++] << 8 | data[offset++]);
 
             // Address
-            byte[] ip = new byte[4];
+            var ip = new byte[4];
             ip[0] = data[offset++];
             ip[1] = data[offset++];
             ip[2] = data[offset++];
@@ -510,7 +510,7 @@ namespace LumiSoft.Net.STUN.Message
             message[offset++] = (byte)(endPoint.Port >> 8);
             message[offset++] = (byte)(endPoint.Port & 0xFF);
             // Address
-            byte[] ipBytes = endPoint.Address.GetAddressBytes();
+            var ipBytes = endPoint.Address.GetAddressBytes();
             message[offset++] = ipBytes[0];
             message[offset++] = ipBytes[1];
             message[offset++] = ipBytes[2];

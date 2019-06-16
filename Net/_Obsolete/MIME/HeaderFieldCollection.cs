@@ -79,8 +79,8 @@ namespace LumiSoft.Net.Mime
 		public void RemoveAll(string fieldName)
 		{
 			for(int i=0;i<m_pHeaderFields.Count;i++){
-				HeaderField h = (HeaderField)m_pHeaderFields[i];
-				if(h.Name.ToLower() == fieldName.ToLower()){
+				var h = (HeaderField)m_pHeaderFields[i];
+                if (h.Name.ToLower() == fieldName.ToLower()){
 					m_pHeaderFields.Remove(h);
 					i--;
 				}
@@ -144,16 +144,16 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public HeaderField[] Get(string fieldName)
 		{
-			ArrayList fields = new ArrayList();
-			foreach(HeaderField h in m_pHeaderFields){
+			var fields = new ArrayList();
+            foreach (HeaderField h in m_pHeaderFields){
 				if(h.Name.ToLower() == fieldName.ToLower()){
 					fields.Add(h);
 				}
 			}
 
 			if(fields.Count > 0){
-				HeaderField[] retVal = new HeaderField[fields.Count];
-				fields.CopyTo(retVal);
+				var retVal = new HeaderField[fields.Count];
+                fields.CopyTo(retVal);
 
 				return retVal;
 			}
@@ -211,14 +211,14 @@ namespace LumiSoft.Net.Mime
 
 			m_pHeaderFields.Clear();
 
-            SmartStream.ReadLineAsyncOP args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
+            var args = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
             stream.ReadLine(args,false);
             if(args.Error != null){
                 throw args.Error;
             }
-            string line = args.LineUtf8;
+            var line = args.LineUtf8;
 
-			while(line != null){
+            while (line != null){
 				// End of header reached
 				if(line == ""){
 					break;
@@ -226,8 +226,8 @@ namespace LumiSoft.Net.Mime
 
 				// Store current header line and read next. We need to read 1 header line to ahead,
 				// because of multiline header fields.
-				string headerField = line; 
-				stream.ReadLine(args,false);
+				var headerField = line;
+                stream.ReadLine(args,false);
                 if(args.Error != null){
                     throw args.Error;
                 }
@@ -243,9 +243,9 @@ namespace LumiSoft.Net.Mime
                     line = args.LineUtf8;
 				}
 
-				string[] name_value = headerField.Split(new char[]{':'},2);
-				// There must be header field name and value, otherwise invalid header field
-				if(name_value.Length == 2){
+				var name_value = headerField.Split(new char[]{':'},2);
+                // There must be header field name and value, otherwise invalid header field
+                if (name_value.Length == 2){
 					Add(name_value[0] + ":",name_value[1].Trim());
 				}
 			}
@@ -258,8 +258,8 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public string ToHeaderString(string encodingCharSet)
 		{
-			StringBuilder headerString = new StringBuilder();
-			foreach(HeaderField f in this){                
+			var headerString = new StringBuilder();
+            foreach (HeaderField f in this){                
 				headerString.Append(f.Name + " " + f.EncodedValue + "\r\n");
 			}
 

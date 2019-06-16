@@ -46,15 +46,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>stack</b> or <b>request</b> is null.</exception>
         internal SIP_RequestSender(SIP_Stack stack,SIP_Request request,SIP_Flow flow)
         {
-            if(stack == null){
-                throw new ArgumentNullException("stack");
-            }
-            if(request == null){
-                throw new ArgumentNullException("request");
-            }
-
-            m_pStack   = stack;
-            m_pRequest = request;
+            m_pStack   = stack ?? throw new ArgumentNullException("stack");
+            m_pRequest = request ?? throw new ArgumentNullException("request");
             m_pFlow    = flow;
 
             m_pCredentials = new List<NetworkCredential>();
@@ -124,7 +117,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     // Try to authorize challanges.
                     else{
-                        SIP_Request request = m_pRequest.Copy();
+                        var request = m_pRequest.Copy();
 
                         /* RFC 3261 22.2.
                             When a UAC resubmits a request with its credentials after receiving a
@@ -136,7 +129,7 @@ namespace LumiSoft.Net.SIP.Stack
 
                         // All challanges authorized, resend request.
                         if(Authorize(request,e.Response,this.Credentials.ToArray())){
-                            SIP_Flow flow  = m_pTransaction.Flow;
+                            var flow  = m_pTransaction.Flow;
                             CleanUpActiveTransaction();            
                             SendToFlow(flow,request);
                         }
@@ -382,7 +375,7 @@ namespace LumiSoft.Net.SIP.Stack
             bool allAuthorized = true;
 
             foreach(SIP_t_Challenge challange in response.WWWAuthenticate.GetAllValues()){
-                Auth_HttpDigest authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
+                var authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
 
                 // Serach credential for the specified challange.
                 NetworkCredential credential = null;
@@ -408,7 +401,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             foreach(SIP_t_Challenge challange in response.ProxyAuthenticate.GetAllValues()){
-                Auth_HttpDigest authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
+                var authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
 
                 // Serach credential for the specified challange.
                 NetworkCredential credential = null;
@@ -447,7 +440,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             try{
-                SIP_Hop hop = m_pHops.Dequeue();        
+                var hop = m_pHops.Dequeue();
                 SendToFlow(m_pStack.TransportLayer.GetOrCreateFlow(hop.Transport,null,hop.EndPoint),m_pRequest.Copy());
             }
             catch(ObjectDisposedException x){
@@ -489,11 +482,11 @@ namespace LumiSoft.Net.SIP.Stack
                 URI, the Contact header field MUST contain a SIPS URI as well.
             */
 
-            SIP_t_ContactParam contact = request.Contact.GetTopMostValue();
+            var contact = request.Contact.GetTopMostValue();
 
             // Add contact header If request-Method can establish dialog and contact header not present.            
-            if(SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method) && contact == null){    
-                SIP_Uri from = (SIP_Uri)request.From.Address.Uri;
+            if (SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method) && contact == null){    
+                var from = (SIP_Uri)request.From.Address.Uri;
 
                 request.Contact.Add((flow.IsSecure ? "sips:" : "sip:" ) + from.User + "@" + flow.LocalPublicEP.ToString());
 

@@ -49,7 +49,7 @@ namespace LumiSoft.Net.DNS
             int port  = reply[offset++] << 8 | reply[offset++];
 
             // Target
-            string target = "";
+            var target = "";
             Dns_Client.GetQName(reply,ref offset,ref target);
 
             return new DNS_rr_SRV(name,priority,weight,port,target,ttl);

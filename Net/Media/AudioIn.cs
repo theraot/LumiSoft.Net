@@ -484,9 +484,6 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ArgumentException">Is raised when any of the aruments has invalid value.</exception>
             public WaveIn(AudioInDevice device,int samplesPerSec,int bitsPerSample,int channels,int bufferSize)
             {
-                if(device == null){
-                    throw new ArgumentNullException("device");
-                }
                 if(samplesPerSec < 8000){
                     throw new ArgumentException("Argument 'samplesPerSec' value must be >= 8000.");
                 }
@@ -497,7 +494,7 @@ namespace LumiSoft.Net.Media
                     throw new ArgumentException("Argument 'channels' value must be >= 1.");
                 }
 
-                m_pInDevice     = device;
+                m_pInDevice     = device ?? throw new ArgumentNullException("device");
                 m_SamplesPerSec = samplesPerSec;
                 m_BitsPerSample = bitsPerSample;
                 m_Channels      = channels;
@@ -507,7 +504,7 @@ namespace LumiSoft.Net.Media
                 m_pReadBuffer   = new FifoBuffer(32000);
 
                 // Try to open wav device.            
-                WAVEFORMATEX format = new WAVEFORMATEX();
+                var format = new WAVEFORMATEX();
                 format.wFormatTag      = WavFormat.PCM;
                 format.nChannels       = (ushort)m_Channels;
                 format.nSamplesPerSec  = (uint)samplesPerSec;                        
@@ -620,7 +617,7 @@ namespace LumiSoft.Net.Media
                             // Queue data for reading.
                             m_pReadBuffer.Write(m_pCurrentBuffer.Data,0,m_pCurrentBuffer.Data.Length,true);
 
-                            BufferItem buffer = m_pCurrentBuffer;
+                            var buffer = m_pCurrentBuffer;
 
                             m_pCurrentBuffer = m_pBuffers.Next();
 
@@ -679,10 +676,10 @@ namespace LumiSoft.Net.Media
             private void CreateBuffers()
             {               
                 while(m_pBuffers.Count < 10){
-                    byte[]   data       = new byte[m_BufferSize];
-                    GCHandle dataHandle = GCHandle.Alloc(data,GCHandleType.Pinned);
+                    var   data       = new byte[m_BufferSize];
+                    var dataHandle = GCHandle.Alloc(data,GCHandleType.Pinned);
 
-                    WAVEHDR wavHeader = new WAVEHDR();
+                    var wavHeader = new WAVEHDR();
                     wavHeader.lpData          = dataHandle.AddrOfPinnedObject();
                     wavHeader.dwBufferLength  = (uint)data.Length;
                     wavHeader.dwBytesRecorded = 0;
@@ -691,7 +688,7 @@ namespace LumiSoft.Net.Media
                     wavHeader.dwLoops         = 0;
                     wavHeader.lpNext          = IntPtr.Zero;
                     wavHeader.reserved        = 0;
-                    GCHandle headerHandle = GCHandle.Alloc(wavHeader,GCHandleType.Pinned);
+                    var headerHandle = GCHandle.Alloc(wavHeader,GCHandleType.Pinned);
                     int result = 0;        
                     result = waveInPrepareHeader(m_pWavDevHandle,headerHandle.AddrOfPinnedObject(),Marshal.SizeOf(wavHeader));                    
                     if(result != MMSYSERR.NOERROR){
@@ -715,12 +712,12 @@ namespace LumiSoft.Net.Media
             public static AudioInDevice[] Devices
             {
                 get{
-                    List<AudioInDevice> retVal = new List<AudioInDevice>();
+                    var retVal = new List<AudioInDevice>();
                     // Get all available output devices and their info.                
                     int devicesCount = waveInGetNumDevs();
                     for(int i=0;i<devicesCount;i++){
-                        WAVEOUTCAPS pwoc = new WAVEOUTCAPS();
-                        if(waveInGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
+                        var pwoc = new WAVEOUTCAPS();
+                        if (waveInGetDevCaps((uint)i,ref pwoc,Marshal.SizeOf(pwoc)) == MMSYSERR.NOERROR){
                             retVal.Add(new AudioInDevice(i,pwoc.szPname,pwoc.wChannels));
                         }
                     }
@@ -858,9 +855,6 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public AudioIn(AudioInDevice device,int samplesPerSec,int bitsPerSample,int channels)
         {
-            if(device == null){
-                throw new ArgumentNullException("device");
-            }
             if(samplesPerSec < 1){
                 throw new ArgumentException("Argument 'samplesPerSec' value must be >= 1.","samplesPerSec");
             }
@@ -871,7 +865,7 @@ namespace LumiSoft.Net.Media
                 throw new ArgumentException("Argument 'channels' value must be >= 1.","channels");
             }
             
-            m_pDevice       = device;
+            m_pDevice       = device ?? throw new ArgumentNullException("device");
             m_SamplesPerSec = samplesPerSec;
             m_BitsPerSample = bitsPerSample;
             m_Channels      = channels;

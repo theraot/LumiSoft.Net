@@ -59,11 +59,8 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Get authentication method
-            string word = reader.ReadWord();
-            if(word == null){
-                throw new SIP_ParseException("Invalid 'credentials' value, authentication method is missing !");
-            }
-            m_Method = word;
+            var word = reader.ReadWord();
+            m_Method = word ?? throw new SIP_ParseException("Invalid 'credentials' value, authentication method is missing !");
 
             // Get authentication data
             word = reader.ReadToEnd();

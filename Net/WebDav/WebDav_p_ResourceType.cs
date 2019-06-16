@@ -54,9 +54,9 @@ namespace LumiSoft.Net.WebDav
                 throw new ParseException("Invalid DAV:resourcetype value.");
             }
 
-            WebDav_p_ResourceType retVal = new WebDav_p_ResourceType();
+            var retVal = new WebDav_p_ResourceType();
 
-            foreach(XmlNode node in resourcetypeNode.ChildNodes){
+            foreach (XmlNode node in resourcetypeNode.ChildNodes){
                 retVal.m_pItems.Add(node.NamespaceURI + node.LocalName);
             }
 
@@ -85,8 +85,8 @@ namespace LumiSoft.Net.WebDav
         public override string Value
         {
             get{ 
-                StringBuilder retVal = new StringBuilder();
-                for(int i=0;i<m_pItems.Count;i++){
+                var retVal = new StringBuilder();
+                for (int i=0;i<m_pItems.Count;i++){
                     if(i == (m_pItems.Count - 1)){
                         retVal.Append(m_pItems[i]);
                     }

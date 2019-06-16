@@ -26,7 +26,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="value">Item value.</param>
         public Item Add(string name,string parametes,string value)
         {
-            Item item = new Item(name,parametes,value);
+            var item = new Item(name,parametes,value);
             m_pItems.Add(item);
 
             return item;
@@ -86,8 +86,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         public Item[] Get(string name)
         {
-            List<Item> retVal = new List<Item>();
-            foreach(Item item in m_pItems){
+            var retVal = new List<Item>();
+            foreach (Item item in m_pItems){
                 if(item.Name.ToLower() == name.ToLower()){
                     retVal.Add(item);
                 }
@@ -110,8 +110,8 @@ namespace LumiSoft.Net.Mime.vCard
                 return;
             }
 
-            Item item = GetFirst(name);
-            if(item != null){
+            var item = GetFirst(name);
+            if (item != null){
                 item.SetDecodedValue(value);
             }
             else{
@@ -146,8 +146,8 @@ namespace LumiSoft.Net.Mime.vCard
                 return;
             }
 
-            Item item = GetFirst(name);
-            if(item != null){
+            var item = GetFirst(name);
+            if (item != null){
                 item.Value = value;
             }
             else{

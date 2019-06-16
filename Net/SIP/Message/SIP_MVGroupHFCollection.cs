@@ -88,8 +88,8 @@ namespace LumiSoft.Net.SIP.Message
         public void RemoveTopMostValue()
         {
             if(m_pFields.Count > 0){                
-                SIP_MultiValueHF<T> h = m_pFields[0];
-                if(h.Count > 1){
+                var h = m_pFields[0];
+                if (h.Count > 1){
                     h.Remove(0);
                 }
                 else{
@@ -104,8 +104,8 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public void RemoveLastValue()
         {
-            SIP_MultiValueHF<T> h = m_pFields[m_pFields.Count - 1];
-            if(h.Count > 1){
+            var h = m_pFields[m_pFields.Count - 1];
+            if (h.Count > 1){
                 h.Remove(h.Count - 1);
             }
             else{
@@ -120,8 +120,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns></returns>
         public T[] GetAllValues()
         {
-            List<T> retVal = new List<T>();
-            foreach(SIP_MultiValueHF<T> h in m_pFields){
+            var retVal = new List<T>();
+            foreach (SIP_MultiValueHF<T> h in m_pFields){
                 foreach(SIP_t_Value v in h.Values){
                     retVal.Add((T)v);
                 }

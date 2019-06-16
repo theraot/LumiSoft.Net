@@ -23,12 +23,9 @@ namespace LumiSoft.Net.IMAP
             if(folderName == string.Empty){
                 throw new ArgumentException("Argument 'folderName' value must be specified.","folderName");
             }
-            if(entries == null){
-                throw new ArgumentNullException("entries");
-            }
 
             FolderName = folderName;
-            Entires   = entries;
+            Entires   = entries ?? throw new ArgumentNullException("entries");
         }
 
         /// <summary>
@@ -58,16 +55,16 @@ namespace LumiSoft.Net.IMAP
                             S: A002 OK Getacl complete
             */
 
-            StringReader r = new StringReader(aclResponse);
+            var r = new StringReader(aclResponse);
             // Eat "*"
             r.ReadWord();
             // Eat "ACL"
             r.ReadWord();
 
-            string               folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
-            string[]             items      = r.ReadToEnd().Split(' ');
-            List<IMAP_Acl_Entry> entries    = new List<IMAP_Acl_Entry>();
-            for(int i=0;i<items.Length;i+=2){
+            var               folderName = TextUtils.UnQuoteString(IMAP_Utils.Decode_IMAP_UTF7_String(r.ReadWord()));
+            var             items      = r.ReadToEnd().Split(' ');
+            var entries    = new List<IMAP_Acl_Entry>();
+            for (int i=0;i<items.Length;i+=2){
                 entries.Add(new IMAP_Acl_Entry(items[i],items[i + 1]));
             }
 
@@ -92,7 +89,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * ACL INBOX Fred rwipslda test rwipslda
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
             retVal.Append("* ACL ");
             retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
             foreach(IMAP_Acl_Entry e in Entires){

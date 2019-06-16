@@ -32,7 +32,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns new cloned request.</returns>
         public SIP_Request Copy()
         {
-            SIP_Request retVal = SIP_Request.Parse(this.ToByteData());
+            var retVal = SIP_Request.Parse(this.ToByteData());
             retVal.Flow           = Flow;
             retVal.LocalEndPoint  = LocalEndPoint;
             retVal.RemoteEndPoint = RemoteEndPoint;
@@ -149,13 +149,13 @@ namespace LumiSoft.Net.SIP.Stack
             }
                         
             // Parse Response-line
-            StreamLineReader r = new StreamLineReader(stream);
+            var r = new StreamLineReader(stream);
             r.Encoding = "utf-8";
-            string[] method_uri_version = r.ReadLineString().Split(' ');
-            if(method_uri_version.Length != 3){
+            var method_uri_version = r.ReadLineString().Split(' ');
+            if (method_uri_version.Length != 3){
                 throw new Exception("Invalid SIP request data ! Method line doesn't contain: SIP-Method SIP-URI SIP-Version.");
             }
-            SIP_Request retVal         = new SIP_Request(method_uri_version[0]);
+            var retVal         = new SIP_Request(method_uri_version[0]);
             retVal.RequestLine.Uri     = AbsoluteUri.Parse(method_uri_version[1]);
             retVal.RequestLine.Version = method_uri_version[2];
 
@@ -172,7 +172,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void ToStream(Stream stream)
         {
             // Add request-line
-            byte[] responseLine = Encoding.UTF8.GetBytes(RequestLine.ToString());
+            var responseLine = Encoding.UTF8.GetBytes(RequestLine.ToString());
             stream.Write(responseLine,0,responseLine.Length);
 
             // Add SIP-message
@@ -185,7 +185,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns></returns>
         public byte[] ToByteData()
         {
-            MemoryStream retVal = new MemoryStream();
+            var retVal = new MemoryStream();
             ToStream(retVal);
 
             return retVal.ToArray();

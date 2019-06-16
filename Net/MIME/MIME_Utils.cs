@@ -52,10 +52,10 @@ namespace LumiSoft.Net.MIME
             */
 
             try{
-                MIME_Reader r = new MIME_Reader(value);
-                string v = r.Atom();
+                var r = new MIME_Reader(value);
+                var v = r.Atom();
                 // Skip optional [ day-of-week "," ] and read "day".
-                if(v.Length == 3){
+                if (v.Length == 3){
                     r.Char(true);
                     v = r.Atom();
                 }
@@ -377,11 +377,11 @@ namespace LumiSoft.Net.MIME
                 }
                         
                 // Convert time to UTC and then back to local.
-                DateTime timeUTC = new DateTime(year,month,day,hour,minute,second).AddMinutes(-(timeZoneMinutes));
+                var timeUTC = new DateTime(year,month,day,hour,minute,second).AddMinutes(-(timeZoneMinutes));
                 return new DateTime(timeUTC.Year,timeUTC.Month,timeUTC.Day,timeUTC.Hour,timeUTC.Minute,timeUTC.Second,DateTimeKind.Utc).ToLocalTime();
             }
             catch(Exception x){
-                string dymmy = x.Message;
+                var dymmy = x.Message;
                 throw new ArgumentException("Argumnet 'value' value '" + value + "' is not valid RFC 822/2822 date-time string.");
             }
         }
@@ -431,11 +431,11 @@ namespace LumiSoft.Net.MIME
 				line with nothing preceding the CRLF).
 			*/
 
-			byte[] crlf = new byte[]{(byte)'\r',(byte)'\n'};
-			MemoryStream msHeaders = new MemoryStream();
-			StreamLineReader r = new StreamLineReader(entryStrm);
-			byte[] lineData = r.ReadLine();
-			while(lineData != null){
+			var crlf = new byte[]{(byte)'\r',(byte)'\n'};
+            var msHeaders = new MemoryStream();
+            var r = new StreamLineReader(entryStrm);
+            var lineData = r.ReadLine();
+            while (lineData != null){
 				if(lineData.Length == 0){
 					break;
 				}
@@ -495,15 +495,15 @@ namespace LumiSoft.Net.MIME
 			*/
 
 			using(TextReader r = new StreamReader(new MemoryStream(System.Text.Encoding.Default.GetBytes(headers)))){
-				string line = r.ReadLine();
-				while(line != null){
+				var line = r.ReadLine();
+                while (line != null){
 					// Find line where field begins
 					if(line.ToUpper().StartsWith(fieldName.ToUpper())){
 						// Remove field name and start reading value
-						string fieldValue = line.Substring(fieldName.Length).Trim();
+						var fieldValue = line.Substring(fieldName.Length).Trim();
 
-						// see if multi line value. See commnt above.
-						line = r.ReadLine();
+                        // see if multi line value. See commnt above.
+                        line = r.ReadLine();
 						while(line != null && (line.StartsWith("\t") || line.StartsWith(" "))){
 							fieldValue += line;
 							line = r.ReadLine();
@@ -609,15 +609,15 @@ namespace LumiSoft.Net.MIME
 					with the Quoted-Printable encoding, "soft" line breaks
 			*/
 
-			MemoryStream msRetVal = new MemoryStream();
-			MemoryStream msSourceStream = new MemoryStream(data);
+			var msRetVal = new MemoryStream();
+            var msSourceStream = new MemoryStream(data);
 
-			int b = msSourceStream.ReadByte();
+            int b = msSourceStream.ReadByte();
 			while(b > -1){
 				// Encoded 8-bit byte(=XX) or soft line break(=CRLF)
 				if(b == '='){
-					byte[] buffer = new byte[2];
-					int nCount = msSourceStream.Read(buffer,0,2);
+					var buffer = new byte[2];
+                    int nCount = msSourceStream.Read(buffer,0,2);
 					if(nCount == 2){
 						// Soft line break, line splitted, just skip CRLF
 						if(buffer[0] == '\r' && buffer[1] == '\n'){
