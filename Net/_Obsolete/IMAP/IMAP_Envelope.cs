@@ -42,8 +42,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses IMAP ENVELOPE from string.
         /// </summary>
@@ -280,11 +278,7 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Envelope(date,subject,from,sender,replyTo,to,cc,bcc,inReplyTo,messageID);
         }
 
-        #endregion
-
-        #region static method ConstructEnvelope
-
-		/// <summary>
+        /// <summary>
 		/// Construct secified mime entity ENVELOPE string.
 		/// </summary>
 		/// <param name="entity">Mail message.</param>
@@ -458,10 +452,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();			
 		}
 
-		#endregion
-
-
-        #region static method ReadAddresses
 
         /// <summary>
         /// Reads parenthesized list of addresses.
@@ -588,11 +578,7 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-        #region private static method ConstructAddresses
-
-		/// <summary>
+        /// <summary>
 		/// Constructs ENVELOPE addresses structure.
 		/// </summary>
 		/// <param name="mailboxes">Mailboxes.</param>
@@ -612,11 +598,7 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();
 		}
 
-		#endregion
-
-		#region private static method ConstructAddress
-
-		/// <summary>
+        /// <summary>
 		/// Constructs ENVELOPE address structure.
 		/// </summary>
 		/// <param name="address">Mailbox address.</param>
@@ -662,10 +644,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();
 		}
 
-		#endregion
-
-        #region static method RemoveCrlf
-
         /// <summary>
         /// Removes CR and LF chars from the specified string.
         /// </summary>
@@ -679,10 +657,6 @@ namespace LumiSoft.Net.IMAP
 
             return value.Replace("\r","").Replace("\n","");
         }
-
-        #endregion
-
-        #region static method DecodeWord
 
         /// <summary>
         /// Decodes word from reader.
@@ -702,10 +676,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets message <b>Date</b> header field value. Value DateTime.Min means no <b>Date</b> header field.
@@ -756,7 +726,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets message <b>Message-ID</b> header field value. Value null means no <b>Message-ID</b> header field.
         /// </summary>
         public string MessageID { get; }
-
-#endregion
     }
 }

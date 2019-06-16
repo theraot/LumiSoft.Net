@@ -5,8 +5,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LumiSoft.Net.DNS.Client
 {
-    #region struct CacheEntry
-
     /// <summary>
     /// Dns cache entry.
     /// </summary>
@@ -35,9 +33,7 @@ namespace LumiSoft.Net.DNS.Client
 		public DateTime Time { get; }
     }
 
-	#endregion
-
-	/// <summary>
+    /// <summary>
 	/// This class implements dns query cache.
 	/// </summary>
     [Obsolete("Use DNS_Client.Cache instead.")]
@@ -54,9 +50,7 @@ namespace LumiSoft.Net.DNS.Client
 		}
 
 
-		#region method GetFromCache
-
-		/// <summary>
+        /// <summary>
 		/// Tries to get dns records from cache, if any.
 		/// </summary>
 		/// <param name="qname"></param>
@@ -80,11 +74,7 @@ namespace LumiSoft.Net.DNS.Client
 			return null;
 		}
 
-		#endregion
-
-		#region method AddToCache
-
-		/// <summary>
+        /// <summary>
 		/// Adds dns records to cache. If old entry exists, it is replaced.
 		/// </summary>
 		/// <param name="qname"></param>
@@ -109,11 +99,7 @@ namespace LumiSoft.Net.DNS.Client
 			}
 		}
 
-		#endregion
-
-		#region method ClearCache
-
-		/// <summary>
+        /// <summary>
 		/// Clears DNS cache.
 		/// </summary>
 		public static void ClearCache()
@@ -123,12 +109,8 @@ namespace LumiSoft.Net.DNS.Client
 			}
 		}
 
-		#endregion
 
-
-		#region method SerializeCache
-
-		/// <summary>
+        /// <summary>
 		/// Serializes current cache.
 		/// </summary>
 		/// <returns>Return serialized cache.</returns>
@@ -144,11 +126,7 @@ namespace LumiSoft.Net.DNS.Client
             }
 		}
 
-		#endregion
-
-		#region method DeSerializeCache
-
-		/// <summary>
+        /// <summary>
 		/// DeSerializes stored cache.
 		/// </summary>
 		/// <param name="cacheData">This value must be DnsCache.SerializeCache() method value.</param>
@@ -162,17 +140,10 @@ namespace LumiSoft.Net.DNS.Client
             }
 		}
 
-		#endregion
 
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets or sets how long(seconds) to cache dns query.
 		/// </summary>
 		public static long CacheTime { get; set; } = 10000;
-
-#endregion
-
-	}
+    }
 }

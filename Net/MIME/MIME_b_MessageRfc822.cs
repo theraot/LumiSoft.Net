@@ -23,8 +23,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -52,10 +50,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region method ToStream
 
         /// <summary>
         /// Stores MIME entity body to the specified stream.
@@ -75,11 +69,7 @@ namespace LumiSoft.Net.MIME
             m_pMessage.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
         }
 
-        #endregion
 
-
-        #region Properties implementation
-        
         /// <summary>
         /// Gets if body has modified.
         /// </summary>
@@ -113,7 +103,5 @@ namespace LumiSoft.Net.MIME
                 m_pMessage = value;
             }
         }
-
-        #endregion
     }
 }

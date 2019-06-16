@@ -21,8 +21,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region method Add
-                
         /// <summary>
         /// Adds specified MIME enity to the collection.
         /// </summary>
@@ -37,10 +35,6 @@ namespace LumiSoft.Net.MIME
             m_pCollection.Add(entity);
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method Insert
 
         /// <summary>
         /// Inserts a new MIME entity into the collection at the specified location.
@@ -58,10 +52,6 @@ namespace LumiSoft.Net.MIME
             m_pCollection.Insert(index,entity);
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes specified MIME entity from the collection.
@@ -89,10 +79,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = true;
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all items from the collection.
         /// </summary>
@@ -101,10 +87,6 @@ namespace LumiSoft.Net.MIME
             m_pCollection.Clear();
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region mehtod Contains
 
         /// <summary>
         /// Gets if the collection contains specified MIME entity.
@@ -121,10 +103,6 @@ namespace LumiSoft.Net.MIME
             return m_pCollection.Contains(entity);
         }
 
-        #endregion
-
-
-        #region method SetModified
 
         /// <summary>
         /// Sets IsModified property value.
@@ -135,10 +113,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = isModified;
         }
 
-        #endregion
-
-
-        #region interface IEnumerator
 
         /// <summary>
 		/// Gets enumerator.
@@ -148,10 +122,6 @@ namespace LumiSoft.Net.MIME
 		{
 			return m_pCollection.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if enity collection has modified.
@@ -190,8 +160,5 @@ namespace LumiSoft.Net.MIME
         {
             get{ return m_pCollection[index]; }
         }
-
-        #endregion
-
     }
 }

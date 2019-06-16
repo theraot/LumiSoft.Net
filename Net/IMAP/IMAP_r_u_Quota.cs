@@ -29,8 +29,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses QUOTA response from quota-response string.
         /// </summary>
@@ -79,10 +77,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Quota(name,entries.ToArray());
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -105,10 +99,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties impelemntation
 
         /// <summary>
         /// Gets quota root name.
@@ -119,7 +109,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets resource limit entries.
         /// </summary>
         public IMAP_Quota_Entry[] Entries { get; }
-
-#endregion
     }
 }

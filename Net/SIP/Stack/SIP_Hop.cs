@@ -59,8 +59,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets target IP end point.
         /// </summary>
@@ -86,8 +84,5 @@ namespace LumiSoft.Net.SIP.Stack
         /// Gets target SIP transport.
         /// </summary>
         public string Transport { get; } = "";
-
-#endregion
-
     }
 }

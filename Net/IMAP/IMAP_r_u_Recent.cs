@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses RECENT response from recent-response string.
         /// </summary>
@@ -67,10 +65,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Recent(Convert.ToInt32(response.Split(' ')[1]));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -83,16 +77,10 @@ namespace LumiSoft.Net.IMAP
             return "* " + MessageCount.ToString() + " RECENT\r\n";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of messages in mailbox with \Recent flag set.
         /// </summary>
         public int MessageCount { get; }
-
-#endregion
     }
 }

@@ -42,8 +42,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region method ForwardStatelessly
-
         /// <summary>
         /// Forwards current request statelessly.
         /// </summary>
@@ -53,10 +51,6 @@ namespace LumiSoft.Net.SIP.Proxy
             throw new NotImplementedException();
         }
 
-        #endregion
-
-        #region method ChallengeRequest
-
         /// <summary>
         /// Forces incoming request to authenticate by sending authentication-challenge response to request sender.
         /// </summary>
@@ -65,10 +59,6 @@ namespace LumiSoft.Net.SIP.Proxy
             throw new NotImplementedException();
         }
 
-        #endregion
-
-
-        #region method SetUser
 
         /// <summary>
         /// Sets current user.
@@ -79,10 +69,6 @@ namespace LumiSoft.Net.SIP.Proxy
             User = user;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets current incoming SIP request.
@@ -133,7 +119,5 @@ namespace LumiSoft.Net.SIP.Proxy
                 return m_pProxyContext; 
             }
         }
-
-        #endregion
     }
 }

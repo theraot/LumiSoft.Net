@@ -30,8 +30,6 @@ namespace LumiSoft.Net.SMTP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets SMTP "mailbox" value. Actually this is just email address.
         /// This value can be "" if "null reverse-path".
@@ -62,7 +60,5 @@ namespace LumiSoft.Net.SMTP.Server
         /// Defined in RFC 1891.
         /// </summary>
         public string ENVID { get; }
-
-#endregion
     }
 }

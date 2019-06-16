@@ -24,8 +24,6 @@ namespace LumiSoft.Net.MIME
         {            
         }
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -61,10 +59,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region method SetText
 
         /// <summary>
         /// Sets text.
@@ -94,10 +88,6 @@ namespace LumiSoft.Net.MIME
             this.Entity.ContentType.Param_Charset = charset.WebName;            
         }
 
-        #endregion
-
-
-        #region method GetCharset
 
         /// <summary>
         /// Gets charset from Content-Type. If char set isn't specified, "ascii" is defined as default and it will be returned.
@@ -126,11 +116,7 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-                
 
-        #region Properties implementation
-                
         /// <summary>
         /// Gets body decoded text.
         /// </summary>
@@ -140,7 +126,5 @@ namespace LumiSoft.Net.MIME
         {
             get{ return GetCharset().GetString(this.Data); }
         }
-
-        #endregion
     }
 }

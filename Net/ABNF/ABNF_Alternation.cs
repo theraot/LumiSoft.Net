@@ -56,13 +56,9 @@ namespace LumiSoft.Net.ABNF
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets alternation items.
         /// </summary>
         public List<ABNF_Concatenation> Items { get; }
-
-#endregion
     }
 }

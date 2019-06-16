@@ -32,8 +32,6 @@ namespace LumiSoft.Net.TCP
         {
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used. This method is thread-safe.
         /// </summary>
@@ -52,10 +50,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-                
-        #region method Connect
 
         /// <summary>
         /// Connects to the specified host. If the hostname resolves to more than one IP address, 
@@ -181,12 +175,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method ConnectAsync
-
-        #region class ConnectAsyncOP
-
         /// <summary>
         /// This class represents <see cref="TCP_Client.ConnectAsync"/> asynchronous operation.
         /// </summary>
@@ -223,8 +211,6 @@ namespace LumiSoft.Net.TCP
                 m_pCertCallback = certCallback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -247,10 +233,6 @@ namespace LumiSoft.Net.TCP
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -308,10 +290,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -331,10 +309,6 @@ namespace LumiSoft.Net.TCP
                     }
                 }
             }
-
-            #endregion
-
-            #region method BeginConnectCompleted
 
             /// <summary>
             /// This method is called when "BeginConnect" has completed.
@@ -369,10 +343,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region method BeginAuthenticateAsClientCompleted
-
             /// <summary>
             /// This method is called when "BeginAuthenticateAsClient" has completed.
             /// </summary>
@@ -393,10 +363,6 @@ namespace LumiSoft.Net.TCP
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method RemoteCertificateValidationCallback
 
             /// <summary>
             /// This method is called when we need to validate remote server certificate.
@@ -422,10 +388,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region method CleanupSocketRelated
-
             /// <summary>
             /// Cleans up any socket related resources.
             /// </summary>
@@ -443,10 +405,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region method InternalConnectCompleted
-
             /// <summary>
             /// Is called when when connecting has finished.
             /// </summary>
@@ -463,10 +421,6 @@ namespace LumiSoft.Net.TCP
                 m_pTcpClient.OnConnected(this.CompleteConnectCallback);
             }
 
-            #endregion
-
-            #region method CompleteConnectCallback
-
             /// <summary>
             /// This method is called when this derrived class OnConnected processing has completed.
             /// </summary>
@@ -478,10 +432,6 @@ namespace LumiSoft.Net.TCP
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -551,16 +501,10 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ConnectAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -571,13 +515,7 @@ namespace LumiSoft.Net.TCP
                     this.CompletedAsync(this,new EventArgs<ConnectAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts connecting to remote end point.
@@ -602,10 +540,6 @@ namespace LumiSoft.Net.TCP
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method Disconnect
-
         /// <summary>
         /// Disconnects connection.
         /// </summary>
@@ -629,10 +563,6 @@ namespace LumiSoft.Net.TCP
 
             LogAddText("Disconnected.");
         }
-
-        #endregion
-
-        #region method BeginDisconnect
 
         /// <summary>
         /// Internal helper method for asynchronous Disconnect method.
@@ -662,10 +592,6 @@ namespace LumiSoft.Net.TCP
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndDisconnect
 
         /// <summary>
         /// Ends a pending asynchronous disconnect request.
@@ -701,10 +627,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-
-        #region method SwitchToSecure
 
         /// <summary>
         /// Switches session to secure connection.
@@ -738,8 +660,6 @@ namespace LumiSoft.Net.TCP
             m_pTcpStream = new SmartStream(sslStream,true);
         }
 
-        #region method RemoteCertificateValidationCallback
-
         private bool RemoteCertificateValidationCallback(object sender,X509Certificate certificate,X509Chain chain,SslPolicyErrors sslPolicyErrors)
         {
             // User will handle it.
@@ -755,14 +675,6 @@ namespace LumiSoft.Net.TCP
                 return false;
             }
         }
-
-        #endregion
-
-        #endregion
-
-        #region method SwitchToSecureAsync
-
-        #region class SwitchToSecureAsyncOP
 
         /// <summary>
         /// This class represents <see cref="TCP_Client.SwitchToSecureAsync"/> asynchronous operation.
@@ -785,8 +697,6 @@ namespace LumiSoft.Net.TCP
                 m_pCertCallback = certCallback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -804,10 +714,6 @@ namespace LumiSoft.Net.TCP
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -843,10 +749,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -866,10 +768,6 @@ namespace LumiSoft.Net.TCP
                     }
                 }
             }
-
-            #endregion
-
-            #region method RemoteCertificateValidationCallback
 
             /// <summary>
             /// This method is called when we need to validate remote server certificate.
@@ -895,10 +793,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region method BeginAuthenticateAsClientCompleted
-
             /// <summary>
             /// This method is called when "BeginAuthenticateAsClient" has completed.
             /// </summary>
@@ -922,10 +816,6 @@ namespace LumiSoft.Net.TCP
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -951,16 +841,10 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<SwitchToSecureAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -971,13 +855,7 @@ namespace LumiSoft.Net.TCP
                     this.CompletedAsync(this,new EventArgs<SwitchToSecureAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts switching connection to secure.
@@ -1009,10 +887,6 @@ namespace LumiSoft.Net.TCP
             return op.Start(this);
         }
 
-        #endregion
-
-        
-        #region virtual method OnConnected
 
         /// <summary>
         /// This method is called after TCP client has sucessfully connected.
@@ -1043,10 +917,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-
-        #region method ReadLine
 
         /// <summary>
         /// Reads and logs specified line from connected host.
@@ -1070,10 +940,6 @@ namespace LumiSoft.Net.TCP
             return line;
         }
 
-        #endregion
-
-        #region method WriteLine
-
         /// <summary>
         /// Sends and logs specified line to connected host.
         /// </summary>
@@ -1089,10 +955,6 @@ namespace LumiSoft.Net.TCP
             LogAddWrite(countWritten,line);
         }
 
-        #endregion
-
-
-        #region mehtod LogAddRead
 
         /// <summary>
         /// Logs read operation.
@@ -1118,10 +980,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method LogAddWrite
-
         /// <summary>
         /// Logs write operation.
         /// </summary>
@@ -1146,10 +1004,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method LogAddText
-
         /// <summary>
         /// Logs free text entry.
         /// </summary>
@@ -1171,10 +1025,6 @@ namespace LumiSoft.Net.TCP
                 // We skip all logging errors, normally there shouldn't be any.
             }
         }
-
-        #endregion
-
-        #region method LogAddException
 
         /// <summary>
         /// Logs exception.
@@ -1200,10 +1050,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -1369,13 +1215,9 @@ namespace LumiSoft.Net.TCP
         /// <remarks>This timeout applies only synchronous TCP read/write operations.</remarks>
         public int Timeout { get; set; } = 61000;
 
-#endregion
-
 
         // OBSOLETE
 
-        #region method BeginConnect
-        
         /// <summary>
         /// Internal helper method for asynchronous Connect method.
         /// </summary>
@@ -1495,10 +1337,6 @@ namespace LumiSoft.Net.TCP
             return asyncState;
         }
 
-        #endregion
-
-        #region method EndConnect
-
         /// <summary>
         /// Ends a pending asynchronous connection request.
         /// </summary>
@@ -1537,10 +1375,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method OnError
-
         /// <summary>
         /// This must be called when unexpected error happens. When inheriting <b>TCP_Client</b> class, be sure that you call <b>OnError</b>
         /// method for each unexpected error.
@@ -1557,8 +1391,5 @@ namespace LumiSoft.Net.TCP
             catch{
             }
         }
-
-        #endregion
-
     }
 }

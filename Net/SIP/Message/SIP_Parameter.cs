@@ -34,8 +34,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets parameter name.
         /// </summary>
@@ -45,8 +43,5 @@ namespace LumiSoft.Net.SIP.Message
         /// Gets or sets parameter name. Value null means value less tag prameter.
         /// </summary>
         public string Value { get; set; } = "";
-
-#endregion
-
     }
 }

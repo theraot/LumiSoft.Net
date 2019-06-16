@@ -22,8 +22,6 @@ namespace LumiSoft.Net.FTP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>
@@ -33,7 +31,5 @@ namespace LumiSoft.Net.FTP.Server
         /// Gets file name with optional path.
         /// </summary>
         public string FileName { get; }
-
-#endregion
     }
 }

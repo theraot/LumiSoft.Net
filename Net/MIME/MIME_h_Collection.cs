@@ -33,8 +33,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region method Insert
-
         /// <summary>
         /// Inserts a new header field into the collection at the specified location.
         /// </summary>
@@ -54,10 +52,6 @@ namespace LumiSoft.Net.MIME
             m_pFields.Insert(index,field);
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method Add
 
         /// <summary>
         /// Parses and adds specified header field to the end of the collection.
@@ -93,10 +87,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = true;
         }
 
-        #endregion
-
-        #region method Remove
-
         /// <summary>
         /// Removes specified header field from the collection.
         /// </summary>
@@ -111,10 +101,6 @@ namespace LumiSoft.Net.MIME
             m_pFields.Remove(field);
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method RemoveAll
 
         /// <summary>
         /// Removes all header fields with the specified name.
@@ -139,10 +125,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = true;
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all items from the collection.
         /// </summary>
@@ -151,10 +133,6 @@ namespace LumiSoft.Net.MIME
             m_pFields.Clear();
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method Contains
 
         /// <summary>
         /// Gets if collection has item with the specified name.
@@ -196,10 +174,6 @@ namespace LumiSoft.Net.MIME
             return m_pFields.Contains(field);
         }
 
-        #endregion
-
-        #region method GetFirst
-
         /// <summary>
         /// Gets first header field with the specified name. returns null if specified header field doesn't exist.
         /// </summary>
@@ -220,10 +194,6 @@ namespace LumiSoft.Net.MIME
 
             return null;
         }
-
-        #endregion
-
-        #region method ReplaceFirst
 
         /// <summary>
         /// Replaces first header field with specified name with specified value.
@@ -246,10 +216,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method ToArray
-
         /// <summary>
         /// Copies header fields to new array.
         /// </summary>
@@ -259,10 +225,6 @@ namespace LumiSoft.Net.MIME
             return m_pFields.ToArray();
         }
 
-        #endregion
-
-
-        #region method ToFile
 
         /// <summary>
         /// Stores header to the specified file.
@@ -282,10 +244,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method ToByte
-
         /// <summary>
         /// Returns header as byte[] data.
         /// </summary>
@@ -301,10 +259,6 @@ namespace LumiSoft.Net.MIME
                 return ms.ToArray();
             }
         }
-
-        #endregion
-
-        #region method ToStream
 
         /// <summary>
         /// Stores header to the specified stream.
@@ -336,10 +290,6 @@ namespace LumiSoft.Net.MIME
             byte[] header = Encoding.UTF8.GetBytes(ToString(wordEncoder,parmetersCharset,reEncod));
             stream.Write(header,0,header.Length);
         }
-
-        #endregion
-
-        #region override method ToString
 
         /// <summary>
         /// Returns MIME header as string.
@@ -377,10 +327,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal.ToString();
         }
-
-        #endregion
-
-        #region method Parse
 
         /// <summary>
         /// Parses MIME header from the specified value.
@@ -472,10 +418,6 @@ namespace LumiSoft.Net.MIME
             }        
         }
 
-        #endregion
-
-
-        #region interface IEnumerator
 
         /// <summary>
 		/// Gets enumerator.
@@ -485,10 +427,6 @@ namespace LumiSoft.Net.MIME
 		{
 			return m_pFields.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if header has modified since it was loaded.
@@ -563,7 +501,5 @@ namespace LumiSoft.Net.MIME
         /// Gets header fields provider.
         /// </summary>
         public MIME_h_Provider FieldsProvider { get; }
-
-#endregion
     }
 }

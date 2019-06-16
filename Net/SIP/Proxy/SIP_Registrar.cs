@@ -6,8 +6,6 @@ using LumiSoft.Net.SIP.Stack;
 
 namespace LumiSoft.Net.SIP.Proxy
 {
-    #region Delegates
-
     /// <summary>
     /// Represents the method that will handle the SIP_Registrar.CanRegister event.
     /// </summary>
@@ -15,8 +13,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// <param name="address">Address to be registered.</param>
     /// <returns>Returns true if specified user can register specified address, otherwise false.</returns>
     public delegate bool SIP_CanRegisterEventHandler(string userName,string address);
-
-    #endregion
 
     /// <summary>
     /// This class implements SIP registrar server. Defined in RFC 3261 10.3.
@@ -49,8 +45,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pTimer.Enabled = true;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -75,20 +69,12 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-
-        #region method m_pTimer_Elapsed
 
         private void m_pTimer_Elapsed(object sender,ElapsedEventArgs e)
         {
             m_pRegistrations.RemoveExpired();
         }
 
-        #endregion
-
-
-        #region method GetRegistration
 
         /// <summary>
         /// Gets specified registration. Returns null if no such registration.
@@ -99,10 +85,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             return m_pRegistrations[aor];
         }
-
-        #endregion
-
-        #region method SetRegistration
 
         /// <summary>
         /// Add or updates specified SIP registration info.
@@ -134,10 +116,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method DeleteRegistration
-
         /// <summary>
         /// Deletes specified registration and all it's contacts.
         /// </summary>
@@ -147,10 +125,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pRegistrations.Remove(addressOfRecord);
         }
 
-        #endregion
-
-
-        #region method Register
 
         /// <summary>
         /// Handles REGISTER method.
@@ -265,8 +239,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             // Probably we need to do validate in SIP stack.
 
-            #region Validate request
-
             if(SIP_Utils.IsSipOrSipsUri(request.To.Address.Uri.ToString())){
                 to = (SIP_Uri)request.To.Address.Uri;
             }
@@ -275,37 +247,17 @@ namespace LumiSoft.Net.SIP.Proxy
                 return;
             }
 
-            #endregion
 
-
-            #region 1. Check if we are responsible for Request-URI domain
-
-            // if(m_pProxy.OnIsLocalUri(e.Request.Uri)){
+// if(m_pProxy.OnIsLocalUri(e.Request.Uri)){
             // }
             // TODO:
-
-            #endregion
-
-            #region 2. Check that all required extentions supported
-
-            #endregion
-
-            #region 3. Authenticate request
 
             if(!Proxy.AuthenticateRequest(e,out userName)){
                 return;
             }
 
-            #endregion
-
-            #region 4. Check if user user is authorized to modify registrations
-
             // We do this in next step(5.).
 
-            #endregion
-
-            #region 5. Check if address of record exists
-            
             if(!Proxy.OnAddressExists(to.Address)){
                 transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found,request));
                 return;
@@ -314,10 +266,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x403_Forbidden,request));
                 return;
             }
-
-            #endregion
-
-            #region 6. Process * Contact if exists
 
             // Check if we have star contact.
             SIP_t_ContactParam starContact = null;
@@ -349,10 +297,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
             }
-
-            #endregion
-
-            #region 7. Process Contact values
 
             if(starContact == null){
                 bool             newReg = false;
@@ -401,10 +345,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #region 8. Create 200 OK response and return all current bindings
-
             SIP_Response response = m_pStack.CreateResponse(SIP_ResponseCodes.x200_Ok,request);
             response.Date = DateTime.Now;
             SIP_Registration registration = m_pRegistrations[to.Address];
@@ -419,15 +359,8 @@ namespace LumiSoft.Net.SIP.Proxy
             // Add Authentication-Info:, then client knows next nonce.
             response.AuthenticationInfo.Add("qop=\"auth\",nextnonce=\"" + m_pStack.DigestNonceManager.CreateNonce() + "\"");
             transaction.SendResponse(response);
-
-            #endregion
-                        
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets owner proxy core.
@@ -449,16 +382,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region Events Implementation
-
         /// <summary>
         /// This event is raised when SIP registrar need to check if specified user can register specified address.
         /// </summary>
         public event SIP_CanRegisterEventHandler CanRegister;
-
-        #region method OnCanRegister
 
         /// <summary>
         /// Is called by SIP registrar if it needs to check if specified user can register specified address.
@@ -475,14 +402,10 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when new AOR(address of record) has been registered.
         /// </summary>
         public event EventHandler<SIP_RegistrationEventArgs> AorRegistered;
-
-        #region method OnAorRegistered
 
         /// <summary>
         /// Raises <b>AorRegistered</b> event.
@@ -495,14 +418,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when AOR(address of record) has been unregistered.
         /// </summary>
         public event EventHandler<SIP_RegistrationEventArgs> AorUnregistered;
-
-        #region method OnAorUnregistered
 
         /// <summary>
         /// Raises <b>AorUnregistered</b> event.
@@ -515,14 +434,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when AOR(address of record) has been updated.
         /// </summary>
         public event EventHandler<SIP_RegistrationEventArgs> AorUpdated;
-
-        #region method OnAorUpdated
 
         /// <summary>
         /// Raises <b>AorUpdated</b> event.
@@ -534,10 +449,5 @@ namespace LumiSoft.Net.SIP.Proxy
                 this.AorUpdated(this,new SIP_RegistrationEventArgs(registration));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

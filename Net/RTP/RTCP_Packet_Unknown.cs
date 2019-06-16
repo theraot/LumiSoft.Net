@@ -16,10 +16,5 @@
         }
 
         // TODO:
-
-        #region Properties Implementation
-
-        #endregion
-
     }
 }

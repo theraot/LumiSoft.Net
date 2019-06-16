@@ -29,8 +29,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Join" from specified value.
         /// </summary>
@@ -85,10 +83,6 @@ namespace LumiSoft.Net.SIP.Message
             }            
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Join" value.
         /// </summary>
@@ -113,10 +107,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets call ID value.
@@ -186,8 +176,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

@@ -37,8 +37,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets data flow what received SIP request.
         /// </summary>
@@ -89,8 +87,5 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{ m_IsHandled = true; }
         }
-
-        #endregion
-
     }
 }

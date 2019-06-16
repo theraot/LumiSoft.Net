@@ -10,8 +10,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class WavePlayer
     {
-        #region class RIFF_Chunk
-
         /// <summary>
         /// This class represents wave RIFF chunk.
         /// </summary>
@@ -24,8 +22,6 @@ namespace LumiSoft.Net.Media
             {
             }
 
-
-            #region method Parse
 
             /// <summary>
             /// Parses RIFF chunk from the specified reader.
@@ -42,10 +38,6 @@ namespace LumiSoft.Net.Media
                 Format    = new string(reader.ReadChars(4)).Trim();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Returns "RIFF".
@@ -64,13 +56,7 @@ namespace LumiSoft.Net.Media
             /// Gets format.
             /// </summary>
             public string Format { get; private set; } = "";
-
-#endregion
         }
-
-        #endregion
-
-        #region class fmt_Chunk
 
         /// <summary>
         /// This class represents wave fmt chunk.
@@ -84,8 +70,6 @@ namespace LumiSoft.Net.Media
             {
             }
 
-
-            #region method Parse
 
             /// <summary>
             /// Parses fmt chunk from the specified reader.
@@ -112,10 +96,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-            #region method ToString
-
             /// <summary>
             /// Returns this as string.
             /// </summary>
@@ -134,10 +114,6 @@ namespace LumiSoft.Net.Media
                 return retVal.ToString();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Returns "fmt".
@@ -181,13 +157,7 @@ namespace LumiSoft.Net.Media
             /// Gets bits per sample.
             /// </summary>
             public int BitsPerSample { get; private set; }
-
-#endregion
         }
-
-        #endregion
-
-        #region class data_Chunk
 
         /// <summary>
         /// This class represents wave data chunk.
@@ -201,8 +171,6 @@ namespace LumiSoft.Net.Media
             {
             }
 
-
-            #region method Parse
 
             /// <summary>
             /// Parses data chunk from the specified reader.
@@ -218,10 +186,6 @@ namespace LumiSoft.Net.Media
                 ChunkSize = reader.ReadUInt32();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Returns "data".
@@ -235,13 +199,7 @@ namespace LumiSoft.Net.Media
             /// Gets chunk size.
             /// </summary>
             public uint ChunkSize { get; private set; }
-
-#endregion
         }
-
-        #endregion
-
-        #region class WavReader
 
         /// <summary>
         /// This class implements wav file reader.
@@ -265,8 +223,6 @@ namespace LumiSoft.Net.Media
             }
 
 
-            #region method Read_ChunkID
-
             /// <summary>
             /// Reads 4 char chunk ID.
             /// </summary>
@@ -283,10 +239,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-            #region method Read_RIFF
-
             /// <summary>
             /// Reads RIFF chunk. 
             /// </summary>
@@ -298,10 +250,6 @@ namespace LumiSoft.Net.Media
 
                 return retVal;
             }
-
-            #endregion
-
-            #region method Read_fmt
 
             /// <summary>
             /// Reads fmt chunk. 
@@ -315,10 +263,6 @@ namespace LumiSoft.Net.Media
                 return retVal;
             }
 
-            #endregion
-
-            #region method Read_data
-
             /// <summary>
             /// Reads data chunk. 
             /// </summary>
@@ -331,10 +275,6 @@ namespace LumiSoft.Net.Media
                 return retVal;
             }
 
-            #endregion
-
-            #region method SkipChunk
-
             /// <summary>
             /// Skips active chunk.
             /// </summary>
@@ -344,11 +284,7 @@ namespace LumiSoft.Net.Media
 
                 m_pBinaryReader.BaseStream.Position += chunkSize;
             }
-
-            #endregion
         }
-
-        #endregion
 
 
         private bool           m_IsPlaying;
@@ -369,8 +305,6 @@ namespace LumiSoft.Net.Media
             m_pOutputDevice = device;
         }
 
-
-        #region method Play
 
         /// <summary>
         /// Starts playing specified wave file for the specified number of times.
@@ -478,10 +412,6 @@ namespace LumiSoft.Net.Media
             }));
         }
 
-        #endregion
-
-        #region method Stop
-
         /// <summary>
         /// Stop currently played audio.
         /// </summary>
@@ -493,7 +423,5 @@ namespace LumiSoft.Net.Media
                 Thread.Sleep(5);
             }
         }
-
-        #endregion
     }
 }

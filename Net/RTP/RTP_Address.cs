@@ -79,8 +79,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method Equals
-
         /// <summary>
         /// Determines whether the specified Object is equal to the current Object.
         /// </summary>
@@ -103,10 +101,6 @@ namespace LumiSoft.Net.RTP
             return false;
         }
 
-        #endregion
-
-        #region ovveride method GetHashCode
-
         /// <summary>
         /// Gets this hash code.
         /// </summary>
@@ -116,10 +110,6 @@ namespace LumiSoft.Net.RTP
             return base.GetHashCode();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this is multicast RTP address.
@@ -158,8 +148,5 @@ namespace LumiSoft.Net.RTP
         /// Gets RTPCP end point.
         /// </summary>
         public IPEndPoint RtcpEP { get; }
-
-#endregion
-
     }
 }

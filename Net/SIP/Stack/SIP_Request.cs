@@ -27,8 +27,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region method Copy
-
         /// <summary>
         /// Clones this request.
         /// </summary>
@@ -43,10 +41,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-
-        #region method Validate
 
         /// <summary>
         /// Checks if SIP request has all required values as request line,header fields and their values.
@@ -123,10 +117,6 @@ namespace LumiSoft.Net.SIP.Stack
             // TODO: get in transport made request, so check if sips and sip set as needed.
         }
 
-        #endregion
-
-        #region method Parse
-
         /// <summary>
         /// Parses SIP_Request from byte array.
         /// </summary>
@@ -178,10 +168,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-        #region method ToStream
-
         /// <summary>
         /// Stores SIP_Request to specified stream.
         /// </summary>
@@ -196,10 +182,6 @@ namespace LumiSoft.Net.SIP.Stack
             this.InternalToStream(stream);
         }
 
-        #endregion
-
-        #region method ToByteData
-
         /// <summary>
         /// Converts this request to raw srver request data.
         /// </summary>
@@ -212,10 +194,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method ToString
-
         /// <summary>
         /// Returns request as string.
         /// </summary>
@@ -225,10 +203,6 @@ namespace LumiSoft.Net.SIP.Stack
             return Encoding.UTF8.GetString(ToByteData());
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets request-line.
@@ -249,8 +223,5 @@ namespace LumiSoft.Net.SIP.Stack
         /// Gets or sets remote end point what sent/received this request. Returns null if this request isn't sent or received.
         /// </summary>
         internal IPEndPoint RemoteEndPoint { get; set; }
-
-#endregion
-
     }    
 }

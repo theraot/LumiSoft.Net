@@ -17,8 +17,6 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_Session : TCP_ServerSession
     {
-        #region class DataConnection
-
         /// <summary>
         /// This class represents FTP session data connection.
         /// </summary>
@@ -51,8 +49,6 @@ namespace LumiSoft.Net.FTP.Server
                 m_Read_Write = read_write;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -81,10 +77,6 @@ namespace LumiSoft.Net.FTP.Server
                 }
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts data connection processing.
@@ -154,10 +146,6 @@ namespace LumiSoft.Net.FTP.Server
                 }
             }
 
-            #endregion
-
-            #region method Abort
-
             /// <summary>
             /// Aborts transfer.
             /// </summary>
@@ -172,10 +160,6 @@ namespace LumiSoft.Net.FTP.Server
                 Dispose();
             }
 
-            #endregion
-
-
-            #region method WriteLine
 
             /// <summary>
             /// Writes line to control connection.
@@ -192,10 +176,6 @@ namespace LumiSoft.Net.FTP.Server
 
                 m_pSession.WriteLine(line);
             }
-
-            #endregion
-
-            #region method StartDataTransfer
 
             private void StartDataTransfer()
             {
@@ -216,11 +196,7 @@ namespace LumiSoft.Net.FTP.Server
                 }
                 Dispose();
             }
-
-            #endregion
         }
-
-        #endregion
 
         private readonly Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications = null;
         private bool                                         m_SessionRejected;
@@ -239,8 +215,6 @@ namespace LumiSoft.Net.FTP.Server
         public FTP_Session()
         {
         }
-
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -262,10 +236,6 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
-
-        #region override method Start
 
         /// <summary>
         /// Starts session processing.
@@ -300,10 +270,6 @@ namespace LumiSoft.Net.FTP.Server
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region override method OnError
 
         /// <summary>
         /// Is called when session has processing error.
@@ -348,10 +314,6 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
-        #region override method OnTimeout
-
         /// <summary>
         /// This method is called when specified session times out.
         /// </summary>
@@ -369,10 +331,6 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
-
-        #region method BeginReadCmd
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -402,10 +360,6 @@ namespace LumiSoft.Net.FTP.Server
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region method ProcessCmd
 
         /// <summary>
         /// Completes command reading operation.
@@ -548,12 +502,8 @@ namespace LumiSoft.Net.FTP.Server
              return readNextCommand;
         }
 
-        #endregion
 
-
-		#region method USER
-
-		private void USER(string argsText)
+        private void USER(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -585,11 +535,7 @@ namespace LumiSoft.Net.FTP.Server
 			}
 		}
 
-		#endregion
-
-		#region method PASS
-
-		private void PASS(string argsText)
+        private void PASS(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -629,12 +575,8 @@ namespace LumiSoft.Net.FTP.Server
 			}
 		}
 
-		#endregion
 
-
-		#region method CWD
-
-		private void CWD(string argsText)
+        private void CWD(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -670,11 +612,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method CDUP
-
-		private void CDUP(string argsText)
+        private void CDUP(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -712,11 +650,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method PWD
-
-		private void PWD(string argsText)
+        private void PWD(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -737,12 +671,8 @@ namespace LumiSoft.Net.FTP.Server
 			WriteLine("257 \"" + m_CurrentDir + "\" is current directory.");
 		}
 
-		#endregion
 
-
-        #region method ABOR
-
-		private void ABOR(string argsText)
+        private void ABOR(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -793,11 +723,7 @@ namespace LumiSoft.Net.FTP.Server
             WriteLine("226 ABOR command successful.");
 		}
 
-		#endregion
-
-		#region method RETR
-
-		private void RETR(string argsText)
+        private void RETR(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -844,11 +770,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method STOR
-
-		private void STOR(string argsText)
+        private void STOR(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -893,11 +815,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method DELE
-
-		private void DELE(string argsText)
+        private void DELE(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -934,11 +852,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method APPE
-
-		private void APPE(string argsText)
+        private void APPE(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -984,10 +898,6 @@ namespace LumiSoft.Net.FTP.Server
                 m_pDataConnection.Start();
             }
 		}
-
-		#endregion
-
-        #region method SIZE
 
         private void SIZE(string argsText)
         {
@@ -1040,12 +950,8 @@ namespace LumiSoft.Net.FTP.Server
             }            
         }
 
-        #endregion
 
-
-		#region method RNFR
-
-		private void RNFR(string argsText)
+        private void RNFR(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1070,11 +976,7 @@ namespace LumiSoft.Net.FTP.Server
             m_RenameFrom = argsText;
 		}
 
-		#endregion
-
-		#region method RNTO
-
-		private void RNTO(string argsText)
+        private void RNTO(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1116,12 +1018,8 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
 
-
-		#region method RMD
-
-		private void RMD(string argsText)
+        private void RMD(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1158,11 +1056,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method MKD
-
-		private void MKD(string argsText)
+        private void MKD(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1199,11 +1093,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method LIST
-		
-		private void LIST(string argsText)
+        private void LIST(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1261,11 +1151,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
-
-		#region method NLST
-
-		private void NLST(string argsText)
+        private void NLST(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1317,12 +1203,8 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-		#endregion
 
-
-		#region method TYPE
-
-		private void TYPE(string argsText)
+        private void TYPE(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1368,11 +1250,7 @@ namespace LumiSoft.Net.FTP.Server
 			}
 		}
 
-		#endregion
-
-		#region method PORT
-
-		private void PORT(string argsText)
+        private void PORT(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1417,11 +1295,7 @@ namespace LumiSoft.Net.FTP.Server
 			WriteLine("200 PORT Command successful.");
 		}
 
-		#endregion
-
-		#region method PASV
-
-		private void PASV(string argsText)
+        private void PASV(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1478,11 +1352,7 @@ namespace LumiSoft.Net.FTP.Server
 			PassiveMode = true;
 		}
 
-		#endregion
-
-		#region method SYST
-
-		private void SYST(string argsText)
+        private void SYST(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1504,12 +1374,8 @@ namespace LumiSoft.Net.FTP.Server
 			WriteLine("215 Windows_NT");
 		}
 
-		#endregion
-                        
 
-		#region method NOOP
-
-		private void NOOP(string argsText)
+        private void NOOP(string argsText)
 		{
             if(m_SessionRejected){
                 WriteLine("500 Bad sequence of commands: Session rejected.");
@@ -1524,11 +1390,7 @@ namespace LumiSoft.Net.FTP.Server
 			WriteLine("200 OK");
 		}
 
-		#endregion
-
-		#region method QUIT
-
-		private void QUIT(string argsText)
+        private void QUIT(string argsText)
 		{
 			/*
 				This command terminates a USER and if file transfer is not
@@ -1553,10 +1415,6 @@ namespace LumiSoft.Net.FTP.Server
             Dispose();
 		}
 
-		#endregion
-
-
-        #region method FEAT
 
         private void FEAT(string argsText)
         {
@@ -1647,10 +1505,6 @@ namespace LumiSoft.Net.FTP.Server
             WriteLine(retVal.ToString());
         }
 
-        #endregion
-
-        #region method OPTS
-
         private void OPTS(string argsText)
         {
             if(m_SessionRejected){
@@ -1704,10 +1558,6 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
-
-        #region method WriteLine
 
         /// <summary>
         /// Sends and logs specified line to connected host.
@@ -1727,10 +1577,6 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
-        #region method LogAddText
-
         /// <summary>
         /// Logs specified text.
         /// </summary>
@@ -1748,11 +1594,7 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
 
-
-		#region Properties Implementation
-        
         /// <summary>
         /// Gets session owner FTP server.
         /// </summary>
@@ -1840,16 +1682,10 @@ namespace LumiSoft.Net.FTP.Server
 		/// </summary>
 		public bool PassiveMode { get; private set; }
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when session has started processing and needs to send 220 greeting or 500 error resposne to the connected client.
         /// </summary>
         public event EventHandler<FTP_e_Started> Started;
-
-        #region method OnStarted
 
         /// <summary>
         /// Raises <b>Started</b> event.
@@ -1867,14 +1703,10 @@ namespace LumiSoft.Net.FTP.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to authenticate session using USER/PASS FTP authentication.
         /// </summary>
         public event EventHandler<FTP_e_Authenticate> Authenticate;
-
-        #region method OnAuthenticate
 
         /// <summary>
         /// Raises <b>Authenticate</b> event.
@@ -1893,14 +1725,10 @@ namespace LumiSoft.Net.FTP.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to get specified file.
         /// </summary>
         public event EventHandler<FTP_e_GetFile> GetFile;
-
-        #region method OnGetFile
 
         /// <summary>
         /// Raises <b>GetFile</b> event.
@@ -1913,14 +1741,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete STOR(store file) command.
         /// </summary>
         public event EventHandler<FTP_e_Stor> Stor;
-
-        #region method OnStor
 
         /// <summary>
         /// Raises <b>Stor</b> event.
@@ -1933,14 +1757,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to get specified file size.
         /// </summary>
         public event EventHandler<FTP_e_GetFileSize> GetFileSize;
-
-        #region method OnGetFileSize
 
         /// <summary>
         /// Raises <b>GetFileSize</b> event.
@@ -1953,14 +1773,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete DELE(delete file) command.
         /// </summary>
         public event EventHandler<FTP_e_Dele> Dele;
-
-        #region method OnDele
 
         /// <summary>
         /// Raises <b>Dele</b> event.
@@ -1973,14 +1789,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete APPE(append to file) command.
         /// </summary>
         public event EventHandler<FTP_e_Appe> Appe;
-
-        #region method OnAppe
 
         /// <summary>
         /// Raises <b>Appe</b> event.
@@ -1993,14 +1805,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete CWD(change working directory) command.
         /// </summary>
         public event EventHandler<FTP_e_Cwd> Cwd;
-
-        #region method OnCwd
 
         /// <summary>
         /// Raises <b>Cwd</b> event.
@@ -2013,14 +1821,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete CDUP(change directory up) command.
         /// </summary>
         public event EventHandler<FTP_e_Cdup> Cdup;
-
-        #region method OnCdup
 
         /// <summary>
         /// Raises <b>Cdup</b> event.
@@ -2033,14 +1837,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete RMD(remove directory) command.
         /// </summary>
         public event EventHandler<FTP_e_Rmd> Rmd;
-
-        #region method OnRmd
 
         /// <summary>
         /// Raises <b>Rmd</b> event.
@@ -2053,14 +1853,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete MKD(make directory) command.
         /// </summary>
         public event EventHandler<FTP_e_Mkd> Mkd;
-
-        #region method OnMkd
 
         /// <summary>
         /// Raises <b>Mkd</b> event.
@@ -2073,14 +1869,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to get directory listing.
         /// </summary>
         public event EventHandler<FTP_e_GetDirListing> GetDirListing;
-
-        #region method OnGetDirListing
 
         /// <summary>
         /// Raises <b>GetDirListing</b> event.
@@ -2093,14 +1885,10 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to complete RNTO(rename file/directory to) command.
         /// </summary>
         public event EventHandler<FTP_e_Rnto> Rnto;
-
-        #region method OnRnto
 
         /// <summary>
         /// Raises <b>Rnto</b> event.
@@ -2112,10 +1900,5 @@ namespace LumiSoft.Net.FTP.Server
                 this.Rnto(this,e);
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

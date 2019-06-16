@@ -30,8 +30,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets resource limit name.
         /// </summary>
@@ -46,7 +44,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets maximum allowed resource usage.
         /// </summary>
         public long MaxUsage { get; }
-
-#endregion
     }
 }

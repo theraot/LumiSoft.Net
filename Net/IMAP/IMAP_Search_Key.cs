@@ -9,8 +9,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public abstract class IMAP_Search_Key
     {
-        #region static method ParseKey
-
         /// <summary>
         /// Parses one search key or search key group.
         /// </summary>
@@ -182,10 +180,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-
-        #region internal abstract method ToCmdParts
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -193,7 +187,5 @@ namespace LumiSoft.Net.IMAP
         /// <param name="list">Array where to store command parts.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>list</b> is null reference.</exception>
         internal abstract void ToCmdParts(List<IMAP_Client_CmdPart> list);
-
-        #endregion
     }
 }

@@ -45,8 +45,6 @@ namespace LumiSoft.Net.SDP
         }
 
 
-        #region method static Parse
-
         /// <summary>
         /// Parses media from "c" SDP message field.
         /// </summary>
@@ -88,10 +86,6 @@ namespace LumiSoft.Net.SDP
             return new SDP_Connection(netType,addrType,connectionAddress);
         }
 
-        #endregion
-
-        #region method ToValue
-
         /// <summary>
         /// Converts this to valid connection data stirng. 
         /// </summary>
@@ -103,10 +97,6 @@ namespace LumiSoft.Net.SDP
             return "c=" + NetType + " " + AddressType + " " + Address + "\r\n";
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets net type. Currently it's always IN(Internet).
@@ -144,8 +134,5 @@ namespace LumiSoft.Net.SDP
                 m_Address = value;
             }
         }
-
-        #endregion
-
     }
 }

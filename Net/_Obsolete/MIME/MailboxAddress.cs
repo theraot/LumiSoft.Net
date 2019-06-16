@@ -43,9 +43,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region method Parse
-
-		/// <summary>
+        /// <summary>
 		/// Parses mailbox from mailbox address string.
 		/// </summary>
 		/// <param name="mailbox">Mailbox string. Format: ["diplay-name"&lt;SP&gt;]&lt;local-part@domain&gt;.</param>
@@ -88,10 +86,6 @@ namespace LumiSoft.Net.Mime
 			return new MailboxAddress(name,emailAddress);
 		}
 
-		#endregion
-
-
-        #region method ToMailboxAddressString
 
         /// <summary>
         /// Converts this to valid mailbox address string.
@@ -117,10 +111,6 @@ namespace LumiSoft.Net.Mime
             return retVal;
         }
 
-        #endregion
-
-
-        #region internal method OnChanged
 
         /// <summary>
 		/// This called when mailox address has changed.
@@ -137,12 +127,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets Mailbox as RFC 2822(3.4. Address Specification) string. Format: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.
 		/// For example, "Ivar Lumi" &lt;ivar@lumisoft.ee&gt;.
 		/// </summary>
@@ -222,8 +208,5 @@ namespace LumiSoft.Net.Mime
 				}
 			}
 		}
-
-		#endregion
-
-     }
+    }
 }

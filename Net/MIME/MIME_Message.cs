@@ -22,8 +22,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method ParseFromFile
-
         /// <summary>
         /// Parses MIME message from the specified file.
         /// </summary>
@@ -70,10 +68,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region static method ParseFromStream
-
         /// <summary>
         /// Parses MIME message from the specified stream.
         /// </summary>
@@ -110,10 +104,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal;
         }
-
-        #endregion
-
-        #region static method CreateAttachment
 
         /// <summary>
         /// Creates attachment entity.
@@ -178,10 +168,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region method GetAllEntities
 
         /// <summary>
         /// Gets all MIME entities as list.
@@ -221,10 +207,6 @@ namespace LumiSoft.Net.MIME
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetEntityByCID
-
         /// <summary>
         /// Gets MIME entity with the specified Content-ID. Returns null if no such entity.
         /// </summary>
@@ -254,14 +236,9 @@ namespace LumiSoft.Net.MIME
             return null;
         }
 
-        #endregion
-
         // TODO:
         //public MIME_Entity GetEntityByPartsSpecifier(string partsSpecifier)
 
-        
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets all MIME entities as list.
@@ -301,8 +278,5 @@ namespace LumiSoft.Net.MIME
                 return retVal.ToArray();
             }
         }
-
-        #endregion
-
     }
 }

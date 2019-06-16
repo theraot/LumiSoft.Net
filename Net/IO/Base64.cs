@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class Base64
     {
-        #region BASE64_ENCODE_TABLE
-
         private readonly static byte[] BASE64_ENCODE_TABLE = new byte[]{
 		    (byte)'A',(byte)'B',(byte)'C',(byte)'D',(byte)'E',(byte)'F',(byte)'G',(byte)'H',(byte)'I',(byte)'J',
             (byte)'K',(byte)'L',(byte)'M',(byte)'N',(byte)'O',(byte)'P',(byte)'Q',(byte)'R',(byte)'S',(byte)'T',
@@ -19,10 +17,6 @@ namespace LumiSoft.Net.IO
             (byte)'y',(byte)'z',(byte)'0',(byte)'1',(byte)'2',(byte)'3',(byte)'4',(byte)'5',(byte)'6',(byte)'7',
             (byte)'8',(byte)'9',(byte)'+',(byte)'/'
 		};
-
-        #endregion
-
-        #region BASE64_DECODE_TABLE
 
         private readonly static short[] BASE64_DECODE_TABLE = new short[]{
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
@@ -40,8 +34,6 @@ namespace LumiSoft.Net.IO
 		    49,50,51,-1,-1,-1,-1,-1         //120 - 127
         };
 
-        #endregion
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -49,8 +41,6 @@ namespace LumiSoft.Net.IO
         {
         }
 
-
-        #region method Encode
 
         /// <summary>
         /// Encodes bytes.
@@ -64,10 +54,6 @@ namespace LumiSoft.Net.IO
         {
             throw new NotImplementedException();
         }
-
-        #endregion
-
-        #region method Decode
 
         /// <summary>
         /// Decodes specified base64 string.
@@ -250,7 +236,5 @@ namespace LumiSoft.Net.IO
 
             return decodedOffset;
         }
-
-        #endregion
     }
 }

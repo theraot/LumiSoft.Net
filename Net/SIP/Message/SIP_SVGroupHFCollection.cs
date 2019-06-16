@@ -27,8 +27,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region mehtod Refresh
-
         /// <summary>
         /// Refreshes header fields in group from actual header.
         /// </summary>
@@ -43,10 +41,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-
-        #region method Add
 
         /// <summary>
         /// Adds specified header field value to the end of header.
@@ -57,10 +51,6 @@ namespace LumiSoft.Net.SIP.Message
             m_pMessage.Header.Add(FieldName,value);
             Refresh();
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes header field from specified index.
@@ -82,10 +72,6 @@ namespace LumiSoft.Net.SIP.Message
             m_pFields.Remove(field);
         }
 
-        #endregion
-
-        #region method RemoveAll
-
         /// <summary>
         /// Removes all this gorup header fields from header.
         /// </summary>
@@ -96,10 +82,6 @@ namespace LumiSoft.Net.SIP.Message
             }
             m_pFields.Clear();
         }
-
-        #endregion
-
-        #region method GetFirst
 
         /// <summary>
         /// Gets the first(Top-Most) header field. Returns null if no header fields.
@@ -115,10 +97,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region method GetAllValues
-
         /// <summary>
         /// Gets all header field values.
         /// </summary>
@@ -133,11 +111,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToArray();
         }
 
-        #endregion
-
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets header field name what this group holds.
@@ -159,8 +132,5 @@ namespace LumiSoft.Net.SIP.Message
         {
             get{ return m_pFields.ToArray(); }
         }
-
-        #endregion
-
     }
 }

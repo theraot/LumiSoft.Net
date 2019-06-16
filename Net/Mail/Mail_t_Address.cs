@@ -17,16 +17,11 @@ namespace LumiSoft.Net.Mail
         }
 
 
-        #region abstract method ToString
-
         /// <summary>
         /// Returns address as string value.
         /// </summary>
         /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <returns>Returns address as string value.</returns>
         public abstract string ToString(MIME_Encoding_EncodedWord wordEncoder);
-
-        #endregion
-
     }
 }

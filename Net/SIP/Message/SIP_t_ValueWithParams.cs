@@ -16,8 +16,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region mehtod ParseParameters
-
         /// <summary>
         /// Parses parameters from specified reader. Reader position must be where parameters begin.
         /// </summary>
@@ -57,10 +55,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region method ParametersToString
-
         /// <summary>
         /// Convert parameters to valid parameters string.
         /// </summary>
@@ -85,17 +79,10 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets via parameters.
         /// </summary>
         public SIP_ParameterCollection Parameters { get; }
-
-#endregion
-
     }
 }

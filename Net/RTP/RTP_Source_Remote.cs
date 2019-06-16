@@ -23,8 +23,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -40,10 +38,6 @@ namespace LumiSoft.Net.RTP
             base.Dispose();
         }
 
-        #endregion
-
-
-        #region method SetParticipant
 
         /// <summary>
         /// Sets source owner participant.
@@ -58,10 +52,6 @@ namespace LumiSoft.Net.RTP
 
             m_pParticipant = participant;
         }
-
-        #endregion
-
-        #region method OnRtpPacketReceived
 
         /// <summary>
         /// Is called when RTP session receives new RTP packet.
@@ -87,10 +77,6 @@ namespace LumiSoft.Net.RTP
             m_pStream.Process(packet,size);
         }
 
-        #endregion
-
-        #region method OnSenderReport
-
         /// <summary>
         /// This method is called when this source got sender report.
         /// </summary>
@@ -107,10 +93,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-        #region method OnAppPacket
-
         /// <summary>
         /// This method is called when this source got RTCP APP apcket.
         /// </summary>
@@ -125,10 +107,6 @@ namespace LumiSoft.Net.RTP
             OnApplicationPacket(packet);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Returns false.
@@ -191,16 +169,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when source sends RTCP APP packet.
         /// </summary>
         public event EventHandler<EventArgs<RTCP_Packet_APP>> ApplicationPacket;
-
-        #region method OnApplicationPacket
 
         /// <summary>
         /// Raises <b>ApplicationPacket</b> event.
@@ -216,9 +188,5 @@ namespace LumiSoft.Net.RTP
                 this.ApplicationPacket(this,new EventArgs<RTCP_Packet_APP>(packet));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

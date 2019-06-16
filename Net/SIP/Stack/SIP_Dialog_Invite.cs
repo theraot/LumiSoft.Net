@@ -20,8 +20,6 @@ namespace LumiSoft.Net.SIP.Stack
         {            
         }
 
-        #region overide method Init
-
         /// <summary>
         /// Initializes dialog.
         /// </summary>
@@ -104,10 +102,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -124,10 +118,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method Terminate
 
         /// <summary>
         /// Starts terminating dialog.
@@ -203,10 +193,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method ProcessRequest
 
         /// <summary>
         /// Processes specified request through this dialog.
@@ -288,10 +274,6 @@ namespace LumiSoft.Net.SIP.Stack
             return false;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if dialog has pending INVITE transaction.
@@ -329,17 +311,11 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when remote-party terminates dialog with BYE request.
         /// </summary>
         /// <remarks>This event is useful only if the application is interested in processing the headers in the BYE message.</remarks>
         public event EventHandler<SIP_RequestReceivedEventArgs> TerminatedByRemoteParty;
-
-        #region method OnTerminatedByRemoteParty
 
         /// <summary>
         /// Raises <b>TerminatedByRemoteParty</b> event.
@@ -351,10 +327,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.TerminatedByRemoteParty(this,bye);
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

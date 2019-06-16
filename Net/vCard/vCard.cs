@@ -26,8 +26,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method ToByte
-
         /// <summary>
         /// Stores vCard structure to byte[].
         /// </summary>
@@ -39,10 +37,6 @@ namespace LumiSoft.Net.Mime.vCard
             return ms.ToArray();
         }
 
-        #endregion
-
-        #region method ToFile
-
         /// <summary>
         /// Stores vCard to the specified file.
         /// </summary>
@@ -53,10 +47,6 @@ namespace LumiSoft.Net.Mime.vCard
                 ToStream(fs);
             }
         }
-
-        #endregion
-
-        #region method ToStream
 
         /// <summary>
         /// Stores vCard structure to the specified stream.
@@ -81,10 +71,6 @@ namespace LumiSoft.Net.Mime.vCard
             stream.Write(data,0,data.Length);
         }
 
-        #endregion
-
-
-        #region static method ParseMultiple
 
         /// <summary>
         /// Parses multiple vCards from the specified file (Apple Address Book and Gmail exports)
@@ -117,10 +103,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
             return vCards;
         }
-
-        #endregion
-
-        #region method Parse
 
         /// <summary>
         /// Parses single vCard from the specified file.
@@ -196,10 +178,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-        #endregion
-                        
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets reference to vCard items.
@@ -551,8 +529,5 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
         }
-
-        #endregion
-
     }
 }

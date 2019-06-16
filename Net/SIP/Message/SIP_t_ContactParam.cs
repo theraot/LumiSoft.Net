@@ -28,8 +28,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "contact-param" from specified value.
         /// </summary>
@@ -89,10 +87,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "contact-param" value.
         /// </summary>
@@ -125,10 +119,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets is this SIP contact is special STAR contact.
@@ -203,8 +193,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

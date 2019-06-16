@@ -30,8 +30,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets start port.
         /// </summary>
@@ -41,8 +39,5 @@ namespace LumiSoft.Net
         /// Gets end port.
         /// </summary>
         public int End { get; } = 1100;
-
-#endregion
-
     }
 }

@@ -20,9 +20,7 @@ namespace LumiSoft.Net
 		}
 
 
-		#region Properties Implementaion
-
-		/// <summary>
+        /// <summary>
 		/// Occured error's exception.
 		/// </summary>
 		public Exception Exception { get; }
@@ -36,8 +34,5 @@ namespace LumiSoft.Net
 		/// Gets comment text.
 		/// </summary>
 		public string Text { get; } = "";
-
-#endregion
-
-	}
+    }
 }

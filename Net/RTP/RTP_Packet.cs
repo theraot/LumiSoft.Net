@@ -25,8 +25,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses RTP packet.
         /// </summary>
@@ -41,10 +39,6 @@ namespace LumiSoft.Net.RTP
             return packet;
         }
 
-        #endregion
-
-        #region method Validate
-
         /// <summary>
         /// Validates RTP packet.
         /// </summary>
@@ -52,10 +46,6 @@ namespace LumiSoft.Net.RTP
         {
             // TODO: Validate RTP apcket
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores this packet to the specified buffer.
@@ -129,10 +119,6 @@ namespace LumiSoft.Net.RTP
             offset += m_Data.Length;
         }
 
-        #endregion
-
-        #region override method ToString
-
         /// <summary>
         /// Returns this packet info as string.
         /// </summary>
@@ -152,10 +138,6 @@ namespace LumiSoft.Net.RTP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region method ParseInternal
 
         /// <summary>
         /// Parses RTP packet from the specified buffer.
@@ -232,10 +214,6 @@ namespace LumiSoft.Net.RTP
             Array.Copy(buffer,offset,m_Data,0,m_Data.Length);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTP version.
@@ -351,8 +329,5 @@ namespace LumiSoft.Net.RTP
                 m_Data = value; 
             }
         }
-
-        #endregion
-
     }
 }

@@ -32,8 +32,6 @@ namespace LumiSoft.Net.FTP
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets if current item is directory.
         /// </summary>
@@ -61,8 +59,5 @@ namespace LumiSoft.Net.FTP
         /// Gets last time file or direcory was modified.
         /// </summary>
         public DateTime Modified { get; }
-
-#endregion
-
     }
 }

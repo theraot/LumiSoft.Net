@@ -32,8 +32,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties impalementation
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>
@@ -53,7 +51,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets new folder name with optional path.
         /// </summary>
         public string NewFolder { get; }
-
-#endregion
     }
 }

@@ -19,8 +19,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method ParseInternal
-
         /// <summary>
         /// Parses APP packet from the specified buffer.
         /// </summary>
@@ -66,10 +64,6 @@ namespace LumiSoft.Net.RTP
             Data    = new byte[length - 8];
             Array.Copy(buffer,offset,Data,0,Data.Length);
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores APP packet to the specified buffer.
@@ -125,10 +119,6 @@ namespace LumiSoft.Net.RTP
             offset += Data.Length;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTCP version.
@@ -173,8 +163,5 @@ namespace LumiSoft.Net.RTP
         {
             get{ return 12 + Data.Length; }
         }
-
-        #endregion
-
     }
 }

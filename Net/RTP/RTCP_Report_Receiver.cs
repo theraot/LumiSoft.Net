@@ -26,8 +26,6 @@ namespace LumiSoft.Net.RTP
             DelaySinceLastSR      = rr.DelaySinceLastSR;
         }
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets the fraction of RTP data packets from source SSRC lost since the previous SR or 
         /// RR packet was sent.
@@ -61,7 +59,5 @@ namespace LumiSoft.Net.RTP
         /// Gets delay since last sender report(SR) was received.
         /// </summary>
         public uint DelaySinceLastSR { get; }
-
-#endregion
     }
 }

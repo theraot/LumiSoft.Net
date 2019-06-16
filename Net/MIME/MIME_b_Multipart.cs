@@ -15,15 +15,11 @@ namespace LumiSoft.Net.MIME
     /// </remarks>
     public class MIME_b_Multipart : MIME_b
     {
-        #region class _MultipartReader
-
         /// <summary>
         /// Implements  multipart "body parts" reader.
         /// </summary>
         public class _MultipartReader : Stream
         {
-            #region enum State
-
             /// <summary>
             /// This enum specified multipart reader sate.
             /// </summary>
@@ -50,10 +46,6 @@ namespace LumiSoft.Net.MIME
                 Done = 3,
             }
 
-            #endregion
-
-            #region class _DataLine
-
             /// <summary>
             /// This class holds readed data line info.
             /// </summary>
@@ -67,8 +59,6 @@ namespace LumiSoft.Net.MIME
                     LineBuffer = new byte[32000];
                 }
 
-
-                #region method AssignFrom
 
                 /// <summary>
                 /// Assigns data line info from rea line operation.
@@ -85,10 +75,6 @@ namespace LumiSoft.Net.MIME
                     Array.Copy(op.Buffer,LineBuffer,op.BytesInBuffer);
                 }
 
-                #endregion
-
-
-                #region Properties implementation
 
                 /// <summary>
                 /// Gets line data buffer.
@@ -99,11 +85,7 @@ namespace LumiSoft.Net.MIME
                 /// Gets number of bytes used in <b>LineBuffer</b>.
                 /// </summary>
                 public int BytesInBuffer { get; private set; }
-
-#endregion
             }
-
-            #endregion
 
             private readonly SmartStream                 m_pStream;
             private readonly string                      m_Boundary      = "";
@@ -135,8 +117,6 @@ namespace LumiSoft.Net.MIME
                 m_pTextEpilogue = new StringBuilder();
             }
 
-
-            #region method Next
 
             /// <summary>
             /// Moves to next "body part". Returns true if moved to next "body part" or false if there are no more parts.
@@ -230,10 +210,6 @@ namespace LumiSoft.Net.MIME
                 return false;
             }
 
-            #endregion
-
-
-            #region override method Flush
 
             /// <summary>
             /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -241,10 +217,6 @@ namespace LumiSoft.Net.MIME
             public override void Flush()
             {            
             }
-
-            #endregion
-
-            #region override method Seek
 
             /// <summary>
             /// Sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -258,10 +230,6 @@ namespace LumiSoft.Net.MIME
                 throw new NotSupportedException();
             }
 
-            #endregion
-
-            #region override method SetLength
-
             /// <summary>
             /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
             /// </summary>
@@ -271,10 +239,6 @@ namespace LumiSoft.Net.MIME
             {
                 throw new NotSupportedException();
             }
-
-            #endregion
-
-            #region override method Read
 
             /// <summary>
             /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -437,10 +401,6 @@ namespace LumiSoft.Net.MIME
                 }
             }
 
-            #endregion
-
-            #region override method Write
-
             /// <summary>
             /// Writes sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
             /// </summary>
@@ -453,10 +413,6 @@ namespace LumiSoft.Net.MIME
                 throw new NotSupportedException();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets a value indicating whether the current stream supports reading.
@@ -536,11 +492,7 @@ namespace LumiSoft.Net.MIME
             /// Gets reader state.
             /// </summary>
             internal State ReaderState { get; private set; } = State.SeekFirst;
-
-#endregion
         }
-
-        #endregion
 
         private readonly MIME_h_ContentType    m_pContentType;
 
@@ -564,8 +516,6 @@ namespace LumiSoft.Net.MIME
             BodyParts = new MIME_EntityCollection();
         }
 
-
-        #region static method Parse
 
         /// <summary>
         /// Parses body from the specified stream
@@ -596,10 +546,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal;
         }
-
-        #endregion
-
-        #region static method ParseInternal
 
         /// <summary>
         /// Internal body parsing.
@@ -642,10 +588,6 @@ namespace LumiSoft.Net.MIME
             body.BodyParts.SetModified(false);
         }
 
-        #endregion
-
-
-        #region override SetParent
 
         /// <summary>
         /// Sets body parent.
@@ -661,10 +603,6 @@ namespace LumiSoft.Net.MIME
                 this.Entity.ContentType = m_pContentType;
             }
         }
-
-        #endregion
-
-        #region method ToStream
 
         /// <summary>
         /// Stores MIME entity body to the specified stream.
@@ -715,11 +653,7 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-        
 
-        #region Properties implementation
-        
         /// <summary>
         /// Gets if body has modified.
         /// </summary>
@@ -763,7 +697,5 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <remarks>Epilogue text is text after last boundary end.</remarks>
         public string TextEpilogue { get; set; } = "";
-
-#endregion
     }
 }

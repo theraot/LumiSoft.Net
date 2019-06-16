@@ -37,8 +37,6 @@ namespace LumiSoft.Net.Mail
         }
 
 
-        #region static method ParseFromByte
-
         /// <summary>
         /// Parses mail message from the specified byte array.
         /// </summary>
@@ -72,10 +70,6 @@ namespace LumiSoft.Net.Mail
 
             return ParseFromStream(new MemoryStream(data),headerEncoding);
         }
-
-        #endregion
-
-        #region static method ParseFromFile
 
         /// <summary>
         /// Parses mail message from the specified file.
@@ -123,10 +117,6 @@ namespace LumiSoft.Net.Mail
             }
         }
 
-        #endregion
-
-        #region static method ParseFromStream
-
         /// <summary>
         /// Parses mail message from the specified stream.
         /// </summary>
@@ -164,10 +154,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-        #endregion
-
-
-        #region method GetAttachments
 
         /// <summary>
         /// Gets this message attachments.
@@ -235,12 +221,8 @@ namespace LumiSoft.Net.Mail
             return retVal.ToArray();
         }
 
-        #endregion
 
-
-        #region Properties Implementation
-
-        // Permanent headerds list: http://www.rfc-editor.org/rfc/rfc4021.txt
+// Permanent headerds list: http://www.rfc-editor.org/rfc/rfc4021.txt
 
         /// <summary>
         /// Gets or sets message date and time. Value <b>DateTime.MinValue</b> means not specified.
@@ -2009,8 +1991,5 @@ namespace LumiSoft.Net.Mail
                 return null; 
             }
         }
-
-        #endregion
-
     }
 }

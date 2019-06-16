@@ -27,8 +27,6 @@ namespace LumiSoft.Net.IO
         }
 
 
-        #region method Read
-
         /// <summary>
         /// Reads up to specified count of bytes from the FIFO buffer.
         /// </summary>
@@ -63,10 +61,6 @@ namespace LumiSoft.Net.IO
                 return countToRead;
             }
         }
-
-        #endregion
-
-        #region method Write
 
         /// <summary>
         /// Writes specified number of bytes to the FIFO buffer.
@@ -120,10 +114,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Clears buffer data.
         /// </summary>
@@ -135,10 +125,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-
-        #region method TrimStart
 
         /// <summary>
         /// Removes unused space from the buffer beginning.
@@ -154,10 +140,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets maximum number of bytes can buffer in FIFO.
@@ -174,7 +156,5 @@ namespace LumiSoft.Net.IO
         {
             get{ return m_WriteOffset - m_ReadOffset; }
         }
-
-        #endregion
     }
 }

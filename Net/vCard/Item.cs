@@ -24,8 +24,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method SetDecodedValue
-
         /// <summary>
         /// Sets item decoded value. Value will be encoded as needed and stored to item.Value property.
         /// Also property item.ParametersString is updated to reflect right encoding(always base64, required by rfc) and charset (utf-8).
@@ -67,10 +65,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-        #endregion
-
-
-        #region internal method ToItemString
 
         /// <summary>
         /// Converts item to vCal item string.
@@ -86,10 +80,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-        #endregion
-
-
-        #region method NeedEncode
 
         /// <summary>
         /// CHecks if specified value must be encoded.
@@ -113,11 +103,8 @@ namespace LumiSoft.Net.Mime.vCard
             return false;
         }
 
-        #endregion
-
 
         // Is it needed ?
-        #region static method FoldData
 
         /// <summary>
         /// Folds long data line to folded lines.
@@ -170,10 +157,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-        #endregion
-        
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gest item name.
@@ -244,8 +227,5 @@ namespace LumiSoft.Net.Mime.vCard
                 return data; 
             }
         }
-
-        #endregion
-
     }
 }

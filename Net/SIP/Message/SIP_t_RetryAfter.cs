@@ -28,8 +28,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Retry-After" from specified value.
         /// </summary>
@@ -78,10 +76,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Retry-After" value.
         /// </summary>
@@ -104,10 +98,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets how many seconds the service is expected to be unavailable to the requesting client.
@@ -157,8 +147,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

@@ -23,8 +23,6 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message info.
         /// </summary>
@@ -40,7 +38,5 @@ namespace LumiSoft.Net.POP3.Server
         /// </summary>
         /// <remarks>POP3 server starts reading message from stream current position and reads while end of stream reached.</remarks>
         public Stream MessageStream { get; set; }
-
-#endregion
     }
 }

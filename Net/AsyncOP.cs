@@ -13,8 +13,6 @@
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
@@ -38,7 +36,5 @@
         {
             get;
         }
-
-        #endregion
     }
 }

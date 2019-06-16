@@ -34,8 +34,6 @@ namespace LumiSoft.Net.DNS
 		}
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -133,10 +131,6 @@ namespace LumiSoft.Net.DNS
 			return new DNS_rr_SOA(name,nameserver,adminMailBox,serial,refresh,retry,expire,minimum,ttl);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
 		/// Gets name server.
@@ -172,8 +166,5 @@ namespace LumiSoft.Net.DNS
 		/// Gets minimum TTL(in seconds) field that should be exported with any RR from this zone. 
 		/// </summary>
 		public long Minimum { get; }
-
-#endregion
-
-	}
+    }
 }

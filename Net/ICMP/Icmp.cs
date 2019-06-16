@@ -26,8 +26,6 @@ namespace LumiSoft.Net.ICMP
 		Echo = 8,
     }
 
-    #region class EchoMessage
-
     /// <summary>
 	/// Echo reply message.
 	/// </summary>
@@ -75,8 +73,6 @@ namespace LumiSoft.Net.ICMP
 			return retVal;
         }
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets IP address what sent echo message.
         /// </summary>
@@ -94,19 +90,13 @@ namespace LumiSoft.Net.ICMP
         /// Gets time in milliseconds what toke to get reply.
         /// </summary>
         public int ReplyTime { get; }
-
-#endregion
     }
-
-    #endregion
 
     /// <summary>
 	/// Icmp utils.
 	/// </summary>
 	public class Icmp
 	{
-		#region methoc Trace
-
         /// <summary>
 		/// Traces specified ip.
 		/// </summary>
@@ -186,10 +176,6 @@ namespace LumiSoft.Net.ICMP
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-        #region method Ping
-
         /// <summary>
         /// Pings specified destination host.
         /// </summary>
@@ -235,10 +221,6 @@ namespace LumiSoft.Net.ICMP
 			return new EchoMessage(((IPEndPoint)endpoint).Address,0,ts.Milliseconds);
         }
 
-        #endregion
-
-
-        #region method CreatePacket
 
         private static byte[] CreatePacket(ushort id)
 		{
@@ -284,7 +266,5 @@ namespace LumiSoft.Net.ICMP
 
 			return packet;
 		}
-
-		#endregion
-	}
+    }
 }

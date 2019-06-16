@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses EXISTS response from exists-response string.
         /// </summary>
@@ -52,10 +50,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Exists(Convert.ToInt32(response.Split(' ')[1]));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -68,16 +62,10 @@ namespace LumiSoft.Net.IMAP
             return "* " + MessageCount.ToString() + " EXISTS\r\n";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of messages in mailbox.
         /// </summary>
         public int MessageCount { get; }
-
-#endregion
     }
 }

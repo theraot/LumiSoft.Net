@@ -42,8 +42,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses SDES chunk from the specified buffer.
         /// </summary>
@@ -122,10 +120,6 @@ namespace LumiSoft.Net.RTP
             // Pad to 32-bit boundary, if it isn't. See not above.
             offset += (offset - startOffset) % 4;
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores SDES junk to the specified buffer.
@@ -210,10 +204,6 @@ namespace LumiSoft.Net.RTP
             }            
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets SSRC or CSRC identifier.
@@ -375,8 +365,5 @@ namespace LumiSoft.Net.RTP
                 return size; 
             }
         }
-
-        #endregion
-
     }
 }

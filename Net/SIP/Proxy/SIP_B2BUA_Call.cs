@@ -33,11 +33,7 @@ namespace LumiSoft.Net.SIP.Proxy
             //m_pCallee.RequestReceived += new SIP_RequestReceivedEventHandler(m_pCallee_RequestReceived);
             //m_pCallee.Terminated += new EventHandler(m_pCallee_Terminated);           
         }
-                                            
 
-        #region Events Handling
-
-        #region method m_pCaller_RequestReceived
 
         /// <summary>
         /// Is called when caller sends new request.
@@ -68,10 +64,6 @@ namespace LumiSoft.Net.SIP.Proxy
             clientTransaction.Tag = e.ServerTransaction;
             clientTransaction.Start();*/
         }
-                
-        #endregion
-
-        #region method m_pCaller_Terminated
 
         /// <summary>
         /// This method is called when caller dialog has terminated, normally this happens 
@@ -83,10 +75,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             Terminate();
         }
-
-        #endregion
-
-        #region method m_pCallee_ResponseReceived
 
         /// <summary>
         /// This method is called when callee dialog client transaction receives response.
@@ -101,10 +89,6 @@ namespace LumiSoft.Net.SIP.Proxy
             //serverTransaction.SendResponse(response);
         }
 
-        #endregion
-
-
-        #region method m_pCallee_RequestReceived
 
         /// <summary>
         /// Is called when callee sends new request.
@@ -134,10 +118,6 @@ namespace LumiSoft.Net.SIP.Proxy
             clientTransaction.Start();*/
         }
 
-        #endregion
-
-        #region method m_pCalee_Terminated
-
         /// <summary>
         /// This method is called when callee dialog has terminated, normally this happens 
         /// when dialog gets BYE request.
@@ -148,10 +128,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             Terminate();
         }
-
-        #endregion
-
-        #region method m_pCaller_ResponseReceived
 
         /// <summary>
         /// This method is called when caller dialog client transaction receives response.
@@ -166,12 +142,6 @@ namespace LumiSoft.Net.SIP.Proxy
             //serverTransaction.SendResponse(response);
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Terminate
 
         /// <summary>
         /// Terminates call.
@@ -199,10 +169,7 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pOwner.OnCallTerminated(this);
         }
 
-        #endregion
-
-        #region method CallTransfer
-        /*
+/*
         /// <summary>
         /// Transfers call to specified recipient.
         /// </summary>
@@ -211,10 +178,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             throw new NotImplementedException();
         }*/
-
-        #endregion
-                
-        #region method CopyMessage
 
         /// <summary>
         /// Copies header fileds from 1 message to antother.
@@ -241,10 +204,6 @@ namespace LumiSoft.Net.SIP.Proxy
             destination.Data = source.Data;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets call start time.
@@ -275,8 +234,5 @@ namespace LumiSoft.Net.SIP.Proxy
 
             get{ return false; }
         }
-
-        #endregion
-
     }
 }

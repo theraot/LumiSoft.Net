@@ -24,8 +24,6 @@ namespace LumiSoft.Net.SMTP.Relay
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets relay session what completed processing.
         /// </summary>
@@ -35,8 +33,5 @@ namespace LumiSoft.Net.SMTP.Relay
         /// Gets Exception what happened or null if relay completed successfully.
         /// </summary>
         public Exception Exception { get; }
-
-#endregion
-
     }
 }

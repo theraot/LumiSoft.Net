@@ -13,8 +13,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioIn : Stream
     {
-        #region class WaveIn
-
         /// <summary>
         /// This class implements streaming microphone wav data receiver.
         /// </summary>
@@ -29,8 +27,6 @@ namespace LumiSoft.Net.Media
             /// <param name="dwParam1">Message parameter.</param>
             /// <param name="dwParam2">Message parameter.</param>
             private delegate void waveInProc(IntPtr hdrvr,int uMsg,int dwUser,int dwParam1,int dwParam2);
-
-            #region Wave in methods
 
             /// <summary>
             /// The waveInAddBuffer function sends an input buffer to the given waveform-audio input device. When the buffer is filled, the application is notified.
@@ -129,10 +125,6 @@ namespace LumiSoft.Net.Media
 		    [DllImport("winmm.dll")]
 		    private static extern int waveInUnprepareHeader(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
 
-            #endregion
-
-            #region class BufferItem
-
             /// <summary>
             /// This class holds queued recording buffer.
             /// </summary>
@@ -154,8 +146,6 @@ namespace LumiSoft.Net.Media
                     DataSize     = dataSize;
                 }
 
-                #region method Dispose
-
                 /// <summary>
                 /// Cleans up any resources being used.
                 /// </summary>
@@ -165,10 +155,6 @@ namespace LumiSoft.Net.Media
                     m_DataHandle.Free();
                 }
 
-                #endregion
-
-
-                #region Properties Implementation
 
                 /// <summary>
                 /// Gets header handle.
@@ -206,14 +192,7 @@ namespace LumiSoft.Net.Media
                 /// Gets wav header data size in bytes.
                 /// </summary>
                 public int DataSize { get; }
-
-#endregion
-
             }
-
-            #endregion
-
-            #region class MMSYSERR
 
             /// <summary>
             /// This class holds MMSYSERR errors.
@@ -310,10 +289,6 @@ namespace LumiSoft.Net.Media
                 public const int LASTERROR = 20;
             }
 
-            #endregion
-
-            #region class WavConstants
-
             /// <summary>
             /// This class provides most used wav constants.
             /// </summary>
@@ -338,10 +313,6 @@ namespace LumiSoft.Net.Media
                 public const int WHDR_ENDLOOP = 0x00000008;
                 public const int WHDR_INQUEUE = 0x00000010;
             }
-
-            #endregion
-
-            #region class WAVEFORMATEX
 
             /// <summary>
             /// This class represents WAVEFORMATEX structure.
@@ -387,10 +358,6 @@ namespace LumiSoft.Net.Media
                 public ushort cbSize;
             }
 
-            #endregion
-
-            #region struct WAVEOUTCAPS
-
             /// <summary>
             /// This class represents WAVEOUTCAPS structure.
             /// </summary>
@@ -431,10 +398,6 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public readonly uint dwSupport;
             }
-
-            #endregion
-
-            #region struct WAVEHDR
 
             /// <summary>
             /// This class represents WAVEHDR structure.
@@ -477,10 +440,6 @@ namespace LumiSoft.Net.Media
                 public uint reserved;
             }
 
-            #endregion
-
-            #region class WavFormat
-
             /// <summary>
             /// This class holds most known wav compression formats.
             /// </summary>
@@ -498,8 +457,6 @@ namespace LumiSoft.Net.Media
                 public const int G722_ADPCM =  0x006;         
                 public const int G729A = 0x0083;*/
             }
-
-            #endregion
 
             private AudioInDevice                m_pInDevice;
             private readonly int                          m_SamplesPerSec  = 8000;
@@ -578,8 +535,6 @@ namespace LumiSoft.Net.Media
                 Dispose();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -610,10 +565,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts recording.
@@ -631,10 +582,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-            #region method Stop
-
             /// <summary>
             /// Stops recording.
             /// </summary>
@@ -651,10 +598,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-
-            #region method OnWaveInProc
 
             /// <summary>
             /// This method is called when wav device generates some event.
@@ -709,10 +652,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-            #region method ProcessActiveBuffer
-
             /// <summary>
             /// Processes active buffer in queue and disposes it if done.
             /// </summary>
@@ -737,10 +676,6 @@ namespace LumiSoft.Net.Media
                 catch{                    
                 }
             }
-
-            #endregion
-
-            #region method CreateBuffers
 
             /// <summary>
             /// Fills recording buffers.
@@ -779,10 +714,6 @@ namespace LumiSoft.Net.Media
                 m_pCurrentBuffer = m_pBuffers[0];
             }
 
-            #endregion
-
-
-            #region Properties Implementation
 
             /// <summary>
             /// Gets all available input audio devices.
@@ -914,11 +845,7 @@ namespace LumiSoft.Net.Media
                     return m_pReadBuffer; 
                 }
             }
-
-            #endregion        
         }
-
-        #endregion
 
         private bool          m_IsDisposed;
         private AudioInDevice m_pDevice;
@@ -960,8 +887,6 @@ namespace LumiSoft.Net.Media
             m_pWaveIn.Start();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -976,10 +901,6 @@ namespace LumiSoft.Net.Media
             m_pWaveIn = null;
         }
 
-        #endregion
-
-
-        #region override method Flush
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -991,10 +912,6 @@ namespace LumiSoft.Net.Media
                 throw new ObjectDisposedException("Base64Stream");
             }
         }
-
-        #endregion
-
-        #region override method Seek
 
         /// <summary>
         /// Sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -1013,10 +930,6 @@ namespace LumiSoft.Net.Media
             throw new NotSupportedException();
         }
 
-        #endregion
-
-        #region override method SetLength
-
         /// <summary>
         /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
         /// </summary>
@@ -1031,10 +944,6 @@ namespace LumiSoft.Net.Media
 
             throw new NotSupportedException();
         }
-
-        #endregion
-
-        #region override method Read
 
         /// <summary>
         /// Reads up to specified count of bytes from the audion in device.
@@ -1069,10 +978,6 @@ namespace LumiSoft.Net.Media
             return m_pWaveIn.ReadBuffer.Read(buffer,offset,count - (count % m_pWaveIn.BlockSize));
         }
 
-        #endregion
-
-        #region override method Write
-
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// This method is not supported and always throws a NotSupportedException.
@@ -1091,10 +996,6 @@ namespace LumiSoft.Net.Media
             throw new NotSupportedException();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets all available audio input devices.
@@ -1264,8 +1165,5 @@ namespace LumiSoft.Net.Media
                 return m_pWaveIn.ReadBuffer.Available; 
             }
         }
-
-        #endregion
-
     }
 }

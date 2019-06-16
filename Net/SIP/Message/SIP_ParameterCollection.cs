@@ -20,8 +20,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Add
-
         /// <summary>
         /// Adds new parameter to the collection.
         /// </summary>
@@ -42,10 +40,6 @@ namespace LumiSoft.Net.SIP.Message
             m_pCollection.Add(new SIP_Parameter(name,value));
         }
 
-        #endregion
-
-        #region method Set
-
         /// <summary>
         /// Adds or updates specified parameter value.
         /// </summary>
@@ -61,10 +55,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all parameters from the collection.
         /// </summary>
@@ -72,10 +62,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             m_pCollection.Clear();
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes specified parameter from the collection.
@@ -88,10 +74,6 @@ namespace LumiSoft.Net.SIP.Message
                 m_pCollection.Remove(parameter);
             }
         }
-
-        #endregion
-
-        #region method Contains
 
         /// <summary>
         /// Checks if the collection contains parameter with the specified name.
@@ -109,12 +91,8 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
 
-
-        #region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -122,10 +100,6 @@ namespace LumiSoft.Net.SIP.Message
 		{
 			return m_pCollection.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets parameters count in the collection.
@@ -152,9 +126,5 @@ namespace LumiSoft.Net.SIP.Message
                 return null; 
             }
         }
-
-
-        #endregion
-
     }
 }

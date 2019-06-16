@@ -21,8 +21,6 @@ namespace LumiSoft.Net.IO
             m_pStreams = new Queue<Stream>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -38,10 +36,6 @@ namespace LumiSoft.Net.IO
             base.Dispose();
         }
 
-        #endregion
-
-
-        #region method AppendStream
 
         /// <summary>
         /// Appends this stream to read queue.
@@ -61,10 +55,6 @@ namespace LumiSoft.Net.IO
             m_pStreams.Enqueue(stream);
         }
 
-        #endregion
-
-
-        #region override method Flush
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -76,10 +66,6 @@ namespace LumiSoft.Net.IO
                 throw new ObjectDisposedException("SmartStream");
             }
         }
-
-        #endregion
-
-        #region override method Seek
 
         /// <summary>
         /// Sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -98,10 +84,6 @@ namespace LumiSoft.Net.IO
             throw new NotSupportedException();
         }
 
-        #endregion
-
-        #region override method SetLength
-
         /// <summary>
         /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
         /// </summary>
@@ -116,10 +98,6 @@ namespace LumiSoft.Net.IO
 
             throw new NotSupportedException();
         }
-
-        #endregion
-
-        #region override method Read
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -156,10 +134,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region override method Write
-
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// This method is not supported and always throws a NotSupportedException.
@@ -178,10 +152,6 @@ namespace LumiSoft.Net.IO
             throw new NotSupportedException();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
@@ -272,8 +242,5 @@ namespace LumiSoft.Net.IO
                 throw new NotSupportedException();
             }
         }
-
-        #endregion
-
     }
 }

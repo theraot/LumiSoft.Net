@@ -57,13 +57,9 @@ namespace LumiSoft.Net.ABNF
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets option alternation elements.
         /// </summary>
         public ABNF_Alternation Alternation { get; private set; }
-
-#endregion
     }
 }

@@ -35,8 +35,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets command tag.
         /// </summary>
@@ -71,7 +69,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets folder supported permanent flags collection.
         /// </summary>
         public List<string> PermanentFlags { get; }
-
-#endregion
     }
 }

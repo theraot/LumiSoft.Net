@@ -29,8 +29,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region method AddMessage
-
         /// <summary>
         /// Adds message which matches search criteria.
         /// </summary>
@@ -40,10 +38,6 @@ namespace LumiSoft.Net.IMAP.Server
             OnMatched(uid);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -67,16 +61,10 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         public IMAP_Search_Key Criteria { get; }
 
-#endregion
-
-        #region Events implementation
-                
         /// <summary>
         /// Is raised when new message matches search criteria.
         /// </summary>
         internal event EventHandler<EventArgs<long>> Matched;
-
-        #region method OnMatched
 
         /// <summary>
         /// Raises <b>Matched</b> event.
@@ -88,9 +76,5 @@ namespace LumiSoft.Net.IMAP.Server
                 this.Matched(this,new EventArgs<long>(uid));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

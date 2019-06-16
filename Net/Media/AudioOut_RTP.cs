@@ -42,8 +42,6 @@ namespace LumiSoft.Net.Media
             m_pAudioCodecs    = codecs;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resource being used.
         /// </summary>
@@ -62,12 +60,6 @@ namespace LumiSoft.Net.Media
             m_pActiveCodec    = null;
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pRTP_Stream_PacketReceived
 
         /// <summary>
         /// This method is called when new RTP packet received.
@@ -111,12 +103,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts receiving RTP audio and palying it out.
@@ -135,10 +121,6 @@ namespace LumiSoft.Net.Media
       
             m_pRTP_Stream.PacketReceived += new EventHandler<RTP_PacketEventArgs>(m_pRTP_Stream_PacketReceived);
         }
-                
-        #endregion
-
-        #region method Stop
 
         /// <summary>
         /// Stops receiving RTP audio and palying it out.
@@ -163,10 +145,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -251,16 +229,10 @@ namespace LumiSoft.Net.Media
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This method is raised when asynchronous thread Exception happens.
         /// </summary>
         public event EventHandler<ExceptionEventArgs> Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -272,9 +244,5 @@ namespace LumiSoft.Net.Media
                 this.Error(this,new ExceptionEventArgs(x));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

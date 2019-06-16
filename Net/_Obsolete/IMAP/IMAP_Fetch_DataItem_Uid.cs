@@ -16,8 +16,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region override method ToString
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -26,7 +24,5 @@ namespace LumiSoft.Net.IMAP
         {
             return "UID";
         }
-
-        #endregion
     }
 }

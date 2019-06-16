@@ -21,8 +21,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>SINCE (string)</b> key.
         /// </summary>
@@ -55,10 +53,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Since(date);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -69,10 +63,6 @@ namespace LumiSoft.Net.IMAP
             return "SINCE " + Date.ToString("dd-MMM-yyyy");
         }
 
-        #endregion
-
-
-        #region internal override method ToCmdParts
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -88,16 +78,10 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets date value.
         /// </summary>
         public DateTime Date { get; }
-
-#endregion
     }
 }

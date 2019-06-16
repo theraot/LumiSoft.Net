@@ -9,10 +9,8 @@ namespace LumiSoft.Net
 	/// This class provides usefull text methods.
 	/// </summary>
 	public class TextUtils
-	{      
-		#region static method QuoteString
-
-		/// <summary>
+	{
+        /// <summary>
         /// Qoutes string and escapes fishy('\',"') chars.
         /// </summary>
         /// <param name="text">Text to quote.</param>
@@ -42,10 +40,6 @@ namespace LumiSoft.Net
 
             return "\"" + retVal.ToString() + "\"";
         }
-
-		#endregion
-         
-        #region static method UnQuoteString
 
         /// <summary>
         /// Unquotes and unescapes escaped chars specified text. For example "xxx" will become to 'xxx', "escaped quote \"", will become to escaped 'quote "'.
@@ -125,10 +119,6 @@ namespace LumiSoft.Net
             return new string(chars,0,posInChars);
         }
 
-        #endregion
-
-        #region static method EscapeString
-
         /// <summary>
         /// Escapes specified chars in the specified string.
         /// </summary>
@@ -155,10 +145,6 @@ namespace LumiSoft.Net
             return new string(buffer,0,nChars);
         }
 
-        #endregion
-
-        #region static method UnEscapeString
-
         /// <summary>
         /// Unescapes all escaped chars.
         /// </summary>
@@ -184,10 +170,6 @@ namespace LumiSoft.Net
             return new string(buffer,0,nChars);
         }
 
-        #endregion
-
-
-		#region static method SplitQuotedString
 
         /// <summary>
 		/// Splits string into string arrays. This split method won't split qouted strings, but only text outside of qouted string.
@@ -281,12 +263,8 @@ namespace LumiSoft.Net
 			return splitParts.ToArray();
 		}
 
-		#endregion
 
-
-		#region method QuotedIndexOf
-
-		/// <summary>
+        /// <summary>
 		/// Gets first index of specified char. The specified char in quoted string is skipped.
 		/// Returns -1 if specified char doesn't exist.
 		/// </summary>
@@ -314,12 +292,8 @@ namespace LumiSoft.Net
 			return retVal;
 		}
 
-		#endregion
 
-
-		#region static method SplitString
-
-		/// <summary>
+        /// <summary>
 		/// Splits string into string arrays.
 		/// </summary>
 		/// <param name="text">Text to split.</param>
@@ -350,10 +324,6 @@ namespace LumiSoft.Net
 			return retVal;
 		}
 
-		#endregion
-
-
-        #region static method IsToken
 
         /// <summary>
         /// Gets if specified string is valid "token" value.
@@ -393,7 +363,5 @@ namespace LumiSoft.Net
 
             return true;
         }
-
-        #endregion
     }
 }

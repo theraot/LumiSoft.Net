@@ -33,8 +33,6 @@ namespace LumiSoft.Net.RTP
             m_pParticipants = new Dictionary<string,RTP_Participant_Remote>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -56,10 +54,6 @@ namespace LumiSoft.Net.RTP
             this.Error = null;
         }
 
-        #endregion
-
-
-        #region method Close
 
         /// <summary>
         /// Closes RTP multimedia session, sends BYE with optional reason text to remote targets.
@@ -79,10 +73,6 @@ namespace LumiSoft.Net.RTP
             Dispose();
         }
 
-        #endregion
-
-        #region method Start
-
         /// <summary>
         /// Starts session.
         /// </summary>
@@ -96,10 +86,6 @@ namespace LumiSoft.Net.RTP
             // TODO:
         }
 
-        #endregion
-
-        #region method Stop
-
         /// <summary>
         /// Stops session.
         /// </summary>
@@ -112,10 +98,6 @@ namespace LumiSoft.Net.RTP
 
             // TODO:
         }
-
-        #endregion
-
-        #region method CreateSession
 
         /// <summary>
         /// Creates new RTP session.
@@ -148,10 +130,6 @@ namespace LumiSoft.Net.RTP
             return session;
         }
 
-        #endregion
-
-
-        #region method GetOrCreateParticipant
 
         /// <summary>
         /// Gets or creates new participant if participant does not exist.
@@ -183,10 +161,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -243,16 +217,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-        #region Event implementation
-
         /// <summary>
         /// Is raised when new session has created.
         /// </summary>
         public event EventHandler<EventArgs<RTP_Session>> SessionCreated;
-
-        #region method OnSessionCreated
 
         /// <summary>
         /// Raises <b>SessionCreated</b> event.
@@ -269,14 +237,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when new remote participant has joined to session.
         /// </summary>
         public event EventHandler<RTP_ParticipantEventArgs> NewParticipant;
-
-        #region method OnNewParticipant
 
         /// <summary>
         /// Raises <b>NewParticipant</b> event.
@@ -289,14 +253,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when unknown error has happened.
         /// </summary>
         public event EventHandler<ExceptionEventArgs> Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -308,9 +268,5 @@ namespace LumiSoft.Net.RTP
                 this.Error(this,new ExceptionEventArgs(exception));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -22,14 +22,10 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets IMAP server response.
         /// </summary>
         /// <remarks>Response should be OK,NO with human readable text."</remarks>
         public IMAP_r_u_ServerStatus Response { get; set; }
-
-#endregion
     }
 }

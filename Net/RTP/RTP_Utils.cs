@@ -7,8 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Utils
     {
-        #region static method GenerateSSRC
-
         /// <summary>
         /// Generates random SSRC value.
         /// </summary>
@@ -17,10 +15,6 @@ namespace LumiSoft.Net.RTP
         {
             return (uint)new Random().Next(100000,int.MaxValue);
         }
-
-        #endregion
-
-        #region static method GenerateCNAME
 
         /// <summary>
         /// Generates random CNAME value.
@@ -32,10 +26,6 @@ namespace LumiSoft.Net.RTP
 
             return Environment.UserName + "@" + System.Net.Dns.GetHostName() + "." + Guid.NewGuid().ToString().Substring(0,8);
         }
-
-        #endregion
-
-        #region static method DateTimeToNTP32
 
         /// <summary>
         /// Converts specified DateTime value to short NTP time. Note: NTP time is in UTC.
@@ -54,10 +44,6 @@ namespace LumiSoft.Net.RTP
 
             return (uint)((DateTimeToNTP64(value) >> 16) & 0xFFFFFFFF);
         }
-
-        #endregion
-
-        #region static method DateTimeToNTP64
 
         /// <summary>
         /// Converts specified DateTime value to long NTP time. Note: NTP time is in UTC.
@@ -83,7 +69,5 @@ namespace LumiSoft.Net.RTP
                        
             return ((ulong)(ts.TotalMilliseconds % 1000) << 32) | (uint)(ts.Milliseconds << 22);
         }
-
-        #endregion
     }
 }

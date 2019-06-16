@@ -25,8 +25,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses this from specified value.
         /// </summary>
@@ -63,10 +61,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid value string.
         /// </summary>
@@ -91,17 +85,10 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets address.
         /// </summary>
         public SIP_t_NameAddress Address { get; private set; }
-
-#endregion
-
     }
 }

@@ -85,8 +85,6 @@ namespace LumiSoft.Net.SIP.UA
 
             State = SIP_UA_CallState.WaitingToAccept;
         }
-        
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resource being used.
@@ -105,12 +103,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pDialog_StateChanged
 
         /// <summary>
         /// Is called when SIP dialog state has changed.
@@ -130,10 +122,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-
-        #region method m_pInitialInviteSender_ResponseReceived
 
         /// <summary>
         /// This method is called when initial INVITE sender got response.
@@ -209,13 +197,7 @@ namespace LumiSoft.Net.SIP.UA
             }
 
         }
-                
-        #endregion
 
-        #endregion
-                        
-        
-        #region method Start
 
         /// <summary>
         /// Starts calling.
@@ -239,11 +221,7 @@ namespace LumiSoft.Net.SIP.UA
                 m_pInitialInviteSender.Start();
             }
         }
-                                                
-        #endregion
 
-
-        #region method SendRinging
 
         /// <summary>
         /// Sends ringing to remote party.
@@ -269,10 +247,6 @@ namespace LumiSoft.Net.SIP.UA
             }
             m_pInitialInviteTransaction.SendResponse(response);
         }
-
-        #endregion
-
-        #region method Accept
 
         /// <summary>
         /// Accepts call.
@@ -309,10 +283,6 @@ namespace LumiSoft.Net.SIP.UA
 
         }
 
-        #endregion
-
-        #region method Reject
-
         /// <summary>
         /// Rejects incoming call.
         /// </summary>
@@ -338,10 +308,6 @@ namespace LumiSoft.Net.SIP.UA
                 SetState(SIP_UA_CallState.Terminated);
             }
         }
-
-        #endregion
-
-        #region method Redirect
 
         /// <summary>
         /// Redirects incoming call to speified contact(s).
@@ -374,10 +340,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-
-        #region method Terminate
 
         /// <summary>
         /// Starts terminating call. To get when call actually terminates, monitor <b>StateChanged</b> event.
@@ -421,10 +383,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-        #region method ToggleOnHold
-        
         /// <summary>
         /// Toggles call on hold.
         /// </summary>
@@ -434,10 +392,6 @@ namespace LumiSoft.Net.SIP.UA
 
             // TODO:
         }
-
-        #endregion
-
-        #region method Transfer
 
         /// <summary>
         /// Transfer call to specified URI.
@@ -449,10 +403,6 @@ namespace LumiSoft.Net.SIP.UA
             // TODO:
         }
 
-        #endregion
-
-
-        #region method SetState
 
         /// <summary>
         /// Changes call state.
@@ -465,10 +415,6 @@ namespace LumiSoft.Net.SIP.UA
             OnStateChanged(state);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -540,16 +486,10 @@ namespace LumiSoft.Net.SIP.UA
         /// </summary>
         public Dictionary<string,object> Tag { get; }
 
-#endregion
-
-        #region Events implementation
-                
         /// <summary>
         /// Is raised when call state has changed.
         /// </summary>
         public event EventHandler StateChanged;
-
-        #region method OnStateChanged
 
         /// <summary>
         /// Raises <b>StateChanged</b> event.
@@ -562,19 +502,10 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
         // public event EventHandler Error
-
-        #region method Error
 
         private void Error()
         {
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

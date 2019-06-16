@@ -54,8 +54,6 @@ namespace LumiSoft.Net.RTP
             m_Probation = MIN_SEQUENTIAL;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -75,10 +73,6 @@ namespace LumiSoft.Net.RTP
             this.PacketReceived = null;
         }
 
-        #endregion
-                        
-
-        #region method Process
 
         /// <summary>
         /// Processes specified RTP packet thorugh this stream.
@@ -135,10 +129,6 @@ namespace LumiSoft.Net.RTP
             // else Packet not valid, skip it.
         }
 
-        #endregion
-
-
-        #region method InitSeq
 
         /// <summary>
         /// Initializes new sequence number.
@@ -156,10 +146,6 @@ namespace LumiSoft.Net.RTP
             m_ReceivedPrior   = 0;
             m_ExpectedPrior   = 0;
         }
-
-        #endregion
-
-        #region method UpdateSeq
 
         /// <summary>
         /// Updates sequence number.
@@ -236,10 +222,6 @@ namespace LumiSoft.Net.RTP
             return true;
         }
 
-        #endregion
-
-
-        #region method SetSR
 
         /// <summary>
         /// Sets property <b>LastSR</b> value.
@@ -257,10 +239,6 @@ namespace LumiSoft.Net.RTP
 
             OnSenderReport();
         }
-
-        #endregion
-
-        #region method CreateReceiverReport
 
         /// <summary>
         /// Creates receiver report.
@@ -342,10 +320,6 @@ namespace LumiSoft.Net.RTP
             return rr;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -565,16 +539,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when stream is closed by remote party (remote party sent BYE).
         /// </summary>
         public event EventHandler Closed;
-
-        #region method OnClosed
 
         /// <summary>
         /// Raises <b>Closed</b> event.
@@ -586,15 +554,11 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when receive stream has timed out by RTP session.
         /// </summary>
         /// <remarks>After <b>Timeout</b> event stream will be disposed and has no longer accessible.</remarks>
         public event EventHandler Timeout;
-
-        #region method OnTimeout
 
         /// <summary>
         /// Raised <b>Timeout</b> event.
@@ -606,14 +570,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-                
         /// <summary>
         /// Is raised when steam gets new sender report from remote party.
         /// </summary>
         public event EventHandler SenderReport;
-        
-        #region method OnSenderReport
 
         /// <summary>
         /// Raises <b>SenderReport</b> event.
@@ -625,14 +585,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when new RTP packet received.
         /// </summary>
         public event EventHandler<RTP_PacketEventArgs> PacketReceived;
-
-        #region method OnPacketReceived
 
         /// <summary>
         /// Raises <b>PacketReceived</b> event.
@@ -644,9 +600,5 @@ namespace LumiSoft.Net.RTP
                 this.PacketReceived(this,new RTP_PacketEventArgs(packet));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -8,8 +8,6 @@ namespace LumiSoft.Net
     /// </summary>
     internal class BitDebuger
     {
-        #region static method ToBit
-
         /// <summary>
         /// Converts byte array to bit(1 byte = 8 bit) representation.
         /// </summary>
@@ -48,7 +46,5 @@ namespace LumiSoft.Net
 
             return retVal.ToString();
         }
-
-        #endregion
     }
 }

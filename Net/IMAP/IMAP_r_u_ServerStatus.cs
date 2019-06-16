@@ -42,8 +42,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses IMAP command completion status response from response line.
         /// </summary>
@@ -72,10 +70,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_ServerStatus(responseCode,optResponse,responseText);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -93,10 +87,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets IMAP server status response code(OK,NO,BAD,PREAUTH,BYE).
@@ -121,10 +111,6 @@ namespace LumiSoft.Net.IMAP
             get{ return !ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase); }
         }
 
-        #endregion
-
-
-        #region Obsolete
 
         /// <summary>
         /// Gets IMAP server status response optiona response-code(ALERT,BADCHARSET,CAPABILITY,PARSE,PERMANENTFLAGS,
@@ -161,7 +147,5 @@ namespace LumiSoft.Net.IMAP
                 }
             }
         }
-
-        #endregion
     }
 }

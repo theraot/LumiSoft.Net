@@ -29,8 +29,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses COPYUID optional response from string.
         /// </summary>
@@ -68,10 +66,6 @@ namespace LumiSoft.Net.IMAP
             );
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -82,10 +76,6 @@ namespace LumiSoft.Net.IMAP
             return "COPYUID " + "m_MailboxUid" + " " + "m_MessageUid";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets target mailbox UID value.
@@ -101,7 +91,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets target messages UID sequence set.
         /// </summary>
         public IMAP_t_SeqSet TargetSeqSet { get; }
-
-#endregion
     }
 }

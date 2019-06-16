@@ -22,14 +22,9 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets RTP source.
         /// </summary>
         public RTP_Source Source { get; }
-
-#endregion
-
     }
 }

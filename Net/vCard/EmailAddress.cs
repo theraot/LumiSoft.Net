@@ -22,8 +22,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method Changed
-
         /// <summary>
         /// This method is called when some property has changed, wee need to update underlaying vCard item.
         /// </summary>
@@ -33,10 +31,6 @@ namespace LumiSoft.Net.Mime.vCard
             Item.SetDecodedValue(m_EmailAddress);
         }
 
-        #endregion
-
-
-        #region internal static method Parse
 
         /// <summary>
         /// Parses email address from vCard EMAIL structure string.
@@ -57,10 +51,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return new EmailAddress(item,type,item.DecodedValue);
         }
-
-        #endregion
-
-        #region internal static EmailTypeToString
 
         /// <summary>
         /// Converts EmailAddressType_enum to vCard item parameters string.
@@ -86,10 +76,6 @@ namespace LumiSoft.Net.Mime.vCard
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets underlaying vCrad item.
@@ -121,8 +107,5 @@ namespace LumiSoft.Net.Mime.vCard
                 Changed();
             }
         }
-
-        #endregion
-
     }
 }

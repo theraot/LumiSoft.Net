@@ -47,8 +47,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -92,10 +90,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region method ToStream
 
         /// <summary>
         /// Stores MIME entity body to the specified stream.
@@ -120,10 +114,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if body has modified.
@@ -155,7 +145,5 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <remarks>Each block contains per-recipient-fields.</remarks>
         public List<MIME_h_Collection> RecipientBlocks { get; }
-
-#endregion
     }
 }

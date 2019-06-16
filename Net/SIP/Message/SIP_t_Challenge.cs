@@ -26,8 +26,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "challenge" from specified value.
         /// </summary>
@@ -72,10 +70,6 @@ namespace LumiSoft.Net.SIP.Message
             m_AuthData = word.Trim();
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "challenge" value.
         /// </summary>
@@ -85,10 +79,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_Method + " " + m_AuthData;
         }
 
-        #endregion
-        
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets authentication method. Normally this value is always 'Digest'.
@@ -121,7 +111,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_AuthData = value;
             }
         }
-
-        #endregion
     }
 }

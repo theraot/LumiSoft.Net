@@ -36,9 +36,7 @@ namespace LumiSoft.Net.MIME
                 EncodedStream.Close();
             }
         }
-        
-  
-        #region override SetParent
+
 
         /// <summary>
         /// Sets body parent.
@@ -54,10 +52,6 @@ namespace LumiSoft.Net.MIME
                 this.Entity.ContentType = new MIME_h_ContentType(MediaType);
             }
         }
-
-        #endregion
-
-        #region method ToStream
 
         /// <summary>
         /// Stores MIME entity body to the specified stream.
@@ -77,10 +71,6 @@ namespace LumiSoft.Net.MIME
             Net_Utils.StreamCopy(GetEncodedDataStream(),stream,32000);
         }
 
-        #endregion
-
-        #region method SetModified
-
         /// <summary>
         /// Sets IsModified property value.
         /// </summary>
@@ -90,10 +80,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = isModified;
         }
 
-        #endregion
-
-
-        #region method GetEncodedDataStream
 
         /// <summary>
         /// Gets body encoded data stream.
@@ -110,10 +96,6 @@ namespace LumiSoft.Net.MIME
 
             return EncodedStream;
         }
-
-        #endregion
-
-        #region method SetEncodedData
 
         /// <summary>
         /// Sets body encoded data from specified stream.
@@ -149,10 +131,6 @@ namespace LumiSoft.Net.MIME
        
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method GetDataStream
 
         /// <summary>
         /// Gets body decoded data stream.
@@ -196,10 +174,6 @@ namespace LumiSoft.Net.MIME
                 throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + this.Entity.ContentTransferEncoding + "'.");
             }
         }
-
-        #endregion
-
-        #region method SetData
 
         /// <summary>
         /// Sets body data from the specified stream.
@@ -249,10 +223,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method SetDataFromFile
-
         /// <summary>
         /// Sets body data from the specified file.
         /// </summary>
@@ -271,10 +241,6 @@ namespace LumiSoft.Net.MIME
             }            
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if body has modified.
@@ -328,7 +294,5 @@ namespace LumiSoft.Net.MIME
         /// Gets encoded data stream.
         /// </summary>
         protected Stream EncodedStream { get; }
-
-#endregion
     }
 }

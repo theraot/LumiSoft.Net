@@ -22,14 +22,9 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets SIP registration.
         /// </summary>
         public SIP_Registration Registration { get; }
-
-#endregion
-
     }
 }

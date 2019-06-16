@@ -19,8 +19,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pRegistrations = new List<SIP_Registration>();
         }
 
-        
-        #region method Add
 
         /// <summary>
         /// Adds specified registration to collection.
@@ -37,10 +35,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method Remove
-
         /// <summary>
         /// Deletes specified registration and all it's contacts. 
         /// </summary>
@@ -56,10 +50,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
         }
-
-        #endregion
-
-        #region method Contains
 
         /// <summary>
         /// Gets if registration with specified name already exists.
@@ -79,10 +69,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        #endregion
-
-
-        #region method RemoveExpired
 
         /// <summary>
         /// Removes all expired registrations from the collection.
@@ -104,12 +90,8 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
 
-
-        #region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -117,10 +99,6 @@ namespace LumiSoft.Net.SIP.Proxy
 		{
 			return m_pRegistrations.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of registrations in the collection.
@@ -156,8 +134,5 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ return m_pRegistrations.ToArray(); }
         }
-                
-        #endregion
-
     }
 }

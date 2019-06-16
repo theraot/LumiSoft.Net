@@ -28,8 +28,6 @@ namespace LumiSoft.Net.DNS
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -58,10 +56,6 @@ namespace LumiSoft.Net.DNS
             return new DNS_rr_SRV(name,priority,weight,port,target,ttl);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets service priority. Lowest value means greater priority.
@@ -83,8 +77,5 @@ namespace LumiSoft.Net.DNS
         /// Service provider host name or IP address.
         /// </summary>
         public string Target { get; } = "";
-
-#endregion
-
     }
 }

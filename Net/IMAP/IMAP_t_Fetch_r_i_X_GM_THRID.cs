@@ -15,13 +15,9 @@
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets thread ID.
         /// </summary>
         public ulong ThreadID { get; }
-
-#endregion
     }
 }

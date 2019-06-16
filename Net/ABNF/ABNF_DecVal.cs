@@ -9,16 +9,12 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_DecVal : ABNF_Element
     {
-        #region enum ValueType
-
         private enum ValueType
         {
             Single = 0,
             Concated = 1,
             Range  = 2,
         }
-
-        #endregion
 
         /// <summary>
         /// Default 'range' value constructor.
@@ -147,10 +143,5 @@ namespace LumiSoft.Net.ABNF
                 return new ABNF_DecVal(values[0],values[1]);
             }
         }
-
-
-        #region Properties implementation
-
-        #endregion
     }
 }

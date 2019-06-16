@@ -10,8 +10,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_Ntlm : AUTH_SASL_Client
     {
-        #region class MessageType1
-
         /// <summary>
         /// This class represents NTLM type 1 message.
         /// </summary>
@@ -39,8 +37,6 @@ namespace LumiSoft.Net.AUTH
                 m_Host   = host;
             }
 
-
-            #region method ToByte
 
             /// <summary>
             /// Converts this to binary NTML type 1 message.
@@ -149,13 +145,7 @@ namespace LumiSoft.Net.AUTH
 
                 return data; 
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region class MessageType2
 
         /// <summary>
         /// This class represents NTLM type 2 message.
@@ -180,8 +170,6 @@ namespace LumiSoft.Net.AUTH
                 Nonce = nonce;
             }
 
-
-            #region static method Parse
 
             /// <summary>
             /// Parses NTLM type 2 message.
@@ -239,22 +227,12 @@ namespace LumiSoft.Net.AUTH
                 return new MessageType2(nonce);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets nonce.
             /// </summary>
             public byte[] Nonce { get; }
-
-#endregion
         }
-
-        #endregion
-
-        #region class MessageType3
 
         /// <summary>
         /// This class represents NTLM type 3 message.
@@ -301,8 +279,6 @@ namespace LumiSoft.Net.AUTH
                 m_NT     = nt;
             }
 
-
-            #region method ToByte
 
             /// <summary>
             /// Converts this to binary NTML type 3 message.
@@ -500,21 +476,13 @@ namespace LumiSoft.Net.AUTH
 
                 return data;
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region class NTLM_Utils
 
         /// <summary>
         /// This class provides NTLM related utility methods.
         /// </summary>
         private class NTLM_Utils
         {
-            #region static method CalculateLM
-
             /// <summary>
             /// Calculates NTLM NT response.
             /// </summary>
@@ -562,10 +530,6 @@ namespace LumiSoft.Net.AUTH
                 return calc_resp(nonce,lmBuffer);
             }
 
-            #endregion
-
-            #region static method CalculateNT
-
             /// <summary>
             /// Calculates NTLM LM response.
             /// </summary>
@@ -590,11 +554,7 @@ namespace LumiSoft.Net.AUTH
 
                 return calc_resp(nonce,ntBuffer);
             }
-                       
-            #endregion
 
-
-            #region static method calc_resp
 
             private static byte[] calc_resp(byte[] nonce,byte[] data)
             {
@@ -623,10 +583,6 @@ namespace LumiSoft.Net.AUTH
                 return response;
             }
 
-            #endregion
-
-            #region static method setup_des_key
-
             private static byte[] setup_des_key(byte[] key56bits,int position) 
             {                 
                 byte[] key = new byte [8]; 
@@ -642,10 +598,6 @@ namespace LumiSoft.Net.AUTH
                 return key;
             }
 
-            #endregion
-
-            #region static method PasswordToKey
-
             private static byte[] PasswordToKey(string password,int position) 
             { 
                 byte[] key7 = new byte[7]; 
@@ -655,11 +607,7 @@ namespace LumiSoft.Net.AUTH
 
                 return key8;
             }
-
-            #endregion
         }
-
-        #endregion
 
         private bool   m_IsCompleted;
         private int    m_State;
@@ -691,8 +639,6 @@ namespace LumiSoft.Net.AUTH
             m_Password = password;
         }
 
-
-        #region method Continue
 
         /// <summary>
         /// Continues authentication process.
@@ -740,10 +686,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -776,7 +718,5 @@ namespace LumiSoft.Net.AUTH
         {
             get{ return true; }
         }
-
-        #endregion
     }
 }

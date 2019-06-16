@@ -16,8 +16,6 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region method SetCurrentSeqNo
-
         /// <summary>
         /// Sets <b>CurrentSeqNo</b> property value.
         /// </summary>
@@ -27,26 +25,16 @@ namespace LumiSoft.Net.IMAP.Client
             CurrentSeqNo = seqNo;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets current message sequence number. Value -1 means no current message.
         /// </summary>
         public int CurrentSeqNo { get; private set; } = -1;
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when current message changes and next message FETCH data-items will be returned.
         /// </summary>
         public event EventHandler NextMessage;
-
-        #region method OnNextMessage
 
         /// <summary>
         /// Raises <b>NextMessage</b> event.
@@ -58,16 +46,12 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         //public event EventHandler BodyS = null;
 
         /// <summary>
         /// Is raised when current message FETCH BODY[] data-item is returned.
         /// </summary>
         public event EventHandler<IMAP_Client_Fetch_Body_EArgs> Body;
-
-        #region method OnBody
 
         /// <summary>
         /// Raises <b>Body</b> event.
@@ -80,16 +64,12 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         //public event EventHandler BodyStructure = null;
 
         /// <summary>
         /// Is raised when current message FETCH ENVELOPE data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<IMAP_Envelope>> Envelope;
-
-        #region method OnEnvelope
 
         /// <summary>
         /// Raises <b>Envelope</b> event.
@@ -102,14 +82,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH FLAGS data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<string[]>> Flags;
-
-        #region method OnFlags
 
         /// <summary>
         /// Raises <b>Flags</b> event.
@@ -122,14 +98,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH INTERNALDATE data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<DateTime>> InternalDate;
-
-        #region method OnInternalDate
 
         /// <summary>
         /// Raises <b>InternalDate</b> event.
@@ -142,14 +114,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH RFC822 data-item is returned.
         /// </summary>
         public event EventHandler<IMAP_Client_Fetch_Rfc822_EArgs> Rfc822;
-
-        #region method OnRfc822
 
         /// <summary>
         /// Raises <b>Rfc822</b> event.
@@ -162,14 +130,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH RFC822.HEADER data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<string>> Rfc822Header;
-
-        #region method OnRfc822Header
 
         /// <summary>
         /// Raises <b>Rfc822Text</b> event.
@@ -182,14 +146,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH RFC822.SIZE data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<int>> Rfc822Size;
-
-        #region method OnSize
 
         /// <summary>
         /// Raises <b>Rfc822Size</b> event.
@@ -202,14 +162,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH RFC822.TEXT data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<string>> Rfc822Text;
-
-        #region method OnRfc822Text
 
         /// <summary>
         /// Raises <b>Rfc822Text</b> event.
@@ -222,14 +178,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH UID data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<long>> UID;
-
-        #region method OnUID
 
         /// <summary>
         /// Raises <b>UID</b> event.
@@ -242,15 +194,11 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
 
         /// <summary>
         /// Is raised when current message FETCH GMail X-GM-MSGID data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<ulong>> X_GM_MSGID;
-
-        #region method OnX_GM_MSGID
 
         /// <summary>
         /// Raises <b>X_GM_MSGID</b> event.
@@ -263,14 +211,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when current message FETCH GMail X-GM-THRID data-item is returned.
         /// </summary>
         public event EventHandler<EventArgs<ulong>> X_GM_THRID;
-
-        #region method OnX_GM_THRID
 
         /// <summary>
         /// Raises <b>X_GM_THRID</b> event.
@@ -282,9 +226,5 @@ namespace LumiSoft.Net.IMAP.Client
                 this.X_GM_THRID(this,new EventArgs<ulong>(threadID));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.FTP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets error response.
         /// </summary>
@@ -41,7 +39,5 @@ namespace LumiSoft.Net.FTP.Server
         /// Gets directory list items.
         /// </summary>
         public List<FTP_ListItem> Items { get; }
-
-#endregion
     }
 }

@@ -14,8 +14,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// Proxy context job is to forward request to contact(s) and send received responses back to caller.</remarks>
     public class SIP_ProxyContext : IDisposable
     {
-        #region class TargetHandler
-
         /// <summary>
         /// This class is responsible for sending <b>request</b> to target(HOPs) and processing responses.
         /// </summary>
@@ -60,8 +58,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 m_pHops = new Queue<SIP_Hop>();  
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -90,10 +86,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #region method Init
-
             /// <summary>
             /// Initializes target.
             /// </summary>
@@ -112,35 +104,17 @@ namespace LumiSoft.Net.SIP.Proxy
 
                 bool isStrictRoute = false;
 
-                #region 1. Make a copy of the received request.
-
                 // 1. Make a copy of the received request.
                 m_pRequest = m_pOwner.Request.Copy();
-
-                #endregion
-
-                #region 2. Update the Request-URI.
 
                 // 2. Update the Request-URI.
                 m_pRequest.RequestLine.Uri = m_pTargetUri;
 
-                #endregion
-
-                #region 3. Update the Max-Forwards header field.
-
                 // 3. Update the Max-Forwards header field.
                 m_pRequest.MaxForwards--;
 
-                #endregion
-                                
-                #region 5. Optionally add additional header fields.
-
                 // 5. Optionally add additional header fields.
                 //    Skip.
-
-                #endregion
-
-                #region 6. Postprocess routing information.
 
                 /* 6. Postprocess routing information.
              
@@ -160,10 +134,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
                     isStrictRoute = true;
                 }
-
-                #endregion
-
-                #region 7. Determine the next-hop address, port, and transport.
 
                 /* 7. Determine the next-hop address, port, and transport.
                       The proxy MAY have a local policy to send the request to a
@@ -225,10 +195,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 foreach(SIP_Hop hop in m_pOwner.Proxy.Stack.GetHops(uri,m_pRequest.ToByteData().Length,((SIP_Uri)m_pRequest.RequestLine.Uri).IsSecure)){
                     m_pHops.Enqueue(hop);
                 }
-                
-                #endregion
-
-                #region 4. Optionally add a Record-route header field value.
 
                 // We need to do step 4 after step 7, because then transport in known.
                 // Each transport can have own host-name, otherwise we don't know what to put into Record-Route.
@@ -252,17 +218,8 @@ namespace LumiSoft.Net.SIP.Proxy
                         m_pRequest.RecordRoute.Add(recordRoute);
                     }
                 }
-
-                #endregion
-
             }
 
-            #endregion
-
-
-            #region Events handling
-                        
-            #region method ClientTransaction_ResponseReceived
 
             /// <summary>
             /// Is called when client transactions receives response.
@@ -281,13 +238,7 @@ namespace LumiSoft.Net.SIP.Proxy
                         Steps 3 - 10 done in ProxyContext.ProcessResponse method.
                     */
 
-                    #region 1. Find Context
-
                     // Done, m_pOwner is it.
-
-                    #endregion
-
-                    #region 2. Update timer C for provisional responses
 
                     /* For an INVITE transaction, if the response is a provisional
                        response with status codes 101 to 199 inclusive (i.e., anything
@@ -298,8 +249,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     if(m_pTimerC != null && e.Response.StatusCode >= 101 && e.Response.StatusCode <= 199){
                         m_pTimerC.Interval = 3 * 60 * 1000;
                     }
-
-                    #endregion
 
                     /*
                     // If 401 or 407 (Authentication required), see i we have specified realm(s) credentials, 
@@ -358,10 +307,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #region method ClientTransaction_TimedOut
-
             /// <summary>
             /// Is called when client transaction has timed out.
             /// </summary>
@@ -399,10 +344,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
             }
-
-            #endregion
-
-            #region method ClientTransaction_TransportError
 
             /// <summary>
             /// Is called when client transaction encountered transport error.
@@ -442,10 +383,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #region method m_pTransaction_Disposed
-
             /// <summary>
             /// This method is called when client transaction has disposed.
             /// </summary>
@@ -464,10 +401,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
             }
-
-            #endregion
-
-            #region method m_pTimerC_Elapsed
 
             private void m_pTimerC_Elapsed(object sender,ElapsedEventArgs e)
             {
@@ -489,12 +422,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts target processing.
@@ -531,10 +458,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #region method Cancel
-
             /// <summary>
             /// Cancels target processing.
             /// </summary>
@@ -555,10 +478,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-
-            #region method SendToNextHop
 
             /// <summary>
             /// Starts sending request to next hop in queue.
@@ -574,10 +493,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 
                 SendToFlow(m_pOwner.Proxy.Stack.TransportLayer.GetOrCreateFlow(hop.Transport,null,hop.EndPoint),m_pRequest.Copy());
             }
-                                                            
-            #endregion
-
-            #region method SendToFlow
 
             /// <summary>
             /// Sends specified request to the specified data flow.
@@ -617,21 +532,11 @@ namespace LumiSoft.Net.SIP.Proxy
                         10. Forward the new request
                         11. Set timer C
                 */
-                                
-                #region 8.  Add a Via header field value
 
                 // Skip, Client transaction will add it.
 
-                #endregion
-
-                #region 9.  Add a Content-Length header field if necessary
-
                 // Skip, our SIP_Message class is smart and do it when ever it's needed.
 
-                #endregion
-
-                #region 10. Forward the new request
-                                
                 m_pTransaction = m_pOwner.Proxy.Stack.TransactionLayer.CreateClientTransaction(flow,request,true);             
                 m_pTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(ClientTransaction_ResponseReceived);
                 m_pTransaction.TimedOut += new EventHandler(ClientTransaction_TimedOut);
@@ -640,10 +545,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
                 // Start transaction processing.
                 m_pTransaction.Start();
-
-                #endregion
-
-                #region 11. Set timer C
 
                 /* 11. Set timer C
                     In order to handle the case where an INVITE request never
@@ -660,13 +561,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     m_pTimerC.Interval = 3 * 60 * 1000;
                     m_pTimerC.Elapsed += new ElapsedEventHandler(m_pTimerC_Elapsed);
                 }
-
-                #endregion
             }
-
-            #endregion
-
-            #region method CleanUpActiveHop
 
             /// <summary>
             /// Cleans up acitve hop resources.
@@ -683,10 +578,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -776,12 +667,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     return m_HasReceivedResponse; 
                 }
             }
-
-            #endregion
-
         }
-
-        #endregion
 
         private bool                        m_IsStarted;
         private SIP_Proxy                   m_pProxy;
@@ -886,8 +772,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             m_pProxy.Stack.Logger.AddText("ProxyContext(id='" + m_ID + "') created.");
         }
-                                
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -912,12 +796,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-
-        #region Events Handling
-
-        #region method m_pServerTransaction_Canceled
 
         /// <summary>
         /// Is called when server transaction has canceled.
@@ -934,10 +812,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method m_pServerTransaction_Disposed
-
         /// <summary>
         /// This method is called when server transaction has disposed.
         /// </summary>
@@ -948,10 +822,6 @@ namespace LumiSoft.Net.SIP.Proxy
             // All done, just dispose proxy context.
             Dispose();
         }
-
-        #endregion
-
-        #region method TargetHandler_Disposed
 
         /// <summary>
         /// This method is called when specified target handler has disposed.
@@ -969,12 +839,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts processing.
@@ -1017,10 +881,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method Cancel
-
         /// <summary>
         /// Cancels proxy context processing. All client transactions and owner server transaction will be canceled,
         /// proxy context will be disposed. 
@@ -1043,10 +903,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-
-        #region method ProcessResponse
 
         /// <summary>
         /// Processes received response.
@@ -1092,9 +948,6 @@ namespace LumiSoft.Net.SIP.Proxy
             bool forwardResponse = false;
 
             lock(m_pLock){
-
-                #region 3.  Remove the topmost Via
-
                 /* 
                     The proxy removes the topmost Via header field value from the
                     response.
@@ -1117,10 +970,6 @@ namespace LumiSoft.Net.SIP.Proxy
                         return;
                     }
                 }
-
-                #endregion
-
-                #region 4.  Add the response to the response context
 
                 /*
                     Final responses received are stored in the response context
@@ -1195,10 +1044,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     m_pResponses.Add(response);
                 }
 
-                #endregion
-
-                #region 5.  Check to see if this response should be forwarded immediately
-
                 /*
                     Until a final response has been sent on the server transaction,
                     the following responses MUST be forwarded immediately:
@@ -1235,10 +1080,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
 
-                #endregion
-
-                #region x.  Handle sequential forking
-
                 /*
                     Sequential Search: In a sequential search, a proxy server attempts
                     each contact address in sequence, proceeding to the next one
@@ -1262,10 +1103,6 @@ namespace LumiSoft.Net.SIP.Proxy
                         return;
                     }
                 }
-
-                #endregion
-
-                #region 6.  When necessary, choose the best final response from the response context
 
                 /* 
                     A stateful proxy MUST send a final response to a response
@@ -1302,12 +1139,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
 
-                #endregion
-
                 if(forwardResponse){
-
-                    #region 7.  Aggregate authorization header field values if necessary
-
                     /* 
                         If the selected response is a 401 (Unauthorized) or 407 (Proxy Authentication Required), 
                         the proxy MUST collect any WWW-Authenticate and Proxy-Authenticate header field values 
@@ -1336,24 +1168,12 @@ namespace LumiSoft.Net.SIP.Proxy
                         }
                     }
 
-                    #endregion
-
-                    #region 8.  Optionally rewrite Record-Route header field values
-
                     // This is optional so we currently won't do that.
-
-                    #endregion
-
-                    #region 9.  Forward the response
 
                     SendResponse(transaction,response);
                     if(response.StatusCodeType != SIP_StatusCodeType.Provisional){
                         m_IsFinalResponseSent = true;
                     }
-
-                    #endregion
-
-                    #region 10. Generate any necessary CANCEL requests
 
                     /* 
                         If the forwarded response was a final response, the proxy MUST
@@ -1363,15 +1183,9 @@ namespace LumiSoft.Net.SIP.Proxy
                     if(response.StatusCodeType != SIP_StatusCodeType.Provisional){
                         CancelAllTargets();
                     }
-
-                    #endregion
                 }
             }
         }
-
-        #endregion
-
-        #region method SendResponse
 
         /// <summary>
         /// Sends SIP response to caller. If proxy context is in B2BUA mode, new response is generated 
@@ -1431,10 +1245,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method CancelAllTargets
-
         /// <summary>
         /// Cancels all targets processing.
         /// </summary>
@@ -1448,10 +1258,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
         }
-
-        #endregion
-
-        #region method GetBestFinalResponse
 
         /// <summary>
         /// Gets best final response. If no final response in responses collection, null is returned.
@@ -1495,10 +1301,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return null;
         }
 
-        #endregion
-
-        #region method GetCredential
-
         /// <summary>
         /// Gets credentials for specified realm. Returns null if none such credentials.
         /// </summary>
@@ -1519,10 +1321,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return null;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -1680,8 +1478,5 @@ namespace LumiSoft.Net.SIP.Proxy
                 return m_pCredentials; 
             }
         }
-
-        #endregion
-
     }
 }

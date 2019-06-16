@@ -26,8 +26,6 @@ namespace LumiSoft.Net.SMTP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets SMTP "mailbox" value. Actually this is just email address.
         /// </summary>
@@ -46,7 +44,5 @@ namespace LumiSoft.Net.SMTP.Server
         /// Defined in RFC 1891.
         /// </summary>
         public string ORCPT { get; } = "";
-
-#endregion
     }
 }

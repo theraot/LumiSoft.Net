@@ -22,8 +22,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -54,8 +52,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
         /*
         /// <summary>
         /// Signs entiy data.
@@ -72,10 +68,5 @@ namespace LumiSoft.Net.MIME
         {
             // SignedCms 
         }*/
-        
-
-        #region Properties implementation
-
-        #endregion
     }
 }

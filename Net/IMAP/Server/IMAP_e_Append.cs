@@ -39,8 +39,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>
@@ -83,16 +81,10 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         public Stream Stream { get; set; }
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when message storing has completed.
         /// </summary>
         public event EventHandler Completed;
-
-        #region method OnCompleted
 
         /// <summary>
         /// Raises <b>Completed</b> event.
@@ -106,9 +98,5 @@ namespace LumiSoft.Net.IMAP.Server
             // Release event.
             this.Completed = null;
         }
-
-        #endregion
-
-        #endregion
     }
 }

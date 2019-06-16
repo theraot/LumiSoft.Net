@@ -22,14 +22,9 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets participant.
         /// </summary>
         public RTP_Participant_Remote Participant { get; }
-
-#endregion
-
     }
 }

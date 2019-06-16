@@ -32,8 +32,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region method Copy
-
         /// <summary>
         /// Clones this request.
         /// </summary>
@@ -45,10 +43,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-
-        #region method Validate
 
         /// <summary>
         /// Checks if SIP response has all required values as response line,header fields and their values.
@@ -88,10 +82,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             // TODO: INVITE 2xx must have only 1 contact header with SIP or SIPS.
         }
-
-        #endregion
-        
-        #region method Parse
 
         /// <summary>
         /// Parses SIP_Response from byte array.
@@ -161,10 +151,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-        #region method ToStream
-
         /// <summary>
         /// Stores SIP_Response to specified stream.
         /// </summary>
@@ -181,10 +167,6 @@ namespace LumiSoft.Net.SIP.Stack
             this.InternalToStream(stream);
         }
 
-        #endregion
-
-        #region method ToByteData
-
         /// <summary>
         /// Converts this response to raw srver response data.
         /// </summary>
@@ -197,10 +179,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method ToString
-
         /// <summary>
         /// Returns response as string.
         /// </summary>
@@ -210,10 +188,6 @@ namespace LumiSoft.Net.SIP.Stack
             return Encoding.UTF8.GetString(ToByteData());
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets SIP request which response it is. This value is null if this is stateless response.
@@ -327,8 +301,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.ReasonPhrase = code_reason[1];
             }
         }
-
-        #endregion
-
     }
 }

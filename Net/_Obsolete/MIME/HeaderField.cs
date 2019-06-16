@@ -29,9 +29,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets or sets header field name. Header field name must end with colon(:) and may contain US-ASCII character values between 33 and 126.
 		/// </summary>
 		public string Name
@@ -87,8 +85,5 @@ namespace LumiSoft.Net.Mime
         /// Gets header field encoded value.
         /// </summary>
         internal string EncodedValue { get; private set; } = "";
-
-#endregion
-
-	}
+    }
 }

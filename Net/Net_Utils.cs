@@ -13,8 +13,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class Net_Utils
     {
-        #region static method GetLocalHostName
-
         /// <summary>
         /// Gets local host name or argument <b>hostName</b> value if it's specified.
         /// </summary>
@@ -29,10 +27,6 @@ namespace LumiSoft.Net
                 return hostName;
             }
         }
-
-        #endregion
-
-        #region static method CompareArray
 
         /// <summary>
         /// Compares if specified array itmes equals.
@@ -77,10 +71,6 @@ namespace LumiSoft.Net
             return true;
         }
 
-        #endregion
-
-        #region static method ReverseArray
-
         /// <summary>
         /// Reverses the specified array elements.
         /// </summary>
@@ -97,10 +87,6 @@ namespace LumiSoft.Net
 
             return array;
         }
-
-        #endregion
-
-        #region static method ArrayToString
 
         /// <summary>
         /// Convert array elements to string.
@@ -125,10 +111,6 @@ namespace LumiSoft.Net
 
             return retVal.ToString();
         }
-
-        #endregion
-
-        #region static method StreamCopy
 
         /// <summary>
         /// Copies <b>source</b> stream data to <b>target</b> stream.
@@ -164,10 +146,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region static method CompareIP
 
         /// <summary>
         /// Compares 2 IP addresses. Returns 0 if IPs are equal, 
@@ -208,10 +186,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-        #region static method IsIPAddress
-
         /// <summary>
         /// Gets if the specified string value is IP address.
         /// </summary>
@@ -228,10 +202,6 @@ namespace LumiSoft.Net
 
             return IPAddress.TryParse(value,out ip);
         }
-
-        #endregion
-
-        #region static method IsMulticastAddress
 
         /// <summary>
         /// Gets if the specified IP address is multicast address.
@@ -259,10 +229,6 @@ namespace LumiSoft.Net
 
             return false;
         }
-
-        #endregion
-
-        #region static method IsPrivateIP
 
         /// <summary>
         /// Gets if specified IP address is private LAN IP address. For example 192.168.x.x is private ip.
@@ -319,10 +285,6 @@ namespace LumiSoft.Net
 			return false;
         }
 
-        #endregion
-
-        #region static method ParseIPEndPoint
-
         /// <summary>
         /// Parses IPEndPoint from the specified string value.
         /// </summary>
@@ -346,12 +308,8 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
 
-
-        #region static method IsInteger
-
-		/// <summary>
+        /// <summary>
 		/// Checks if specified string is integer(int/long).
 		/// </summary>
 		/// <param name="value"></param>
@@ -367,10 +325,6 @@ namespace LumiSoft.Net
 
             return long.TryParse(value,out l);
 		}
-
-		#endregion
-
-        #region static method IsAscii
 
         /// <summary>
         /// Gets if the specified string is ASCII string.
@@ -393,10 +347,6 @@ namespace LumiSoft.Net
 			return true;
         }
 
-        #endregion
-
-               
-        #region static method IsSocketAsyncSupported
 
         /// <summary>
         /// Gets if socket async methods supported by OS.
@@ -415,10 +365,6 @@ namespace LumiSoft.Net
                 return false;
             }
         }
-
-        #endregion
-
-        #region static method CreateSocket
 
         /// <summary>
         /// Creates new socket for the specified end point.
@@ -455,10 +401,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region static method ToHex
 
         /// <summary>
 		/// Converts specified data to HEX string.
@@ -490,11 +432,7 @@ namespace LumiSoft.Net
 			return BitConverter.ToString(Encoding.Default.GetBytes(text)).ToLower().Replace("-","");
 		}
 
-		#endregion
-
-        #region static method FromHex
-
-		/// <summary>
+        /// <summary>
 		/// Converts hex byte data to normal byte data. Hex data must be in two bytes pairs, for example: 0F,FF,A3,... .
 		/// </summary>
 		/// <param name="hexData">Hex data.</param>
@@ -573,10 +511,6 @@ namespace LumiSoft.Net
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-
-        #region static method FromBase64
 
         /// <summary>
         /// Decodes specified base64 data.
@@ -611,10 +545,6 @@ namespace LumiSoft.Net
 
             return base64.Decode(data,0,data.Length,true);
         }
-
-        #endregion
-
-        #region static method Base64Encode
 
         /// <summary>
 		/// Encodes specified data with base64 encoding.
@@ -745,11 +675,7 @@ namespace LumiSoft.Net
 			return retVal;
 		}
 
-		#endregion
-
-		#region static method Base64Decode
-        
-		/// <summary>
+        /// <summary>
 		/// Decodes base64 data. Defined in RFC 2045 6.8.  Base64 Content-Transfer-Encoding.
 		/// </summary>
 		/// <param name="base64Data">Base64 decoded data.</param>
@@ -895,10 +821,6 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
-
-
-        #region static method ComputeMd5
 
         /// <summary>
         /// Computes md5 hash.
@@ -924,12 +846,8 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
 
         //--- Obsolte ------------------------------------------------------------------
-        
-        #region static method IsIoCompletionPortsSupported
 
         /// <summary>
         /// Gets if IO completion ports supported by OS.
@@ -949,8 +867,5 @@ namespace LumiSoft.Net
                 return false;
             }
         }
-
-        #endregion
-
     }
 }

@@ -26,8 +26,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "r-value" from specified value.
         /// </summary>
@@ -74,10 +72,6 @@ namespace LumiSoft.Net.SIP.Message
             m_Priority  = namespace_priority[1];
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "r-value" value.
         /// </summary>
@@ -93,10 +87,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_Namespace + "." + m_Priority;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets Namespace.
@@ -145,8 +135,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_Priority = value;
             }
         }
-
-        #endregion
-
     }
 }

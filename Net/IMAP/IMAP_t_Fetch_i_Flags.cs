@@ -13,8 +13,6 @@
         }
 
 
-        #region override method ToString
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -23,7 +21,5 @@
         {
             return "FLAGS";
         }
-
-        #endregion
     }
 }

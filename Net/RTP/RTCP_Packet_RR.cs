@@ -29,8 +29,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region mehtod ParseInternal
-
         /// <summary>
         /// Parses receiver report(RR) from byte buffer.
         /// </summary>
@@ -93,10 +91,6 @@ namespace LumiSoft.Net.RTP
             }
             // TODO: profile-specific extensions
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores receiver report(RR) packet to the specified buffer.
@@ -163,10 +157,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-        #region method ToString
-
         /// <summary>
         /// Returns RR packet as string.
         /// </summary>
@@ -182,10 +172,6 @@ namespace LumiSoft.Net.RTP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTCP version.
@@ -220,8 +206,5 @@ namespace LumiSoft.Net.RTP
         {
             get{ return 8 + (24 * ReportBlocks.Count); }
         }
-
-        #endregion
-
     }
 }

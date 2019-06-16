@@ -19,8 +19,6 @@ namespace LumiSoft.Net.STUN.Client
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets UDP network type.
         /// </summary>
@@ -30,8 +28,5 @@ namespace LumiSoft.Net.STUN.Client
         /// Gets public IP end point. This value is null if failed to get network type.
         /// </summary>
         public IPEndPoint PublicEndPoint { get; }
-
-#endregion
-
     }
 }

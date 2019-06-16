@@ -36,8 +36,6 @@ namespace LumiSoft.Net.SMTP.Client
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets SMTP status code.
         /// </summary>
@@ -75,8 +73,5 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
         }
-
-        #endregion
-
     }
 }

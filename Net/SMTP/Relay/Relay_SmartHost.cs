@@ -48,8 +48,6 @@ namespace LumiSoft.Net.SMTP.Relay
         }
 
 
-        #region override method Equals
-
         /// <summary>
         /// Compares the current instance with another object of the same type.
         /// </summary>
@@ -84,10 +82,6 @@ namespace LumiSoft.Net.SMTP.Relay
             return true;
         }
 
-        #endregion
-
-        #region override method GetHashCode
-
         /// <summary>
         /// Returns the hash code.
         /// </summary>
@@ -97,10 +91,6 @@ namespace LumiSoft.Net.SMTP.Relay
             return base.GetHashCode();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets smart host name or IP address.
@@ -126,8 +116,5 @@ namespace LumiSoft.Net.SMTP.Relay
         /// Gets smart host password.
         /// </summary>
         public string Password { get; }
-
-#endregion
-
     }
 }

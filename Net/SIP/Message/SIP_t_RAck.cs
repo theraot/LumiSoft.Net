@@ -42,8 +42,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "RAck" from specified value.
         /// </summary>
@@ -109,10 +107,6 @@ namespace LumiSoft.Net.SIP.Message
             m_Method = word;
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "RAck" value.
         /// </summary>
@@ -128,10 +122,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_ResponseNumber + " " + m_CSeqNumber + " " + m_Method;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets response number.
@@ -180,8 +170,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_Method = value;
             }
         }
-
-        #endregion
-
     }
 }

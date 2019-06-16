@@ -30,8 +30,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method ToValueString
-
         /// <summary>
         /// Converts item to vCard N structure string.
         /// </summary>
@@ -41,10 +39,6 @@ namespace LumiSoft.Net.Mime.vCard
             return LastName + ";" + FirstName + ";" + AdditionalNames + ";" + HonorificPerfix + ";" + HonorificSuffix;
         }
 
-        #endregion
-
-
-        #region internal static method Parse
 
         /// <summary>
         /// Parses name info from vCard N item.
@@ -72,10 +66,6 @@ namespace LumiSoft.Net.Mime.vCard
             return name;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets last name.
@@ -101,8 +91,5 @@ namespace LumiSoft.Net.Mime.vCard
         /// Gets honorific suffix.
         /// </summary>
         public string HonorificSuffix { get; private set; } = "";
-
-#endregion
-
     }
 }

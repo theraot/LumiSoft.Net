@@ -25,10 +25,8 @@ namespace LumiSoft.Net.Mime
 			Parameters = new HeaderFieldParameterCollection(this);
 		}
 
-		
-		#region method ParseParameters
 
-		/// <summary>
+        /// <summary>
 		/// Parses parameters from header field.
 		/// </summary>
 		/// <returns></returns>
@@ -61,11 +59,7 @@ namespace LumiSoft.Net.Mime
 			return retVal;
 		}
 
-		#endregion
-
-		#region method StoreParameters
-
-		/// <summary>
+        /// <summary>
 		/// Stores parameters to header field Value property.
 		/// </summary>
 		/// <param name="value"></param>
@@ -81,12 +75,8 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderField.Value = retVal;
 		}
 
-		#endregion
 
-        
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets header field name.
 		/// </summary>
 		public string Name
@@ -114,8 +104,5 @@ namespace LumiSoft.Net.Mime
 		/// Gets header field parameters.
 		/// </summary>
 		public HeaderFieldParameterCollection Parameters { get; }
-
-#endregion
-
-	}
+    }
 }

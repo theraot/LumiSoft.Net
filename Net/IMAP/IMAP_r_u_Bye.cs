@@ -21,9 +21,7 @@ namespace LumiSoft.Net.IMAP
 
             Text = text;
         }
-        
 
-        #region static method Parse
 
         /// <summary>
         /// Parses BYE response from bye-response string.
@@ -81,10 +79,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Bye(r.ReadToEnd());
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -100,16 +94,10 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets BYE reason text.
         /// </summary>
         public string Text { get; }
-
-#endregion
     }
 }

@@ -30,8 +30,6 @@ namespace LumiSoft.Net.WebDav
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets property namespace.
         /// </summary>
@@ -46,7 +44,5 @@ namespace LumiSoft.Net.WebDav
         /// Gets property value.
         /// </summary>
         public override string Value { get; }
-
-#endregion
     }
 }

@@ -77,8 +77,6 @@ namespace LumiSoft.Net.Log
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets log entry type.
         /// </summary>
@@ -128,8 +126,5 @@ namespace LumiSoft.Net.Log
         /// Gest log data. Value null means no log data.
         /// </summary>
         public byte[] Data { get; }
-
-#endregion
-
     }
 }

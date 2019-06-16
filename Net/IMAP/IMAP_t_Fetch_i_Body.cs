@@ -28,8 +28,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region override method ToString
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -53,10 +51,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets body section. Value null means not specified.
@@ -72,7 +66,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets maximum count of bytes to fetch. Value -1 means not specified.
         /// </summary>
         public int MaxCount { get; } = -1;
-
-#endregion
     }
 }

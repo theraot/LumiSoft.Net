@@ -35,8 +35,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pDialogs            = new Dictionary<string,SIP_Dialog>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -71,15 +69,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_IsDisposed = true;
         }
 
-        #endregion
-
-
-        #region Events Handling
-
-        #endregion
-
-
-        #region method CreateClientTransaction
 
         /// <summary>
         /// Creates new client transaction.
@@ -134,10 +123,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method CreateServerTransaction
-
         /// <summary>
         /// Creates new SIP server transaction for specified request.
         /// </summary>
@@ -177,10 +162,6 @@ namespace LumiSoft.Net.SIP.Stack
                 return transaction;
             }
         }
-
-        #endregion
-
-        #region method EnsureServerTransaction
 
         /// <summary>
         /// Ensures that specified request has matching server transaction. If server transaction doesn't exist, 
@@ -226,10 +207,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method MatchClientTransaction
 
         /// <summary>
         /// Matches SIP response to client transaction. If not matching transaction found, returns null.
@@ -258,10 +235,6 @@ namespace LumiSoft.Net.SIP.Stack
             
             return retVal;
         }
-
-        #endregion
-
-        #region method MatchServerTransaction
 
         /// <summary>
         /// Matches SIP request to server transaction. If not matching transaction found, returns null.
@@ -313,10 +286,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-        #region method MatchCancelToTransaction
-
         /// <summary>
         /// Matches CANCEL requst to SIP server non-CANCEL transaction. Returns null if no match.
         /// </summary>
@@ -345,10 +314,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-
-        #region method GetOrCreateDialog
 
         /// <summary>
         /// Gets existing or creates new dialog.
@@ -402,10 +367,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method RemoveDialog
 
         /// <summary>
         /// Removes specified dialog from dialogs collection.
@@ -417,10 +378,6 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pDialogs.Remove(dialog.ID);
             }
         }
-
-        #endregion
-
-        #region method MatchDialog
 
         /// <summary>
         /// Matches specified SIP request to SIP dialog. If no matching dialog found, returns null.
@@ -484,10 +441,6 @@ namespace LumiSoft.Net.SIP.Stack
             return dialog;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets all(clinet + server) active transactions.
@@ -547,8 +500,5 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-
-        #endregion
-
     }
 }

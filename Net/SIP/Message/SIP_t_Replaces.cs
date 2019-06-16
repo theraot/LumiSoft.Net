@@ -28,8 +28,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Replaces" from specified value.
         /// </summary>
@@ -76,10 +74,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Replaces" value.
         /// </summary>
@@ -105,10 +99,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets call id.
@@ -200,8 +190,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

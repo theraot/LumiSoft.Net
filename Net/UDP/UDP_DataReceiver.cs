@@ -33,8 +33,6 @@ namespace LumiSoft.Net.UDP
             m_pSocket = socket;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -57,10 +55,6 @@ namespace LumiSoft.Net.UDP
             this.Error = null;            
         }
 
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts receiving data.
@@ -135,10 +129,6 @@ namespace LumiSoft.Net.UDP
             });
         }
 
-        #endregion
-
-
-        #region method IOCompletionReceive
 
         /// <summary>
         /// Receives synchornously(if packet(s) available now) or starts waiting UDP packet asynchronously if no packets at moment.
@@ -169,10 +159,6 @@ namespace LumiSoft.Net.UDP
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region method AsyncSocketReceive
 
         /// <summary>
         /// Is called BeginReceiveFrom has completed.
@@ -212,17 +198,11 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
-
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when when new UDP packet is available.
         /// </summary>
         public event EventHandler<UDP_e_PacketReceived> PacketReceived;
-
-        #region method OnPacketReceived
 
         /// <summary>
         /// Raises <b>PacketReceived</b> event.
@@ -239,14 +219,10 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when unhandled error happens.
         /// </summary>
         public event EventHandler<ExceptionEventArgs> Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -262,10 +238,5 @@ namespace LumiSoft.Net.UDP
                 this.Error(this,new ExceptionEventArgs(x));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

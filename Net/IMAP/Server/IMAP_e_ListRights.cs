@@ -34,8 +34,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets LISTRIGHTS response.
         /// </summary>
@@ -67,7 +65,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets ACL identifier (normally user or group name).
         /// </summary>
         public string Identifier { get; }
-
-#endregion
     }
 }

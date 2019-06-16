@@ -22,8 +22,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method Changed
-
         /// <summary>
         /// This method is called when some property has changed, wee need to update underlaying vCard item.
         /// </summary>
@@ -33,10 +31,6 @@ namespace LumiSoft.Net.Mime.vCard
             Item.Value            = m_Number;
         }
 
-        #endregion
-
-
-        #region internal static method Parse
 
         /// <summary>
         /// Parses phone from vCard TEL structure string.
@@ -90,10 +84,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return new PhoneNumber(item,type,item.Value);
         }
-
-        #endregion
-
-        #region internal static PhoneTypeToString
 
         /// <summary>
         /// Converts PhoneNumberType_enum to vCard item parameters string.
@@ -152,10 +142,6 @@ namespace LumiSoft.Net.Mime.vCard
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets underlaying vCrad item.
@@ -187,8 +173,5 @@ namespace LumiSoft.Net.Mime.vCard
                 Changed();
             }
         }
-
-        #endregion
-
     }
 }

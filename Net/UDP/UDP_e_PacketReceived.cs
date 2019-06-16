@@ -17,8 +17,6 @@ namespace LumiSoft.Net.UDP
         }
 
 
-        #region method Reuse
-
         /// <summary>
         /// Reuses this class.
         /// </summary>
@@ -34,10 +32,6 @@ namespace LumiSoft.Net.UDP
             RemoteEP = remoteEP;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets socket which received data.
@@ -58,8 +52,5 @@ namespace LumiSoft.Net.UDP
         /// Gets remote host from where data was received.
         /// </summary>
         public IPEndPoint RemoteEP { get; private set; }
-
-#endregion
-
     }
 }

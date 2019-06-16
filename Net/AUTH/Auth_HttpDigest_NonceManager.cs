@@ -9,8 +9,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class Auth_HttpDigest_NonceManager : IDisposable
     {
-        #region class NonceEntry
-
         /// <summary>
         /// This class represents nonce entry in active nonces collection.
         /// </summary>
@@ -27,8 +25,6 @@ namespace LumiSoft.Net.AUTH
             }
 
 
-            #region Properties Implementation
-
             /// <summary>
             /// Gets nonce value.
             /// </summary>
@@ -38,12 +34,7 @@ namespace LumiSoft.Net.AUTH
             /// Gets time when this nonce entry was created.
             /// </summary>
             public DateTime CreateTime { get; }
-
-#endregion
-
         }
-
-        #endregion
 
         private List<NonceEntry> m_pNonces;
         private int              m_ExpireTime = 30;
@@ -61,8 +52,6 @@ namespace LumiSoft.Net.AUTH
             m_pTimer.Enabled = true;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up nay resource being used.
         /// </summary>
@@ -79,20 +68,12 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region method m_pTimer_Elapsed
 
         private void m_pTimer_Elapsed(object sender,ElapsedEventArgs e)
         {
             RemoveExpiredNonces();
         }
 
-        #endregion
-
-
-        #region mehtod CreateNonce
 
         /// <summary>
         /// Creates new nonce and adds it to active nonces collection.
@@ -105,10 +86,6 @@ namespace LumiSoft.Net.AUTH
 
             return nonce;
         }
-
-        #endregion
-
-        #region method NonceExists
 
         /// <summary>
         /// Checks if specified nonce exists in active nonces collection.
@@ -128,10 +105,6 @@ namespace LumiSoft.Net.AUTH
             return false;
         }
 
-        #endregion
-
-        #region method RemoveNonce
-
         /// <summary>
         /// Removes specified nonce from active nonces collection.
         /// </summary>
@@ -148,10 +121,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region method RemoveExpiredNonces
 
         /// <summary>
         /// Removes not used nonces what has expired.
@@ -169,10 +138,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets nonce expire time in seconds.
@@ -189,8 +154,5 @@ namespace LumiSoft.Net.AUTH
                 m_ExpireTime = value;
             }
         }
-
-        #endregion
-
     }
 }

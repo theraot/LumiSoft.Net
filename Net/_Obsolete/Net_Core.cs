@@ -9,8 +9,6 @@ using LumiSoft.Net.DNS.Client;
 
 namespace LumiSoft.Net
 {
-    #region enum AuthType
-
     /// <summary>
     /// Authentication type.
     /// </summary>
@@ -42,18 +40,13 @@ namespace LumiSoft.Net
 		DIGEST_MD5 = 4,	
 	}
 
-	#endregion
-
-	/// <summary>
+    /// <summary>
 	/// Provides net core utility methods.
 	/// </summary>
     [Obsolete("")]
 	public class Core
-	{		
-		
-		#region method GetHostName
-
-		/// <summary>
+	{
+        /// <summary>
 		/// Gets host name. If fails returns ip address.
 		/// </summary>
 		/// <param name="ip">IP address which to reverse lookup.</param>
@@ -82,12 +75,8 @@ namespace LumiSoft.Net
             return retVal;
 		}
 
-		#endregion
 
-
-		#region method GetArgsText
-
-		/// <summary>
+        /// <summary>
 		/// Gets argument part of command text.
 		/// </summary>
 		/// <param name="input">Input srting from where to remove value.</param>
@@ -104,12 +93,8 @@ namespace LumiSoft.Net
 			return buff;
 		}
 
-		#endregion
 
-		
-		#region method IsNumber
-
-		/// <summary>
+        /// <summary>
 		/// Checks if specified string is number(long).
 		/// </summary>
 		/// <param name="str"></param>
@@ -126,10 +111,6 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
-
-
-        #region static method ReverseArray
 
         /// <summary>
         /// Reverses the specified array elements.
@@ -149,10 +130,6 @@ namespace LumiSoft.Net
             return array;
         }
 
-        #endregion
-
-
-        #region static method Base64Encode
 
         /// <summary>
 		/// Encodes specified data with base64 encoding.
@@ -283,11 +260,7 @@ namespace LumiSoft.Net
 			return retVal;
 		}
 
-		#endregion
-
-		#region static method Base64Decode
-
-		/// <summary>
+        /// <summary>
 		/// Decodes base64 data. Defined in RFC 2045 6.8.  Base64 Content-Transfer-Encoding.
 		/// </summary>
 		/// <param name="base64Data">Base64 decoded data.</param>
@@ -444,11 +417,7 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
-
-		#region method QuotedPrintableEncode
-
-		/// <summary>
+        /// <summary>
 		/// Encodes data with quoted-printable encoding.
 		/// </summary>
 		/// <param name="data">Data to encode.</param>
@@ -502,11 +471,7 @@ namespace LumiSoft.Net
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method QuotedPrintableDecode
-
-		/// <summary>
+        /// <summary>
 		/// quoted-printable decoder. Defined in RFC 2045 6.7.
 		/// </summary>
 		/// <param name="data">Data which to encode.</param>
@@ -614,11 +579,7 @@ namespace LumiSoft.Net
 			return msRetVal.ToArray();
 		}
 
-		#endregion
-
-		#region method QDecode
-
-		/// <summary>
+        /// <summary>
 		/// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.
         /// Defined in RFC 2047 4.2.
 		/// </summary>
@@ -631,11 +592,7 @@ namespace LumiSoft.Net
 			return encoding.GetString(QuotedPrintableDecode(System.Text.Encoding.ASCII.GetBytes(data.Replace("_"," "))));
 		}
 
-		#endregion
-
-		#region method CanonicalDecode
-
-		/// <summary>
+        /// <summary>
 		/// Canonical decoding. Decodes all canonical encoding occurences in specified text.
 		/// Usually mime message header unicode/8bit values are encoded as Canonical.
 		/// Format: =?charSet?type[Q or B]?encoded_string?= .
@@ -733,11 +690,7 @@ namespace LumiSoft.Net
 			return retVal.ToString();
 		}
 
-		#endregion
-
-		#region method CanonicalEncode
-
-		/// <summary>
+        /// <summary>
 		/// Canonical encoding.
 		/// </summary>
 		/// <param name="str">String to encode.</param>
@@ -763,11 +716,7 @@ namespace LumiSoft.Net
 			return str;
 		}
 
-		#endregion
-
-		#region static method Encode_IMAP_UTF7_String
-
-		/// <summary>
+        /// <summary>
 		/// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
 		/// Example: öö is encoded to &amp;APYA9g-.
 		/// </summary>
@@ -847,11 +796,7 @@ namespace LumiSoft.Net
 			return System.Text.Encoding.Default.GetString(retVal.ToArray());
 		}
 
-		#endregion
-
-		#region static method Decode_IMAP_UTF7_String
-
-		/// <summary>
+        /// <summary>
 		/// Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
 		/// Example: &amp;APYA9g- is decoded to öö.
 		/// </summary>
@@ -947,11 +892,7 @@ namespace LumiSoft.Net
 			return retVal.ToString();
 		}
 
-		#endregion
-
-		#region method IsAscii
-
-		/// <summary>
+        /// <summary>
 		/// Checks if specified string data is acii data.
 		/// </summary>
 		/// <param name="data"></param>
@@ -968,12 +909,8 @@ namespace LumiSoft.Net
 			return true;
 		}
 
-		#endregion
 
-
-		#region static method GetFileNameFromPath
-
-		/// <summary>
+        /// <summary>
 		/// Gets file name from path.
 		/// </summary>
 		/// <param name="filePath">File file path with file name. For examples: c:\fileName.xxx, aaa\fileName.xxx.</param>
@@ -983,10 +920,6 @@ namespace LumiSoft.Net
 			return Path.GetFileName(filePath);
 		}
 
-		#endregion
-
-
-        #region static method IsIP
 
         /// <summary>
         /// Gets if specified value is IP address.
@@ -1003,10 +936,6 @@ namespace LumiSoft.Net
                 return false;
             }
         }
-
-        #endregion
-
-        #region static method CompareIP
 
         /// <summary>
         /// Compares 2 IP addresses. Returns 0 if IPs are equal, 
@@ -1043,10 +972,6 @@ namespace LumiSoft.Net
                 return 0;
             }
         }
-
-        #endregion
-
-        #region static method IsPrivateIP
 
         /// <summary>
         /// Gets if specified IP address is private LAN IP address. For example 192.168.x.x is private ip.
@@ -1105,10 +1030,6 @@ namespace LumiSoft.Net
 			return false;
         }
 
-        #endregion
-
-
-        #region static method CreateSocket
 
         /// <summary>
         /// Creates new socket for the specified end point.
@@ -1141,10 +1062,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region method ToHex
 
         /// <summary>
 		/// Converts string to hex string.
@@ -1200,12 +1117,8 @@ namespace LumiSoft.Net
 
 			return retVal.ToArray();
 		}
-                
-		#endregion
 
-		#region method FromHex
-
-		/// <summary>
+        /// <summary>
 		/// Converts hex byte data to normal byte data. Hex data must be in two bytes pairs, for example: 0F,FF,A3,... .
 		/// </summary>
 		/// <param name="hexData">Hex data.</param>
@@ -1280,10 +1193,6 @@ namespace LumiSoft.Net
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-
-        #region static method ComputeMd5
 
         /// <summary>
         /// Computes md5 hash.
@@ -1304,8 +1213,5 @@ namespace LumiSoft.Net
                 return System.Text.Encoding.Default.GetString(hash);
             }
         }
-
-        #endregion
-
     }
 }

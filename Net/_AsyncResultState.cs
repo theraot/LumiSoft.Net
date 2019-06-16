@@ -26,8 +26,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region mehtod SetAsyncResult
-
         /// <summary>
         /// Sets AsyncResult value.
         /// </summary>
@@ -41,10 +39,6 @@ namespace LumiSoft.Net
             AsyncResult = asyncResult;
         }
 
-        #endregion
-
-        #region method CompletedCallback
-
         /// <summary>
         /// This method is called by AsyncDelegate when asynchronous operation completes. 
         /// </summary>
@@ -56,10 +50,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets caller's async object.
@@ -110,9 +100,5 @@ namespace LumiSoft.Net
         {
             get{ return AsyncResult.IsCompleted; } 
         }
-
-
-        #endregion
-
     }
 }

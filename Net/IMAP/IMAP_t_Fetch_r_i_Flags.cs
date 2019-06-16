@@ -22,13 +22,9 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message flags.
         /// </summary>
         public IMAP_t_MsgFlags Flags { get; }
-
-#endregion
     }
 }

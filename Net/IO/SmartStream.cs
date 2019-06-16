@@ -11,8 +11,6 @@ namespace LumiSoft.Net.IO
     public class SmartStream : Stream
     { 
         private delegate void BufferCallback(Exception x);
-                
-        #region class ReadLineAsyncOP
 
         /// <summary>
         /// This class implements read line operation.
@@ -54,8 +52,6 @@ namespace LumiSoft.Net.IO
                 Dispose();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -72,10 +68,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts reading line.
@@ -103,10 +95,6 @@ namespace LumiSoft.Net.IO
                 return m_IsCompletedSync;
             }
 
-            #endregion
-
-
-            #region method Buffering_Completed
 
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
@@ -133,10 +121,6 @@ namespace LumiSoft.Net.IO
                     }
                 }
             }
-
-            #endregion
-
-            #region method DoLineReading
 
             /// <summary>
             /// Starts/continues line reading.
@@ -197,10 +181,6 @@ namespace LumiSoft.Net.IO
                 return true;
             }
 
-            #endregion
-
-
-            #region method SetInfo
 
             /// <summary>
             /// Sets specified field values.
@@ -215,10 +195,6 @@ namespace LumiSoft.Net.IO
                 m_pException      = exception;
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -399,16 +375,10 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is raised when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ReadLineAsyncOP>> Completed;
-
-            #region method OnCompleted
 
             /// <summary>
             /// Raises <b>Completed</b> event.
@@ -421,15 +391,7 @@ namespace LumiSoft.Net.IO
                     this.Completed(this,new EventArgs<ReadLineAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
-
-        #region class ReadPeriodTerminatedAsyncOP
 
         /// <summary>
         /// This class implements read period-terminated operation.
@@ -477,8 +439,6 @@ namespace LumiSoft.Net.IO
                 Dispose();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -497,10 +457,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts period-terminated data reading.
@@ -527,10 +483,6 @@ namespace LumiSoft.Net.IO
                 return m_IsCompletedSync;
             }
 
-            #endregion
-
-
-            #region method m_pReadLineOP_Completed
 
             /// <summary>
             /// Is called when asynchronous line reading has completed.
@@ -554,10 +506,6 @@ namespace LumiSoft.Net.IO
                     OnCompleted();
                 }
             }
-
-            #endregion
-
-            #region method DoRead
 
             /// <summary>
             /// Continues period-terminated reading.
@@ -584,10 +532,6 @@ namespace LumiSoft.Net.IO
                                 
                 return true;
             }
-
-            #endregion
-
-            #region method ProcessReadedLine
 
             /// <summary>
             /// Processes readed line.
@@ -631,10 +575,6 @@ namespace LumiSoft.Net.IO
                 return false;
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -733,16 +673,10 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is raised when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ReadPeriodTerminatedAsyncOP>> Completed;
-
-            #region method OnCompleted
 
             /// <summary>
             /// Raises <b>Completed</b> event.
@@ -755,15 +689,7 @@ namespace LumiSoft.Net.IO
                     this.Completed(this,new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
-
-        #region class BufferReadAsyncOP
 
         /// <summary>
         /// This class implements asynchronous read buffering.
@@ -801,8 +727,6 @@ namespace LumiSoft.Net.IO
                 Dispose();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -818,10 +742,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts asynchronous operation.
@@ -883,10 +803,6 @@ namespace LumiSoft.Net.IO
                 return m_IsCompletedSync;
             }
 
-            #endregion
-
-            #region method ReleaseEvents
-
             /// <summary>
             /// Releases all events attached to this class.
             /// </summary>
@@ -895,10 +811,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -983,16 +895,10 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is raised when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<BufferReadAsyncOP>> Completed;
-
-            #region method OnCompleted
 
             /// <summary>
             /// Raises <b>Completed</b> event.
@@ -1003,13 +909,7 @@ namespace LumiSoft.Net.IO
                     this.Completed(this,new EventArgs<BufferReadAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         private bool              m_IsDisposed;
         private readonly Stream            m_pStream;
@@ -1044,8 +944,6 @@ namespace LumiSoft.Net.IO
             m_LastActivity = DateTime.Now;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -1061,10 +959,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-        
-                                        
-        #region method ReadLine
 
         /// <summary>
         /// Begins line reading.
@@ -1079,15 +973,9 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentNullException("op");
             }
 
-            #region async
-
             if(async){
                 return op.Start(async,this);
             }
-
-            #endregion
-
-            #region sync
 
             else{
                 byte[]             buffer         = op.Buffer;
@@ -1146,13 +1034,7 @@ namespace LumiSoft.Net.IO
 
                 return true;
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region method BeginReadHeader
 
         /// <summary>
         /// Begins an asynchronous header reading from the source stream.
@@ -1180,10 +1062,6 @@ namespace LumiSoft.Net.IO
 
             return new ReadToTerminatorAsyncOperation(this,"",storeStream,maxCount,exceededAction,callback,state);
         }
-
-        #endregion
-
-        #region method EndReadHeader
 
         /// <summary>
         /// Handles the end of an asynchronous header reading.
@@ -1219,10 +1097,6 @@ namespace LumiSoft.Net.IO
             return (int)ar.BytesStored;
         }
 
-        #endregion
-
-        #region method ReadHeader
-
         /// <summary>
         /// Reads header from stream and stores to the specified <b>storeStream</b>.
         /// </summary>
@@ -1252,10 +1126,6 @@ namespace LumiSoft.Net.IO
 
             return EndReadHeader(ar);
         }
-
-        #endregion
-
-        #region method ReadPeriodTerminated
 
         /// <summary>
         /// Begins period-terminated data reading.
@@ -1289,10 +1159,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region method BeginReadFixedCount
-
         /// <summary>
         /// Begins an asynchronous data reading from the source stream.
         /// </summary>
@@ -1318,10 +1184,6 @@ namespace LumiSoft.Net.IO
 
             return new ReadToStreamAsyncOperation(this,storeStream,count,callback,state);
         }
-
-        #endregion
-
-        #region method EndReadFixedCount
 
         /// <summary>
         /// Handles the end of an asynchronous data reading.
@@ -1351,10 +1213,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region method ReadFixedCount
-
         /// <summary>
         /// Reads specified number of bytes from source stream and writes to the specified stream.
         /// </summary>
@@ -1380,10 +1238,6 @@ namespace LumiSoft.Net.IO
             EndReadFixedCount(ar);
         }
 
-        #endregion
-
-        #region method ReadFixedCountString
-
         /// <summary>
         /// Reads specified number of bytes from source stream and converts it to string with current encoding.
         /// </summary>
@@ -1405,10 +1259,6 @@ namespace LumiSoft.Net.IO
 
             return m_pEncoding.GetString(ms.ToArray());
         }
-
-        #endregion
-                
-        #region method ReadAll
 
         /// <summary>
         /// Reads all data from source stream and stores to the specified stream.
@@ -1438,10 +1288,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region method Peek
-
         /// <summary>
         /// Returns the next available character but does not consume it.
         /// </summary>
@@ -1465,10 +1311,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region method Write
-
         /// <summary>
         /// Writes specified string data to stream.
         /// </summary>
@@ -1488,10 +1330,6 @@ namespace LumiSoft.Net.IO
             Write(dataBytes,0,dataBytes.Length);
             Flush();
         }
-
-        #endregion
-
-        #region method WriteLine
 
         /// <summary>
         /// Writes specified line to stream. If CRLF is missing, it will be added automatically to line data.
@@ -1519,10 +1357,6 @@ namespace LumiSoft.Net.IO
 
             return dataBytes.Length;
         }
-
-        #endregion
-
-        #region method WriteStream
 
         /// <summary>
         /// Writes all source <b>stream</b> data to stream.
@@ -1581,12 +1415,6 @@ namespace LumiSoft.Net.IO
             Flush();
         }
 
-        #endregion
-
-        #region method WriteStreamAsync
-
-        #region class WriteStreamAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SmartStream.WriteStreamAsync"/> asynchronous operation.
         /// </summary>
@@ -1618,8 +1446,6 @@ namespace LumiSoft.Net.IO
                 m_pBuffer = new byte[32000];
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -1638,10 +1464,6 @@ namespace LumiSoft.Net.IO
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1670,10 +1492,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1693,10 +1511,6 @@ namespace LumiSoft.Net.IO
                     }
                 }
             }
-
-            #endregion
-
-            #region method BeginReadData
 
             /// <summary>
             /// Starts reading data.
@@ -1737,10 +1551,6 @@ namespace LumiSoft.Net.IO
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method ProcessReadDataResult
 
             /// <summary>
             /// Processes read data result.
@@ -1810,10 +1620,6 @@ namespace LumiSoft.Net.IO
                 return false;
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1861,16 +1667,10 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<WriteStreamAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1881,13 +1681,7 @@ namespace LumiSoft.Net.IO
                     this.CompletedAsync(this,new EventArgs<WriteStreamAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts writing stream data to this stream.
@@ -1911,10 +1705,6 @@ namespace LumiSoft.Net.IO
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method WritePeriodTerminated
 
         /// <summary>
         /// Writes period handled and terminated data to this stream.
@@ -1952,12 +1742,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-        
-        #region method WritePeriodTerminatedAsync
-
-        #region class WritePeriodTerminatedAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SmartStream.WritePeriodTerminatedAsync"/> asynchronous operation.
         /// </summary>
@@ -1986,8 +1770,6 @@ namespace LumiSoft.Net.IO
                 m_pStream = new SmartStream(stream,false);
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -2006,10 +1788,6 @@ namespace LumiSoft.Net.IO
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2052,10 +1830,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2075,10 +1849,6 @@ namespace LumiSoft.Net.IO
                     }
                 }
             }
-
-            #endregion
-
-            #region method ReadLineCompleted
 
             /// <summary>
             /// Is called when source stream read line reading has completed.
@@ -2141,10 +1911,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region method SendLineCompleted
-
             /// <summary>
             /// Is called when line sending has completed.
             /// </summary>
@@ -2167,10 +1933,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region method SendTerminatorCompleted
-
             /// <summary>
             /// Is called when ".CRLF" or "CRLF.CRLF" terminator sending has completed.
             /// </summary>
@@ -2187,10 +1949,6 @@ namespace LumiSoft.Net.IO
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2238,16 +1996,10 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<WritePeriodTerminatedAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -2258,13 +2010,7 @@ namespace LumiSoft.Net.IO
                     this.CompletedAsync(this,new EventArgs<WritePeriodTerminatedAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts writing period handled and terminated data to this stream.
@@ -2289,10 +2035,6 @@ namespace LumiSoft.Net.IO
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method WriteHeader
-
         /// <summary>
         /// Reads header from source <b>stream</b> and writes it to stream.
         /// </summary>
@@ -2312,10 +2054,6 @@ namespace LumiSoft.Net.IO
             reader.ReadHeader(this,0,SizeExceededAction.ThrowException);
         }
 
-        #endregion
-
-
-        #region override method Flush
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -2329,10 +2067,6 @@ namespace LumiSoft.Net.IO
 
             m_pStream.Flush();
         }
-
-        #endregion
-
-        #region override method Seek
 
         /// <summary>
         /// Sets the position within the current stream.
@@ -2349,10 +2083,6 @@ namespace LumiSoft.Net.IO
 
             return m_pStream.Seek(offset,origin);
         }
-
-        #endregion
-
-        #region override method SetLength
 
         /// <summary>
         /// Sets the length of the current stream.
@@ -2371,10 +2101,6 @@ namespace LumiSoft.Net.IO
             m_ReadBufferOffset = 0;
             m_ReadBufferCount  = 0;
         }
-
-        #endregion
-                
-        #region override method BeginRead
 
         /// <summary>
         /// Begins an asynchronous read operation.
@@ -2412,10 +2138,6 @@ namespace LumiSoft.Net.IO
             return new ReadAsyncOperation(this,buffer,offset,count,callback,state);
         }
 
-        #endregion
-
-        #region override method EndRead
-
         /// <summary>
         /// Handles the end of an asynchronous data reading.
         /// </summary>
@@ -2442,10 +2164,6 @@ namespace LumiSoft.Net.IO
             
             return ar.BytesStored;            
         }
-
-        #endregion
-
-        #region override method Read
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -2491,10 +2209,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-        #region override method BeginWrite
-
         /// <summary>
         /// Begins an asynchronous write operation.
         /// </summary>
@@ -2512,10 +2226,6 @@ namespace LumiSoft.Net.IO
             return m_pStream.BeginWrite(buffer, offset, count, callback, state);
         }
 
-        #endregion
-
-        #region override method EndWrite
-
         /// <summary>
         /// Ends an asynchronous write operation.
         /// </summary>
@@ -2524,10 +2234,6 @@ namespace LumiSoft.Net.IO
         {
             m_pStream.EndWrite(asyncResult);
         }
-
-        #endregion
-
-        #region override method Write
 
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
@@ -2548,10 +2254,6 @@ namespace LumiSoft.Net.IO
             m_BytesWritten += count;
         }
 
-        #endregion
-
-
-        #region method BufferRead
 
         /// <summary>
         /// Begins buffering read-buffer.
@@ -2572,8 +2274,6 @@ namespace LumiSoft.Net.IO
 
             m_ReadBufferOffset =  0;
             m_ReadBufferCount  =  0;
-
-            #region async
 
             if(async){
                 m_pReadBufferOP.ReleaseEvents();
@@ -2613,10 +2313,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region sync
-
             else{
                 int countReaded = m_pStream.Read(m_pReadBuffer,0,m_pReadBuffer.Length);
                 m_ReadBufferCount  =  countReaded;
@@ -2625,14 +2321,8 @@ namespace LumiSoft.Net.IO
 
                 return false;
             }
-
-            #endregion                        
         }
 
-        #endregion
-                
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets this stream underlying stream.
@@ -2847,12 +2537,8 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
 
         //------- Obsolete
-
-        #region class ReadLineAsyncOperation
 
         /// <summary>
         /// This class implements asynchronous line reading.
@@ -2914,8 +2600,6 @@ namespace LumiSoft.Net.IO
             }
 
 
-            #region method Buffering_Completed
-
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
             /// </summary>
@@ -2935,10 +2619,6 @@ namespace LumiSoft.Net.IO
                     DoLineReading();
                 }
             }
-
-            #endregion
-
-            #region method DoLineReading
 
             /// <summary>
             /// Does line reading.
@@ -3007,10 +2687,6 @@ namespace LumiSoft.Net.IO
                 Completed();
             }
 
-            #endregion
-
-            #region method Completed
-
             /// <summary>
             /// This method must be called when asynchronous operation has completed.
             /// </summary>
@@ -3023,10 +2699,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
@@ -3071,13 +2743,7 @@ namespace LumiSoft.Net.IO
             /// Gets number of bytes stored in to <b>Buffer</b>.
             /// </summary>
             internal int BytesStored { get; private set; }
-
-#endregion
         }
-
-        #endregion
-
-        #region class ReadToTerminatorAsyncOperation
 
         /// <summary>
         /// This class implements asynchronous line-based terminated data reader, where terminator is on line itself.
@@ -3138,8 +2804,6 @@ namespace LumiSoft.Net.IO
                 #pragma warning restore
             }
 
-
-            #region mehtod ReadLine_Completed
 
             /// <summary>
             /// This method is called when asyynchronous line reading has completed.
@@ -3202,10 +2866,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region method Completed
-
             /// <summary>
             /// This method must be called when asynchronous operation has completed.
             /// </summary>
@@ -3218,10 +2878,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets terminator.
@@ -3266,14 +2922,7 @@ namespace LumiSoft.Net.IO
             /// Gets exception happened on asynchronous operation. Returns null if operation was successfull.
             /// </summary>
             internal Exception Exception { get; private set; }
-
-#endregion
-
         }
-
-        #endregion
-
-        #region class ReadToStreamAsyncOperation
 
         /// <summary>
         /// This class implements asynchronous read to stream data reader.
@@ -3325,8 +2974,6 @@ namespace LumiSoft.Net.IO
             }
 
 
-            #region method Buffering_Completed
-
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
             /// </summary>
@@ -3347,10 +2994,6 @@ namespace LumiSoft.Net.IO
                     DoDataReading();
                 }
             }
-
-            #endregion
-
-            #region method DoReading
 
             /// <summary>
             /// Does data reading.
@@ -3392,10 +3035,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region method Completed
-
             /// <summary>
             /// This method must be called when asynchronous operation has completed.
             /// </summary>
@@ -3408,10 +3047,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
@@ -3451,14 +3086,7 @@ namespace LumiSoft.Net.IO
             /// Gets exception happened on asynchronous operation. Returns null if operation was successfull.
             /// </summary>
             internal Exception Exception { get; private set; }
-
-#endregion
-
         }
-
-        #endregion
-
-        #region class ReadAsyncOperation
 
         /// <summary>
         /// This class implements asynchronous data reader.
@@ -3515,8 +3143,6 @@ namespace LumiSoft.Net.IO
             }
 
 
-            #region method Buffering_Completed
-
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
             /// </summary>
@@ -3536,10 +3162,6 @@ namespace LumiSoft.Net.IO
                     DoRead();
                 }
             }
-
-            #endregion
-
-            #region method DoRead
 
             /// <summary>
             /// Does asynchronous data reading.
@@ -3577,10 +3199,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-            #region method Completed
-
             /// <summary>
             /// This method must be called when asynchronous operation has completed.
             /// </summary>
@@ -3593,10 +3211,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
@@ -3636,14 +3250,8 @@ namespace LumiSoft.Net.IO
             /// Gets number of bytes stored in to <b>Buffer</b>.
             /// </summary>
             internal int BytesStored { get; private set; }
-
-#endregion
         }
 
-        #endregion
-
-
-        #region method BeginReadLine
 
         /// <summary>
         /// Begins an asynchronous line reading from the source stream.
@@ -3683,10 +3291,6 @@ namespace LumiSoft.Net.IO
             return new ReadLineAsyncOperation(this,buffer,offset,maxCount,exceededAction,callback,state);
         }
 
-        #endregion
-
-        #region method EndReadLine
-
         /// <summary>
         /// Handles the end of an asynchronous line reading.
         /// </summary>
@@ -3721,8 +3325,5 @@ namespace LumiSoft.Net.IO
                 return ar.BytesStored;
             }
         }
-
-        #endregion
-
     }
 }

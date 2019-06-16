@@ -57,8 +57,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             m_pStack = stack;
-                        
-            #region UAS
 
             /* RFC 3261 12.1.1.
                 The UAS then constructs the state of the dialog.  This state MUST be
@@ -118,11 +116,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
                 m_pRemoteSupported = supported.ToArray();
             }
-
-            #endregion
-
-            #region UAC
-
             /* RFC 3261 12.1.2.
                 When a UAC receives a response that establishes a dialog, it
                 constructs the state of the dialog.  This state MUST be maintained
@@ -185,13 +178,9 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pRemoteSupported = supported.ToArray();
             }
 
-            #endregion            
-
             m_pFlow = transaction.Flow;
             AddTransaction(transaction);
         }
-
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -219,10 +208,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method Terminate
 
         /// <summary>
         /// Terminates dialog.
@@ -239,10 +224,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method CreateRequest
 
         /// <summary>
         /// Creates new SIP request using this dialog info.
@@ -387,10 +368,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method CreateRequestSender
-
         /// <summary>
         /// Creates SIP request sender for the specified request.
         /// </summary>
@@ -416,10 +393,6 @@ namespace LumiSoft.Net.SIP.Stack
                 return sender;
             }
         }
-
-        #endregion
-
-        #region method IsTargetRefresh
 
         /// <summary>
         /// Gets if sepcified request method is target-refresh method.
@@ -455,10 +428,6 @@ namespace LumiSoft.Net.SIP.Stack
             return false;
         }
 
-        #endregion
-
-
-        #region method SetState
 
         /// <summary>
         /// Sets dialog state.
@@ -478,12 +447,8 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         // TODO: Early timer.
 
-
-        #region method ProcessRequest
 
         /// <summary>
         /// Processes specified request through this dialog.
@@ -543,10 +508,6 @@ namespace LumiSoft.Net.SIP.Stack
             return e.IsHandled;
         }
 
-        #endregion
-
-        #region method ProcessResponse
-
         /// <summary>
         /// Processes specified response through this dialog.
         /// </summary>
@@ -561,10 +522,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return false;            
         }
-
-        #endregion
-
-        #region method AddTransaction
 
         /// <summary>
         /// Adds transaction to dialog transactions list.
@@ -582,10 +539,6 @@ namespace LumiSoft.Net.SIP.Stack
             });            
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the dialog.
@@ -865,16 +818,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when Dialog state has changed.
         /// </summary>
         public event EventHandler StateChanged;
-
-        #region method OnStateChanged
 
         /// <summary>
         /// Raises <b>StateChanged</b> event.
@@ -886,14 +833,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when dialog gets new request.
         /// </summary>
         public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
-
-        #region method OnRequestReceived
 
         /// <summary>
         /// Raises <b>RequestReceived</b> event.
@@ -905,10 +848,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.RequestReceived(this,e);
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

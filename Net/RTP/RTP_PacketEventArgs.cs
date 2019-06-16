@@ -21,14 +21,9 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets RTP packet.
         /// </summary>
         public RTP_Packet Packet { get; }
-
-#endregion
-
     }
 }

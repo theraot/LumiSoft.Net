@@ -20,8 +20,6 @@ namespace LumiSoft.Net.WebDav
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses WebDav_Response from 'DAV:response' element.
         /// </summary>
@@ -54,10 +52,6 @@ namespace LumiSoft.Net.WebDav
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets response href.
@@ -71,7 +65,5 @@ namespace LumiSoft.Net.WebDav
         {
             get{ return m_pPropStats.ToArray(); }
         }
-
-        #endregion
     }
 }

@@ -21,8 +21,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region method ProcessRequest
-
         /// <summary>
         /// Processes specified request through this dialog.
         /// </summary>
@@ -49,21 +47,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
-
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when NOTIFY request received.
         /// </summary>
         public event EventHandler<SIP_RequestReceivedEventArgs> Notify;
-
-        #region method OnNotify
 
         /// <summary>
         /// Raises <b>Notify</b> event.
@@ -75,9 +62,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.Notify(this,e);
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

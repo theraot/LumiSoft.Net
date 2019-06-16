@@ -26,8 +26,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>UID (sequence set)</b> key.
         /// </summary>
@@ -59,10 +57,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -73,10 +67,6 @@ namespace LumiSoft.Net.IMAP
             return "UID " + Value.ToString();
         }
 
-        #endregion
-
-
-        #region internal override method ToCmdParts
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -92,17 +82,11 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets sequence-set value.
         /// </summary>
         public IMAP_t_SeqSet Value { get; }
-
-#endregion
 
 
         //--- OBSOLETE -----

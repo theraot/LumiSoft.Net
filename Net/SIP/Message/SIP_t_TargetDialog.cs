@@ -29,8 +29,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Target-Dialog" from specified value.
         /// </summary>
@@ -76,10 +74,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Target-Dialog" value.
         /// </summary>
@@ -104,10 +98,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets call ID.
@@ -179,8 +169,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses multi value header field values.
         /// </summary>
@@ -50,10 +48,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts to valid mutli value header field value.
         /// </summary>
@@ -74,10 +68,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region method GetValues
 
         /// <summary>
         /// Gets header field values.
@@ -87,10 +77,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return Values.ToArray();
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes value from specified index.
@@ -103,10 +89,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets header field value.
@@ -138,8 +120,5 @@ namespace LumiSoft.Net.SIP.Message
         {
             get{ return Values.Count; }
         }
-                
-        #endregion
-
     }
 }

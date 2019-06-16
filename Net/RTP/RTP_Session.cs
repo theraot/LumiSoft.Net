@@ -99,8 +99,6 @@ namespace LumiSoft.Net.RTP
             m_pRtcpTimer.AutoReset = false;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -147,10 +145,6 @@ namespace LumiSoft.Net.RTP
             this.NewReceiveStream = null;
         }
 
-        #endregion
-
-
-        #region method Close
 
         /// <summary>
         /// Closes RTP session, sends BYE with optional reason text to remote targets.
@@ -187,10 +181,6 @@ namespace LumiSoft.Net.RTP
             OnClosed();
             Dispose();
         }
-
-        #endregion
-
-        #region method Start
 
         /// <summary>
         /// Starts RTP session.
@@ -248,10 +238,6 @@ namespace LumiSoft.Net.RTP
             Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count,m_pSenders.Count,m_Bandwidth * 0.25,false,m_RtcpAvgPacketSize,true));
         }
 
-        #endregion
-
-        #region method Stop
-
         /// <summary>
         /// Stops RTP session.
         /// </summary>
@@ -267,10 +253,6 @@ namespace LumiSoft.Net.RTP
             throw new NotImplementedException();
         }
 
-        #endregion
-
-
-        #region method CreateSendStream
 
         /// <summary>
         /// Creates new send stream.
@@ -290,10 +272,6 @@ namespace LumiSoft.Net.RTP
 
             return source.Stream;
         }
-
-        #endregion
-
-        #region method AddTarget
 
         /// <summary>
         /// Opens RTP session to the specified remote target.
@@ -324,10 +302,6 @@ namespace LumiSoft.Net.RTP
             m_pTargets.Add(target);
         }
 
-        #endregion
-
-        #region method RemoveTarget
-
         /// <summary>
         /// Removes specified target.
         /// </summary>
@@ -346,10 +320,6 @@ namespace LumiSoft.Net.RTP
             m_pTargets.Remove(target);
         }
 
-        #endregion
-
-        #region method RemoveTargets
-
         /// <summary>
         /// Removes all targets.
         /// </summary>
@@ -362,10 +332,6 @@ namespace LumiSoft.Net.RTP
 
             m_pTargets.Clear();
         }
-
-        #endregion
-
-        #region method StunPublicEndPoints
 
         /// <summary>
         /// Gets RTP and RTCP public end points.
@@ -404,10 +370,6 @@ namespace LumiSoft.Net.RTP
             return false;
         }
 
-        #endregion
-
-
-        #region method SendRtcpPacket
 
         /// <summary>
         /// Sends specified RTCP packet to the session remote party.
@@ -444,10 +406,6 @@ namespace LumiSoft.Net.RTP
 
             return packetBytes.Length;
         }
-
-        #endregion
-
-        #region method SendRtpPacket
 
         /// <summary>
         /// Sends specified RTP packet to the session remote party.
@@ -500,10 +458,6 @@ namespace LumiSoft.Net.RTP
             return count;
         }
 
-        #endregion
-
-
-        #region method ProcessRtcp
 
         /// <summary>
         /// Processes specified RTCP data.
@@ -557,9 +511,6 @@ namespace LumiSoft.Net.RTP
                 RTCP_CompoundPacket compoundPacket = RTCP_CompoundPacket.Parse(buffer,count);
                 // Process each RTCP packet.
                 foreach(RTCP_Packet packet in compoundPacket.Packets){
-
-                    #region APP
-
                     if(packet.Type == RTCP_PacketType.APP){
                         RTCP_Packet_APP app = ((RTCP_Packet_APP)packet);
 
@@ -569,10 +520,6 @@ namespace LumiSoft.Net.RTP
                             source.OnAppPacket(app);
                         }
                     }
-
-                    #endregion
-
-                    #region BYE
 
                     else if(packet.Type == RTCP_PacketType.BYE){
                         RTCP_Packet_BYE bye = ((RTCP_Packet_BYE)packet);
@@ -594,10 +541,6 @@ namespace LumiSoft.Net.RTP
                         }
                     }
 
-                    #endregion
-
-                    #region RR
-
                     else if(packet.Type == RTCP_PacketType.RR){
                         RTCP_Packet_RR rr = ((RTCP_Packet_RR)packet);
                             
@@ -614,10 +557,6 @@ namespace LumiSoft.Net.RTP
                             }
                         }                        
                     }
-
-                    #endregion
-
-                    #region SDES
 
                     else if(packet.Type == RTCP_PacketType.SDES){ 
                         foreach(RTCP_Packet_SDES_Chunk sdes in ((RTCP_Packet_SDES)packet).Chunks){
@@ -639,10 +578,6 @@ namespace LumiSoft.Net.RTP
                         }
                     }
 
-                    #endregion
-
-                    #region SR
-
                     else if(packet.Type == RTCP_PacketType.SR){
                         RTCP_Packet_SR sr = ((RTCP_Packet_SR)packet);
 
@@ -661,8 +596,6 @@ namespace LumiSoft.Net.RTP
                         }                        
                     }
 
-                    #endregion
-
                     // Unknown packet.
                     else{
                         m_RtcpUnknownPacketsReceived++;
@@ -673,10 +606,6 @@ namespace LumiSoft.Net.RTP
                 m_pSession.OnError(x);
             }
         }
-
-        #endregion
-
-        #region method ProcessRtp
 
         /// <summary>
         /// Processes specified RTP data.
@@ -734,11 +663,7 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
 
-
-        #region method CreateLocalSource
-        
         /// <summary>
         /// Creates local source.
         /// </summary>
@@ -762,10 +687,6 @@ namespace LumiSoft.Net.RTP
 
             return source;
         }
-
-        #endregion
-
-        #region method GetOrCreateSource
 
         /// <summary>
         /// Gets or creates source. This method also does RFC 3550 8.2 "Collision Resolution and Loop Detection".
@@ -921,10 +842,6 @@ namespace LumiSoft.Net.RTP
             return (RTP_Source_Remote)source;
         }
 
-        #endregion
-
-        #region method Schedule
-
         /// <summary>
         /// Schedules RTCP transmission.
         /// </summary>
@@ -935,10 +852,6 @@ namespace LumiSoft.Net.RTP
             m_pRtcpTimer.Interval = seconds * 1000;
             m_pRtcpTimer.Enabled = true;
         }
-
-        #endregion
-
-        #region method ComputeRtcpTransmissionInterval
 
         /// <summary>
         /// Computes RTCP transmission interval. Defined in RFC 3550 6.3.1.
@@ -1035,10 +948,6 @@ namespace LumiSoft.Net.RTP
             return (int)Math.Max(t,2.0);
         }
 
-        #endregion
-
-        #region method DoReverseReconsideration
-
         /// <summary>
         /// Does "reverse reconsideration" algorithm. Defined in RFC 3550 6.3.4.
         /// </summary>
@@ -1071,10 +980,6 @@ namespace LumiSoft.Net.RTP
             
             m_PMembersCount = m_pMembers.Count;
         }
-
-        #endregion
-
-        #region method TimeOutSsrc
 
         /// <summary>
         /// Does RFC 3550 6.3.5 Timing Out an SSRC.
@@ -1136,10 +1041,6 @@ namespace LumiSoft.Net.RTP
             }            
         }
 
-        #endregion
-
-        #region method SendRtcp
-
         /// <summary>
         /// Sends RTCP report.
         /// </summary>
@@ -1192,8 +1093,6 @@ namespace LumiSoft.Net.RTP
                     stream.RtcpCycle();
                 }
 
-                #region SR(s) / RR
-
                 // We are sender.
                 if(we_sent){
                     // Create SR for each active send stream.
@@ -1218,10 +1117,6 @@ namespace LumiSoft.Net.RTP
                     // Report blocks added later.                
                 }
 
-                #endregion
-
-                #region SDES
-
                 RTCP_Packet_SDES sdes = new RTCP_Packet_SDES();
                 // Add default SSRC.
                 RTCP_Packet_SDES_Chunk sdesChunk = new RTCP_Packet_SDES_Chunk(m_pRtcpSource.SSRC,m_pSession.LocalParticipant.CNAME);
@@ -1233,10 +1128,6 @@ namespace LumiSoft.Net.RTP
                     sdes.Chunks.Add(new RTCP_Packet_SDES_Chunk(stream.Source.SSRC,m_pSession.LocalParticipant.CNAME));
                 }
                 compundPacket.Packets.Add(sdes);
-
-                #endregion
-
-                #region RR filling
 
                 /* RR reporting:
                     Report up to 31 active senders, if more senders, reoprt next with next interval.
@@ -1270,8 +1161,6 @@ namespace LumiSoft.Net.RTP
                     rr.ReportBlocks.Add(activeSenders[activeSenderCount - i].CreateReceiverReport());
                 }
 
-                #endregion
-
                 // Send RTPC packet.
                 SendRtcpPacket(compundPacket);
 
@@ -1304,10 +1193,6 @@ namespace LumiSoft.Net.RTP
             Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count,m_pSenders.Count,m_Bandwidth * 0.25,we_sent,m_RtcpAvgPacketSize,false));
         }
 
-        #endregion
-
-
-        #region method RtpAsyncSocketSendCompleted
 
         /// <summary>
         /// Is called when RTP socket has finisehd data sending.
@@ -1324,10 +1209,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -1829,17 +1710,11 @@ namespace LumiSoft.Net.RTP
                 return m_pPayloads; 
             }
         }
-                
-        #endregion
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when RTP session has disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises <b>Disposed</b> event.
@@ -1851,14 +1726,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when RTP session has closed.
         /// </summary>
         public event EventHandler Closed;
-
-        #region method OnClosed
 
         /// <summary>
         /// Raises <b>Closed</b> event.
@@ -1870,14 +1741,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when new send stream created.
         /// </summary>
         public event EventHandler<RTP_SendStreamEventArgs> NewSendStream;
-
-        #region method OnNewSendStream
 
         /// <summary>
         /// Raises <b>NewSendStream</b> event.
@@ -1890,14 +1757,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when new recieve stream received from remote target.
         /// </summary>
         public event EventHandler<RTP_ReceiveStreamEventArgs> NewReceiveStream;
-
-        #region mehtod OnNewReceiveStream
 
         /// <summary>
         /// Raises <b>NewReceiveStream</b> event.
@@ -1910,14 +1773,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when session sending payload has changed.
         /// </summary>
         public event EventHandler PayloadChanged;
-
-        #region method OnPayloadChanged
 
         /// <summary>
         /// Raises <b>PayloadChanged</b> event.
@@ -1928,10 +1787,5 @@ namespace LumiSoft.Net.RTP
                 this.PayloadChanged(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

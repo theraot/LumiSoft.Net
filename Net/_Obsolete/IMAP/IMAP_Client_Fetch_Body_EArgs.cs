@@ -21,8 +21,6 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).
         /// </summary>
@@ -38,16 +36,10 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public Stream Stream { get; set; }
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This method is called when message storing has completed.
         /// </summary>
         public event EventHandler StoringCompleted;
-
-        #region method OnStoringCompleted
 
         /// <summary>
         /// Raises <b>StoringCompleted</b> event.
@@ -58,9 +50,5 @@ namespace LumiSoft.Net.IMAP.Client
                 this.StoringCompleted(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

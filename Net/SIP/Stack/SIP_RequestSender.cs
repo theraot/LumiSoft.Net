@@ -17,8 +17,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </remarks>
     public class SIP_RequestSender : IDisposable
     {
-        #region enum SIP_RequestSenderState
-
         private enum SIP_RequestSenderState
         {
             Initial,
@@ -27,8 +25,6 @@ namespace LumiSoft.Net.SIP.Stack
             Completed,
             Disposed
         }
-
-        #endregion
 
         private object                  m_pLock        = new object();
         private SIP_RequestSenderState  m_State        = SIP_RequestSenderState.Initial;
@@ -65,8 +61,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pHops = new Queue<SIP_Hop>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -93,12 +87,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method ClientTransaction_ResponseReceived
 
         /// <summary>
         /// Is called when client transactions receives response.
@@ -168,10 +156,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method ClientTransaction_TimedOut
-
         /// <summary>
         /// Is called when client transaction has timed out.
         /// </summary>
@@ -208,10 +192,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }               
             }
         }
-
-        #endregion
-
-        #region method ClientTransaction_TransportError
 
         /// <summary>
         /// Is called when client transaction encountered transport error.
@@ -250,12 +230,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts sending request.
@@ -357,10 +331,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method Cancel
-
         /// <summary>
         /// Cancels current request sending.
         /// </summary>
@@ -392,10 +362,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pTransaction.Cancel();
         }
 
-        #endregion
-
-
-        #region method Authorize
 
         /// <summary>
         /// Creates authorization for each challange in <b>response</b>.
@@ -417,8 +383,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             bool allAuthorized = true;
-
-            #region WWWAuthenticate
 
             foreach(SIP_t_Challenge challange in response.WWWAuthenticate.GetAllValues()){
                 Auth_HttpDigest authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
@@ -446,10 +410,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
-            #region ProxyAuthenticate
-
             foreach(SIP_t_Challenge challange in response.ProxyAuthenticate.GetAllValues()){
                 Auth_HttpDigest authDigest = new Auth_HttpDigest(challange.AuthData,request.RequestLine.Method);
 
@@ -476,14 +436,8 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
             return allAuthorized;
         }
-
-        #endregion
-
-        #region method SendToNextHop
 
         /// <summary>
         /// Starts sending request to next hop in queue.
@@ -507,10 +461,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method SendToFlow
-
         /// <summary>
         /// Sends specified request to the specified data flow.
         /// </summary>
@@ -525,8 +475,6 @@ namespace LumiSoft.Net.SIP.Stack
             if(request == null){
                 throw new ArgumentNullException("request");
             }
-
-            #region Contact (RFC 3261 8.1.1.8)
 
             /*
                 The Contact header field provides a SIP or SIPS URI that can be used
@@ -563,8 +511,6 @@ namespace LumiSoft.Net.SIP.Stack
                 //((SIP_Uri)contact.Address.Uri).Host =  m_pStack.TransportLayer.GetContactHost(flow).ToString();
             }
 
-            #endregion
-         
             m_pTransaction = m_pStack.TransactionLayer.CreateClientTransaction(flow,request,true);  
             m_pTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(ClientTransaction_ResponseReceived);
             m_pTransaction.TimedOut += new EventHandler(ClientTransaction_TimedOut);
@@ -573,10 +519,6 @@ namespace LumiSoft.Net.SIP.Stack
             // Start transaction processing.
             m_pTransaction.Start();
         }
-
-        #endregion
-
-        #region method CleanUpActiveHop
 
         /// <summary>
         /// Cleans up active transaction.
@@ -595,10 +537,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -703,16 +641,10 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public object Tag { get; set; }
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when this transaction has got response from target end point.
         /// </summary>
         public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
-
-        #region method OnResponseReceived
 
         /// <summary>
         /// Raises ResponseReceived event.
@@ -725,10 +657,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method OnTransportError
 
         /// <summary>
         /// Raises event <b>TransportError</b>.
@@ -739,14 +667,10 @@ namespace LumiSoft.Net.SIP.Stack
             // TODO:
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when sender has finished processing(got final-response or error).
         /// </summary>
         public event EventHandler Completed;
-
-        #region method OnCompleted
 
         /// <summary>
         /// Raises event <b>Completed</b>.
@@ -760,14 +684,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when this object has disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises <b>Disposed</b> event.
@@ -778,9 +698,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.Disposed(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -53,8 +53,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "name-addr" or "addr-spec" from specified value.
         /// </summary>
@@ -122,10 +120,6 @@ namespace LumiSoft.Net.SIP.Message
             }            
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid name-addr or addr-spec string as needed.
         /// </summary>
@@ -147,10 +141,6 @@ namespace LumiSoft.Net.SIP.Message
             }            
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets display name.
@@ -232,8 +222,5 @@ namespace LumiSoft.Net.SIP.Message
                 return false;
             }
         }
-
-        #endregion
-
     }
 }

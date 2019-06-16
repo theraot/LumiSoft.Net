@@ -30,8 +30,6 @@ namespace LumiSoft.Net.FTP.Client
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets FTP status code.
         /// </summary>
@@ -56,8 +54,5 @@ namespace LumiSoft.Net.FTP.Client
                 }
             }
         }
-
-        #endregion
-
     }
 }

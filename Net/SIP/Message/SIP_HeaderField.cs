@@ -19,8 +19,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method SetMultiValue
-
         /// <summary>
         /// Sets property IsMultiValue value.
         /// </summary>
@@ -30,10 +28,6 @@ namespace LumiSoft.Net.SIP.Message
             IsMultiValue = value;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets header field name.
@@ -54,8 +48,5 @@ namespace LumiSoft.Net.SIP.Message
         /// Gets if header field is multi value header field.
         /// </summary>
         public bool IsMultiValue { get; private set; }
-
-#endregion
-
     }
 }

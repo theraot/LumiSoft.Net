@@ -82,9 +82,7 @@ namespace LumiSoft.Net.SMTP.Client
         {
         }
 
-		#region override method Dispose
-
-		/// <summary>
+        /// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
 		public override void Dispose()
@@ -92,10 +90,6 @@ namespace LumiSoft.Net.SMTP.Client
 			base.Dispose();
 		}
 
-		#endregion
-
-                
-        #region override method Disconnect
 
         /// <summary>
 		/// Closes connection to SMTP server.
@@ -150,10 +144,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
 		}
 
-		#endregion
-
-        #region method EhloHelo
-
         /// <summary>
         /// Sends EHLO/HELO command to SMTP server.
         /// </summary>
@@ -196,12 +186,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method EhloHeloAsync
-
-        #region class EhloHeloAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.EhloHeloAsync"/> asynchronous operation.
         /// </summary>
@@ -232,8 +216,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_HostName = hostName;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -252,10 +234,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -308,10 +286,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -331,10 +305,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method EhloCommandSendingCompleted
 
             /// <summary>
             /// Is called when EHLO command sending has finished.
@@ -360,10 +330,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method EhloReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server EHLO command response reading has completed.
@@ -435,10 +401,6 @@ namespace LumiSoft.Net.SMTP.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method HeloCommandSendingCompleted
-
             /// <summary>
             /// Is called when HELO command sending has finished.
             /// </summary>
@@ -463,10 +425,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method HeloReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server HELO command response reading has completed.
@@ -519,10 +477,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -570,16 +524,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<EhloHeloAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -590,13 +538,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<EhloHeloAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending EHLO/HELO command to SMTP server.
@@ -625,10 +567,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-                
-        #region method StartTLS
 
         /// <summary>
         /// Sends STARTTLS command to SMTP server.
@@ -681,12 +619,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method StartTlsAsync
-
-        #region class StartTlsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.StartTlsAsync"/> asynchronous operation.
         /// </summary>
@@ -707,8 +639,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pCertCallback = certCallback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -726,10 +656,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -786,10 +712,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -809,10 +731,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method StartTlsCommandSendingCompleted
 
             /// <summary>
             /// Is called when STARTTLS command sending has finished.
@@ -838,10 +756,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method StartTlsReadResponseCompleted
 
             /// <summary>
             /// Is called when STARTTLS command response reading has completed.
@@ -905,10 +819,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region method SwitchToSecureCompleted
-
             /// <summary>
             /// Is called when TLS handshake has completed.
             /// </summary>
@@ -940,10 +850,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -969,16 +875,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<StartTlsAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -989,13 +889,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<StartTlsAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending STARTTLS command to SMTP server.
@@ -1028,10 +922,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method AuthGetStrongestMethod
 
         /// <summary>
         /// Gets strongest authentication method which we can support from SMTP server.
@@ -1076,10 +966,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method Auth
-
         /// <summary>
         /// Sends AUTH command to SMTP server.
         /// </summary>
@@ -1119,12 +1005,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method AuthAsync
-
-        #region class AuthAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.AuthAsync"/> asynchronous operation.
         /// </summary>
@@ -1150,8 +1030,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pSASL = sasl;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -1168,10 +1046,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1236,10 +1110,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1259,10 +1129,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method AuthCommandSendingCompleted
 
             /// <summary>
             /// Is called when AUTH command sending has finished.
@@ -1288,10 +1154,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method AuthReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server response reading has completed.
@@ -1335,10 +1197,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1364,16 +1222,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1384,13 +1236,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending AUTH command to SMTP server.
@@ -1421,10 +1267,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method MailFrom
 
         /// <summary>
         /// Sends MAIL command to SMTP server.
@@ -1479,12 +1321,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method MailFromAsync
-
-        #region class MailFromAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.MailFromAsync"/> asynchronous operation.
         /// </summary>
@@ -1524,8 +1360,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_EnvID       = envid;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -1544,10 +1378,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1628,10 +1458,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1651,10 +1477,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method MailCommandSendingCompleted
 
             /// <summary>
             /// Is called when MAIL command sending has finished.
@@ -1680,10 +1502,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method MailReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server MAIL command response reading has completed.
@@ -1723,10 +1541,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1752,16 +1566,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<MailFromAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1772,13 +1580,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<MailFromAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending MAIL command to SMTP server.
@@ -1807,10 +1609,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method RcptTo
 
         /// <summary>
         /// Sends RCPT TO: command to SMTP server.
@@ -1863,12 +1661,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method RcptToAsync
-
-        #region class RcptToAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.RcptToAsync"/> asynchronous operation.
         /// </summary>
@@ -1914,8 +1706,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_ORcpt     = orcpt;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -1934,10 +1724,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2025,10 +1811,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2048,10 +1830,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method MailCommandSendingCompleted
 
             /// <summary>
             /// Is called when RCPT command sending has finished.
@@ -2077,10 +1855,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method RcptReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server RCPT command response reading has completed.
@@ -2122,10 +1896,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2151,16 +1921,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<RcptToAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -2171,13 +1935,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<RcptToAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending RCPT command to SMTP server.
@@ -2206,10 +1964,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
- 
-        #region method SendMessage
 
         /// <summary>
         /// Sends raw message to SMTP server.
@@ -2259,12 +2013,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method SendMessageAsync
-
-        #region class SendMessageAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.SendMessageAsync"/> asynchronous operation.
         /// </summary>
@@ -2295,8 +2043,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_UseBdat = useBdatIfPossibe;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -2316,10 +2062,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2401,10 +2143,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2424,10 +2162,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method BdatChunkReadingCompleted
 
             /// <summary>
             /// Is called when message data block for BDAT reading has completed.
@@ -2477,10 +2211,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region method BdatCommandSendingCompleted
-
             /// <summary>
             /// Is called when BDAT command sending has finished.
             /// </summary>
@@ -2505,10 +2235,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);   
                 }
             }
-
-            #endregion
-
-            #region method BdatReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server BDAT command response reading has completed.
@@ -2559,10 +2285,6 @@ namespace LumiSoft.Net.SMTP.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method DataCommandSendingCompleted
-
             /// <summary>
             /// Is called when DATA command sending has finished.
             /// </summary>
@@ -2587,10 +2309,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);    
                 }
             }
-
-            #endregion
-
-            #region method DataReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server DATA command initial response reading has completed.
@@ -2637,10 +2355,6 @@ namespace LumiSoft.Net.SMTP.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method DataMsgSendingCompleted
-
             /// <summary>
             /// Is called when DATA command message sending has completed.
             /// </summary>
@@ -2681,10 +2395,6 @@ namespace LumiSoft.Net.SMTP.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method DataReadFinalResponseCompleted
-
             /// <summary>
             /// Is called when SMTP server DATA command final response reading has completed.
             /// </summary>
@@ -2720,10 +2430,6 @@ namespace LumiSoft.Net.SMTP.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2749,16 +2455,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<SendMessageAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -2769,13 +2469,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<SendMessageAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending message to SMTP server.
@@ -2803,10 +2497,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Rset
 
         /// <summary>
         /// Send RSET command to server.
@@ -2840,12 +2530,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method RsetAsync
-
-        #region class RsetAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.RsetAsync"/> asynchronous operation.
         /// </summary>
@@ -2863,8 +2547,6 @@ namespace LumiSoft.Net.SMTP.Client
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -2881,10 +2563,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2930,10 +2608,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2953,10 +2627,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method RsetCommandSendingCompleted
 
             /// <summary>
             /// Is called when RSET command sending has finished.
@@ -2982,10 +2652,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method RsetReadResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server RSET command response reading has completed.
@@ -3028,10 +2694,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3057,16 +2719,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3077,13 +2733,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending RSET command to SMTP server.
@@ -3111,10 +2761,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-                
-        #region method Noop
 
         /// <summary>
         /// Send NOOP command to server. This method can be used for keeping connection alive(not timing out).
@@ -3148,12 +2794,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-        
-        #region method NoopAsync
-
-        #region class NoopAsyncOP
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.NoopAsync"/> asynchronous operation.
         /// </summary>
@@ -3171,8 +2811,6 @@ namespace LumiSoft.Net.SMTP.Client
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -3189,10 +2827,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -3238,10 +2872,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -3261,10 +2891,6 @@ namespace LumiSoft.Net.SMTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method NoopCommandSendingCompleted
 
             /// <summary>
             /// Is called when NOOP command sending has finished.
@@ -3290,10 +2916,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method NoopReadResponseCompleted
 
             /// <summary>
             /// Is called when NOOP command response reading has completed.
@@ -3338,10 +2960,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3367,16 +2985,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3387,13 +2999,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending NOOP command to SMTP server. This method can be used for keeping connection alive(not timing out).
@@ -3422,10 +3028,6 @@ namespace LumiSoft.Net.SMTP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region override method OnConnected
 
         /// <summary>
         /// This method is called when TCP client has sucessfully connected.
@@ -3442,10 +3044,6 @@ namespace LumiSoft.Net.SMTP.Client
                 ReadServerGreetingCompleted(readGreetingOP,callback);
             }
         }
-
-        #endregion
-
-        #region method ReadServerGreetingCompleted
 
         /// <summary>
         /// Is called when SMTP server greeting reading has completed.
@@ -3496,12 +3094,6 @@ namespace LumiSoft.Net.SMTP.Client
             connectCallback(error);
         }
 
-        #endregion
-
-
-        #region method ReadResponseAsync
-
-        #region class ReadResponseAsyncOP
 
         /// <summary>
         /// This class represents <see cref="SMTP_Client.ReadResponseAsync"/> asynchronous operation.
@@ -3520,8 +3112,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pReplyLines = new List<SMTP_t_ReplyLine>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -3539,10 +3129,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -3605,10 +3191,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }                
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -3618,10 +3200,6 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 State = state;
             }
-
-            #endregion
-
-            #region method ReadLineCompleted
 
             /// <summary>
             /// Is called when read line has completed.
@@ -3658,10 +3236,6 @@ namespace LumiSoft.Net.SMTP.Client
                 return false;
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3709,16 +3283,10 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ReadResponseAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3729,13 +3297,7 @@ namespace LumiSoft.Net.SMTP.Client
                     this.CompletedAsync(this,new EventArgs<ReadResponseAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Reads SMTP server single or multiline response.
@@ -3760,10 +3322,6 @@ namespace LumiSoft.Net.SMTP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-                
-        #region static method QuickSend
 
         /// <summary>
         /// Sends specified mime message.
@@ -3904,10 +3462,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             QuickSendSmartHost(localHost,Dns_Client.Static.GetEmailHosts(to)[0].HostName,25,false,from,new string[]{to},message);
         }
-
-        #endregion
-
-        #region static method QuickSendSmartHost
 
         /// <summary>
         /// Sends message by using specified smart host.
@@ -4073,10 +3627,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets host name which is reported to SMTP server. If value null, then local computer name is used.
@@ -4248,13 +3798,9 @@ namespace LumiSoft.Net.SMTP.Client
                 return m_pAuthdUserIdentity; 
             }
         }
-                
-        #endregion
 
-                
+
         //------- OBSOLETE  
-
-        #region method Authenticate
 
         /// <summary>
         /// Authenticates user. Authenticate method chooses strongest possible authentication method supported by server, 
@@ -4294,8 +3840,6 @@ namespace LumiSoft.Net.SMTP.Client
             else if(authMethods.Contains("CRAM-MD5")){
                 authMethod = "CRAM-MD5";
             }
-
-            #region AUTH LOGIN
 
             if(authMethod == "LOGIN"){
                 /* LOGIN
@@ -4340,10 +3884,6 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pAuthdUserIdentity = new GenericIdentity(userName,"LOGIN");
             }
 
-            #endregion
-
-            #region AUTH CRAM-MD5
-
             else if(authMethod == "CRAM-MD5"){
                 /* CRAM-M5
                     Description:
@@ -4380,10 +3920,6 @@ namespace LumiSoft.Net.SMTP.Client
          
                 m_pAuthdUserIdentity = new GenericIdentity(userName,"CRAM-MD5");
             }
-
-            #endregion
-
-            #region AUTH DIGEST-MD5
 
             else if(authMethod == "DIGEST-MD5"){
                 /*
@@ -4446,13 +3982,7 @@ namespace LumiSoft.Net.SMTP.Client
 
                 m_pAuthdUserIdentity = new GenericIdentity(userName,"DIGEST-MD5");
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region method BeginAuthenticate
 
         /// <summary>
         /// Internal helper method for asynchronous Authenticate method.
@@ -4490,10 +4020,6 @@ namespace LumiSoft.Net.SMTP.Client
             return asyncState;
         }
 
-        #endregion
-
-        #region method EndAuthenticate
-
         /// <summary>
         /// Ends a pending asynchronous authentication request.
         /// </summary>
@@ -4529,10 +4055,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method BeginNoop
-
         /// <summary>
         /// Internal helper method for asynchronous Noop method.
         /// </summary>
@@ -4562,10 +4084,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndNoop
 
         /// <summary>
         /// Ends a pending asynchronous Noop request.
@@ -4602,10 +4120,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method BeginStartTLS
-
         /// <summary>
         /// Internal helper method for asynchronous StartTLS method.
         /// </summary>
@@ -4636,10 +4150,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndStartTLS
 
         /// <summary>
         /// Ends a pending asynchronous StartTLS request.
@@ -4675,10 +4185,6 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
         }
-
-        #endregion
-
-        #region method BeginRcptTo
 
         /// <summary>
         /// Internal helper method for asynchronous RcptTo method.
@@ -4729,10 +4235,6 @@ namespace LumiSoft.Net.SMTP.Client
             return asyncState;
         }
 
-        #endregion
-
-        #region method EndRcptTo
-
         /// <summary>
         /// Ends a pending asynchronous RcptTo request.
         /// </summary>
@@ -4767,10 +4269,6 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
         }
-
-        #endregion
-
-        #region method BeginMailFrom
 
         /// <summary>
         /// Internal helper method for asynchronous MailFrom method.
@@ -4823,10 +4321,6 @@ namespace LumiSoft.Net.SMTP.Client
             return asyncState;
         }
 
-        #endregion
-
-        #region method EndMailFrom
-
         /// <summary>
         /// Ends a pending asynchronous MailFrom request.
         /// </summary>
@@ -4862,10 +4356,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method BeginReset
-
         /// <summary>
         /// Internal helper method for asynchronous Reset method.
         /// </summary>
@@ -4895,10 +4385,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndReset
 
         /// <summary>
         /// Ends a pending asynchronous reset request.
@@ -4935,10 +4421,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-        #region method Reset
-
         /// <summary>
         /// Resets SMTP session, all state data will be deleted.
         /// </summary>
@@ -4973,10 +4455,6 @@ namespace LumiSoft.Net.SMTP.Client
             m_MailFrom = null;
             m_pRecipients.Clear();
         }
-
-        #endregion
-
-        #region method BeginSendMessage
 
         /// <summary>
         /// Internal helper method for asynchronous SendMessage method.
@@ -5013,10 +4491,6 @@ namespace LumiSoft.Net.SMTP.Client
             return asyncState;
         }
 
-        #endregion
-
-        #region method EndSendMessage
-
         /// <summary>
         /// Ends a pending asynchronous SendMessage request.
         /// </summary>
@@ -5052,10 +4526,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-        #endregion
-
-
-        #region static method BeginGetDomainHosts
 
         /// <summary>
         /// Internal helper method for asynchronous SendMessage method.
@@ -5088,10 +4558,6 @@ namespace LumiSoft.Net.SMTP.Client
             return asyncState;
         }
 
-        #endregion
-
-        #region static method EndGetDomainHosts
-
         /// <summary>
         /// Ends a pending asynchronous BeginGetDomainHosts request.
         /// </summary>
@@ -5122,10 +4588,6 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginGetDomainHosts method.");
             }
         }
-
-        #endregion
-
-        #region static method GetDomainHosts
 
         /// <summary>
         /// Gets specified email domain SMTP hosts. Values are in descending priority order.
@@ -5178,8 +4640,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return retVal.ToArray();
         }
-
-        #endregion
 
         /// <summary>
         /// Gets or sets if BDAT command can be used.

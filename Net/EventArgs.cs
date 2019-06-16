@@ -18,14 +18,9 @@ namespace LumiSoft.Net
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets event data.
         /// </summary>
         public T Value { get; }
-
-#endregion
-
     }
 }

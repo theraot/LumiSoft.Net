@@ -27,8 +27,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementataion
-
         /// <summary>
         /// Gets or sets if specified user is authenticated.
         /// </summary>
@@ -43,7 +41,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets user password.
         /// </summary>
         public string Password { get; } = "";
-
-#endregion
     }
 }

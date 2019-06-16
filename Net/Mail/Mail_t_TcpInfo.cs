@@ -32,8 +32,6 @@ namespace LumiSoft.Net.Mail
         }
 
 
-        #region method ToString
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -48,10 +46,6 @@ namespace LumiSoft.Net.Mail
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets IP address.
@@ -62,7 +56,5 @@ namespace LumiSoft.Net.Mail
         /// Gets host value. Value null means not specified.
         /// </summary>
         public string HostName { get; }
-
-#endregion
     }
 }

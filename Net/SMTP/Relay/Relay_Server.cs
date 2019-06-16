@@ -9,15 +9,11 @@ using LumiSoft.Net.TCP;
 
 namespace LumiSoft.Net.SMTP.Relay
 {
-    #region Delegates
-
     /// <summary>
     /// Represents the method that will handle the <b>Relay_Server.SessionCompleted</b> event.
     /// </summary>
     /// <param name="e">Event data.</param>
     public delegate void Relay_SessionCompletedEventHandler(Relay_SessionCompletedEventArgs e);
-
-    #endregion
 
     /// <summary>
     /// This class implements SMTP relay server. Defined in RFC 2821.
@@ -50,8 +46,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pDsnClient  = new Dns_Client();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -80,12 +74,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pDsnClient = null;
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimerTimeout_Elapsed
 
         /// <summary>
         /// Is called when we need to check timed out relay sessions.
@@ -110,12 +98,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts SMTP relay server.
@@ -143,10 +125,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pTimerTimeout.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerTimeout_Elapsed);
             m_pTimerTimeout.Start();
         }
-                
-        #endregion
-
-        #region method Stop
 
         /// <summary>
         /// Stops SMTP relay server.
@@ -174,10 +152,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pTimerTimeout = null;
         }
 
-        #endregion
-                              
-
-        #region method Run
 
         /// <summary>
         /// Processes relay queue.
@@ -285,10 +259,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-
-        #region method GetLocalBinding
 
         /// <summary>
         /// Gets local IP binding for specified remote IP.
@@ -325,10 +295,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method TryAddIpUsage
-
         /// <summary>
         /// Increases specified IP address connactions count if maximum allowed connections to 
         /// the specified IP address isn't exceeded.
@@ -362,10 +328,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method RemoveIpUsage
-
         /// <summary>
         /// Decreases specified IP address connactions count.
         /// </summary>
@@ -396,10 +358,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method GetIpUsage
-
         /// <summary>
         /// Gets how many connections to the specified IP address.
         /// </summary>
@@ -425,10 +383,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if server is disposed.
@@ -701,16 +655,10 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region Events Implementation
-
         /// <summary>
         /// This event is raised when relay session processing completes.
         /// </summary>
         public event Relay_SessionCompletedEventHandler SessionCompleted;
-
-        #region method OnSessionCompleted
 
         /// <summary>
         /// Raises <b>SessionCompleted</b> event.
@@ -724,14 +672,10 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when unhandled exception happens.
         /// </summary>
         public event ErrorEventHandler Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -743,10 +687,5 @@ namespace LumiSoft.Net.SMTP.Relay
                 this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

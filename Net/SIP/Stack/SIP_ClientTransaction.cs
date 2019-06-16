@@ -37,8 +37,6 @@ namespace LumiSoft.Net.SIP.Stack
             SetState(SIP_TransactionState.WaitingToStart);            
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -90,12 +88,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimerA_Elapsed
 
         /// <summary>
         /// Is raised when INVITE timer A triggered.
@@ -149,10 +141,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerB_Elapsed
-
         /// <summary>
         /// Is raised when INVITE timer B triggered.
         /// </summary>
@@ -191,10 +179,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerD_Elapsed
-
         /// <summary>
         /// Is raised when INVITE timer D triggered.
         /// </summary>
@@ -218,10 +202,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-
-        #endregion
-
-        #region method m_pTimerE_Elapsed
 
         /// <summary>
         /// Is raised when Non-INVITE timer E triggered.
@@ -268,10 +248,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerF_Elapsed
-
         /// <summary>
         /// Is raised when Non-INVITE timer F triggered.
         /// </summary>
@@ -317,10 +293,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerK_Elapsed
-
         /// <summary>
         /// Is raised when Non-INVITE timer K triggered.
         /// </summary>
@@ -339,10 +311,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-
-        #endregion
-
-        #region method m_pTimerM_Elapsed
 
         /// <summary>
         /// Is called when INVITE timer M triggered.
@@ -366,12 +334,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts transaction processing.
@@ -391,8 +353,6 @@ namespace LumiSoft.Net.SIP.Stack
                 // Move processing to thread pool.
                 ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){
                     lock(this.SyncRoot){
-                        #region INVITE
-
                         if(this.Method == SIP_Methods.INVITE){
                             /* RFC 3261 17.1.1.2.
                                 The initial state, "calling", MUST be entered when the TU
@@ -444,10 +404,6 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
 
-                        #endregion
-
-                        #region Non-INVITE
-
                         else{
                             /* RFC 3261 17.1.2.2.
                                 The "Trying" state is entered when the TU initiates a new client
@@ -495,16 +451,10 @@ namespace LumiSoft.Net.SIP.Stack
                                 }
                             }
                         }
-
-                        #endregion
                     }
                 }));                
             }
         }
-                                
-        #endregion
-
-        #region method Cancel
 
         /// <summary>
         /// Starts canceling transaction. 
@@ -548,10 +498,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method ProcessResponse
 
         /// <summary>
         /// Processes specified response through this transaction.
@@ -599,8 +545,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
 
 
-                #region INVITE
-
                 /* RFC 6026 7.2. INVITE client transaction. (Udpates RFC 3261)
                       +-----------+                        +-----------+
                       |           |                        |           |
@@ -644,8 +588,6 @@ namespace LumiSoft.Net.SIP.Stack
                 */
 
                 if(this.Method == SIP_Methods.INVITE){
-                    #region Calling
-
                     if(this.State == SIP_TransactionState.Calling){
                         // Store response.
                         AddResponse(response);
@@ -713,10 +655,6 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                     }
 
-                    #endregion
-
-                    #region Proceeding
-
                     else if(this.State == SIP_TransactionState.Proceeding){
                         // Store response.
                         AddResponse(response);
@@ -763,19 +701,11 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                     }
 
-                    #endregion
-
-                    #region Accepted
-
                     else if(this.State == SIP_TransactionState.Accpeted){
                         if(response.StatusCodeType == SIP_StatusCodeType.Success){
                             OnResponseReceived(response);
                         }
                     }
-
-                    #endregion
-
-                    #region Completed
 
                     else if(this.State == SIP_TransactionState.Completed){
                         // 3xx - 6xx
@@ -784,21 +714,10 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                     }
 
-                    #endregion
-
-                    #region Terminated
-
                     else if(this.State == SIP_TransactionState.Terminated){
                         // We should never reach here, but if so, do nothing.
                     }
-
-                    #endregion
                 }
-
-                #endregion
-
-                #region Non-INVITE
-
                 /* RFC 3251 17.1.2.2
                                                |Request from TU
                                                |send request
@@ -843,8 +762,6 @@ namespace LumiSoft.Net.SIP.Stack
                 */
 
                 else{
-                    #region Trying
-
                     if(this.State == SIP_TransactionState.Trying){
                         // Store response.
                         AddResponse(response);
@@ -896,10 +813,6 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                     }
 
-                    #endregion
-
-                    #region Proceeding
-
                     else if(this.State == SIP_TransactionState.Proceeding){
                         // Store response.
                         AddResponse(response);
@@ -939,32 +852,16 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                     }
 
-                    #endregion
-
-                    #region Completed
-
                     else if(this.State == SIP_TransactionState.Completed){
                         // Eat retransmited response.
                     }
 
-                    #endregion
-
-                    #region Terminated
-
                     else if(this.State == SIP_TransactionState.Terminated){
                         // We should never reach here, but if so, do nothing.
                     }
-
-                    #endregion
                 }
-
-                #endregion
             }
         }
-                                                
-        #endregion
-
-        #region method SendCancel
 
         /// <summary>
         /// Creates and send CANCEL request to remote target.
@@ -1007,10 +904,6 @@ namespace LumiSoft.Net.SIP.Stack
             SIP_ClientTransaction transaction = this.Stack.TransactionLayer.CreateClientTransaction(this.Flow,cancelRequest,false);
             transaction.Start();
         }
-
-        #endregion
-
-        #region method SendAck
 
         /// <summary>
         /// Creates and sends ACK for final(3xx - 6xx) failure response.
@@ -1065,28 +958,18 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
 
-
-        #region Properties implementation
-                
-        // FIX ME:
+// FIX ME:
 
         /// <summary>
         /// Gets or sets RSeq value. Value -1 means no reliable provisional response received.
         /// </summary>
         internal int RSeq { get; set; } = -1;
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when transaction received response from remote party.
         /// </summary>
         public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
-
-        #region method OnResponseReceived
 
         /// <summary>
         /// Raises ResponseReceived event.
@@ -1098,10 +981,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.ResponseReceived(this,new SIP_ResponseReceivedEventArgs(this.Stack,this,response));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

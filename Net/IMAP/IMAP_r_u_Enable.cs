@@ -21,9 +21,7 @@ namespace LumiSoft.Net.IMAP
 
             Capabilities = capabilities;
         }
-        
 
-        #region static method Parse
 
         /// <summary>
         /// Parses ENABLE response from enable-response string.
@@ -63,10 +61,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Enable(r.ReadToEnd().Split(' '));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -86,16 +80,10 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets IMAP capabilities.
         /// </summary>
         public string[] Capabilities { get; }
-
-#endregion
     }
 }

@@ -29,8 +29,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -55,10 +53,6 @@ namespace LumiSoft.Net.MIME
             throw new NotImplementedException("Body provider class does not implement required Parse method.");
         }
 
-        #endregion
-
-
-        #region method SetParent
 
         /// <summary>
         /// Sets body parent.
@@ -75,10 +69,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method ToStream
-
         /// <summary>
         /// Stores MIME entity body to the specified stream.
         /// </summary>
@@ -90,10 +80,6 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         internal protected abstract void ToStream(Stream stream,MIME_Encoding_EncodedWord headerWordEncoder,Encoding headerParmetersCharset,bool headerReencode);
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if body has modified.
@@ -115,7 +101,5 @@ namespace LumiSoft.Net.MIME
         {
             get{ return m_pContentType.TypeWithSubtype; }
         }
-
-        #endregion
     }
 }

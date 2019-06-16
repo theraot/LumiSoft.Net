@@ -41,8 +41,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "CSeq" from specified value.
         /// </summary>
@@ -92,10 +90,6 @@ namespace LumiSoft.Net.SIP.Message
             m_RequestMethod = word;
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "CSeq" value.
         /// </summary>
@@ -105,11 +99,7 @@ namespace LumiSoft.Net.SIP.Message
             return m_SequenceNumber + " " + m_RequestMethod;
         }
 
-        #endregion
 
-
-        #region Properties Implementation
-                
         /// <summary>
         /// Gets or sets sequence number.
         /// </summary>
@@ -141,8 +131,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_RequestMethod = value;
             }
         }
-
-        #endregion
-
     }
 }

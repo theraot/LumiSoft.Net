@@ -17,8 +17,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses UNSEEN optional response from string.
         /// </summary>
@@ -42,10 +40,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Unseen(Convert.ToInt32(code_value[1]));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -56,16 +50,10 @@ namespace LumiSoft.Net.IMAP
             return "UNSEEN " + SeqNo;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets first unseen message sequence number.
         /// </summary>
         public int SeqNo { get; }
-
-#endregion
     }
 }

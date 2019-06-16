@@ -21,9 +21,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region method Add
-
-		/// <summary>
+        /// <summary>
 		/// Adds a new mailbox to the end of the collection.
 		/// </summary>
 		/// <param name="mailbox">Mailbox to add.</param>
@@ -34,11 +32,7 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
-
-		#region method Insert
-
-		/// <summary>
+        /// <summary>
 		/// Inserts a new mailbox into the collection at the specified location.
 		/// </summary>
 		/// <param name="index">The location in the collection where you want to add the mailbox.</param>
@@ -50,12 +44,8 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
 
-
-		#region method Remove
-
-		/// <summary>
+        /// <summary>
 		/// Removes header field at the specified index from the collection.
 		/// </summary>
 		/// <param name="index">Index of the mailbox which to remove.</param>
@@ -76,12 +66,8 @@ namespace LumiSoft.Net.Mime
 
 			OnCollectionChanged();
 		}
-		
-		#endregion
 
-		#region method Clear
-        
-		/// <summary>
+        /// <summary>
 		/// Clears the collection of all mailboxes.
 		/// </summary>
 		public void Clear()
@@ -91,12 +77,8 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
 
-
-		#region method Parse
-
-		/// <summary>
+        /// <summary>
 		/// Parses mailboxes from Rfc 2822 3.4 mailbox-list string. Syntax: mailbox *(',' mailbox).
 		/// </summary>
 		/// <param name="mailboxList">Mailbox list string.</param>
@@ -112,12 +94,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region method ToAddressString
-        
-		/// <summary>
+        /// <summary>
 		/// Convert addresses to Rfc 2822 mailbox-list string.
 		/// </summary>
 		/// <returns></returns>
@@ -137,12 +115,8 @@ namespace LumiSoft.Net.Mime
 			return retVal;
 		}
 
-		#endregion
 
-
-		#region internal method OnCollectionChanged
-
-		/// <summary>
+        /// <summary>
 		/// This called when collection has changed. Item is added,deleted,changed or collection cleared.
 		/// </summary>
 		internal void OnCollectionChanged()
@@ -154,12 +128,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -168,11 +138,7 @@ namespace LumiSoft.Net.Mime
 			return m_pMailboxes.GetEnumerator();
 		}
 
-		#endregion
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets mailbox from specified index.
 		/// </summary>
 		public MailboxAddress this[int index]
@@ -193,8 +159,5 @@ namespace LumiSoft.Net.Mime
 		/// Gets or sets owner of this collection.
 		/// </summary>
 		internal Address Owner { get; set; }
-
-#endregion
-
-	}
+    }
 }

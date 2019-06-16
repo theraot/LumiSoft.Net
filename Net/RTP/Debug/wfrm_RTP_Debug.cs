@@ -12,8 +12,6 @@ namespace LumiSoft.Net.RTP.Debug
     /// </summary>
     public class wfrm_RTP_Debug : Form
     {
-        #region method ComboBoxItem
-
         /// <summary>
         /// This class implements ComboBaox item.
         /// </summary>
@@ -31,8 +29,6 @@ namespace LumiSoft.Net.RTP.Debug
             }
 
 
-            #region method ToString
-
             /// <summary>
             /// Returns ComboBox text.
             /// </summary>
@@ -42,10 +38,6 @@ namespace LumiSoft.Net.RTP.Debug
                 return Text;
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets text.
@@ -56,13 +48,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// Gets user data.
             /// </summary>
             public object Tag { get; }
-
-#endregion
         }
-
-        #endregion
-
-        #region class RTP_SessionStatistics
 
         /// <summary>
         /// This class provides data for RTP global statistic property grid.
@@ -85,8 +71,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pSession = session;
             }
 
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets total members count.
@@ -329,14 +313,7 @@ namespace LumiSoft.Net.RTP.Debug
                     return m_pSession.StreamMode.ToString();
                 }
             }
-
-            #endregion
-
         }
-
-        #endregion
-
-        #region class RTP_ParticipantInfo
 
         /// <summary>
         /// This class provides data for RTP participant property grid.
@@ -359,8 +336,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pParticipant = participant;
             }
 
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets or sets the real name, eg. "John Doe". Value null means not specified.
@@ -454,13 +429,7 @@ namespace LumiSoft.Net.RTP.Debug
                     }
                 }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region class RTP_SourceInfo
 
         /// <summary>
         /// This class provides data for RTP "source" property grid.
@@ -483,8 +452,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pSource = source;
             }
 
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets source state.
@@ -556,13 +523,7 @@ namespace LumiSoft.Net.RTP.Debug
             {
                 get{ return m_pSource.LastRtpPacket.ToString("HH:mm:ss"); }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region class RTP_ReceiveStreamInfo
 
         /// <summary>
         /// This class provides data for RTP "receive stream" property grid.
@@ -584,8 +545,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pStream = stream;
             }
 
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets stream owner RTP session.
@@ -683,14 +642,7 @@ namespace LumiSoft.Net.RTP.Debug
             {
                 get{ return m_pStream.DelaySinceLastSR / 1000; }
             }
-
-            #endregion
-
         }
-
-        #endregion
-
-        #region method RTP_SendStreamInfo
 
         /// <summary>
         /// This class provides data for RTP "send stream" property grid.
@@ -713,8 +665,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pStream = stream;
             }
 
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets stream owner RTP session.
@@ -787,11 +737,7 @@ namespace LumiSoft.Net.RTP.Debug
             {
                 get{ return m_pStream.RtpDataBytesSent; }
             }
-
-            #endregion
         }
-
-        #endregion
 
         private TabControl     m_pTab;
         private SplitContainer m_pParticipantsSplitter;
@@ -842,8 +788,6 @@ namespace LumiSoft.Net.RTP.Debug
             }
         }
 
-                                                
-        #region method InitUI
 
         /// <summary>
         /// Creates and initializes UI.
@@ -909,31 +853,17 @@ namespace LumiSoft.Net.RTP.Debug
 
             this.Controls.Add(m_pTab);
         }
-                                                                
-        #endregion
 
 
-        #region Events handling
-
-        #region method m_pParticipants_AfterSelect
-                
         private void m_pParticipants_AfterSelect(object sender,TreeViewEventArgs e)
         {
             m_pParticipantData.SelectedObject = e.Node.Tag;
         }
 
-        #endregion
-
-        #region method m_pSessions_SelectedIndexChanged
-
         private void m_pSessions_SelectedIndexChanged(object sender,EventArgs e)
         {
             m_pGlobalSessionInfo.SelectedObject = ((ComboBoxItem)m_pSessions.SelectedItem).Tag;
         }
-
-        #endregion
-
-        #region method m_pErrors_DoubleClick
 
         private void m_pErrors_DoubleClick(object sender,EventArgs e)
         {
@@ -942,10 +872,6 @@ namespace LumiSoft.Net.RTP.Debug
             }
         }
 
-        #endregion
-
-
-        #region method m_pSession_Error
 
         /// <summary>
         /// Is called when RTP session gets unhandled error.
@@ -965,10 +891,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pErrors.Items.Add(item);
             }));
         }
-
-        #endregion
-
-        #region method m_pSession_SessionCreated
 
         /// <summary>
         /// Is called when RTP multimedia session creates new session.
@@ -991,10 +913,6 @@ namespace LumiSoft.Net.RTP.Debug
                 }
             }));
         }
-
-        #endregion
-
-        #region method m_pSession_NewParticipant
 
         /// <summary>
         /// This method is called when RTP session sees new remote participant.
@@ -1019,10 +937,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pParticipants.Nodes.Add(nodeParticipant);
             }));
         }
-                                                
-        #endregion
-
-        #region method Participant_Removed
 
         /// <summary>
         /// This method is called when RTP remote participant has disjoined the multimedia session.
@@ -1043,10 +957,6 @@ namespace LumiSoft.Net.RTP.Debug
                 }
             }));
         }
-
-        #endregion
-
-        #region method Participant_SourceAdded
 
         /// <summary>
         /// This method is called when participant creates new source. 
@@ -1084,10 +994,6 @@ namespace LumiSoft.Net.RTP.Debug
                 }
             }));
         }
-                                
-        #endregion
-
-        #region method Source_StateChanged
 
         /// <summary>
         /// This method is called when participant source state changes.
@@ -1134,10 +1040,6 @@ namespace LumiSoft.Net.RTP.Debug
             }));
         }
 
-        #endregion
-
-        #region method Participant_SourceRemoved
-
         /// <summary>
         /// This method is called when participant closes source.
         /// </summary>
@@ -1166,10 +1068,6 @@ namespace LumiSoft.Net.RTP.Debug
             }));
         }
 
-        #endregion
-
-        #region method m_pTimer_Tick
-
         private void m_pTimer_Tick(object sender,EventArgs e)
         {
             if(m_IsDisposed){
@@ -1184,10 +1082,6 @@ namespace LumiSoft.Net.RTP.Debug
             m_pGlobalSessionInfo.Refresh();
         }
 
-        #endregion
-
-        #region method wfrm_RTP_Debug_FormClosing
-
         private void wfrm_RTP_Debug_FormClosing(object sender,FormClosingEventArgs e)
         {
             m_IsDisposed = true;
@@ -1201,12 +1095,6 @@ namespace LumiSoft.Net.RTP.Debug
             m_pTimer.Dispose();
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region FindParticipantNode
 
         /// <summary>
         /// Searches specified participant tree node.
@@ -1228,17 +1116,10 @@ namespace LumiSoft.Net.RTP.Debug
             return null;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets RTP session what UI debugs.
         /// </summary>
         public RTP_MultimediaSession Session { get; }
-
-#endregion
-
     }
 }

@@ -30,8 +30,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets if specified user is authenticated.
         /// </summary>
@@ -51,7 +49,5 @@ namespace LumiSoft.Net.AUTH
         /// Gets password.
         /// </summary>
         public string Password { get; } = "";
-
-#endregion
     }
 }

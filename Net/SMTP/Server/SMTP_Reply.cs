@@ -46,8 +46,6 @@ namespace LumiSoft.Net.SMTP.Server
         }
 
 
-        #region method override ToString
-
         /// <summary>
         /// Returns SMTP server reply as string.
         /// </summary>
@@ -68,10 +66,6 @@ namespace LumiSoft.Net.SMTP.Server
             return retVal.ToString(); 
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets SMTP server reply code.
@@ -82,7 +76,5 @@ namespace LumiSoft.Net.SMTP.Server
         /// Gets SMTP server reply lines.
         /// </summary>
         public string[] ReplyLines { get; }
-
-#endregion
     }
 }

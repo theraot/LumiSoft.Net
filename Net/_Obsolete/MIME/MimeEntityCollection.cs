@@ -25,9 +25,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region method Add
-
-		/// <summary>
+        /// <summary>
 		/// Creates a new mime entity to the end of the collection.
 		/// </summary>
 		/// <returns></returns>
@@ -57,11 +55,7 @@ namespace LumiSoft.Net.Mime
 			m_pEntities.Add(entity);
 		}
 
-		#endregion
-
-		#region method Insert
-
-		/// <summary>
+        /// <summary>
 		/// Inserts a new mime entity into the collection at the specified location.
 		/// </summary>
 		/// <param name="index">The location in the collection where you want to add the mime entity.</param>
@@ -80,12 +74,8 @@ namespace LumiSoft.Net.Mime
 			m_pEntities.Insert(index,entity);
 		}
 
-		#endregion
 
-
-		#region method Remove
-
-		/// <summary>
+        /// <summary>
 		/// Removes mime entity at the specified index from the collection.
 		/// </summary>
 		/// <param name="index">Index of mime entity to remove.</param>
@@ -103,11 +93,7 @@ namespace LumiSoft.Net.Mime
 			m_pEntities.Remove(entity);
 		}
 
-		#endregion
-
-		#region method Clear
-
-		/// <summary>
+        /// <summary>
 		/// Clears the collection of all mome entities.
 		/// </summary>
 		public void Clear()
@@ -115,12 +101,8 @@ namespace LumiSoft.Net.Mime
 			m_pEntities.Clear();
 		}
 
-		#endregion
 
-
-		#region method Contains
-
-		/// <summary>
+        /// <summary>
 		/// Gets if collection contains specified mime entity.
 		/// </summary>
 		/// <param name="entity">Mime entity.</param>
@@ -130,12 +112,8 @@ namespace LumiSoft.Net.Mime
 			return m_pEntities.Contains(entity);
 		}
 
-		#endregion
 
-
-		#region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -144,11 +122,7 @@ namespace LumiSoft.Net.Mime
 			return m_pEntities.GetEnumerator();
 		}
 
-		#endregion
-
-		#region Properties Implementation
-		
-		/// <summary>
+        /// <summary>
 		/// Gets mime entity at specified index.
 		/// </summary>
 		public MimeEntity this[int index]
@@ -163,7 +137,5 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ return m_pEntities.Count; }
 		}
-
-		#endregion
-	}
+    }
 }

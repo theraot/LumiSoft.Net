@@ -68,8 +68,6 @@ namespace LumiSoft.Net.SDP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses media from "m" SDP message field.
         /// </summary>
@@ -123,10 +121,6 @@ namespace LumiSoft.Net.SDP
             return media;
         }
 
-        #endregion
-
-
-        #region method SetStreamMode
 
         /// <summary>
         /// Sets SDP media stream mode.
@@ -164,10 +158,6 @@ namespace LumiSoft.Net.SDP
                 Attributes.Add(new SDP_Attribute(streamMode,""));
             }
         }
-
-        #endregion
-
-        #region method ToValue
 
         /// <summary>
         /// Converts this to valid media string.
@@ -216,10 +206,6 @@ namespace LumiSoft.Net.SDP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets meadia type. Currently defined media are "audio", "video", "text", 
@@ -304,8 +290,5 @@ namespace LumiSoft.Net.SDP
         /// Gets user data items collection.
         /// </summary>
         public Dictionary<string,object> Tags { get; }
-
-#endregion
-
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets the wallclock time (see Section 4) when this report was sent.
         /// </summary>
@@ -46,8 +44,5 @@ namespace LumiSoft.Net.RTP
         /// Gets how many bytes sender has sent.
         /// </summary>
         public uint SenderOctetCount { get; }
-
-#endregion
-
     }
 }

@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public abstract class IMAP_t_orc
     {
-        #region static method Parse
-
         /// <summary>
         /// Parses IMAP optional response from string.
         /// </summary>
@@ -66,7 +64,5 @@ namespace LumiSoft.Net.IMAP
                 return IMAP_t_orc_Unknown.Parse(value);
             }
         }
-
-        #endregion
     }
 }

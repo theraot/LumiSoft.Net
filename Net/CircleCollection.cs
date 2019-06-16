@@ -20,8 +20,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region methd Add
-
         /// <summary>
         /// Adds specified items to the collection.
         /// </summary>
@@ -55,10 +53,6 @@ namespace LumiSoft.Net
             m_Index = 0;
         }
 
-        #endregion
-        
-        #region method Remove
-
         /// <summary>
         /// Removes specified item from the collection.
         /// </summary>
@@ -76,10 +70,6 @@ namespace LumiSoft.Net
             m_Index = 0;
         }
 
-        #endregion
-        
-        #region method Clear
-
         /// <summary>
         /// Clears all items from collection.
         /// </summary>
@@ -91,10 +81,6 @@ namespace LumiSoft.Net
             m_Index = 0;
         }
 
-        #endregion
-
-        #region method Contains
-
         /// <summary>
         /// Gets if the collection contain the specified item.
         /// </summary>
@@ -105,10 +91,6 @@ namespace LumiSoft.Net
             return m_pItems.Contains(item);
         }
 
-        #endregion
-
-
-        #region method Next
 
         /// <summary>
         /// Gets next item from the collection. This method is thread-safe.
@@ -132,10 +114,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-        #region method ToArray
-
         /// <summary>
         /// Copies all elements to new array, all elements will be in order they added. This method is thread-safe.
         /// </summary>
@@ -146,10 +124,6 @@ namespace LumiSoft.Net
                 return m_pItems.ToArray();
             }
         }
-
-        #endregion
-
-        #region method ToCurrentOrderArray
 
         /// <summary>
         /// Copies all elements to new array, all elements will be in current circle order. This method is thread-safe.
@@ -173,10 +147,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets number of items in the collection.
@@ -195,8 +165,5 @@ namespace LumiSoft.Net
         {
             get{ return m_pItems[index]; }
         }
-
-        #endregion
-
     }
 }

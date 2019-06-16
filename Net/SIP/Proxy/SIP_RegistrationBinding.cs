@@ -33,8 +33,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region method Update
-
         /// <summary>
         /// Updates specified binding.
         /// </summary>
@@ -68,10 +66,6 @@ namespace LumiSoft.Net.SIP.Proxy
             LastUpdate = DateTime.Now;
         }
 
-        #endregion
-
-        #region method Remove
-
         /// <summary>
         /// Removes this binding from the registration.
         /// </summary>
@@ -79,10 +73,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             m_pRegistration.RemoveBinding(this);
         }
-
-        #endregion
-
-        #region method ToContactValue
 
         /// <summary>
         /// Converts <b>ContactUri</b> to valid Contact header value.
@@ -97,10 +87,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return retVal.ToStringValue();
         }
 
-        #endregion
-
-
-        #region IComparable interface Implementation
 
         /// <summary>
         /// Compares the current instance with another object of the same type. 
@@ -131,10 +117,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             return -1;
         }
-
-        #endregion
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets the last time when the binding was updated.
@@ -189,8 +171,5 @@ namespace LumiSoft.Net.SIP.Proxy
         /// Gets CSeq header field sequence number value which added this binding.
         /// </summary>
         public int CSeqNo { get; private set; } = 1;
-
-#endregion
-
     }
 }

@@ -128,9 +128,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region static method Parse
-
-		/// <summary>
+        /// <summary>
 		/// Parses mime message from byte[] data.
 		/// </summary>
 		/// <param name="data">Mime message data.</param>
@@ -167,12 +165,8 @@ namespace LumiSoft.Net.Mime
 			return mime;
 		}
 
-		#endregion
 
-
-		#region static method CreateSimple
-
-		/// <summary>
+        /// <summary>
 		/// Creates simple mime message.
 		/// </summary>
 		/// <param name="from">Header field From: value.</param>
@@ -283,12 +277,8 @@ namespace LumiSoft.Net.Mime
 			return m;
 		}
 
-		#endregion
 
-
-		#region method ToStringData
-
-		/// <summary>
+        /// <summary>
 		/// Stores mime message to string.
 		/// </summary>
 		/// <returns></returns>
@@ -297,11 +287,7 @@ namespace LumiSoft.Net.Mime
 			return System.Text.Encoding.Default.GetString(this.ToByteData());
 		}
 
-		#endregion
-
-		#region method ToByteData
-
-		/// <summary>
+        /// <summary>
 		/// Stores mime message to byte[].
 		/// </summary>
 		/// <returns></returns>
@@ -314,11 +300,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region method ToFile
-
-		/// <summary>
+        /// <summary>
 		/// Stores mime message to specified file.
 		/// </summary>
 		/// <param name="fileName">File name.</param>
@@ -329,11 +311,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region method ToStream
-
-		/// <summary>
+        /// <summary>
 		/// Stores mime message to specified stream. Stream position stays where mime writing ends.
 		/// </summary>
 		/// <param name="storeStream">Stream where to store mime message.</param>
@@ -342,12 +320,8 @@ namespace LumiSoft.Net.Mime
 			MainEntity.ToStream(storeStream);
 		}
 
-		#endregion
 
-
-		#region method GetEntities
-
-		/// <summary>
+        /// <summary>
 		/// Gets mime entities, including nested entries. 
 		/// </summary>
 		/// <param name="entities"></param>
@@ -366,12 +340,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region Properties Implementaion
-
-		/// <summary>
+        /// <summary>
 		/// Message main(top-level) entity.
 		/// </summary>
 		public MimeEntity MainEntity { get; }
@@ -486,8 +456,5 @@ namespace LumiSoft.Net.Mime
 				return null;
 			}
 		}
-		
-		#endregion
-
-	}
+    }
 }

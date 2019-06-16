@@ -17,8 +17,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses RTP compound packet.
         /// </summary>
@@ -67,10 +65,6 @@ namespace LumiSoft.Net.RTP
             return packet;
         }
 
-        #endregion
-
-        #region mehtod ToByte
-
         /// <summary>
         /// Gets RTCP compound packet as raw byte data.
         /// </summary>
@@ -104,10 +98,6 @@ namespace LumiSoft.Net.RTP
                 packet.ToByte(buffer,ref offset);
             }   
         }
-
-        #endregion
-
-        #region method Validate
 
         /// <summary>
         /// Validates RTCP compound packet.
@@ -153,10 +143,6 @@ namespace LumiSoft.Net.RTP
             }          
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets compound packets.
@@ -178,8 +164,5 @@ namespace LumiSoft.Net.RTP
                 return size; 
             }
         }
-
-        #endregion
-
     }
 }

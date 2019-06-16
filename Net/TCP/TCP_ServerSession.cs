@@ -37,8 +37,6 @@ namespace LumiSoft.Net.TCP
             m_pTags = new Dictionary<string,object>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -80,10 +78,6 @@ namespace LumiSoft.Net.TCP
             this.Disposed    = null;
         }
 
-        #endregion
-
-
-        #region method Init
 
         /// <summary>
         /// Initializes session. This method is called from TCP_Server when new session created.
@@ -111,10 +105,6 @@ namespace LumiSoft.Net.TCP
 
             m_pTcpStream = new SmartStream(new NetworkStream(socket,true),true);
         }
-
-        #endregion
-
-        #region method Start
 
         /// <summary>
         /// This method is called from TCP server when session should start processing incoming connection.
@@ -170,10 +160,6 @@ namespace LumiSoft.Net.TCP
         {
         }
 
-        #endregion
-
-
-        #region method SwitchToSecure
 
         /// <summary>
         /// Switches session to secure connection.
@@ -209,12 +195,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method SwitchToSecureAsync
-
-        #region class SwitchToSecureAsyncOP
-
         /// <summary>
         /// This class represents <see cref="TCP_ServerSession.SwitchToSecureAsync"/> asynchronous operation.
         /// </summary>
@@ -233,8 +213,6 @@ namespace LumiSoft.Net.TCP
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -252,10 +230,6 @@ namespace LumiSoft.Net.TCP
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -291,10 +265,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -314,10 +284,6 @@ namespace LumiSoft.Net.TCP
                     }
                 }
             }
-
-            #endregion
-
-            #region method BeginAuthenticateAsServerCompleted
 
             /// <summary>
             /// This method is called when "BeginAuthenticateAsServer" has completed.
@@ -342,10 +308,6 @@ namespace LumiSoft.Net.TCP
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -371,16 +333,10 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<SwitchToSecureAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -391,13 +347,7 @@ namespace LumiSoft.Net.TCP
                     this.CompletedAsync(this,new EventArgs<SwitchToSecureAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts switching connection to secure.
@@ -428,10 +378,6 @@ namespace LumiSoft.Net.TCP
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Disconnect
 
         /// <summary>
         /// Disconnects session.
@@ -477,10 +423,6 @@ namespace LumiSoft.Net.TCP
             Dispose();
         }
 
-        #endregion
-
-
-        #region method OnTimeout
 
         /// <summary>
         /// This method is called when specified session times out.
@@ -501,10 +443,6 @@ namespace LumiSoft.Net.TCP
             OnTimeout();
         }
 
-        #endregion
-
-
-        #region method LogAddText
 
         /// <summary>
         /// Logs specified text.
@@ -532,10 +470,6 @@ namespace LumiSoft.Net.TCP
             catch{
             }
         }
-
-        #endregion
-
-        #region method LogAddException
 
         /// <summary>
         /// Logs specified exception.
@@ -565,10 +499,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if TCP server session is disposed.
@@ -753,17 +683,11 @@ namespace LumiSoft.Net.TCP
                 return m_pTcpStream; 
             }
         }
-                                
-        #endregion
-
-        #region Events Implementation
 
         /// <summary>
         /// This event is raised when session idle(no activity) timeout reached.
         /// </summary>
         public event EventHandler IdleTimeout;
-
-        #region method OnIdleTimeout
 
         /// <summary>
         /// Raises <b>IdleTimeout</b> event.
@@ -775,14 +699,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session has disconnected and will be disposed soon.
         /// </summary>
         public event EventHandler Disonnected;
-
-        #region method OnDisonnected
 
         /// <summary>
         /// Raises <b>Disonnected</b> event.
@@ -794,14 +714,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session has disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises <b>Disposed</b> event.
@@ -813,14 +729,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-        
         /// <summary>
         /// This event is raised when TCP server session has unknown unhandled error.
         /// </summary>
         public event ErrorEventHandler Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -832,10 +744,5 @@ namespace LumiSoft.Net.TCP
                 this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

@@ -15,13 +15,9 @@
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message ID.
         /// </summary>
         public ulong MsgID { get; }
-
-#endregion
     }
 }

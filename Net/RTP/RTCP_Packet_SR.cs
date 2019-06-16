@@ -30,8 +30,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method ParseInternal
-
         /// <summary>
         /// Parses RTCP sender report(SR) from specified data buffer.
         /// </summary>
@@ -108,10 +106,6 @@ namespace LumiSoft.Net.RTP
                 offset += 24;
             }
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores sender report(SR) packet to the specified buffer.
@@ -212,10 +206,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTCP version.
@@ -270,8 +260,5 @@ namespace LumiSoft.Net.RTP
         {
             get{ return 28 + (24 * ReportBlocks.Count); }
         }
-
-        #endregion
-
     }
 }

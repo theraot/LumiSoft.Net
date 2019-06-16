@@ -23,8 +23,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method CreateCallID
-
         /// <summary>
         /// Creates new call ID value.
         /// </summary>
@@ -37,10 +35,6 @@ namespace LumiSoft.Net.SIP.Message
             return callID;
         }
 
-        #endregion
-
-
-        #region method Parse
 
         /// <summary>
         /// Parses "callid" from specified value.
@@ -79,10 +73,6 @@ namespace LumiSoft.Net.SIP.Message
             m_CallID = word;
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "callid" value.
         /// </summary>
@@ -92,10 +82,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_CallID;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets call ID.
@@ -112,8 +98,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_CallID = value;
             }
         }
-
-        #endregion
-
     }
 }

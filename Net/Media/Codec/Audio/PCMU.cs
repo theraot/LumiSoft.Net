@@ -7,8 +7,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
     /// </summary>
     public class PCMU : AudioCodec
     {
-        #region byte[] MuLawCompressTable
-
         private static readonly byte[] MuLawCompressTable = new byte[]{ 
             0,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3, 
             4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 
@@ -27,10 +25,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7, 
             7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7 
         };
-
-        #endregion
-
-        #region short[] MuLawDecompressTable
 
         private static readonly short[] MuLawDecompressTable = new short[]{ 
             -32124,-31100,-30076,-29052,-28028,-27004,-25980,-24956, 
@@ -67,8 +61,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             56,    48,    40,    32,    24,    16,     8,     0 
         };
 
-        #endregion
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -76,8 +68,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
         {
         }
 
-
-        #region method Encode
 
         /// <summary>
         /// Encodes linear 16-bit linear PCM to 8-bit ulaw.
@@ -116,10 +106,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return retVal;
         }
 
-        #endregion
-
-        #region method Decode
-
         /// <summary>
         /// Decodes 8-bit ulaw to linear 16-bit PCM.
         /// </summary>
@@ -152,10 +138,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return retVal;
         }
 
-        #endregion
-
-
-        #region static method LinearToMuLawSample
 
         private static byte LinearToMuLawSample(short sample) 
         { 
@@ -177,10 +159,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return (byte)compressedByte;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets codec name.
@@ -199,8 +177,5 @@ namespace LumiSoft.Net.Media.Codec.Audio
         /// Gets compressed audio format info.
         /// </summary>
         public override AudioFormat CompressedAudioFormat { get; } = new AudioFormat(8000,8,1);
-
-#endregion
-
     }
 }

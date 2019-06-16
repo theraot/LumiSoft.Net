@@ -21,8 +21,6 @@ namespace LumiSoft.Net.UPnP
             ErrorText = errorText;
         }
 
-        #region static method Parse
-
         /// <summary>
         /// Parses UPnP exception from UPnP xml error.
         /// </summary>
@@ -79,10 +77,6 @@ namespace LumiSoft.Net.UPnP
             return new UPnP_Exception(errorCode,errorText);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets UPnP error code.
@@ -93,7 +87,5 @@ namespace LumiSoft.Net.UPnP
         /// Gets UPnP error text.
         /// </summary>
         public string ErrorText { get; } = "";
-
-#endregion
     }
 }

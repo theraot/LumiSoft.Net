@@ -28,8 +28,6 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message info.
         /// </summary>
@@ -45,7 +43,5 @@ namespace LumiSoft.Net.POP3.Server
         /// </summary>
         /// <remarks>This value should contain message header + number of <b>lineCount</b> body lines.</remarks>
         public byte[] Data { get; set; }
-
-#endregion
     }
 }

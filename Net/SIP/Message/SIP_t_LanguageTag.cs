@@ -26,8 +26,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "language-tag" from specified value.
         /// </summary>
@@ -73,10 +71,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "language-tag" value.
         /// </summary>
@@ -97,10 +91,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets language tag.
@@ -117,8 +107,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_LanguageTag = value;
             }
         }
-
-        #endregion
-
     }
 }

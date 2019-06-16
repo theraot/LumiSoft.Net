@@ -25,8 +25,6 @@ namespace LumiSoft.Net.SMTP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses SMTP reply-line from 
         /// </summary>
@@ -70,10 +68,6 @@ namespace LumiSoft.Net.SMTP
             return new SMTP_t_ReplyLine(replyCode,text,isLastLine);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as SMTP server <b>reply-line</b>.
@@ -89,10 +83,6 @@ namespace LumiSoft.Net.SMTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets SMTP server reply code.
@@ -108,7 +98,5 @@ namespace LumiSoft.Net.SMTP
         /// Gets if this is last reply line.
         /// </summary>
         public bool IsLastLine { get; } = true;
-
-#endregion
     }
 }

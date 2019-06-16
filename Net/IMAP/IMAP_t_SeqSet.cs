@@ -32,8 +32,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses <b>sequense-set</b> from string.
         /// </summary>
@@ -121,12 +119,8 @@ namespace LumiSoft.Net.IMAP
             return retVal;
         }
 
-        #endregion
 
-
-        #region method Contains
-
-		/// <summary>
+        /// <summary>
 		/// Gets if sequence-set contains specified number.
 		/// </summary>
 		/// <param name="seqNumber">Sequence number.</param>
@@ -141,10 +135,6 @@ namespace LumiSoft.Net.IMAP
 			return false;
 		}
 
-		#endregion
-
-        #region method ToString
-
         /// <summary>
         /// Returns this as <b>sequence-set</b> string.
         /// </summary>
@@ -154,12 +144,8 @@ namespace LumiSoft.Net.IMAP
             return m_SequenceString;
         }
 
-        #endregion
 
-
-        #region method Parse_Seq_Number
-
-		/// <summary>
+        /// <summary>
 		/// Parses seq-number from specified value. Throws exception if invalid seq-number value.
 		/// </summary>
 		/// <param name="seqNumberValue">Integer number or *.</param>
@@ -184,10 +170,6 @@ namespace LumiSoft.Net.IMAP
 			}
 		}
 
-		#endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets sequence set ranges.
@@ -196,7 +178,5 @@ namespace LumiSoft.Net.IMAP
         {
             get{ return m_pSequenceParts.ToArray(); }
         }
-
-        #endregion
     }
 }

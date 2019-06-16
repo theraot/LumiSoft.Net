@@ -31,8 +31,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parse SIP or SIPS URI from string value.
         /// </summary>
@@ -50,10 +48,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region override method Equals
 
         /// <summary>
         /// Compares the current instance with another object of the same type.
@@ -149,10 +143,6 @@ namespace LumiSoft.Net
             return true;
         }
 
-        #endregion
-
-        #region override method GetHashCode
-
         /// <summary>
         /// Returns the hash code.
         /// </summary>
@@ -162,10 +152,6 @@ namespace LumiSoft.Net
             return base.GetHashCode();
         }
 
-        #endregion
-
-
-        #region method ParseInternal
 
         /// <summary>
         /// Parses SIP_Uri from SIP-URI string.
@@ -229,10 +215,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Converts SIP_Uri to valid SIP-URI string.
@@ -285,10 +267,6 @@ namespace LumiSoft.Net
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets URI scheme.
@@ -801,8 +779,5 @@ namespace LumiSoft.Net
         /// Gets or sets header.
         /// </summary>
         public string Header { get; set; }
-
-#endregion
-
     }
 }

@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses PARSE optional response from string.
         /// </summary>
@@ -44,10 +42,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Parse(code_value.Length == 2 ? code_value[1] : "");
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -58,16 +52,10 @@ namespace LumiSoft.Net.IMAP
             return "PARSE " + ErrorText;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets parse error text.
         /// </summary>
         public string ErrorText { get; }
-
-#endregion
     }
 }

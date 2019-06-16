@@ -9,9 +9,7 @@ namespace LumiSoft.Net.IMAP
 	/// Provides utility methods for IMAP.
 	/// </summary>
 	public class IMAP_Utils
-	{	        
-        #region static method MessageFlagsAdd
-
+	{
         /// <summary>
         /// Adds specified flags to flags list.
         /// </summary>
@@ -48,10 +46,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region static method MessageFlagsRemove
-
         /// <summary>
         /// Removes specified flags from message flags list.
         /// </summary>
@@ -86,10 +80,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToArray();
         }
 
-        #endregion
-
-
-        #region method ACL_to_String
 
         /// <summary>
 		/// Converts IMAP_ACL_Flags to string.
@@ -130,11 +120,7 @@ namespace LumiSoft.Net.IMAP
 			return retVal;
 		}
 
-		#endregion
-
-		#region method ACL_From_String
-
-		/// <summary>
+        /// <summary>
 		/// Parses IMAP_ACL_Flags from string.
 		/// </summary>
 		/// <param name="aclString">String from where to convert</param>
@@ -174,12 +160,8 @@ namespace LumiSoft.Net.IMAP
 			return retVal;
 		}
 
-		#endregion
 
-
-		#region method ParseDate
-
-		/// <summary>
+        /// <summary>
 		/// Parses IMAP date time from string.
 		/// </summary>
 		/// <param name="date">DateTime string.</param>
@@ -213,11 +195,7 @@ namespace LumiSoft.Net.IMAP
             }
 		}
 
-		#endregion
-
-		#region static DateTimeToString
-
-		/// <summary>
+        /// <summary>
 		/// Converts date time to IMAP date time string.
 		/// </summary>
 		/// <param name="date">DateTime to convert.</param>
@@ -231,12 +209,8 @@ namespace LumiSoft.Net.IMAP
 			return retVal;
 		}
 
-		#endregion
 
-
-        #region static method Encode_IMAP_UTF7_String
-
-		/// <summary>
+        /// <summary>
 		/// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
 		/// Example: öö is encoded to &amp;APYA9g-.
 		/// </summary>
@@ -315,11 +289,7 @@ namespace LumiSoft.Net.IMAP
 			return System.Text.Encoding.Default.GetString(retVal.ToArray());
 		}
 
-		#endregion
-
-		#region static method Decode_IMAP_UTF7_String
-
-		/// <summary>
+        /// <summary>
 		/// Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
 		/// Example: &amp;APYA9g- is decoded to öö.
 		/// </summary>
@@ -414,10 +384,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();
 		}
 
-		#endregion
-
-        #region static method EncodeMailbox
-
         /// <summary>
         /// Encodes mailbox name.
         /// </summary>
@@ -448,10 +414,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-        #region static method DecodeMailbox
-
         /// <summary>
         /// Decodes mailbox name.
         /// </summary>
@@ -479,10 +441,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-
-        #region static method NormalizeFolder
 
         /// <summary>
 		/// Normalizes folder path.  Example: /Inbox/SubFolder/ will be Inbox/SubFolder.
@@ -502,10 +460,6 @@ namespace LumiSoft.Net.IMAP
 			return folder;
 		}
 
-		#endregion
-
-        #region static method IsValidFolderName
-
         /// <summary>
         /// Gets if the specified folder name is valid folder name.
         /// </summary>
@@ -518,10 +472,6 @@ namespace LumiSoft.Net.IMAP
             return true;
         }
 
-        #endregion
-
-
-        #region static method MustUseLiteralString
 
         /// <summary>
         /// Gets if specified string must be sent as IMAP literal-string.
@@ -544,10 +494,6 @@ namespace LumiSoft.Net.IMAP
 
             return false;
         }
-
-        #endregion
-
-        #region static method ImapStringToByte
 
         /// <summary>
         /// Converts IMAP string to byte[].
@@ -604,11 +550,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-
-
-        #region static method ReadString
 
         /// <summary>
         /// Reads IMAP string/astring/nstring/utf8-quoted from string reader.
@@ -643,14 +584,10 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
 
         //---- Obsolete
 
-        #region method ParseMessageFlags
-
-		/// <summary>
+        /// <summary>
 		/// Parses message flags from string.
 		/// </summary>
 		/// <param name="flagsString">Message flags string.</param>
@@ -681,10 +618,6 @@ namespace LumiSoft.Net.IMAP
 			return mFlags;
 		}
 
-		#endregion
-
-        #region static method MessageFlagsToStringArray
-
         /// <summary>
         /// Converts standard IMAP message flags to string array.
         /// </summary>
@@ -714,11 +647,7 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region static method MessageFlagsToString
-
-		/// <summary>
+        /// <summary>
 		/// Converts message flags to string. Eg. \SEEN \DELETED .
 		/// </summary>
         /// <param name="msgFlags">IMAP message flags.</param>
@@ -745,7 +674,5 @@ namespace LumiSoft.Net.IMAP
 
 			return retVal.Trim();
 		}
-
-		#endregion
     }
 }

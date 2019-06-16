@@ -24,8 +24,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "alert-param" from specified value.
         /// </summary>
@@ -69,10 +67,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "alert-param" value.
         /// </summary>
@@ -86,10 +80,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets uri value.
@@ -106,8 +96,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_Uri = value;
             }
         }
-
-        #endregion
-
     }
 }

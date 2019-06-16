@@ -24,8 +24,6 @@ namespace LumiSoft.Net.POP3.Client
             m_pMessages = new List<POP3_ClientMessage>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -43,10 +41,6 @@ namespace LumiSoft.Net.POP3.Client
             m_pMessages = null;
         }
 
-        #endregion
-
-
-        #region method Add
 
         /// <summary>
         /// Adds new message to messages collection.
@@ -57,12 +51,8 @@ namespace LumiSoft.Net.POP3.Client
             m_pMessages.Add(new POP3_ClientMessage(m_pPop3Client,m_pMessages.Count + 1,size));
         }
 
-        #endregion
 
-
-        #region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns>Returns IEnumerator interface.</returns>
@@ -75,10 +65,6 @@ namespace LumiSoft.Net.POP3.Client
 
 			return m_pMessages.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets total size of messages, messages marked for deletion are included.
@@ -161,8 +147,5 @@ namespace LumiSoft.Net.POP3.Client
                 return null; 
             }
         }
-
-        #endregion
-
     }
 }

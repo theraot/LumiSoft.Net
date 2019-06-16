@@ -27,8 +27,6 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets if session is authenticated.
         /// </summary>
@@ -43,7 +41,5 @@ namespace LumiSoft.Net.POP3.Server
         /// Gets password.
         /// </summary>
         public string Password { get; } = "";
-
-#endregion
     }
 }

@@ -42,10 +42,8 @@ namespace LumiSoft.Net.SIP.Message
             m_Expires = expires;
             this.Refresher = refresher;
         }
-        
 
-        #region method Parse
-        
+
         /// <summary>
         /// Parses "Session-Expires" from specified value.
         /// </summary>
@@ -95,10 +93,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Session-Expires" value.
         /// </summary>
@@ -122,10 +116,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets after how many seconds session expires.
@@ -169,8 +159,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

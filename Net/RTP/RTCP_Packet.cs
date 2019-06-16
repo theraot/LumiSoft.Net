@@ -17,8 +17,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses 1 RTCP packet from the specified buffer.
         /// </summary>
@@ -110,10 +108,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-        #region method ToByte
-
         /// <summary>
         /// Stores this packet to the specified buffer.
         /// </summary>
@@ -121,10 +115,6 @@ namespace LumiSoft.Net.RTP
         /// <param name="offset">Offset in buffer.</param>
         public abstract void ToByte(byte[] buffer,ref int offset);
 
-        #endregion
-
-
-        #region method ParseInternal
 
         /// <summary>
         /// Parses RTCP packet from the specified buffer.
@@ -133,10 +123,6 @@ namespace LumiSoft.Net.RTP
         /// <param name="offset">Offset in buffer.</param>
         protected abstract void ParseInternal(byte[] buffer,ref int offset);
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTCP version.
@@ -192,8 +178,5 @@ namespace LumiSoft.Net.RTP
         {
             get;
         }
-
-        #endregion
-
     }
 }

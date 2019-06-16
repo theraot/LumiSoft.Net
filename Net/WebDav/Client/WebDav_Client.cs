@@ -18,8 +18,6 @@ namespace LumiSoft.Net.WebDav.Client
         }
 
 
-        #region method PropFind
-
         /// <summary>
         /// Executes PROPFIND method.
         /// </summary>
@@ -63,17 +61,9 @@ namespace LumiSoft.Net.WebDav.Client
             return WebDav_MultiStatus.Parse(request.GetResponse().GetResponseStream());
         }
 
-        #endregion
-
-        #region method PropPatch
-
         // public void PropPatch()
         // {
         // }
-
-        #endregion
-
-        #region method MkCol
 
         /// <summary>
         /// Creates new collection to the specified path.
@@ -93,10 +83,6 @@ namespace LumiSoft.Net.WebDav.Client
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         }
 
-        #endregion
-
-        #region method Get
-        
         /// <summary>
         /// Gets the specified resource stream.
         /// </summary>
@@ -120,25 +106,13 @@ namespace LumiSoft.Net.WebDav.Client
             return response.GetResponseStream();
         }
 
-        #endregion
-
-        #region method Head
-
         // public void Head()
         // {
         // }
 
-        #endregion
-
-        #region method Post
-
         // public void Post()
         // {
         // }
-
-        #endregion
-
-        #region method Delete
 
         /// <summary>
         /// Deletes specified resource.
@@ -157,10 +131,6 @@ namespace LumiSoft.Net.WebDav.Client
 
             request.GetResponse();
         }
-
-        #endregion
-
-        #region method Put
 
         /// <summary>
         /// Creates specified resource to the specified location.
@@ -208,10 +178,6 @@ namespace LumiSoft.Net.WebDav.Client
             request.GetResponse();
         }
 
-        #endregion
-
-        #region method Copy
-
         /// <summary>
         /// Copies source URI resource to the target URI.
         /// </summary>
@@ -241,10 +207,6 @@ namespace LumiSoft.Net.WebDav.Client
 
             request.GetResponse();
         }
-
-        #endregion
-
-        #region method Move
 
         /// <summary>
         /// Moves source URI resource to the target URI.
@@ -276,33 +238,18 @@ namespace LumiSoft.Net.WebDav.Client
             request.GetResponse();
         }
 
-        #endregion
-
-        #region method Lock
-
         // public void Lock()
         // {
         // }
-
-        #endregion
-
-        #region method Unlock
 
         // public void Unlock()
         // {
         // }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets credentials.
         /// </summary>
         public NetworkCredential Credentials { get; set; }
-
-#endregion
-
     }
 }

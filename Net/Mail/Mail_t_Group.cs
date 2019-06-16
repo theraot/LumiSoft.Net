@@ -22,8 +22,6 @@ namespace LumiSoft.Net.Mail
         }
 
 
-        #region method override ToString
-
         /// <summary>
         /// Returns mailbox as string.
         /// </summary>
@@ -63,10 +61,6 @@ namespace LumiSoft.Net.Mail
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets diplay name. Value null means not specified.
@@ -77,7 +71,5 @@ namespace LumiSoft.Net.Mail
         /// Gets groiup address members collection.
         /// </summary>
         public List<Mail_t_Mailbox> Members { get; }
-
-#endregion
     }
 }

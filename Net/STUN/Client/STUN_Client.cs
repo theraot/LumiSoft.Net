@@ -29,8 +29,6 @@ namespace LumiSoft.Net.STUN.Client
     /// </example>
     public class STUN_Client
     {
-        #region static method Query
-
         /// <summary>
         /// Gets NAT info from STUN server.
         /// </summary>
@@ -225,10 +223,6 @@ namespace LumiSoft.Net.STUN.Client
             }
         }
 
-        #endregion
-
-        #region method GetPublicIP
-
         /// <summary>
         /// Resolves local IP to public IP using STUN.
         /// </summary>
@@ -266,10 +260,6 @@ namespace LumiSoft.Net.STUN.Client
                 throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
             }
         }
-
-        #endregion
-
-        #region method GetPublicEP
 
         /// <summary>
         /// Resolves socket local end point to public end point.
@@ -330,10 +320,6 @@ namespace LumiSoft.Net.STUN.Client
             }
         }
 
-        #endregion
-
-
-        #region method GetSharedSecret
 
         private void GetSharedSecret()
         {
@@ -371,10 +357,6 @@ namespace LumiSoft.Net.STUN.Client
                 }
             }*/
         }
-
-        #endregion
-
-        #region method DoTransaction
 
         /// <summary>
         /// Does STUN transaction. Returns transaction response or null if transaction failed.
@@ -414,8 +396,6 @@ namespace LumiSoft.Net.STUN.Client
 
             return null;
         }
-
-        #endregion
 
 
         // TODO: Update to RFC 5389

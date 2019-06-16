@@ -20,9 +20,7 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderField = headerField;
 		}
 
-		#region method Add
-
-		/// <summary>
+        /// <summary>
 		/// Adds a new header field parameter with specified name and value to the end of the collection.
 		/// </summary>
 		/// <param name="parameterName">Parameter name.</param>
@@ -42,12 +40,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region method Remove
-
-		/// <summary>
+        /// <summary>
 		/// Removes specified header field parameter from the collection.
 		/// </summary>
 		/// <param name="parameterName">The name of the header field parameter to remove.</param>
@@ -63,11 +57,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region method Clear
-
-		/// <summary>
+        /// <summary>
 		/// Clears the collection of all header field parameters.
 		/// </summary>
 		public void Clear()
@@ -77,12 +67,8 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderField.StoreParameters(m_pHeaderField.Value,parameters);
 		}
 
-		#endregion
 
-
-		#region method Contains
-
-		/// <summary>
+        /// <summary>
 		/// Gets if collection contains specified parameter.
 		/// </summary>
 		/// <param name="parameterName">Parameter name.</param>
@@ -95,12 +81,8 @@ namespace LumiSoft.Net.Mime
 			return parameters.ContainsKey(parameterName);
 		}
 
-		#endregion
 
-
-		#region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -117,11 +99,7 @@ namespace LumiSoft.Net.Mime
 			return retVal.GetEnumerator();
 		}
 
-		#endregion
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets or sets specified parameter value.
 		/// </summary>
 		public string this[string parameterName]
@@ -157,8 +135,5 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ return m_pHeaderField.ParseParameters().Count; }
 		}
-
-		#endregion
-
-	}
+    }
 }

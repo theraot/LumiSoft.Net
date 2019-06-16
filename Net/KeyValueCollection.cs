@@ -21,8 +21,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region method Add
-
         /// <summary>
         /// Adds the specified key and value to the collection.
         /// </summary>
@@ -33,10 +31,6 @@ namespace LumiSoft.Net
             m_pDictionary.Add(key,value);
             m_pList.Add(value);
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes the value with the specified key from the collection.
@@ -57,10 +51,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all items from the collection.
         /// </summary>
@@ -69,10 +59,6 @@ namespace LumiSoft.Net
             m_pDictionary.Clear();
             m_pList.Clear();
         }
-
-        #endregion
-
-        #region method ContainsKey
 
         /// <summary>
         /// Gets if the collection contains the specified key.
@@ -84,10 +70,6 @@ namespace LumiSoft.Net
             return m_pDictionary.ContainsKey(key);
         }
 
-        #endregion
-
-        #region method TryGetValue
-
         /// <summary>
         /// Gets the value associated with the specified key.
         /// </summary>
@@ -98,10 +80,6 @@ namespace LumiSoft.Net
         {
             return m_pDictionary.TryGetValue(key,out value);
         }
-
-        #endregion
-
-        #region method TryGetValueAt
 
         /// <summary>
         /// Gets the value at the specified index.
@@ -122,10 +100,6 @@ namespace LumiSoft.Net
             return false;
         }
 
-        #endregion
-
-        #region method ToArray
-
         /// <summary>
         /// Copies all elements to new array, all elements will be in order they added. This method is thread-safe.
         /// </summary>
@@ -137,10 +111,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region interface IEnumerator
 
         /// <summary>
 		/// Gets enumerator.
@@ -150,10 +120,6 @@ namespace LumiSoft.Net
 		{
 			return m_pList.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of items int he collection.
@@ -172,8 +138,5 @@ namespace LumiSoft.Net
         {
             get{ return m_pDictionary[key]; }
         }
-   
-        #endregion
-
     }
 }

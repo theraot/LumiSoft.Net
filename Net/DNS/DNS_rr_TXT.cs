@@ -22,8 +22,6 @@ namespace LumiSoft.Net.DNS
 		}
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -41,16 +39,10 @@ namespace LumiSoft.Net.DNS
 			return new DNS_rr_TXT(name,text,ttl);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
 		/// Gets text.
 		/// </summary>
 		public string Text { get; } = "";
-
-#endregion
-	}
+    }
 }

@@ -37,8 +37,6 @@ namespace LumiSoft.Net.SMTP.Server
             m_pTo = new Dictionary<string,SMTP_RcptTo>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resource being used.
         /// </summary>
@@ -61,10 +59,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-    
-
-        #region override method Start
 
         /// <summary>
         /// Starts session processing.
@@ -112,10 +106,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-        #region override method OnError
-
         /// <summary>
         /// Is called when session has processing error.
         /// </summary>
@@ -159,10 +149,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-        #region override method OnTimeout
-
         /// <summary>
         /// This method is called when specified session times out.
         /// </summary>
@@ -184,10 +170,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-                
-        #region method BeginReadCmd
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -217,10 +199,6 @@ namespace LumiSoft.Net.SMTP.Server
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region method ProcessCmd
 
         /// <summary>
         /// Completes command reading operation.
@@ -329,11 +307,7 @@ namespace LumiSoft.Net.SMTP.Server
              return readNextCommand;
         }
 
-        #endregion
-//
-        #region method ReadCommandAsync
-
-        #region class ReadCommandAsyncOP
+        //
 
         /// <summary>
         /// 
@@ -346,14 +320,7 @@ namespace LumiSoft.Net.SMTP.Server
             public ReadCommandAsyncOP()
             {
             }
-
-
-            #region Properties implementation
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Reads next SMTP command.
@@ -369,9 +336,7 @@ namespace LumiSoft.Net.SMTP.Server
             // ReadCommandCompleted
         }
 
-        #endregion
-//
-        #region method ReadCommandCompleted
+        //
 
         /// <summary>
         /// Is called when SMTP command reading has completed.
@@ -388,12 +353,6 @@ namespace LumiSoft.Net.SMTP.Server
 
             // TODO:
         }
-
-        #endregion
-
-        #region method SendResponseAsync
-
-        #region class SendResponseAsyncOP
 
         /// <summary>
         /// This class represents <see cref="SMTP_Session.SendResponseAsync"/> asynchronous operation.
@@ -438,8 +397,6 @@ namespace LumiSoft.Net.SMTP.Server
                 m_pReplyLines = replyLines;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -457,10 +414,6 @@ namespace LumiSoft.Net.SMTP.Server
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -508,10 +461,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -532,10 +481,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
-            #region method ResponseSendingCompleted
-
             /// <summary>
             /// Is called when response sending has finished.
             /// </summary>
@@ -553,10 +498,6 @@ namespace LumiSoft.Net.SMTP.Server
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -582,16 +523,10 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<SendResponseAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -602,13 +537,7 @@ namespace LumiSoft.Net.SMTP.Server
                     this.CompletedAsync(this,new EventArgs<SendResponseAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Sends SMTP server response.
@@ -633,10 +562,6 @@ namespace LumiSoft.Net.SMTP.Server
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region class Cmd_DATA
 
         /// <summary>
         /// Implements SMTP DATA command. Defined in RFC 5321 4.1.1.4.
@@ -656,8 +581,6 @@ namespace LumiSoft.Net.SMTP.Server
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -674,12 +597,8 @@ namespace LumiSoft.Net.SMTP.Server
                 this.CompletedAsync = null;
             }
 
-            #endregion
 
-
-            #region method Start
-
-             /// <summary>
+            /// <summary>
             /// Starts operation processing.
             /// </summary>
             /// <param name="owner">Owner SMTP session.</param>
@@ -793,10 +712,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -819,10 +734,6 @@ namespace LumiSoft.Net.SMTP.Server
                     }
                 }
             }
-
-            #endregion
-
-            #region method SendFinalResponse
 
             /// <summary>
             /// Sends specified final response to client.
@@ -850,10 +761,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
-            #region method SendFinalResponseCompleted
-
             /// <summary>
             /// Is called when SMTP server "final" response sending has completed.
             /// </summary>
@@ -867,10 +774,6 @@ namespace LumiSoft.Net.SMTP.Server
                 
                 op.Dispose();
             }
-
-            #endregion
-
-            #region method Send354ResponseCompleted
 
             /// <summary>
             /// Is called when SMTP server 354 response sending has completed.
@@ -906,10 +809,6 @@ namespace LumiSoft.Net.SMTP.Server
 
                 op.Dispose();
             }
-
-            #endregion
-
-            #region method MessageReadingCompleted
 
             /// <summary>
             /// Is called when incoming SMTP message reading has completed.
@@ -954,10 +853,6 @@ namespace LumiSoft.Net.SMTP.Server
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -983,16 +878,10 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<Cmd_DATA>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1003,16 +892,8 @@ namespace LumiSoft.Net.SMTP.Server
                     this.CompletedAsync(this,new EventArgs<Cmd_DATA>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
 
-        #endregion
-
-
-        #region method EHLO
 
         private void EHLO(string cmdText)
         {
@@ -1103,10 +984,6 @@ namespace LumiSoft.Net.SMTP.Server
             WriteLine(reply.ToString());
         }
 
-        #endregion
-
-        #region method HELO
-
         private void HELO(string cmdText)
         {
             // RFC 5321 3.1.
@@ -1147,10 +1024,6 @@ namespace LumiSoft.Net.SMTP.Server
 
             WriteLine(reply.ToString());
         }
-
-        #endregion
-
-        #region method STARTTLS
 
         private void STARTTLS(string cmdText)
         {
@@ -1231,10 +1104,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-        #region method AUTH
-
         private void AUTH(string cmdText)
         {
             // RFC 5321 3.1.
@@ -1286,8 +1155,6 @@ namespace LumiSoft.Net.SMTP.Server
 				return;
             }
 
-            #region Parse parameters
-
             string[] arguments = cmdText.Split(' ');
             if(arguments.Length > 2){
                 WriteLine("501 Syntax error, syntax: AUTH SP mechanism [SP initial-response] CRLF");
@@ -1309,8 +1176,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
             string mechanism = arguments[0];
-
-            #endregion
 
             if(!this.Authentications.ContainsKey(mechanism)){
                 WriteLine("501 Not supported authentication mechanism.");
@@ -1373,10 +1238,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
         }
-
-        #endregion
-
-        #region method MAIL
 
         private void MAIL(string cmdText)
         {
@@ -1454,8 +1315,6 @@ namespace LumiSoft.Net.SMTP.Server
                 cmdText = cmdText.Substring(cmdText.IndexOf('>') + 1).Trim();
             }
 
-            #region Parse parameters
-                                    
             string[] parameters = string.IsNullOrEmpty(cmdText) ? new string[0] : cmdText.Split(' ');
             foreach(string parameter in parameters){
                 string[] name_value = parameter.Split(new char[]{'='},2);
@@ -1535,8 +1394,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
             SMTP_MailFrom from  = new SMTP_MailFrom(address,size,body,ret,envID);
             SMTP_Reply    reply = new SMTP_Reply(250,"OK.");
 
@@ -1550,10 +1407,6 @@ namespace LumiSoft.Net.SMTP.Server
 
             WriteLine(reply.ToString());
         }
-
-        #endregion
-
-        #region method RCPT
 
         private void RCPT(string cmdText)
         {
@@ -1632,8 +1485,6 @@ namespace LumiSoft.Net.SMTP.Server
                 return;
             }
 
-            #region Parse parameters
-
             string[] parameters = string.IsNullOrEmpty(cmdText) ? new string[0] : cmdText.Split(' ');
             foreach(string parameter in parameters){
                 string[] name_value = parameter.Split(new char[]{'='},2);
@@ -1686,8 +1537,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-            #endregion
-
             // Maximum allowed recipients exceeded.
             if(m_pTo.Count >= this.Server.MaxRecipients){
                 WriteLine("452 Too many recipients");
@@ -1709,9 +1558,7 @@ namespace LumiSoft.Net.SMTP.Server
             WriteLine(reply.ToString());
         }
 
-        #endregion
-// REMOVE ME:
-        #region method DATA
+        // REMOVE ME:
 
         private bool DATA(string cmdText)
         {
@@ -1856,10 +1703,6 @@ namespace LumiSoft.Net.SMTP.Server
             BeginReadCmd();
         }
 
-        #endregion
-
-        #region method BDAT
-
         private bool BDAT(string cmdText)
         {
             // RFC 5321 3.1.
@@ -1990,10 +1833,6 @@ namespace LumiSoft.Net.SMTP.Server
             return false;
         }
 
-        #endregion
-
-        #region method RSET
-
         private void RSET(string cmdText)
         {
             // RFC 5321 3.1.
@@ -2025,10 +1864,6 @@ namespace LumiSoft.Net.SMTP.Server
             WriteLine("250 OK.");
         }
 
-        #endregion
-
-        #region method NOOP
-
         private void NOOP(string cmdText)
         {
             // RFC 5321 3.1.
@@ -2053,10 +1888,6 @@ namespace LumiSoft.Net.SMTP.Server
             WriteLine("250 OK.");
         }
 
-        #endregion
-
-        #region method QUIT
-
         private void QUIT(string cmdText)
         {
             /* RFC 5321 4.1.1.10.
@@ -2078,10 +1909,6 @@ namespace LumiSoft.Net.SMTP.Server
             Dispose();
         }
 
-        #endregion
-
-
-        #region method Reset
 
         /// <summary>
         /// Does reset as specified in RFC 5321.
@@ -2097,10 +1924,6 @@ namespace LumiSoft.Net.SMTP.Server
             m_pMessageStream = null;
             m_BDatReadedCount = 0;
         }
-
-        #endregion
-
-        #region method CreateReceivedHeader
 
         /// <summary>
         /// Creates "Received:" header field. For more info see RFC 5321.4.4.
@@ -2150,10 +1973,6 @@ namespace LumiSoft.Net.SMTP.Server
             return Encoding.UTF8.GetBytes(received.ToString());
         }
 
-        #endregion
-
-        #region method WriteLine
-
         /// <summary>
         /// Sends and logs specified line to connected host.
         /// </summary>
@@ -2172,10 +1991,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-
-        #region mehtod LogAddRead
 
         /// <summary>
         /// Logs read operation.
@@ -2201,10 +2016,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-        #region method LogAddWrite
-
         /// <summary>
         /// Logs write operation.
         /// </summary>
@@ -2229,10 +2040,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-        #region method LogAddText
-
         /// <summary>
         /// Logs free text entry.
         /// </summary>
@@ -2254,10 +2061,6 @@ namespace LumiSoft.Net.SMTP.Server
                 // We skip all logging errors, normally there shouldn't be any.
             }
         }
-
-        #endregion
-
-        #region method LogAddException
 
         /// <summary>
         /// Logs exception.
@@ -2283,10 +2086,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets session owner SMTP server.
@@ -2439,16 +2238,11 @@ namespace LumiSoft.Net.SMTP.Server
 				m_UseAsyncSockets = value;
 			}
 		}
-        #endregion
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when session has started processing and needs to send 220 greeting or 554 error resposne to the connected client.
         /// </summary>
         public event EventHandler<SMTP_e_Started> Started;
-
-        #region method OnStarted
 
         /// <summary>
         /// Raises <b>Started</b> event.
@@ -2467,14 +2261,10 @@ namespace LumiSoft.Net.SMTP.Server
             return reply;
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when EHLO command received.
         /// </summary>
         public event EventHandler<SMTP_e_Ehlo> Ehlo;
-
-        #region method OnEhlo
 
         /// <summary>
         /// Raises <b>Ehlo</b> event.
@@ -2494,14 +2284,10 @@ namespace LumiSoft.Net.SMTP.Server
             return reply;
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when MAIL FROM: command received.
         /// </summary>
         public event EventHandler<SMTP_e_MailFrom> MailFrom;
-
-        #region method OnMailFrom
 
         /// <summary>
         /// Raises <b>MailFrom</b> event.
@@ -2521,14 +2307,10 @@ namespace LumiSoft.Net.SMTP.Server
             return reply;
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when RCPT TO: command received.
         /// </summary>
         public event EventHandler<SMTP_e_RcptTo> RcptTo;
-
-        #region method OnRcptTo
 
         /// <summary>
         /// Raises <b>RcptTo</b> event.
@@ -2548,14 +2330,10 @@ namespace LumiSoft.Net.SMTP.Server
             return reply;
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when SMTP server needs to get stream where to store incoming message.
         /// </summary>
         public event EventHandler<SMTP_e_Message> GetMessageStream;
-
-        #region method OnGetMessageStream
 
         /// <summary>
         /// Raises <b>GetMessageStream</b> event.
@@ -2573,15 +2351,11 @@ namespace LumiSoft.Net.SMTP.Server
             return null;
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when SMTP server has canceled message storing.
         /// </summary>
         /// <remarks>This can happen on 2 cases: on session timeout and if between BDAT chunks RSET issued.</remarks>
         public event EventHandler MessageStoringCanceled;
-
-        #region method OnMessageStoringCanceled
 
         /// <summary>
         /// Raises <b>MessageStoringCanceled</b> event.
@@ -2593,14 +2367,10 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when SMTP server has completed message storing.
         /// </summary>
         public event EventHandler<SMTP_e_MessageStored> MessageStoringCompleted;
-
-        #region method OnMessageStoringCompleted
 
         /// <summary>
         /// Raises <b>MessageStoringCompleted</b> event.
@@ -2618,10 +2388,5 @@ namespace LumiSoft.Net.SMTP.Server
 
             return reply;
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

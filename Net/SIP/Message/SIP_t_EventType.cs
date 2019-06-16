@@ -17,8 +17,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "event-type" from specified value.
         /// </summary>
@@ -55,10 +53,6 @@ namespace LumiSoft.Net.SIP.Message
             m_EventType = word;
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "event-type" value.
         /// </summary>
@@ -68,10 +62,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_EventType;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets event type.
@@ -89,8 +79,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_EventType = value;
             }
         }
-
-        #endregion
-
     }
 }

@@ -44,8 +44,6 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region method SetIsMarkedForDeletion
-
         /// <summary>
         /// Sets IsMarkedForDeletion proerty value.
         /// </summary>
@@ -55,11 +53,7 @@ namespace LumiSoft.Net.POP3.Server
             IsMarkedForDeletion = value;
         }
 
-        #endregion
 
-
-        #region Properties implemnetation
-                
         /// <summary>
         /// Gets message UID. NOTE: Before accessing this property, check that server supports UIDL command.
         /// </summary>
@@ -86,7 +80,5 @@ namespace LumiSoft.Net.POP3.Server
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         internal int SequenceNumber { get; set; } = -1;
-
-#endregion
     }
 }

@@ -11,10 +11,5 @@
         public ABNF_HexVal()
         {
         }
-
-
-        #region Properties implementation
-
-        #endregion
     }
 }

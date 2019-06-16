@@ -33,8 +33,6 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region override method Start
-
         /// <summary>
         /// Starts session processing.
         /// </summary>
@@ -77,10 +75,6 @@ namespace LumiSoft.Net.POP3.Server
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region override method OnError
 
         /// <summary>
         /// Is called when session has processing error.
@@ -125,10 +119,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region override method OnTimeout
-
         /// <summary>
         /// This method is called when specified session times out.
         /// </summary>
@@ -148,10 +138,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-
-        #region method BeginReadCmd
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -181,10 +167,6 @@ namespace LumiSoft.Net.POP3.Server
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region method ProcessCmd
 
         /// <summary>
         /// Completes command reading operation.
@@ -295,10 +277,6 @@ namespace LumiSoft.Net.POP3.Server
              return readNextCommand;
         }
 
-        #endregion
-
-
-        #region method STLS
 
         private void STLS(string cmdText)
         {
@@ -381,10 +359,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region method USER
-
         private void USER(string cmdText)
         {
             /* RFC 1939 7. USER
@@ -419,10 +393,6 @@ namespace LumiSoft.Net.POP3.Server
 
             this.TcpStream.WriteLine("+OK User name OK.");
         }
-
-        #endregion
-
-        #region method PASS
 
         private void PASS(string cmdText)
         {
@@ -486,10 +456,6 @@ namespace LumiSoft.Net.POP3.Server
                 this.TcpStream.WriteLine("-ERR Authentication failed.");
             }
         }
-
-        #endregion
-
-        #region method AUTH
 
         private void AUTH(string cmdText)
         {
@@ -685,10 +651,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-
-        #region method STAT
 
         private void STAT(string cmdText)
         {
@@ -729,10 +691,6 @@ namespace LumiSoft.Net.POP3.Server
 
             WriteLine("+OK " + count + " " + size);
         }
-
-        #endregion
-
-        #region method LIST
 
         private void LIST(string cmdText)
         {
@@ -825,10 +783,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region method UIDL
-
         private void UIDL(string cmdText)
         {
             /* RFC 1939 UIDL [msg]
@@ -918,10 +872,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region method TOP
-
         private void TOP(string cmdText)
         {
             /* RFC 1939 7. TOP
@@ -1001,10 +951,6 @@ namespace LumiSoft.Net.POP3.Server
                 WriteLine("-ERR no such message.");
             }
         }
-
-        #endregion
-
-        #region method RETR
 
         private void RETR(string cmdText)
         {
@@ -1086,10 +1032,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region method DELE
-
         private void DELE(string cmdText)
         {
             /* RFC 1939 5. DELE
@@ -1140,10 +1082,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region method NOOP
-
         private void NOOP(string cmdText)
         {
             /* RFC 1939 5. NOOP
@@ -1165,10 +1103,6 @@ namespace LumiSoft.Net.POP3.Server
 
             WriteLine("+OK");
         }
-
-        #endregion
-
-        #region method RSET
 
         private void RSET(string cmdText)
         {
@@ -1200,10 +1134,6 @@ namespace LumiSoft.Net.POP3.Server
             OnReset();
         }
 
-        #endregion
-
-
-        #region method CAPA
 
         private void CAPA(string cmdText)
         {
@@ -1310,10 +1240,6 @@ namespace LumiSoft.Net.POP3.Server
             WriteLine(capaResponse.ToString());
         }
 
-        #endregion
-
-        #region method QUIT
-
         private void QUIT(string cmdText)
         {
             /* RFC 1939 6. QUIT
@@ -1358,10 +1284,6 @@ namespace LumiSoft.Net.POP3.Server
             Dispose();
         }
 
-        #endregion
-
-
-        #region method WriteLine
 
         /// <summary>
         /// Sends and logs specified line to connected host.
@@ -1381,10 +1303,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-        #region method LogAddText
-
         /// <summary>
         /// Logs specified text.
         /// </summary>
@@ -1402,10 +1320,6 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets session owner POP3 server.
@@ -1467,16 +1381,10 @@ namespace LumiSoft.Net.POP3.Server
 	        }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when session has started processing and needs to send +OK greeting or -ERR error resposne to the connected client.
         /// </summary>
         public event EventHandler<POP3_e_Started> Started;
-
-        #region method OnStarted
 
         /// <summary>
         /// Raises <b>Started</b> event.
@@ -1494,14 +1402,10 @@ namespace LumiSoft.Net.POP3.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to authenticate session using USER/PASS POP3 authentication.
         /// </summary>
         public event EventHandler<POP3_e_Authenticate> Authenticate;
-
-        #region method OnAuthenticate
 
         /// <summary>
         /// Raises <b>Authenticate</b> event.
@@ -1520,14 +1424,10 @@ namespace LumiSoft.Net.POP3.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to get mailbox messsages info.
         /// </summary>
         public event EventHandler<POP3_e_GetMessagesInfo> GetMessagesInfo;
-
-        #region method OnGetMessagesInfo
 
         /// <summary>
         /// Raises <b>GetMessagesInfo</b> event.
@@ -1544,14 +1444,10 @@ namespace LumiSoft.Net.POP3.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to get top of the specified message data.
         /// </summary>
         public event EventHandler<POP3_e_GetTopOfMessage> GetTopOfMessage;
-
-        #region method OnGetTopOfMessage
 
         /// <summary>
         /// Raises <b>GetTopOfMessage</b> event.
@@ -1570,14 +1466,10 @@ namespace LumiSoft.Net.POP3.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to get specified message stream.
         /// </summary>
         public event EventHandler<POP3_e_GetMessageStream> GetMessageStream;
-
-        #region method OnGetMessageStream
 
         /// <summary>
         /// Raises <b>GetMessageStream</b> event.
@@ -1595,14 +1487,10 @@ namespace LumiSoft.Net.POP3.Server
             return eArgs;
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session needs to delete specified message.
         /// </summary>
         public event EventHandler<POP3_e_DeleteMessage> DeleteMessage;
-
-        #region method OnDeleteMessage
 
         /// <summary>
         /// Raises <b>DeleteMessage</b> event.
@@ -1615,14 +1503,10 @@ namespace LumiSoft.Net.POP3.Server
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when session is reset by remote user.
         /// </summary>
         public event EventHandler Reset;
-
-        #region method OnReset
 
         /// <summary>
         /// Raises <b>Reset</b> event.
@@ -1633,9 +1517,5 @@ namespace LumiSoft.Net.POP3.Server
                 this.Reset(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

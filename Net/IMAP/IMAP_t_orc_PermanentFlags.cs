@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses PERMANENTFLAGS optional response from string.
         /// </summary>
@@ -50,10 +48,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_PermanentFlags(r.ReadParenthesized().Split(' '));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -64,16 +58,10 @@ namespace LumiSoft.Net.IMAP
             return "PERMANENTFLAGS (" + Net_Utils.ArrayToString(Flags," ") + ")";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets list of supported permanent flags.
         /// </summary>
         public string[] Flags { get; }
-
-#endregion
     }
 }

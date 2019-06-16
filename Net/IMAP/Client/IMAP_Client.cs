@@ -36,8 +36,6 @@ namespace LumiSoft.Net.IMAP.Client
 	/// </example>
     public class IMAP_Client : TCP_Client
     {
-        #region class CmdLine
-
         /// <summary>
         /// This class represent IMAP single command line.
         /// </summary>
@@ -63,8 +61,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
 
 
-            #region Properties implementation
-
             /// <summary>
             /// Gets command line data.
             /// </summary>
@@ -74,13 +70,7 @@ namespace LumiSoft.Net.IMAP.Client
             /// Gets command line data.
             /// </summary>
             public string LogText { get; }
-
-#endregion
         }
-
-        #endregion
-
-        #region class CmdAsyncOP
 
         /// <summary>
         /// This class is base class for simple(request -> response) IMAP commands.
@@ -106,8 +96,6 @@ namespace LumiSoft.Net.IMAP.Client
                 CmdLines = new List<CmdLine>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -127,10 +115,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -216,10 +200,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region abstract method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -227,10 +207,6 @@ namespace LumiSoft.Net.IMAP.Client
             /// <param name="imap">IMAP client.</param>
             protected abstract void OnInitCmdLine(IMAP_Client imap);
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -251,10 +227,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -305,16 +277,10 @@ namespace LumiSoft.Net.IMAP.Client
             /// </summary>
             internal List<CmdLine> CmdLines { get; private set; }
 
-#endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<T>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -325,14 +291,8 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<T>((T)((object)this)));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
 
-        #endregion
-   
         private GenericIdentity            m_pAuthenticatedUser;
         private string                     m_GreetingText       = "";
         private int                        m_CommandIndex       = 1;
@@ -349,9 +309,7 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region override method Disconnect
-
-		/// <summary>
+        /// <summary>
 		/// Closes connection to IMAP server.
 		/// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
@@ -387,10 +345,6 @@ namespace LumiSoft.Net.IMAP.Client
             m_MailboxEncoding    = IMAP_Mailbox_Encoding.ImapUtf7;
 		}
 
-		#endregion
-
-
-        #region method StartTls
 
         /// <summary>
         /// Switches connection to secure connection.
@@ -433,12 +387,6 @@ namespace LumiSoft.Net.IMAP.Client
             }            
         }
 
-        #endregion
-
-        #region method StartTlsAsync
-
-        #region class StartTlsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.StartTlsAsync"/> asynchronous operation.
         /// </summary>
@@ -464,8 +412,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback     = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -484,10 +430,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -559,10 +501,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -582,10 +520,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ProcessCmdResult
 
             /// <summary>
             /// Processes STARTTLS command result.
@@ -635,10 +569,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -683,16 +613,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<StartTlsAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -703,13 +627,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<StartTlsAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes STARTTLS command.
@@ -748,10 +666,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-        
-
-        #region method Login
 
         /// <summary>
         /// Authenticates user using IMAP-LOGIN method.
@@ -802,12 +716,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method LoginAsync
-
-        #region class LoginAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.LoginAsync"/> asynchronous operation.
         /// </summary>
@@ -847,8 +755,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -867,10 +773,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -982,10 +884,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1006,10 +904,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1054,16 +948,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<LoginAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1074,13 +962,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<LoginAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes LOGIN command.
@@ -1115,10 +997,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Authenticate
 
         /// <summary>
         /// Sends AUTHENTICATE command to IMAP server.
@@ -1163,12 +1041,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method AuthenticateAsync
-
-        #region class AuthenticateAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.AuthenticateAsync"/> asynchronous operation.
         /// </summary>
@@ -1194,8 +1066,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pSASL = sasl;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -1212,10 +1082,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1281,10 +1147,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1304,10 +1166,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method AuthenticateCommandSendingCompleted
 
             /// <summary>
             /// Is called when AUTHENTICATE command sending has finished.
@@ -1334,10 +1192,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region method AuthenticateReadResponseCompleted
-            
             /// <summary>
             /// Is called when IMAP server response reading has completed.
             /// </summary>
@@ -1383,10 +1237,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1412,16 +1262,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<AuthenticateAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1432,13 +1276,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<AuthenticateAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending AUTHENTICATE command to IMAP server.
@@ -1473,10 +1311,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region method GetNamespaces
 
         /// <summary>
         /// Gets IMAP server namespaces.
@@ -1528,12 +1362,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetNamespacesAsync
-
-        #region class GetNamespacesAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetNamespacesAsync"/> asynchronous operation.
         /// </summary>
@@ -1548,8 +1376,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -1585,11 +1411,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " NAMESPACE" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes NAMESPACE command.
@@ -1624,10 +1446,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetFolders
 
         /// <summary>
         /// Gets folders list.
@@ -1687,12 +1505,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetFoldersAsync
-
-        #region class GetFoldersAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetFoldersAsync"/> asynchronous operation.
         /// </summary>
@@ -1718,8 +1530,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Filter = filter;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -1867,11 +1677,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes LIST command.
@@ -1906,10 +1712,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method CreateFolder
 
         /// <summary>
         /// Creates new folder.
@@ -1958,12 +1760,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method CreateFolderAsync
-
-        #region class CreateFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.CreateFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -1990,8 +1786,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2052,11 +1846,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " CREATE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes CREATE command.
@@ -2091,10 +1881,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method DeleteFolder
 
         /// <summary>
         /// Deletes specified folder.
@@ -2143,12 +1929,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method DeleteFolderAsync
-
-        #region class DeleteFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.DeleteFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -2175,8 +1955,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2239,11 +2017,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " DELETE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes DELETE command.
@@ -2278,10 +2052,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method RenameFolder
 
         /// <summary>
         /// Renames exisiting folder name.
@@ -2337,12 +2107,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method RenameFolderAsync
-
-        #region class RenameFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.RenameFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -2378,8 +2142,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_NewFolder = newFolder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2448,11 +2210,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " RENAME " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + IMAP_Utils.EncodeMailbox(m_NewFolder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes RENAME command.
@@ -2487,10 +2245,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetSubscribedFolders
 
         /// <summary>
         /// Get user subscribed folders list.
@@ -2550,12 +2304,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetSubscribedFoldersAsync
-
-        #region class GetSubscribedFoldersAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetSubscribedFoldersAsync"/> asynchronous operation.
         /// </summary>
@@ -2581,8 +2329,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Filter = filter;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2637,11 +2383,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes LSUB command.
@@ -2676,10 +2418,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method SubscribeFolder
 
         /// <summary>
         /// Subscribes specified folder.
@@ -2727,12 +2465,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method SubscribeFolderAsync
-
-        #region class SubscribeFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.SubscribeFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -2759,8 +2491,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2801,11 +2531,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " SUBSCRIBE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes SUBSCRIBE command.
@@ -2840,10 +2566,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method UnsubscribeFolder
 
         /// <summary>
         /// Unsubscribes specified folder.
@@ -2892,12 +2614,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method UnsubscribeFolderAsync
-
-        #region class UnsubscribeFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.UnsubscribeFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -2924,8 +2640,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2954,11 +2668,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " UNSUBSCRIBE " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes UNSUBSCRIBE command.
@@ -2993,10 +2703,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method FolderStatus
 
         /// <summary>
         /// Gets the specified folder status.
@@ -3057,12 +2763,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-        
-        #region method FolderStatusAsync
-
-        #region class FolderStatusAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.FolderStatusAsync"/> asynchronous operation.
         /// </summary>
@@ -3089,8 +2789,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -3172,11 +2870,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " STATUS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " (MESSAGES RECENT UIDNEXT UIDVALIDITY UNSEEN)\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes STATUS command.
@@ -3211,10 +2905,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method SelectFolder
 
         /// <summary>
         /// Selects specified folder.
@@ -3263,12 +2953,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method SelectFolderAsync
-
-        #region class SelectFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.SelectFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -3302,8 +2986,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -3322,10 +3004,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -3440,10 +3118,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -3463,10 +3137,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ProecessCmdResult
 
             /// <summary>
             /// Processes command result.
@@ -3507,10 +3177,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3555,16 +3221,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<SelectFolderAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3575,13 +3235,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<SelectFolderAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes SELECT command.
@@ -3616,10 +3270,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method ExamineFolder
 
         /// <summary>
         /// Selects folder as read-only, no changes to messages or flags not possible.
@@ -3668,12 +3318,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method ExamineFolderAsync
-
-        #region class ExamineFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.ExamineFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -3707,8 +3351,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -3727,10 +3369,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -3801,10 +3439,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -3824,10 +3458,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ProecessCmdResult
 
             /// <summary>
             /// Processes command result.
@@ -3868,10 +3498,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3916,16 +3542,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ExamineFolderAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3936,13 +3556,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<ExamineFolderAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes EXAMINE command.
@@ -3977,10 +3591,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetFolderQuotaRoots
 
         /// <summary>
         /// Gets specified folder quota roots and their quota resource usage.
@@ -4044,12 +3654,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetFolderQuotaRootsAsync
-
-        #region class GetFolderQuotaRootsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetFolderQuotaRootsAsync"/> asynchronous operation.
         /// </summary>
@@ -4076,8 +3680,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -4108,11 +3710,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETQUOTAROOT " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes STATUS command.
@@ -4147,10 +3745,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetQuota
 
         /// <summary>
         /// Gets the specified folder quota-root resource limit entries.
@@ -4208,12 +3802,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetQuotaAsync
-
-        #region class GetQuotaAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetQuotaAsync"/> asynchronous operation.
         /// </summary>
@@ -4237,8 +3825,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_QuotaRootName = quotaRootName;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -4266,11 +3852,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETQUOTA " + IMAP_Utils.EncodeMailbox(m_QuotaRootName,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes GETQUOTA command.
@@ -4306,10 +3888,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method SetQuota
-
         private void SetQuota()
         {
             /* RFC 2087 4.1. SETQUOTA Command.
@@ -4336,10 +3914,6 @@ namespace LumiSoft.Net.IMAP.Client
                             S: A001 OK Setquota completed
             */
         }
-
-        #endregion
-
-        #region method GetFolderAcl
 
         /// <summary>
         /// Gets the specified folder ACL entries.
@@ -4400,12 +3974,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetFolderAclAsync
-
-        #region class GetFolderAclAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetFolderAclAsync"/> asynchronous operation.
         /// </summary>
@@ -4429,8 +3997,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -4465,11 +4031,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " GETACL " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes GETACL command.
@@ -4504,10 +4066,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method SetFolderAcl
 
         /// <summary>
         /// Sets the specified folder ACL.
@@ -4565,12 +4123,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method SetFolderAclAsync
-
-        #region class SetFolderAclAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.SetFolderAclAsync"/> asynchronous operation.
         /// </summary>
@@ -4612,8 +4164,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Permissions  = permissions;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -4676,11 +4226,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes(command.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes SETACL command.
@@ -4715,10 +4261,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method DeleteFolderAcl
 
         /// <summary>
         /// Deletes the specified folder user ACL entry.
@@ -4774,12 +4316,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method DeleteFolderAclAsync
-
-        #region class DeleteFolderAclAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.DeleteFolderAclAsync"/> asynchronous operation.
         /// </summary>
@@ -4813,8 +4349,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
 
 
-            #region override method OnInitCmdLine
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -4845,11 +4379,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " DELETEACL " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + TextUtils.QuoteString(m_Identifier) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes DELETEACL command.
@@ -4884,10 +4414,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetFolderRights
 
         /// <summary>
         /// Gets rights which can be set for the specified identifier.
@@ -4955,12 +4481,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetFolderRightsAsync
-
-        #region class GetFolderRightsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetFolderRightsAsync"/> asynchronous operation.
         /// </summary>
@@ -4993,8 +4513,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Identifier = identifier;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -5036,11 +4554,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " LISTRIGHTS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + " " + TextUtils.QuoteString(m_Identifier) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes LISTRIGHTS command.
@@ -5075,10 +4589,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetFolderMyRights
 
         /// <summary>
         /// Gets myrights to the specified folder.
@@ -5139,12 +4649,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method GetFolderMyRightsAsync
-
-        #region class GetFolderMyRightsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.GetFolderMyRightsAsyncOP"/> asynchronous operation.
         /// </summary>
@@ -5168,8 +4672,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -5197,11 +4699,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " MYRIGHTS " + IMAP_Utils.EncodeMailbox(m_Folder,imap.m_MailboxEncoding) + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes MYRIGHTS command.
@@ -5237,10 +4735,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method StoreMessage
-                
         /// <summary>
         /// Stores specified message to the specified folder.
         /// </summary>
@@ -5359,12 +4853,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method StoreMessageAsync
-
-        #region class StoreMessageAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.StoreMessageAsync"/> asynchronous operation.
         /// </summary>
@@ -5416,8 +4904,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback    = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -5436,10 +4922,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -5578,10 +5060,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -5601,10 +5079,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ProcessCmdSendingResult
 
             /// <summary>
             /// Processes intial command line sending result.
@@ -5648,10 +5122,6 @@ namespace LumiSoft.Net.IMAP.Client
                     op.Dispose();
                 }
             }
-
-            #endregion
-
-            #region method ProcessMsgSendingResult
 
             /// <summary>
             /// Processes message literal sending result.
@@ -5712,11 +5182,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -5785,16 +5250,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<StoreMessageAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -5805,13 +5264,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<StoreMessageAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes APPEND command.
@@ -5846,10 +5299,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Enable
 
         /// <summary>
         /// Enables the specified IMAP capabilities in server.
@@ -5912,12 +5361,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method EnableAsync
-
-        #region class EnableAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.EnableAsync"/> asynchronous operation.
         /// </summary>
@@ -5944,8 +5387,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCapabilities = capabilities;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -5974,11 +5415,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes(cmd.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes ENABLE command.
@@ -6017,10 +5454,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region mehod EnableUtf8
-
         /// <summary>
         /// Enables UTF-8 support in IMAP server.
         /// </summary>
@@ -6053,10 +5486,6 @@ namespace LumiSoft.Net.IMAP.Client
             m_MailboxEncoding = IMAP_Mailbox_Encoding.ImapUtf8;
         }
 
-        #endregion
-
-
-        #region method CloseFolder
 
         /// <summary>
         /// Closes selected folder, all messages marked as Deleted will be expunged.
@@ -6099,12 +5528,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method CloseFolderAsync
-
-        #region class CloseFolderAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.CloseFolderAsync"/> asynchronous operation.
         /// </summary>
@@ -6127,8 +5550,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -6147,10 +5568,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -6226,10 +5643,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -6249,10 +5662,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ProecessCmdResult
 
             /// <summary>
             /// Processes command result.
@@ -6287,10 +5696,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -6335,16 +5740,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<CloseFolderAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -6355,13 +5754,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<CloseFolderAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes CLOSE command.
@@ -6400,10 +5793,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method Fetch
-                
         /// <summary>
         /// Fetches specified message items.
         /// </summary>
@@ -6461,12 +5850,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method FetchAsync
-
-        #region class FetchAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.FetchAsync"/> asynchronous operation.
         /// </summary>
@@ -6502,8 +5885,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pDataItems = items;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -6553,11 +5934,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes(command.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts executing FETCH command.
@@ -6595,10 +5972,6 @@ namespace LumiSoft.Net.IMAP.Client
                         
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Search
 
         /// <summary>
         /// Searches message what matches specified search criteria.
@@ -6659,12 +6032,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return retVal.ToArray();
         }
-                
-        #endregion
-
-        #region method SearchAsync
-
-        #region class SearchAsyncOP
 
         /// <summary>
         /// This class represents <see cref="IMAP_Client.SearchAsync"/> asynchronous operation.
@@ -6695,8 +6062,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCriteria = criteria;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -6799,11 +6164,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CmdLines.Add(new CmdLine(cmdLine.ToByte(),Encoding.UTF8.GetString(cmdLine.ToByte()).TrimEnd()));
                 }
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts executing SEARCH command.
@@ -6842,10 +6203,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method StoreMessageFlags
-                
         /// <summary>
         /// Stores specified message flags to the sepcified messages.
         /// </summary>
@@ -6898,12 +6255,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method StoreMessageFlagsAsync
-
-        #region class StoreMessageFlagsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.StoreMessageFlagsAsync"/> asynchronous operation.
         /// </summary>
@@ -6942,8 +6293,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pMsgFlags    = msgFlags;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -7049,11 +6398,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes(command.ToString());
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes STORE command.
@@ -7092,10 +6437,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method CopyMessages
-        
         /// <summary>
         /// Copies specified messages from current selected folder to the specified target folder.
         /// </summary>
@@ -7180,12 +6521,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method CopyMessagesAsync
-
-        #region class CopyMessagesAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.CopyMessagesAsync"/> asynchronous operation.
         /// </summary>
@@ -7221,8 +6556,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_TargetFolder = targetFolder;
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -7272,10 +6605,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets <b>COPYUID</b> optional response. Returns null if IMAP server doesn't support <b>UIDPLUS</b> extention.
@@ -7300,11 +6629,7 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes COPY command.
@@ -7343,10 +6668,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-                
-        #region method MoveMessages
-               
         /// <summary>
         /// Moves specified messages from current selected folder to the specified target folder.
         /// </summary>
@@ -7390,10 +6711,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method Expunge
-
         /// <summary>
         /// Deletes all messages in selected folder which has "Deleted" flag set.
         /// </summary>
@@ -7435,12 +6752,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method ExpungeAsync
-
-        #region class ExpungeAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.ExpungeAsync"/> asynchronous operation.
         /// </summary>
@@ -7455,8 +6766,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -7494,11 +6803,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " EXPUNGE" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes EXPUNGE command.
@@ -7537,12 +6842,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method IdleAsync
-
-        #region class IdleAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.IdleAsync"/> asynchronous operation.
         /// </summary>
@@ -7566,8 +6865,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -7586,10 +6883,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Done
 
             /// <summary>
             /// Starts exiting IDLE state.
@@ -7629,10 +6922,6 @@ namespace LumiSoft.Net.IMAP.Client
                 );
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -7732,10 +7021,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -7755,10 +7040,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ProecessCmdResult
 
             /// <summary>
             /// Processes command result.
@@ -7802,10 +7083,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region method ProcessReadFinalResponseResult
-
             /// <summary>
             /// Processes IDLE final(final response after +) response reading result.
             /// </summary>
@@ -7838,10 +7115,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -7886,16 +7159,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<IdleAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -7906,13 +7173,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<IdleAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes IDLE command.
@@ -7951,10 +7212,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region method Capability
 
         /// <summary>
         /// Gets IMAP server capabilities.
@@ -8003,12 +7260,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method CapabilityAsync
-
-        #region class CapabilityAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.CapabilityAsync"/> asynchronous operation.
         /// </summary>
@@ -8023,8 +7274,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -8081,11 +7330,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " CAPABILITY" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes CAPABILITY command.
@@ -8117,10 +7362,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Noop
 
         /// <summary>
         /// Sends NOOP command to IMAP server.
@@ -8157,12 +7398,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method NoopAsync
-
-        #region class NoopAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.NoopAsync"/> asynchronous operation.
         /// </summary>
@@ -8177,8 +7412,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
             }
 
-
-            #region override method OnInitCmdLine
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -8206,11 +7439,7 @@ namespace LumiSoft.Net.IMAP.Client
                 byte[] cmdLine = Encoding.UTF8.GetBytes((imap.m_CommandIndex++).ToString("d5") + " NOOP" + "\r\n");
                 this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
             }
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Executes NOOP command.
@@ -8243,12 +7472,7 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
 
-
-        #region override method OnConnected
-
-        
         /// <summary>
         /// This method is called when TCP client has sucessfully connected.
         /// </summary>
@@ -8265,10 +7489,6 @@ namespace LumiSoft.Net.IMAP.Client
                 ProcessGreetingResult(op,callback);                
             }
         }
-
-        #endregion
-
-        #region method ProcessGreetingResult
 
         /// <summary>
         /// Processes IMAP server greeting reading result.
@@ -8310,12 +7530,6 @@ namespace LumiSoft.Net.IMAP.Client
             connectCallback(error);
         }
 
-        #endregion
-
-
-        #region method SendCmdAndReadRespAsync
-
-        #region class SendCmdAndReadRespAsyncOP
 
         /// <summary>
         /// This class represents <see cref="IMAP_Client.SendCmdAndReadRespAsync"/> asynchronous operation.
@@ -8373,8 +7587,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;                
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -8394,10 +7606,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion       
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -8427,10 +7635,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -8450,10 +7654,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion            
-
-            #region method SendCmdLine
 
             /// <summary>
             /// Sends next command line to IMAP server.
@@ -8480,10 +7680,6 @@ namespace LumiSoft.Net.IMAP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method ProcessCmdLineSendResult
 
             /// <summary>
             /// Processes command line sending result.
@@ -8543,10 +7739,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -8591,16 +7783,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<SendCmdAndReadRespAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -8611,13 +7797,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<SendCmdAndReadRespAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Sends IMAP command to server and reads server responses.
@@ -8639,12 +7819,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method ReadResponseAsync
-
-        #region class ReadResponseAsyncOP
-
         /// <summary>
         /// This class represents <see cref="IMAP_Client.ReadResponseAsync"/> asynchronous operation.
         /// </summary>
@@ -8665,8 +7839,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pReadLineOP = new SmartStream.ReadLineAsyncOP(new byte[64000],SizeExceededAction.JunkAndThrowException);
                 m_pReadLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(m_pReadLineOP_Completed);
             }
-                        
-            #region method Dispose
 
             /// <summary>
             /// Cleans up any resource being used.
@@ -8689,10 +7861,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-                                    
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -8731,10 +7899,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region method Reuse
-
             /// <summary>
             /// Prepares this class for reuse.
             /// </summary>
@@ -8752,10 +7916,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_RiseCompleted = false;
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -8776,10 +7936,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region method m_pReadLineOP_Completed
-
             /// <summary>
             /// Is called when TcpStream.ReadLine has completed.
             /// </summary>
@@ -8795,10 +7951,6 @@ namespace LumiSoft.Net.IMAP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
-            #endregion
-
-            #region method ReadLineCompleted
 
             /// <summary>
             /// Is called when read line has completed.
@@ -8831,8 +7983,6 @@ namespace LumiSoft.Net.IMAP.Client
                         if(responseLine.StartsWith("*")){
                             string[] parts = responseLine.Split(new char[]{' '},4);
                             string   word  = responseLine.Split(' ')[1];
-
-                            #region Untagged status responses. RFC 3501 7.1.
 
                             // OK,NO,BAD,PREAUTH,BYE
 
@@ -8899,13 +8049,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 m_pImapClient.OnUntaggedStatusResponse((IMAP_r_u)m_pResponse);
                             }
 
-                            #endregion
-
-                            #region Untagged server and mailbox status. RFC 3501 7.2.
-
                             // CAPABILITY,LIST,LSUB,STATUS,SEARCH,FLAGS
-
-                            #region CAPABILITY
 
                             else if(word.Equals("CAPABILITY",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Capability.Parse(responseLine); 
@@ -8915,41 +8059,21 @@ namespace LumiSoft.Net.IMAP.Client
                                 m_pImapClient.m_pCapabilities.AddRange(((IMAP_r_u_Capability)m_pResponse).Capabilities);
                             }
 
-                            #endregion
-
-                            #region LIST
-
                             else if(word.Equals("LIST",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_List.Parse(responseLine);
                             }
-
-                            #endregion
-
-                            #region LSUB
 
                             else if(word.Equals("LSUB",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_LSub.Parse(responseLine);
                             }
 
-                            #endregion
-
-                            #region STATUS
-
                             else if(word.Equals("STATUS",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Status.Parse(responseLine);
                             }
 
-                            #endregion
-
-                            #region SEARCH
-
                             else if(word.Equals("SEARCH",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Search.Parse(responseLine);
                             }
-
-                            #endregion
-
-                            #region FLAGS
 
                             else if(word.Equals("FLAGS",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Flags.Parse(responseLine);
@@ -8958,12 +8082,6 @@ namespace LumiSoft.Net.IMAP.Client
                                     m_pImapClient.m_pSelectedFolder.SetFlags(((IMAP_r_u_Flags)m_pResponse).Flags);
                                 }
                             }
-
-                            #endregion
-
-                            #endregion
-
-                            #region Untagged mailbox size. RFC 3501 7.3.
 
                             // EXISTS,RECENT
 
@@ -8981,10 +8099,6 @@ namespace LumiSoft.Net.IMAP.Client
                                     m_pImapClient.m_pSelectedFolder.SetRecentMessagesCount(((IMAP_r_u_Recent)m_pResponse).MessageCount);
                                 }
                             }
-                                                
-                            #endregion
-
-                            #region Untagged message status. RFC 3501 7.4.
 
                             // EXPUNGE,FETCH
 
@@ -9003,10 +8117,6 @@ namespace LumiSoft.Net.IMAP.Client
                                 return;
                             }
 
-                            #endregion
-
-                            #region Untagged acl realted. RFC 4314.
-
                             else if(word.Equals("ACL",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Acl.Parse(responseLine);
                             }
@@ -9017,10 +8127,6 @@ namespace LumiSoft.Net.IMAP.Client
                                 m_pResponse = IMAP_r_u_MyRights.Parse(responseLine);
                             }
 
-                            #endregion
-
-                            #region Untagged quota related. RFC 2087.
-
                             else if(word.Equals("QUOTA",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Quota.Parse(responseLine);
                             }
@@ -9028,24 +8134,14 @@ namespace LumiSoft.Net.IMAP.Client
                                 m_pResponse = IMAP_r_u_QuotaRoot.Parse(responseLine);
                             }
 
-                            #endregion
-
-                            #region Untagged namespace related. RFC 2342.
-
                             else if(word.Equals("NAMESPACE",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Namespace.Parse(responseLine);
                             }
-
-                            #endregion
-
-                            #region Untagged enable related. RFC 5161.
 
                             else if(word.Equals("ENABLED",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Enable.Parse(responseLine);
                             }
 
-                            #endregion
-                            
                             // Raise event 'UntaggedResponse'.
                             m_pImapClient.OnUntaggedResponse((IMAP_r_u)m_pResponse);
                         }
@@ -9067,10 +8163,6 @@ namespace LumiSoft.Net.IMAP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region method FetchParsingCompleted
 
             /// <summary>
             /// This method is called when FETCH parsing has completed.
@@ -9095,10 +8187,6 @@ namespace LumiSoft.Net.IMAP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -9143,16 +8231,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ReadResponseAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -9163,13 +8245,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<ReadResponseAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts reading IMAP server response.
@@ -9190,12 +8266,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
- 
-        #region method ReadFinalResponseAsync
-
-        #region class ReadFinalResponseAsyncOP
 
         /// <summary>
         /// This class represents <see cref="IMAP_Client.ReadFinalResponseAsyncOP"/> asynchronous operation.
@@ -9218,8 +8288,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCallback = callback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -9238,10 +8306,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -9300,10 +8364,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -9323,10 +8383,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ResponseReadingCompleted
 
             /// <summary>
             /// Is called when IMAP server response reading has completed.
@@ -9364,10 +8420,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -9412,16 +8464,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ReadFinalResponseAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -9432,13 +8478,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<ReadFinalResponseAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts reading IMAP server final(OK/BAD/NO/+) response.
@@ -9459,12 +8499,6 @@ namespace LumiSoft.Net.IMAP.Client
                         
             return op.Start(this);
         }
-
-        #endregion
-                
-        #region method ReadStringLiteralAsync
-
-        #region class ReadStringLiteralAsyncOP
 
         /// <summary>
         /// This class represents <see cref="IMAP_Client.ReadStringLiteralAsync"/> asynchronous operation.
@@ -9494,8 +8528,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_LiteralSize = literalSize;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -9513,10 +8545,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -9543,10 +8571,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -9567,10 +8591,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region method ReadingCompleted
-
             /// <summary>
             /// This method is called when string-literal reading has completed.
             /// </summary>
@@ -9590,10 +8610,6 @@ namespace LumiSoft.Net.IMAP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -9638,16 +8654,10 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ReadStringLiteralAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -9658,13 +8668,7 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CompletedAsync(this,new EventArgs<ReadStringLiteralAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts reading string-literal from IMAP server.
@@ -9685,10 +8689,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method SupportsCapability
 
         /// <summary>
         /// Gets if IMAP server supports the specified capability.
@@ -9716,10 +8716,6 @@ namespace LumiSoft.Net.IMAP.Client
             return false;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.
@@ -9846,16 +8842,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region Events implementation
-        
         /// <summary>
         /// This event is raised when IMAP server sends untagged status response.
         /// </summary>
         public event EventHandler<EventArgs<IMAP_r_u>> UntaggedStatusResponse;
-
-        #region method OnUntaggedStatusResponse
 
         /// <summary>
         /// Raises <b>UntaggedStatusResponse</b> event.
@@ -9868,15 +8858,11 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP server sends any untagged response.
         /// </summary>
         /// <remarks>NOTE: This event may raised from thread pool thread, so UI event handlers need to use Invoke.</remarks>
         public event EventHandler<EventArgs<IMAP_r_u>> UntaggedResponse;
-
-        #region method OnUntaggedResponse
 
         /// <summary>
         /// Raises <b>UntaggedResponse</b> event.
@@ -9889,14 +8875,10 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-                
         /// <summary>
         /// This event is raised when IMAP server expunges message and sends EXPUNGE response.
         /// </summary>
         public event EventHandler<EventArgs<IMAP_r_u_Expunge>> MessageExpunged;
-
-        #region method OnMessageExpunged
 
         /// <summary>
         /// Raises <b>MessageExpunged</b> event.
@@ -9909,15 +8891,11 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when FETCH response parsing allows to specify stream where to store binary data.
         /// </summary>
         /// <remarks>Thhis event is raised for FETCH BODY[]/RFC822/RFC822.HEADER/RFC822.TEXT data-items.</remarks>
         public event EventHandler<IMAP_Client_e_FetchGetStoreStream> FetchGetStoreStream;
-
-        #region method OnFetchGetStoreStream
 
         /// <summary>
         /// Raises <b>FetchGetStoreStream</b> event.
@@ -9930,14 +8908,8 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #endregion
-
 
         //--- OBSOLETE ------------------------         
-
-        #region method ReadResponse
 
         /// <summary>
         /// Reads IMAP server responses.
@@ -9987,8 +8959,6 @@ namespace LumiSoft.Net.IMAP.Client
                 if(responseLine.StartsWith("*")){
                     string[] parts = responseLine.Split(new char[]{' '},4);
                     string   word  = responseLine.Split(' ')[1];
-
-                    #region Untagged status responses. RFC 3501 7.1.
 
                     // OK,NO,BAD,PREAUTH,BYE
 
@@ -10049,13 +9019,7 @@ namespace LumiSoft.Net.IMAP.Client
                         OnUntaggedStatusResponse(IMAP_r_u_ServerStatus.Parse(responseLine));
                     }
 
-                    #endregion
-
-                    #region Untagged server and mailbox status. RFC 3501 7.2.
-
                     // CAPABILITY,LIST,LSUB,STATUS,SEARCH,FLAGS
-
-                    #region CAPABILITY
 
                     else if(word.Equals("CAPABILITY",StringComparison.InvariantCultureIgnoreCase)){
                         if(capability != null){
@@ -10063,19 +9027,11 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                     }
 
-                    #endregion
-
-                    #region LIST
-
                     else if(word.Equals("LIST",StringComparison.InvariantCultureIgnoreCase)){
                         if(list != null){
                             list.Add(IMAP_r_u_List.Parse(responseLine));
                         }
                     }
-
-                    #endregion
-
-                    #region LSUB
 
                     else if(word.Equals("LSUB",StringComparison.InvariantCultureIgnoreCase)){
                         if(lsub != null){
@@ -10083,19 +9039,11 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                     }
 
-                    #endregion
-
-                    #region STATUS
-
                     else if(word.Equals("STATUS",StringComparison.InvariantCultureIgnoreCase)){
                         if(status != null){
                             status.Add(IMAP_r_u_Status.Parse(responseLine));
                         }
                     }
-
-                    #endregion
-
-                    #region SEARCH
 
                     else if(word.Equals("SEARCH",StringComparison.InvariantCultureIgnoreCase)){
                         /* RFC 3501 7.2.5.  SEARCH Response
@@ -10119,10 +9067,6 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                     }
 
-                    #endregion
-
-                    #region FLAGS
-
                     else if(word.Equals("FLAGS",StringComparison.InvariantCultureIgnoreCase)){
                         /* RFC 3501 7.2.6. FLAGS Response.                         
                             Contents:   flag parenthesized list
@@ -10145,12 +9089,6 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                     }
 
-                    #endregion
-
-                    #endregion
-
-                    #region Untagged mailbox size. RFC 3501 7.3.
-
                     // EXISTS,RECENT
 
                     // TODO: May this values exist other command than SELECT and EXAMINE ?
@@ -10167,10 +9105,6 @@ namespace LumiSoft.Net.IMAP.Client
                             folderInfo.SetRecentMessagesCount(Convert.ToInt32(word));
                         }
                     }
-                                        
-                    #endregion
-
-                    #region Untagged message status. RFC 3501 7.4.
 
                     // EXPUNGE,FETCH
 
@@ -10186,10 +9120,6 @@ namespace LumiSoft.Net.IMAP.Client
                         _FetchResponseReader r = new _FetchResponseReader(this,responseLine,fetchHandler);
                         r.Start();                        
                     }
-
-                    #endregion
-
-                    #region Untagged acl realted. RFC 4314.
 
                     else if(word.Equals("ACL",StringComparison.InvariantCultureIgnoreCase)){
                         if(acl != null){
@@ -10207,10 +9137,6 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                     }
 
-                    #endregion
-
-                    #region Untagged quota related. RFC 2087.
-
                     else if(word.Equals("QUOTA",StringComparison.InvariantCultureIgnoreCase)){
                         if(quota != null){
                             quota.Add(IMAP_r_u_Quota.Parse(responseLine));
@@ -10222,27 +9148,17 @@ namespace LumiSoft.Net.IMAP.Client
                         }
                     }
 
-                    #endregion
-
-                    #region Untagged namespace related. RFC 2342.
-
                     else if(word.Equals("NAMESPACE",StringComparison.InvariantCultureIgnoreCase)){
                         if(nspace != null){
                             nspace.Add(IMAP_r_u_Namespace.Parse(responseLine));
                         }
                     }
 
-                    #endregion
-
-                    #region Untagged enable related. RFC 5161.
-
                     else if(word.Equals("ENABLED",StringComparison.InvariantCultureIgnoreCase)){
                         if(enable != null){
                             enable.Add(IMAP_r_u_Enable.Parse(responseLine));
                         }
                     }
-
-                    #endregion
                 }
                 // Command continuation response.
                 else if(responseLine.StartsWith("+")){
@@ -10255,10 +9171,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
         }
-
-        #endregion
-
-        #region method Search
 
         /// <summary>
         /// Searches message what matches specified search criteria.
@@ -10316,10 +9228,6 @@ namespace LumiSoft.Net.IMAP.Client
            
             return retVal.ToArray();
         }
-
-        #endregion
-
-        #region method Fetch
 
         /// <summary>
         /// Fetches specified message items.
@@ -10407,10 +9315,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-        #endregion
-
-        #region method StoreMessage
-
         /// <summary>
         /// Stores specified message to the specified folder.
         /// </summary>
@@ -10428,11 +9332,7 @@ namespace LumiSoft.Net.IMAP.Client
         public void StoreMessage(string folder,IMAP_MessageFlags flags,DateTime internalDate,Stream message,int count)
         {
             StoreMessage(folder,IMAP_Utils.MessageFlagsToStringArray(flags),internalDate,message,count);
-        }        
-
-        #endregion
-
-        #region method StoreMessageFlags
+        }
 
         /// <summary>
         /// Stores specified message flags to the sepcified messages.
@@ -10474,10 +9374,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
             StoreMessageFlags(uid,seqSet,setType,IMAP_Utils.MessageFlagsToStringArray(flags));
         }
-
-        #endregion
-
-        #region method CopyMessages
 
         /// <summary>
         /// Copies specified messages from current selected folder to the specified target folder.
@@ -10521,10 +9417,6 @@ namespace LumiSoft.Net.IMAP.Client
             CopyMessages(uid,IMAP_t_SeqSet.Parse(seqSet.ToSequenceSetString()),targetFolder);
         }
 
-        #endregion
-
-        #region method MoveMessages
-
         /// <summary>
         /// Moves specified messages from current selected folder to the specified target folder.
         /// </summary>
@@ -10564,10 +9456,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             MoveMessages(uid,IMAP_t_SeqSet.Parse(seqSet.ToSequenceSetString()),targetFolder,expunge);
         }
-
-        #endregion
-
-        #region method GetFolderQuota
 
         /// <summary>
         /// Gets the specified folder quota-root resource limit entries.
@@ -10626,10 +9514,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region class _FetchResponseReader
-
         /// <summary>
         /// This class implements FETCH response reader.
         /// </summary>
@@ -10665,8 +9549,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pHandler  = handler;
             }
 
-            #region method Start
-
             /// <summary>
             /// Starts reading FETCH response.
             /// </summary>
@@ -10689,14 +9571,9 @@ namespace LumiSoft.Net.IMAP.Client
                 while(m_pFetchReader.Available > 0){
                     m_pFetchReader.ReadToFirstChar();
 //*
-                    #region BODY
 
                     if(m_pFetchReader.StartsWith("BODY ",false)){
                     }
-
-                    #endregion
-
-                    #region BODY[<section>]<<origin octet>>
 
                     else if(m_pFetchReader.StartsWith("BODY[",false)){
                         // Eat BODY word.
@@ -10743,24 +9620,14 @@ namespace LumiSoft.Net.IMAP.Client
                         eArgs.OnStoringCompleted();
                     }
 
-                    #endregion
-//*
-                    #region BODYSTRUCTURE
+                    //*
 
                     else if(m_pFetchReader.StartsWith("BODYSTRUCTURE ",false)){
                     }
 
-                    #endregion
-
-                    #region ENVELOPE
-
                     else if(m_pFetchReader.StartsWith("ENVELOPE ",false)){
                         m_pHandler.OnEnvelope(IMAP_Envelope.Parse(this));
                     }
-
-                    #endregion
-
-                    #region  FLAGS
 
                     else if(m_pFetchReader.StartsWith("FLAGS ",false)){
                         // Eat FLAGS word.
@@ -10775,20 +9642,12 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pHandler.OnFlags(flags);
                     }
 
-                    #endregion
-
-                    #region INTERNALDATE
-
                     else if(m_pFetchReader.StartsWith("INTERNALDATE ",false)){
                          // Eat INTERNALDATE word.
                         m_pFetchReader.ReadWord();
 
                         m_pHandler.OnInternalDate(IMAP_Utils.ParseDate(m_pFetchReader.ReadWord()));
                     }
-
-                    #endregion
-
-                    #region RFC822
 
                     else if(m_pFetchReader.StartsWith("RFC822 ",false)){
                         // Eat RFC822 word.
@@ -10825,10 +9684,6 @@ namespace LumiSoft.Net.IMAP.Client
                         eArgs.OnStoringCompleted();
                     }
 
-                    #endregion
-
-                    #region RFC822.HEADER
-
                     else if(m_pFetchReader.StartsWith("RFC822.HEADER ",false)){
                         // Eat RFC822.HEADER word.
                         m_pFetchReader.ReadWord(false,new char[]{' '},false);
@@ -10857,20 +9712,12 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pHandler.OnRfc822Header(text);
                     }
 
-                    #endregion
-
-                    #region RFC822.SIZE
-
                     else if(m_pFetchReader.StartsWith("RFC822.SIZE ",false)){
                         // Eat RFC822.SIZE word.
                         m_pFetchReader.ReadWord(false,new char[]{' '},false);
 
                         m_pHandler.OnSize(Convert.ToInt32(m_pFetchReader.ReadWord()));
                     }
-
-                    #endregion
-
-                    #region RFC822.TEXT
 
                     else if(m_pFetchReader.StartsWith("RFC822.TEXT ",false)){
                         // Eat RFC822.TEXT word.
@@ -10900,20 +9747,12 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pHandler.OnRfc822Text(text);
                     }
 
-                    #endregion
-
-                    #region UID
-
                     else if(m_pFetchReader.StartsWith("UID ",false)){
                         // Eat UID word.
                         m_pFetchReader.ReadWord();
 
                         m_pHandler.OnUID(Convert.ToInt64(m_pFetchReader.ReadWord()));
                     }
-
-                    #endregion
-
-                    #region X-GM-MSGID
 
                     else if(m_pFetchReader.StartsWith("X-GM-MSGID ",false)){
                         // Eat X-GM-MSGID word.
@@ -10922,10 +9761,6 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pHandler.OnX_GM_MSGID(Convert.ToUInt64(m_pFetchReader.ReadWord()));
                     }
 
-                    #endregion
-
-                    #region X-GM-THRID
-
                     else if(m_pFetchReader.StartsWith("X-GM-THRID ",false)){
                         // Eat X-GM-THRID word.
                         m_pFetchReader.ReadWord();
@@ -10933,15 +9768,9 @@ namespace LumiSoft.Net.IMAP.Client
                         m_pHandler.OnX_GM_THRID(Convert.ToUInt64(m_pFetchReader.ReadWord()));
                     }
 
-                    #endregion
-
-                    #region Fetch closing ")"
-
                     else if(m_pFetchReader.StartsWith(")",false)){
                         break;
                     }
-
-                    #endregion
 
                     else{
                         throw new NotSupportedException("Not supported IMAP FETCH data-item '" + m_pFetchReader.ReadToEnd() + "'.");
@@ -10949,10 +9778,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method GetReader
 
             /// <summary>
             /// Gets FETCH current line data reader.
@@ -10961,10 +9786,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
                 return m_pFetchReader;
             }
-
-            #endregion
-
-            #region method ReadString
 
             /// <summary>
             /// Reads string. Quoted-string-string-literal and NIL supported.
@@ -10993,13 +9814,7 @@ namespace LumiSoft.Net.IMAP.Client
                     return MIME_Encoding_EncodedWord.DecodeS(m_pFetchReader.ReadWord());
                 }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region method ReadStringLiteral
 
         /// <summary>
         /// Reads IMAP <b>string-literal</b> from remote endpoint.
@@ -11037,10 +9852,6 @@ namespace LumiSoft.Net.IMAP.Client
             LogAddRead(count,"Readed string-literal " + count.ToString() + " bytes.");
         }
 
-        #endregion
-
-        #region method SendCommand
-
         /// <summary>
         /// Send specified command to the IMAP server.
         /// </summary>
@@ -11057,10 +9868,6 @@ namespace LumiSoft.Net.IMAP.Client
             this.TcpStream.Write(buffer,0,buffer.Length);
             LogAddWrite(command.TrimEnd().Length,command.TrimEnd());
         }
-
-        #endregion
-
-        #region method ReadFinalResponse
 
         /// <summary>
         /// Reads final response from IMAP server.
@@ -11089,7 +9896,5 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
         }
-
-        #endregion
     }
 }

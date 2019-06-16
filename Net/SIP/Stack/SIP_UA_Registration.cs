@@ -65,8 +65,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pTimer.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimer_Elapsed);
             m_pTimer.Enabled = false;
         }
-                
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -91,12 +89,6 @@ namespace LumiSoft.Net.SIP.Stack
             this.Disposed     = null;
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimer_Elapsed
 
         /// <summary>
         /// This method is raised when registration needs to refresh server registration.
@@ -109,10 +101,6 @@ namespace LumiSoft.Net.SIP.Stack
                 BeginRegister(m_AutoRefresh);
             }
         }
-                
-        #endregion
-
-        #region mehtod m_pRegisterSender_ResponseReceived
 
         /// <summary>
         /// This method is called when REGISTER has finished.
@@ -180,10 +168,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pRegisterSender = null;
         }
 
-        #endregion
-
-        #region method m_pUnregisterSender_ResponseReceived
-
         /// <summary>
         /// This method is called when un-REGISTER has finished.
         /// </summary>
@@ -201,12 +185,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pUnregisterSender = null;
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method BeginRegister
 
         /// <summary>
         /// Starts registering.
@@ -243,10 +221,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pRegisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pRegisterSender_ResponseReceived);
             m_pRegisterSender.Start();
         }
-
-        #endregion
-
-        #region method BeginUnregister
 
         /// <summary>
         /// Starts unregistering.
@@ -290,11 +264,7 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pUnregisterSender = null;
             }
         }
-                
-        #endregion
 
-
-        #region method SetState
 
         /// <summary>
         /// Changes current registration state.
@@ -307,10 +277,6 @@ namespace LumiSoft.Net.SIP.Stack
             OnStateChanged();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -399,16 +365,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when registration state has changed.
         /// </summary>
         public event EventHandler StateChanged;
-
-        #region method OnStateChanged
 
         /// <summary>
         /// Raises event <b>StateChanged</b>.
@@ -420,14 +380,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when REGISTER has completed successfully.
         /// </summary>
         public event EventHandler Registered;
-
-        #region method OnRegistered
 
         /// <summary>
         /// Raises event <b>Registered</b>.
@@ -439,14 +395,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when un-REGISTER has completed successfully.
         /// </summary>
         public event EventHandler Unregistered;
-
-        #region method OnUnregistered
 
         /// <summary>
         /// Raises event <b>Unregistered</b>.
@@ -458,14 +410,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when REGISTER/un-REGISTER has failed.
         /// </summary>
         public event EventHandler<SIP_ResponseReceivedEventArgs> Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises event <b>Error</b>.
@@ -478,14 +426,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when registration has disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises event <b>Disposed</b>.
@@ -496,10 +440,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.Disposed(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

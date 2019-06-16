@@ -23,8 +23,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets response received by SIP stack.
         /// </summary>
@@ -62,8 +60,5 @@ namespace LumiSoft.Net.SIP.Stack
                 return m_pStack.TransactionLayer.GetOrCreateDialog(ClientTransaction,Response); 
             }
         }
-
-        #endregion
-
     }
 }

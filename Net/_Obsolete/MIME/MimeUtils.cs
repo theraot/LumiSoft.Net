@@ -10,8 +10,6 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class MimeUtils
 	{
-		#region static method ParseDate
-
         // TODO get rid of this method, only IMAP uses it
 
 		/// <summary>
@@ -198,11 +196,7 @@ namespace LumiSoft.Net.Mime
             }
 		}
 
-		#endregion
-
-		#region static method DateTimeToRfc2822
-
-		/// <summary>
+        /// <summary>
 		/// Converts date to rfc 2822 date time string.
 		/// </summary>
 		/// <param name="dateTime">Date time value.</param>
@@ -212,12 +206,8 @@ namespace LumiSoft.Net.Mime
 			return dateTime.ToUniversalTime().ToString("r",System.Globalization.DateTimeFormatInfo.InvariantInfo);
 		}
 
-		#endregion
 
-
-		#region static method ParseHeaders
-
-		/// <summary>
+        /// <summary>
 		/// Parses headers from message or mime entry.
 		/// </summary>
 		/// <param name="entryStrm">Stream from where to read headers.</param>
@@ -248,11 +238,7 @@ namespace LumiSoft.Net.Mime
 			return System.Text.Encoding.Default.GetString(msHeaders.ToArray());
 		}
 
-		#endregion
-
-		#region static method ParseHeaderField
-
-		/// <summary>
+        /// <summary>
 		/// Parse header specified header field value.
 		/// 
 		/// Use this method only if you need to get only one header field, otherwise use
@@ -323,11 +309,7 @@ namespace LumiSoft.Net.Mime
 			return "";
 		}
 
-		#endregion
-
-		#region static function ParseHeaderFiledParameter
-
-		/// <summary>
+        /// <summary>
 		/// Parses header field parameter value. 
 		/// For example: CONTENT-TYPE: application\octet-stream; name="yourFileName.xxx",
 		/// fieldName="CONTENT-TYPE:" and subFieldName="name".
@@ -364,12 +346,8 @@ namespace LumiSoft.Net.Mime
 			return "";			
 		}
 
-		#endregion
 
-
-		#region static method ParseMediaType
-
-		/// <summary>
+        /// <summary>
 		/// Parses MediaType_enum from <b>Content-Type:</b> header field value.
 		/// </summary>
 		/// <param name="headerFieldValue"><b>Content-Type:</b> header field value. This value can be null, then MediaType_enum.NotSpecified.</param>
@@ -470,11 +448,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region static method MediaTypeToString
-
-		/// <summary>
+        /// <summary>
 		/// Converts MediaType_enum to string. NOTE: Returns null for MediaType_enum.NotSpecified.
 		/// </summary>
 		/// <param name="mediaType">MediaType_enum value to convert.</param>
@@ -573,11 +547,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region static method ParseContentTransferEncoding
-
-		/// <summary>
+        /// <summary>
 		/// Parses ContentTransferEncoding_enum from <b>Content-Transfer-Encoding:</b> header field value.
 		/// </summary>
 		/// <param name="headerFieldValue"><b>Content-Transfer-Encoding:</b> header field value. This value can be null, then ContentTransferEncoding_enum.NotSpecified.</param>
@@ -609,11 +579,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region static method ContentTransferEncodingToString
-
-		/// <summary>
+        /// <summary>
 		/// Converts ContentTransferEncoding_enum to string. NOTE: Returns null for ContentTransferEncoding_enum.NotSpecified.
 		/// </summary>
 		/// <param name="encoding">ContentTransferEncoding_enum value to convert.</param>
@@ -643,11 +609,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region static method ParseContentDisposition
-
-		/// <summary>
+        /// <summary>
 		/// Parses ContentDisposition_enum from <b>Content-Disposition:</b> header field value.
 		/// </summary>
 		/// <param name="headerFieldValue"><b>Content-Disposition:</b> header field value. This value can be null, then ContentDisposition_enum.NotSpecified.</param>
@@ -670,11 +632,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region static method ContentDispositionToString
-
-		/// <summary>
+        /// <summary>
 		/// Converts ContentDisposition_enum to string. NOTE: Returns null for ContentDisposition_enum.NotSpecified.
 		/// </summary>
 		/// <param name="disposition">ContentDisposition_enum value to convert.</param>
@@ -695,10 +653,6 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-
-        #region static method EncodeWord
 
         /// <summary>
         /// Encodes specified text as "encoded-word" if encode is required. For more information see RFC 2047.
@@ -761,10 +715,6 @@ namespace LumiSoft.Net.Mime
 
             return Core.CanonicalEncode(text,"utf-8");
         }
-
-        #endregion
-
-        #region static method DecodeWords
 
         /// <summary>
         /// Decodes "encoded-word"'s from the specified text. For more information see RFC 2047.
@@ -902,10 +852,6 @@ namespace LumiSoft.Net.Mime
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region static method EncodeHeaderField
-
         /// <summary>
 		/// Encodes header field with quoted-printable encoding, if value contains ANSI or UNICODE chars.
 		/// </summary>
@@ -963,12 +909,8 @@ namespace LumiSoft.Net.Mime
 			return Core.CanonicalEncode(text,"utf-8");
 		}
 
-		#endregion
 
-
-		#region static method CreateMessageID
-
-		/// <summary>
+        /// <summary>
 		/// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
 		/// </summary>
 		/// <returns></returns>
@@ -977,10 +919,6 @@ namespace LumiSoft.Net.Mime
 			return "<" + Guid.NewGuid().ToString().Replace("-","") + "@" + Guid.NewGuid().ToString().Replace("-","") + ">";
 		}
 
-		#endregion
-
-
-        #region static method FoldData
 
         /// <summary>
         /// Folds long data line to folded lines.
@@ -1032,7 +970,5 @@ namespace LumiSoft.Net.Mime
                 return data;
             }
         }
-
-        #endregion
-	}
+    }
 }

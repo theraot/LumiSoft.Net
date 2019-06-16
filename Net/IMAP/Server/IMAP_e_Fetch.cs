@@ -13,8 +13,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </remarks>
     public class IMAP_e_Fetch : EventArgs
     {
-        #region class e_NewMessageData
-
         /// <summary>
         /// This class provides data for <b cref="IMAP_e_Fetch.NewMessageData">IMAP_Session.NewMessageData</b> event.
         /// </summary>
@@ -37,8 +35,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
 
-            #region Properties implementation
-
             /// <summary>
             /// Gets message info.
             /// </summary>
@@ -48,11 +44,7 @@ namespace LumiSoft.Net.IMAP.Server
             /// Gets message data stream.
             /// </summary>
             public Mail_Message MessageData { get; }
-
-#endregion
         }
-
-        #endregion
 
         private IMAP_r_ServerStatus m_pResponse;
 
@@ -77,8 +69,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponse     = response;
         }
 
-
-        #region method AddData
 
         /// <summary>
         /// Adds specified message for FETCH response processing.
@@ -107,10 +97,6 @@ namespace LumiSoft.Net.IMAP.Server
             OnNewMessageData(msgInfo,msgData);
         }
 
-        #endregion
-
-
-        #region Properties impelementation
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -139,16 +125,10 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         public IMAP_Fetch_DataType FetchDataType { get; } = IMAP_Fetch_DataType.FullMessage;
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when new message-info/message-data is added for FETCH processing.
         /// </summary>
         internal event EventHandler<IMAP_e_Fetch.e_NewMessageData> NewMessageData;
-
-        #region method OnNewMessageData
 
         /// <summary>
         /// Raises <b>NewMessageData</b> event.
@@ -161,9 +141,5 @@ namespace LumiSoft.Net.IMAP.Server
                 this.NewMessageData(this,new e_NewMessageData(msgInfo,msgData));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -26,9 +26,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region method Parse
-
-		/// <summary>
+        /// <summary>
 		/// Parses mime entity from stream.
 		/// </summary>
 		/// <param name="stream">Data stream from where to read data.</param>
@@ -187,12 +185,8 @@ namespace LumiSoft.Net.Mime
 			return false;
 		}
 
-		#endregion
 
-
-		#region method ToStream
-
-		/// <summary>
+        /// <summary>
 		/// Stores mime entity and it's child entities to specified stream.
 		/// </summary>
 		/// <param name="storeStream">Stream where to store mime entity.</param>
@@ -229,12 +223,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region method DataToFile
-
-		/// <summary>
+        /// <summary>
 		/// Saves this.Data property value to specified file.
 		/// </summary>
 		/// <param name="fileName">File name where to store data.</param>
@@ -245,11 +235,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region method DataToStream
-
-		/// <summary>
+        /// <summary>
 		/// Saves this.Data property value to specified stream.
 		/// </summary>
 		/// <param name="stream">Stream where to store data.</param>
@@ -259,11 +245,7 @@ namespace LumiSoft.Net.Mime
 			stream.Write(data,0,data.Length);
 		}
 
-		#endregion
-
-		#region method DataFromFile
-
-		/// <summary>
+        /// <summary>
 		/// Loads MimeEntity.Data property from file.
 		/// </summary>
 		/// <param name="fileName">File name.</param>
@@ -274,11 +256,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region method DataFromStream
-
-		/// <summary>
+        /// <summary>
 		/// Loads MimeEntity.Data property from specified stream. Note: reading starts from current position and stream isn't closed.
 		/// </summary>
 		/// <param name="stream">Data stream.</param>
@@ -290,12 +268,8 @@ namespace LumiSoft.Net.Mime
 			this.Data = data;
 		}
 
-		#endregion
 
-
-		#region method EncodeData
-
-		/// <summary>
+        /// <summary>
 		/// Encodes data with specified content transfer encoding.
 		/// </summary>
 		/// <param name="data">Data to encode.</param>
@@ -322,11 +296,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-
-		#region method FoldHeader
-
-		/// <summary>
+        /// <summary>
 		/// Folds header.
 		/// </summary>
 		/// <param name="header">Header string.</param>
@@ -375,12 +345,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-		
 
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets message header.
 		/// </summary>
 		public HeaderFieldCollection Header { get; }
@@ -1450,8 +1416,5 @@ namespace LumiSoft.Net.Mime
 		/// Note: This property can be set only if Content-Type: isn't multipart.
 		/// </summary>
 		public byte[] DataEncoded { get; set; }
-
-#endregion
-
-	}
+    }
 }

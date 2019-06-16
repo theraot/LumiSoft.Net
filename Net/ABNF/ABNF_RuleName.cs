@@ -66,8 +66,6 @@ namespace LumiSoft.Net.ABNF
         }
 
 
-        #region method ValidateName
-
         /// <summary>
         /// Validates 'rulename' value.
         /// </summary>
@@ -98,16 +96,10 @@ namespace LumiSoft.Net.ABNF
             return true;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets rule name.
         /// </summary>
         public string RuleName { get; }
-
-#endregion
     }
 }

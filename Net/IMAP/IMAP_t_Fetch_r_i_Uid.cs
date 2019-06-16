@@ -22,13 +22,9 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message UID value.
         /// </summary>
         public long UID { get; }
-
-#endregion
     }
 }

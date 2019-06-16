@@ -42,8 +42,6 @@ namespace LumiSoft.Net.DNS.Client
             m_pTimeoutTimer = new TimerEx(timeout);
             m_pTimeoutTimer.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimeoutTimer_Elapsed);
         }
-                        
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resource being used.
@@ -69,12 +67,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimeoutTimer_Elapsed
 
         /// <summary>
         /// Is called when DNS transaction timeout timer triggers.
@@ -94,12 +86,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts DNS transaction processing.
@@ -148,10 +134,6 @@ namespace LumiSoft.Net.DNS.Client
             });
         }
 
-        #endregion
-
-
-        #region method ProcessResponse
 
         /// <summary>
         /// Processes DNS server response through this transaction.
@@ -192,10 +174,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-
-        #region method SetState
 
         /// <summary>
         /// Sets transaction state.
@@ -208,11 +186,7 @@ namespace LumiSoft.Net.DNS.Client
             OnStateChanged();
         }
 
-        #endregion
-
-        #region method CreateQuery
-
-		/// <summary>
+        /// <summary>
 		/// Creates binary query.
 		/// </summary>
         /// <param name="buffer">Buffer where to store query.</param>
@@ -331,10 +305,6 @@ namespace LumiSoft.Net.DNS.Client
 			return position;
 		}
 
-		#endregion
-
-
-        #region Properties implementaion
 
         /// <summary>
         /// Get DNS transaction state.
@@ -366,16 +336,10 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public DnsServerResponse Response { get; private set; }
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This event is raised when DNS transaction state has changed.
         /// </summary>
         public event EventHandler<EventArgs<DNS_ClientTransaction>> StateChanged;
-
-        #region method OnStateChanged
 
         /// <summary>
         /// Raises <b>StateChanged</b> event.
@@ -387,14 +351,10 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when DNS transaction times out.
         /// </summary>
         public event EventHandler Timeout;
-
-        #region method OnTimeout
 
         /// <summary>
         /// Raises <b>Timeout</b> event.
@@ -405,9 +365,5 @@ namespace LumiSoft.Net.DNS.Client
                 this.Timeout(this,new EventArgs());
            }
         }
-
-        #endregion
-
-        #endregion
     }
 }

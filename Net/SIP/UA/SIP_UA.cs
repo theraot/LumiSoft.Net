@@ -24,8 +24,6 @@ namespace LumiSoft.Net.SIP.UA
 
             m_pCalls = new List<SIP_UA_Call>();
         }
-                        
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -63,12 +61,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pStack_RequestReceived
 
         /// <summary>
         /// This method is called when SIP stack received new message.
@@ -131,10 +123,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-        #region method Call_StateChanged
-
         /// <summary>
         /// Thsi method is called when call state has chnaged.
         /// </summary>
@@ -148,12 +136,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method CreateCall
 
         /// <summary>
         /// Creates call to <b>invite</b> specified recipient.
@@ -179,11 +161,7 @@ namespace LumiSoft.Net.SIP.UA
                 return call;
             }
         }
-                                
-        #endregion
 
-        
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -219,17 +197,11 @@ namespace LumiSoft.Net.SIP.UA
                 return m_pCalls.ToArray();
             }
         }
-                
-        #endregion
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when user agent get new SIP request.
         /// </summary>
         public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
-
-        #region method OnRequestReceived
 
         /// <summary>
         /// Raises <b>RequestReceived</b> event.
@@ -242,14 +214,10 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when new incoming call.
         /// </summary>
         public event EventHandler<SIP_UA_Call_EventArgs> IncomingCall;
-
-        #region method OnIncomingCall
 
         /// <summary>
         /// Raises event <b>IncomingCall</b>.
@@ -261,10 +229,5 @@ namespace LumiSoft.Net.SIP.UA
                 this.IncomingCall(this,new SIP_UA_Call_EventArgs(call));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

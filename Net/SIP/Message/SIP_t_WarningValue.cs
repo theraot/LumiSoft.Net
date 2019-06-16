@@ -31,8 +31,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "warning-value" from specified value.
         /// </summary>
@@ -94,10 +92,6 @@ namespace LumiSoft.Net.SIP.Message
             this.Agent = TextUtils.UnQuoteString(word);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "warning-value" value.
         /// </summary>
@@ -107,10 +101,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_Code + " " + m_Agent + " " + TextUtils.QuoteString(m_Text);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets warning code.
@@ -159,8 +149,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_Text = value;
             }
         }
-
-        #endregion
-
     }
 }

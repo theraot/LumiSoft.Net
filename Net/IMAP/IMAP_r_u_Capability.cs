@@ -23,8 +23,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses CAPABILITY response from capability-response string.
         /// </summary>
@@ -96,10 +94,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Capability(capabilities);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -119,16 +113,10 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties impelementation
 
         /// <summary>
         /// Gets capabilities list.
         /// </summary>
         public string[] Capabilities { get; }
-
-#endregion
     }
 }

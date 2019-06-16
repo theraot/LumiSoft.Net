@@ -8,8 +8,6 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientCache
     {
-        #region class CacheEntry
-
         /// <summary>
         /// This class represents DNS cache entry.
         /// </summary>
@@ -32,8 +30,6 @@ namespace LumiSoft.Net.DNS.Client
             }
 
 
-            #region Properties implementation
-
             /// <summary>
             /// Gets DNS server response.
             /// </summary>
@@ -43,11 +39,7 @@ namespace LumiSoft.Net.DNS.Client
             /// Gets time when cache entry expires.
             /// </summary>
             public DateTime Expires { get; }
-
-#endregion
         }
-
-        #endregion
 
         private Dictionary<string,CacheEntry> m_pCache;
         private TimerEx                       m_pTimerTimeout;
@@ -64,8 +56,6 @@ namespace LumiSoft.Net.DNS.Client
             m_pTimerTimeout.Start();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -77,12 +67,6 @@ namespace LumiSoft.Net.DNS.Client
             m_pTimerTimeout = null;
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimerTimeout_Elapsed
 
         /// <summary>
         /// Is called when cache expired entries check timer triggers.
@@ -107,12 +91,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method GetFromCache
 
         /// <summary>
 		/// Gets DNS server cached response or null if no cached result.
@@ -146,11 +124,7 @@ namespace LumiSoft.Net.DNS.Client
             }
 		}
 
-		#endregion
-
-        #region method AddToCache
-
-		/// <summary>
+        /// <summary>
 		/// Adds dns records to cache. If old entry exists, it is replaced.
 		/// </summary>
 		/// <param name="qname">Query name.</param>
@@ -193,11 +167,7 @@ namespace LumiSoft.Net.DNS.Client
 			}
 		}
 
-		#endregion
-
-        #region method ClearCache
-
-		/// <summary>
+        /// <summary>
 		/// Clears DNS cache.
 		/// </summary>
 		public void ClearCache()
@@ -207,10 +177,6 @@ namespace LumiSoft.Net.DNS.Client
 			}
 		}
 
-		#endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets maximum number of seconds to cache positive DNS responses.
@@ -229,7 +195,5 @@ namespace LumiSoft.Net.DNS.Client
         {
             get{ return m_pCache.Count; }
         }
-
-        #endregion
     }
 }

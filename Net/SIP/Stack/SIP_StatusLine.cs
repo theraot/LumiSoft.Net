@@ -33,8 +33,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region override method ToString
-
         /// <summary>
         /// Returns Status-Line string.
         /// </summary>
@@ -47,10 +45,6 @@ namespace LumiSoft.Net.SIP.Stack
             return m_Version + " " + m_StatusCode + " " + m_Reason + "\r\n";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets SIP version.
@@ -106,8 +100,5 @@ namespace LumiSoft.Net.SIP.Stack
                 m_Reason = value;
             }
         }
-
-        #endregion
-
     }
 }

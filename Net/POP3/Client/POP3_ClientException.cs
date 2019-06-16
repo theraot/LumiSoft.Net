@@ -27,8 +27,6 @@ namespace LumiSoft.Net.POP3.Client
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets POP3 server error status code.
         /// </summary>
@@ -38,8 +36,5 @@ namespace LumiSoft.Net.POP3.Client
         /// Gets POP3 server response text after status code.
         /// </summary>
         public string ResponseText { get; } = "";
-
-#endregion
-
     }
 }

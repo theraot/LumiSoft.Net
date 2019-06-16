@@ -24,8 +24,6 @@ namespace LumiSoft.Net.DNS
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -68,10 +66,6 @@ namespace LumiSoft.Net.DNS
             }
         }
 
-        #endregion
-
-
-        #region IComparable Implementation
 
         /// <summary>
         /// Compares the current instance with another object of the same type. 
@@ -100,10 +94,6 @@ namespace LumiSoft.Net.DNS
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
 		/// Gets MX record preference. The lower number is the higher priority server.
@@ -114,8 +104,5 @@ namespace LumiSoft.Net.DNS
 		/// Gets mail host dns name.
 		/// </summary>
 		public string Host { get; } = "";
-
-#endregion
-
-	}
+    }
 }

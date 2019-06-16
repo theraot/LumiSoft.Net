@@ -29,8 +29,6 @@ namespace LumiSoft.Net.SMTP.Server
         }
 
 
-        #region Properties impelemntation
-
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>
@@ -52,7 +50,5 @@ namespace LumiSoft.Net.SMTP.Server
                 m_pReply = value;
             }
         }
-
-        #endregion
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.MIME
             m_pBodyProvider = new MIME_b_Provider();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used. This method is thread-safe.
         /// </summary>
@@ -43,10 +41,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-
-        #region method ToFile
 
         /// <summary>
         /// Stores MIME entity to the specified file.
@@ -85,10 +79,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method ToStream
-
         /// <summary>
         /// Store MIME enity to the specified stream.
         /// </summary>
@@ -120,10 +110,6 @@ namespace LumiSoft.Net.MIME
             stream.Write(new byte[]{(int)'\r',(int)'\n'},0,2);
             m_pBody.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
         }
-
-        #endregion
-
-        #region method ToString
 
         /// <summary>
         /// Returns MIME entity as string.
@@ -162,10 +148,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method ToByte
-
         /// <summary>
         /// Returns MIME entity as byte[].
         /// </summary>
@@ -194,10 +176,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-
-        #region method Parse
 
         /// <summary>
         /// Parses MIME entiry from the specified stream.
@@ -224,10 +202,6 @@ namespace LumiSoft.Net.MIME
             m_pBody.SetParent(this,false);         
         }
 
-        #endregion
-
-        #region method SetParent
-
         /// <summary>
         /// Sets MIME entity parent entity.
         /// </summary>
@@ -237,12 +211,8 @@ namespace LumiSoft.Net.MIME
             m_pParent = parent;
         }
 
-        #endregion
 
-
-        #region Properties Implementation
-
-        // Permanent headerds list: http://www.rfc-editor.org/rfc/rfc4021.txt
+// Permanent headerds list: http://www.rfc-editor.org/rfc/rfc4021.txt
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -870,8 +840,5 @@ namespace LumiSoft.Net.MIME
                 m_pBody.SetParent(this,true);
             }
         }
-                        
-        #endregion
-
     }
 }

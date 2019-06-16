@@ -17,13 +17,9 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message IMAP server internal assigned date-time.
         /// </summary>
         public DateTime Date { get; }
-
-#endregion
     }
 }

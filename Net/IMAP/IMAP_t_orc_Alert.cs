@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses ALERT optional response from string.
         /// </summary>
@@ -44,10 +42,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Alert(code_value.Length == 2 ? code_value[1] : "");
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -58,16 +52,10 @@ namespace LumiSoft.Net.IMAP
             return "ALERT " + AlertText;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets alert text.
         /// </summary>
         public string AlertText { get; }
-
-#endregion
     }
 }

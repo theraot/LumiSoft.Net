@@ -11,10 +11,5 @@
         public ABNF_BinVal()
         {
         }
-
-
-        #region Properties implementation
-
-        #endregion
     }
 }

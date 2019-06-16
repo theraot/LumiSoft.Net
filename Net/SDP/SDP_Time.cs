@@ -31,8 +31,6 @@ namespace LumiSoft.Net.SDP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses media from "t" SDP message field.
         /// </summary>
@@ -66,10 +64,6 @@ namespace LumiSoft.Net.SDP
             return new SDP_Time(startTime,endTime);
         }
 
-        #endregion
-
-        #region method ToValue
-
         /// <summary>
         /// Converts this to valid "t" string.
         /// </summary>
@@ -81,10 +75,6 @@ namespace LumiSoft.Net.SDP
             return "t=" + StartTime + " " + StopTime + "\r\n";
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets start time when session must start. Network Time Protocol (NTP) time values in 
@@ -119,8 +109,5 @@ namespace LumiSoft.Net.SDP
                 m_StopTime = value;
             }
         }
-
-        #endregion
-
     }
 }

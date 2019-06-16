@@ -29,8 +29,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets MYRIGHTS response.
         /// </summary>
@@ -57,7 +55,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets folder name with optional path.
         /// </summary>
         public string Folder { get; }
-
-#endregion
     }
 }

@@ -93,8 +93,6 @@ namespace LumiSoft.Net.Mail
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -227,10 +225,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns header field as string.
@@ -301,10 +295,6 @@ namespace LumiSoft.Net.Mail
             
         }
 
-        #endregion
-                       
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -463,7 +453,5 @@ namespace LumiSoft.Net.Mail
                 m_IsModified = true;
             }
         }
-
-        #endregion
     }
 }

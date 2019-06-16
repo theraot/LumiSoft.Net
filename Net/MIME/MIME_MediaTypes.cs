@@ -6,8 +6,6 @@
     /// </summary>
     public class MIME_MediaTypes
     {
-        #region application
-
         /// <summary>
         /// This class holds well-known application/xxx media types.
         /// </summary>
@@ -49,10 +47,6 @@
             public static readonly string pkcs7_mime = "application/pkcs7-mime";
         }
 
-        #endregion
-
-        #region image
-
         /// <summary>
         /// This class holds well-known image/xxx media types.
         /// </summary>
@@ -73,10 +67,6 @@
             /// </summary>
             public static readonly string tiff = "image/tiff";
         }
-                
-        #endregion
-
-        #region text
 
         /// <summary>
         /// This class holds well-known text/xxx media types.
@@ -118,10 +108,6 @@
             /// </summary>
             public static readonly string xml = "text/xml";
         }
-
-        #endregion
-
-        #region multipart
 
         /// <summary>
         /// This class holds well-known multipart/xxx media types.
@@ -179,10 +165,6 @@
             public static readonly string voice_message = "multipart/voice-message";
         }
 
-        #endregion
-
-        #region message
-
         /// <summary>
         /// This class holds well-known message/xxx media types.
         /// </summary>
@@ -203,7 +185,5 @@
             /// </summary>
             public static readonly string delivery_status = "message/delivery-status";
         }
-
-        #endregion        
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-                
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
@@ -119,7 +117,5 @@ namespace LumiSoft.Net.IMAP.Server
                 return maxUID; 
             }
         }
-
-        #endregion
     }
 }

@@ -16,16 +16,10 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region abstract method Reset
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
         public abstract void Reset();
-
-        #endregion
-
-        #region abstract method Continue
 
         /// <summary>
         /// Continues authentication process.
@@ -35,10 +29,6 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>clientRespone</b> is null reference.</exception>
         public abstract byte[] Continue(byte[] clientResponse);
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -86,8 +76,5 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public Dictionary<string,object> Tags { get; } = null;
-
-#endregion
-
     }
 }

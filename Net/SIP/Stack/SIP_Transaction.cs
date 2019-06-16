@@ -73,8 +73,6 @@ namespace LumiSoft.Net.SIP.Stack
             }  
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -93,20 +91,12 @@ namespace LumiSoft.Net.SIP.Stack
             this.TransportError = null;
         }
 
-        #endregion
-
-
-        #region method Cancel
 
         /// <summary>
         /// Cancels current transaction.
         /// </summary>
         public abstract void Cancel();
 
-        #endregion
-
-
-        #region method SetState
 
         /// <summary>
         /// Changes transaction state.
@@ -128,10 +118,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method AddResponse
-
         /// <summary>
         /// Adds specified response to transaction responses collection.
         /// </summary>
@@ -149,10 +135,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the dialog.
@@ -360,16 +342,10 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         internal string Key { get; } = "";
 
-#endregion
-
-        #region Events Implementation
-
         /// <summary>
         /// Is raised when transaction state has changed.
         /// </summary>
         public event EventHandler StateChanged;
-
-        #region method OnStateChanged
 
         /// <summary>
         /// Raises event <b>StateChanged</b>.
@@ -381,14 +357,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-               
         /// <summary>
         /// Is raised when transaction is disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises event <b>Disposed</b>.
@@ -400,14 +372,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised if transaction is timed out. 
         /// </summary>
         public event EventHandler TimedOut;
-
-        #region method OnTimedOut
 
         /// <summary>
         /// Raises TimedOut event.
@@ -419,14 +387,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when there is transport error. 
         /// </summary>
         public event EventHandler<ExceptionEventArgs> TransportError;
-
-        #region method TransportError
 
         /// <summary>
         /// Raises TimedOut event.
@@ -444,15 +408,11 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when there is transaction error. For example this is raised when server transaction never
         /// gets ACK.
         /// </summary>
         public event EventHandler TransactionError;
-
-        #region method OnTransactionError
 
         /// <summary>
         /// Raises TransactionError event.
@@ -464,10 +424,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.TransactionError(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

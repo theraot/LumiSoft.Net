@@ -38,8 +38,6 @@ namespace LumiSoft.Net.RTP
             m_SSRC     = ssrc;
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -60,10 +58,6 @@ namespace LumiSoft.Net.RTP
             this.StateChanged = null;
         }
 
-        #endregion
-
-
-        #region method Close
 
         /// <summary>
         /// Closes specified source.
@@ -77,10 +71,6 @@ namespace LumiSoft.Net.RTP
             Dispose();
         }
 
-        #endregion
-
-        #region method SetRtcpEP
-
         /// <summary>
         /// Sets property <b>RtcpEP</b> value.
         /// </summary>
@@ -90,10 +80,6 @@ namespace LumiSoft.Net.RTP
             m_pRtcpEP = ep;
         }
 
-        #endregion
-
-        #region method SetRtpEP
-
         /// <summary>
         /// Sets property <b>RtpEP</b> value.
         /// </summary>
@@ -102,10 +88,6 @@ namespace LumiSoft.Net.RTP
         {
             m_pRtpEP = ep;
         }
-
-        #endregion
-
-        #region method SetActivePassive
 
         /// <summary>
         /// Sets source active/passive state.
@@ -122,10 +104,6 @@ namespace LumiSoft.Net.RTP
             // TODO:
         }
 
-        #endregion
-
-        #region method SetLastRtcpPacket
-
         /// <summary>
         /// Sets <b>LastRtcpPacket</b> property value.
         /// </summary>
@@ -136,10 +114,6 @@ namespace LumiSoft.Net.RTP
             m_LastActivity = time;
         }
 
-        #endregion
-
-        #region method SetLastRtpPacket
-
         /// <summary>
         /// Sets <b>LastRtpPacket</b> property value.
         /// </summary>
@@ -149,10 +123,6 @@ namespace LumiSoft.Net.RTP
             m_LastRtpPacket = time;
             m_LastActivity = time;
         }
-
-        #endregion
-
-        #region method SetRR
 
         /// <summary>
         /// Sets property LastRR value.
@@ -167,10 +137,6 @@ namespace LumiSoft.Net.RTP
 
         }
 
-        #endregion
-
-
-        #region method GenerateNewSSRC
 
         /// <summary>
         /// Generates new SSRC value. This must be called only if SSRC collision of local source.
@@ -180,10 +146,6 @@ namespace LumiSoft.Net.RTP
             m_SSRC = RTP_Utils.GenerateSSRC();
         }
 
-        #endregion
-
-
-        #region method SetState
 
         /// <summary>
         /// Sets source state.
@@ -202,10 +164,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets source state.
@@ -370,16 +328,10 @@ namespace LumiSoft.Net.RTP
             get;
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when source is closed (by BYE).
         /// </summary>
         public event EventHandler Closed;
-
-        #region method OnClosed
 
         /// <summary>
         /// Raises <b>Closed</b> event.
@@ -391,14 +343,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when source is disposing.
         /// </summary>
         public event EventHandler Disposing;
-
-        #region method OnDisposing
 
         /// <summary>
         /// Raises <b>Disposing</b> event.
@@ -410,14 +358,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when source state has changed.
         /// </summary>
         public event EventHandler StateChanged;
-
-        #region method OnStateChaged
 
         /// <summary>
         /// Raises <b>StateChanged</b> event.
@@ -428,10 +372,5 @@ namespace LumiSoft.Net.RTP
                 this.StateChanged(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

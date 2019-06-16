@@ -20,8 +20,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_Directive : SIP_t_Value
     {
-        #region enum DirectiveType
-
         /// <summary>
         /// Proccess directives. Defined in rfc 3841 9.1.
         /// </summary>
@@ -98,8 +96,6 @@ namespace LumiSoft.Net.SIP.Message
             NoQueue
         }
 
-        #endregion
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -107,8 +103,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
-        #region method Parse
 
         /// <summary>
         /// Parses "directive" from specified value.
@@ -194,10 +188,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "directive" value.
         /// </summary>
@@ -256,17 +246,10 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets directive.
         /// </summary>
         public DirectiveType Directive { get; set; } = DirectiveType.Fork;
-
-#endregion
-
     }
 }

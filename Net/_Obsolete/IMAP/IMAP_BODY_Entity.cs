@@ -24,8 +24,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses entity and it's child entities.
         /// </summary>
@@ -139,10 +137,6 @@ namespace LumiSoft.Net.IMAP
             }   */         
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets parent entity of this entity. If this entity is top level, then this property returns null.
@@ -225,8 +219,5 @@ namespace LumiSoft.Net.IMAP
                 return m_ContentSize; 
             }
         }
-
-        #endregion
-
     }
 }

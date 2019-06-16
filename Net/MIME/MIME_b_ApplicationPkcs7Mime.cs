@@ -20,8 +20,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -49,10 +47,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region method GetCertificates
 
         /// <summary>
         /// Gets certificates contained in pkcs 7.
@@ -69,10 +63,6 @@ namespace LumiSoft.Net.MIME
 
             return signedCms.Certificates;
         }
-
-        #endregion
-                
-        #region method VerifySignature
 
         /// <summary>
         /// Checks if signature is valid and data not altered.
@@ -104,10 +94,6 @@ namespace LumiSoft.Net.MIME
             return false;
         }
 
-        #endregion
-               
-        #region method GetSignedMime
-
         /// <summary>
         /// Gets signed mime content. Value null means no content.
         /// </summary>
@@ -130,10 +116,6 @@ namespace LumiSoft.Net.MIME
                 return null;
             }
         }
-
-        #endregion
-                
-        #region method GetEnvelopedMime
 
         /// <summary>
         /// Decrypts enveloped mime content.
@@ -160,16 +142,9 @@ namespace LumiSoft.Net.MIME
             return MIME_Message.ParseFromStream(new MemoryStream(envelopedCms.Encode()));
         }
 
-        #endregion
-
 
         // public void CreateSigned(X509Certificate2 cert,MIME_Entity entity)
 
         // public void CreateEnveloped(X509Certificate2 cert,MIME_Entity entity)
-
-
-        #region Properties implementation
-
-        #endregion
     }
 }

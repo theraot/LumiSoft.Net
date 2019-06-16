@@ -28,8 +28,6 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets related FETCH response.
         /// </summary>
@@ -44,7 +42,5 @@ namespace LumiSoft.Net.IMAP.Client
         /// Gets stream where to store data-item data.
         /// </summary>
         public Stream Stream { get; set; }
-
-#endregion
     }
 }

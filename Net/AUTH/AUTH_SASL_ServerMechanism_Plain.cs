@@ -22,8 +22,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region override method Reset
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
@@ -33,10 +31,6 @@ namespace LumiSoft.Net.AUTH
             m_IsAuthenticated = false;
             m_UserName        = "";
         }
-
-        #endregion
-
-        #region override method Continue
 
         /// <summary>
         /// Continues authentication process.
@@ -89,10 +83,6 @@ namespace LumiSoft.Net.AUTH
             return null;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -131,16 +121,10 @@ namespace LumiSoft.Net.AUTH
             get{ return m_UserName; }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is called when authentication mechanism needs to authenticate specified user.
         /// </summary>
         public event EventHandler<AUTH_e_Authenticate> Authenticate;
-
-        #region method OnAuthenticate
 
         /// <summary>
         /// Raises <b>Authenticate</b> event.
@@ -159,9 +143,5 @@ namespace LumiSoft.Net.AUTH
 
             return retVal;
         }
-
-        #endregion
-
-        #endregion
     }
 }

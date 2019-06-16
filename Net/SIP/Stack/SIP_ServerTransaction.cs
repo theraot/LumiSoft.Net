@@ -34,8 +34,6 @@ namespace LumiSoft.Net.SIP.Stack
             Start();            
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -69,12 +67,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimer100_Elapsed
 
         /// <summary>
         /// Is raised when INVITE 100 (Trying) response must be sent if no response sent by transaction user.
@@ -120,10 +112,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerG_Elapsed
-
         /// <summary>
         /// Is raised when INVITE timer G triggered.
         /// </summary>
@@ -165,10 +153,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerH_Elapsed
-
         /// <summary>
         /// Is raised when INVITE timer H triggered.
         /// </summary>
@@ -196,10 +180,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pTimerI_Elapsed
-
         /// <summary>
         /// Is raised when INVITE timer I triggered.
         /// </summary>
@@ -221,10 +201,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region mehtod m_pTimerJ_Elapsed
-        
         /// <summary>
         /// Is raised when INVITE timer J triggered.
         /// </summary>
@@ -245,10 +221,6 @@ namespace LumiSoft.Net.SIP.Stack
                 SetState(SIP_TransactionState.Terminated);
             }
         }
-
-        #endregion
-
-        #region method m_pTimerL_Elapsed
 
         /// <summary>
         /// Is called when INVITE time L triggered.
@@ -272,20 +244,12 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts transaction processing.
         /// </summary>
         private void Start()
         {
-            #region INVITE
-
             if(this.Method == SIP_Methods.INVITE){
                 /* RFC 3261 17.2.1.
                     When a server transaction is constructed for a request, it enters the "Proceeding" state. The server 
@@ -300,22 +264,12 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pTimer100.Enabled = true;
             }
 
-            #endregion
-
-            #region Non-INVITE
-
             else{
                 // RFC 3261 17.2.2. The state machine is initialized in the "Trying" state.
                 SetState(SIP_TransactionState.Trying);
             }
-
-            #endregion
         }
-                
-        #endregion
 
-
-        #region method SendResponse
 
         /// <summary>
         /// Sends specified response to remote party.
@@ -334,8 +288,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
 
                 try{
-                    #region INVITE
-
                     /* RFC 6026 7.1. INVITE server transaction. (Udpates RFC 3261)   
                      
                                                              |INVITE
@@ -385,8 +337,6 @@ namespace LumiSoft.Net.SIP.Stack
                     */
 
                     if(this.Method == SIP_Methods.INVITE){
-                        #region Proceeding
-
                         if(this.State == SIP_TransactionState.Proceeding){
                             AddResponse(response);
 
@@ -447,46 +397,23 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
 
-                        #endregion
-
-                        #region Accepted
-
                         else if(this.State == SIP_TransactionState.Accpeted){
                             this.Stack.TransportLayer.SendResponse(this,response);
                             OnResponseSent(response);
                         }
 
-                        #endregion
-
-                        #region Completed
-
                         else if(this.State == SIP_TransactionState.Completed){
                             // We do nothing here, we just wait ACK to arrive.
                         }
-
-                        #endregion
-
-                        #region Confirmed
 
                         else if(this.State == SIP_TransactionState.Confirmed){
                             // We do nothing, just wait ACK retransmissions.
                         }
 
-                        #endregion
-
-                        #region Terminated
-
                         else if(this.State == SIP_TransactionState.Terminated){
                             // We should never rreach here, but if so, skip it.
                         }
-
-                        #endregion
                     }
-
-                    #endregion
-
-                    #region Non-INVITE
-
                     /* RFC 3261 17.2.2.
                                               |Request received
                                               |pass to TU
@@ -531,8 +458,6 @@ namespace LumiSoft.Net.SIP.Stack
                     */
 
                     else{
-                        #region Trying
-
                         if(this.State == SIP_TransactionState.Trying){
                             AddResponse(response);
 
@@ -564,10 +489,6 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
 
-                        #endregion
-
-                        #region Proceeding
-
                         else if(this.State == SIP_TransactionState.Proceeding){
                             AddResponse(response);
 
@@ -598,26 +519,14 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
 
-                        #endregion
-
-                        #region Completed
-
                         else if(this.State == SIP_TransactionState.Completed){
                             // Do nothing.
                         }
 
-                        #endregion
-
-                        #region Terminated
-
                         else if(this.State == SIP_TransactionState.Terminated){
                             // Do nothing.
                         }
-
-                        #endregion
                     }
-
-                    #endregion
                 }
                 catch(SIP_TransportException x){
                     // Log
@@ -629,10 +538,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-                                                                
-        #endregion
-
-        #region method Cancel
 
         /// <summary>
         /// Cancels current transaction processing and sends '487 Request Terminated'.
@@ -667,10 +572,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method ProcessRequest
 
         /// <summary>
         /// Processes specified request through this transaction.
@@ -709,11 +610,7 @@ namespace LumiSoft.Net.SIP.Stack
                         );
                     }
 
-                    #region INVITE
-
                     if(this.Method == SIP_Methods.INVITE){
-                        #region INVITE
-
                         if(request.RequestLine.Method == SIP_Methods.INVITE){
                             if(this.State == SIP_TransactionState.Proceeding){
                                 /* RFC 3261 17.2.1.
@@ -734,20 +631,10 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
 
-                        #endregion
-
-                        #region ACK
-
                         else if(request.RequestLine.Method == SIP_Methods.ACK){
-                            #region Accepeted
-
                             if(this.State == SIP_TransactionState.Accpeted){
                                 
                             }
-
-                            #endregion
-
-                            #region Completed
 
                             else if(this.State == SIP_TransactionState.Completed){
                                 /* RFC 3261 17.2.1
@@ -790,16 +677,8 @@ namespace LumiSoft.Net.SIP.Stack
                                 }
                                 m_pTimerI.Enabled = true;
                             }
-
-                            #endregion
                         }
-
-                        #endregion
                     }
-
-                    #endregion
-
-                    #region Non-INVITE
 
                     else{
                         // Non-INVITE transaction may have only request retransmission requests.
@@ -820,8 +699,6 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
                     }
-
-                    #endregion
                 }
                 catch(SIP_TransportException x){
                     // Log
@@ -833,22 +710,11 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-                
-        #endregion
-
-
-        #region Properties implementation
-
-        #endregion
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when transaction has sent response to remote party.
         /// </summary>
         public event EventHandler<SIP_ResponseSentEventArgs> ResponseSent;
-
-        #region method OnResponseSent
 
         /// <summary>
         /// Raises <b>ResponseSent</b> event.
@@ -861,14 +727,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when transaction has canceled.
         /// </summary>
         public event EventHandler Canceled;
-
-        #region method OnCanceled
 
         /// <summary>
         /// Raises <b>Canceled</b> event.
@@ -879,10 +741,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.Canceled(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

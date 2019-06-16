@@ -25,8 +25,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region override method Reset
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
@@ -38,10 +36,6 @@ namespace LumiSoft.Net.AUTH
             m_State           = 0;
             m_Key             = "";
         }
-
-        #endregion
-
-        #region override method Continue
 
         /// <summary>
         /// Continues authentication process.
@@ -147,12 +141,8 @@ namespace LumiSoft.Net.AUTH
             return null;
         }
 
-        #endregion
 
-
-        #region method HmacMd5
-
-		/// <summary>
+        /// <summary>
 		/// Calculates keyed md5 hash from specifieed text and with specified hash key.
 		/// </summary>
 		/// <param name="hashKey">MD5 key.</param>
@@ -165,10 +155,6 @@ namespace LumiSoft.Net.AUTH
 			return kMd5.ComputeHash(Encoding.ASCII.GetBytes(hashKey));
 		}
 
-		#endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -207,16 +193,10 @@ namespace LumiSoft.Net.AUTH
             get{ return m_UserName; }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is called when authentication mechanism needs to get user info to complete atuhentication.
         /// </summary>
         public event EventHandler<AUTH_e_UserInfo> GetUserInfo;
-
-        #region method OnGetUserInfo
 
         /// <summary>
         /// Raises <b>GetUserInfo</b> event.
@@ -233,9 +213,5 @@ namespace LumiSoft.Net.AUTH
 
             return retVal;
         }
-
-        #endregion
-
-        #endregion
     }
 }

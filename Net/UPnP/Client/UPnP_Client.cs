@@ -19,8 +19,6 @@ namespace LumiSoft.Net.UPnP.Client
         }
 
 
-        #region method Search
-
         /// <summary>
         /// Searches the network for UPnP root devices.
         /// </summary>
@@ -240,7 +238,5 @@ namespace LumiSoft.Net.UPnP.Client
                 return devices.ToArray();
             }        
         }
-
-        #endregion
     }
 }

@@ -20,9 +20,7 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static mehtod ConstructBodyStructure
-
-		/// <summary>
+        /// <summary>
 		/// Constructs FETCH BODY and BODYSTRUCTURE response.
 		/// </summary>
 		/// <param name="message">Mail message.</param>
@@ -326,10 +324,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();
 		}
 
-		#endregion
-
-
-        #region method Parse
 
         /// <summary>
         /// Parses IMAP BODYSTRUCTURE from body structure string.
@@ -341,12 +335,8 @@ namespace LumiSoft.Net.IMAP
             MainEntity.Parse(bodyStructureString);
         }
 
-        #endregion
 
-
-        #region method GetEntities
-
-		/// <summary>
+        /// <summary>
 		/// Gets mime entities, including nested entries. 
 		/// </summary>
 		/// <param name="entities"></param>
@@ -365,10 +355,6 @@ namespace LumiSoft.Net.IMAP
 			}
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets main entity.
@@ -416,8 +402,5 @@ namespace LumiSoft.Net.IMAP
                 return attachments.ToArray();
             }
         }
-
-        #endregion
-
     }
 }

@@ -19,8 +19,6 @@ namespace LumiSoft.Net.TCP
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets TCP server.
         /// </summary>
@@ -30,8 +28,5 @@ namespace LumiSoft.Net.TCP
         /// Gets TCP server session.
         /// </summary>
         public T Session { get; }
-
-#endregion
-
     }
 }

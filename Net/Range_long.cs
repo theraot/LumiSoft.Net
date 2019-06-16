@@ -27,8 +27,6 @@
         }
 
 
-        #region method Contains
-
         /// <summary>
         /// Gets if the specified value is within range.
         /// </summary>
@@ -43,10 +41,6 @@
             return false;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets range start.
@@ -57,7 +51,5 @@
         /// Gets range end.
         /// </summary>
         public long End { get; }
-
-#endregion
     }
 }

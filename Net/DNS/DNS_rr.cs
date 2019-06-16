@@ -19,8 +19,6 @@ namespace LumiSoft.Net.DNS
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets DNS domain name that owns a resource record.
         /// </summary>
@@ -35,7 +33,5 @@ namespace LumiSoft.Net.DNS
 		/// Gets TTL (time to live) value in seconds.
 		/// </summary>
 		public int TTL { get; } = -1;
-
-#endregion
-	}
+    }
 }

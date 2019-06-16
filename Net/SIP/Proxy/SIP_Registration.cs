@@ -40,8 +40,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region method GetBinding
-
         /// <summary>
         /// Gets matching binding. Returns null if no match.
         /// </summary>
@@ -64,10 +62,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 return null;
             }
         }
-
-        #endregion
-
-        #region method AddOrUpdateBindings
 
         /// <summary>
         /// Adds or updates matching bindings.
@@ -111,10 +105,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method RemoveBinding
-
         /// <summary>
         /// Removes specified binding.
         /// </summary>
@@ -131,10 +121,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-        #region method RemoveAllBindings
-
         /// <summary>
         /// Removes all this registration bindings.
         /// </summary>
@@ -144,10 +130,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 m_pBindings.Clear();
             }
         }
-
-        #endregion
-
-        #region method RemoveExpiredBindings
 
         /// <summary>
         /// Removes all expired bindings.
@@ -164,10 +146,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets time when this registration entry was created.
@@ -198,8 +176,5 @@ namespace LumiSoft.Net.SIP.Proxy
                 return retVal; 
             }
         }
-
-        #endregion
-
     }
 }

@@ -16,8 +16,6 @@ namespace LumiSoft.Net.WebDav
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses WebDav_PropStat from 'DAV:propstat' element.
         /// </summary>
@@ -50,10 +48,6 @@ namespace LumiSoft.Net.WebDav
             return retVAl;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets property HTTP status.
@@ -69,7 +63,5 @@ namespace LumiSoft.Net.WebDav
         /// Gets 'prop' element value.
         /// </summary>
         public WebDav_Prop Prop { get; private set; }
-
-#endregion
     }
 }

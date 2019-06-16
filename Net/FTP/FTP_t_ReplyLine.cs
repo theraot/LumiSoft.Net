@@ -25,8 +25,6 @@ namespace LumiSoft.Net.FTP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses FTP reply-line from 
         /// </summary>
@@ -61,10 +59,6 @@ namespace LumiSoft.Net.FTP
             return new FTP_t_ReplyLine(replyCode,text,isLastLine);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as FTP server <b>reply-line</b>.
@@ -80,10 +74,6 @@ namespace LumiSoft.Net.FTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets SMTP server reply code.
@@ -99,7 +89,5 @@ namespace LumiSoft.Net.FTP
         /// Gets if this is last reply line.
         /// </summary>
         public bool IsLastLine { get; } = true;
-
-#endregion
     }
 }

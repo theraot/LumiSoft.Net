@@ -18,8 +18,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets authentication context.
         /// </summary>
@@ -29,8 +27,5 @@ namespace LumiSoft.Net.SIP.Proxy
         /// Gets or sets if specified request is authenticated.
         /// </summary>
         public bool Authenticated { get; set; }
-
-#endregion
-
     }
 }

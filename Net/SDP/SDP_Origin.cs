@@ -54,8 +54,6 @@ namespace LumiSoft.Net.SDP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses SDP Origin("o=") from specified value.
         /// </summary>
@@ -93,10 +91,6 @@ namespace LumiSoft.Net.SDP
             );
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns origin as SDP string.
@@ -107,10 +101,6 @@ namespace LumiSoft.Net.SDP
             return "o=" + UserName + " " + SessionID +  " " + SessionVersion + " " + NetType + " " + AddressType + " " + UnicastAddress + "\r\n";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets user name.
@@ -142,8 +132,5 @@ namespace LumiSoft.Net.SDP
         /// Gets address(DNS host name or IP address). 
         /// </summary>
         public string UnicastAddress { get; }
-
-#endregion
-
     }
 }

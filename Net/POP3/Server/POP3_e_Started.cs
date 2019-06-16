@@ -17,14 +17,10 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region roperties implementation
-
         /// <summary>
         /// Gets or sets POP3 server response.
         /// </summary>
         /// <remarks>Response also MUST contain response code(+OK / -ERR). For example: "-ERR Session rejected."</remarks>
         public string Response { get; set; }
-
-#endregion
     }
 }

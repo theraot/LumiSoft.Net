@@ -69,8 +69,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region override method Equals
-
         /// <summary>
         /// Compares the current instance with another object of the same type.
         /// </summary>
@@ -105,10 +103,6 @@ namespace LumiSoft.Net
             return true;
         }
 
-        #endregion
-
-        #region override method GetHashCode
-
         /// <summary>
         /// Returns the hash code.
         /// </summary>
@@ -118,10 +112,6 @@ namespace LumiSoft.Net
             return base.GetHashCode();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets host name.
@@ -178,8 +168,5 @@ namespace LumiSoft.Net
         /// Gets or sets user data. This is used internally don't use it !!!.
         /// </summary>
         public object Tag { get; set; }
-
-#endregion
-
     }
 }

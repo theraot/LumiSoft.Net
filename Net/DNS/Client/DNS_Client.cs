@@ -113,8 +113,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -148,10 +146,6 @@ namespace LumiSoft.Net.DNS.Client
             Cache = null;
         }
 
-        #endregion
-
-
-        #region method CreateTransaction
 
         /// <summary>
         /// Creates new DNS client transaction.
@@ -245,10 +239,6 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
         }
 
-        #endregion
-
-        #region method Query
-
         /// <summary>
 		/// Queries server with specified query.
 		/// </summary>
@@ -303,10 +293,6 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
 		}
 
-		#endregion
-        
-        #region method GetHostAddresses
-
         /// <summary>
         /// Gets host IPv4 and IPv6 addresses.
         /// </summary>
@@ -345,12 +331,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-        #region method GetHostAddressesAsync
-
-        #region class GetHostAddressesAsyncOP
-
         /// <summary>
         /// This class represents <see cref="Dns_Client.GetHostAddressesAsync"/> asynchronous operation.
         /// </summary>
@@ -381,8 +361,6 @@ namespace LumiSoft.Net.DNS.Client
                 m_pIPv6Addresses = new List<IPAddress>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -401,10 +379,6 @@ namespace LumiSoft.Net.DNS.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -457,8 +431,6 @@ namespace LumiSoft.Net.DNS.Client
 			    }
                 // Query A/AAAA records.
                 else{
-                    #region A records transaction
-
                     DNS_ClientTransaction transaction_A = dnsClient.CreateTransaction(DNS_QType.A,m_HostNameOrIP,2000);
                     transaction_A.StateChanged += delegate(object s1,EventArgs<DNS_ClientTransaction> e1){ 
                         if(e1.Value.State == DNS_ClientTransactionState.Completed){
@@ -493,10 +465,6 @@ namespace LumiSoft.Net.DNS.Client
                         }
                     };
                     transaction_A.Start();
-                    
-                    #endregion
-
-                    #region AAAA records transaction
 
                     DNS_ClientTransaction transaction_AAAA = dnsClient.CreateTransaction(DNS_QType.AAAA,m_HostNameOrIP,2000);
                     transaction_AAAA.StateChanged += delegate(object s1,EventArgs<DNS_ClientTransaction> e1){
@@ -532,8 +500,6 @@ namespace LumiSoft.Net.DNS.Client
                         }
                     };
                     transaction_AAAA.Start();
-
-                    #endregion
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
@@ -545,10 +511,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -569,10 +531,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -640,16 +598,10 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<GetHostAddressesAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -660,13 +612,7 @@ namespace LumiSoft.Net.DNS.Client
                     this.CompletedAsync(this,new EventArgs<GetHostAddressesAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts resolving host IPv4 and IPv6 addresses.
@@ -690,10 +636,6 @@ namespace LumiSoft.Net.DNS.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetHostsAddresses
 
         /// <summary>
         /// Resolving multiple host IPv4 and IPv6 addresses.
@@ -748,12 +690,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-        #region method GetHostsAddressesAsync
-
-        #region class GetHostsAddressesAsyncOP
-
         /// <summary>
         /// This class represents <see cref="Dns_Client.GetHostsAddressesAsync"/> asynchronous operation.
         /// </summary>
@@ -796,8 +732,6 @@ namespace LumiSoft.Net.DNS.Client
             }
 
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -816,10 +750,6 @@ namespace LumiSoft.Net.DNS.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -870,10 +800,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -893,10 +819,6 @@ namespace LumiSoft.Net.DNS.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method GetHostAddressesCompleted
 
             /// <summary>
             /// This method is called when GetHostAddresses operation has completed.
@@ -949,10 +871,6 @@ namespace LumiSoft.Net.DNS.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1015,16 +933,10 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<GetHostsAddressesAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1035,14 +947,8 @@ namespace LumiSoft.Net.DNS.Client
                     this.CompletedAsync(this,new EventArgs<GetHostsAddressesAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
 
-        #endregion
-        
         /// <summary>
         /// Starts resolving multiple host IPv4 and IPv6 addresses.
         /// </summary>
@@ -1065,10 +971,6 @@ namespace LumiSoft.Net.DNS.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method GetEmailHosts
 
         /// <summary>
         /// Gets email hosts.
@@ -1112,12 +1014,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-        #region method GetEmailHostsAsync
-
-        #region class GetEmailHostsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="Dns_Client.GetEmailHostsAsync"/> asynchronous operation.
         /// </summary>
@@ -1152,8 +1048,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -1171,10 +1065,6 @@ namespace LumiSoft.Net.DNS.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1216,10 +1106,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1239,10 +1125,6 @@ namespace LumiSoft.Net.DNS.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method LookupMX
 
             /// <summary>
             /// Starts looking up MX records for specified domain.
@@ -1365,10 +1247,6 @@ namespace LumiSoft.Net.DNS.Client
                 transaction_MX.Start();
             }
 
-            #endregion
-
-            #region method Get_A_or_AAAA_FromResponse
-
             /// <summary>
             /// Gets A and AAAA records from DNS server additional responses section.
             /// </summary>
@@ -1404,10 +1282,6 @@ namespace LumiSoft.Net.DNS.Client
 
                 return aList.ToArray();
             }
-
-            #endregion
-
-            #region method LookupCompleted
 
             /// <summary>
             /// This method is called when A/AAAA lookup has completed.
@@ -1455,10 +1329,6 @@ namespace LumiSoft.Net.DNS.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-                                    
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1521,16 +1391,10 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<GetEmailHostsAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1541,13 +1405,7 @@ namespace LumiSoft.Net.DNS.Client
                     this.CompletedAsync(this,new EventArgs<GetEmailHostsAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts getting email hosts.
@@ -1572,10 +1430,6 @@ namespace LumiSoft.Net.DNS.Client
             return op.Start(this);
         }
 
-        #endregion
-                        
-
-        #region method Send
 
         /// <summary>
         /// Sends specified packet to the specified target IP end point.
@@ -1605,10 +1459,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-
-        #region method ProcessUdpPacket
 
         /// <summary>
         /// Processes received UDP packet.
@@ -1643,10 +1493,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-        #endregion
-
-
-        #region method GetQName
 
         internal static bool GetQName(byte[] reply,ref int offset,ref string name)
 		{
@@ -1715,11 +1561,7 @@ namespace LumiSoft.Net.DNS.Client
 			}
 		}
 
-		#endregion
-
-		#region method ParseQuery
-
-		/// <summary>
+        /// <summary>
 		/// Parses query.
 		/// </summary>
 		/// <param name="reply">Dns server reply.</param>
@@ -1795,11 +1637,7 @@ namespace LumiSoft.Net.DNS.Client
 			return new DnsServerResponse(true,id,replyCode,answers,authoritiveAnswers,additionalAnswers);
 		}
 
-		#endregion
-
-		#region method ParseAnswers
-
-		/// <summary>
+        /// <summary>
 		/// Parses specified count of answers from query.
 		/// </summary>
 		/// <param name="reply">Server returned query.</param>
@@ -1890,10 +1728,6 @@ namespace LumiSoft.Net.DNS.Client
 			return answers;
 		}
 
-		#endregion
-
-        #region method ReadCharacterString
-
         /// <summary>
         /// Reads character-string from spefcified data and offset.
         /// </summary>
@@ -1915,10 +1749,6 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets static DNS client.
@@ -1973,12 +1803,8 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public DNS_ClientCache Cache { get; private set; }
 
-#endregion
-
 
         //--- OBSOLETE --------------------
-
-        #region [obsolete] static method Resolve
 
         /// <summary>
         /// Resolves host names to IP addresses.
@@ -2049,8 +1875,5 @@ namespace LumiSoft.Net.DNS.Client
                 }
 			}
 		}
-
-		#endregion
-
-	}
+    }
 }

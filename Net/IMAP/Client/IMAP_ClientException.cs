@@ -61,8 +61,6 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets IMAP server response.
         /// </summary>
@@ -83,8 +81,5 @@ namespace LumiSoft.Net.IMAP.Client
         {
             get{ return Response.ResponseText; }
         }
-
-        #endregion
-
     }
 }

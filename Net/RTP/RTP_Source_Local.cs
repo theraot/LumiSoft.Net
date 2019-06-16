@@ -33,8 +33,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method SendApplicationPacket
-
         /// <summary>
         /// Sends specified application packet to the RTP session target(s).
         /// </summary>
@@ -60,10 +58,6 @@ namespace LumiSoft.Net.RTP
             this.Session.SendRtcpPacket(p);
         }
 
-        #endregion
-
-
-        #region method Close
 
         /// <summary>
         /// Closes this source, sends BYE to remote party.
@@ -93,10 +87,6 @@ namespace LumiSoft.Net.RTP
             base.Close(closeReason);
         }
 
-        #endregion
-
-        #region method CreateStream
-
         /// <summary>
         /// Creates RTP send stream for this source.
         /// </summary>
@@ -115,10 +105,6 @@ namespace LumiSoft.Net.RTP
 
             SetState(RTP_SourceState.Active);
         }
-
-        #endregion
-
-        #region method SendRtpPacket
 
         /// <summary>
         /// Sends specified RTP packet to the session remote party.
@@ -143,10 +129,6 @@ namespace LumiSoft.Net.RTP
             return this.Session.SendRtpPacket(Stream,packet);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Returns true.
@@ -191,7 +173,5 @@ namespace LumiSoft.Net.RTP
                 }
             }
         }
-
-        #endregion
     }
 }

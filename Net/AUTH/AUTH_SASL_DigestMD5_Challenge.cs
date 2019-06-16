@@ -44,8 +44,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses DIGEST-MD5 challenge from challenge-string.
         /// </summary>
@@ -110,10 +108,6 @@ namespace LumiSoft.Net.AUTH
             return retVal;
         }
 
-        #endregion
-
-
-        #region method ToChallenge
 
         /// <summary>
         /// Returns DIGEST-MD5 "digest-challenge" string.
@@ -173,10 +167,6 @@ namespace LumiSoft.Net.AUTH
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets realm value. For more info see RFC 2831.
@@ -217,7 +207,5 @@ namespace LumiSoft.Net.AUTH
         /// Gets cipher-opts value. For more info see RFC 2831.
         /// </summary>
         public string CipherOpts { get; private set; }
-
-#endregion
     }
 }

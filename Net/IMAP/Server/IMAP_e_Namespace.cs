@@ -24,8 +24,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets IMAP server NAMESPACE response.
         /// </summary>
@@ -47,7 +45,5 @@ namespace LumiSoft.Net.IMAP.Server
                 m_pResponse = value; 
             }
         }
-
-        #endregion
     }
 }

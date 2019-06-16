@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses EXPUNGE response from expunge-response string.
         /// </summary>
@@ -81,10 +79,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Expunge(Convert.ToInt32(response.Split(' ')[1]));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -97,16 +91,10 @@ namespace LumiSoft.Net.IMAP
             return "* " + SeqNo.ToString() + " EXPUNGE\r\n";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets message sequence number.
         /// </summary>
         public int SeqNo { get; } = 1;
-
-#endregion
     }
 }

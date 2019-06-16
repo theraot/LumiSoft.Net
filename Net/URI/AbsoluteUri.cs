@@ -16,9 +16,7 @@ namespace LumiSoft.Net
         internal AbsoluteUri()
         {
         }
-        
 
-        #region static method Parse
 
         /// <summary>
         /// Parse URI from string value.
@@ -50,10 +48,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region virtual ParseInternal
 
         /// <summary>
         /// Parses URI from the specified string.
@@ -73,10 +67,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Converts URI to string.
@@ -87,10 +77,6 @@ namespace LumiSoft.Net
             return m_Scheme + ":" + m_Value;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets URI scheme.
@@ -107,8 +93,5 @@ namespace LumiSoft.Net
         {
             get{ return ToString().Split(new char[]{':'},2)[1]; }
         }
-
-        #endregion
-
     }
 }

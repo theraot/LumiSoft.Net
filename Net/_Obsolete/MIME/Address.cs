@@ -18,9 +18,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets if address is group address or mailbox address.
 		/// </summary>
 		public bool IsGroupAddress { get; }
@@ -30,8 +28,5 @@ namespace LumiSoft.Net.Mime
 		/// Gets or sets owner of this address.
 		/// </summary>
 		internal object Owner { get; set; }
-
-#endregion
-
-	}
+    }
 }

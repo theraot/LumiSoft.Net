@@ -19,8 +19,6 @@ namespace LumiSoft.Net.SDP
         }
 
 
-        #region method static Parse
-
         /// <summary>
         /// Parses media from "a" SDP message field.
         /// </summary>
@@ -53,10 +51,6 @@ namespace LumiSoft.Net.SDP
             return new SDP_Attribute(name,value);
         }
 
-        #endregion
-
-        #region method ToValue
-
         /// <summary>
         /// Converts this to valid "a" string.
         /// </summary>
@@ -76,10 +70,6 @@ namespace LumiSoft.Net.SDP
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets attribute name.
@@ -90,8 +80,5 @@ namespace LumiSoft.Net.SDP
         /// Gets or sets attribute value.
         /// </summary>
         public string Value { get; set; } = "";
-
-#endregion
-
     }
 }

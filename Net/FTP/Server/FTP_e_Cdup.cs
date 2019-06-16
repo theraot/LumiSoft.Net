@@ -15,13 +15,9 @@ namespace LumiSoft.Net.FTP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>
         public FTP_t_ReplyLine[] Response { get; set; }
-
-#endregion
     }
 }

@@ -17,14 +17,10 @@ namespace LumiSoft.Net.FTP.Server
         }
 
 
-        #region roperties implementation
-
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>
         /// <remarks>Response also MUST contain response code(220 / 500). For example: "500 Session rejected."</remarks>
         public string Response { get; set; }
-
-#endregion
     }
 }

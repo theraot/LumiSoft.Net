@@ -22,8 +22,6 @@ namespace LumiSoft.Net.DNS
 		}
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -60,10 +58,6 @@ namespace LumiSoft.Net.DNS
 			return new DNS_rr_HINFO(name,cpu,os,ttl);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
 		/// Gets host's CPU.
@@ -74,7 +68,5 @@ namespace LumiSoft.Net.DNS
 		/// Gets host's OS.
 		/// </summary>
 		public string OS { get; } = "";
-
-#endregion
-	}
+    }
 }

@@ -27,8 +27,6 @@ namespace LumiSoft.Net.FTP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets error response.
         /// </summary>
@@ -43,7 +41,5 @@ namespace LumiSoft.Net.FTP.Server
         /// Gets or sets file stream.
         /// </summary>
         public Stream FileStream { get; set; }
-
-#endregion
     }
 }

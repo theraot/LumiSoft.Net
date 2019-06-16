@@ -26,10 +26,8 @@ namespace LumiSoft.Net.Mime
 			m_pAddresses = new List<Address>();
 		}
 
-		
-		#region method Add
 
-		/// <summary>
+        /// <summary>
 		/// Adds a new address to the end of the collection.
 		/// </summary>
 		/// <param name="address">Address to add.</param>
@@ -41,11 +39,7 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
-
-		#region method Insert
-
-		/// <summary>
+        /// <summary>
 		/// Inserts a new address into the collection at the specified location.
 		/// </summary>
 		/// <param name="index">The location in the collection where you want to add the address.</param>
@@ -58,12 +52,8 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
 
-
-		#region method Remove
-		
-		/// <summary>
+        /// <summary>
 		/// Removes address at the specified index from the collection.
 		/// </summary>
 		/// <param name="index">Index of the address which to remove.</param>
@@ -84,11 +74,7 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
-
-		#region method Clear
-
-		/// <summary>
+        /// <summary>
 		/// Clears the collection of all addresses.
 		/// </summary>
 		public void Clear()
@@ -101,12 +87,8 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
 
-
-		#region method Parse
-
-		/// <summary>
+        /// <summary>
 		/// Parses address-list from string.
 		/// </summary>
 		/// <param name="addressList">Address list string.</param>
@@ -150,12 +132,8 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-		#endregion
 
-
-		#region method ToAddressListString
-        
-		/// <summary>
+        /// <summary>
 		/// Convert addresses to Rfc 2822 address-list string.
 		/// </summary>
 		/// <returns></returns>
@@ -186,12 +164,8 @@ namespace LumiSoft.Net.Mime
 			return retVal.ToString();
 		}
 
-		#endregion
 
-
-		#region internal method OnCollectionChanged
-
-		/// <summary>
+        /// <summary>
 		/// This called when collection has changed. Item is added,deleted,changed or collection cleared.
 		/// </summary>
 		internal void OnCollectionChanged()
@@ -202,12 +176,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -216,11 +186,7 @@ namespace LumiSoft.Net.Mime
 			return m_pAddresses.GetEnumerator();
 		}
 
-		#endregion
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets all mailbox addresses. Note: group address mailbox addresses are also included.
 		/// </summary>
 		public MailboxAddress[] Mailboxes
@@ -266,8 +232,5 @@ namespace LumiSoft.Net.Mime
 		/// Bound address-list to specified header field.
 		/// </summary>
 		internal HeaderField BoundedHeaderField { get; set; }
-
-#endregion
-
-	}
+    }
 }

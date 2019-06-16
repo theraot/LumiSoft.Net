@@ -40,8 +40,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method Changed
-
         /// <summary>
         /// This method is called when some property has changed, we need to update underlaying vCard item.
         /// </summary>
@@ -60,10 +58,6 @@ namespace LumiSoft.Net.Mime.vCard
             Item.SetDecodedValue(value);
         }
 
-        #endregion
-
-
-        #region internal static method Parse
 
         /// <summary>
         /// Parses delivery address from vCard ADR structure string.
@@ -108,10 +102,6 @@ namespace LumiSoft.Net.Mime.vCard
             );
         }
 
-        #endregion
-
-        #region internal static AddressTypeToString
-
         /// <summary>
         /// Converts DeliveryAddressType_enum to vCard item parameters string.
         /// </summary>
@@ -148,10 +138,6 @@ namespace LumiSoft.Net.Mime.vCard
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets underlaying vCrad item.
@@ -261,8 +247,5 @@ namespace LumiSoft.Net.Mime.vCard
                 Changed();
             }
         }
-
-        #endregion
-
     }
 }

@@ -52,8 +52,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region static method CreateBranch
-
         /// <summary>
         /// Creates new branch paramter value.
         /// </summary>
@@ -65,10 +63,6 @@ namespace LumiSoft.Net.SIP.Message
             return "z9hG4bK-" + Guid.NewGuid().ToString().Replace("-","");
         }
 
-        #endregion
-
-
-        #region method Parse
 
         /// <summary>
         /// Parses "via-parm" from specified value.
@@ -154,10 +148,6 @@ namespace LumiSoft.Net.SIP.Message
             this.ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "via-parm" value.
         /// </summary>
@@ -201,10 +191,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-        
-        #region Properties Implementation
 
         /// <summary>
         /// Gets sent protocol name. Normally this is always SIP.
@@ -454,8 +440,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

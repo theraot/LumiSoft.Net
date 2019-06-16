@@ -33,8 +33,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets DNS host name.
         /// </summary>
@@ -49,7 +47,5 @@ namespace LumiSoft.Net
         /// Gets list of aliases(CNAME) that are associated with a host.
         /// </summary>
         public string[] Aliases { get; }
-
-#endregion
     }
 }

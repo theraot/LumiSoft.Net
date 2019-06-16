@@ -21,9 +21,7 @@ namespace LumiSoft.Net.SIP.Message
 		}
 
 
-		#region method Add
-        
-		/// <summary>
+        /// <summary>
 		/// Adds a new header field with specified name and value to the end of the collection.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -42,11 +40,7 @@ namespace LumiSoft.Net.SIP.Message
 			m_pHeaderFields.Add(headerField);
 		}
 
-		#endregion
-
-		#region method Insert
-
-		/// <summary>
+        /// <summary>
 		/// Inserts a new header field into the collection at the specified location.
 		/// </summary>
 		/// <param name="index">The location in the collection where you want to add the header field.</param>
@@ -56,10 +50,6 @@ namespace LumiSoft.Net.SIP.Message
 		{
             m_pHeaderFields.Insert(index,GetheaderField(fieldName,value));
 		}
-
-		#endregion
-
-        #region method Set
 
         /// <summary>
         /// Sets specified header field value. If header field existst, first found value is set.
@@ -78,10 +68,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-
-        #region method Remove
 
         /// <summary>
 		/// Removes header field at the specified index from the collection.
@@ -101,10 +87,6 @@ namespace LumiSoft.Net.SIP.Message
 			m_pHeaderFields.Remove(field);
 		}
 
-		#endregion
-
-        #region method RemoveFirst
-
         /// <summary>
         /// Removes first header field with specified name.
         /// </summary>
@@ -118,10 +100,6 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
-        #region method RemoveAll
 
         /// <summary>
 		/// Removes all header fields with specified name from the collection.
@@ -138,11 +116,7 @@ namespace LumiSoft.Net.SIP.Message
 			}
 		}
 
-		#endregion
-		
-		#region method Clear
-
-		/// <summary>
+        /// <summary>
 		/// Clears the collection of all header fields.
 		/// </summary>
 		public void Clear()
@@ -150,12 +124,8 @@ namespace LumiSoft.Net.SIP.Message
 			m_pHeaderFields.Clear();
 		}
 
-		#endregion
 
-
-		#region method Contains
-
-		/// <summary>
+        /// <summary>
 		/// Gets if collection contains specified header field.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -181,12 +151,8 @@ namespace LumiSoft.Net.SIP.Message
 			return m_pHeaderFields.Contains(headerField);
 		}
 
-		#endregion
 
-
-		#region method GetFirst
-
-		/// <summary>
+        /// <summary>
 		/// Gets first header field with specified name, returns null if specified field doesn't exist.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -202,11 +168,7 @@ namespace LumiSoft.Net.SIP.Message
 			return null;
 		}
 
-		#endregion
-
-		#region method Get
-
-		/// <summary>
+        /// <summary>
 		/// Gets header fields with specified name.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -223,12 +185,8 @@ namespace LumiSoft.Net.SIP.Message
             return fields.ToArray();
 		}
 
-		#endregion
 
-
-        #region method Parse
-	
-		/// <summary>
+        /// <summary>
 		/// Parses header fields from string.
 		/// </summary>
 		/// <param name="headerString">Header string.</param>
@@ -296,12 +254,8 @@ namespace LumiSoft.Net.SIP.Message
                 }
 			}
 		}
-		
-		#endregion
 
-        #region method ToHeaderString
-
-		/// <summary>
+        /// <summary>
 		/// Converts header fields to SIP message header string.
 		/// </summary>
 		/// <returns>Returns SIP message header as string.</returns>
@@ -316,10 +270,6 @@ namespace LumiSoft.Net.SIP.Message
 			return headerString.ToString();
 		}
 
-		#endregion
-
-        
-        #region method GetheaderField
 
         /// <summary>
         /// Gets right type header field.
@@ -564,10 +514,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-
-        #region interface IEnumerator
 
         /// <summary>
 		/// Gets enumerator.
@@ -578,11 +524,7 @@ namespace LumiSoft.Net.SIP.Message
 			return m_pHeaderFields.GetEnumerator();
 		}
 
-		#endregion
-
-		#region Properties Implementation
-		
-		/// <summary>
+        /// <summary>
 		/// Gets header field from specified index.
 		/// </summary>
 		public SIP_HeaderField this[int index]
@@ -597,8 +539,5 @@ namespace LumiSoft.Net.SIP.Message
 		{
 			get{ return m_pHeaderFields.Count; }
 		}
-
-		#endregion
-
-	}
+    }
 }

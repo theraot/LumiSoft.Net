@@ -31,8 +31,6 @@ namespace LumiSoft.Net.MIME
             m_pCharset = charset;
         }
 
-                
-        #region method Encode
 
         /// <summary>
         /// Encodes specified text if it contains 8-bit chars, otherwise text won't be encoded.
@@ -49,10 +47,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method Decode
-
         /// <summary>
         /// Decodes specified encoded-word.
         /// </summary>
@@ -68,10 +62,6 @@ namespace LumiSoft.Net.MIME
             return DecodeS(text);
         }
 
-        #endregion
-
-
-        #region static method MustEncode
 
         /// <summary>
         /// Checks if specified text must be encoded.
@@ -95,10 +85,6 @@ namespace LumiSoft.Net.MIME
 
             return false;
         }
-
-        #endregion
-
-        #region static method EncodeS
 
         /// <summary>
         /// Encodes specified text if it contains 8-bit chars, otherwise text won't be encoded.
@@ -151,15 +137,9 @@ namespace LumiSoft.Net.MIME
                     string part = parts[i];
                     byte[] data = charset.GetBytes(part);
 
-                    #region B encode
-
                     if(encoding == MIME_EncodedWordEncoding.B){
                         retVal.Append("=?" + charset.WebName + "?B?" + Convert.ToBase64String(data) + "?=");
                     }
-
-                    #endregion
-
-                    #region Q encode
 
                     else{
                         retVal.Append("=?" + charset.WebName + "?Q?");
@@ -180,8 +160,6 @@ namespace LumiSoft.Net.MIME
                         retVal.Append("?=");
                     }
 
-                    #endregion
-
                     if(i < (parts.Count - 1)){
                         retVal.Append("\r\n ");
                     }
@@ -193,10 +171,6 @@ namespace LumiSoft.Net.MIME
                 return text;
             }
         }
-
-        #endregion
-
-        #region static method DecodeS
 
         /// <summary>
         /// Decodes non-ascii word with MIME <b>encoded-word</b> method. Defined in RFC 2047 2.
@@ -213,10 +187,6 @@ namespace LumiSoft.Net.MIME
 
             return DecodeTextS(word);
         }
-
-        #endregion
-
-        #region static method DecodeTextS
 
         /// <summary>
         /// Decodes non-ascii text with MIME <b>encoded-word</b> method. Defined in RFC 2047 2.
@@ -283,17 +253,10 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets if long words(over 75 char) are splitted.
         /// </summary>
         public bool Split { get; set; } = true;
-
-#endregion
-
     }
 }

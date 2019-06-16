@@ -20,8 +20,6 @@ namespace LumiSoft.Net.WebDav
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses WebDav_Prop from 'DAV:prop' element.
         /// </summary>
@@ -56,10 +54,6 @@ namespace LumiSoft.Net.WebDav
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets properties.
@@ -84,7 +78,5 @@ namespace LumiSoft.Net.WebDav
                 return null;
             }
         }
-        
-        #endregion
     }
 }

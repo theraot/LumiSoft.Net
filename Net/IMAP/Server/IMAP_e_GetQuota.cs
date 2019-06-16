@@ -29,8 +29,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets QUOTA responses collection.
         /// </summary>
@@ -57,7 +55,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets quopta root name.
         /// </summary>
         public string QuotaRoot { get; }
-
-#endregion
     }
 }

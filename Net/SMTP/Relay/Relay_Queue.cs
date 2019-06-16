@@ -30,8 +30,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pQueue = new Queue<Relay_QueueItem>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -39,10 +37,6 @@ namespace LumiSoft.Net.SMTP.Relay
         {
         }
 
-        #endregion
-
-
-        #region method QueueMessage
 
         /// <summary>
         /// Queues message for relay.
@@ -90,10 +84,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method DequeueMessage
-
         /// <summary>
         /// Dequeues message from queue. If there are no messages, this method returns null.
         /// </summary>
@@ -110,10 +100,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets queue name.
@@ -127,8 +113,5 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ return m_pQueue.Count; }
         }
-
-        #endregion
-
     }
 }

@@ -31,8 +31,6 @@ namespace LumiSoft.Net.IO
             Dispose();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -51,10 +49,6 @@ namespace LumiSoft.Net.IO
             base.Dispose();
         }
 
-        #endregion
-
-
-        #region override method Flush
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -68,10 +62,6 @@ namespace LumiSoft.Net.IO
 
             m_pStream.Flush();
         }
-
-        #endregion
-
-        #region override method Seek
 
         /// <summary>
         /// Sets the position within the current stream.
@@ -89,10 +79,6 @@ namespace LumiSoft.Net.IO
             return m_pStream.Seek(offset,origin);
         }
 
-        #endregion
-
-        #region override method SetLength
-
         /// <summary>
         /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
         /// </summary>
@@ -107,10 +93,6 @@ namespace LumiSoft.Net.IO
 
             m_pStream.SetLength(value);
         }
-
-        #endregion
-
-        #region override method Read
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -132,10 +114,6 @@ namespace LumiSoft.Net.IO
             
             return m_pStream.Read(buffer,offset,count);
         }
-
-        #endregion
-
-        #region override method Write
 
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
@@ -169,10 +147,6 @@ namespace LumiSoft.Net.IO
             m_pStream.Write(buffer,offset,count);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
@@ -260,7 +234,5 @@ namespace LumiSoft.Net.IO
                 m_pStream.Position = value;
             }
         }
-
-        #endregion
     }
 }

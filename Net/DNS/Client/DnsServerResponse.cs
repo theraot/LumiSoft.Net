@@ -24,9 +24,7 @@ namespace LumiSoft.Net.DNS.Client
 		}
 
 
-		#region method GetARecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets IPv4 host addess records.
 		/// </summary>
 		/// <returns></returns>
@@ -42,11 +40,7 @@ namespace LumiSoft.Net.DNS.Client
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetNSRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets name server records.
 		/// </summary>
 		/// <returns></returns>
@@ -62,11 +56,7 @@ namespace LumiSoft.Net.DNS.Client
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetCNAMERecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets CNAME records.
 		/// </summary>
 		/// <returns></returns>
@@ -82,11 +72,7 @@ namespace LumiSoft.Net.DNS.Client
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetSOARecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets SOA records.
 		/// </summary>
 		/// <returns></returns>
@@ -102,11 +88,7 @@ namespace LumiSoft.Net.DNS.Client
 			return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetPTRRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets PTR records.
 		/// </summary>
 		/// <returns></returns>
@@ -122,11 +104,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetHINFORecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets HINFO records.
 		/// </summary>
 		/// <returns></returns>
@@ -142,11 +120,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetMXRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets MX records.(MX records are sorted by preference, lower array element is prefered)
 		/// </summary>
 		/// <returns></returns>
@@ -166,11 +140,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
 		}
 
-		#endregion
-
-		#region method GetTXTRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets text records.
 		/// </summary>
 		/// <returns></returns>
@@ -186,11 +156,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
-
-		#region method GetAAAARecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets IPv6 host addess records.
 		/// </summary>
 		/// <returns></returns>
@@ -206,11 +172,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
-
-        #region method GetSRVRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets SRV resource records.
 		/// </summary>
 		/// <returns></returns>
@@ -226,11 +188,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
-
-        #region method GetNAPTRRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets NAPTR resource records.
 		/// </summary>
 		/// <returns></returns>
@@ -246,11 +204,7 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
-
-        #region method GetSPFRecords
-
-		/// <summary>
+        /// <summary>
 		/// Gets SPF resource records.
 		/// </summary>
 		/// <returns></returns>
@@ -266,12 +220,8 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-		#endregion
 
-
-		#region method FilterRecords
-
-		/// <summary>
+        /// <summary>
 		/// Filters out specified type of records from answer.
 		/// </summary>
 		/// <param name="answers"></param>
@@ -289,12 +239,8 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
 		}
 
-		#endregion
 
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets if connection to dns server was successful.
 		/// </summary>
 		public bool ConnectionOk { get; } = true;
@@ -365,7 +311,5 @@ namespace LumiSoft.Net.DNS.Client
 		{
 			get{ return m_pAdditionalAnswers.ToArray(); }
 		}
-
-		#endregion
-	}
+    }
 }

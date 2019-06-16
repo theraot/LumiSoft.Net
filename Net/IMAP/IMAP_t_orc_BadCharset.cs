@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses BADCHARSET optional response from string.
         /// </summary>
@@ -44,10 +42,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_BadCharset(code_value[1].Trim().Split(' '));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -58,16 +52,10 @@ namespace LumiSoft.Net.IMAP
             return "BADCHARSET " + Net_Utils.ArrayToString(Charsets," ");
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets list of supported charsets.
         /// </summary>
         public string[] Charsets { get; }
-
-#endregion
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets if this header field parameter is modified since it has loaded.
         /// </summary>
@@ -51,8 +49,5 @@ namespace LumiSoft.Net.MIME
                 IsModified = true;
             }
         }
-
-        #endregion
-
     }
 }

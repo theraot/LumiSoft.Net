@@ -17,8 +17,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses UIDNEXT optional response from string.
         /// </summary>
@@ -42,10 +40,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_UidNext(Convert.ToInt32(code_value[1]));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -56,16 +50,10 @@ namespace LumiSoft.Net.IMAP
             return "UIDNEXT " + UidNext;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets next message predicted UID value.
         /// </summary>
         public int UidNext { get; }
-
-#endregion
     }
 }

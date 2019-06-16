@@ -17,8 +17,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_TransportLayer
     {
-        #region class SIP_FlowManager
-
         /// <summary>
         /// Implements SIP flow manager.
         /// </summary>
@@ -51,8 +49,6 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pTimeoutTimer.Enabled = true;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -75,12 +71,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
-
-            #region Events handling
-
-            #region method m_pTimeoutTimer_Elapsed
 
             private void m_pTimeoutTimer_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
             {
@@ -102,12 +92,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
-            #endregion
-
-
-            #region method GetOrCreateFlow
 
             /// <summary>
             /// Returns existing flow if exists, otherwise new created flow.
@@ -153,10 +137,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
-            #region method GetFlow
-
             /// <summary>
             /// Returns specified flow or null if no such flow.
             /// </summary>
@@ -176,10 +156,6 @@ namespace LumiSoft.Net.SIP.Stack
                     return retVal;
                 }
             }
-
-            #endregion
-
-            #region method CreateFromSession
 
             /// <summary>
             /// Creates new flow from TCP server session.
@@ -209,10 +185,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -289,12 +261,7 @@ namespace LumiSoft.Net.SIP.Stack
                     return m_pOwner; 
                 }
             }
-
-            #endregion
-
         }
-
-        #endregion
 
         private bool                          m_IsDisposed;
         private IPBindInfo[]                  m_pBinds;
@@ -333,8 +300,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pLocalIPv4 = new CircleCollection<IPAddress>();
             m_pLocalIPv6 = new CircleCollection<IPAddress>();
         }
-                
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -359,12 +324,6 @@ namespace LumiSoft.Net.SIP.Stack
             UdpServer = null;
         }
 
-        #endregion
-
-                
-        #region Events handling
-
-        #region method m_pUdpServer_PacketReceived
 
         /// <summary>
         /// This method is called when new SIP UDP packet has received.
@@ -382,10 +341,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method m_pUdpServer_Error
-
         /// <summary>
         /// This method is called when UDP server unknown error.
         /// </summary>
@@ -395,10 +350,6 @@ namespace LumiSoft.Net.SIP.Stack
         {
             Stack.OnError(e.Exception);
         }
-
-        #endregion
-
-        #region method m_pTcpServer_SessionCreated
 
         /// <summary>
         /// This method is called when SIP stack has got new incoming connection.
@@ -410,12 +361,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pFlowManager.CreateFromSession(e.Session);
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts listening incoming requests and responses.
@@ -431,10 +376,6 @@ namespace LumiSoft.Net.SIP.Stack
             UdpServer.Start();
             m_pTcpServer.Start();            
         }
-                                
-        #endregion
-
-        #region method Stop
 
         /// <summary>
         /// Stops listening incoming requests and responses.
@@ -450,10 +391,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pTcpServer.Stop();        
         }
 
-        #endregion
-
-
-        #region method OnMessageReceived
 
         /// <summary>
         /// Is called when specified SIP flow has got new SIP message.
@@ -473,9 +410,6 @@ namespace LumiSoft.Net.SIP.Stack
             // TODO: Log
                         
             try{
-
-                #region Ping / pong
-
                 // We have "ping"(CRLFCRLF) request, response with "pong".
                 if(message.Length == 4){
                     if(this.Stack.Logger != null){
@@ -500,14 +434,7 @@ namespace LumiSoft.Net.SIP.Stack
                     return;
                 }
 
-                #endregion
-
-                #region Response
-
                 if(Encoding.UTF8.GetString(message,0,3).ToUpper().StartsWith("SIP")){
-
-                    #region Parse and validate response
-
                     SIP_Response response = null;
                     try{
                         response = SIP_Response.Parse(message);
@@ -530,8 +457,6 @@ namespace LumiSoft.Net.SIP.Stack
 
                         return;
                     }
-
-                    #endregion
 
                     /* RFC 3261 18.1.2 Receiving Responses.
                         When a response is received, the client transport examines the top
@@ -568,15 +493,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 }
 
-                #endregion
-
-                #region Request
-
                 // SIP request.
                 else{
-
-                    #region Parse and validate request
-
                     SIP_Request request = null;
                     try{
                         request = SIP_Request.Parse(message);
@@ -603,8 +521,6 @@ namespace LumiSoft.Net.SIP.Stack
 
                         return;
                     }
-
-                    #endregion
 
                     // TODO: Is that needed, core can reject message as it would like.
                     SIP_ValidateRequestEventArgs eArgs = Stack.OnValidateRequest(request,flow.RemoteEP);
@@ -700,9 +616,6 @@ namespace LumiSoft.Net.SIP.Stack
                         Stack.OnRequestReceived(new SIP_RequestReceivedEventArgs(Stack,flow,request));
                     }
                 }
-
-                #endregion
-
             }
             catch(SocketException s){
                 // Skip all socket errors here
@@ -713,10 +626,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method GetOrCreateFlow
 
         /// <summary>
         /// Gets existing flow or if flow doesn't exist, new one is created and returned.
@@ -767,10 +676,6 @@ namespace LumiSoft.Net.SIP.Stack
             return m_pFlowManager.GetOrCreateFlow(false,localEP,remoteEP,transport);
         }
 
-        #endregion
-
-        #region method GetFlow
-
         /// <summary>
         /// Returns specified flow or null if no such flow.
         /// </summary>
@@ -790,10 +695,6 @@ namespace LumiSoft.Net.SIP.Stack
             return m_pFlowManager.GetFlow(flowID);
         }
 
-        #endregion
-
-
-        #region method SendRequest
 
         /// <summary>
         /// Sends request using methods as described in RFC 3261 [4](RFC 3263).
@@ -955,10 +856,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-                
-        #region method SendResponse
-
         /// <summary>
         /// Sends specified response back to request maker using RFC 3261 18. rules.
         /// </summary>
@@ -994,10 +891,6 @@ namespace LumiSoft.Net.SIP.Stack
             SendResponseInternal(null,response,localEP);
         }
 
-        #endregion
-    
-
-        #region method SendResponse
 
         /// <summary>
         /// Sends specified response back to request maker using RFC 3261 18. rules.
@@ -1019,10 +912,6 @@ namespace LumiSoft.Net.SIP.Stack
             SendResponseInternal(transaction,response,null);
         }
 
-        #endregion
-
-
-        #region method SendResponseInternal
 
         /// <summary>
         /// Sends response to request maker using RFC 3261 18. rules.
@@ -1139,8 +1028,6 @@ namespace LumiSoft.Net.SIP.Stack
             
             byte[] responseData = response.ToByteData();
 
-            #region Try existing flow first
-
             /* First try active flow to send response, thats not 100% as RFC says, but works better in any case.
                RFC says that for TCP and TLS only, we do it for any transport.
             */
@@ -1171,10 +1058,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
-
-            #region Reliable TCP,TLS, ...
 
             if(SIP_Utils.IsReliableTransport(via.ProtocolTransport)){
                 // Get original request remote end point.
@@ -1185,8 +1068,6 @@ namespace LumiSoft.Net.SIP.Stack
                 else if(via.Received != null){
                     remoteEP = new IPEndPoint(via.Received,via.SentBy.Port == -1 ? 5060 : via.SentBy.Port);
                 }
-                    
-                #region If original request connection alive, use it
 
                 try{
                     SIP_Flow flow = null;
@@ -1230,10 +1111,6 @@ namespace LumiSoft.Net.SIP.Stack
                     // Override RFC, if there is any existing connection and it gives error, try always RFC 3261 18.2.2(recieved) and 3265 5.
                 }
 
-                #endregion
-
-                #region Send RFC 3261 18.2.2(recieved)
-
                 if(remoteEP != null){
                     try{
                         SendResponseToHost(logID,transactionID,null,remoteEP.Address.ToString(),remoteEP.Port,via.ProtocolTransport,response);
@@ -1243,55 +1120,25 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 }
 
-                #endregion
-
-                #region Send RFC 3265 5.
-
                 SendResponse_RFC_3263_5(logID,transactionID,localEP,response);
-
-                #endregion
-
             }
-
-            #endregion
-
-            #region UDP Via: maddr parameter
 
             else if(via.Maddr != null){
                 throw new SIP_TransportException("Sending responses to multicast address(Via: 'maddr') is not supported.");
             }
 
-            #endregion
-
-            #region RFC 3581 4. UDP Via: received and rport parameters
-
             else if(via.Maddr == null && via.Received != null && via.RPort > 0){
                 SendResponseToHost(logID,transactionID,localEP,via.Received.ToString(),via.RPort,via.ProtocolTransport,response);
             }
-
-            #endregion
-
-            #region UDP Via: received parameter
 
             else if(via.Received != null){
                 SendResponseToHost(logID,transactionID,localEP,via.Received.ToString(),via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
 
-            #endregion
-
-            #region UDP
-
             else{
                 SendResponse_RFC_3263_5(logID,transactionID,localEP,response);
             }
-
-            #endregion
-
         }
-
-        #endregion
-
-        #region method SendResponse_RFC_3263_5
 
         /// <summary>
         /// Sends specified response back to request maker using RFC 3263 5. rules.
@@ -1352,23 +1199,13 @@ namespace LumiSoft.Net.SIP.Stack
 
             SIP_t_ViaParm via = response.Via.GetTopMostValue();
 
-            #region Sent-By is IP address
-            
             if(via.SentBy.IsIPAddress){
                 SendResponseToHost(logID,transactionID,localEP,via.SentBy.Host,via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
 
-            #endregion
-
-            #region Sent-By is host name with port number
-
             else if(via.SentBy.Port != -1){
                 SendResponseToHost(logID,transactionID,localEP,via.SentBy.Host,via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
-
-            #endregion
-
-            #region Sent-By is just host name
 
             else{
                 try{
@@ -1431,13 +1268,7 @@ namespace LumiSoft.Net.SIP.Stack
                     throw new SIP_TransportException("Dns error: " + dnsX.ErrorCode.ToString());
                 }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region method SendResponseToHost
 
         /// <summary>
         /// Sends response to the specified host.
@@ -1512,10 +1343,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
 // REMOVE ME:
-        #region method Resolve
         /*
         /// <summary>
         /// Resolves data flow local NATed IP end point to public IP end point.
@@ -1561,9 +1389,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 */
-        #endregion
-
-        #region method GetContactHost
 
         /// <summary>
         /// Gets contact URI <b>host</b> parameter suitable to the specified flow.
@@ -1630,10 +1455,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-        #endregion
-
-        #region method GetRecordRoute
-
         /// <summary>
         /// Gets Record-Route for the specified transport.
         /// </summary>
@@ -1658,10 +1479,6 @@ namespace LumiSoft.Net.SIP.Stack
             return null;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if transport layer is running.
@@ -1749,8 +1566,5 @@ namespace LumiSoft.Net.SIP.Stack
         /// Gets or sets STUN server name or IP address. This value must be filled if SIP stack is running behind a NAT.
         /// </summary>
         internal string StunServer { get; set; }
-
-#endregion
-
     }
 }

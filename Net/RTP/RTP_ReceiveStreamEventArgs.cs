@@ -22,14 +22,9 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets RTP stream.
         /// </summary>
         public RTP_ReceiveStream Stream { get; }
-
-#endregion
-
     }
 }

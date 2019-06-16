@@ -79,8 +79,6 @@ namespace LumiSoft.Net.ABNF
         }
 
 
-        #region method Validate
-
         /// <summary>
         /// Validates "prose-val" value.
         /// </summary>
@@ -117,16 +115,10 @@ namespace LumiSoft.Net.ABNF
             return true;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets value.
         /// </summary>
         public string Value { get; } = "";
-
-#endregion
     }
 }

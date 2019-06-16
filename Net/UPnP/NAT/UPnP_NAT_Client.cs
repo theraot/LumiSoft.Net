@@ -27,8 +27,6 @@ namespace LumiSoft.Net.UPnP.NAT
             Init();
         }
 
-        #region method Init
-
         /// <summary>
         /// Initializes UPnP NAT info.
         /// </summary>
@@ -111,10 +109,6 @@ namespace LumiSoft.Net.UPnP.NAT
             }            
         }
 
-        #endregion
-
-
-        #region method GetExternalIPAddress
 
         /// <summary>
         /// Gets NAT public IP address.
@@ -146,10 +140,6 @@ namespace LumiSoft.Net.UPnP.NAT
 
             return null;
         }
-
-        #endregion
-
-        #region method GetPortMappings
 
         /// <summary>
         /// Gets all existing port mappings.
@@ -255,10 +245,6 @@ namespace LumiSoft.Net.UPnP.NAT
             return retVal.ToArray();
         }
 
-        #endregion
-
-        #region method AddPortMapping
-
         /// <summary>
         /// This method creates a new port mapping or overwrites an existing mapping.
         /// </summary>
@@ -330,10 +316,6 @@ namespace LumiSoft.Net.UPnP.NAT
             }
         }
 
-        #endregion
-
-        #region method DeletePortMapping
-                
         /// <summary>
         /// Deletes port mapping.
         /// </summary>
@@ -394,10 +376,6 @@ namespace LumiSoft.Net.UPnP.NAT
             }
         }
 
-        #endregion
-
-
-        #region method SendCommand
 
         /// <summary>
         /// Sends command to UPnP device and reads response.
@@ -425,10 +403,6 @@ namespace LumiSoft.Net.UPnP.NAT
             }
         }
 
-        #endregion
-
-        
-        #region Properties implementation
 
         /// <summary>
         /// Gets if UPnP NAT is supported.
@@ -437,7 +411,5 @@ namespace LumiSoft.Net.UPnP.NAT
         {
             get{ return m_ControlUrl != null; }
         }
-
-        #endregion
     }
 }

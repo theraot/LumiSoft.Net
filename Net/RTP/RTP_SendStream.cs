@@ -36,8 +36,6 @@ namespace LumiSoft.Net.RTP
             m_SeqNo = new Random().Next(1,32000);
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -56,10 +54,6 @@ namespace LumiSoft.Net.RTP
             this.Closed = null;
         }
 
-        #endregion
-
-
-        #region method Close
 
         /// <summary>
         /// Closes this sending stream.
@@ -87,10 +81,6 @@ namespace LumiSoft.Net.RTP
             Dispose();
         }
 
-        #endregion
-
-
-        #region method Send
 
         /// <summary>
         /// Sends specified packet to the RTP session remote party.
@@ -128,10 +118,6 @@ namespace LumiSoft.Net.RTP
             RtcpCyclesSinceWeSent = 0;
         }
 
-        #endregion
-
-
-        #region method RtcpCycle
 
         /// <summary>
         /// Is called by RTP session if RTCP cycle compled.
@@ -141,10 +127,6 @@ namespace LumiSoft.Net.RTP
             RtcpCyclesSinceWeSent++;
         }
 
-        #endregion
-
-
-        #region mehtod NextSeqNo
 
         /// <summary>
         /// Gets next packet sequence number.
@@ -161,10 +143,6 @@ namespace LumiSoft.Net.RTP
             return (ushort)m_SeqNo++;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -312,16 +290,10 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal int RtcpCyclesSinceWeSent { get; private set; } = 9999;
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when stream has disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises <b>Disposed</b> event.
@@ -333,14 +305,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when stream is closed.
         /// </summary>
         public event EventHandler Closed;
-
-        #region method OnClosed
 
         /// <summary>
         /// Raises <b>Closed</b> event.
@@ -351,10 +319,5 @@ namespace LumiSoft.Net.RTP
                 this.Closed(this,new EventArgs());
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

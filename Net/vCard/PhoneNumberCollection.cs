@@ -26,8 +26,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method Add
-
         /// <summary>
         /// Add new phone number to the collection.
         /// </summary>
@@ -39,10 +37,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_pCollection.Add(new PhoneNumber(item,type,number));
         }
 
-        #endregion
-
-        #region method Remove
-
         /// <summary>
         /// Removes specified item from the collection.
         /// </summary>
@@ -52,10 +46,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_pOwner.Items.Remove(item.Item);
             m_pCollection.Remove(item);
         }
-
-        #endregion
-
-        #region method Clear
 
         /// <summary>
         /// Removes all items from the collection.
@@ -68,12 +58,8 @@ namespace LumiSoft.Net.Mime.vCard
             m_pCollection.Clear();
         }
 
-        #endregion
 
-
-        #region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -82,10 +68,6 @@ namespace LumiSoft.Net.Mime.vCard
 			return m_pCollection.GetEnumerator();
 		}
 
-		#endregion
-
-        #region Properties Implementation
-
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
@@ -93,8 +75,5 @@ namespace LumiSoft.Net.Mime.vCard
         {
             get{ return m_pCollection.Count; }
         }
-
-        #endregion
-
     }
 }

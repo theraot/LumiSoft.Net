@@ -22,8 +22,6 @@ namespace LumiSoft.Net.TCP
         }
 
 
-        #region method Add
-
         /// <summary>
         /// Adds specified TCP session to the colletion.
         /// </summary>
@@ -50,10 +48,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes specified TCP server session from the collection.
@@ -82,10 +76,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all items from the collection.
         /// </summary>
@@ -96,10 +86,6 @@ namespace LumiSoft.Net.TCP
                 m_pConnectionsPerIP.Clear();
             }
         }
-
-        #endregion
-        
-        #region method ToArray
 
         /// <summary>
         /// Copies all TCP server session to new array. This method is thread-safe.
@@ -114,10 +100,6 @@ namespace LumiSoft.Net.TCP
                 return retVal;
             }
         }
-
-        #endregion
-
-        #region mehtod GetConnectionsPerIP
 
         /// <summary>
         /// Gets number of connections per specified IP.
@@ -137,10 +119,6 @@ namespace LumiSoft.Net.TCP
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets number of items in the collection.
@@ -159,8 +137,5 @@ namespace LumiSoft.Net.TCP
         {
             get{ return m_pItems[id]; }
         }
-
-        #endregion
-
     }
 }

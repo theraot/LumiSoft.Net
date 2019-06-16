@@ -10,8 +10,6 @@ namespace LumiSoft.Net.Mail
     /// </summary>
     public class Mail_Utils
     {
-        #region static method SMTP_Mailbox
-
         /// <summary>
         /// Reads SMTP "Mailbox" from the specified MIME reader.
         /// </summary>
@@ -53,7 +51,5 @@ namespace LumiSoft.Net.Mail
                         
             return retVal.ToString();
         }
-
-        #endregion
     }
 }

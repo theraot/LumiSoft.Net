@@ -18,8 +18,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method InternalParse
-
         /// <summary>
         /// Parses SIP message from specified byte array.
         /// </summary>
@@ -59,10 +57,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region mehtod InternalToStream
-
         /// <summary>
         /// Stores SIP_Message to specified stream.
         /// </summary>
@@ -88,10 +82,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        
-        #region Properties Implementation
 
         /// <summary>
         /// Gets direct access to header.
@@ -1319,8 +1309,5 @@ namespace LumiSoft.Net.SIP.Message
         /// Gets or sets content data.
         /// </summary>
         public byte[] Data { get; set; }
-
-#endregion
-
     }
 }

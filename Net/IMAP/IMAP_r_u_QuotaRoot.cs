@@ -33,8 +33,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses QUOTAROOT response from quotaRoot-response string.
         /// </summary>
@@ -80,10 +78,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_QuotaRoot(folderName,quotaRoots.ToArray());
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -113,10 +107,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets folder name.
@@ -127,7 +117,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets quota roots.
         /// </summary>
         public string[] QuotaRoots { get; }
-
-#endregion
     }
 }

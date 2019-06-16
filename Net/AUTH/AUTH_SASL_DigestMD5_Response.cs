@@ -68,8 +68,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses DIGEST-MD5 response from response-string.
         /// </summary>
@@ -185,10 +183,6 @@ namespace LumiSoft.Net.AUTH
             return retVal;
         }
 
-        #endregion
-
-
-        #region method Authenticate
 
         /// <summary>
         /// Authenticates user.
@@ -213,10 +207,6 @@ namespace LumiSoft.Net.AUTH
             return false;
         }
 
-        #endregion
-
-
-        #region method ToResponse
 
         /// <summary>
         /// Creates digest response for challenge.
@@ -280,10 +270,6 @@ namespace LumiSoft.Net.AUTH
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method ToRspauthResponse
-
         /// <summary>
         /// Creates <b>response-auth</b> response for client.
         /// </summary>
@@ -339,10 +325,6 @@ namespace LumiSoft.Net.AUTH
             }            
         }
 
-        #endregion
-
-
-        #region method CalculateResponse
 
         /// <summary>
         /// Calculates digest response.
@@ -426,10 +408,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-        #region method a1
-
         /// <summary>
         /// Calculates A1 value.
         /// </summary>
@@ -474,10 +452,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-        #region method a2
-
         /// <summary>
         /// Calculates A2 value.
         /// </summary>
@@ -513,10 +487,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-        #region method h
-
         /// <summary>
         /// Computes MD5 hash.
         /// </summary>
@@ -529,20 +499,12 @@ namespace LumiSoft.Net.AUTH
             return md5.ComputeHash(value);
         }
 
-        #endregion
-
-        #region method kd
-
         private byte[] kd(string secret,string data)
         {
             // KD(secret, data) = H(concat(secret, ":", data))
 
             return h(Encoding.UTF8.GetBytes(secret + ":" + data));
         }
-
-        #endregion
-
-        #region method hex
 
         /// <summary>
         /// Converts value to hex string.
@@ -554,11 +516,7 @@ namespace LumiSoft.Net.AUTH
             return Net_Utils.ToHex(value);
         }
 
-        #endregion
 
-
-        #region Properties implementation
-                
         /// <summary>
         /// Gets user name.
         /// </summary>
@@ -613,7 +571,5 @@ namespace LumiSoft.Net.AUTH
         /// Gets authorization ID.
         /// </summary>
         public string Authzid { get; private set; }
-
-#endregion
     }
 }

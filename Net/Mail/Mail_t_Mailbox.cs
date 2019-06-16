@@ -34,8 +34,6 @@ namespace LumiSoft.Net.Mail
             Address     = address;
         }
 
-        #region static method Parse
-
         /// <summary>
         /// Parses <b>mailbox</b> from specified string value.
         /// </summary>
@@ -70,10 +68,6 @@ namespace LumiSoft.Net.Mail
             throw new ParseException("Not valid 'mailbox' value '" + value + "'.");
         }
 
-        #endregion
-
-
-        #region method override ToString
 
         /// <summary>
         /// Returns mailbox as string.
@@ -104,10 +98,6 @@ namespace LumiSoft.Net.Mail
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets display name. Value null means not specified.
@@ -147,7 +137,5 @@ namespace LumiSoft.Net.Mail
                 }
             }
         }
-
-        #endregion
     }
 }

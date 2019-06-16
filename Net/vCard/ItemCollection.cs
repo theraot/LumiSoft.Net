@@ -19,8 +19,6 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
 
-        #region method Add
-
         /// <summary>
         /// Adds new vCard item to the collection.
         /// </summary>
@@ -34,10 +32,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return item;
         }
-
-        #endregion
-
-        #region method Remove
 
         /// <summary>
         /// Removes all items with the specified name.
@@ -62,10 +56,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_pItems.Remove(item);
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Clears all items in the collection.
         /// </summary>
@@ -74,10 +64,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_pItems.Clear();
         }
 
-        #endregion
-
-
-        #region method GetFirst
 
         /// <summary>
         /// Gets first item with specified name. Returns null if specified item doesn't exists.
@@ -95,10 +81,6 @@ namespace LumiSoft.Net.Mime.vCard
             return null;
         }
 
-        #endregion
-
-        #region method Get
-
         /// <summary>
         /// Gets items with specified name.
         /// </summary>
@@ -115,10 +97,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return retVal.ToArray();
         }
-
-        #endregion
-
-        #region method SetDecodedStringValue
 
         /// <summary>
         /// Sets first item with specified value.  If item doesn't exist, item will be appended to the end.
@@ -144,10 +122,6 @@ namespace LumiSoft.Net.Mime.vCard
                 item.SetDecodedValue(value);
             }
         }
-
-        #endregion
-
-        #region method SetValue
 
         /// <summary>
         /// Sets first item with specified encoded value.  If item doesn't exist, item will be appended to the end.
@@ -183,12 +157,8 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-        #endregion
 
-                
-		#region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -197,10 +167,6 @@ namespace LumiSoft.Net.Mime.vCard
 			return m_pItems.GetEnumerator();
 		}
 
-		#endregion
-
-        #region Properties Implementation
-
         /// <summary>
         /// Gets number of vCard items in the collection.
         /// </summary>
@@ -208,8 +174,5 @@ namespace LumiSoft.Net.Mime.vCard
         {
             get{ return m_pItems.Count; }
         }
-
-        #endregion
-
     }
 }

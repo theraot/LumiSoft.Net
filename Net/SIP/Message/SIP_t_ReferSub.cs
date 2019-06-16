@@ -33,8 +33,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Refer-Sub" from specified value.
         /// </summary>
@@ -84,10 +82,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "contact-param" value.
         /// </summary>
@@ -111,17 +105,10 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets refer-sub-value value.
         /// </summary>
         public bool Value { get; set; }
-
-#endregion
-
     }
 }

@@ -17,18 +17,12 @@ namespace LumiSoft.Net.IO
         }
 
 
-        #region method Flush
-
         /// <summary>
         /// Not used.
         /// </summary>
         public override void Flush()
         {
         }
-
-        #endregion
-
-        #region method Seek
 
         /// <summary>
         /// Sets the current position of the stream to the given value. This method always throws a NotSupportedException.
@@ -41,10 +35,6 @@ namespace LumiSoft.Net.IO
             throw new NotSupportedException();
         }
 
-        #endregion
-
-        #region method SetLength
-
         /// <summary>
         /// Sets the length of the stream. This method always throws a NotSupportedException.
         /// </summary>
@@ -53,10 +43,6 @@ namespace LumiSoft.Net.IO
         {
             throw new NotSupportedException();
         }
-
-        #endregion
-
-        #region method Read
 
         /// <summary>
         /// Reads data from the stream. This method always throws a NotSupportedException.
@@ -70,10 +56,6 @@ namespace LumiSoft.Net.IO
             throw new NotSupportedException();
         }
 
-        #endregion
-
-        #region method Write
-
         /// <summary>
         /// Writes data to the stream.
         /// </summary>
@@ -84,10 +66,6 @@ namespace LumiSoft.Net.IO
         {
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets a value indicating whether the stream supports reading. This property always returns false.
@@ -130,7 +108,5 @@ namespace LumiSoft.Net.IO
 
             set{ throw new NotSupportedException(); }
         }
-
-        #endregion
     }
 }

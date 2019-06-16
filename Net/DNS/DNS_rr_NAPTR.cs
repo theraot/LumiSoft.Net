@@ -32,8 +32,6 @@ namespace LumiSoft.Net.DNS
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -80,10 +78,6 @@ namespace LumiSoft.Net.DNS
             return new DNS_rr_NAPTR(name,order,preference,flags,services,regexp,replacement,ttl);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets order in which the NAPTR records MUST be processed in order to accurately 
@@ -117,8 +111,5 @@ namespace LumiSoft.Net.DNS
         /// Gets regular expressions replacement value.
         /// </summary>
         public string Replacement { get; } = "";
-
-#endregion
-
     }
 }

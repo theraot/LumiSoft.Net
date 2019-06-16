@@ -17,8 +17,6 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_Session : TCP_Session
     {
-        #region class Relay_Target
-
         /// <summary>
         /// This class holds relay target information.
         /// </summary>
@@ -53,8 +51,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
 
-            #region Properties Implementation
-
             /// <summary>
             /// Gets target host name.
             /// </summary>
@@ -79,12 +75,7 @@ namespace LumiSoft.Net.SMTP.Relay
             /// Gets target server password.
             /// </summary>
             public string Password { get; }
-
-#endregion
-
         }
-
-        #endregion
 
         private Relay_Server       m_pServer;
         private IPBindInfo         m_pLocalBindInfo;
@@ -153,8 +144,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pSmtpClient       = new SMTP_Client();
         }
 
-        #region override method Dispose
-
         /// <summary>
         /// Completes relay session and does clean up. This method is thread-safe.
         /// </summary>
@@ -204,10 +193,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Start processing relay message.
@@ -253,11 +238,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 Dispose(x);
             }
         }
-                
-        #endregion
 
-
-        #region override method Disconnect
 
         /// <summary>
         /// Closes relay connection.
@@ -293,10 +274,6 @@ namespace LumiSoft.Net.SMTP.Relay
             Disconnect();
         }
 
-        #endregion
-
-
-        #region method EmailHostsResolveCompleted
 
         /// <summary>
         /// Is called when email domain target servers resolve operation has completed.
@@ -334,10 +311,6 @@ namespace LumiSoft.Net.SMTP.Relay
             op.Dispose();
         }
 
-        #endregion
-
-        #region method SmartHostsResolveCompleted
-
         /// <summary>
         /// Is called when smart hosts ip addresses resolve operation has completed.
         /// </summary>
@@ -368,10 +341,6 @@ namespace LumiSoft.Net.SMTP.Relay
 
             op.Dispose();
         }
-
-        #endregion
-
-        #region method BeginConnect
 
         /// <summary>
         /// Starts connecting to best target. 
@@ -484,10 +453,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method ConnectCompleted
-
         /// <summary>
         /// Is called when EHLO/HELO command has completed.
         /// </summary>
@@ -536,10 +501,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 Dispose(x);
             }
         }
-
-        #endregion
-
-        #region method EhloCommandCompleted
 
         /// <summary>
         /// Is called when EHLO/HELO command has completed.
@@ -607,10 +568,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method StartTlsCommandCompleted
-
         /// <summary>
         /// Is called when STARTTLS command has completed.
         /// </summary>
@@ -641,10 +598,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 Dispose(x);
             }
         }
-
-        #endregion
-
-        #region method AuthCommandCompleted
 
         /// <summary>
         /// Is called when AUTH command has completed.
@@ -689,10 +642,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method MailCommandCompleted
-
         /// <summary>
         /// Is called when MAIL command has completed.
         /// </summary>
@@ -727,10 +676,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method RcptCommandCompleted
-
         /// <summary>
         /// Is called when RCPT command has completed.
         /// </summary>
@@ -762,10 +707,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method MessageSendingCompleted
-
         /// <summary>
         /// Is called when message sending has completed.
         /// </summary>
@@ -793,10 +734,6 @@ namespace LumiSoft.Net.SMTP.Relay
             op.Dispose();
         }
 
-        #endregion
-
-
-        #region method SmtpClient_WriteLog
 
         /// <summary>
         /// Thsi method is called when SMTP client has new log entry available.
@@ -825,10 +762,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method LogText
-
         /// <summary>
         /// Logs specified text if logging enabled.
         /// </summary>
@@ -854,10 +787,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-        #endregion
-
-        #region method IsDsnSupported
-
         /// <summary>
         /// Gets if DSN extention is supported by remote server.
         /// </summary>
@@ -873,10 +802,6 @@ namespace LumiSoft.Net.SMTP.Relay
             return false;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -1161,8 +1086,5 @@ namespace LumiSoft.Net.SMTP.Relay
                 return m_pSmtpClient.TcpStream; 
             }
         }
-
-        #endregion
-
     }
 }

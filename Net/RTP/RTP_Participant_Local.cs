@@ -28,8 +28,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method AddNextOptionalSdesItem
-
         /// <summary>
         /// Adds next(round-robined) optional SDES item to SDES chunk, if any available.
         /// </summary>
@@ -67,10 +65,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region method ConstructOptionalItems
 
         /// <summary>
         /// Constructs optional SDES items round-robin.
@@ -101,11 +95,7 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
 
-
-        #region Properties implementation
-                
         /// <summary>
         /// Gets or sets the real name, eg. "John Doe". Value null means not specified.
         /// </summary>
@@ -194,8 +184,5 @@ namespace LumiSoft.Net.RTP
         }
 
         // TODO: PRIV
-
-        #endregion
-
     }
 }

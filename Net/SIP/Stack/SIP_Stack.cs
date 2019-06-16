@@ -60,8 +60,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pDnsClient = new Dns_Client();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -99,10 +97,6 @@ namespace LumiSoft.Net.SIP.Stack
             }            
         }
 
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts SIP stack.
@@ -116,10 +110,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             m_pTransportLayer.Start();            
         }
-
-        #endregion
-
-        #region method Stop
 
         /// <summary>
         /// Stops SIP stack.
@@ -188,11 +178,7 @@ namespace LumiSoft.Net.SIP.Stack
             State = SIP_StackState.Stopped;            
         }
 
-        #endregion
 
-
-        #region method CreateRequest
-        
         /// <summary>
         /// Creates new out-off dialog SIP request.
         /// </summary>
@@ -239,8 +225,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             SIP_Request request = new SIP_Request(method);
 
-            #region Request-URI (section 8.1.1.1)
-
             /*
                 The initial Request-URI of the message SHOULD be set to the value of
                 the URI in the To field.  One notable exception is the REGISTER
@@ -249,10 +233,6 @@ namespace LumiSoft.Net.SIP.Stack
             */
             
             request.RequestLine.Uri = to.Uri;
-
-            #endregion
-
-            #region To (section 8.1.1.2)
 
             /*
                 The To header field first and foremost specifies the desired
@@ -265,10 +245,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             SIP_t_To t = new SIP_t_To(to);
             request.To = t;
-
-            #endregion
-
-            #region From (section 8.1.1.3)
 
             /*
                 The From header field indicates the logical identity of the initiator
@@ -293,10 +269,6 @@ namespace LumiSoft.Net.SIP.Stack
             f.Tag = SIP_Utils.CreateTag();
             request.From = f;
 
-            #endregion
-                        
-            #region CallID (section 8.1.1.4)
-
             /*
                 The Call-ID header field acts as a unique identifier to group
                 together a series of messages.  It MUST be the same for all requests
@@ -311,10 +283,6 @@ namespace LumiSoft.Net.SIP.Stack
                 request.CallID = SIP_t_CallID.CreateCallID().ToStringValue();
             }
 
-            #endregion
-
-            #region CSeq (section 8.1.1.5)
-
             /*
                 The CSeq header field serves as a way to identify and order
                 transactions.  It consists of a sequence number and a method.  The
@@ -328,15 +296,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             request.CSeq = new SIP_t_CSeq(ConsumeCSeq(),method);
 
-            #endregion
-
-            #region Max-Forwards (section 8.1.1.6)
-
             request.MaxForwards = m_MaxForwards;
-
-            #endregion
-
-            #region Allow,Supported (section 13.2.1)
 
             // RFC requires these headers for dialog establishing requests only.
             // We just add these to every request - this is won't violate RFC.
@@ -347,34 +307,20 @@ namespace LumiSoft.Net.SIP.Stack
                 request.Supported.Add(SIP_Utils.ListToString(m_pAllow));
             }
 
-            #endregion
 
-
-            #region Pre-configured route (proxy server)
-
-            // section 8.1.2 suggests to use pre-configured route for proxy.
+// section 8.1.2 suggests to use pre-configured route for proxy.
 
             foreach(SIP_Uri proxy in m_pProxyServers){
                 request.Route.Add(proxy.ToString());
             }
 
-            #endregion
-                                    
-
-            #region User-Agent
 
             if(!string.IsNullOrEmpty(m_UserAgent)){
                 request.UserAgent = m_UserAgent;
             }
 
-            #endregion
-
             return request;
         }
-
-        #endregion
-
-        #region method CreateRequestSender
 
         /// <summary>
         /// Creates SIP request sender for the specified request.
@@ -409,10 +355,6 @@ namespace LumiSoft.Net.SIP.Stack
             return sender;
         }
 
-        #endregion
-
-        #region method ConsumeCSeq
-
         /// <summary>
         /// Consumes current CSeq number and increments it by 1.
         /// </summary>
@@ -421,10 +363,6 @@ namespace LumiSoft.Net.SIP.Stack
         {
             return m_CSeq++;
         }
-
-        #endregion
-
-        #region method CreateResponse
 
         /// <summary>
         /// Creates response for the specified request.
@@ -505,8 +443,6 @@ namespace LumiSoft.Net.SIP.Stack
             response.CallID = request.CallID;
             response.CSeq   = request.CSeq;
 
-            #region Allow,Supported (section 13.2.1)
-
             // RFC requires these headers for dialog establishing requests only.
             // We just add these to every request - this is won't violate RFC.
 
@@ -516,15 +452,9 @@ namespace LumiSoft.Net.SIP.Stack
                 response.Supported.Add(SIP_Utils.ListToString(m_pAllow));
             }
 
-            #endregion
-
-            #region User-Agent
-
             if(!string.IsNullOrEmpty(m_UserAgent)){
                 request.UserAgent = m_UserAgent;
             }
-
-            #endregion
 
             if(SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method)){
                 foreach(SIP_t_AddressParam route in request.RecordRoute.GetAllValues()){
@@ -539,10 +469,6 @@ namespace LumiSoft.Net.SIP.Stack
                         
             return response;
         }
-
-        #endregion
-
-        #region method GetHops
 
         /// <summary>
         /// Gets target hops(address,port,transport) of the specified URI.
@@ -562,8 +488,6 @@ namespace LumiSoft.Net.SIP.Stack
             string           transport              = "";
             bool             transportSetExplicitly = false;
             List<DNS_rr_SRV> targetSRV              = new List<DNS_rr_SRV>();
-
-            #region RFC 3263 4.1 Selecting a Transport Protocol
 
             /* 4.1 Selecting a Transport Protocol
 
@@ -815,11 +739,7 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                     }
                 //}
-            }            
-
-            #endregion
-
-            #region RFC 3263 4.2 Determining Port and IP Address
+            }
 
             /* 4.2 Determining Port and IP Address
 
@@ -926,14 +846,8 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-            #endregion
-
             return retVal.ToArray();
         }
-
-        #endregion
-
-        #region method CreateRegistration
 
         /// <summary>
         /// Creates new registration.
@@ -977,10 +891,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets stack state.
@@ -1386,17 +1296,11 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region Events Implementation
-                
         /// <summary>
         /// This event is raised when new incoming SIP request is received. You can control incoming requests
         /// with that event. For example you can require authentication or send what ever error to request maker user.
         /// </summary>
         public event EventHandler<SIP_ValidateRequestEventArgs> ValidateRequest;
-        
-        #region mehtod OnValidateRequest
 
         /// <summary>
         /// Is called by Transport layer when new incoming SIP request is received.
@@ -1414,15 +1318,11 @@ namespace LumiSoft.Net.SIP.Stack
             return eArgs;
         }
 
-        #endregion
-
 
         /// <summary>
         /// This event is raised when new SIP request is received.
         /// </summary>
         public event EventHandler<SIP_RequestReceivedEventArgs> RequestReceived;
-
-        #region method OnRequestReceived
 
         /// <summary>
         /// Raises <b>RequestReceived</b> event.
@@ -1435,16 +1335,12 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
 
         /// <summary>
         /// This event is raised when new stray SIP response is received.
         /// Stray response means that response doesn't match to any transaction.
         /// </summary>
         public event EventHandler<SIP_ResponseReceivedEventArgs> ResponseReceived;
-
-        #region method OnResponseReceived
 
         /// <summary>
         /// Raises <b>ResponseReceived</b> event.
@@ -1457,15 +1353,11 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
 
         /// <summary>
         /// This event is raised by any SIP element when unknown/unhandled error happened.
         /// </summary>
         public event EventHandler<ExceptionEventArgs> Error;
-
-        #region method OnError
 
         /// <summary>
         /// Is called when ever unknown error happens.
@@ -1477,10 +1369,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.Error(this,new ExceptionEventArgs(x));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

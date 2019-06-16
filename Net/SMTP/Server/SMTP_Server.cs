@@ -35,8 +35,6 @@ namespace LumiSoft.Net.SMTP.Server
         //public override Dispose
 
 
-        #region override method OnMaxConnectionsExceeded
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
@@ -48,10 +46,6 @@ namespace LumiSoft.Net.SMTP.Server
         {
             session.TcpStream.WriteLine("421 Client host rejected: too many connections, please try again later.");
         }
-
-        #endregion
-
-        #region override method OnMaxConnectionsPerIPExceeded
 
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections per connected IP exceeded.
@@ -65,10 +59,6 @@ namespace LumiSoft.Net.SMTP.Server
             session.TcpStream.WriteLine("421 Client host rejected: too many connections from your IP(" + session.RemoteEndPoint.Address + "), please try again later.");
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets SMTP server supported service extentions.
@@ -256,12 +246,5 @@ namespace LumiSoft.Net.SMTP.Server
         /// Gets SMTP service extentions list.
         /// </summary>
         internal List<string> Extentions { get; }
-
-#endregion
-
-        #region Events implementation
-                
-        #endregion
-
     }
 }

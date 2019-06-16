@@ -13,8 +13,6 @@ namespace LumiSoft.Net.SIP
     /// </summary>
     public class SIP_Utils
     {
-        #region method ParseAddress
-
         /// <summary>
         /// Parses address from SIP To: header field.
         /// </summary>
@@ -37,10 +35,6 @@ namespace LumiSoft.Net.SIP
                 throw new ArgumentException("Invalid SIP header To: '" + to + "' value !");
             }
         }
-
-        #endregion
-
-        #region method UriToRequestUri
 
         /// <summary>
         /// Converts URI to Request-URI by removing all not allowed Request-URI parameters from URI.
@@ -70,10 +64,6 @@ namespace LumiSoft.Net.SIP
             }      
         }
 
-        #endregion
-
-        #region method IsSipOrSipsUri
-
         /// <summary>
         /// Gets if specified value is SIP or SIPS URI.
         /// </summary>
@@ -90,10 +80,6 @@ namespace LumiSoft.Net.SIP
             }
             return false;
         }
-
-        #endregion
-
-        #region method IsTelUri
 
         /// <summary>
         /// Gets if specified URI is tel: or sip tel URI. There is special case when SIP URI can be tel:, 
@@ -127,10 +113,6 @@ namespace LumiSoft.Net.SIP
             return false;
         }
 
-        #endregion
-
-        #region method GetCredentials
-
         /// <summary>
         /// Gets specified realm SIP proxy credentials. Returns null if none exists for specified realm.
         /// </summary>
@@ -151,10 +133,6 @@ namespace LumiSoft.Net.SIP
             return null;
         }
 
-        #endregion
-
-        #region method ContainsOptionTag
-
         /// <summary>
         /// Gets is specified option tags constains specified option tag.
         /// </summary>
@@ -171,10 +149,6 @@ namespace LumiSoft.Net.SIP
 
             return false;
         }
-
-        #endregion
-
-        #region method MethodCanEstablishDialog
 
         /// <summary>
         /// Gets if specified method can establish dialog.
@@ -202,10 +176,6 @@ namespace LumiSoft.Net.SIP
             return false;
         }
 
-        #endregion
-
-        #region method CreateTag
-
         /// <summary>
         /// Creates tag for tag header filed. For example From:/To: tag value.
         /// </summary>
@@ -214,10 +184,6 @@ namespace LumiSoft.Net.SIP
         {
             return Guid.NewGuid().ToString().Replace("-","").Substring(8);
         }
-
-        #endregion
-
-        #region method IsReliableTransport
 
         /// <summary>
         /// Gets if the specified transport is reliable transport.
@@ -242,10 +208,6 @@ namespace LumiSoft.Net.SIP
             }
         }
 
-        #endregion
-
-
-        #region method IsToken
 
         /// <summary>
         /// Gets if the specified value is "token".
@@ -262,10 +224,6 @@ namespace LumiSoft.Net.SIP
             return LumiSoft.Net.MIME.MIME_Reader.IsToken(value);
         }
 
-        #endregion
-
-
-        #region static method ListToString
 
         /// <summary>
         /// Returns list elements as comma separated string.
@@ -291,8 +249,5 @@ namespace LumiSoft.Net.SIP
 
             return retVal.ToString();
         }
-
-        #endregion
-
     }
 }

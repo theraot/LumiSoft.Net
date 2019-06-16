@@ -15,8 +15,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses READ-ONLY optional response from string.
         /// </summary>
@@ -37,10 +35,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_ReadOnly();
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -50,7 +44,5 @@ namespace LumiSoft.Net.IMAP
         {
             return "READ-ONLY";
         }
-
-        #endregion
     }
 }

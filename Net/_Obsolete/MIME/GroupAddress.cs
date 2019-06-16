@@ -22,9 +22,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region static method Parse
-		
-		/// <summary>
+        /// <summary>
 		/// Parses Rfc 2822 3.4 group address from group address string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
 		/// </summary>
 		/// <param name="group">Group address string.</param>
@@ -45,12 +43,8 @@ namespace LumiSoft.Net.Mime
 			return g;
 		}
 
-		#endregion
 
-
-		#region internal method OnChanged
-
-		/// <summary>
+        /// <summary>
 		/// This called when group address has changed.
 		/// </summary>
 		internal void OnChanged()
@@ -62,12 +56,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region Properties implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets Group as RFC 2822(3.4. Address Specification) string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
 		/// </summary>
 		public string GroupString
@@ -93,8 +83,5 @@ namespace LumiSoft.Net.Mime
 		/// Gets group members collection.
 		/// </summary>
 		public MailboxAddressCollection GroupMembers { get; }
-
-#endregion
-
-	}
+    }
 }

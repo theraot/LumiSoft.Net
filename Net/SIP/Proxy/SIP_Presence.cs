@@ -31,11 +31,5 @@ namespace LumiSoft.Net.SIP.Proxy
         internal void Notify(SIP_RequestReceivedEventArgs e)
         {
         }
-
-
-        #region Properties Implementation
-
-        #endregion
-
     }
 }

@@ -24,8 +24,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets namespace name.
         /// </summary>
@@ -35,7 +33,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets namespace hierarchy delimiter char.
         /// </summary>
         public char HierarchyDelimiter { get; } = '/';
-
-#endregion
     }
 }

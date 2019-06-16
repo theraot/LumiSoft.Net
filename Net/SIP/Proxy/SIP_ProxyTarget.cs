@@ -35,8 +35,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets target URI.
         /// </summary>
@@ -46,8 +44,5 @@ namespace LumiSoft.Net.SIP.Proxy
         /// Gets data flow. Value null means that new flow must created.
         /// </summary>
         public SIP_Flow Flow { get; }
-
-#endregion
-
     }
 }

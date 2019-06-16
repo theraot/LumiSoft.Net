@@ -58,9 +58,7 @@ namespace LumiSoft.Net.POP3.Client
 	        m_pExtCapabilities = new List<string>();
 		}
 
-		#region override method Dispose
-
-		/// <summary>
+        /// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
 		public override void Dispose()
@@ -68,12 +66,8 @@ namespace LumiSoft.Net.POP3.Client
 			base.Dispose();
 		}
 
-		#endregion
 
-
-		#region override method Disconnect
-
-		/// <summary>
+        /// <summary>
 		/// Closes connection to POP3 server.
 		/// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
@@ -112,10 +106,6 @@ namespace LumiSoft.Net.POP3.Client
             m_pAuthdUserIdentity = null;
 		}
 
-		#endregion
-
-
-        #region method Capa
 
         /// <summary>
         /// Executes CAPA command.
@@ -150,12 +140,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method CapaAsync
-
-        #region class CapaAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.CapaAsync"/> asynchronous operation.
         /// </summary>
@@ -175,8 +159,6 @@ namespace LumiSoft.Net.POP3.Client
                 m_pResponseLines = new List<string>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -194,10 +176,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -276,10 +254,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -299,10 +273,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method CapaCommandSendingCompleted
 
             /// <summary>
             /// Is called when CAPA command sending has finished.
@@ -329,10 +299,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method CapaReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server CAPA response reading has completed.
             /// </summary>
@@ -391,10 +357,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method ReadMultiLineResponseLineCompleted
-            
             /// <summary>
             /// Is called when POP3 server multiline response single line reading has completed.
             /// </summary>
@@ -438,10 +400,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -467,16 +425,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<CapaAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -487,13 +439,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<CapaAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending CAPA command to POP3 server.
@@ -522,10 +468,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region method Stls
 
         /// <summary>
         /// Executes STLS command.
@@ -567,12 +509,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method StlsAsync
-
-        #region class StlsAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.StlsAsync"/> asynchronous operation.
         /// </summary>
@@ -593,8 +529,6 @@ namespace LumiSoft.Net.POP3.Client
                 m_pCertCallback = certCallback;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -611,10 +545,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -674,10 +604,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -697,10 +623,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method StlsCommandSendingCompleted
 
             /// <summary>
             /// Is called when STLS command sending has finished.
@@ -727,10 +649,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method StlsReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server STLS response reading has completed.
             /// </summary>
@@ -778,10 +696,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method SwitchToSecureCompleted
-
             /// <summary>
             /// Is called when TLS handshake has completed.
             /// </summary>
@@ -813,10 +727,6 @@ namespace LumiSoft.Net.POP3.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -842,16 +752,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<StlsAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -862,13 +766,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<StlsAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending STLS command to POP3 server.
@@ -899,10 +797,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return op.Start(this);
         }
-
-        #endregion
-                
-        #region method Login
 
         /// <summary>
         /// Executes USER/PASS command.
@@ -953,12 +847,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method LoginAsync
-
-        #region class LoginAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.LoginAsync"/> asynchronous operation.
         /// </summary>
@@ -994,8 +882,6 @@ namespace LumiSoft.Net.POP3.Client
                 m_Password = password;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -1012,10 +898,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1057,10 +939,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1080,10 +958,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method UserCommandSendingCompleted
 
             /// <summary>
             /// Is called when USER command sending has finished.
@@ -1110,10 +984,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method UserReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server USER response reading has completed.
             /// </summary>
@@ -1158,10 +1028,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method PassCommandSendingCompleted
-
             /// <summary>
             /// Is called when PASS command sending has finished.
             /// </summary>
@@ -1187,10 +1053,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method PassReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server PASS response reading has completed.
             /// </summary>
@@ -1236,10 +1098,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method FillMessagesCompleted
-
             /// <summary>
             /// Is called when FillMessagesAsync method has completed.
             /// </summary>
@@ -1268,10 +1126,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1297,16 +1151,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<LoginAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1317,13 +1165,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<LoginAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts executing USER/PASS command.
@@ -1354,10 +1196,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return op.Start(this);
         }
-
-        #endregion
-
-        #region method Auth
 
         /// <summary>
         /// Sends AUTH command to POP3 server.
@@ -1399,12 +1237,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method AuthAsync
-
-        #region class AuthAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.AuthAsync"/> asynchronous operation.
         /// </summary>
@@ -1430,8 +1262,6 @@ namespace LumiSoft.Net.POP3.Client
                 m_pSASL = sasl;
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -1448,10 +1278,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1519,10 +1345,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1542,10 +1364,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method AuthCommandSendingCompleted
 
             /// <summary>
             /// Is called when AUTH command sending has finished.
@@ -1572,10 +1390,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method AuthReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server response reading has completed.
             /// </summary>
@@ -1637,10 +1451,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method FillMessagesCompleted
-
             /// <summary>
             /// Is called when FillMessagesAsync method has completed.
             /// </summary>
@@ -1669,10 +1479,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1698,16 +1504,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<AuthAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -1718,13 +1518,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending AUTH command to POP3 server.
@@ -1755,10 +1549,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return op.Start(this);
         }
-
-        #endregion
-                
-        #region method Noop
 
         /// <summary>
         /// Send NOOP command to server. This method can be used for keeping connection alive(not timing out).
@@ -1796,12 +1586,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method NoopAsync
-
-        #region class NoopAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.NoopAsync"/> asynchronous operation.
         /// </summary>
@@ -1819,8 +1603,6 @@ namespace LumiSoft.Net.POP3.Client
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -1837,10 +1619,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -1900,10 +1678,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -1923,10 +1697,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method NoopCommandSendingCompleted
 
             /// <summary>
             /// Is called when NOOP command sending has finished.
@@ -1953,10 +1723,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method NoopReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server NOOP response reading has completed.
             /// </summary>
@@ -1995,10 +1761,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2024,16 +1786,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<NoopAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -2044,13 +1800,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending NOOP command to POP3 server.
@@ -2081,10 +1831,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return op.Start(this);
         }
-
-        #endregion
-                
-        #region method Rset
 
         /// <summary>
 		/// Resets session. Messages marked for deletion will be unmarked.
@@ -2122,12 +1868,6 @@ namespace LumiSoft.Net.POP3.Client
             }
 		}
 
-		#endregion
-
-        #region method RsetAsync
-
-        #region class RsetAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.RsetAsync"/> asynchronous operation.
         /// </summary>
@@ -2145,8 +1885,6 @@ namespace LumiSoft.Net.POP3.Client
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -2163,10 +1901,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2227,10 +1961,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2250,10 +1980,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method RsetCommandSendingCompleted
 
             /// <summary>
             /// Is called when RSET command sending has finished.
@@ -2280,10 +2006,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method RsetReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server RSET response reading has completed.
             /// </summary>
@@ -2326,10 +2048,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2355,16 +2073,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<RsetAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -2375,13 +2087,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending RSET command to POP3 server.
@@ -2413,12 +2119,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region method FillMessagesAsync
-
-        #region class FillMessagesAsyncOP
 
         /// <summary>
         /// This class represents <see cref="POP3_Client.FillMessagesAsync"/> asynchronous operation.
@@ -2437,8 +2137,6 @@ namespace LumiSoft.Net.POP3.Client
             {
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -2455,10 +2153,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2501,10 +2195,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2524,10 +2214,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ListCompleted
 
             /// <summary>
             /// Is called when LIST command has completed.
@@ -2570,10 +2256,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method UidlCompleted
-
             /// <summary>
             /// Is called when LIST command has completed.
             /// </summary>
@@ -2608,10 +2290,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2637,16 +2315,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<FillMessagesAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -2657,13 +2329,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<FillMessagesAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts filling mailbox messages info.
@@ -2692,12 +2358,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method ListAsync
-
-        #region class ListAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.ListAsync"/> asynchronous operation.
         /// </summary>
@@ -2717,8 +2377,6 @@ namespace LumiSoft.Net.POP3.Client
                 m_pResponseLines = new List<string>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -2736,10 +2394,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -2844,10 +2498,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -2867,10 +2517,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method ListCommandSendingCompleted
 
             /// <summary>
             /// Is called when LIST command sending has finished.
@@ -2897,10 +2543,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method ListReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server LIST response reading has completed.
             /// </summary>
@@ -2959,10 +2601,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method ReadMultiLineResponseLineCompleted
-            
             /// <summary>
             /// Is called when POP3 server multiline response single line reading has completed.
             /// </summary>
@@ -3006,10 +2644,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3054,16 +2688,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<ListAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3074,13 +2702,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<ListAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending LIST command to POP3 server.
@@ -3109,12 +2731,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-        #endregion
-
-        #region method UidlAsync
-
-        #region class UidlAsyncOP
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.UidlAsync"/> asynchronous operation.
         /// </summary>
@@ -3134,8 +2750,6 @@ namespace LumiSoft.Net.POP3.Client
                 m_pResponseLines = new List<string>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -3153,10 +2767,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts operation processing.
@@ -3259,10 +2869,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region method SetState
 
             /// <summary>
             /// Sets operation state.
@@ -3282,10 +2888,6 @@ namespace LumiSoft.Net.POP3.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region method UidlCommandSendingCompleted
 
             /// <summary>
             /// Is called when UIDL command sending has finished.
@@ -3312,10 +2914,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region method UidlReadResponseCompleted
-            
             /// <summary>
             /// Is called when POP3 server UIDL response reading has completed.
             /// </summary>
@@ -3374,10 +2972,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-            #endregion
-
-            #region method ReadMultiLineResponseLineCompleted
-            
             /// <summary>
             /// Is called when POP3 server multiline response single line reading has completed.
             /// </summary>
@@ -3421,10 +3015,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3469,16 +3059,10 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-            #endregion
-
-            #region Events implementation
-
             /// <summary>
             /// Is called when asynchronous operation has completed.
             /// </summary>
             public event EventHandler<EventArgs<UidlAsyncOP>> CompletedAsync;
-
-            #region method OnCompletedAsync
 
             /// <summary>
             /// Raises <b>CompletedAsync</b> event.
@@ -3489,13 +3073,7 @@ namespace LumiSoft.Net.POP3.Client
                     this.CompletedAsync(this,new EventArgs<UidlAsyncOP>(this));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         /// <summary>
         /// Starts sending UIDL command to POP3 server.
@@ -3524,10 +3102,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-        #endregion
-
-
-        #region override method OnConnected
 
         /// <summary>
         /// This method is called when TCP client has sucessfully connected.
@@ -3544,10 +3118,6 @@ namespace LumiSoft.Net.POP3.Client
                 ReadServerGreetingCompleted(readGreetingOP,callback);
             }
         }
-
-        #endregion
-        
-        #region method ReadServerGreetingCompleted
 
         /// <summary>
         /// Is called when POP3 server greeting reading has completed.
@@ -3593,11 +3163,7 @@ namespace LumiSoft.Net.POP3.Client
             connectCallback(error);
         }
 
-        #endregion
 
-
-        #region Properties Implementation
-        
         /// <summary>
         /// Gets greeting text which was sent by POP3 server.
         /// </summary>
@@ -3722,12 +3288,8 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-		#endregion
-
 
         //--- Obsolete -------------------------------------------------------------------
-                
-        #region method StartTLS
 
         /// <summary>
         /// Switches POP3 connection to SSL.
@@ -3779,10 +3341,6 @@ namespace LumiSoft.Net.POP3.Client
             this.SwitchToSecure();
         }
 
-        #endregion
-
-        #region method BeginStartTLS
-
         /// <summary>
         /// Internal helper method for asynchronous StartTLS method.
         /// </summary>
@@ -3816,10 +3374,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndStartTLS
 
         /// <summary>
         /// Ends a pending asynchronous StartTLS request.
@@ -3855,10 +3409,6 @@ namespace LumiSoft.Net.POP3.Client
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
         }
-
-        #endregion
-
-        #region method Authenticate
 
         /// <summary>
 		/// Authenticates user.
@@ -3925,10 +3475,6 @@ namespace LumiSoft.Net.POP3.Client
             }
 		}
 
-		#endregion
-
-        #region method BeginAuthenticate
-
         /// <summary>
         /// Internal helper method for asynchronous Authenticate method.
         /// </summary>
@@ -3965,10 +3511,6 @@ namespace LumiSoft.Net.POP3.Client
             return asyncState;
         }
 
-        #endregion
-
-        #region method EndAuthenticate
-
         /// <summary>
         /// Ends a pending asynchronous authentication request.
         /// </summary>
@@ -4004,10 +3546,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method BeginNoop
-
         /// <summary>
         /// Internal helper method for asynchronous Noop method.
         /// </summary>
@@ -4037,10 +3575,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndNoop
 
         /// <summary>
         /// Ends a pending asynchronous Noop request.
@@ -4077,10 +3611,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-        #endregion
-
-        #region method BeginReset
-
         /// <summary>
         /// Internal helper method for asynchronous Reset method.
         /// </summary>
@@ -4113,10 +3643,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return asyncState;
         }
-
-        #endregion
-
-        #region method EndReset
 
         /// <summary>
         /// Ends a pending asynchronous reset request.
@@ -4152,10 +3678,6 @@ namespace LumiSoft.Net.POP3.Client
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginReset method.");
             }
         }
-
-        #endregion
-
-        #region method Reset
 
         /// <summary>
 		/// Resets session. Messages marked for deletion will be unmarked.
@@ -4193,10 +3715,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 		}
-
-		#endregion
-
-        #region method FillMessages
 
         /// <summary>
         /// Fills messages info.
@@ -4283,7 +3801,5 @@ namespace LumiSoft.Net.POP3.Client
 				m_IsUidlSupported = false;
 			}
         }
-
-        #endregion
-	}
+    }
 }

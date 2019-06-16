@@ -24,9 +24,7 @@ namespace LumiSoft.Net
 		}
 
 
-		#region method ReadLine
-
-		/// <summary>
+        /// <summary>
 		/// Reads byte[] line from stream. NOTE: Returns null if end of stream reached.
 		/// </summary>
 		/// <returns>Return null if end of stream reached.</returns>
@@ -79,11 +77,7 @@ namespace LumiSoft.Net
 			return null;
 		}
 
-		#endregion
-
-		#region method ReadLineString
-
-		/// <summary>
+        /// <summary>
 		/// Reads string line from stream. String is converted with specified Encoding property from byte[] line. NOTE: Returns null if end of stream reached.
 		/// </summary>
 		/// <returns></returns>
@@ -103,12 +97,8 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
 
-
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets or sets charset encoding to use for string based methods. Default("") encoding is system default encoding.
 		/// </summary>
 		public string Encoding
@@ -127,8 +117,5 @@ namespace LumiSoft.Net
         /// Gets or sets if lines must be CRLF terminated or may be only LF terminated too.
         /// </summary>
         public bool CRLF_LinesOnly { get; set; } = true;
-
-#endregion
-
-	}
+    }
 }

@@ -35,8 +35,6 @@ namespace LumiSoft.Net.SMTP.Relay
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets this relay item owner queue.
         /// </summary>
@@ -86,8 +84,5 @@ namespace LumiSoft.Net.SMTP.Relay
         /// Gets or sets user data.
         /// </summary>
         public object Tag { get; set; }
-
-#endregion
-
     }
 }

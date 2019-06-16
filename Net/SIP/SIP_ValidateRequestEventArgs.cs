@@ -20,8 +20,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets incoming SIP request.
         /// </summary>
@@ -36,7 +34,5 @@ namespace LumiSoft.Net.SIP.Stack
         /// Gets or sets response code. Value null means SIP stack will handle it.
         /// </summary>
         public string ResponseCode { get; set; }
-
-#endregion
     }
 }

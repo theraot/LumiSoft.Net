@@ -15,8 +15,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region method Notify
-
         /// <summary>
         /// Sends notify request to remote end point.
         /// </summary>
@@ -29,7 +27,5 @@ namespace LumiSoft.Net.SIP.Stack
 
             // TODO:
         }
-
-        #endregion
     }
 }

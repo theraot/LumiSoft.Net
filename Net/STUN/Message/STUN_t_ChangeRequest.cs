@@ -24,8 +24,6 @@ namespace LumiSoft.Net.STUN.Message
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets or sets if STUN server must send response to different IP than request was received.
         /// </summary>
@@ -35,8 +33,5 @@ namespace LumiSoft.Net.STUN.Message
         /// Gets or sets if STUN server must send response to different port than request was received.
         /// </summary>
         public bool ChangePort { get; set; } = true;
-
-#endregion
-
     }
 }

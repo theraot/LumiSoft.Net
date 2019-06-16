@@ -41,8 +41,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region method ContainsFlag
-
         /// <summary>
         /// Gets if this message info contains specified message flag.
         /// </summary>
@@ -63,10 +61,6 @@ namespace LumiSoft.Net.IMAP.Server
             return false;
         }
 
-        #endregion
-
-
-        #region method FlagsToImapString
 
         /// <summary>
         /// Flags to IMAP flags string.
@@ -87,10 +81,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return retVal.ToString();
         }
-
-        #endregion
-
-        #region method UpdateFlags
 
         /// <summary>
         /// Updates IMAP message flags.
@@ -115,10 +105,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets message ID value.
@@ -150,7 +136,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets or sets message one-based sequnece number.
         /// </summary>
         internal int SeqNo { get; set; } = 1;
-
-#endregion
     }
 }

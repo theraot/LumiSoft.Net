@@ -24,8 +24,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses RTCP report block (part of SR or RR packet) from specified buffer.
         /// </summary>
@@ -66,10 +64,6 @@ namespace LumiSoft.Net.RTP
             LastSR                = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
             DelaySinceLastSR      = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores report block to the specified buffer.
@@ -139,10 +133,6 @@ namespace LumiSoft.Net.RTP
             buffer[offset++] = (byte)((DelaySinceLastSR)       | 0xFF);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets the SSRC identifier of the source to which the information in this reception report block pertains.
@@ -184,8 +174,5 @@ namespace LumiSoft.Net.RTP
         /// the DLSR field is set to zero.
         /// </summary>
         public uint DelaySinceLastSR { get; set; }
-
-#endregion
-
     }
 }

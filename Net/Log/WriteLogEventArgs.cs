@@ -22,14 +22,9 @@ namespace LumiSoft.Net.Log
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets new log entry.
         /// </summary>
         public LogEntry LogEntry { get; }
-
-#endregion
-
     }
 }

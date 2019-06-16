@@ -24,8 +24,6 @@ namespace LumiSoft.Net
 		}
 
 
-		#region method AppendString
-
         /// <summary>
 		/// Appends specified string to SourceString.
 		/// </summary>
@@ -35,12 +33,8 @@ namespace LumiSoft.Net
 			SourceString += value;
 		}
 
-		#endregion
 
-
-		#region method ReadToFirstChar
-
-		/// <summary>
+        /// <summary>
 		/// Reads to first char, skips white-space(SP,VTAB,HTAB,CR,LF) from the beginning of source string.
 		/// </summary>
         /// <returns>Returns white-space chars which was readed.</returns>
@@ -62,15 +56,11 @@ namespace LumiSoft.Net
             return whiteSpaceChars;
 		}
 
-		#endregion
-
-	//	public string ReadToDelimiter(char delimiter)
+        //	public string ReadToDelimiter(char delimiter)
 	//	{
 	//	}
 
-		#region method ReadSpecifiedLength
-
-		/// <summary>
+    /// <summary>
 		/// Reads string with specified length. Throws exception if read length is bigger than source string length.
 		/// </summary>
 		/// <param name="length">Number of chars to read.</param>
@@ -88,11 +78,7 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
-
-		#region method QuotedReadToDelimiter
-
-        /// <summary>
+    /// <summary>
 		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiter in quoted string is skipped.
         /// Delimiter is removed by default.
 		/// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
@@ -181,10 +167,6 @@ namespace LumiSoft.Net
 			return currentSplitBuffer.ToString();
 		}
 
-		#endregion
-        
-		#region method ReadWord
-
         /// <summary>
 		/// Reads word from string. Returns null if no word is available.
 		/// Word reading begins from first char, for example if SP"text", then space is trimmed.
@@ -267,11 +249,7 @@ namespace LumiSoft.Net
 			}			
 		}
 
-		#endregion
-	
-		#region method ReadParenthesized
-
-		/// <summary>
+        /// <summary>
 		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
 		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
 		/// </summary>
@@ -353,10 +331,6 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
-        
-        #region method ReadToEnd
-
         /// <summary>
         /// Reads all remaining string, returns null if no chars left to read.
         /// </summary>
@@ -373,10 +347,6 @@ namespace LumiSoft.Net
             return retVal;
         }
 
-        #endregion
-
-        #region method RemoveFromEnd
-
         /// <summary>
         /// Removes specified count of chars from the end of the source string.
         /// </summary>
@@ -391,10 +361,6 @@ namespace LumiSoft.Net
             SourceString = SourceString.Substring(0,SourceString.Length - count);
         }
 
-        #endregion
-
-
-        #region method StartsWith
 
         /// <summary>
 		/// Gets if source string starts with specified value. Compare is case-sensitive.
@@ -422,10 +388,6 @@ namespace LumiSoft.Net
 			}
 		}
 
-		#endregion
-
-        #region method EndsWith
-
         /// <summary>
 		/// Gets if source string ends with specified value. Compare is case-sensitive.
 		/// </summary>
@@ -451,10 +413,6 @@ namespace LumiSoft.Net
 				return SourceString.EndsWith(value,StringComparison.InvariantCultureIgnoreCase);
 			}
 		}
-
-		#endregion
-
-        #region method StartsWithWord
 
         /// <summary>
         /// Gets if current source string starts with word. For example if source string starts with
@@ -483,10 +441,6 @@ namespace LumiSoft.Net
             return true;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
 		/// Gets how many chars are available for reading.
@@ -513,8 +467,5 @@ namespace LumiSoft.Net
         {
             get{ return OriginalString.Length - SourceString.Length; }
         }
-
-		#endregion
-
-	}
+    }
 }

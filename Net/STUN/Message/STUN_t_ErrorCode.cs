@@ -17,8 +17,6 @@ namespace LumiSoft.Net.STUN.Message
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets or sets error code.
         /// </summary>
@@ -28,8 +26,5 @@ namespace LumiSoft.Net.STUN.Message
         /// Gets reason text.
         /// </summary>
         public string ReasonText { get; set; } = "";
-
-#endregion
-
     }
 }

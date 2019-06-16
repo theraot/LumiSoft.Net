@@ -23,8 +23,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-        
-        #region method Parse
 
         /// <summary>
         /// Parses "Method" from specified value.
@@ -66,10 +64,6 @@ namespace LumiSoft.Net.SIP.Message
             m_Method = word;
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Method" value.
         /// </summary>
@@ -79,10 +73,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_Method;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets SIP method what is allowed.
@@ -102,8 +92,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_Method = value;
             }
         }
-
-        #endregion
-
     }
 }

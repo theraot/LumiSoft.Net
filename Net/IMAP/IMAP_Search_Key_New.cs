@@ -19,8 +19,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>NEW</b> key.
         /// </summary>
@@ -42,10 +40,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_New();
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -56,10 +50,6 @@ namespace LumiSoft.Net.IMAP
             return "NEW";
         }
 
-        #endregion
-
-
-        #region internal override method ToCmdParts
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -74,7 +64,5 @@ namespace LumiSoft.Net.IMAP
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
         }
-
-        #endregion
     }
 }

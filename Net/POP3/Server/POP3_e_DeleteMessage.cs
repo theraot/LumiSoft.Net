@@ -22,13 +22,9 @@ namespace LumiSoft.Net.POP3.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message info.
         /// </summary>
         public POP3_ServerMessage Message { get; }
-
-#endregion
     }
 }

@@ -24,9 +24,7 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields = new List<HeaderField>();
 		}
 
-		#region method Add
-        
-		/// <summary>
+        /// <summary>
 		/// Adds a new header field with specified name and value to the end of the collection.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -45,11 +43,7 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields.Add(headerField);
 		}
 
-		#endregion
-
-		#region method Insert
-
-		/// <summary>
+        /// <summary>
 		/// Inserts a new header field into the collection at the specified location.
 		/// </summary>
 		/// <param name="index">The location in the collection where you want to add the header field.</param>
@@ -60,12 +54,8 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields.Insert(index,new HeaderField(fieldName,value));
 		}
 
-		#endregion
 
-
-		#region method Remove
-
-		/// <summary>
+        /// <summary>
 		/// Removes header field at the specified index from the collection.
 		/// </summary>
 		/// <param name="index">The index of the header field to remove.</param>
@@ -83,11 +73,7 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields.Remove(field);
 		}
 
-		#endregion
-
-		#region method RemoveAll
-
-		/// <summary>
+        /// <summary>
 		/// Removes all header fields with specified name from the collection.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -102,11 +88,7 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
-		
-		#region method Clear
-
-		/// <summary>
+        /// <summary>
 		/// Clears the collection of all header fields.
 		/// </summary>
 		public void Clear()
@@ -114,12 +96,8 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields.Clear();
 		}
 
-		#endregion
 
-
-		#region method Contains
-
-		/// <summary>
+        /// <summary>
 		/// Gets if collection contains specified header field.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -145,12 +123,8 @@ namespace LumiSoft.Net.Mime
 			return m_pHeaderFields.Contains(headerField);
 		}
 
-		#endregion
 
-
-		#region method GetFirst
-
-		/// <summary>
+        /// <summary>
 		/// Gets first header field with specified name, returns null if specified field doesn't exist.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -166,11 +140,7 @@ namespace LumiSoft.Net.Mime
 			return null;
 		}
 
-		#endregion
-
-		#region method Get
-
-		/// <summary>
+        /// <summary>
 		/// Gets header fields with specified name, returns null if specified field doesn't exist.
 		/// </summary>
 		/// <param name="fieldName">Header field name.</param>
@@ -195,12 +165,8 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-		#endregion
 
-
-		#region method Parse
-	
-		/// <summary>
+        /// <summary>
 		/// Parses header fields from string.
 		/// </summary>
 		/// <param name="headerString">Header string.</param>
@@ -289,12 +255,8 @@ namespace LumiSoft.Net.Mime
 				}
 			}
 		}
-		
-		#endregion
 
-		#region method ToHeaderString
-
-		/// <summary>
+        /// <summary>
 		/// Converts header fields to rfc 2822 message header string.
 		/// </summary>
 		/// <param name="encodingCharSet">CharSet to use for non ASCII header field values. Utf-8 is recommended value, if you explicity don't need other.</param>
@@ -309,12 +271,8 @@ namespace LumiSoft.Net.Mime
 			return headerString.ToString();
 		}
 
-		#endregion
 
-
-		#region interface IEnumerator
-
-		/// <summary>
+        /// <summary>
 		/// Gets enumerator.
 		/// </summary>
 		/// <returns></returns>
@@ -323,11 +281,7 @@ namespace LumiSoft.Net.Mime
 			return m_pHeaderFields.GetEnumerator();
 		}
 
-		#endregion
-
-		#region Properties Implementation
-		
-		/// <summary>
+        /// <summary>
 		/// Gets header field from specified index.
 		/// </summary>
 		public HeaderField this[int index]
@@ -342,8 +296,5 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ return m_pHeaderFields.Count; }
 		}
-
-		#endregion
-
-	}
+    }
 }

@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses unknown optional response from string.
         /// </summary>
@@ -39,10 +37,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Unknown(value);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -53,16 +47,10 @@ namespace LumiSoft.Net.IMAP
             return Value;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Optional response value.
         /// </summary>
         public string Value { get; }
-
-#endregion
     }
 }

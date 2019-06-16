@@ -18,8 +18,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-                
-        #region method ParseInternal
 
         /// <summary>
         /// Parses BYE packet from raw byte[] bye packet.
@@ -72,10 +70,6 @@ namespace LumiSoft.Net.RTP
                 offset += reasonLength;
             }
         }
-
-        #endregion
-
-        #region mehtod ToByte
 
         /// <summary>
         /// Stores BYE packet to the specified buffer.
@@ -138,10 +132,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTCP version.
@@ -199,8 +189,5 @@ namespace LumiSoft.Net.RTP
                 return size; 
             }
         }
-
-        #endregion
-
     }
 }

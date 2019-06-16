@@ -35,8 +35,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Min-SE" from specified value.
         /// </summary>
@@ -84,10 +82,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Min-SE" value.
         /// </summary>
@@ -109,10 +103,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets time in seconds when session expires.
@@ -130,8 +120,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_Time = value;
             }
         }
-
-        #endregion
-
     }
 }

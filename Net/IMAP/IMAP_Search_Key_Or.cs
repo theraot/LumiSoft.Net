@@ -30,8 +30,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>OR (search-key1) (search-key2)</b> key.
         /// </summary>
@@ -53,10 +51,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Or(IMAP_Search_Key.ParseKey(r),IMAP_Search_Key.ParseKey(r));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -67,10 +61,6 @@ namespace LumiSoft.Net.IMAP
             return "OR " + SearchKey1.ToString() + " " + SearchKey2.ToString();
         }
 
-        #endregion
-
-
-        #region internal override method ToCmdParts
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -89,10 +79,6 @@ namespace LumiSoft.Net.IMAP
             SearchKey2.ToCmdParts(list);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets search-key1.
@@ -103,7 +89,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets search-key2.
         /// </summary>
         public IMAP_Search_Key SearchKey2 { get; }
-
-#endregion
     }
 }

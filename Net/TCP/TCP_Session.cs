@@ -18,27 +18,17 @@ namespace LumiSoft.Net.TCP
         {
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
         public abstract void Dispose();
 
-        #endregion
-
-
-        #region method Disconnect
 
         /// <summary>
         /// Disconnects session.
         /// </summary>
         public abstract void Disconnect();
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if session is connected.
@@ -119,8 +109,5 @@ namespace LumiSoft.Net.TCP
         {
             get;
         }
-
-        #endregion
-
     }
 }

@@ -25,8 +25,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>NOT (search-key)</b> key.
         /// </summary>
@@ -48,10 +46,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Not(IMAP_Search_Key.ParseKey(r));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -62,10 +56,6 @@ namespace LumiSoft.Net.IMAP
             return "NOT " + SearchKey.ToString();
         }
 
-        #endregion
-
-
-        #region internal override method ToCmdParts
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -82,16 +72,10 @@ namespace LumiSoft.Net.IMAP
             SearchKey.ToCmdParts(list);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets search KEY.
         /// </summary>
         public IMAP_Search_Key SearchKey { get; }
-
-#endregion
     }
 }

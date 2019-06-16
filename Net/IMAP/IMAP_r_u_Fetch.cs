@@ -55,8 +55,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region method ParseAsync
-
         /// <summary>
         /// Starts parsing FETCH response.
         /// </summary>
@@ -97,10 +95,6 @@ namespace LumiSoft.Net.IMAP
             ParseDataItems(imap,r,callback);
         }
 
-        #endregion
-
-
-        #region override method ToStreamAsync
 
         /// <summary>
         /// Starts writing response to the specified stream.
@@ -186,10 +180,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-
-        #region method ParseDataItems
 
         /// <summary>
         /// Starts parsing fetch data-items,
@@ -216,8 +206,6 @@ namespace LumiSoft.Net.IMAP
                         
             while(true){
                 r.ReadToFirstChar();
-
-                #region BODY[]
 
                 if(r.StartsWith("BODY[",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
@@ -284,25 +272,13 @@ namespace LumiSoft.Net.IMAP
                     //else{
                 }
 
-                #endregion
-
-                #region BODY
-
                 else if(r.StartsWith("BODY ",false)){
                     //IMAP_t_Fetch_r_i_BodyS
                 }
 
-                #endregion
-
-                #region BODYSTRUCTURE
-
                 else if(r.StartsWith("BODYSTRUCTURE",false)){
                     //IMAP_t_Fetch_r_i_BodyStructure
                 }
-
-                #endregion
-
-                #region ENVELOPE
 
                 else if(r.StartsWith("ENVELOPE",false)){
                     // Envelope can contain string literals, we just try to parse it.
@@ -335,10 +311,6 @@ namespace LumiSoft.Net.IMAP
                     m_pDataItems.Add(IMAP_t_Fetch_r_i_Envelope.Parse(new StringReader(envelope)));
                 }
 
-                #endregion
-
-                #region FLAGS
-
                 else if(r.StartsWith("FLAGS",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         FLAGS
@@ -351,10 +323,6 @@ namespace LumiSoft.Net.IMAP
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Flags(IMAP_t_MsgFlags.Parse(r.ReadParenthesized())));
                 }
 
-                #endregion
-
-                #region INTERNALDATE
-
                 else if(r.StartsWith("INTERNALDATE",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         INTERNALDATE
@@ -366,10 +334,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_InternalDate(IMAP_Utils.ParseDate(r.ReadWord())));
                 }
-
-                #endregion
-
-                #region RFC822
 
                 else if(r.StartsWith("RFC822 ",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
@@ -400,10 +364,6 @@ namespace LumiSoft.Net.IMAP
                     // Continue processing.
                     //else{
                 }
-
-                #endregion
-
-                #region RFC822.HEADER
 
                 else if(r.StartsWith("RFC822.HEADER",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
@@ -439,10 +399,6 @@ namespace LumiSoft.Net.IMAP
                     //else{
                 }
 
-                #endregion
-
-                #region RFC822.SIZE
-
                 else if(r.StartsWith("RFC822.SIZE",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.SIZE
@@ -454,10 +410,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Rfc822Size(Convert.ToInt32(r.ReadWord())));
                 }
-
-                #endregion
-
-                #region RFC822.TEXT
 
                 else if(r.StartsWith("RFC822.TEXT",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
@@ -489,10 +441,6 @@ namespace LumiSoft.Net.IMAP
                     //else{
                 }
 
-                #endregion
-
-                #region UID
-
                 else if(r.StartsWith("UID",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         UID
@@ -505,10 +453,6 @@ namespace LumiSoft.Net.IMAP
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Uid(Convert.ToInt64(r.ReadWord())));
                 }
 
-                #endregion
-
-                #region X-GM-MSGID
-
                 else if(r.StartsWith("X-GM-MSGID",false)){
                     /* http://code.google.com/intl/et/apis/gmail/imap X-GM-MSGID.
                 
@@ -519,10 +463,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_X_GM_MSGID(Convert.ToUInt64(r.ReadWord())));
                 }
-
-                #endregion
-
-                #region X-GM-THRID
 
                 else if(r.StartsWith("X-GM-THRID",false)){
                     /* http://code.google.com/intl/et/apis/gmail/imap X-GM-THRID.
@@ -535,15 +475,9 @@ namespace LumiSoft.Net.IMAP
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_X_GM_THRID(Convert.ToUInt64(r.ReadWord())));
                 }
 
-                #endregion
-
-                #region ) - fetch closing.
-
                 else if(r.StartsWith(")",false)){
                     break;
                 }
-
-                #endregion
 
                 else{
                     throw new ParseException("Not supported FETCH data-item '" + r.ReadToEnd() + "'.");
@@ -552,10 +486,6 @@ namespace LumiSoft.Net.IMAP
 
             callback(this,new EventArgs<Exception>(null));
         }
-
-        #endregion
-
-        #region method ReadStringLiteral
 
         /// <summary>
         /// Reads string-literal(stores it to reader 'r') and continuing fetch line.
@@ -637,10 +567,6 @@ namespace LumiSoft.Net.IMAP
                 throw new ParseException("No string-literal available '" + r.SourceString + "'.");
             }
         }
-
-        #endregion
-
-        #region method ReadData
 
         /// <summary>
         /// Reads IMAP string(string-literal,quoted-string,NIL) and remaining FETCH line if needed.
@@ -736,10 +662,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-        #endregion
-
-        #region method ReadNextFetchLine
-        
         /// <summary>
         /// Reads next continuing FETCH line and stores to fetch reader 'r'.
         /// </summary>
@@ -812,10 +734,6 @@ namespace LumiSoft.Net.IMAP
             return true;
         }
 
-        #endregion
-
-
-        #region method FilterDataItem
 
         /// <summary>
         /// Returns specified data-item or null if no such item.
@@ -838,10 +756,6 @@ namespace LumiSoft.Net.IMAP
             return null;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets message 1-based sequence number.
@@ -953,7 +867,5 @@ namespace LumiSoft.Net.IMAP
         {
             get{ return (IMAP_t_Fetch_r_i_X_GM_THRID)FilterDataItem(typeof(IMAP_t_Fetch_r_i_X_GM_THRID)); }
         }
-
-        #endregion
     }
 }

@@ -11,8 +11,6 @@ namespace LumiSoft.Net.MIME
     {
         private readonly string m_Source = "";
 
-#region constants
-
         private static readonly char[] atextChars = new char[]{'!','#','$','%','&','\'','*','+','-','/','=','?','^','_','`','{','|','}','~'};
 
         private static readonly char[] specials = new char[]{'(',')','<','>','[',']',':',';','@','\\',',','.','"'};
@@ -20,8 +18,6 @@ namespace LumiSoft.Net.MIME
         private static readonly char[] tspecials = new char[]{'(',')','<','>','@',',',';',':','\\','"','/','[',']','?','='};
 
         private static readonly Regex encodedword_regex = new Regex(@"=\?(?<charset>.*?)\?(?<encoding>[qQbB])\?(?<value>.*?)\?=",RegexOptions.IgnoreCase);
-
-        #endregion
 
         /// <summary>
         /// Default constructor.
@@ -37,8 +33,6 @@ namespace LumiSoft.Net.MIME
             m_Source = value;
         }
 
-
-        #region method Atom
 
         /// <summary>
         /// Reads RFC 2822 'atom' from source stream.
@@ -78,10 +72,6 @@ namespace LumiSoft.Net.MIME
                 return null;
             }
         }
-
-        #endregion
-
-        #region method DotAtom
 
         /// <summary>
         /// Reads RFC 2822 'dot-atom' from source stream.
@@ -124,10 +114,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method Token
-
         /// <summary>
         /// Reads RFC 2045 (section 5) 'token' from source stream.
         /// </summary>
@@ -166,10 +152,6 @@ namespace LumiSoft.Net.MIME
                 return null;
             }
         }
-
-        #endregion
-
-        #region method Comment
 
         /// <summary>
         /// Reads RFC 822 'comment' from source stream.
@@ -221,10 +203,6 @@ namespace LumiSoft.Net.MIME
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method Word
-
         /// <summary>
         /// Reads RFC 2822 (section 3.2.6) 'word' from source stream.
         /// </summary>
@@ -244,10 +222,6 @@ namespace LumiSoft.Net.MIME
                 return DotAtom();
             }
         }
-
-        #endregion
-
-        #region method EncodedWord
 
         /// <summary>
         /// Reads RFC 2047 'encoded-word' from source stream.
@@ -319,10 +293,6 @@ namespace LumiSoft.Net.MIME
             return retVal.ToString();
         }
 
-        #endregion
-                
-        #region method QuotedString
-
         /// <summary>
         /// Reads RFC 822 'quoted-string' from source stream.
         /// </summary>
@@ -383,10 +353,6 @@ namespace LumiSoft.Net.MIME
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method Value
-
         /// <summary>
         /// Reads RFC 2045 (section 5) 'token' from source stream.
         /// </summary>
@@ -402,10 +368,6 @@ namespace LumiSoft.Net.MIME
                 return Token();
             }
         }
-
-        #endregion
-
-        #region method Phrase
 
         /// <summary>
         /// Reads RFC 2047 (section 5) 'phrase' from source stream.
@@ -459,10 +421,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method Text
-
         /// <summary>
         /// Reads RFC 822 '*text' from source stream.
         /// </summary>
@@ -471,10 +429,6 @@ namespace LumiSoft.Net.MIME
         {
             throw new NotImplementedException();
         }
-
-        #endregion
-
-        #region method ToFirstChar
 
         /// <summary>
         /// Reads all white-space chars + CR and LF.
@@ -508,10 +462,6 @@ namespace LumiSoft.Net.MIME
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method Char
-
         /// <summary>
         /// Reads 1 char from source stream.
         /// </summary>
@@ -530,10 +480,6 @@ namespace LumiSoft.Net.MIME
                 return m_Source[Position++];
             }
         }
-
-        #endregion
-
-        #region method Peek
 
         /// <summary>
         /// Shows next char in source stream, this method won't consume that char.
@@ -554,10 +500,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method StartsWith
-
         /// <summary>
         /// Gets if source stream valu starts with the specified value. Compare is case-insensitive.
         /// </summary>
@@ -572,10 +514,6 @@ namespace LumiSoft.Net.MIME
 
             return m_Source.Substring(Position).StartsWith(value,StringComparison.InvariantCultureIgnoreCase);
         }
-
-        #endregion
-
-        #region method ToEnd
 
         /// <summary>
         /// Reads all data from current postion to the end.
@@ -593,10 +531,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region static method IsAlpha
 
         /// <summary>
         /// Gets if the specified char is RFC 822 'ALPHA'.
@@ -616,10 +550,6 @@ namespace LumiSoft.Net.MIME
                 return false;
             }
         }
-
-        #endregion
-
-        #region static method IsAText
 
         /// <summary>
         /// Gets if the specified char is RFC 2822 'atext'.
@@ -649,10 +579,6 @@ namespace LumiSoft.Net.MIME
             return false;
         }
 
-        #endregion
-
-        #region static method IsDotAtom
-
         /// <summary>
         /// Gets if the specified value can be represented as "dot-atom".
         /// </summary>
@@ -677,10 +603,6 @@ namespace LumiSoft.Net.MIME
 
             return true;
         }
-
-        #endregion
-
-        #region static method IsToken
 
         /// <summary>
         /// Gets if specified valu is RFC 2045 (section 5) 'token'.
@@ -738,10 +660,6 @@ namespace LumiSoft.Net.MIME
             return true;
         }
 
-        #endregion
-
-        #region static method IsAttributeChar
-                
         /// <summary>
         /// Gets if the specified char is RFC 2231 (section 7) 'attribute-char'.
         /// </summary>
@@ -773,12 +691,8 @@ namespace LumiSoft.Net.MIME
             return true;
         }
 
-        #endregion
 
-
-        #region method ReadParenthesized
-
-		/// <summary>
+        /// <summary>
 		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
 		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
 		/// </summary>
@@ -848,10 +762,6 @@ namespace LumiSoft.Net.MIME
 			throw new ArgumentException("There is no closing parenthesize for '" + m_Source.Substring(Position) + "' !");
 		}
 
-		#endregion
-
-        #region method QuotedReadToDelimiter
-
         /// <summary>
 		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped. 
 		/// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
@@ -909,10 +819,6 @@ namespace LumiSoft.Net.MIME
 			return currentSplitBuffer.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of chars has left for processing.
@@ -926,8 +832,5 @@ namespace LumiSoft.Net.MIME
         /// Gets position in string.
         /// </summary>
         public int Position { get; private set; }
-
-#endregion
-
     }
 }

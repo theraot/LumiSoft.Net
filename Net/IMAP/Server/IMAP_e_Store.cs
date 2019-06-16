@@ -38,8 +38,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>
@@ -76,7 +74,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets flags.
         /// </summary>
         public string[] Flags { get; }
-
-#endregion
     }
 }

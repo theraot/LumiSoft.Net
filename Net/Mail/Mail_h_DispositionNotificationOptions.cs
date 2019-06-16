@@ -25,8 +25,6 @@ namespace LumiSoft.Net.Mail
             importance = "required" / "optional"
         */
 
-        
-        #region override method ToString
 
         /// <summary>
         /// Returns header field as string.
@@ -40,10 +38,6 @@ namespace LumiSoft.Net.Mail
             return "TODO:";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -70,7 +64,5 @@ namespace LumiSoft.Net.Mail
         {
             get{ return "TODO:"; }
         }
-
-        #endregion
     }
 }

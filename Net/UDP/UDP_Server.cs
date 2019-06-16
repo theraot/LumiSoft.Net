@@ -31,8 +31,6 @@ namespace LumiSoft.Net.UDP
         {        
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -48,10 +46,6 @@ namespace LumiSoft.Net.UDP
             this.PacketReceived = null;
         }
 
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts UDP server.
@@ -141,10 +135,6 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
-
-        #region method Stop
-
         /// <summary>
         /// Stops UDP server.
         /// </summary>
@@ -167,10 +157,6 @@ namespace LumiSoft.Net.UDP
             m_pSendSocketsIPv6 = null;
         }
 
-        #endregion
-
-        #region method Restart
-
         /// <summary>
         /// Restarts running server. If server is not running, this methods has no efffect.
         /// </summary>
@@ -182,11 +168,7 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
 
-
-        #region method SendPacket
-                
         /// <summary>
         /// Sends specified UDP packet to the specified remote end point.
         /// </summary>
@@ -345,10 +327,6 @@ namespace LumiSoft.Net.UDP
             m_PacketsSent++;
         }
 
-        #endregion
-
-        #region method GetLocalEndPoint
-
         /// <summary>
         /// Gets suitable local IP end point for the specified remote endpoint.
         /// If there are multiple sending local end points, they will be load-balanched with round-robin.
@@ -385,10 +363,6 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
-
-
-        #region method ProcessUdpPacket
 
         /// <summary>
         /// Processes specified incoming UDP packet.
@@ -404,10 +378,6 @@ namespace LumiSoft.Net.UDP
             OnUdpPacketReceived(e);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -597,16 +567,10 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
-
-        #region Events Implementation
-
         /// <summary>
         /// This event is raised when new UDP packet received.
         /// </summary>
         public event EventHandler<UDP_e_PacketReceived> PacketReceived;
-
-        #region method OnUdpPacketReceived
 
         /// <summary>
         /// Raises PacketReceived event.
@@ -619,14 +583,10 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when unexpected error happens.
         /// </summary>
         public event ErrorEventHandler Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises Error event.
@@ -638,10 +598,5 @@ namespace LumiSoft.Net.UDP
                 this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

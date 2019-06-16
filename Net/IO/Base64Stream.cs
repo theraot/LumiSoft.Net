@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class Base64Stream : Stream,IDisposable
     {
-        #region BASE64_ENCODE_TABLE
-
         private readonly static byte[] BASE64_ENCODE_TABLE = new byte[]{
 		    (byte)'A',(byte)'B',(byte)'C',(byte)'D',(byte)'E',(byte)'F',(byte)'G',(byte)'H',(byte)'I',(byte)'J',
             (byte)'K',(byte)'L',(byte)'M',(byte)'N',(byte)'O',(byte)'P',(byte)'Q',(byte)'R',(byte)'S',(byte)'T',
@@ -19,10 +17,6 @@ namespace LumiSoft.Net.IO
             (byte)'y',(byte)'z',(byte)'0',(byte)'1',(byte)'2',(byte)'3',(byte)'4',(byte)'5',(byte)'6',(byte)'7',
             (byte)'8',(byte)'9',(byte)'+',(byte)'/'
 		};
-
-        #endregion
-
-        #region BASE64_DECODE_TABLE
 
         private readonly static short[] BASE64_DECODE_TABLE = new short[]{
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
@@ -39,8 +33,6 @@ namespace LumiSoft.Net.IO
 		    39,40,41,42,43,44,45,46,47,48,  //110 - 119
 		    49,50,51,-1,-1,-1,-1,-1         //120 - 127
         };
-
-        #endregion
 
         private bool        m_IsFinished;
         private readonly Stream      m_pStream;
@@ -90,8 +82,6 @@ namespace LumiSoft.Net.IO
             m_pBase64       = new Base64();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Celans up any resources being used.
         /// </summary>
@@ -112,10 +102,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-
-        #region override method Flush
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -127,10 +113,6 @@ namespace LumiSoft.Net.IO
                 throw new ObjectDisposedException("Base64Stream");
             }
         }
-
-        #endregion
-
-        #region override method Seek
 
         /// <summary>
         /// Sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -149,10 +131,6 @@ namespace LumiSoft.Net.IO
             throw new NotSupportedException();
         }
 
-        #endregion
-
-        #region override method SetLength
-
         /// <summary>
         /// Sets the length of the current stream. This method is not supported and always throws a NotSupportedException.
         /// </summary>
@@ -167,10 +145,6 @@ namespace LumiSoft.Net.IO
 
             throw new NotSupportedException();
         }
-
-        #endregion
-
-        #region override method Read
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -247,10 +221,6 @@ namespace LumiSoft.Net.IO
 
             return countToCopy;
         }
-
-        #endregion
-
-        #region override method Write
 
         /// <summary>
         /// Encodes a sequence of bytes, writes to the current stream and advances the current position within this stream by the number of bytes written.
@@ -344,10 +314,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-
-        #region method Finish
 
         /// <summary>
         /// Completes encoding. Call this method if all data has written and no more data. 
@@ -382,10 +348,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -477,8 +439,5 @@ namespace LumiSoft.Net.IO
                 throw new NotSupportedException();
             }
         }
-
-        #endregion
-  
     }
 }

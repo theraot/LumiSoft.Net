@@ -7,8 +7,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
     /// </summary>
     public class PCMA : AudioCodec
     {
-        #region byte[] ALawCompressTable
-
         private static readonly byte[] ALawCompressTable = new byte[]{ 
             1,1,2,2,3,3,3,3, 
             4,4,4,4,4,4,4,4, 
@@ -27,10 +25,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             7,7,7,7,7,7,7,7, 
             7,7,7,7,7,7,7,7 
         };
-
-        #endregion
-
-        #region short[] ALawDecompressTable
 
         private static readonly short[] ALawDecompressTable = new short[]{ 
             -5504, -5248, -6016, -5760, -4480, -4224, -4992, -4736, 
@@ -67,8 +61,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             944,   912,  1008,   976,   816,   784,   880,   848 
         };
 
-        #endregion
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -76,8 +68,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
         {
         }
 
-
-        #region method Encode
 
         /// <summary>
         /// Encodes linear 16-bit linear PCM to 8-bit alaw.
@@ -116,10 +106,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return retVal;
         }
 
-        #endregion
-
-        #region method Decode
-
         /// <summary>
         /// Decodes 8-bit alaw to linear 16-bit PCM.
         /// </summary>
@@ -152,10 +138,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return retVal;
         }
 
-        #endregion
-
-
-        #region static method LinearToALawSample
 
         private static byte LinearToALawSample(short sample) 
         { 
@@ -185,10 +167,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return compressedByte;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets codec name.
@@ -207,8 +185,5 @@ namespace LumiSoft.Net.Media.Codec.Audio
         /// Gets compressed audio format info.
         /// </summary>
         public override AudioFormat CompressedAudioFormat { get; } = new AudioFormat(8000,8,1);
-
-#endregion
-
     }
 }

@@ -36,8 +36,6 @@ namespace LumiSoft.Net.DNS
         }
 
 
-        #region Properties implementation
-        
         /// <summary>
         /// Gets DNS query class.
         /// </summary>
@@ -52,7 +50,5 @@ namespace LumiSoft.Net.DNS
         /// Gets query text.
         /// </summary>
         public string QueryName { get; } = "";
-
-#endregion
     }
 }

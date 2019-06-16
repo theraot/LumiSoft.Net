@@ -18,11 +18,8 @@ namespace LumiSoft.Net.ABNF
             Init();
         }
 
-        #region method Init
-
         private void Init()
         {
-            #region Add basic rules
             /*
             ALPHA          =  %x41-5A / %x61-7A   ; A-Z / a-z
 
@@ -78,13 +75,8 @@ namespace LumiSoft.Net.ABNF
             WSP            =  SP / HTAB
                                 ; white space
 */
-            #endregion
         }
 
-        #endregion
-
-
-        #region method AddRules
 
         /// <summary>
         /// Parses and adds ABNF rules from the specified ABFN string.
@@ -100,17 +92,10 @@ namespace LumiSoft.Net.ABNF
             // TODO:
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets ABNF rules collection.
         /// </summary>
         public List<ABNF_Rule> Rules { get; }
-
-#endregion
-
     }
 }

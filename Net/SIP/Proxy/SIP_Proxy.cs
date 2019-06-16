@@ -7,8 +7,6 @@ using LumiSoft.Net.SIP.Stack;
 
 namespace LumiSoft.Net.SIP.Proxy
 {
-    #region Delegates
-
     /// <summary>
     /// Represents the method that will handle the SIP_ProxyCore.IsLocalUri event.
     /// </summary>
@@ -27,8 +25,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// <param name="address">SIP address to check.</param>
     /// <returns>Returns true if specified address exists, otherwise false.</returns>
     public delegate bool SIP_AddressExistsEventHandler(string address);
-
-    #endregion
 
     /// <summary>
     /// Implements SIP registrar,statefull and stateless proxy.
@@ -66,8 +62,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pHandlers      = new List<SIP_ProxyHandler>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -87,12 +81,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pProxyContexts = null;
         }
 
-        #endregion
-
-
-        #region Events Handling
-
-        #region method m_pStack_RequestReceived
 
         /// <summary>
         /// This method is called when SIP stack receives new request.
@@ -104,10 +92,6 @@ namespace LumiSoft.Net.SIP.Proxy
             OnRequestReceived(e);
         }
 
-        #endregion
-
-        #region method m_pStack_ResponseReceived
-
         /// <summary>
         /// This method is called when SIP stack receives new response.
         /// </summary>
@@ -118,12 +102,6 @@ namespace LumiSoft.Net.SIP.Proxy
             OnResponseReceived(e);            
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method OnRequestReceived
 
         /// <summary>
         /// This method is called when new request is received.
@@ -132,10 +110,7 @@ namespace LumiSoft.Net.SIP.Proxy
         private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {            
             SIP_Request request = e.Request;
-            try{  
-
-                #region Statefull
-
+            try{
                 // Statefull
                 if((m_ProxyMode & SIP_ProxyMode.Statefull) != 0){
                     // Statefull proxy is transaction statefull proxy only, 
@@ -171,18 +146,10 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
 
-                #endregion
-                
-                #region B2BUA
-                
                 // B2BUA
                 else if((m_ProxyMode & SIP_ProxyMode.B2BUA) != 0){
                     m_pB2BUA.OnRequestReceived(e);
                 }
-
-                #endregion
-
-                #region Stateless
 
                 // Stateless
                 else if((m_ProxyMode & SIP_ProxyMode.Stateless) != 0){
@@ -190,16 +157,9 @@ namespace LumiSoft.Net.SIP.Proxy
                     ForwardRequest(false,e,true);
                 }
 
-                #endregion
-
-                #region Proxy won't accept command
-                
                 else{
                     e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x501_Not_Implemented,request));
                 }
-
-                #endregion
-
             }
             catch(Exception x){
                 try{
@@ -215,10 +175,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }            
         }
-
-        #endregion
-
-        #region method OnResponseReceived
 
         /// <summary>
         /// This method is called when new response is received.
@@ -264,10 +220,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-
-        #region method ForwardRequest
 
         /// <summary>
         /// Forwards specified request to target recipient.
@@ -297,8 +249,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     2. URI scheme
                 4. Forward the request (Section 16.6)
             */
-
-            #region 1. Validate the request (Section 16.3)
 
             // 1.1 Reasonable Syntax.
             //      SIP_Message parsing have done it.
@@ -351,10 +301,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     requestContext.SetUser(userName);
                 }
             }
-
-            #endregion
-
-            #region 2. Preprocess routing information (Section 16.4).
 
             /*
                 The proxy MUST inspect the Request-URI of the request.  If the
@@ -417,10 +363,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-            #endregion
-
-            #region REGISTER request processing
-                       
             if(e.Request.RequestLine.Method == SIP_Methods.REGISTER){
                 SIP_Uri requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
@@ -440,10 +382,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Forward REGISTER.
                 // else{
             }
-
-            #endregion
-
-            #region 3. Determine target(s) for the request (Section 16.5)
 
             /* 3. Determine target(s) for the request (Section 16.5)
                     Next, the proxy calculates the target(s) of the request.  The set of
@@ -541,10 +479,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }               
             }
 
-            #endregion
-
-            #region x. Custom handling
-
             // x.1 Process custom request handlers, if any.
             foreach(SIP_ProxyHandler handler in this.Handlers){
                 try{
@@ -572,20 +506,10 @@ namespace LumiSoft.Net.SIP.Proxy
                 return;
             }
 
-            #endregion
-
-            #region 4. Forward the request (Section 16.6)
-
-            #region Statefull
-
             if (statefull){
                 SIP_ProxyContext proxyContext = this.CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
                 proxyContext.Start();
             }
-
-            #endregion
-
-            #region Stateless
 
             else{
                 /* RFC 3261 16.6 Request Forwarding.
@@ -619,34 +543,12 @@ namespace LumiSoft.Net.SIP.Proxy
 
                 bool      isStrictRoute = false;
                 SIP_Hop[] hops          = null;
-                                
-                #region 1.  Make a copy of the received request
 
                 SIP_Request forwardRequest = request.Copy();
 
-                #endregion
-
-                #region 2.  Update the Request-URI
-
                 forwardRequest.RequestLine.Uri = requestContext.Targets[0].TargetUri;
 
-                #endregion
-
-                #region 3.  Update the Max-Forwards header field
-
                 forwardRequest.MaxForwards--;
-
-                #endregion
-
-                #region 4.  Optionally add a Record-route header field value
-
-                #endregion
-
-                #region 5.  Optionally add additional header fields
-
-                #endregion
-
-                #region 6.  Postprocess routing information
 
                 /* 6. Postprocess routing information.
              
@@ -666,10 +568,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
                     isStrictRoute = true;
                 }
-
-                #endregion
-
-                #region 7.  Determine the next-hop address, port, and transport
 
                 /* 7. Determine the next-hop address, port, and transport.
                       The proxy MAY have a local policy to send the request to a
@@ -736,26 +634,14 @@ namespace LumiSoft.Net.SIP.Proxy
 
                     return;
                 }
-                
-                #endregion
 
-                #region 8.  Add a Via header field value
-                                
                 forwardRequest.Via.AddToTop("SIP/2.0/transport-tl-addign sentBy-tl-assign-it;branch=z9hG4bK-" + Net_Utils.ComputeMd5(request.Via.GetTopMostValue().Branch,true));
                 
                 // Add 'flowID' what received request, you should use the same flow to send response back.
                 // For more info see RFC 3261 18.2.2.
                 forwardRequest.Via.GetTopMostValue().Parameters.Add("flowID",request.Flow.ID);
 
-                #endregion
-
-                #region 9.  Add a Content-Length header field if necessary
-
                 // Skip, our SIP_Message class is smart and do it when ever it's needed.
-
-                #endregion
-
-                #region 10. Forward the new request
 
                 try{
                     try{
@@ -781,19 +667,8 @@ namespace LumiSoft.Net.SIP.Proxy
                         e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x503_Service_Unavailable + ": Transport error.",forwardRequest));
                     }
                 }
-
-                #endregion
-
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
-
-        #region method AuthenticateRequest
 
         /// <summary>
         /// Authenticates SIP request. This method also sends all needed replys to request sender.
@@ -866,10 +741,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return true;
         }
 
-        #endregion
-
-        #region method IsLocalRoute
-
         /// <summary>
         /// Gets if this proxy server is responsible for specified route.
         /// </summary>
@@ -896,10 +767,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        #endregion
-
-        #region method IsRecordRoute
-
         /// <summary>
         /// Checks if the specified route is Record-Route what we add.
         /// </summary>
@@ -920,10 +787,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        #endregion
-
-        #region method CreateProxyContext
-
         internal SIP_ProxyContext CreateProxyContext(SIP_RequestContext requestContext,SIP_ServerTransaction transaction,SIP_Request request,bool addRecordRoute)
         {            
             // Create proxy context that will be responsible for forwarding request.
@@ -943,10 +806,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return proxyContext;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -1067,17 +926,11 @@ namespace LumiSoft.Net.SIP.Proxy
                 return m_pHandlers; 
             }
         }
-                
-        #endregion
 
-        #region Events Implementation
-                                
         /// <summary>
         /// This event is raised when SIP proxy needs to know if specified request URI is local URI or remote URI.
         /// </summary>
         public event SIP_IsLocalUriEventHandler IsLocalUri;
-
-        #region mehtod OnIsLocalUri
 
         /// <summary>
         /// Raises <b>IsLocalUri</b> event.
@@ -1093,14 +946,10 @@ namespace LumiSoft.Net.SIP.Proxy
             return true;
         }
 
-        #endregion
-        
         /// <summary>
         /// This event is raised when SIP proxy or registrar server needs to authenticate user.
         /// </summary>
         public event SIP_AuthenticateEventHandler Authenticate;
-                
-        #region method OnAuthenticate
 
         /// <summary>
         /// Is called by SIP proxy or registrar server when it needs to authenticate user.
@@ -1117,14 +966,10 @@ namespace LumiSoft.Net.SIP.Proxy
             return eArgs;
         }
 
-        #endregion
-               
         /// <summary>
         /// This event is raised when SIP proxy needs to know if specified local server address exists.
         /// </summary>
         public event SIP_AddressExistsEventHandler AddressExists;
-                
-        #region method OnAddressExists
 
         /// <summary>
         /// Is called by SIP proxy if it needs to check if specified address exists.
@@ -1139,10 +984,5 @@ namespace LumiSoft.Net.SIP.Proxy
                         
             return false;
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

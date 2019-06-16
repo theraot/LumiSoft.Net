@@ -15,8 +15,6 @@ namespace LumiSoft.Net.MIME
         {
         }
 
-                
-        #region method ToString
 
         /// <summary>
         /// Returns header field as string.
@@ -49,10 +47,6 @@ namespace LumiSoft.Net.MIME
         /// <returns>Returns header field as string.</returns>
         public abstract string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode);
 
-        #endregion
-
-        #region method ValueToString
-
         /// <summary>
         /// Returns header field value as string.
         /// </summary>
@@ -74,10 +68,6 @@ namespace LumiSoft.Net.MIME
             return ToString(wordEncoder,parmetersCharset).Split(new char[]{':'},2)[1].TrimStart();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -96,8 +86,5 @@ namespace LumiSoft.Net.MIME
         {
             get;
         }
-
-        #endregion
-
     }
 }

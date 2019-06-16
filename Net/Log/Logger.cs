@@ -16,8 +16,6 @@ namespace LumiSoft.Net.Log
         {
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -25,10 +23,6 @@ namespace LumiSoft.Net.Log
         {
         }
 
-        #endregion
-
-
-        #region method AddRead
 
         /// <summary>
         /// Adds read log entry.
@@ -69,10 +63,6 @@ namespace LumiSoft.Net.Log
             OnWriteLog(new LogEntry(LogEntryType.Read,id,userIdentity,size,text,localEP,remoteEP,data));
         }
 
-        #endregion
-
-        #region method AddWrite
-
         /// <summary>
         /// Add write log entry.
         /// </summary>
@@ -112,10 +102,6 @@ namespace LumiSoft.Net.Log
             OnWriteLog(new LogEntry(LogEntryType.Write,id,userIdentity,size,text,localEP,remoteEP,data));
         }
 
-        #endregion
-
-        #region method AddText
-
         /// <summary>
         /// Adds text entry.
         /// </summary>
@@ -148,10 +134,6 @@ namespace LumiSoft.Net.Log
             OnWriteLog(new LogEntry(LogEntryType.Text,id,userIdentity,0,text,localEP,remoteEP,(byte[])null));
         }
 
-        #endregion
-
-        #region method AddException
-
         /// <summary>
         /// Adds exception entry.
         /// </summary>
@@ -166,21 +148,10 @@ namespace LumiSoft.Net.Log
             OnWriteLog(new LogEntry(LogEntryType.Exception,id,userIdentity,0,text,localEP,remoteEP,exception));
         }
 
-        #endregion
-
-
-        #region Properties Implementation
-
-        #endregion
-        
-        #region Events Implementation
-
         /// <summary>
         /// Is raised when new log entry is available.
         /// </summary>
         public event EventHandler<WriteLogEventArgs> WriteLog;
-
-        #region method OnWriteLog
 
         /// <summary>
         /// Raises WriteLog event.
@@ -192,10 +163,5 @@ namespace LumiSoft.Net.Log
                 this.WriteLog(this,new WriteLogEventArgs(entry));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

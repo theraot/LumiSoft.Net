@@ -15,8 +15,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region abstract method Continue
-
         /// <summary>
         /// Continues authentication process.
         /// </summary>
@@ -25,10 +23,6 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>serverResponse</b> is null reference.</exception>
         public abstract byte[] Continue(byte[] serverResponse);
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -62,7 +56,5 @@ namespace LumiSoft.Net.AUTH
         {
             get{ return false; }
         }
-
-        #endregion
     }
 }

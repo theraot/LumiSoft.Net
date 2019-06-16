@@ -42,8 +42,6 @@ namespace LumiSoft.Net.SIP.Debug
             InitUI();
         }
 
-        #region mehtod InitUI
-
         /// <summary>
         /// Creates and initializes UI.
         /// </summary>
@@ -55,8 +53,6 @@ namespace LumiSoft.Net.SIP.Debug
                         
             m_pTab = new TabControl();
             m_pTab.Dock = DockStyle.Fill;
-
-            #region tabpage Log
 
             m_pTab.TabPages.Add("log","Log");
 
@@ -101,10 +97,6 @@ namespace LumiSoft.Net.SIP.Debug
             m_pTabLog_Text.BorderStyle = BorderStyle.None;
             m_pTab.TabPages["log"].Controls.Add(m_pTabLog_Text);
 
-            #endregion
-
-            #region tabpage Transaction
-
             m_pTab.TabPages.Add("transactions","Transactions");
 
             m_pTabTransactions_Toolbar = new ToolStrip();
@@ -126,10 +118,6 @@ namespace LumiSoft.Net.SIP.Debug
             m_pTabTransactions_List.Columns.Add("Create Time",80);
             m_pTabTransactions_List.Columns.Add("ID",100);
             m_pTab.TabPages["transactions"].Controls.Add(m_pTabTransactions_List);
-
-            #endregion
-
-            #region tabpage Dialogs
 
             m_pTab.TabPages.Add("dialogs","Dialogs");
 
@@ -153,10 +141,6 @@ namespace LumiSoft.Net.SIP.Debug
             m_pTabDialogs_List.DoubleClick += new EventHandler(m_pTabDialogs_List_DoubleClick);
             m_pTab.TabPages["dialogs"].Controls.Add(m_pTabDialogs_List);
 
-            #endregion
-
-            #region tabpage Flows
-
             m_pTab.TabPages.Add("flows","Flows");
 
             m_pTabFlows_Toolbar = new ToolStrip();
@@ -179,17 +163,9 @@ namespace LumiSoft.Net.SIP.Debug
             m_pTabFlows_List.Columns.Add("Public EP",130);
             m_pTab.TabPages["flows"].Controls.Add(m_pTabFlows_List);
 
-            #endregion
-                        
             this.Controls.Add(m_pTab);
         }
-                                                                                
-        #endregion
 
-
-        #region Events handling
-
-        #region method Logger_WriteLog
 
         /// <summary>
         /// Is raised when SIP stack has new log entry.
@@ -229,10 +205,6 @@ namespace LumiSoft.Net.SIP.Debug
             }));
         }
 
-        #endregion
-
-
-        #region method m_pTabLog_Toolbar_Click
 
         /// <summary>
         /// This method is called when when log toolbar button is pressed.
@@ -247,10 +219,6 @@ namespace LumiSoft.Net.SIP.Debug
                 m_pTabLog_Text.Text = "";
             }
         }
-
-        #endregion
-
-        #region method m_pTabTransactions_Toolbar_Click
 
         /// <summary>
         /// This method is called when when transactions toolbar button is pressed.
@@ -292,10 +260,6 @@ namespace LumiSoft.Net.SIP.Debug
             }
         }
 
-        #endregion
-
-        #region method m_pTabDialogs_Toolbar_Click
-
         /// <summary>
         /// This method is called when when dialogs toolbar button is pressed.
         /// </summary>
@@ -323,10 +287,6 @@ namespace LumiSoft.Net.SIP.Debug
             }
         }
 
-        #endregion
-
-        #region method m_pTabDialogs_List_DoubleClick
-
         /// <summary>
         /// Is called when dialog list has double clicked.
         /// </summary>
@@ -350,10 +310,6 @@ namespace LumiSoft.Net.SIP.Debug
 
             frm.Show();
         }
-
-        #endregion
-
-        #region method m_pTabFlows_Toolbar_Click
 
         /// <summary>
         /// This method is called when when flows toolbar button is pressed.
@@ -382,10 +338,6 @@ namespace LumiSoft.Net.SIP.Debug
             }
         }
 
-        #endregion
-
-
-        #region method wfrm_Debug_FormClosed
 
         /// <summary>
         /// This method is called when debug window is closed.
@@ -397,12 +349,6 @@ namespace LumiSoft.Net.SIP.Debug
             m_pStack.Logger.WriteLog -= new EventHandler<LumiSoft.Net.Log.WriteLogEventArgs>(Logger_WriteLog);
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region static method IsAstericMatch
 
         /// <summary>
 		/// Checks if text matches to search pattern.
@@ -457,7 +403,5 @@ namespace LumiSoft.Net.SIP.Debug
 
             return true;
 		}
-
-		#endregion
     }
 }

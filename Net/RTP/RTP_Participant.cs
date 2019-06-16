@@ -29,8 +29,6 @@ namespace LumiSoft.Net.RTP
             m_pSources = new List<RTP_Source>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -43,10 +41,6 @@ namespace LumiSoft.Net.RTP
             this.SourceRemoved = null;
         }
 
-        #endregion
-
-
-        #region method EnsureSource
 
         /// <summary>
         /// Adds specified source to participant if participant doesn't contain the specified source.
@@ -78,10 +72,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets canonical name of participant.
@@ -101,16 +91,10 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public object Tag { get; set; }
 
-#endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when participant disjoins(timeout or BYE all sources) the RTP multimedia session.
         /// </summary>
         public event EventHandler Removed;
-
-        #region method OnRemoved
 
         /// <summary>
         /// Raises <b>Removed</b> event.
@@ -122,14 +106,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when participant gets new RTP source.
         /// </summary>
         public event EventHandler<RTP_SourceEventArgs> SourceAdded;
-
-        #region method OnSourceAdded
 
         /// <summary>
         /// Raises <b>SourceAdded</b> event.
@@ -146,14 +126,10 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when RTP source removed from(Timeout or BYE) participant.
         /// </summary>
         public event EventHandler<RTP_SourceEventArgs> SourceRemoved;
-
-        #region method OnSourceRemoved
 
         /// <summary>
         /// Raises <b>SourceRemoved</b> event.
@@ -169,9 +145,5 @@ namespace LumiSoft.Net.RTP
                 this.SourceRemoved(this,new RTP_SourceEventArgs(source));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

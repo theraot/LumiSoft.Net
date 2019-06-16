@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_MsgFlags
     {
-        #region System flags definition
-
         /// <summary>
         /// Message flag <b>Seen</b>: Message has been read.
         /// </summary>
@@ -40,8 +38,6 @@ namespace LumiSoft.Net.IMAP
         /// </summary>
         public static readonly string Recent = "\\Recent";
 
-        #endregion
-
         private readonly KeyValueCollection<string,string> m_pFlags;
 
         /// <summary>
@@ -61,8 +57,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
-        #region static method Parse
 
         /// <summary>
         /// Parses message flags from flags-string.
@@ -90,10 +84,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_MsgFlags(flags);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as flags string.
@@ -114,10 +104,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method Contains
-
         /// <summary>
         /// Gets if flags list contains the specified flag.
         /// </summary>
@@ -132,10 +118,6 @@ namespace LumiSoft.Net.IMAP
             return m_pFlags.ContainsKey(flag.ToLower());
         }
 
-        #endregion
-
-        #region method ToArray
-
         /// <summary>
         /// Copies message flags to string array.
         /// </summary>
@@ -145,10 +127,6 @@ namespace LumiSoft.Net.IMAP
             return m_pFlags.ToArray();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of flags in the collection.
@@ -157,7 +135,5 @@ namespace LumiSoft.Net.IMAP
         {
             get{ return m_pFlags.Count; }
         }
-
-        #endregion
     }
 }

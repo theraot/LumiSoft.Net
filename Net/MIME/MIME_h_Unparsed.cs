@@ -35,8 +35,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -48,11 +46,7 @@ namespace LumiSoft.Net.MIME
             throw new InvalidOperationException();
         }
 
-        #endregion
 
-
-        #region override method ToString
-                
         /// <summary>
         /// Returns header field as string.
         /// </summary>
@@ -65,10 +59,6 @@ namespace LumiSoft.Net.MIME
             return m_ParseValue;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -94,7 +84,5 @@ namespace LumiSoft.Net.MIME
         /// Gets error happened during parse.
         /// </summary>
         public Exception Exception { get; }
-
-#endregion
     }
 }

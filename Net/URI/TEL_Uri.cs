@@ -13,8 +13,6 @@
         }
 
 
-        #region Properties implementation
-
         public bool IsGlobal
         {
             get{ return false; }
@@ -24,9 +22,5 @@
         {
             get{ return ""; }
         }
-
-
-        #endregion
-
     }
 }

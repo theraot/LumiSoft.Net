@@ -19,8 +19,6 @@
         }
 
 
-        #region ovveride method Equals
-
         /// <summary>
         /// Compares the current instance with another object of the same type.
         /// </summary>
@@ -49,10 +47,6 @@
             return true;
         }
 
-        #endregion
-
-        #region override method GetHashCode
-
         /// <summary>
         /// Returns the hash code.
         /// </summary>
@@ -62,10 +56,6 @@
             return base.GetHashCode();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets the number of samples per second that are provided by the audio format.
@@ -81,7 +71,5 @@
         /// Gets the number of channels that are provided by the audio format.
         /// </summary>
         public int Channels { get; }
-
-#endregion
     }
 }

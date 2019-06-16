@@ -32,8 +32,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-        
         /// <summary>
         /// Gets ACL responses collection.
         /// </summary>
@@ -60,7 +58,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets folder name with optional path.
         /// </summary>
         public string Folder { get; }
-
-#endregion
     }
 }

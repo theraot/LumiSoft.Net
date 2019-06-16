@@ -18,8 +18,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method ToString
-
         /// <summary>
         /// Returns participant as string.
         /// </summary>
@@ -51,10 +49,6 @@ namespace LumiSoft.Net.RTP
             return retVal.ToString().TrimEnd();
         }
 
-        #endregion
-
-
-        #region method Update
 
         /// <summary>
         /// Updates participant data from SDES items.
@@ -98,10 +92,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets the real name, eg. "John Doe". Value null means not specified.
@@ -137,17 +127,11 @@ namespace LumiSoft.Net.RTP
         public string Note { get; private set; }
 
         // TODO: PRIV
-                
-        #endregion
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when participant data changed.
         /// </summary>
         public event EventHandler<RTP_ParticipantEventArgs> Changed;
-
-        #region method OnChanged
 
         /// <summary>
         /// Raises <b>Changed</b> event.
@@ -158,10 +142,5 @@ namespace LumiSoft.Net.RTP
                 this.Changed(this,new RTP_ParticipantEventArgs(this));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

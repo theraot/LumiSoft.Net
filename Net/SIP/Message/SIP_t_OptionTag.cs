@@ -23,8 +23,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "option-tag" from specified value.
         /// </summary>
@@ -62,10 +60,6 @@ namespace LumiSoft.Net.SIP.Message
             m_OptionTag = word;
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "option-tag" value.
         /// </summary>
@@ -75,10 +69,6 @@ namespace LumiSoft.Net.SIP.Message
             return m_OptionTag;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets option tag.
@@ -95,8 +85,5 @@ namespace LumiSoft.Net.SIP.Message
                 m_OptionTag = value;
             }
         }
-
-        #endregion
-
     }
 }

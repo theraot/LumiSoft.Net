@@ -21,8 +21,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "Authentication-Info" from specified value.
         /// </summary>
@@ -85,10 +83,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-        
-        #region method ToStringValue
-
         /// <summary>
         /// Converts SIP_t_AuthenticationInfo to valid Authentication-Info value.
         /// </summary>
@@ -145,10 +139,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets server next predicted nonce value. Value null means that value not specified.
@@ -187,8 +177,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

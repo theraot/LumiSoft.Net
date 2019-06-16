@@ -23,14 +23,9 @@ namespace LumiSoft.Net.SIP.UA
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets call.
         /// </summary>
         public SIP_UA_Call Call { get; }
-
-#endregion
-
     }
 }

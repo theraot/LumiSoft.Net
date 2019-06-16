@@ -26,8 +26,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method MillisecondsToRtpTicks
-
         /// <summary>
         /// Convers milliseconds to RTP clock ticks. For example clock 8khz 20ms will be 160 RTP clock ticks.
         /// </summary>
@@ -38,10 +36,6 @@ namespace LumiSoft.Net.RTP
             return ((Rate * milliseconds) / 1000);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets clock base value from where clock started.
@@ -69,7 +63,5 @@ namespace LumiSoft.Net.RTP
                 return (uint)(BaseValue + ((Rate  * elapsed) / 1000));
             }
         }
-
-        #endregion
     }
 }

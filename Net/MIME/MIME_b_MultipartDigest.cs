@@ -25,8 +25,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #region static method Parse
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -57,10 +55,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-        
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets default body part Content-Type. For more info see RFC 2046 5.1.
@@ -78,7 +72,5 @@ namespace LumiSoft.Net.MIME
                 return retVal; 
             }
         }
-
-        #endregion
     }
 }

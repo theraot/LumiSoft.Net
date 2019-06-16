@@ -27,8 +27,6 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets command part ype.
         /// </summary>
@@ -38,7 +36,5 @@ namespace LumiSoft.Net.IMAP.Client
         /// Gets command part string value.
         /// </summary>
         public string Value { get; }
-
-#endregion
     }
 }

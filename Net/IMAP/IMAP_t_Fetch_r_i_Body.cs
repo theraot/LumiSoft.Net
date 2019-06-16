@@ -27,8 +27,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region method SetStream
-
         /// <summary>
         /// Sets Stream property value.
         /// </summary>
@@ -43,10 +41,6 @@ namespace LumiSoft.Net.IMAP
             Stream = stream;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).
@@ -62,7 +56,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets data stream.
         /// </summary>
         public Stream Stream { get; private set; }
-
-#endregion
     }
 }

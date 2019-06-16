@@ -10,9 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// This is base class for any IMAP server response.
     /// </summary>
     public abstract class IMAP_r
-    {        
-        #region virtual method ToString
-        
+    {
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -22,10 +20,6 @@ namespace LumiSoft.Net.IMAP
         {
             return ToString();
         }
-
-        #endregion
-
-        #region method ToStreamAsync
 
         /// <summary>
         /// Starts writing response to the specified stream.
@@ -45,10 +39,6 @@ namespace LumiSoft.Net.IMAP
             return ToStreamAsync(null,stream,mailboxEncoding,completedAsyncCallback);
         }
 
-        #endregion
-
-
-        #region method SendAsync
 
         /// <summary>
         /// Starts sending response to the specified IMAP session remote endpoint.
@@ -67,10 +57,6 @@ namespace LumiSoft.Net.IMAP
             return ToStreamAsync(session,session.TcpStream,session.MailboxEncoding,completedAsyncCallback);
         }
 
-        #endregion
-
-
-        #region virtual method ToStreamAsync
 
         /// <summary>
         /// Starts writing response to the specified stream.
@@ -132,7 +118,5 @@ namespace LumiSoft.Net.IMAP
                 return true;
             }
         }
-
-        #endregion
     }
 }

@@ -22,8 +22,6 @@ namespace LumiSoft.Net.UPnP
             Init(url);
         }
 
-        #region method Init
-
         private void Init(string url)
         {
             XmlDocument xml = new XmlDocument();
@@ -51,10 +49,6 @@ namespace LumiSoft.Net.UPnP
             PresentationUrl  = xml.SelectSingleNode("n:root/n:device/n:presentationURL",ns).InnerText;
         }
 
-        #endregion
-
-
-        #region Proeprties implementation
 
         /// <summary>
         /// Gets device base URL.
@@ -124,7 +118,5 @@ namespace LumiSoft.Net.UPnP
         /// Gets UPnP device XML description.
         /// </summary>
         public string DeviceXml { get; private set; }
-
-#endregion
     }
 }

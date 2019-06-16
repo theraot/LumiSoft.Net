@@ -5,8 +5,6 @@
     /// </summary>
     public abstract class AudioCodec : Codec
     {
-        #region Properties implementation
-
         /// <summary>
         /// Gets uncompressed audio format info.
         /// </summary>
@@ -22,7 +20,5 @@
         {
             get;
         }
-        
-        #endregion
     }
 }

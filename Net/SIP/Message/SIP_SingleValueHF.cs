@@ -19,8 +19,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses single value from specified reader.
         /// </summary>
@@ -29,10 +27,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             ValueX.Parse(reader);
         }
-
-        #endregion
-
-        #region method ToStringValue
 
         /// <summary>
         /// Convert this to string value.
@@ -43,12 +37,8 @@ namespace LumiSoft.Net.SIP.Message
             return ValueX.ToStringValue();
         }
 
-        #endregion
 
-
-        #region Properties Implementation
-
-        // FIX ME: Change base class Value property or this to new name
+// FIX ME: Change base class Value property or this to new name
 
         /// <summary>
         /// Gets or sets header field value.
@@ -70,8 +60,5 @@ namespace LumiSoft.Net.SIP.Message
         /// Gets or sets header field value.
         /// </summary>
         public T ValueX { get; set; }
-
-#endregion
-
     }
 }

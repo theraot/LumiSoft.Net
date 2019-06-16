@@ -25,8 +25,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses "info" from specified value.
         /// </summary>
@@ -71,10 +69,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "info" value.
         /// </summary>
@@ -88,10 +82,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-                
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets 'purpose' parameter value. Value null means not specified. 
@@ -118,8 +108,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

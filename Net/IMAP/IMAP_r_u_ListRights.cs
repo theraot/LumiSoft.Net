@@ -39,8 +39,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses LISTRIGHTS response from LISTRIGHTS-response string.
         /// </summary>
@@ -94,10 +92,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_ListRights(folder,identifier,reqRights,optRights);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -123,10 +117,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties impelementation
 
         /// <summary>
         /// Gets folder name.
@@ -147,7 +137,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets optional rights.
         /// </summary>
         public string OptionalRights { get; }
-
-#endregion
     }
 }

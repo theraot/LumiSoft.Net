@@ -27,8 +27,6 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
 
-        #region override method ToString
-
         /// <summary>
         /// Returns this object as human readable string.
         /// </summary>
@@ -49,10 +47,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region method SetUidValidity
 
         /// <summary>
         /// Sets UidValidity property value.
@@ -63,10 +57,6 @@ namespace LumiSoft.Net.IMAP.Client
             UidValidity = value;
         }
 
-        #endregion
-
-        #region method SetFlags
-
         /// <summary>
         /// Sets Flags property value.
         /// </summary>
@@ -75,10 +65,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
             Flags = value;
         }
-
-        #endregion
-
-        #region method SetPermanentFlags
 
         /// <summary>
         /// Sets PermanentFlags property value.
@@ -89,10 +75,6 @@ namespace LumiSoft.Net.IMAP.Client
             PermanentFlags = value;
         }
 
-        #endregion
-
-        #region method SetReadOnly
-
         /// <summary>
         /// Sets IsReadOnly property value.
         /// </summary>
@@ -101,10 +83,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
             IsReadOnly = value;
         }
-
-        #endregion
-
-        #region method SetUidNext
 
         /// <summary>
         /// Sets UidNext property value.
@@ -115,10 +93,6 @@ namespace LumiSoft.Net.IMAP.Client
             UidNext = value;
         }
 
-        #endregion
-
-        #region method SetFirstUnseen
-
         /// <summary>
         /// Sets FirstUnseen property value.
         /// </summary>
@@ -127,10 +101,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
             FirstUnseen = value;
         }
-
-        #endregion
-
-        #region method SetMessagesCount
 
         /// <summary>
         /// Sets MessagesCount property value.
@@ -141,10 +111,6 @@ namespace LumiSoft.Net.IMAP.Client
             MessagesCount = value;
         }
 
-        #endregion
-
-        #region method SetRecentMessagesCount
-
         /// <summary>
         /// Sets RecentMessagesCount property value.
         /// </summary>
@@ -154,10 +120,6 @@ namespace LumiSoft.Net.IMAP.Client
             RecentMessagesCount = value;
         }
 
-        #endregion
-
-
-        #region method StringArrayToString
 
         /// <summary>
         /// Coneverts string array to comma separated value.
@@ -181,10 +143,6 @@ namespace LumiSoft.Net.IMAP.Client
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets selected folder name(path included).
@@ -230,7 +188,5 @@ namespace LumiSoft.Net.IMAP.Client
         /// Gets number of recent messages in this folder.
         /// </summary>
         public int RecentMessagesCount { get; private set; }
-
-#endregion
     }
 }

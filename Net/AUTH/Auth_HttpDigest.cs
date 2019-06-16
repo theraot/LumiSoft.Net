@@ -64,8 +64,6 @@ namespace LumiSoft.Net.AUTH
             Opaque = opaque;
         }
 
-                
-        #region method Authenticate
 
         /// <summary>
         /// Authenticates specified user and password using this class parameters.
@@ -84,10 +82,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region method Parse
 
         /// <summary>
         /// Parses authetication info from client digest response.
@@ -139,10 +133,6 @@ namespace LumiSoft.Net.AUTH
                 }
             }
         }
-
-        #endregion
-
-        #region method CalculateRspAuth
 
         /// <summary>
         /// Calculates 'rspauth' value.
@@ -206,10 +196,6 @@ namespace LumiSoft.Net.AUTH
                 return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + this.Nonce + ":" + Net_Utils.ComputeMd5(a2,true),true);
             }
         }
-
-        #endregion
-
-        #region method CalculateResponse
 
         /// <summary>
         /// Calculates response value.
@@ -309,10 +295,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region method ToString
 
         /// <summary>
         /// Converts this to valid digest string.
@@ -335,10 +317,6 @@ namespace LumiSoft.Net.AUTH
 
             return retVal.ToString();
         }
-
-        #endregion
-
-        #region method ToChallange
 
         /// <summary>
         /// Creates 'Challange' data using this class info. 
@@ -371,10 +349,6 @@ namespace LumiSoft.Net.AUTH
 
             return retVal.ToString();
         }
-
-        #endregion
-
-        #region method ToAuthorization
 
         /// <summary>
         /// Creates 'Authorization' data using this class info.
@@ -442,19 +416,11 @@ namespace LumiSoft.Net.AUTH
             return retVal;
         }
 
-        #endregion
-
-
-        #region method H
 
         private string H(string value)
         {
             return Net_Utils.ComputeMd5(value,true);
         }
-
-        #endregion
-
-        #region method KD
 
         private string KD(string key,string data)
         {
@@ -463,10 +429,6 @@ namespace LumiSoft.Net.AUTH
             return H(key + ":" + data);
         }
 
-        #endregion
-
-
-        #region static method CreateNonce
 
         /// <summary>
         /// Creates valid nonce value.
@@ -477,10 +439,6 @@ namespace LumiSoft.Net.AUTH
             return Guid.NewGuid().ToString().Replace("-","");
         }
 
-        #endregion
-
-        #region static method CreateOpaque
-
         /// <summary>
         /// Creates valid opaque value.
         /// </summary>
@@ -490,10 +448,6 @@ namespace LumiSoft.Net.AUTH
             return Guid.NewGuid().ToString().Replace("-","");
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets request method.
@@ -639,8 +593,5 @@ namespace LumiSoft.Net.AUTH
         /// header field.  The nc-value is the hexadecimal count of the number of requests.
         /// </summary>
         public int NonceCount { get; set; } = 1;
-
-#endregion
-
     }
 }

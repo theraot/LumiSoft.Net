@@ -9,9 +9,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Utils
     {
-        #region static method DateTimeToRfc2822
-
-		/// <summary>
+        /// <summary>
 		/// Converts date to RFC 2822 date time string.
 		/// </summary>
 		/// <param name="dateTime">Date time value to convert..</param>
@@ -20,10 +18,6 @@ namespace LumiSoft.Net.MIME
 		{            
             return dateTime.ToString("ddd, dd MMM yyyy HH':'mm':'ss ",System.Globalization.DateTimeFormatInfo.InvariantInfo) + dateTime.ToString("zzz").Replace(":","");
 		}
-
-		#endregion
-
-        #region static method ParseRfc2822DateTime
 
         /// <summary>
         /// Parses RFC 2822 date-time from the specified value.
@@ -135,8 +129,6 @@ namespace LumiSoft.Net.MIME
                 // We have RFC 822 date with abbrevated time zone name. For example: GMT.
                 else{
                     v = v.ToUpper();
-
-                    #region time zones
 
                     // Alpha Time Zone (military).
                     if(v == "A"){
@@ -382,8 +374,6 @@ namespace LumiSoft.Net.MIME
                     else if(v == "Z"){
                         timeZoneMinutes = 0000;
                     }
-
-                    #endregion
                 }
                         
                 // Convert time to UTC and then back to local.
@@ -396,10 +386,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-
-        #region static method UnfoldHeader
 
         /// <summary>
         /// Unfolds folded header field.
@@ -423,12 +409,8 @@ namespace LumiSoft.Net.MIME
             return value.Replace("\r\n","");
         }
 
-        #endregion
 
-
-        #region static method CreateMessageID
-
-		/// <summary>
+        /// <summary>
 		/// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
 		/// </summary>
 		/// <returns></returns>
@@ -437,12 +419,8 @@ namespace LumiSoft.Net.MIME
 			return "<" + Guid.NewGuid().ToString().Replace("-","").Substring(16) + "@" + Guid.NewGuid().ToString().Replace("-","").Substring(16) + ">";
 		}
 
-		#endregion
 
-
-        #region static method ParseHeaders
-
-		/// <summary>
+        /// <summary>
 		/// Parses headers from message or mime entry.
 		/// </summary>
 		/// <param name="entryStrm">Stream from where to read headers.</param>
@@ -473,11 +451,7 @@ namespace LumiSoft.Net.MIME
 			return System.Text.Encoding.Default.GetString(msHeaders.ToArray());
 		}
 
-		#endregion
-
-        #region static method ParseHeaderField
-
-		/// <summary>
+        /// <summary>
 		/// Parse header specified header field value.
 		/// 
 		/// Use this method only if you need to get only one header field, otherwise use
@@ -548,12 +522,8 @@ namespace LumiSoft.Net.MIME
 			return "";
 		}
 
-		#endregion
 
-
-        #region static method QDecode
-
-		/// <summary>
+        /// <summary>
 		/// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.
         /// Defined in RFC 2047 4.2.
 		/// </summary>
@@ -573,11 +543,7 @@ namespace LumiSoft.Net.MIME
 			return encoding.GetString(QuotedPrintableDecode(Encoding.ASCII.GetBytes(data.Replace("_"," "))));
 		}
 
-		#endregion
-
-        #region static method QuotedPrintableDecode
-
-		/// <summary>
+        /// <summary>
 		/// quoted-printable decoder. Defined in RFC 2045 6.7.
 		/// </summary>
 		/// <param name="data">Data which to encode.</param>
@@ -688,7 +654,5 @@ namespace LumiSoft.Net.MIME
 
 			return msRetVal.ToArray();
 		}
-
-		#endregion
     }
 }

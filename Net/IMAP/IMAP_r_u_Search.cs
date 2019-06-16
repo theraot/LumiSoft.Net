@@ -23,8 +23,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses SEARCH response from exists-response string.
         /// </summary>
@@ -59,10 +57,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Search(values.ToArray());
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -82,16 +76,10 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets search matching messages seqNo/UID(Depeneds on UID SEARCH) list.
         /// </summary>
         public int[] Values { get; }
-
-#endregion
     }
 }

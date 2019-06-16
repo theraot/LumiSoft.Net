@@ -19,8 +19,6 @@ namespace LumiSoft.Net.RTP
         }
 
 
-        #region method ParseInternal
-
         /// <summary>
         /// Parses Source Description(SDES) packet from data buffer.
         /// </summary>
@@ -62,10 +60,6 @@ namespace LumiSoft.Net.RTP
                 Chunks.Add(chunk);
             }
         }
-
-        #endregion
-
-        #region method ToByte
 
         /// <summary>
         /// Stores SDES packet to the specified buffer.
@@ -115,10 +109,6 @@ namespace LumiSoft.Net.RTP
             buffer[lengthOffset + 1] = (byte)((length)      & 0xFF);
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets RTCP version.
@@ -155,8 +145,5 @@ namespace LumiSoft.Net.RTP
                 return size; 
             }
         }
-
-        #endregion
-
     }
 }

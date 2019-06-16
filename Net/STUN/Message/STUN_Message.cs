@@ -9,8 +9,6 @@ namespace LumiSoft.Net.STUN.Message
     /// </summary>
     public class STUN_Message
     {
-        #region enum AttributeType
-
         /// <summary>
         /// Specifies STUN attribute type.
         /// </summary>
@@ -32,10 +30,6 @@ namespace LumiSoft.Net.STUN.Message
             ServerName       = 0x8022,
         }
 
-        #endregion
-
-        #region enum IPFamily
-
         /// <summary>
         /// Specifies IP address family.
         /// </summary>
@@ -44,8 +38,6 @@ namespace LumiSoft.Net.STUN.Message
             IPv4 = 0x01,
             IPv6 = 0x02,
         }
-
-        #endregion
 
         /// <summary>
         /// Default constructor.
@@ -56,8 +48,6 @@ namespace LumiSoft.Net.STUN.Message
             new Random().NextBytes(TransactionID);
         }
 
-
-        #region method Parse
 
         /// <summary>
         /// Parses STUN message from raw data packet.
@@ -139,10 +129,6 @@ namespace LumiSoft.Net.STUN.Message
                 ParseAttribute(data,ref offset);
             }
         }
-
-        #endregion
-
-        #region method ToByteData
 
         /// <summary>
         /// Converts this to raw STUN packet.
@@ -327,10 +313,6 @@ namespace LumiSoft.Net.STUN.Message
             return retVal;
         }
 
-        #endregion
-
-
-        #region method ParseAttribute
 
         /// <summary>
         /// Parses attribute from data.
@@ -456,10 +438,6 @@ namespace LumiSoft.Net.STUN.Message
             }
         }
 
-        #endregion
-
-        #region method ParseEndPoint
-
         /// <summary>
         /// Pasrses IP endpoint attribute.
         /// </summary>
@@ -497,10 +475,6 @@ namespace LumiSoft.Net.STUN.Message
             
             return new IPEndPoint(new IPAddress(ip),port);
         }
-
-        #endregion
-
-        #region method StoreEndPoint
 
         /// <summary>
         /// Stores ip end point attribute to buffer.
@@ -545,10 +519,6 @@ namespace LumiSoft.Net.STUN.Message
             message[offset++] = ipBytes[3];
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets STUN message type.
@@ -622,8 +592,5 @@ namespace LumiSoft.Net.STUN.Message
         /// Gets or sets server name.
         /// </summary>
         public string ServerName { get; set; }
-
-#endregion
-
     }
 }

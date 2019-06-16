@@ -38,7 +38,6 @@ namespace LumiSoft.Net.SMTP
         }
 
 
-        #region static method Parse
         /*
         /// <summary>
         /// Parses SMTP mailbox from the specified string.
@@ -72,10 +71,7 @@ namespace LumiSoft.Net.SMTP
             return null;
         }
         */
-        #endregion
 
-
-        #region override method ToString
 
         /// <summary>
         /// Returns mailbox as string.
@@ -91,10 +87,6 @@ namespace LumiSoft.Net.SMTP
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets local-part of mailbox.
@@ -107,7 +99,5 @@ namespace LumiSoft.Net.SMTP
         /// </summary>
         /// <remarks>If domain is <b>address-literal</b>, surrounding bracets will be removed.</remarks>
         public string Domain { get; }
-
-#endregion
     }
 }

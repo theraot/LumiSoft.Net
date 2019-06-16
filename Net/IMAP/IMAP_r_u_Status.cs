@@ -37,8 +37,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses STATUS response from status-response string.
         /// </summary>
@@ -97,10 +95,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Status(folder,messages,recent,uidNext,folderUid,unseen);
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -162,10 +156,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets folder name.
@@ -196,7 +186,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets unseen messages count.
         /// </summary>
         public int UnseenCount { get; }
-
-#endregion
     }
 }

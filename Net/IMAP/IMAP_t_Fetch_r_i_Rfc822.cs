@@ -23,8 +23,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region method SetStream
-
         /// <summary>
         /// Sets Stream property value.
         /// </summary>
@@ -39,16 +37,10 @@ namespace LumiSoft.Net.IMAP
             Stream = stream;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets message stream.
         /// </summary>
         public Stream Stream { get; private set; }
-
-#endregion
     }
 }

@@ -23,8 +23,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_SubscriptionState : SIP_t_ValueWithParams
     {
-        #region class SubscriptionState
-
         /// <summary>
         /// This class holds 'substate-value' values.
         /// </summary>
@@ -46,10 +44,6 @@ namespace LumiSoft.Net.SIP.Message
             /// </summary>
             public const string terminated = "terminated";
         }
-
-        #endregion
-
-        #region class EventReason
 
         /// <summary>
         /// This class holds 'event-reason-value' values.
@@ -99,8 +93,6 @@ namespace LumiSoft.Net.SIP.Message
             public const string noresource = "noresource";
         }
 
-        #endregion
-
         private string m_Value = "";
 
         /// <summary>
@@ -113,8 +105,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
 
-        #region method Parse
-        
         /// <summary>
         /// Parses "Subscription-State" from specified value.
         /// </summary>
@@ -166,10 +156,6 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Subscription-State" value.
         /// </summary>
@@ -200,10 +186,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets subscription state value. Known values are defined in SubscriptionState class.
@@ -314,8 +296,5 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
-        #endregion
-
     }
 }

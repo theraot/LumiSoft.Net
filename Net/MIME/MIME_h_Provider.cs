@@ -23,8 +23,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region method Parse
-
         /// <summary>
         /// Parses specified header field.
         /// </summary>
@@ -66,10 +64,6 @@ namespace LumiSoft.Net.MIME
             return headerField;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets default header field what is used to reperesent unknown header fields.
@@ -97,7 +91,5 @@ namespace LumiSoft.Net.MIME
         /// Gets header fields parsers collection.
         /// </summary>
         public Dictionary<string,Type> HeaderFields { get; }
-
-#endregion
     }
 }

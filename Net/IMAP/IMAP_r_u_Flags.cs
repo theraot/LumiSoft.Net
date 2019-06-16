@@ -23,8 +23,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses FLAGS response from exists-response string.
         /// </summary>
@@ -56,10 +54,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Flags(r.ReadParenthesized().Split(' '));
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -82,16 +76,10 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets mailbox supported flags.
         /// </summary>
         public string[] Flags { get; }
-
-#endregion
     }
 }

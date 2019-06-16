@@ -19,9 +19,7 @@ namespace LumiSoft.Net.NNTP.Client
         }
 
 
-        #region override method Disconnect
-
-		/// <summary>
+        /// <summary>
 		/// Closes connection to NNTP server.
 		/// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
@@ -49,10 +47,6 @@ namespace LumiSoft.Net.NNTP.Client
             }
 		}
 
-		#endregion
-
-
-        #region method GetNewsGroups
 
         /// <summary>
         /// Gets NNTP newsgoups.
@@ -114,10 +108,6 @@ namespace LumiSoft.Net.NNTP.Client
 
             return newsGroups.ToArray();
         }
-
-        #endregion
-
-        #region method PostMessage
 
         /// <summary>
         /// Posts specified message to the specified newsgroup.
@@ -187,10 +177,6 @@ namespace LumiSoft.Net.NNTP.Client
 
         }
 
-        #endregion
-        
-
-        #region override method OnConnected
 
         /// <summary>
         /// This method is called after TCP client has sucessfully connected.
@@ -203,14 +189,5 @@ namespace LumiSoft.Net.NNTP.Client
                 throw new Exception(responseLine);
             }
         }
-
-        #endregion
-
-
-        #region Properties Implementation
-
-        
-        #endregion
-
     }
 }

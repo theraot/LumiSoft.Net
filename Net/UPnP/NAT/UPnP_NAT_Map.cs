@@ -29,8 +29,6 @@
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets if NAT port map is enabled.
         /// </summary>
@@ -70,7 +68,5 @@
         /// Gets lease duration in in seconds. Value null means "never expires".
         /// </summary>
         public int LeaseDuration { get; }
-
-#endregion
     }
 }

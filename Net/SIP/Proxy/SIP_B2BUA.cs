@@ -26,8 +26,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pCalls = new List<SIP_B2BUA_Call>();
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -44,10 +42,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-        #endregion
-
-
-        #region method OnRequestReceived
 
         /// <summary>
         /// This method is called when new request is received.
@@ -174,10 +168,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 //m_pProxy.ForwardRequest(true,e,b2buaRequest,false);
             }
         }
-                
-        #endregion
-
-        #region method OnResponseReceived
 
         /// <summary>
         /// This method is called when new response is received.
@@ -189,10 +179,6 @@ namespace LumiSoft.Net.SIP.Proxy
             // All reponses must match to transactions, so we never should reach here.
         }
 
-        #endregion
-
-
-        #region method AddCall
 
         /// <summary>
         /// Adds specified call to calls list.
@@ -209,10 +195,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }            
         }
 
-        #endregion
-
-        #region method RemoveCall
-
         /// <summary>
         /// Removes specified call from calls list.
         /// </summary>
@@ -223,10 +205,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             OnCallTerminated(call);            
         }
-
-        #endregion
-
-        #region method GetCallByID
 
         /// <summary>
         /// Gets call by call ID.
@@ -244,10 +222,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return null;
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets B2BUA owner SIP stack.
@@ -264,10 +238,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ return m_pCalls.ToArray(); }
         }
-
-        #endregion
-
-        #region Events Implementation
 
         /// <summary>
         /// Is called when new call is created.
@@ -300,8 +270,5 @@ namespace LumiSoft.Net.SIP.Proxy
                 this.CallTerminated(call,new EventArgs());
             }
         }
-
-        #endregion
-
     }
 }

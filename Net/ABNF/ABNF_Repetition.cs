@@ -118,8 +118,6 @@ namespace LumiSoft.Net.ABNF
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets minimum repetitions.
         /// </summary>
@@ -134,7 +132,5 @@ namespace LumiSoft.Net.ABNF
         /// Gets repeated element.
         /// </summary>
         public ABNF_Element Element { get; }
-
-#endregion
     }
 }

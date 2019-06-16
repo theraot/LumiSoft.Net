@@ -20,9 +20,7 @@ namespace LumiSoft.Net.Mime
 		}
 
 
-		#region Properties Implementation
-
-		/// <summary>
+        /// <summary>
 		/// Gets header field parameter name.
 		/// </summary>
 		public string Name { get; } = "";
@@ -31,8 +29,5 @@ namespace LumiSoft.Net.Mime
 		/// Gets header field parameter name.
 		/// </summary>
 		public string Value { get; } = "";
-
-#endregion
-
-	}
+    }
 }

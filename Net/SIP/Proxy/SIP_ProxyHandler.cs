@@ -15,8 +15,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
 
-        #region method ProcessRequest
-
         /// <summary>
         /// This method is called when new SIP request received.
         /// </summary>
@@ -69,20 +67,12 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        #endregion
-
-        #region method OnResponseReceived
-
         /*
         public virtual bool OnResponseReceived()
         {
         }
         */
 
-        #endregion
-                
-
-        #region method IsLocalUri
 
         /// <summary>
         /// Gets if the specified URI is local URI.
@@ -93,10 +83,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-        #endregion
-
-        #region method GetRegistrarContacts
-
         /// <summary>
         /// 
         /// </summary>
@@ -104,10 +90,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets a value indicating whether another request can use this handler.
@@ -121,8 +103,5 @@ namespace LumiSoft.Net.SIP.Proxy
         /// Gets or stets user data.
         /// </summary>
         public object Tag { get; set; }
-
-#endregion
-
     }
 }

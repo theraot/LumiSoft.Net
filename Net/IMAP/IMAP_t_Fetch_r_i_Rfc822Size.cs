@@ -22,13 +22,9 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets message size in bytes.
         /// </summary>
         public int Size { get; }
-
-#endregion
     }
 }

@@ -10,8 +10,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_h_ParameterCollection : IEnumerable
     {
-        #region class _ParameterBuilder
-
         /// <summary>
         /// This class represents header field parameter builder.
         /// </summary>
@@ -37,8 +35,6 @@ namespace LumiSoft.Net.MIME
             }
 
 
-            #region method AddPart
-
             /// <summary>
             /// Adds header field parameter part to paramter buffer.
             /// </summary>
@@ -58,10 +54,6 @@ namespace LumiSoft.Net.MIME
                 // Add parameter to list.
                 m_pParts.Add(index,value);
             }
-
-            #endregion
-
-            #region method GetParamter
 
             /// <summary>
             /// Gets header field parameter(splitted paramter values concated).
@@ -83,20 +75,12 @@ namespace LumiSoft.Net.MIME
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets parameter name.
             /// </summary>
             public string Name { get; }
-
-#endregion
         }
-
-        #endregion
 
         private bool                                m_IsModified;
         private readonly Dictionary<string,MIME_h_Parameter> m_pParameters;
@@ -118,8 +102,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region method Remove
-
         /// <summary>
         /// Removes specified parametr from the collection.
         /// </summary>
@@ -136,10 +118,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all items from the collection.
         /// </summary>
@@ -148,10 +126,6 @@ namespace LumiSoft.Net.MIME
             m_pParameters.Clear();
             m_IsModified = true;
         }
-
-        #endregion
-
-        #region method ToArray
 
         /// <summary>
         /// Copies header fields parameters to new array.
@@ -165,10 +139,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region method ToString
 
         /// <summary>
         /// Returns header field parameters as string.
@@ -250,10 +220,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal.ToString();
         }
-
-        #endregion
-
-        #region method Parse
 
         /// <summary>
         /// Parses parameters from the specified value.
@@ -366,11 +332,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = false;
         }
 
-        #endregion
-
-        
-
-        #region static method DecodeExtOctet
 
         /// <summary>
         /// Decodes non-ascii text with MIME <b>ext-octet</b> method. Defined in RFC 2231 7.
@@ -403,10 +364,6 @@ namespace LumiSoft.Net.MIME
             return charset.GetString(decodedBuffer,0,offset);
         }
 
-        #endregion
-
-
-        #region interface IEnumerator
 
         /// <summary>
 		/// Gets enumerator.
@@ -416,10 +373,6 @@ namespace LumiSoft.Net.MIME
 		{
 			return m_pParameters.Values.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this header field parameters are modified since it has loaded.
@@ -493,7 +446,5 @@ namespace LumiSoft.Net.MIME
                 }
             }
         }
-
-        #endregion
     }
 }

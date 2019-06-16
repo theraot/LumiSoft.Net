@@ -23,8 +23,6 @@ namespace LumiSoft.Net.FTP.Server
 		}
 
 
-        #region override method OnMaxConnectionsExceeded
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
@@ -36,10 +34,6 @@ namespace LumiSoft.Net.FTP.Server
         {
             session.TcpStream.WriteLine("500 Client host rejected: too many connections, please try again later.");
         }
-
-        #endregion
-
-        #region override method OnMaxConnectionsPerIPExceeded
 
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections per connected IP exceeded.
@@ -53,10 +47,6 @@ namespace LumiSoft.Net.FTP.Server
             session.TcpStream.WriteLine("500 Client host rejected: too many connections from your IP(" + session.RemoteEndPoint.Address + "), please try again later.");
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets server greeting text.
@@ -130,7 +120,5 @@ namespace LumiSoft.Net.FTP.Server
                 m_PassiveStartPort = value;
             }
         }
-
-        #endregion
-	}
+    }
 }

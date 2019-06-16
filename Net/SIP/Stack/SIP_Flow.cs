@@ -107,8 +107,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region mehtod Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -133,10 +131,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method Send
 
         /// <summary>
         /// Sends specified request to flow remote end point.
@@ -179,10 +173,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method SendPing
-
         /// <summary>
         /// Send ping request to flow remote end point.
         /// </summary>
@@ -203,10 +193,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts flow processing.
@@ -239,10 +225,6 @@ namespace LumiSoft.Net.SIP.Stack
             startLock.Close();
         }
 
-        #endregion
-
-
-        #region method SendInternal
 
         /// <summary>
         /// Sends specified data to the remote end point.
@@ -275,10 +257,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method BeginReadHeader
 
         /// <summary>
         /// Starts reading SIP message header.
@@ -297,10 +275,6 @@ namespace LumiSoft.Net.SIP.Stack
                 null
             );
         }
-
-        #endregion
-
-        #region method BeginReadHeader_Completed
 
         /// <summary>
         /// This method is called when SIP message header reading has completed.
@@ -372,10 +346,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region method BeginReadData_Completed
-
         /// <summary>
         /// This method is called when SIP message data reading has completed.
         /// </summary>
@@ -396,10 +366,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-
-        #region method OnUdpPacketReceived
 
         /// <summary>
         /// This method is called when flow gets new UDP packet.
@@ -420,10 +386,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pStack.TransportLayer.OnMessageReceived(this,data);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -709,16 +671,10 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// Is raised when flow is disposing.
         /// </summary>
         public event EventHandler IsDisposing;
-
-        #region method OnDisposing
 
         /// <summary>
         /// Raises <b>Disposed</b> event.
@@ -729,10 +685,5 @@ namespace LumiSoft.Net.SIP.Stack
                 this.IsDisposing(this,new EventArgs());
             }
         }
-
-        #endregion.
-
-        #endregion
-
     }
 }

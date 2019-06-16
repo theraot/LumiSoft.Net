@@ -22,8 +22,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region method Append
-
         /// <summary>
         /// Appends specified string value to the buffer. String is encoded with <see cref="Charset"/>.
         /// </summary>
@@ -94,10 +92,6 @@ namespace LumiSoft.Net
             Count += value.Length;
         }
 
-        #endregion
-
-        #region method ToByte
-
         /// <summary>
         /// Returns this as byte[] data.
         /// </summary>
@@ -110,10 +104,6 @@ namespace LumiSoft.Net
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets number of bytes in byte builder buffer.
@@ -136,8 +126,5 @@ namespace LumiSoft.Net
                 m_pCharset = value;
             }
         }
-
-        #endregion
-
     }
 }

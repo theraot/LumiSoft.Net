@@ -38,8 +38,6 @@ namespace LumiSoft.Net.AUTH
         }
 
 
-        #region method Continue
-
         /// <summary>
         /// Continues authentication process.
         /// </summary>
@@ -135,10 +133,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
@@ -163,7 +157,5 @@ namespace LumiSoft.Net.AUTH
         {
             get{ return m_UserName; }
         }
-
-        #endregion
     }
 }

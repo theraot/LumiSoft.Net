@@ -11,8 +11,6 @@ using LumiSoft.Net.TCP;
 
 namespace LumiSoft.Net.FTP.Client
 {
-    #region enum TransferType
-
     /// <summary>
 	/// Transfer type.
 	/// </summary>
@@ -28,15 +26,11 @@ namespace LumiSoft.Net.FTP.Client
 		Binary = 1,
     }
 
-    #endregion
-
     /// <summary>
 	/// This class implements FTP client. Defined in RFC 959.
 	/// </summary>
 	public class FTP_Client : TCP_Client
     {
-        #region class DataConnection
-
         /// <summary>
         /// This class implements FTP client data connection.
         /// </summary>
@@ -58,8 +52,6 @@ namespace LumiSoft.Net.FTP.Client
                 CreateSocket();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -72,10 +64,6 @@ namespace LumiSoft.Net.FTP.Client
                 m_pOwner = null;
             }
 
-            #endregion
-
-
-            #region method SwitchToActive
 
             /// <summary>
             /// Swtiches FTP data connection to active mode.
@@ -89,10 +77,6 @@ namespace LumiSoft.Net.FTP.Client
 
                 m_pOwner.LogAddText("FTP data channel switched to Active mode, listening FTP server connect to '" + m_pSocket.LocalEndPoint.ToString() + "'.");
             }
-
-            #endregion
-
-            #region method SwitchToPassive
 
             /// <summary>
             /// Swtiches FTP data connection to passive mode and connects to the sepcified FTP server.
@@ -115,10 +99,6 @@ namespace LumiSoft.Net.FTP.Client
                 m_pOwner.LogAddText("FTP Passive data channel established, localEP='" + m_pSocket.LocalEndPoint.ToString() + "' remoteEP='" + m_pSocket.RemoteEndPoint.ToString() + "'.");
             }
 
-            #endregion
-
-
-            #region method ReadAll
 
             /// <summary>
             /// Reads all data from FTP data connection and stores to the specified stream.
@@ -152,10 +132,6 @@ namespace LumiSoft.Net.FTP.Client
                 }
             }
 
-            #endregion
-
-            #region method WriteAll
-
             /// <summary>
             /// Writes all data from the specified stream to FTP data connection.
             /// </summary>
@@ -187,10 +163,6 @@ namespace LumiSoft.Net.FTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region method WaitFtpServerToConnect
 
             /// <summary>
             /// Waits FTP server to connect to this data connection.
@@ -226,10 +198,6 @@ namespace LumiSoft.Net.FTP.Client
                     CleanUpSocket();
                 }
             }
-
-            #endregion
-
-            #region method CreateSocket
 
             /// <summary>
             /// Creates new socket for data connection.
@@ -274,10 +242,6 @@ namespace LumiSoft.Net.FTP.Client
                 }                
             }
 
-            #endregion
-
-            #region method CleanUpSocket
-
             /// <summary>
             /// Cleans up socket for reuse.
             /// </summary>
@@ -290,10 +254,6 @@ namespace LumiSoft.Net.FTP.Client
                 // We can't reuse socket, so we need to recreate new one for each transfer.
                 CreateSocket();
             }
-
-            #endregion
-
-            #region method TransferStream
 
             /// <summary>
             /// Copies all source stream data to the specified target stream.
@@ -318,10 +278,6 @@ namespace LumiSoft.Net.FTP.Client
                 }
             }
 
-            #endregion
-
-
-            #region Properties Implementation
 
             /// <summary>
             /// Gets data connection local IP end point.
@@ -340,12 +296,7 @@ namespace LumiSoft.Net.FTP.Client
             /// Gets if there is active read or write job in data stream.
             /// </summary>
             public bool IsActive { get; private set; }
-
-#endregion
-
         }
-
-        #endregion
 
         private FTP_TransferMode m_TransferMode       = FTP_TransferMode.Passive;
         private IPAddress        m_pDataConnectionIP;
@@ -362,9 +313,7 @@ namespace LumiSoft.Net.FTP.Client
 		{		    
 		}
 
-		#region override method Dispose
-
-		/// <summary>
+        /// <summary>
 		/// Clean up any resources being used. This method is thread-safe.
 		/// </summary>
 		public override void Dispose()
@@ -376,12 +325,8 @@ namespace LumiSoft.Net.FTP.Client
             }
 		}
 
-		#endregion
 
-
-        #region override method Disconnect
-
-		/// <summary>
+        /// <summary>
 		/// Closes connection to FTP server.
 		/// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
@@ -416,10 +361,6 @@ namespace LumiSoft.Net.FTP.Client
             }
 		}
 
-		#endregion
-
-        #region method Reinitialize
-
         /// <summary>
         /// Terminates the user and flushes all state information on the server. The connection is left open. 
         /// </summary>
@@ -442,10 +383,6 @@ namespace LumiSoft.Net.FTP.Client
 				throw new FTP_ClientException(response[0]);
 			}
         }
-
-        #endregion
-
-        #region method Authenticate
 
         /// <summary>
 		/// Authenticates user. Authenticate method chooses strongest possible authentication method supported by server.
@@ -497,10 +434,6 @@ namespace LumiSoft.Net.FTP.Client
             }
 		}
 
-		#endregion
-
-        #region method Noop
-
         /// <summary>
         /// Send NOOP command to server. This method can be used for keeping connection alive(not timing out).
         /// </summary>
@@ -524,10 +457,6 @@ namespace LumiSoft.Net.FTP.Client
 			}
         }
 
-        #endregion
-
-        #region method Abort
-
         /// <summary>
         /// Aborts an active file transfer.
         /// </summary>
@@ -550,10 +479,6 @@ namespace LumiSoft.Net.FTP.Client
 				throw new FTP_ClientException(line);
 			}
         }
-
-        #endregion
-
-        #region method GetCurrentDir
 
         /// <summary>
         /// Gets current working directory in the sFTP server.
@@ -584,10 +509,6 @@ namespace LumiSoft.Net.FTP.Client
 
             return r.ReadWord();
         }
-
-        #endregion
-
-        #region method SetCurrentDir
 
         /// <summary>
         /// Changes the current working directory on the server.
@@ -620,10 +541,6 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(response[0]);
             }            
         }
-
-        #endregion
-
-        #region method GetList
 
         /// <summary>
         /// Gets files and directories in the current server directory.
@@ -678,8 +595,6 @@ namespace LumiSoft.Net.FTP.Client
                     break;
                 }
             }
-
-            #region MLSD
 
             if(mlsdSupported){
                 if(string.IsNullOrEmpty(path)){
@@ -749,10 +664,6 @@ namespace LumiSoft.Net.FTP.Client
                     }
                 }
             }
-
-            #endregion
-
-            #region LIST
 
             else{
                 if(string.IsNullOrEmpty(path)){
@@ -859,14 +770,8 @@ namespace LumiSoft.Net.FTP.Client
                 }                
             }
 
-            #endregion
-
             return retVal.ToArray();
         }
-
-        #endregion
-
-        #region method GetFile
 
         /// <summary>
         /// Gets specified file from FTP server.
@@ -969,10 +874,6 @@ namespace LumiSoft.Net.FTP.Client
             }
         }
 
-        #endregion
-
-        #region method AppendToFile
-
         /// <summary>
         /// Appends specified data to the existing file. If existing file doesn't exist, it will be created.
         /// </summary>
@@ -1034,10 +935,6 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(response[0]);
             }
         }
-
-        #endregion
-
-        #region method StoreFile
 
         /// <summary>
         /// Stores specified file to FTP server.
@@ -1140,10 +1037,6 @@ namespace LumiSoft.Net.FTP.Client
             }
         }
 
-        #endregion
-
-        #region method DeleteFile
-
         /// <summary>
         /// Deletes specified file from ftp server.
         /// </summary>
@@ -1175,10 +1068,6 @@ namespace LumiSoft.Net.FTP.Client
 				throw new FTP_ClientException(reply);
 			}
         }
-
-        #endregion
-
-        #region method Rename
 
         /// <summary>
         /// Renames file or directory to the new specified name.
@@ -1226,10 +1115,6 @@ namespace LumiSoft.Net.FTP.Client
 			}
         }
 
-        #endregion
-
-        #region method CreateDirectory
-
         /// <summary>
         /// Creates a directory on the FTP server.
         /// </summary>
@@ -1261,10 +1146,6 @@ namespace LumiSoft.Net.FTP.Client
 				throw new FTP_ClientException(reply);
 			}
         }
-
-        #endregion
-
-        #region method DeleteDirectory
 
         /// <summary>
         /// Deletes specified directory from FTP server.
@@ -1298,12 +1179,8 @@ namespace LumiSoft.Net.FTP.Client
 			}
         }
 
-        #endregion
 
-
-        #region method SetTransferType
-
-		/// <summary>
+        /// <summary>
 		/// Sets transfer typr.
 		/// </summary>
 		/// <param name="type">Transfer type.</param>
@@ -1324,10 +1201,6 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(response[0]);
             }
 		}
-
-		#endregion
-
-        #region method Port
 
         /// <summary>
         /// Sends PORT command to server.
@@ -1352,10 +1225,6 @@ namespace LumiSoft.Net.FTP.Client
             throw new FTP_ClientException(response[0]);
         }
 
-        #endregion
-
-        #region method Pasv
-
         /// <summary>
         /// Sends PASV command to server.
         /// </summary>
@@ -1374,10 +1243,6 @@ namespace LumiSoft.Net.FTP.Client
             m_pDataConnection.SwitchToPassive(new IPEndPoint(IPAddress.Parse(parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3]),(Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5])));
         }
 
-        #endregion
-
-
-        #region method ReadResponse
 
         /// <summary>
         /// Reads FTP server response line(s).
@@ -1468,10 +1333,6 @@ namespace LumiSoft.Net.FTP.Client
             return retVal.ToArray();
         }
 
-        #endregion
-                        
-
-        #region override method OnConnected
 
         /// <summary>
         /// This method is called after TCP client has sucessfully connected.
@@ -1509,8 +1370,6 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(line);
             }
 
-            #region FEAT
-
             /* Try to get FTP server supported capabilities, if command not supported, just skip tat command.
                 RFC 2389 3.
                     
@@ -1537,16 +1396,10 @@ namespace LumiSoft.Net.FTP.Client
                     line = ReadLine();
                 }
             }
-
-            #endregion
         }
 
-        #endregion
-		       
-		
-		#region Properties Implementation
-        
-		/// <summary>
+
+        /// <summary>
 		/// Gets or sets data connection establish mode.
 		/// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
@@ -1682,8 +1535,5 @@ namespace LumiSoft.Net.FTP.Client
                 return m_pAuthdUserIdentity; 
             }
         }
-
-		#endregion
-
-	}
+    }
 }

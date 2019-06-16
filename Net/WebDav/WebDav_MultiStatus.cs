@@ -19,8 +19,6 @@ namespace LumiSoft.Net.WebDav
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses WebDav_MultiResponse from 'DAV:multistatus' element.
         /// </summary>
@@ -52,16 +50,10 @@ namespace LumiSoft.Net.WebDav
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets responses collection.
         /// </summary>
         public List<WebDav_Response> Responses { get; }
-
-#endregion
     }
 }

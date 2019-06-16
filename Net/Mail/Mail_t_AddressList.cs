@@ -30,8 +30,6 @@ namespace LumiSoft.Net.Mail
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses <b>address-list</b> from specified string value.
         /// </summary>
@@ -121,10 +119,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-        #endregion
-
-
-        #region method Insert
 
         /// <summary>
         /// Inserts a address into the collection at the specified location.
@@ -146,10 +140,6 @@ namespace LumiSoft.Net.Mail
             IsModified = true;
         }
 
-        #endregion
-
-        #region method Add
-
         /// <summary>
         /// Adds specified address to the end of the collection.
         /// </summary>
@@ -165,10 +155,6 @@ namespace LumiSoft.Net.Mail
             IsModified = true;
         }
 
-        #endregion
-
-        #region method Remove
-
         /// <summary>
         /// Removes specified item from the collection.
         /// </summary>
@@ -183,10 +169,6 @@ namespace LumiSoft.Net.Mail
             m_pList.Remove(value);
         }
 
-        #endregion
-
-        #region method Clear
-
         /// <summary>
         /// Removes all items from the collection.
         /// </summary>
@@ -196,10 +178,6 @@ namespace LumiSoft.Net.Mail
             IsModified = true;
         }
 
-        #endregion
-
-        #region method ToArray
-
         /// <summary>
         /// Copies addresses to new array.
         /// </summary>
@@ -208,10 +186,6 @@ namespace LumiSoft.Net.Mail
         {
             return m_pList.ToArray();
         }
-
-        #endregion
-
-        #region override method ToString
 
         /// <summary>
         /// Returns address-list as string.
@@ -232,10 +206,6 @@ namespace LumiSoft.Net.Mail
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region method AcceptChanges
 
         /// <summary>
         /// Resets IsModified property to false.
@@ -245,10 +215,6 @@ namespace LumiSoft.Net.Mail
             IsModified = false;
         }
 
-        #endregion
-
-
-        #region interface IEnumerator
 
         /// <summary>
 		/// Gets enumerator.
@@ -258,10 +224,6 @@ namespace LumiSoft.Net.Mail
 		{
 			return m_pList.GetEnumerator();
 		}
-
-		#endregion
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if list has modified since it was loaded.
@@ -312,7 +274,5 @@ namespace LumiSoft.Net.Mail
                 return retVal.ToArray(); 
             }
         }
-
-        #endregion
     }
 }

@@ -13,8 +13,6 @@
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets property namespace.
         /// </summary>
@@ -38,7 +36,5 @@
         {
             get;
         }
-
-        #endregion
     }
 }

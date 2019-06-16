@@ -17,14 +17,9 @@ namespace LumiSoft.Net.DNS.Client
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets DNS server returned error code.
         /// </summary>
         public DNS_RCode ErrorCode { get; }
-
-#endregion
-
     }
 }

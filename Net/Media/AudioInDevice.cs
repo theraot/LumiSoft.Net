@@ -19,8 +19,6 @@
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets device name.
         /// </summary>
@@ -36,8 +34,5 @@
         /// Gets device index in devices.
         /// </summary>
         internal int Index { get; }
-
-#endregion
-
     }
 }

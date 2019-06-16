@@ -48,8 +48,6 @@ namespace LumiSoft.Net.Media
             m_pRTP_Stream.Session.PayloadChanged += new EventHandler(m_pRTP_Stream_PayloadChanged);
             m_pAudioCodecs.TryGetValue(m_pRTP_Stream.Session.Payload,out m_pActiveCodec);
         }
-                
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -72,12 +70,6 @@ namespace LumiSoft.Net.Media
             m_pActiveCodec    = null;
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pRTP_Stream_PayloadChanged
 
         /// <summary>
         /// Is called when RTP session sending payload has changed.
@@ -95,10 +87,6 @@ namespace LumiSoft.Net.Media
                 Start();
             }
         }
-
-        #endregion
-
-        #region method m_pWaveIn_AudioFrameReceived
 
         /// <summary>
         /// Is called when wave-in has received new audio frame.
@@ -137,12 +125,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts capturing from audio-in device and sending it to RTP stream.
@@ -168,10 +150,6 @@ namespace LumiSoft.Net.Media
                 m_pWaveIn.Start();
             }
         }
-                
-        #endregion
-
-        #region method Stop
 
         /// <summary>
         /// Stops capturing from audio-in device and sending it to RTP stream.
@@ -192,10 +170,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -309,16 +283,10 @@ namespace LumiSoft.Net.Media
             }
         }
 
-        #endregion
-
-        #region Events implementation
-
         /// <summary>
         /// This method is raised when asynchronous thread Exception happens.
         /// </summary>
         public event EventHandler<ExceptionEventArgs> Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -330,9 +298,5 @@ namespace LumiSoft.Net.Media
                 this.Error(this,new ExceptionEventArgs(x));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

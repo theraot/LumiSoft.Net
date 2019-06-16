@@ -21,8 +21,6 @@ namespace LumiSoft.Net.WebDav
         }
 
 
-        #region mehtod Contains
-
         /// <summary>
         /// Checks if this 'resourcetype' property contains the specified resource type.
         /// </summary>
@@ -39,10 +37,6 @@ namespace LumiSoft.Net.WebDav
             return false;
         }
 
-        #endregion
-
-
-        #region static method Parse
 
         /// <summary>
         /// Parses WebDav_p_ResourceType from 'DAV:resourcetype' xml element.
@@ -71,10 +65,6 @@ namespace LumiSoft.Net.WebDav
             return retVal;
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets property namespace.
@@ -119,7 +109,5 @@ namespace LumiSoft.Net.WebDav
         {
             get{ return m_pItems.ToArray(); }
         }
-
-        #endregion
     }
 }

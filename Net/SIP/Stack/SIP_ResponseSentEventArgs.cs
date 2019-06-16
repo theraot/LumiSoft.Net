@@ -27,8 +27,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region Properties Implementation
-
         /// <summary>
         /// Gets server transaction which sent response.
         /// </summary>
@@ -38,8 +36,5 @@ namespace LumiSoft.Net.SIP.Stack
         /// Gets response which was sent.
         /// </summary>
         public SIP_Response Response { get; }
-
-#endregion
-
     }
 }

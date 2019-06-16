@@ -95,8 +95,6 @@ namespace LumiSoft.Net.MIME
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -147,10 +145,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns header field as string.
@@ -174,10 +168,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
@@ -260,7 +250,5 @@ namespace LumiSoft.Net.MIME
 
             set{ Parameters["boundary"] = value; }
         }
-
-        #endregion
     }
 }

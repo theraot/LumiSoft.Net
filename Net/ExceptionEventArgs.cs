@@ -22,14 +22,9 @@ namespace LumiSoft.Net
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets exception.
         /// </summary>
         public Exception Exception { get; }
-
-#endregion
-
     }
 }

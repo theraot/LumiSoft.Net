@@ -13,8 +13,6 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_Server<T> : IDisposable where T : TCP_ServerSession,new()
     {
-        #region class ListeningPoint
-
         /// <summary>
         /// This class holds listening point info.
         /// </summary>
@@ -32,8 +30,6 @@ namespace LumiSoft.Net.TCP
             }
 
 
-            #region Properties Implementation
-
             /// <summary>
             /// Gets socket.
             /// </summary>
@@ -43,14 +39,7 @@ namespace LumiSoft.Net.TCP
             /// Gets bind info.
             /// </summary>
             public IPBindInfo BindInfo { get; }
-
-#endregion
-
         }
-
-        #endregion
-
-        #region class TCP_Acceptor
 
         /// <summary>
         /// Implements single TCP connection acceptor.
@@ -79,8 +68,6 @@ namespace LumiSoft.Net.TCP
                 Tags = new Dictionary<string,object>();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -99,10 +86,6 @@ namespace LumiSoft.Net.TCP
                 this.Error = null;
             }
 
-            #endregion
-
-
-            #region method Start
 
             /// <summary>
             /// Starts accpeting connections.
@@ -121,8 +104,6 @@ namespace LumiSoft.Net.TCP
                 // Move processing to thread pool.
                 ThreadPool.QueueUserWorkItem(delegate(object state){
                     try{
-                        #region IO completion ports
-
                         if(Net_Utils.IsSocketAsyncSupported()){
                             m_pSocketArgs = new SocketAsyncEventArgs();
                             m_pSocketArgs.Completed += delegate(object s1,SocketAsyncEventArgs e1){
@@ -148,15 +129,9 @@ namespace LumiSoft.Net.TCP
                             IOCompletionAccept();
                         }
 
-                        #endregion
-
-                        #region Async sockets
-
                         else{
                             m_pSocket.BeginAccept(new AsyncCallback(this.AsyncSocketAccept),null);
                         }
-
-                        #endregion
                     }
                     catch(Exception x){
                         OnError(x);
@@ -164,10 +139,6 @@ namespace LumiSoft.Net.TCP
                 });
             }
 
-            #endregion
-
-
-            #region method IOCompletionAccept
 
             /// <summary>
             /// Accpets connection synchornously(if connection(s) available now) or starts waiting TCP connection asynchronously if no connections at moment.
@@ -202,10 +173,6 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-            #region method AsyncSocketAccept
-
             /// <summary>
             /// Is called BeginAccept has completed.
             /// </summary>
@@ -231,26 +198,16 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
-
-            #region Properties implementation
 
             /// <summary>
             /// Gets user data items.
             /// </summary>
             public Dictionary<string,object> Tags { get; private set; }
 
-#endregion
-
-            #region Events handling
-
             /// <summary>
             /// Is raised when new TCP connection was accepted.
             /// </summary>
             public event EventHandler<EventArgs<Socket>> ConnectionAccepted;
-
-            #region method OnConnectionAccepted
 
             /// <summary>
             /// Raises <b>ConnectionAccepted</b> event.
@@ -263,14 +220,10 @@ namespace LumiSoft.Net.TCP
                 }
             }
 
-            #endregion
-
             /// <summary>
             /// Is raised when unhandled error happens.
             /// </summary>
             public event EventHandler<ExceptionEventArgs> Error;
-
-            #region method OnError
 
             /// <summary>
             /// Raises <b>Error</b> event.
@@ -282,13 +235,7 @@ namespace LumiSoft.Net.TCP
                     this.Error(this,new ExceptionEventArgs(x));
                 }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
 
         private IPBindInfo[]                             m_pBindings            = new IPBindInfo[0];
         private long                                     m_MaxConnections;
@@ -311,8 +258,6 @@ namespace LumiSoft.Net.TCP
             m_pListeningPoints = new List<TCP_Server<T>.ListeningPoint>();
             m_pSessions = new TCP_SessionCollection<TCP_ServerSession>();
         }
-
-        #region method Dispose
 
         /// <summary>
         /// Cleans up any resources being used.
@@ -348,12 +293,6 @@ namespace LumiSoft.Net.TCP
             this.Error    = null;
         }
 
-        #endregion
-
-
-        #region Events handling
-
-        #region method m_pTimer_IdleTimeout_Elapsed
 
         /// <summary>
         /// Is called when session idle check timer triggered.
@@ -383,12 +322,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region method Start
 
         /// <summary>
         /// Starts TCP server.
@@ -417,10 +350,6 @@ namespace LumiSoft.Net.TCP
 
             OnStarted();
         }
-                
-        #endregion
-
-        #region method Stop
 
         /// <summary>
         /// Stops TCP server, all active connections will be terminated.
@@ -449,10 +378,6 @@ namespace LumiSoft.Net.TCP
             OnStopped();
         }
 
-        #endregion
-
-        #region method Restart
-
         /// <summary>
         /// Restarts TCP server.
         /// </summary>
@@ -462,10 +387,6 @@ namespace LumiSoft.Net.TCP
             Start();
         }
 
-        #endregion
-
-
-        #region virtual method OnMaxConnectionsExceeded
 
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
@@ -478,10 +399,6 @@ namespace LumiSoft.Net.TCP
         {
         }
 
-        #endregion
-
-        #region virtual method OnMaxConnectionsPerIPExceeded
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections per connected IP exceeded.
         /// </summary>
@@ -493,10 +410,6 @@ namespace LumiSoft.Net.TCP
         {
         }
 
-        #endregion
-
-
-        #region method StartListen
 
         /// <summary>
         /// Starts listening incoming connections. NOTE: All active listening points will be disposed.
@@ -561,10 +474,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-        #region method ProcessConnection
-
         /// <summary>
         /// Processes specified connection.
         /// </summary>
@@ -613,10 +522,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if server is disposed.
@@ -872,16 +777,10 @@ namespace LumiSoft.Net.TCP
         }
 
 
-        #endregion
-
-        #region Events Implementation
-
         /// <summary>
         /// This event is raised when TCP server has started.
         /// </summary>
         public event EventHandler Started;
-
-        #region method OnStarted
 
         /// <summary>
         /// Raises <b>Started</b> event.
@@ -893,14 +792,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when TCP server has stopped.
         /// </summary>
         public event EventHandler Stopped;
-
-        #region method OnStopped
 
         /// <summary>
         /// Raises <b>Stopped</b> event.
@@ -912,14 +807,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when TCP server has disposed.
         /// </summary>
         public event EventHandler Disposed;
-
-        #region method OnDisposed
 
         /// <summary>
         /// Raises <b>Disposed</b> event.
@@ -931,14 +822,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-
         /// <summary>
         /// This event is raised when TCP server creates new session.
         /// </summary>
         public event EventHandler<TCP_ServerSessionEventArgs<T>> SessionCreated;
-
-        #region method OnSessionCreated
 
         /// <summary>
         /// Raises <b>SessionCreated</b> event.
@@ -951,14 +838,10 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-        #endregion
-                        
         /// <summary>
         /// This event is raised when TCP server has unknown unhandled error.
         /// </summary>
         public event ErrorEventHandler Error;
-
-        #region method OnError
 
         /// <summary>
         /// Raises <b>Error</b> event.
@@ -970,10 +853,5 @@ namespace LumiSoft.Net.TCP
                 this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
-
-        #endregion
-
-        #endregion
-
     }
 }

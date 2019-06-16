@@ -33,9 +33,7 @@ namespace LumiSoft.Net.SIP.Message
             Time  = time;
             Delay = delay;
         }
-        
-        
-        #region method Parse
+
 
         /// <summary>
         /// Parses "Timestamp" from specified value.
@@ -86,10 +84,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-        #region method ToStringValue
-
         /// <summary>
         /// Converts this to valid "Timestamp" value.
         /// </summary>
@@ -109,10 +103,6 @@ namespace LumiSoft.Net.SIP.Message
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets or sets time in seconds when request was sent.
@@ -124,8 +114,5 @@ namespace LumiSoft.Net.SIP.Message
         /// the request and generated response.
         /// </summary>
         public decimal Delay { get; set; }
-
-#endregion
-
     }
 }

@@ -44,8 +44,6 @@ namespace LumiSoft.Net
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses HostEndPoint from the specified string.
         /// </summary>
@@ -92,10 +90,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region method ToString
 
         /// <summary>
         /// Returns HostEndPoint as string.
@@ -111,10 +105,6 @@ namespace LumiSoft.Net
             }
         }
 
-        #endregion
-
-
-        #region Properties Implementation
 
         /// <summary>
         /// Gets if <b>Host</b> is IP address.
@@ -133,8 +123,5 @@ namespace LumiSoft.Net
         /// Gets the port number of the endpoint. Value -1 means port not specified.
         /// </summary>
         public int Port { get; }
-
-#endregion
-
     }
 }

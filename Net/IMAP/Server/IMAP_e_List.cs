@@ -22,8 +22,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
 
-        #region Properties implementation
-
         /// <summary>
         /// Gets folder reference name. Value null means not specified.
         /// </summary>
@@ -45,7 +43,5 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets IMAP folders collection.
         /// </summary>
         public List<IMAP_r_u_List> Folders { get; }
-
-#endregion
     }
 }

@@ -10,8 +10,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioOut : IDisposable
     {
-        #region class WaveOut
-
         /// <summary>
         /// This class provides windows native waveOut implementation.
         /// </summary>
@@ -26,8 +24,6 @@ namespace LumiSoft.Net.Media
             /// <param name="dwParam1">Message parameter.</param>
             /// <param name="dwParam2">Message parameter.</param>
             private delegate void waveOutProc(IntPtr hdrvr,int uMsg,int dwUser,int dwParam1,int dwParam2);
-
-            #region class MMSYSERR
 
             /// <summary>
             /// This class holds MMSYSERR errors.
@@ -124,10 +120,6 @@ namespace LumiSoft.Net.Media
                 public const int LASTERROR = 20;
             }
 
-            #endregion
-
-            #region class WavConstants
-
             /// <summary>
             /// This class provides most used wav constants.
             /// </summary>
@@ -152,10 +144,6 @@ namespace LumiSoft.Net.Media
                 public const int WHDR_ENDLOOP = 0x00000008;
                 public const int WHDR_INQUEUE = 0x00000010;
             }
-
-            #endregion
-
-            #region class WavMethods
 
             /// <summary>
             /// This class provides windows wav methods.
@@ -289,10 +277,6 @@ namespace LumiSoft.Net.Media
 
             }
 
-            #endregion
-
-            #region struct WAVEOUTCAPS
-
             /// <summary>
             /// This class represents WAVEOUTCAPS structure.
             /// </summary>
@@ -333,10 +317,6 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public readonly uint dwSupport;
             }
-
-            #endregion
-
-            #region class WAVEFORMATEX
 
             /// <summary>
             /// This class represents WAVEFORMATEX structure.
@@ -382,10 +362,6 @@ namespace LumiSoft.Net.Media
                 public ushort cbSize;
             }
 
-            #endregion
-
-            #region struct WAVEHDR
-
             /// <summary>
             /// This class represents WAVEHDR structure.
             /// </summary>
@@ -427,10 +403,6 @@ namespace LumiSoft.Net.Media
                 public uint reserved;
             }
 
-            #endregion
-
-            #region class PlayItem
-
             /// <summary>
             /// This class holds queued wav play item.
             /// </summary>
@@ -452,8 +424,6 @@ namespace LumiSoft.Net.Media
                     DataSize     = dataSize;
                 }
 
-                #region method Dispose
-
                 /// <summary>
                 /// Cleans up any resources being used.
                 /// </summary>
@@ -463,10 +433,6 @@ namespace LumiSoft.Net.Media
                     m_DataHandle.Free();
                 }
 
-                #endregion
-
-
-                #region Properties Implementation
 
                 /// <summary>
                 /// Gets header handle.
@@ -496,12 +462,7 @@ namespace LumiSoft.Net.Media
                 /// Gets wav header data size in bytes.
                 /// </summary>
                 public int DataSize { get; }
-
-#endregion
-
             }
-
-            #endregion
 
             private AudioOutDevice  m_pOutDevice;
             private readonly int             m_SamplesPerSec = 8000;
@@ -571,8 +532,6 @@ namespace LumiSoft.Net.Media
                 Dispose();
             }
 
-            #region method Dispose
-
             /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
@@ -606,10 +565,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-
-            #region method OnWaveOutProc
 
             /// <summary>
             /// This method is called when wav device generates some event.
@@ -631,10 +586,6 @@ namespace LumiSoft.Net.Media
                 catch{
                 }
             }
-
-            #endregion
-
-            #region method OnCleanUpFirstBlock
 
             /// <summary>
             /// Cleans up the first data block in play queue.
@@ -659,10 +610,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-            #endregion
-
-
-            #region method Play
 
             /// <summary>
             /// Plays specified audio data bytes. If player is currently playing, data will be queued for playing.
@@ -730,10 +677,6 @@ namespace LumiSoft.Net.Media
                 //--------------------------------------------------------------------------------------------------
             }
 
-            #endregion
-
-
-            #region Properties Implementation
 
             /// <summary>
             /// Gets all available output audio devices.
@@ -812,11 +755,7 @@ namespace LumiSoft.Net.Media
             /// Gets number of bytes buffered for playing.
             /// </summary>
             public int BytesBuffered { get; private set; }
-
-#endregion
         }
-
-        #endregion
 
         // TODO: Linux WaveOut similar PCM audio player.
 
@@ -876,8 +815,6 @@ namespace LumiSoft.Net.Media
             m_pWaveOut = new WaveOut(device,samplesPerSec,bitsPerSample,channels);
         }
 
-        #region method Dispose
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -892,10 +829,6 @@ namespace LumiSoft.Net.Media
             m_pWaveOut = null;
         }
 
-        #endregion
-
-
-        #region method Write
 
         /// <summary>
         /// Writes specified audio data bytes to the active audio device. If player is currently playing, data will be queued for playing.
@@ -923,10 +856,6 @@ namespace LumiSoft.Net.Media
             m_pWaveOut.Play(buffer,offset,count);
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets all available audio output devices.
@@ -1068,8 +997,5 @@ namespace LumiSoft.Net.Media
                 return m_pWaveOut.BytesBuffered; 
             }
         }
-
-        #endregion
-
     }
 }

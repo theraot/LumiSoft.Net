@@ -28,8 +28,6 @@ namespace LumiSoft.Net.IMAP
         }
 
 
-        #region static method Parse
-
         /// <summary>
         /// Parses NAMESPACE response from namespace-response string.
         /// </summary>
@@ -121,10 +119,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Namespace(personal.ToArray(),other.ToArray(),shared.ToArray());
         }
 
-        #endregion
-
-
-        #region override method ToString
 
         /// <summary>
         /// Returns this as string.
@@ -183,10 +177,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToString();
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets personal namespaces. Value null means not specified.
@@ -202,7 +192,5 @@ namespace LumiSoft.Net.IMAP
         /// Gets shared namespaces. Value null means not specified.
         /// </summary>
         public IMAP_Namespace_Entry[] SharedNamespaces { get; }
-
-#endregion
     }
 }

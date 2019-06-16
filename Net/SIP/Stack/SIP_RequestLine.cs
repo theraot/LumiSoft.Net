@@ -36,8 +36,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
 
-        #region override method ToString
-
         /// <summary>
         /// Returns Request-Line string.
         /// </summary>
@@ -50,10 +48,6 @@ namespace LumiSoft.Net.SIP.Stack
             return m_Method + " " + m_pUri.ToString() + " " + m_Version + "\r\n";
         }
 
-        #endregion
-
-
-        #region Properties implementation
 
         /// <summary>
         /// Gets or sets request method. This value is always in upper-case.
@@ -113,8 +107,5 @@ namespace LumiSoft.Net.SIP.Stack
                 m_Version = value;
             }
         }
-
-        #endregion
-
     }
 }
