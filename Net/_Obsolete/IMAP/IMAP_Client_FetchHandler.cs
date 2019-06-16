@@ -9,13 +9,6 @@ namespace LumiSoft.Net.IMAP.Client
     public class IMAP_Client_FetchHandler
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Client_FetchHandler()
-        {            
-        }
-
-        /// <summary>
         /// Sets <b>CurrentSeqNo</b> property value.
         /// </summary>
         /// <param name="seqNo">Message sequnece number.</param>

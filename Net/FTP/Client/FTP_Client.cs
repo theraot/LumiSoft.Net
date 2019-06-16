@@ -302,13 +302,6 @@ namespace LumiSoft.Net.FTP.Client
         private GenericIdentity  m_pAuthdUserIdentity;
         private DataConnection   m_pDataConnection;
 
-		/// <summary>
-		/// Default connection.
-		/// </summary>
-		public FTP_Client()
-		{		    
-		}
-
         /// <summary>
 		/// Clean up any resources being used. This method is thread-safe.
 		/// </summary>

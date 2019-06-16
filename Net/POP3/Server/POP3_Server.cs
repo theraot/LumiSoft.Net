@@ -13,13 +13,6 @@ namespace LumiSoft.Net.POP3.Server
         private int    m_MaxBadCommands = 30;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public POP3_Server()
-        {
-        }
-
-        /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
         /// <param name="session">Incoming session.</param>

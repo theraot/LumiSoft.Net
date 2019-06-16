@@ -9,13 +9,6 @@ namespace LumiSoft.Net.AUTH
     public abstract class AUTH_SASL_ServerMechanism
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public AUTH_SASL_ServerMechanism()
-        {
-        }
-
-        /// <summary>
         /// Resets any authentication state data.
         /// </summary>
         public abstract void Reset();

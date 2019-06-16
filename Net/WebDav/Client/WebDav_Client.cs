@@ -11,13 +11,6 @@ namespace LumiSoft.Net.WebDav.Client
     public class WebDav_Client
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public WebDav_Client()
-        {
-        }
-
-        /// <summary>
         /// Executes PROPFIND method.
         /// </summary>
         /// <param name="requestUri">Request URI.</param>

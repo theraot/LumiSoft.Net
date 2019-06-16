@@ -16,13 +16,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_OptionTag = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_OptionTag()
-        {
-        }
-
-        /// <summary>
         /// Parses "option-tag" from specified value.
         /// </summary>
         /// <param name="value">SIP "option-tag" value.</param>

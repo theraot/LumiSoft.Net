@@ -25,13 +25,6 @@ namespace LumiSoft.Net.UDP
         private long                     m_PacketsSent;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public UDP_Server()
-        {        
-        }
-
-        /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
         public void Dispose()

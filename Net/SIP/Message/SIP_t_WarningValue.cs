@@ -24,13 +24,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Text  = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_WarningValue()
-        {
-        }
-
-        /// <summary>
         /// Parses "warning-value" from specified value.
         /// </summary>
         /// <param name="value">SIP "warning-value" value.</param>

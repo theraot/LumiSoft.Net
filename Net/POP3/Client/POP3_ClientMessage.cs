@@ -75,13 +75,6 @@ namespace LumiSoft.Net.POP3.Client
             private bool               m_RiseCompleted;
 
             /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public MarkForDeletionAsyncOP()
-            {
-            }
-
-            /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
             public void Dispose()

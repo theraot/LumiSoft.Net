@@ -6,13 +6,6 @@
     public class IMAP_t_Fetch_i_X_GM_MSGID : IMAP_t_Fetch_i
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_t_Fetch_i_X_GM_MSGID()
-        {
-        }
-
-        /// <summary>
         /// Returns this as string.
         /// </summary>
         /// <returns>Returns this as string.</returns>

@@ -15,13 +15,6 @@ namespace LumiSoft.Net.MIME
         private readonly bool m_IsDisposed = false;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public MIME_Message()
-        {
-        }
-
-        /// <summary>
         /// Parses MIME message from the specified file.
         /// </summary>
         /// <param name="file">File name with path from where to parse MIME message.</param>

@@ -11,13 +11,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Search_Key_Deleted : IMAP_Search_Key
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Search_Key_Deleted()
-        {
-        }
-
-        /// <summary>
         /// Returns parsed IMAP SEARCH <b>DELETED</b> key.
         /// </summary>
         /// <param name="r">String reader.</param>

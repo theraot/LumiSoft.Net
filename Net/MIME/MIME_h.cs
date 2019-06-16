@@ -9,13 +9,6 @@ namespace LumiSoft.Net.MIME
     public abstract class MIME_h
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public MIME_h()
-        {
-        }
-
-        /// <summary>
         /// Returns header field as string.
         /// </summary>
         /// <returns>Returns header field as string.</returns>

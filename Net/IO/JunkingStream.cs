@@ -10,13 +10,6 @@ namespace LumiSoft.Net.IO
     public class JunkingStream : Stream
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public JunkingStream()
-        {
-        }
-
-        /// <summary>
         /// Not used.
         /// </summary>
         public override void Flush()

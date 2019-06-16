@@ -12,13 +12,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Search_Key_New : IMAP_Search_Key
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Search_Key_New()
-        {
-        }
-
-        /// <summary>
         /// Returns parsed IMAP SEARCH <b>NEW</b> key.
         /// </summary>
         /// <param name="r">String reader.</param>

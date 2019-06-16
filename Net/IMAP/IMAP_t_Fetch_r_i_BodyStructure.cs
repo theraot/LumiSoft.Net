@@ -5,11 +5,5 @@
     /// </summary>
     public class IMAP_t_Fetch_r_i_BodyStructure : IMAP_t_Fetch_r_i
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_t_Fetch_r_i_BodyStructure()
-        {
-        }
     }
 }

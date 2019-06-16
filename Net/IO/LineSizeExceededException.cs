@@ -7,11 +7,5 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class LineSizeExceededException : Exception
     {
-        /// <summary>
-        /// Default coonstructor.
-        /// </summary>
-        public LineSizeExceededException() : base()
-        {
-        }
     }
 }

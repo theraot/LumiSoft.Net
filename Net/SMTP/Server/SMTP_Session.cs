@@ -312,12 +312,6 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private class ReadCommandAsyncOP
         {
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public ReadCommandAsyncOP()
-            {
-            }
         }
 
         /// <summary>
@@ -567,13 +561,6 @@ namespace LumiSoft.Net.SMTP.Server
             private SMTP_Session  m_pSession;
             private DateTime      m_StartTime;
             private bool          m_RiseCompleted;
-            
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public Cmd_DATA()
-            {
-            }
 
             /// <summary>
             /// Cleans up any resource being used.

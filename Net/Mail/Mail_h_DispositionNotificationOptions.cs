@@ -10,13 +10,6 @@ namespace LumiSoft.Net.Mail
     /// </summary>
     public class Mail_h_DispositionNotificationOptions : MIME_h
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Mail_h_DispositionNotificationOptions()
-        {
-        }
-
         /*
             Disposition-Notification-Options    = "Disposition-Notification-Options" ":" disposition-notification-parameters
             disposition-notification-parameters = parameter *(";" parameter)

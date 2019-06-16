@@ -208,13 +208,6 @@ namespace LumiSoft.Net.FTP.Server
 		private IPEndPoint                                   m_pDataConEndPoint;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public FTP_Session()
-        {
-        }
-
-        /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
         public override void Dispose()

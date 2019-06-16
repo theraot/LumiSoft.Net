@@ -8,14 +8,7 @@ namespace LumiSoft.Net.Log
     /// General logging module.
     /// </summary>
     public class Logger : IDisposable
-    {    
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Logger()
-        {
-        }
-
+    {
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>

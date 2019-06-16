@@ -8,13 +8,6 @@ namespace LumiSoft.Net.SIP.Proxy
     public class SIP_ProxyHandler
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_ProxyHandler()
-        {
-        }
-
-        /// <summary>
         /// This method is called when new SIP request received.
         /// </summary>
         /// <param name="requestContext">SIP proxy request context.</param>

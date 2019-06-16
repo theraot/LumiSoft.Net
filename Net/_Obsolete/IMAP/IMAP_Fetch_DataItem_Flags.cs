@@ -9,13 +9,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Fetch_DataItem_Flags : IMAP_Fetch_DataItem
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Fetch_DataItem_Flags()
-        {
-        }
-
-        /// <summary>
         /// Returns this as string.
         /// </summary>
         /// <returns>Returns this as string.</returns>

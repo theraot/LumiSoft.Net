@@ -12,13 +12,6 @@ namespace LumiSoft.Net.UPnP.Client
     public class UPnP_Client
     {
         /// <summary>
-        /// Defaultc onstructor.
-        /// </summary>
-        public UPnP_Client()
-        {
-        }
-
-        /// <summary>
         /// Searches the network for UPnP root devices.
         /// </summary>
         /// <param name="timeout">Search wait timeout in milliseconds.</param>

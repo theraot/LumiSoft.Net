@@ -19,13 +19,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Priority  = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_RValue()
-        {
-        }
-
-        /// <summary>
         /// Parses "r-value" from specified value.
         /// </summary>
         /// <param name="value">SIP "r-value" value.</param>

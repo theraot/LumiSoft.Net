@@ -8,13 +8,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_t_orc_TryCreate : IMAP_t_orc
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_t_orc_TryCreate()
-        {
-        }
-
-        /// <summary>
         /// Parses TRYCREATE optional response from string.
         /// </summary>
         /// <param name="value">TRYCREATE optional response string.</param>

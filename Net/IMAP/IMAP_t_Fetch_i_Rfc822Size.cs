@@ -6,13 +6,6 @@
     public class IMAP_t_Fetch_i_Rfc822Size : IMAP_t_Fetch_i
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_t_Fetch_i_Rfc822Size()
-        {
-        }
-
-        /// <summary>
         /// Returns this as string.
         /// </summary>
         /// <returns>Returns this as string.</returns>

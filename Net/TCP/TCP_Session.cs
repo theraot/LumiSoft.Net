@@ -12,13 +12,6 @@ namespace LumiSoft.Net.TCP
     public abstract class TCP_Session : IDisposable
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public TCP_Session()
-        {
-        }
-
-        /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
         public abstract void Dispose();

@@ -16,13 +16,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_CallID = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_CallID()
-        {
-        }
-
-        /// <summary>
         /// Creates new call ID value.
         /// </summary>
         /// <returns>Returns call ID value.</returns>

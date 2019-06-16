@@ -97,13 +97,6 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_Directive()
-        {
-        }
-
-        /// <summary>
         /// Parses "directive" from specified value.
         /// </summary>
         /// <param name="value">SIP "directive" value.</param>

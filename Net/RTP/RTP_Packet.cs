@@ -18,13 +18,6 @@ namespace LumiSoft.Net.RTP
         private byte[] m_Data;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public RTP_Packet()
-        {
-        }
-
-        /// <summary>
         /// Parses RTP packet.
         /// </summary>
         /// <param name="buffer">Buffer containing RTP packet.</param>

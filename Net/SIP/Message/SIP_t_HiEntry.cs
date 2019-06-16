@@ -21,13 +21,6 @@ namespace LumiSoft.Net.SIP.Message
         private SIP_t_NameAddress m_pAddress;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_HiEntry()
-        {
-        }
-
-        /// <summary>
         /// Parses "hi-entry" from specified value.
         /// </summary>
         /// <param name="value">SIP "hi-entry" value.</param>

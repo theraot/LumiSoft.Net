@@ -12,13 +12,6 @@ namespace LumiSoft.Net.NNTP.Client
     public class NNTP_Client : TCP_Client
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public NNTP_Client()
-        {
-        }
-
-        /// <summary>
 		/// Closes connection to NNTP server.
 		/// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>

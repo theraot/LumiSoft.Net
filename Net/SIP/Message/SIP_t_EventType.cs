@@ -10,13 +10,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_EventType = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_EventType()
-        {
-        }
-
-        /// <summary>
         /// Parses "event-type" from specified value.
         /// </summary>
         /// <param name="value">SIP "event-type" value.</param>

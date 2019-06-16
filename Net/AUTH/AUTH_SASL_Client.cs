@@ -8,13 +8,6 @@ namespace LumiSoft.Net.AUTH
     public abstract class AUTH_SASL_Client
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public AUTH_SASL_Client()
-        {
-        }
-
-        /// <summary>
         /// Continues authentication process.
         /// </summary>
         /// <param name="serverResponse">Server sent SASL response.</param>

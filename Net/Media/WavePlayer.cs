@@ -16,13 +16,6 @@ namespace LumiSoft.Net.Media
         private class RIFF_Chunk
         {
             /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public RIFF_Chunk()
-            {
-            }
-
-            /// <summary>
             /// Parses RIFF chunk from the specified reader.
             /// </summary>
             /// <param name="reader">Wave reader.</param>
@@ -61,13 +54,6 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class fmt_Chunk
         {
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public fmt_Chunk()
-            {
-            }
-
             /// <summary>
             /// Parses fmt chunk from the specified reader.
             /// </summary>
@@ -160,13 +146,6 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class data_Chunk
         {
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public data_Chunk()
-            {
-            }
-
             /// <summary>
             /// Parses data chunk from the specified reader.
             /// </summary>

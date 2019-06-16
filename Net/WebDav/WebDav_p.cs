@@ -6,13 +6,6 @@
     public abstract class WebDav_p
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public WebDav_p()
-        {
-        }
-
-        /// <summary>
         /// Gets property namespace.
         /// </summary>
         public abstract string Namespace

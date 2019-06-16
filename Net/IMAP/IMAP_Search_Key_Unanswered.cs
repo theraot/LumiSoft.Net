@@ -11,13 +11,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Search_Key_Unanswered : IMAP_Search_Key
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Search_Key_Unanswered()
-        {
-        }
-
-        /// <summary>
         /// Returns parsed IMAP SEARCH <b>UNANSWERED</b> key.
         /// </summary>
         /// <param name="r">String reader.</param>

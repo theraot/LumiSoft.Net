@@ -5,11 +5,5 @@
     /// </summary>
     public class ABNF_HexVal
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public ABNF_HexVal()
-        {
-        }
     }
 }

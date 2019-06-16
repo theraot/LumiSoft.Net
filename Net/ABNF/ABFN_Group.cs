@@ -8,13 +8,6 @@ namespace LumiSoft.Net.ABNF
     public class ABFN_Group : ABNF_Element
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public ABFN_Group()
-        {
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>

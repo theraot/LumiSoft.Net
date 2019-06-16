@@ -9,13 +9,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Fetch_DataItem_X_GM_MSGID : IMAP_Fetch_DataItem
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Fetch_DataItem_X_GM_MSGID()
-        {
-        }
-
-        /// <summary>
         /// Returns this as string.
         /// </summary>
         /// <returns>Returns this as string.</returns>

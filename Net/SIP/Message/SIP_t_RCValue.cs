@@ -16,13 +16,6 @@ namespace LumiSoft.Net.SIP.Message
     public class SIP_t_RCValue : SIP_t_ValueWithParams
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_RCValue()
-        {
-        }
-
-        /// <summary>
         /// Parses "rc-value" from specified value.
         /// </summary>
         /// <param name="value">SIP "rc-value" value.</param>

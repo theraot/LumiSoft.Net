@@ -17,13 +17,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Uri = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_ErrorUri()
-        {
-        }
-
-        /// <summary>
         /// Parses "error-uri" from specified value.
         /// </summary>
         /// <param name="value">SIP "error-uri" value.</param>

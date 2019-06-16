@@ -62,13 +62,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
         };
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public PCMA()
-        {
-        }
-
-        /// <summary>
         /// Encodes linear 16-bit linear PCM to 8-bit alaw.
         /// </summary>
         /// <param name="buffer">Data to encode. Data must be in Little-Endian format.</param>

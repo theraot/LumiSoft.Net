@@ -16,13 +16,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Encoding = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_ContentCoding()
-        {
-        }
-
-        /// <summary>
         /// Parses "content-coding" from specified value.
         /// </summary>
         /// <param name="value">SIP "content-coding" value.</param>

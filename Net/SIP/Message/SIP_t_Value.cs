@@ -6,13 +6,6 @@ namespace LumiSoft.Net.SIP.Message
     public abstract class SIP_t_Value
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_Value()
-        {
-        }
-
-        /// <summary>
         /// Parses single value from specified reader.
         /// </summary>
         /// <param name="reader">Reader what contains </param>

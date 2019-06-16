@@ -17,13 +17,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Method = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_Method()
-        {
-        }
-
-        /// <summary>
         /// Parses "Method" from specified value.
         /// </summary>
         /// <param name="value">SIP "Method" value.</param>

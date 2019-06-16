@@ -205,13 +205,6 @@ namespace LumiSoft.Net.TCP
             private SslStream         m_pSslStream;
 
             /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public SwitchToSecureAsyncOP()
-            {
-            }
-
-            /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
             public void Dispose()

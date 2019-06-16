@@ -9,14 +9,6 @@ namespace LumiSoft.Net.SIP.Proxy
     public class SIP_Presence
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_Presence()
-        {
-        }
-
-        
-        /// <summary>
         /// Handles SUBSCRIBE method.
         /// </summary>
         /// <param name="e">Request event arguments.</param>

@@ -18,13 +18,6 @@ namespace LumiSoft.Net.SIP.Message
         private readonly string m_Uri = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_Info()
-        {
-        }
-
-        /// <summary>
         /// Parses "info" from specified value.
         /// </summary>
         /// <param name="value">SIP "info" value.</param>

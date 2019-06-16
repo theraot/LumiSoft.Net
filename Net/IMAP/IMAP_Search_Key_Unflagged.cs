@@ -11,13 +11,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_Search_Key_Unflagged : IMAP_Search_Key
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_Search_Key_Unflagged()
-        {
-        }
-
-        /// <summary>
         /// Returns parsed IMAP SEARCH <b>UNFLAGGED</b> key.
         /// </summary>
         /// <param name="r">String reader.</param>

@@ -6,13 +6,6 @@
     public class IMAP_t_Fetch_i_Rfc822Header : IMAP_t_Fetch_i
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_t_Fetch_i_Rfc822Header()
-        {
-        }
-
-        /// <summary>
         /// Returns this as string.
         /// </summary>
         /// <returns>Returns this as string.</returns>

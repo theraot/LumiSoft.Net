@@ -17,13 +17,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Uri = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_AlertParam()
-        {
-        }
-
-        /// <summary>
         /// Parses "alert-param" from specified value.
         /// </summary>
         /// <param name="value">SIP "alert-param" value.</param>

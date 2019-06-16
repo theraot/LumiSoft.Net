@@ -25,13 +25,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_Mechanism = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_SecMechanism()
-        {
-        }
-
-        /// <summary>
         /// Parses "sec-mechanism" from specified value.
         /// </summary>
         /// <param name="value">SIP "sec-mechanism" value.</param>

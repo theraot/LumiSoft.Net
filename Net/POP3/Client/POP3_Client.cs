@@ -1581,13 +1581,6 @@ namespace LumiSoft.Net.POP3.Client
             private bool          m_RiseCompleted;
 
             /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public NoopAsyncOP()
-            {
-            }
-
-            /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
             public void Dispose()
@@ -1860,13 +1853,6 @@ namespace LumiSoft.Net.POP3.Client
             private bool          m_RiseCompleted;
 
             /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public RsetAsyncOP()
-            {
-            }
-
-            /// <summary>
             /// Cleans up any resources being used.
             /// </summary>
             public void Dispose()
@@ -2106,13 +2092,6 @@ namespace LumiSoft.Net.POP3.Client
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
-
-            /// <summary>
-            /// Default constructor.
-            /// </summary>
-            public FillMessagesAsyncOP()
-            {
-            }
 
             /// <summary>
             /// Cleans up any resources being used.

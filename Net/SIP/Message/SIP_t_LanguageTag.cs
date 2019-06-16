@@ -19,13 +19,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_LanguageTag = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_LanguageTag()
-        {
-        }
-
-        /// <summary>
         /// Parses "language-tag" from specified value.
         /// </summary>
         /// <param name="value">SIP "language-tag" value.</param>

@@ -19,13 +19,6 @@ namespace LumiSoft.Net.SIP.Message
         private string m_LanguageRange = "";
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SIP_t_Language()
-        {
-        }
-
-        /// <summary>
         /// Parses "language" from specified value.
         /// </summary>
         /// <param name="value">SIP "language" value.</param>

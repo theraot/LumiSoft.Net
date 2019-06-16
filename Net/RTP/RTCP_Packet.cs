@@ -10,13 +10,6 @@ namespace LumiSoft.Net.RTP
         private int m_PaddBytesCount;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public RTCP_Packet()
-        {
-        }
-
-        /// <summary>
         /// Parses 1 RTCP packet from the specified buffer.
         /// </summary>
         /// <param name="buffer">Buffer which contains RTCP packet.</param>

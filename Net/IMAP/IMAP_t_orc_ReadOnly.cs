@@ -8,13 +8,6 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_t_orc_ReadOnly : IMAP_t_orc
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public IMAP_t_orc_ReadOnly()
-        {
-        }
-
-        /// <summary>
         /// Parses READ-ONLY optional response from string.
         /// </summary>
         /// <param name="value">READ-ONLY optional response string.</param>

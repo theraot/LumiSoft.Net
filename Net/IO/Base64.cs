@@ -35,13 +35,6 @@ namespace LumiSoft.Net.IO
         };
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Base64()
-        {
-        }
-
-        /// <summary>
         /// Encodes bytes.
         /// </summary>
         /// <param name="buffer">Data buffer.</param>

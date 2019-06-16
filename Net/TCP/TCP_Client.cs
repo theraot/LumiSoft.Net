@@ -26,13 +26,6 @@ namespace LumiSoft.Net.TCP
         private SmartStream                         m_pTcpStream;
 
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public TCP_Client()
-        {
-        }
-
-        /// <summary>
         /// Cleans up any resources being used. This method is thread-safe.
         /// </summary>
         public override void Dispose()

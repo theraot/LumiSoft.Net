@@ -6,13 +6,6 @@
     public abstract class AsyncOP
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public AsyncOP()
-        {
-        }
-
-        /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
         public abstract bool IsDisposed

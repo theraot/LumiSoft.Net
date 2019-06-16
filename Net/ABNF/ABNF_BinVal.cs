@@ -5,11 +5,5 @@
     /// </summary>
     public class ABNF_BinVal
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public ABNF_BinVal()
-        {
-        }
     }
 }

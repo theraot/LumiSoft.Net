@@ -10,13 +10,6 @@ namespace LumiSoft.Net.Mail
     public abstract class Mail_t_Address
     {
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Mail_t_Address()
-        {
-        }
-
-        /// <summary>
         /// Returns address as string value.
         /// </summary>
         /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
