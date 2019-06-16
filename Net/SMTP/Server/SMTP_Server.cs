@@ -67,8 +67,8 @@ namespace LumiSoft.Net.SMTP.Server
         public string[] ServiceExtentions
         {
             get{              
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
  
                 return Extentions.ToArray(); 
@@ -114,15 +114,15 @@ namespace LumiSoft.Net.SMTP.Server
         public string GreetingText
         {
             get{                
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_GreetingText; }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_GreetingText = value;
@@ -137,16 +137,16 @@ namespace LumiSoft.Net.SMTP.Server
         public int MaxBadCommands
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_MaxBadCommands; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 0){
                     throw new ArgumentException("Property 'MaxBadCommands' value must be >= 0.");
@@ -164,16 +164,16 @@ namespace LumiSoft.Net.SMTP.Server
         public int MaxTransactions
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_MaxTransactions; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 0){
                     throw new ArgumentException("Property 'MaxTransactions' value must be >= 0.");
@@ -191,16 +191,16 @@ namespace LumiSoft.Net.SMTP.Server
         public int MaxMessageSize
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_MaxMessageSize; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(value < 500){
@@ -220,16 +220,16 @@ namespace LumiSoft.Net.SMTP.Server
         public int MaxRecipients
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_MaxRecipients; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 1){
                     throw new ArgumentException("Property 'MaxRecipients' value must be >= 1.");

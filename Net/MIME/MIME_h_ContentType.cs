@@ -153,7 +153,7 @@ namespace LumiSoft.Net.MIME
         /// <returns>Returns header field as string.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
-            if(!reEncode && !this.IsModified){
+            if(!reEncode && !IsModified){
                 return m_ParseValue;
             }
 

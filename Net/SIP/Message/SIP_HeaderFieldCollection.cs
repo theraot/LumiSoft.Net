@@ -58,12 +58,12 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         public void Set(string fieldName,string value)
         {
-            var h = this.GetFirst(fieldName);
+            var h = GetFirst(fieldName);
             if (h != null){
                 h.Value = value;
             }
             else{
-                this.Add(fieldName,value);
+                Add(fieldName,value);
             }
         }
 

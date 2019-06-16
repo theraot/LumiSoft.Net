@@ -43,7 +43,7 @@ namespace LumiSoft.Net.Media
 
             Stop();
 
-            this.Error        = null;
+            Error        = null;
             m_pAudioOutDevice = null;
             m_pRTP_Stream     = null;
             m_pAudioCodecs    = null;
@@ -85,7 +85,7 @@ namespace LumiSoft.Net.Media
                 m_pAudioOut.Write(decodedData,0,decodedData.Length);
             }
             catch(Exception x){
-                if(!this.IsDisposed){
+                if(!IsDisposed){
                     // Raise error event(We can't throw expection directly, we are on threadpool thread).
                     OnError(x);
                 }
@@ -98,8 +98,8 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public void Start()
         {   
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(m_IsRunning){
                 return;
@@ -116,8 +116,8 @@ namespace LumiSoft.Net.Media
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public void Stop()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(!m_IsRunning){
                 return;
@@ -145,8 +145,8 @@ namespace LumiSoft.Net.Media
         public bool IsRunning
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_IsRunning; 
@@ -161,21 +161,21 @@ namespace LumiSoft.Net.Media
         public AudioOutDevice AudioOutDevice
         {
             get{   
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pAudioOutDevice; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_pAudioOutDevice = value ?? throw new ArgumentNullException("AudioOutDevice");
 
-                if(this.IsRunning){
+                if(IsRunning){
                     Stop();
                     Start();
                 }
@@ -189,8 +189,8 @@ namespace LumiSoft.Net.Media
         public Dictionary<int,AudioCodec> Codecs
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pAudioCodecs; 
@@ -205,8 +205,8 @@ namespace LumiSoft.Net.Media
         public AudioCodec ActiveCodec
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pActiveCodec; 
@@ -224,8 +224,8 @@ namespace LumiSoft.Net.Media
         /// <param name="x">Error what happened.</param>
         private void OnError(Exception x)
         {
-            if(this.Error != null){
-                this.Error(this,new ExceptionEventArgs(x));
+            if(Error != null){
+                Error(this,new ExceptionEventArgs(x));
             }
         }
     }

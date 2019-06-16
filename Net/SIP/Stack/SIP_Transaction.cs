@@ -72,10 +72,10 @@ namespace LumiSoft.Net.SIP.Stack
             m_pFlow    = null;
             m_pRequest = null;
 
-            this.StateChanged   = null;
-            this.Disposed       = null;
-            this.TimedOut       = null;
-            this.TransportError = null;
+            StateChanged   = null;
+            Disposed       = null;
+            TimedOut       = null;
+            TransportError = null;
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace LumiSoft.Net.SIP.Stack
         protected void SetState(SIP_TransactionState state)
         {            
             // Log
-            if(this.Stack.Logger != null){
-                this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=" + (this is SIP_ServerTransaction) + "] switched to '" + state.ToString() + "' state.");
+            if(Stack.Logger != null){
+                Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=" + (this is SIP_ServerTransaction) + "] switched to '" + state.ToString() + "' state.");
             }
 
             State = state;
@@ -145,8 +145,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Stack Stack
         {
             get{ 
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pStack; 
@@ -160,8 +160,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Flow Flow
         {
             get{
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pFlow; 
@@ -175,8 +175,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Request Request
         {
             get{ 
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRequest; 
@@ -190,8 +190,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string Method
         {
             get{ 
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_Method; 
@@ -205,8 +205,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string ID
         {
             get{
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_ID; 
@@ -220,8 +220,8 @@ namespace LumiSoft.Net.SIP.Stack
         public DateTime CreateTime
         {
             get{ 
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_CreateTime; 
@@ -235,8 +235,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Response[] Responses
         {
             get{ 
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pResponses.ToArray(); 
@@ -250,13 +250,13 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Response LastProvisionalResponse
         {
             get{
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                for(int i=this.Responses.Length - 1;i>-1;i--){
-                    if(this.Responses[i].StatusCodeType == SIP_StatusCodeType.Provisional){
-                        return this.Responses[i];
+                for(int i=Responses.Length - 1;i>-1;i--){
+                    if(Responses[i].StatusCodeType == SIP_StatusCodeType.Provisional){
+                        return Responses[i];
                     }
                 }
 
@@ -271,11 +271,11 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Response FinalResponse
         {
             get{
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                foreach(SIP_Response response in this.Responses){
+                foreach(SIP_Response response in Responses){
                     if(response.StatusCodeType != SIP_StatusCodeType.Provisional){
                         return response;
                     }
@@ -292,8 +292,8 @@ namespace LumiSoft.Net.SIP.Stack
         public bool HasProvisionalResponse
         {
             get{ 
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 foreach(SIP_Response response in m_pResponses){
@@ -335,8 +335,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnStateChanged()
         {
-            if(this.StateChanged != null){
-                this.StateChanged(this,new EventArgs());
+            if(StateChanged != null){
+                StateChanged(this,new EventArgs());
             }
         }
 
@@ -350,8 +350,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         protected void OnDisposed()
         {
-            if(this.Disposed != null){
-                this.Disposed(this,new EventArgs());
+            if(Disposed != null){
+                Disposed(this,new EventArgs());
             }
         }
 
@@ -365,8 +365,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         protected void OnTimedOut()
         {
-            if(this.TimedOut != null){
-                this.TimedOut(this,new EventArgs());
+            if(TimedOut != null){
+                TimedOut(this,new EventArgs());
             }
         }
 
@@ -386,8 +386,8 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("exception");
             }
 
-            if(this.TransportError != null){
-                this.TransportError(this,new ExceptionEventArgs(exception));
+            if(TransportError != null){
+                TransportError(this,new ExceptionEventArgs(exception));
             }
         }
 
@@ -403,8 +403,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="errorText">Text describing error.</param>
         protected void OnTransactionError(string errorText)
         {
-            if(this.TransactionError != null){
-                this.TransactionError(this,new EventArgs());
+            if(TransactionError != null){
+                TransactionError(this,new EventArgs());
             }
         }
     }

@@ -130,7 +130,7 @@ namespace LumiSoft.Net.IO
         private void TrimStart()
         {            
             if(m_ReadOffset > 0){
-                var buffer = new byte[this.Available];
+                var buffer = new byte[Available];
                 Array.Copy(m_pBuffer,m_ReadOffset,buffer,0,buffer.Length);
                 Array.Copy(buffer,m_pBuffer,buffer.Length);
                 m_ReadOffset  = 0;

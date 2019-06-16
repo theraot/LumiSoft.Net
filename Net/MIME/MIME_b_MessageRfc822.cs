@@ -88,13 +88,13 @@ namespace LumiSoft.Net.MIME
                 if(value == null){
                     throw new ArgumentNullException("value");
                 }
-                if(this.Entity == null){
+                if(Entity == null){
                     throw new InvalidOperationException("Body must be bounded to some entity first.");
                 }
 
                 // Owner entity has no content-type or has different content-type, just add/overwrite it.
-                if(this.Entity.ContentType == null || !string.Equals(this.Entity.ContentType.TypeWithSubtype,this.MediaType,StringComparison.InvariantCultureIgnoreCase)){
-                    this.Entity.ContentType = new MIME_h_ContentType(this.MediaType);
+                if(Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase)){
+                    Entity.ContentType = new MIME_h_ContentType(MediaType);
                 }
 
                 m_pMessage = value;

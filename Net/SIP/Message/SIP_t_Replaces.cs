@@ -107,7 +107,7 @@ namespace LumiSoft.Net.SIP.Message
         public string ToTag
         {
             get{ 
-                var parameter = this.Parameters["to-tag"];
+                var parameter = Parameters["to-tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -117,10 +117,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("to-tag");
+                    Parameters.Remove("to-tag");
                 }
                 else{
-                    this.Parameters.Set("to-tag",value);
+                    Parameters.Set("to-tag",value);
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace LumiSoft.Net.SIP.Message
         public string FromTag
         {
             get{ 
-                var parameter = this.Parameters["from-tag"];
+                var parameter = Parameters["from-tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -141,10 +141,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("from-tag");
+                    Parameters.Remove("from-tag");
                 }
                 else{
-                    this.Parameters.Set("from-tag",value);
+                    Parameters.Set("from-tag",value);
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace LumiSoft.Net.SIP.Message
         {                                    
             get
             {
-                if(this.Parameters.Contains("early-only")){
+                if(Parameters.Contains("early-only")){
                     return true;
                 }
 
@@ -165,10 +165,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(!value){
-                    this.Parameters.Remove("early-only");
+                    Parameters.Remove("early-only");
                 }
                 else{
-                    this.Parameters.Set("early-only",null);
+                    Parameters.Set("early-only",null);
                 }
             }
         }

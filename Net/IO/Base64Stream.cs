@@ -232,7 +232,7 @@ namespace LumiSoft.Net.IO
         public override void Write(byte[] buffer,int offset,int count)        
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(m_IsFinished){
                 throw new InvalidOperationException("Stream is marked as finished by calling Finish method.");
@@ -317,7 +317,7 @@ namespace LumiSoft.Net.IO
         public void Finish()
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(m_IsFinished){
                 return;

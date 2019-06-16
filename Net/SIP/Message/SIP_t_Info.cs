@@ -81,7 +81,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Purpose
         {
             get{ 
-                var parameter = this.Parameters["purpose"];
+                var parameter = Parameters["purpose"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -91,10 +91,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("purpose");
+                    Parameters.Remove("purpose");
                 }
                 else{
-                    this.Parameters.Set("purpose",value);
+                    Parameters.Set("purpose",value);
                 }
             }
         }

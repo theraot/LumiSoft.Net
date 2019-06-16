@@ -106,7 +106,7 @@ namespace LumiSoft.Net.SIP.Message
         public double QValue
         {
             get{
-                var parameter = this.Parameters["qvalue"];
+                var parameter = Parameters["qvalue"];
                 if (parameter != null){
                     return Convert.ToDouble(parameter.Value);
                 }
@@ -120,10 +120,10 @@ namespace LumiSoft.Net.SIP.Message
                 }
 
                 if(value < 0){
-                    this.Parameters.Remove("qvalue");
+                    Parameters.Remove("qvalue");
                 }
                 else{
-                    this.Parameters.Set("qvalue",value.ToString());
+                    Parameters.Set("qvalue",value.ToString());
                 }
             }
         }

@@ -131,19 +131,19 @@ namespace LumiSoft.Net.SIP.Message
         {
             get
             {
-                if(this.Parameters["cause"] == null){
+                if(Parameters["cause"] == null){
                     return -1;
                 }
 
-                return Convert.ToInt32(this.Parameters["cause"].Value);
+                return Convert.ToInt32(Parameters["cause"].Value);
             }
 
             set{
                 if(value < 0){
-                    this.Parameters.Remove("cause");
+                    Parameters.Remove("cause");
                 }
                 else{
-                    this.Parameters.Set("cause",value.ToString());
+                    Parameters.Set("cause",value.ToString());
                 }
             }
         }
@@ -154,7 +154,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Text
         {
             get{
-                var parameter = this.Parameters["text"];
+                var parameter = Parameters["text"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -164,10 +164,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("text");
+                    Parameters.Remove("text");
                 }
                 else{
-                    this.Parameters.Set("text",value);
+                    Parameters.Set("text",value);
                 }
             }
         }

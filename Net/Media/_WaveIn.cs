@@ -542,7 +542,7 @@ namespace LumiSoft.Net.Media
             format.wBitsPerSample  = (ushort)m_BitsPerSample;
             format.cbSize          = 0; 
             // We must delegate reference, otherwise GC will collect it.
-            m_pWaveInProc = new waveInProc(this.OnWaveInProc);
+            m_pWaveInProc = new waveInProc(OnWaveInProc);
             
             int result = waveInOpen(out m_pWavDevHandle,m_pInDevice.Index,format,m_pWaveInProc,0,WavConstants.CALLBACK_FUNCTION);
             if(result != MMSYSERR.NOERROR){
@@ -585,7 +585,7 @@ namespace LumiSoft.Net.Media
                 m_pInDevice     = null;
                 m_pWavDevHandle = IntPtr.Zero;
 
-                this.AudioFrameReceived = null;
+                AudioFrameReceived = null;
             }
             catch{                
             }
@@ -804,8 +804,8 @@ namespace LumiSoft.Net.Media
         /// <param name="eArgs">Event arguments.</param>
         private void OnAudioFrameReceived(EventArgs<byte[]> eArgs)
         {
-            if(this.AudioFrameReceived != null){
-                this.AudioFrameReceived(this,eArgs);
+            if(AudioFrameReceived != null){
+                AudioFrameReceived(this,eArgs);
             }
         }
     }

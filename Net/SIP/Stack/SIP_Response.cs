@@ -37,7 +37,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns new cloned request.</returns>
         public SIP_Response Copy()
         {
-            var retVal = SIP_Response.Parse(this.ToByteData());
+            var retVal = Parse(ToByteData());
 
             return retVal;
         }
@@ -54,26 +54,26 @@ namespace LumiSoft.Net.SIP.Stack
             // CallID:
             // CSeq
                         
-            if(this.Via.GetTopMostValue() == null){
+            if(Via.GetTopMostValue() == null){
                 throw new SIP_ParseException("Via: header field is missing !");
             }
-            if(this.Via.GetTopMostValue().Branch == null){
+            if(Via.GetTopMostValue().Branch == null){
                 throw new SIP_ParseException("Via: header fields branch parameter is missing !");
             }
 
-            if(this.To == null){
+            if(To == null){
                 throw new SIP_ParseException("To: header field is missing !");
             }
 
-            if(this.From == null){
+            if(From == null){
                 throw new SIP_ParseException("From: header field is missing !");
             }
 
-            if(this.CallID == null){
+            if(CallID == null){
                 throw new SIP_ParseException("CallID: header field is missing !");
             }
 
-            if(this.CSeq == null){
+            if(CSeq == null){
                 throw new SIP_ParseException("CSeq: header field is missing !");
             }
 
@@ -157,11 +157,11 @@ namespace LumiSoft.Net.SIP.Stack
             // Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
 
             // Add response-line
-            var responseLine = Encoding.UTF8.GetBytes("SIP/" + this.SipVersion.ToString("f1").Replace(',','.') + " " + this.StatusCode + " " + this.ReasonPhrase + "\r\n");
+            var responseLine = Encoding.UTF8.GetBytes("SIP/" + SipVersion.ToString("f1").Replace(',','.') + " " + StatusCode + " " + ReasonPhrase + "\r\n");
             stream.Write(responseLine,0,responseLine.Length);
 
             // Add SIP-message
-            this.InternalToStream(stream);
+            InternalToStream(stream);
         }
 
         /// <summary>
@@ -284,12 +284,12 @@ namespace LumiSoft.Net.SIP.Stack
                     throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Reason-Phrase value !");
                 }
                 try{
-                    this.StatusCode = Convert.ToInt32(code_reason[0]);
+                    StatusCode = Convert.ToInt32(code_reason[0]);
                 }
                 catch{
                     throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Status-Code value !");
                 }
-                this.ReasonPhrase = code_reason[1];
+                ReasonPhrase = code_reason[1];
             }
         }
     }

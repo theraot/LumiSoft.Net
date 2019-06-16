@@ -52,12 +52,12 @@ namespace LumiSoft.Net.MIME
         /// <returns>Returns certificates contained in pkcs 7. Returns null if no certificates.</returns>
         public X509Certificate2Collection GetCertificates()
         {
-            if(this.Data == null){
+            if(Data == null){
                 return null;
             }
 
             var signedCms = new SignedCms();
-            signedCms.Decode(this.Data);
+            signedCms.Decode(Data);
 
             return signedCms.Certificates;
         }
@@ -70,18 +70,18 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != signed-data</b>.</exception>
         public bool VerifySignature()
         {
-            if(!string.Equals(this.Entity.ContentType.Parameters["smime-type"],"signed-data",StringComparison.InvariantCultureIgnoreCase)){
+            if(!string.Equals(Entity.ContentType.Parameters["smime-type"],"signed-data",StringComparison.InvariantCultureIgnoreCase)){
                 throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=signed-data.");
             }
 
             // Check this.Data exists.
-            if(this.Data == null){
+            if(Data == null){
                return false;
             }
 
             try{
                 var signedCms = new SignedCms();
-                signedCms.Decode(this.Data);
+                signedCms.Decode(Data);
                 signedCms.CheckSignature(true);
 
                 return true;
@@ -100,13 +100,13 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="InvalidOperationException">Is raised when <b>smime-type != signed-data</b>.</exception>
         public MIME_Message GetSignedMime()
         {
-            if(!string.Equals(this.Entity.ContentType.Parameters["smime-type"],"signed-data",StringComparison.InvariantCultureIgnoreCase)){
+            if(!string.Equals(Entity.ContentType.Parameters["smime-type"],"signed-data",StringComparison.InvariantCultureIgnoreCase)){
                 throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=signed-data.");
             }
 
-            if(this.Data != null){
+            if(Data != null){
                 var signedCms = new SignedCms();
-                signedCms.Decode(this.Data);
+                signedCms.Decode(Data);
 
                 return MIME_Message.ParseFromStream(new MemoryStream(signedCms.ContentInfo.Content));
             }
@@ -126,12 +126,12 @@ namespace LumiSoft.Net.MIME
             if(cert == null){
                 throw new ArgumentNullException("cert");
             }
-            if(!string.Equals(this.Entity.ContentType.Parameters["smime-type"],"enveloped-data",StringComparison.InvariantCultureIgnoreCase)){
+            if(!string.Equals(Entity.ContentType.Parameters["smime-type"],"enveloped-data",StringComparison.InvariantCultureIgnoreCase)){
                 throw new InvalidOperationException("The VerifySignature method is only valid if Content-Type parameter smime-type=enveloped-data.");
             }
 
             var envelopedCms = new EnvelopedCms();
-            envelopedCms.Decode(this.Data);
+            envelopedCms.Decode(Data);
 
             var certificates = new X509Certificate2Collection(cert);
             envelopedCms.Decrypt(certificates);

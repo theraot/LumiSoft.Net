@@ -191,9 +191,9 @@ namespace LumiSoft.Net
 		public string ReadWord(bool unQuote,char[] wordTerminatorChars,bool removeWordTerminator)
 		{			
 			// Always start word reading from first char.
-			this.ReadToFirstChar();
+			ReadToFirstChar();
 
-            if(this.Available == 0){
+            if(Available == 0){
 				return null;
 			}
             			            
@@ -327,7 +327,7 @@ namespace LumiSoft.Net
         /// <returns></returns>
         public string ReadToEnd()
         {
-            if(this.Available == 0){
+            if(Available == 0){
 				return null;
 			}
 

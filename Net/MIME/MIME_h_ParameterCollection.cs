@@ -154,7 +154,7 @@ namespace LumiSoft.Net.MIME
             }
 
             var retVal = new StringBuilder();
-            foreach (MIME_h_Parameter parameter in this.ToArray()){
+            foreach (MIME_h_Parameter parameter in ToArray()){
                 if(string.IsNullOrEmpty(parameter.Value)){
                     retVal.Append(";\r\n\t" + parameter.Name);
                 }
@@ -371,7 +371,7 @@ namespace LumiSoft.Net.MIME
                     return true;
                 }
 
-                foreach(MIME_h_Parameter parameter in this.ToArray()){
+                foreach(MIME_h_Parameter parameter in ToArray()){
                     if(parameter.IsModified){
                         return true;
                     }

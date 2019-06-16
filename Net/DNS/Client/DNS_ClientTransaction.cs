@@ -42,7 +42,7 @@ namespace LumiSoft.Net.DNS.Client
         public void Dispose()
         {
             lock(m_pLock){
-                if(this.State == DNS_ClientTransactionState.Disposed){
+                if(State == DNS_ClientTransactionState.Disposed){
                     return;
                 }
 
@@ -55,8 +55,8 @@ namespace LumiSoft.Net.DNS.Client
 
                 Response = null;
 
-                this.StateChanged = null;
-                this.Timeout = null;
+                StateChanged = null;
+                Timeout = null;
             }
         }
 
@@ -84,7 +84,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="InvalidOperationException">Is raised when this method is called in invalid transaction state.</exception>
         public void Start()
         {   
-            if(this.State != DNS_ClientTransactionState.WaitingForStart){
+            if(State != DNS_ClientTransactionState.WaitingForStart){
                 throw new InvalidOperationException("DNS_ClientTransaction.Start may be called only in 'WaitingForStart' transaction state.");
             }
 
@@ -138,7 +138,7 @@ namespace LumiSoft.Net.DNS.Client
                         
             try{
                 lock(m_pLock){
-                    if(this.State != DNS_ClientTransactionState.Active){
+                    if(State != DNS_ClientTransactionState.Active){
                         return;
                     }
                     m_ResponseCount++;
@@ -158,7 +158,7 @@ namespace LumiSoft.Net.DNS.Client
                 } 
             }
             finally{
-                if(this.State == DNS_ClientTransactionState.Completed){
+                if(State == DNS_ClientTransactionState.Completed){
                     Dispose();
                 }                
             }
@@ -333,8 +333,8 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private void OnStateChanged()
         {
-            if(this.StateChanged != null){
-                this.StateChanged(this,new EventArgs<DNS_ClientTransaction>(this));
+            if(StateChanged != null){
+                StateChanged(this,new EventArgs<DNS_ClientTransaction>(this));
             }
         }
 
@@ -348,8 +348,8 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private void OnTimeout()
         {
-           if(this.Timeout != null){
-                this.Timeout(this,new EventArgs());
+           if(Timeout != null){
+                Timeout(this,new EventArgs());
            }
         }
     }

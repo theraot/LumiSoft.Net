@@ -46,8 +46,8 @@ namespace LumiSoft.Net.RTP
                         
             OnDisposed();
 
-            this.Disposed = null;
-            this.Closed = null;
+            Disposed = null;
+            Closed = null;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace LumiSoft.Net.RTP
         public void Close(string closeReason)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             
             m_pSource.Close(closeReason);
@@ -86,21 +86,21 @@ namespace LumiSoft.Net.RTP
         public void Send(RTP_Packet packet)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(packet == null){
                 throw new ArgumentNullException("packet");
             }
-            if(this.Session.StreamMode == RTP_StreamMode.Inactive || this.Session.StreamMode == RTP_StreamMode.Receive){
+            if(Session.StreamMode == RTP_StreamMode.Inactive || Session.StreamMode == RTP_StreamMode.Receive){
                 return;
             }
 
             // RTP was designed around the concept of Application Level Framing (ALF), 
             // because of it we only allow to send packets and don't deal with breaking frames into packets.
 
-            packet.SSRC  = this.Source.SSRC;
+            packet.SSRC  = Source.SSRC;
             packet.SeqNo = NextSeqNo();
-            packet.PayloadType = this.Session.Payload;
+            packet.PayloadType = Session.Payload;
             
             // Send RTP packet.
             m_RtpBytesSent += m_pSource.SendRtpPacket(packet);
@@ -148,7 +148,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSource.Session; 
@@ -163,7 +163,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSource; 
@@ -178,7 +178,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SeqNoWrapCount; 
@@ -193,7 +193,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SeqNo; 
@@ -208,7 +208,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastPacketTime;
@@ -223,7 +223,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastPacketRtpTimestamp; 
@@ -238,7 +238,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_RtpPacketsSent; 
@@ -253,7 +253,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_RtpBytesSent; 
@@ -268,7 +268,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_RtpDataBytesSent; 
@@ -291,8 +291,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnDisposed()
         {
-            if(this.Disposed != null){
-                this.Disposed(this,new EventArgs());
+            if(Disposed != null){
+                Disposed(this,new EventArgs());
             }
         }
 
@@ -306,8 +306,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnClosed()
         {
-            if(this.Closed != null){
-                this.Closed(this,new EventArgs());
+            if(Closed != null){
+                Closed(this,new EventArgs());
             }
         }
     }

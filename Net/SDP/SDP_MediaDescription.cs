@@ -181,7 +181,7 @@ namespace LumiSoft.Net.SDP
             else{
                 retVal.Append("m=" + MediaType + " " + Port + " " + Protocol);
             }
-            foreach(string mediaFormat in this.MediaFormats){
+            foreach(string mediaFormat in MediaFormats){
                 retVal.Append(" " + mediaFormat);
             }
             retVal.Append("\r\n");
@@ -195,9 +195,9 @@ namespace LumiSoft.Net.SDP
             }
             // c (connection information)
             if(Connection != null){
-                retVal.Append(this.Connection.ToValue());
+                retVal.Append(Connection.ToValue());
             }
-            foreach(SDP_Attribute attribute in this.Attributes){
+            foreach(SDP_Attribute attribute in Attributes){
                 retVal.Append(attribute.ToValue());
             }
 

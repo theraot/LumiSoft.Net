@@ -72,7 +72,7 @@ namespace LumiSoft.Net.SIP.Message
             retVal.Append(Address.ToStringValue());
 
             // Add parameters
-            foreach(SIP_Parameter parameter in this.Parameters){
+            foreach(SIP_Parameter parameter in Parameters){
                 if(parameter.Value != null){
                     retVal.Append(";" + parameter.Name + "=" + parameter.Value);
                 }

@@ -24,8 +24,8 @@ namespace LumiSoft.Net.Mime
 		/// <param name="value">Header field value.</param>
 		public HeaderField(string name,string value)
 		{
-			this.Name  = name;
-			this.Value = value;
+			Name  = name;
+			Value = value;
 		}
 
         /// <summary>

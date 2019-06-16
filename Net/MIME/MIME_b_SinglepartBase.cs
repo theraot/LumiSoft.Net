@@ -47,8 +47,8 @@ namespace LumiSoft.Net.MIME
             base.SetParent(entity,setContentType);
 
             // Owner entity has no content-type or has different content-type, just add/overwrite it.
-            if(setContentType && (this.Entity.ContentType == null || !string.Equals(this.Entity.ContentType.TypeWithSubtype,this.MediaType,StringComparison.InvariantCultureIgnoreCase))){
-                this.Entity.ContentType = new MIME_h_ContentType(MediaType);
+            if(setContentType && (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase))){
+                Entity.ContentType = new MIME_h_ContentType(MediaType);
             }
         }
 
@@ -86,7 +86,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
         public Stream GetEncodedDataStream()
         {
-            if(this.Entity == null){
+            if(Entity == null){
                 throw new InvalidOperationException("Body must be bounded to some entity first.");
             }
 
@@ -114,15 +114,15 @@ namespace LumiSoft.Net.MIME
             if(stream == null){
                 throw new ArgumentNullException("stream");
             }
-            if(this.Entity == null){
+            if(Entity == null){
                 throw new InvalidOperationException("Body must be bounded to some entity first.");
             }
 
             // Owner entity has no content-type or has different content-type, just add/overwrite it.
-            if(this.Entity.ContentType == null || !string.Equals(this.Entity.ContentType.TypeWithSubtype,this.MediaType,StringComparison.InvariantCultureIgnoreCase)){
-                this.Entity.ContentType = new MIME_h_ContentType(this.MediaType);
+            if(Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase)){
+                Entity.ContentType = new MIME_h_ContentType(MediaType);
             }
-            this.Entity.ContentTransferEncoding = contentTransferEncoding;
+            Entity.ContentTransferEncoding = contentTransferEncoding;
 
             EncodedStream.SetLength(0);
             Net_Utils.StreamCopy(stream,EncodedStream,32000);
@@ -139,7 +139,7 @@ namespace LumiSoft.Net.MIME
         /// <remarks>The returned stream should be closed/disposed as soon as it's not needed any more.</remarks>
         public Stream GetDataStream()
         {             
-            if(this.Entity == null){
+            if(Entity == null){
                 throw new InvalidOperationException("Body must be bounded to some entity first.");
             }
 
@@ -148,8 +148,8 @@ namespace LumiSoft.Net.MIME
                 Content-Transfer-Encoding header field is not present.
             */
             var transferEncoding = MIME_TransferEncodings.SevenBit;
-            if (this.Entity.ContentTransferEncoding != null){
-                transferEncoding = this.Entity.ContentTransferEncoding.ToLowerInvariant();
+            if (Entity.ContentTransferEncoding != null){
+                transferEncoding = Entity.ContentTransferEncoding.ToLowerInvariant();
             }
 
             EncodedStream.Position = 0;            
@@ -169,7 +169,7 @@ namespace LumiSoft.Net.MIME
             if(transferEncoding == MIME_TransferEncodings.SevenBit){
                 return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
-            throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + this.Entity.ContentTransferEncoding + "'.");
+            throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + Entity.ContentTransferEncoding + "'.");
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ 
                 var ms = new MemoryStream();
-                Net_Utils.StreamCopy(this.GetEncodedDataStream(),ms,32000);
+                Net_Utils.StreamCopy(GetEncodedDataStream(),ms,32000);
 
                 return ms.ToArray();
             }
@@ -279,7 +279,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 var ms = new MemoryStream();
-                Net_Utils.StreamCopy(this.GetDataStream(),ms,32000);
+                Net_Utils.StreamCopy(GetDataStream(),ms,32000);
 
                 return ms.ToArray(); 
             }

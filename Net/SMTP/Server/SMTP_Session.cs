@@ -42,7 +42,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         public override void Dispose()
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -82,11 +82,11 @@ namespace LumiSoft.Net.SMTP.Server
             
             try{
                 SMTP_Reply reply = null;
-                if(string.IsNullOrEmpty(this.Server.GreetingText)){
-                    reply = new SMTP_Reply(220,"<" + Net_Utils.GetLocalHostName(this.LocalHostName) + "> Simple Mail Transfer Service Ready.");
+                if(string.IsNullOrEmpty(Server.GreetingText)){
+                    reply = new SMTP_Reply(220,"<" + Net_Utils.GetLocalHostName(LocalHostName) + "> Simple Mail Transfer Service Ready.");
                 }
                 else{
-                    reply = new SMTP_Reply(220,this.Server.GreetingText);
+                    reply = new SMTP_Reply(220,Server.GreetingText);
                 }
 
                 reply = OnStarted(reply);
@@ -111,7 +111,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <param name="x">Exception happened.</param>
         protected override void OnError(Exception x)
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
             if(x == null){
@@ -174,7 +174,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private void BeginReadCmd()
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace LumiSoft.Net.SMTP.Server
                     }
                 });
                 // Process incoming commands while, command reading completes synchronously.
-                while(this.TcpStream.ReadLine(readLineOP,m_UseAsyncSockets)){                    
+                while(TcpStream.ReadLine(readLineOP,m_UseAsyncSockets)){                    
                     if(!ProcessCmd(readLineOP)){
                         break;
                     }
@@ -209,7 +209,7 @@ namespace LumiSoft.Net.SMTP.Server
                         
             try{
                 // We are already disposed.
-                if(this.IsDisposed){
+                if(IsDisposed){
                     return false;
                 }
                 // Check errors.
@@ -218,15 +218,15 @@ namespace LumiSoft.Net.SMTP.Server
                 }
                 // Remote host shut-down(Socket.ShutDown) socket.
                 if(op.BytesInBuffer == 0){
-                    LogAddText("The remote host '" + this.RemoteEndPoint.ToString() + "' shut down socket.");
+                    LogAddText("The remote host '" + RemoteEndPoint.ToString() + "' shut down socket.");
                     Dispose();
                 
                     return false;
                 }
 
                 // Log.
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,this.LocalEndPoint,this.RemoteEndPoint);
+                if(Server.Logger != null){
+                    Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,LocalEndPoint,RemoteEndPoint);
                 }
 
                 var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new[]{' '},2);
@@ -253,7 +253,7 @@ namespace LumiSoft.Net.SMTP.Server
                 }
                 else if(cmd == "DATA"){                    
                     var cmdData = new Cmd_DATA();
-                    cmdData.CompletedAsync += delegate(object sender,EventArgs<SMTP_Session.Cmd_DATA> e){
+                    cmdData.CompletedAsync += delegate(object sender,EventArgs<Cmd_DATA> e){
                         if(op.Error != null){
                             OnError(op.Error);
                         }
@@ -289,7 +289,7 @@ namespace LumiSoft.Net.SMTP.Server
                      m_BadCommands++;
 
                      // Maximum allowed bad commands exceeded.
-                     if(this.Server.MaxBadCommands != 0 && m_BadCommands > this.Server.MaxBadCommands){
+                     if(Server.MaxBadCommands != 0 && m_BadCommands > Server.MaxBadCommands){
                          WriteLine("421 Too many bad commands, closing transmission channel.");
                          Disconnect();
                          return false;
@@ -336,7 +336,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <param name="op">Asynchronous operation.</param>
         private void ReadCommandCompleted(ReadCommandAsyncOP op)
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
             if(op == null){
@@ -403,7 +403,7 @@ namespace LumiSoft.Net.SMTP.Server
                 m_pReplyLines = null;
                 m_pSession    = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -431,7 +431,7 @@ namespace LumiSoft.Net.SMTP.Server
                     m_pSession.LogAddWrite(buffer.Length,response.ToString());
 
                     // Start response sending.
-                    m_pSession.TcpStream.BeginWrite(buffer,0,buffer.Length,this.ResponseSendingCompleted,null);
+                    m_pSession.TcpStream.BeginWrite(buffer,0,buffer.Length,ResponseSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -498,7 +498,7 @@ namespace LumiSoft.Net.SMTP.Server
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -518,8 +518,8 @@ namespace LumiSoft.Net.SMTP.Server
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<SendResponseAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<SendResponseAsyncOP>(this));
                 }
             }
         }
@@ -534,8 +534,8 @@ namespace LumiSoft.Net.SMTP.Server
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         private bool SendResponseAsync(SendResponseAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -571,7 +571,7 @@ namespace LumiSoft.Net.SMTP.Server
                 m_pException = null;
                 m_pSession   = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -735,7 +735,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// <summary>
             /// Is called when SMTP server "final" response sending has completed.
             /// </summary>
-            private void SendFinalResponseCompleted(SMTP_Session.SendResponseAsyncOP op)
+            private void SendFinalResponseCompleted(SendResponseAsyncOP op)
             {                 
                 if(op.Error != null){
                     m_pException = op.Error;
@@ -750,7 +750,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// Is called when SMTP server 354 response sending has completed.
             /// </summary>
             /// <param name="op">Asynchronous operation.</param>
-            private void Send354ResponseCompleted(SMTP_Session.SendResponseAsyncOP op)
+            private void Send354ResponseCompleted(SendResponseAsyncOP op)
             {
                 try{
                     // RFC 5321.4.4 trace info.
@@ -838,7 +838,7 @@ namespace LumiSoft.Net.SMTP.Server
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -858,8 +858,8 @@ namespace LumiSoft.Net.SMTP.Server
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<Cmd_DATA>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<Cmd_DATA>(this));
                 }
             }
         }
@@ -897,32 +897,32 @@ namespace LumiSoft.Net.SMTP.Server
             }
 
             var ehloLines = new List<string>();
-            ehloLines.Add(Net_Utils.GetLocalHostName(this.LocalHostName));
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.PIPELINING)){
+            ehloLines.Add(Net_Utils.GetLocalHostName(LocalHostName));
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions.PIPELINING)){
                 ehloLines.Add(SMTP_ServiceExtensions.PIPELINING);
             }
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.SIZE)){
-                ehloLines.Add(SMTP_ServiceExtensions.SIZE + " " + this.Server.MaxMessageSize);
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions.SIZE)){
+                ehloLines.Add(SMTP_ServiceExtensions.SIZE + " " + Server.MaxMessageSize);
             }
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.STARTTLS) && !this.IsSecureConnection && this.Certificate != null){
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions.STARTTLS) && !IsSecureConnection && Certificate != null){
                 ehloLines.Add(SMTP_ServiceExtensions.STARTTLS);
             }
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions._8BITMIME)){
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions._8BITMIME)){
                 ehloLines.Add(SMTP_ServiceExtensions._8BITMIME);
             }
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.BINARYMIME)){
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions.BINARYMIME)){
                 ehloLines.Add(SMTP_ServiceExtensions.BINARYMIME);
             }
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.CHUNKING)){
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions.CHUNKING)){
                 ehloLines.Add(SMTP_ServiceExtensions.CHUNKING);
             }
-            if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN)){
+            if(Server.Extentions.Contains(SMTP_ServiceExtensions.DSN)){
                 ehloLines.Add(SMTP_ServiceExtensions.DSN);
             }
             
             var sasl = new StringBuilder();
-            foreach (AUTH_SASL_ServerMechanism authMechanism in this.Authentications.Values){
-                if(!authMechanism.RequireSSL || (authMechanism.RequireSSL && this.IsSecureConnection)){
+            foreach (AUTH_SASL_ServerMechanism authMechanism in Authentications.Values){
+                if(!authMechanism.RequireSSL || (authMechanism.RequireSSL && IsSecureConnection)){
                     sasl.Append(authMechanism.Name + " ");
                 }
             }
@@ -971,7 +971,7 @@ namespace LumiSoft.Net.SMTP.Server
                 return;
             }
 
-            var reply = new SMTP_Reply(250,Net_Utils.GetLocalHostName(this.LocalHostName));
+            var reply = new SMTP_Reply(250,Net_Utils.GetLocalHostName(LocalHostName));
 
             reply = OnEhlo(cmdText,reply);
 
@@ -1045,11 +1045,11 @@ namespace LumiSoft.Net.SMTP.Server
                 WriteLine("501 Syntax error: No parameters allowed.");
                 return;
             }
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 WriteLine("503 Bad sequence of commands: Connection is already secure.");
                 return;
             }
-            if(this.Certificate == null){
+            if(Certificate == null){
                 WriteLine("454 TLS not available: Server has no SSL certificate.");
                 return;
             }
@@ -1115,7 +1115,7 @@ namespace LumiSoft.Net.SMTP.Server
                 such a response, it MUST reject the AUTH command by sending a 501 reply.
 			*/
             
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				WriteLine("503 Bad sequence of commands: you are already authenticated.");
 				return;
 			}
@@ -1146,13 +1146,13 @@ namespace LumiSoft.Net.SMTP.Server
             }
             var mechanism = arguments[0];
 
-            if (!this.Authentications.ContainsKey(mechanism)){
+            if (!Authentications.ContainsKey(mechanism)){
                 WriteLine("501 Not supported authentication mechanism.");
                 return;
             }
 
             var clientResponse = initialClientResponse;
-            var auth = this.Authentications[mechanism];
+            var auth = Authentications[mechanism];
             auth.Reset();
             while(true){
                 var serverResponse = auth.Continue(clientResponse);
@@ -1180,13 +1180,13 @@ namespace LumiSoft.Net.SMTP.Server
 
                 // Read client response. 
                 var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                this.TcpStream.ReadLine(readLineOP,false);
+                TcpStream.ReadLine(readLineOP,false);
                 if(readLineOP.Error != null){
                     throw readLineOP.Error;
                 }                    
                 // Log
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
+                if(Server.Logger != null){
+                    Server.Logger.AddRead(ID,AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",LocalEndPoint,RemoteEndPoint);
                 }
 
                 // Client canceled authentication.
@@ -1228,7 +1228,7 @@ namespace LumiSoft.Net.SMTP.Server
                 WriteLine("503 Bad sequence of commands: BDAT command is pending.");
                 return;
             }
-            if(this.Server.MaxTransactions != 0 && m_Transactions >= this.Server.MaxTransactions){
+            if(Server.MaxTransactions != 0 && m_Transactions >= Server.MaxTransactions){
                 WriteLine("503 Bad sequence of commands: Maximum allowed mail transactions exceeded.");
                 return;
             }
@@ -1286,7 +1286,7 @@ namespace LumiSoft.Net.SMTP.Server
                 var name_value = parameter.Split(new[]{'='},2);
 
                 // SIZE
-                if (this.Server.Extentions.Contains(SMTP_ServiceExtensions.SIZE) && name_value[0].ToUpper() == "SIZE"){
+                if (Server.Extentions.Contains(SMTP_ServiceExtensions.SIZE) && name_value[0].ToUpper() == "SIZE"){
                     // RFC 1870.
                     //  size-value ::= 1*20DIGIT
                     if(name_value.Length == 1){
@@ -1299,13 +1299,13 @@ namespace LumiSoft.Net.SMTP.Server
                     }
 
                     // Message size exceeds maximum allowed message size.
-                    if(size > this.Server.MaxMessageSize){
+                    if(size > Server.MaxMessageSize){
                         WriteLine("552 Message exceeds fixed maximum message size.");
                         return;
                     }
                 }
                 // BODY
-                else if(this.Server.Extentions.Contains(SMTP_ServiceExtensions._8BITMIME) && name_value[0].ToUpper() == "BODY"){
+                else if(Server.Extentions.Contains(SMTP_ServiceExtensions._8BITMIME) && name_value[0].ToUpper() == "BODY"){
                     // RFC 1652.
                     //  body-value ::= "7BIT" / "8BITMIME" / "BINARYMIME"
                     //
@@ -1321,7 +1321,7 @@ namespace LumiSoft.Net.SMTP.Server
                     body = name_value[1].ToUpper();
                 }
                 // RET
-                else if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "RET")
+                else if(Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "RET")
                 {
                     // RFC 3461 4.3.
                     //  ret-value = "FULL" / "HDRS"
@@ -1342,7 +1342,7 @@ namespace LumiSoft.Net.SMTP.Server
                     }
                 }
                 // ENVID
-                else if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "ENVID"){
+                else if(Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "ENVID"){
                     // RFC 3461 4.4.
                     //  envid-parameter = "ENVID=" xtext
                     if(name_value.Length == 1){
@@ -1457,7 +1457,7 @@ namespace LumiSoft.Net.SMTP.Server
                 var name_value = parameter.Split(new[]{'='},2);
 
                 // NOTIFY
-                if (this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "NOTIFY"){
+                if (Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "NOTIFY"){
                     /* RFC 1891 5.1.
                         notify-esmtp-value  = "NEVER" / 1#notify-list-element
                         notify-list-element = "SUCCESS" / "FAILURE" / "DELAY"
@@ -1491,7 +1491,7 @@ namespace LumiSoft.Net.SMTP.Server
                     }
                 }
                 // ORCPT
-                else if(this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "ORCPT"){
+                else if(Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "ORCPT"){
                     if(name_value.Length == 1){
                         WriteLine("501 Syntax error: ORCPT parameter value must be specified.");
                         return;
@@ -1505,7 +1505,7 @@ namespace LumiSoft.Net.SMTP.Server
             }
 
             // Maximum allowed recipients exceeded.
-            if(m_pTo.Count >= this.Server.MaxRecipients){
+            if(m_pTo.Count >= Server.MaxRecipients){
                 WriteLine("452 Too many recipients");
                 return;
             }
@@ -1614,7 +1614,7 @@ namespace LumiSoft.Net.SMTP.Server
             // Create asynchronous read period-terminated opeartion.
             var readPeriodTermOP = new SmartStream.ReadPeriodTerminatedAsyncOP(
                 m_pMessageStream,
-                this.Server.MaxMessageSize,
+                Server.MaxMessageSize,
                 SizeExceededAction.JunkAndThrowException
             );
             // This event is raised only if read period-terminated opeartion completes asynchronously.
@@ -1622,7 +1622,7 @@ namespace LumiSoft.Net.SMTP.Server
                 DATA_End(startTime,readPeriodTermOP);
             });
             // Read period-terminated completed synchronously.
-            if(this.TcpStream.ReadPeriodTerminated(readPeriodTermOP,true)){
+            if(TcpStream.ReadPeriodTerminated(readPeriodTermOP,true)){
                 DATA_End(startTime,readPeriodTermOP);
 
                 return true;
@@ -1752,22 +1752,22 @@ namespace LumiSoft.Net.SMTP.Server
 
             var storeStream = m_pMessageStream;
             // Maximum allowed message size exceeded.
-            if ((m_BDatReadedCount + chunkSize) > this.Server.MaxMessageSize){
+            if ((m_BDatReadedCount + chunkSize) > Server.MaxMessageSize){
                 storeStream = new JunkingStream();
             }
 
             // Read data block.
-            this.TcpStream.BeginReadFixedCount(
+            TcpStream.BeginReadFixedCount(
                 storeStream,
                 chunkSize,
                 new AsyncCallback(delegate(IAsyncResult ar){
                     try{
-                        this.TcpStream.EndReadFixedCount(ar);
+                        TcpStream.EndReadFixedCount(ar);
 
                         m_BDatReadedCount += chunkSize;
 
                         // Maximum allowed message size exceeded.
-                        if(m_BDatReadedCount > this.Server.MaxMessageSize){
+                        if(m_BDatReadedCount > Server.MaxMessageSize){
                             WriteLine("552 Too much mail data.");
 
                             OnMessageStoringCanceled();            
@@ -1868,7 +1868,7 @@ namespace LumiSoft.Net.SMTP.Server
             */
 
             try{
-                WriteLine("221 <" + Net_Utils.GetLocalHostName(this.LocalHostName) + "> Service closing transmission channel.");                
+                WriteLine("221 <" + Net_Utils.GetLocalHostName(LocalHostName) + "> Service closing transmission channel.");                
             }
             catch{
             }
@@ -1881,7 +1881,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private void Reset()
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -1920,19 +1920,19 @@ namespace LumiSoft.Net.SMTP.Server
                 ESMTPSA              ESMTP with both STARTTLS and SMTP AUTH     [RFC3848]
             */
 
-            var received = new LumiSoft.Net.Mail.Mail_h_Received(this.EhloHost,Net_Utils.GetLocalHostName(this.LocalHostName),DateTime.Now);
-            received.From_TcpInfo = new LumiSoft.Net.Mail.Mail_t_TcpInfo(this.RemoteEndPoint.Address,null);
+            var received = new Mail.Mail_h_Received(EhloHost,Net_Utils.GetLocalHostName(LocalHostName),DateTime.Now);
+            received.From_TcpInfo = new Mail.Mail_t_TcpInfo(RemoteEndPoint.Address,null);
             received.Via = "TCP";
-            if(!this.IsAuthenticated && !this.IsSecureConnection){
+            if(!IsAuthenticated && !IsSecureConnection){
                 received.With = "ESMTP";
             }
-            else if(this.IsAuthenticated && !this.IsSecureConnection){
+            else if(IsAuthenticated && !IsSecureConnection){
                 received.With = "ESMTPA";
             }
-            else if(!this.IsAuthenticated && this.IsSecureConnection){
+            else if(!IsAuthenticated && IsSecureConnection){
                 received.With = "ESMTPS";
             }
-            else if(this.IsAuthenticated && this.IsSecureConnection){
+            else if(IsAuthenticated && IsSecureConnection){
                 received.With = "ESMTPSA";
             }
             
@@ -1949,11 +1949,11 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("line");
             }
 
-            int countWritten = this.TcpStream.WriteLine(line);
+            int countWritten = TcpStream.WriteLine(line);
 
             // Log.
-            if(this.Server.Logger != null){
-                this.Server.Logger.AddWrite(this.ID,this.AuthenticatedUserIdentity,countWritten,line,this.LocalEndPoint,this.RemoteEndPoint);
+            if(Server.Logger != null){
+                Server.Logger.AddWrite(ID,AuthenticatedUserIdentity,countWritten,line,LocalEndPoint,RemoteEndPoint);
             }
         }
 
@@ -1965,14 +1965,14 @@ namespace LumiSoft.Net.SMTP.Server
         public void LogAddRead(long size,string text)
         {
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddRead(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                if(Server.Logger != null){
+                    Server.Logger.AddRead(
+                        ID,
+                        AuthenticatedUserIdentity,
                         size,
                         text,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint
+                        LocalEndPoint,
+                        RemoteEndPoint
                     );
                 }
             }
@@ -1989,14 +1989,14 @@ namespace LumiSoft.Net.SMTP.Server
         public void LogAddWrite(long size,string text)
         {
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddWrite(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                if(Server.Logger != null){
+                    Server.Logger.AddWrite(
+                        ID,
+                        AuthenticatedUserIdentity,
                         size,
                         text,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint
+                        LocalEndPoint,
+                        RemoteEndPoint
                     );
                 }
             }
@@ -2012,13 +2012,13 @@ namespace LumiSoft.Net.SMTP.Server
         public void LogAddText(string text)
         {
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddText(
-                        this.IsConnected ? this.ID : "",
-                        this.IsConnected ? this.AuthenticatedUserIdentity : null,
+                if(Server.Logger != null){
+                    Server.Logger.AddText(
+                        IsConnected ? ID : "",
+                        IsConnected ? AuthenticatedUserIdentity : null,
                         text,                        
-                        this.IsConnected ? this.LocalEndPoint : null,
-                        this.IsConnected ? this.RemoteEndPoint : null
+                        IsConnected ? LocalEndPoint : null,
+                        IsConnected ? RemoteEndPoint : null
                     );
                 }
             }
@@ -2035,13 +2035,13 @@ namespace LumiSoft.Net.SMTP.Server
         public void LogAddException(string text,Exception x)
         {
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddException(
-                        this.IsConnected ? this.ID : "",
-                        this.IsConnected ? this.AuthenticatedUserIdentity : null,
+                if(Server.Logger != null){
+                    Server.Logger.AddException(
+                        IsConnected ? ID : "",
+                        IsConnected ? AuthenticatedUserIdentity : null,
                         text,                        
-                        this.IsConnected ? this.LocalEndPoint : null,
-                        this.IsConnected ? this.RemoteEndPoint : null,
+                        IsConnected ? LocalEndPoint : null,
+                        IsConnected ? RemoteEndPoint : null,
                         x
                     );
                 }
@@ -2058,8 +2058,8 @@ namespace LumiSoft.Net.SMTP.Server
         public new SMTP_Server Server
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return (SMTP_Server)base.Server;
@@ -2073,8 +2073,8 @@ namespace LumiSoft.Net.SMTP.Server
         public Dictionary<string,AUTH_SASL_ServerMechanism> Authentications
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pAuthentications; 
@@ -2088,8 +2088,8 @@ namespace LumiSoft.Net.SMTP.Server
         public int BadCommands
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_BadCommands; 
@@ -2103,8 +2103,8 @@ namespace LumiSoft.Net.SMTP.Server
         public int Transactions
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_Transactions; 
@@ -2118,8 +2118,8 @@ namespace LumiSoft.Net.SMTP.Server
         public string EhloHost
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_EhloHost; 
@@ -2133,8 +2133,8 @@ namespace LumiSoft.Net.SMTP.Server
         public override GenericIdentity AuthenticatedUserIdentity
         {
 	        get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
 		        return m_pUser;
@@ -2148,8 +2148,8 @@ namespace LumiSoft.Net.SMTP.Server
         public SMTP_MailFrom From
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pFrom; 
@@ -2163,8 +2163,8 @@ namespace LumiSoft.Net.SMTP.Server
         public SMTP_RcptTo[] To
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 lock(m_pTo){
@@ -2186,17 +2186,17 @@ namespace LumiSoft.Net.SMTP.Server
 		public bool UseAsyncSockets
 		{
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
 				return m_UseAsyncSockets;
 			}
 
 			set{
-				if (this.IsDisposed)
+				if (IsDisposed)
 				{
-					throw new ObjectDisposedException(this.GetType().Name);
+					throw new ObjectDisposedException(GetType().Name);
 				}
 
 				m_UseAsyncSockets = value;
@@ -2215,9 +2215,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns SMTP server reply what must be sent to the connected client.</returns>
         private SMTP_Reply OnStarted(SMTP_Reply reply)
         {
-            if(this.Started != null){
+            if(Started != null){
                 var eArgs = new SMTP_e_Started(this,reply);
-                this.Started(this,eArgs);
+                Started(this,eArgs);
 
                 return eArgs.Reply;
             }
@@ -2238,9 +2238,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns SMTP server reply what must be sent to the connected client.</returns>
         private SMTP_Reply OnEhlo(string domain,SMTP_Reply reply)
         {
-            if(this.Ehlo != null){
+            if(Ehlo != null){
                 var eArgs = new SMTP_e_Ehlo(this,domain,reply);
-                this.Ehlo(this,eArgs);
+                Ehlo(this,eArgs);
 
                 return eArgs.Reply;
             }
@@ -2261,9 +2261,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns SMTP server reply what must be sent to the connected client.</returns>
         private SMTP_Reply OnMailFrom(SMTP_MailFrom from,SMTP_Reply reply)
         {
-            if(this.MailFrom != null){
+            if(MailFrom != null){
                 var eArgs = new SMTP_e_MailFrom(this,from,reply);
-                this.MailFrom(this,eArgs);
+                MailFrom(this,eArgs);
 
                 return eArgs.Reply;
             }
@@ -2284,9 +2284,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns SMTP server reply what must be sent to the connected client.</returns>
         private SMTP_Reply OnRcptTo(SMTP_RcptTo to,SMTP_Reply reply)
         {
-            if(this.RcptTo != null){
+            if(RcptTo != null){
                 var eArgs = new SMTP_e_RcptTo(this,to,reply);
-                this.RcptTo(this,eArgs);
+                RcptTo(this,eArgs);
 
                 return eArgs.Reply;
             }
@@ -2305,9 +2305,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns message store stream.</returns>
         private Stream OnGetMessageStream()
         {
-            if(this.GetMessageStream != null){
+            if(GetMessageStream != null){
                 var eArgs = new SMTP_e_Message(this);
-                this.GetMessageStream(this,eArgs);
+                GetMessageStream(this,eArgs);
 
                 return eArgs.Stream;
             }
@@ -2326,8 +2326,8 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private void OnMessageStoringCanceled()
         {
-            if(this.MessageStoringCanceled != null){
-                this.MessageStoringCanceled(this,new EventArgs());
+            if(MessageStoringCanceled != null){
+                MessageStoringCanceled(this,new EventArgs());
             }
         }
 
@@ -2343,9 +2343,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <returns>Returns SMTP server reply what must be sent to the connected client.</returns>
         private SMTP_Reply OnMessageStoringCompleted(SMTP_Reply reply)
         {
-            if(this.MessageStoringCompleted != null){
+            if(MessageStoringCompleted != null){
                 var eArgs = new SMTP_e_MessageStored(this,m_pMessageStream,reply);
-                this.MessageStoringCompleted(this,eArgs);
+                MessageStoringCompleted(this,eArgs);
 
                 return eArgs.Reply;
             }

@@ -115,7 +115,7 @@ namespace LumiSoft.Net.SIP.Message
         public string ID
         {
             get{ 
-                var parameter = this.Parameters["id"];
+                var parameter = Parameters["id"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -125,10 +125,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("id");
+                    Parameters.Remove("id");
                 }
                 else{
-                    this.Parameters.Set("id",value);
+                    Parameters.Set("id",value);
                 }
             }
         }

@@ -33,7 +33,7 @@ namespace LumiSoft.Net.SIP.Debug
         public wfrm_SIP_Debug(SIP_Stack stack)
         {
             m_pStack = stack ?? throw new ArgumentNullException("stack");
-            m_pStack.Logger.WriteLog += new EventHandler<LumiSoft.Net.Log.WriteLogEventArgs>(Logger_WriteLog);
+            m_pStack.Logger.WriteLog += new EventHandler<Log.WriteLogEventArgs>(Logger_WriteLog);
 
             InitUI();
         }
@@ -43,9 +43,9 @@ namespace LumiSoft.Net.SIP.Debug
         /// </summary>
         private void InitUI()
         {
-            this.ClientSize = new Size(600,300);
-            this.Text = "SIP Debug";
-            this.FormClosed += new FormClosedEventHandler(wfrm_Debug_FormClosed);
+            ClientSize = new Size(600,300);
+            Text = "SIP Debug";
+            FormClosed += new FormClosedEventHandler(wfrm_Debug_FormClosed);
                         
             m_pTab = new TabControl();
             m_pTab.Dock = DockStyle.Fill;
@@ -159,7 +159,7 @@ namespace LumiSoft.Net.SIP.Debug
             m_pTabFlows_List.Columns.Add("Public EP",130);
             m_pTab.TabPages["flows"].Controls.Add(m_pTabFlows_List);
 
-            this.Controls.Add(m_pTab);
+            Controls.Add(m_pTab);
         }
 
         /// <summary>
@@ -167,9 +167,9 @@ namespace LumiSoft.Net.SIP.Debug
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Event data.</param>
-        private void Logger_WriteLog(object sender,LumiSoft.Net.Log.WriteLogEventArgs e)
+        private void Logger_WriteLog(object sender,Log.WriteLogEventArgs e)
         {
-            if(!this.Visible){
+            if(!Visible){
                 return;
             }
 
@@ -339,7 +339,7 @@ namespace LumiSoft.Net.SIP.Debug
         /// <param name="e">Event data.</param>
         private void wfrm_Debug_FormClosed(object sender,FormClosedEventArgs e)
         {
-            m_pStack.Logger.WriteLog -= new EventHandler<LumiSoft.Net.Log.WriteLogEventArgs>(Logger_WriteLog);
+            m_pStack.Logger.WriteLog -= new EventHandler<Log.WriteLogEventArgs>(Logger_WriteLog);
         }
 
         /// <summary>

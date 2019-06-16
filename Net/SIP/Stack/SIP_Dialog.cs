@@ -185,13 +185,13 @@ namespace LumiSoft.Net.SIP.Stack
         public virtual void Dispose()
         {
             lock(SyncRoot){
-                if(this.State == SIP_DialogState.Disposed){
+                if(State == SIP_DialogState.Disposed){
                     return;
                 }
 
                 SetState(SIP_DialogState.Disposed,true);
    
-                this.RequestReceived = null;
+                RequestReceived = null;
                 m_pStack             = null;
                 m_CallID             = null;
                 m_LocalTag           = null;
@@ -212,11 +212,11 @@ namespace LumiSoft.Net.SIP.Stack
         public void Terminate()
         {
             lock(SyncRoot){
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                this.SetState(SIP_DialogState.Terminated,true);
+                SetState(SIP_DialogState.Terminated,true);
             }
         }
 
@@ -230,8 +230,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns created request.</returns>
         public SIP_Request CreateRequest(string method)
         {
-            if(this.State == SIP_DialogState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(State == SIP_DialogState.Disposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(method == null){
                 throw new ArgumentNullException("method");
@@ -374,8 +374,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_RequestSender CreateRequestSender(SIP_Request request)
         {
             lock(SyncRoot){
-                if(this.State == SIP_DialogState.Terminated){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Terminated){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(request == null){
                     throw new ArgumentNullException("request");
@@ -383,7 +383,7 @@ namespace LumiSoft.Net.SIP.Stack
 
                 // TODO: Request sender must use dialog sequence numbering if authentication done.
                
-                var sender = m_pStack.CreateRequestSender(request,this.Flow);
+                var sender = m_pStack.CreateRequestSender(request,Flow);
 
                 return sender;
             }
@@ -477,7 +477,7 @@ namespace LumiSoft.Net.SIP.Stack
                 m_RemoteSeqNo = e.Request.CSeq.SequenceNumber;
             }
             else if(e.Request.CSeq.SequenceNumber < m_RemoteSeqNo){
-                e.ServerTransaction.SendResponse(this.Stack.CreateResponse(SIP_ResponseCodes.x500_Server_Internal_Error + ": The mid-dialog request is out of order(late arriving request).",e.Request));
+                e.ServerTransaction.SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x500_Server_Internal_Error + ": The mid-dialog request is out of order(late arriving request).",e.Request));
 
                 return true;
             }
@@ -550,8 +550,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Stack Stack
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pStack; 
@@ -565,8 +565,8 @@ namespace LumiSoft.Net.SIP.Stack
         public DateTime CreateTime
         {
             get{
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_CreateTime; 
@@ -580,11 +580,11 @@ namespace LumiSoft.Net.SIP.Stack
         public string ID
         {
             get{
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return this.CallID + "-" + this.LocalTag + "-" + this.RemoteTag; 
+                return CallID + "-" + LocalTag + "-" + RemoteTag; 
             }
         }
 
@@ -595,8 +595,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string CallID
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_CallID; 
@@ -610,8 +610,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string LocalTag
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LocalTag; 
@@ -625,8 +625,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string RemoteTag
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_RemoteTag;
@@ -640,8 +640,8 @@ namespace LumiSoft.Net.SIP.Stack
         public int LocalSeqNo
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LocalSeqNo;
@@ -655,8 +655,8 @@ namespace LumiSoft.Net.SIP.Stack
         public int RemoteSeqNo
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_RemoteSeqNo; 
@@ -670,8 +670,8 @@ namespace LumiSoft.Net.SIP.Stack
         public AbsoluteUri LocalUri
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pLocalUri; 
@@ -685,8 +685,8 @@ namespace LumiSoft.Net.SIP.Stack
         public AbsoluteUri RemoteUri
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRemoteUri; 
@@ -700,8 +700,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Uri LocalContact
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pLocalContact;
@@ -715,8 +715,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Uri RemoteTarget
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRemoteTarget;
@@ -730,8 +730,8 @@ namespace LumiSoft.Net.SIP.Stack
         public bool IsSecure
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_IsSecure; 
@@ -745,8 +745,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_t_AddressParam[] RouteSet
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRouteSet; 
@@ -759,8 +759,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string[] RemoteAllow
         {
             get{
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRemoteAllow;
@@ -773,8 +773,8 @@ namespace LumiSoft.Net.SIP.Stack
         public string[] RemoteSupported
         {
             get{
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRemoteSupported;
@@ -788,8 +788,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Flow Flow
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pFlow; 
@@ -803,8 +803,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Transaction[] Transactions
         {
             get{ 
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pTransactions.ToArray(); 
@@ -821,8 +821,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnStateChanged()
         {
-            if(this.StateChanged != null){
-                this.StateChanged(this,new EventArgs());
+            if(StateChanged != null){
+                StateChanged(this,new EventArgs());
             }
         }
 
@@ -837,8 +837,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event args.</param>
         private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {
-            if(this.RequestReceived != null){
-                this.RequestReceived(this,e);
+            if(RequestReceived != null){
+                RequestReceived(this,e);
             }
         }
     }

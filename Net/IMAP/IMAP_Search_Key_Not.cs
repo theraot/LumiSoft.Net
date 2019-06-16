@@ -38,7 +38,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ParseException("Parse error: Not a SEARCH 'NOT' key.");
             }
 
-            return new IMAP_Search_Key_Not(IMAP_Search_Key.ParseKey(r));
+            return new IMAP_Search_Key_Not(ParseKey(r));
         }
 
         /// <summary>

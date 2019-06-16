@@ -222,7 +222,7 @@ namespace LumiSoft.Net.SIP
                 throw new ArgumentNullException("value");
             }
 
-            return LumiSoft.Net.MIME.MIME_Reader.IsToken(value);
+            return MIME.MIME_Reader.IsToken(value);
         }
 
         /// <summary>

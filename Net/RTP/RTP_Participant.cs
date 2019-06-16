@@ -36,9 +36,9 @@ namespace LumiSoft.Net.RTP
         {
             m_pSources = null;
 
-            this.Removed = null;
-            this.SourceAdded = null;
-            this.SourceRemoved = null;
+            Removed = null;
+            SourceAdded = null;
+            SourceRemoved = null;
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnRemoved()
         {
-            if(this.Removed != null){
-                this.Removed(this,new EventArgs());
+            if(Removed != null){
+                Removed(this,new EventArgs());
             }
         }
 
@@ -119,8 +119,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("source");
             }
 
-            if(this.SourceAdded != null){
-                this.SourceAdded(this,new RTP_SourceEventArgs(source));
+            if(SourceAdded != null){
+                SourceAdded(this,new RTP_SourceEventArgs(source));
             }
         }
 
@@ -139,8 +139,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("source");
             }
 
-            if(this.SourceRemoved != null){
-                this.SourceRemoved(this,new RTP_SourceEventArgs(source));
+            if(SourceRemoved != null){
+                SourceRemoved(this,new RTP_SourceEventArgs(source));
             }
         }
     }

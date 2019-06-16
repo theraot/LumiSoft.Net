@@ -61,7 +61,7 @@ namespace LumiSoft.Net.IO
                 m_pOwner       = null;
                 m_pBuffer      = null;
                 m_pException   = null;
-                this.Completed = null;
+                Completed = null;
             }
 
             /// <summary>
@@ -124,7 +124,7 @@ namespace LumiSoft.Net.IO
                         // Read buffer empty, buff next data block.
                         if(m_pOwner.BytesInReadBuffer == 0){
                             // Buffering started asynchronously.
-                            if(m_pOwner.BufferRead(async,this.Buffering_Completed)){
+                            if(m_pOwner.BufferRead(async,Buffering_Completed)){
                                 return false;
                             }
                             // Buffering completed synchronously, continue processing.
@@ -199,7 +199,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompleted; 
@@ -214,7 +214,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompletedSync; 
@@ -234,7 +234,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pBuffer; 
@@ -249,7 +249,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_BytesInBuffer; 
@@ -264,7 +264,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     int retVal = m_BytesInBuffer;
@@ -295,14 +295,14 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    if(this.BytesInBuffer == 0){
+                    if(BytesInBuffer == 0){
                         return null;
                     }
 
-                    return Encoding.ASCII.GetString(m_pBuffer,0,this.LineBytesInBuffer);
+                    return Encoding.ASCII.GetString(m_pBuffer,0,LineBytesInBuffer);
                 }
             }
 
@@ -314,14 +314,14 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    if(this.BytesInBuffer == 0){
+                    if(BytesInBuffer == 0){
                         return null;
                     }
 
-                    return Encoding.UTF8.GetString(m_pBuffer,0,this.LineBytesInBuffer);
+                    return Encoding.UTF8.GetString(m_pBuffer,0,LineBytesInBuffer);
                 }
             }
 
@@ -333,14 +333,14 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    if(this.BytesInBuffer == 0){
+                    if(BytesInBuffer == 0){
                         return null;
                     }
 
-                    return Encoding.UTF32.GetString(m_pBuffer,0,this.LineBytesInBuffer);
+                    return Encoding.UTF32.GetString(m_pBuffer,0,LineBytesInBuffer);
                 }
             }
 
@@ -352,7 +352,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
     
                     return m_pException; 
@@ -371,8 +371,8 @@ namespace LumiSoft.Net.IO
             {
                 m_IsCompleted = true;
 
-                if(this.Completed != null){
-                    this.Completed(this,new EventArgs<ReadLineAsyncOP>(this));
+                if(Completed != null){
+                    Completed(this,new EventArgs<ReadLineAsyncOP>(this));
                 }
             }
         }
@@ -434,7 +434,7 @@ namespace LumiSoft.Net.IO
                 m_pReadLineOP.Dispose();
                 m_pReadLineOP  = null;
                 m_pException   = null;
-                this.Completed = null;
+                Completed = null;
             }
 
             /// <summary>
@@ -564,7 +564,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompleted; 
@@ -579,7 +579,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompletedSync; 
@@ -593,7 +593,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pStream; 
@@ -608,7 +608,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_BytesStored; 
@@ -623,7 +623,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_LinesStored; 
@@ -638,7 +638,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
     
                     return m_pException; 
@@ -657,8 +657,8 @@ namespace LumiSoft.Net.IO
             {
                 m_IsCompleted = true;
 
-                if(this.Completed != null){
-                    this.Completed(this,new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
+                if(Completed != null){
+                    Completed(this,new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
                 }
             }
         }
@@ -707,7 +707,7 @@ namespace LumiSoft.Net.IO
 
                 m_pOwner       = null;
                 m_pBuffer      = null;
-                this.Completed = null;
+                Completed = null;
             }
 
             /// <summary>
@@ -723,7 +723,7 @@ namespace LumiSoft.Net.IO
             internal bool Start(bool async,byte[] buffer,int count)
             {
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(buffer == null){
                     throw new ArgumentNullException("buffer");
@@ -775,7 +775,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             internal void ReleaseEvents()
             {
-                this.Completed = null;
+                Completed = null;
             }
 
             /// <summary>
@@ -794,7 +794,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompleted; 
@@ -809,7 +809,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompletedSync; 
@@ -824,7 +824,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pBuffer; 
@@ -839,7 +839,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_BytesInBuffer; 
@@ -854,7 +854,7 @@ namespace LumiSoft.Net.IO
             {
                 get{
                     if(m_IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pException; 
@@ -871,8 +871,8 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompleted()
             {
-                if(this.Completed != null){
-                    this.Completed(this,new EventArgs<BufferReadAsyncOP>(this));
+                if(Completed != null){
+                    Completed(this,new EventArgs<BufferReadAsyncOP>(this));
                 }
             }
         }
@@ -950,7 +950,7 @@ namespace LumiSoft.Net.IO
                 while(true){                        
                     // Read buffer empty, buff next data block.
                     if(m_ReadBufferOffset >= m_ReadBufferCount){                        
-                        this.BufferRead(false,null);
+                        BufferRead(false,null);
                         
                         // We reached end of stream, no more data.
                         if(m_ReadBufferCount == 0){                                    
@@ -1010,7 +1010,7 @@ namespace LumiSoft.Net.IO
         public IAsyncResult BeginReadHeader(Stream storeStream,int maxCount,SizeExceededAction exceededAction,AsyncCallback callback,object state)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(storeStream == null){
                 throw new ArgumentNullException("storeStream");
@@ -1072,7 +1072,7 @@ namespace LumiSoft.Net.IO
         public int ReadHeader(Stream storeStream,int maxCount,SizeExceededAction exceededAction)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(storeStream == null){
                 throw new ArgumentNullException("storeStream");
@@ -1131,7 +1131,7 @@ namespace LumiSoft.Net.IO
         public IAsyncResult BeginReadFixedCount(Stream storeStream,long count,AsyncCallback callback,object state)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(storeStream == null){
                 throw new ArgumentNullException("storeStream");
@@ -1182,7 +1182,7 @@ namespace LumiSoft.Net.IO
         public void ReadFixedCount(Stream storeStream,long count)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(storeStream == null){
                 throw new ArgumentNullException("storeStream");
@@ -1206,7 +1206,7 @@ namespace LumiSoft.Net.IO
         public string ReadFixedCountString(int count)
         {    
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }        
             if(count < 0){
                 throw new ArgumentException("Argument 'count' value must be >= 0.");
@@ -1227,7 +1227,7 @@ namespace LumiSoft.Net.IO
         public void ReadAll(Stream stream)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(stream == null){
                 throw new ArgumentNullException("stream");
@@ -1253,14 +1253,14 @@ namespace LumiSoft.Net.IO
         public int Peek()
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(this.BytesInReadBuffer == 0){
+            if(BytesInReadBuffer == 0){
                 BufferRead(false,null);
             }
 
             // We are end of stream.
-            if(this.BytesInReadBuffer == 0){
+            if(BytesInReadBuffer == 0){
                 return -1;
             }
 
@@ -1276,7 +1276,7 @@ namespace LumiSoft.Net.IO
         public void Write(string data)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(data == null){
                 throw new ArgumentNullException("data");
@@ -1297,7 +1297,7 @@ namespace LumiSoft.Net.IO
         public int WriteLine(string line)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(line == null){
                 throw new ArgumentNullException("line");
@@ -1323,7 +1323,7 @@ namespace LumiSoft.Net.IO
         public void WriteStream(Stream stream)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(stream == null){
                 throw new ArgumentNullException("stream");
@@ -1352,7 +1352,7 @@ namespace LumiSoft.Net.IO
         public void WriteStream(Stream stream,long count)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(stream == null){
                 throw new ArgumentNullException("stream");
@@ -1413,7 +1413,7 @@ namespace LumiSoft.Net.IO
                 m_pOwner     = null;
                 m_pBuffer    = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1482,7 +1482,7 @@ namespace LumiSoft.Net.IO
                                 break;
                             }
                             // Error happened in ProcessReadDataResult method.
-                            if(this.State != AsyncOP_State.Active){
+                            if(State != AsyncOP_State.Active){
                                 break;
                             }
                         }
@@ -1580,7 +1580,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1599,7 +1599,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1622,8 +1622,8 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<WriteStreamAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<WriteStreamAsyncOP>(this));
                 }
             }
         }
@@ -1638,8 +1638,8 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool WriteStreamAsync(WriteStreamAsyncOP op)
         {
-            if(this.m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(m_IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -1662,7 +1662,7 @@ namespace LumiSoft.Net.IO
         public long WritePeriodTerminated(Stream stream)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(stream == null){
                 throw new ArgumentNullException("stream");
@@ -1673,7 +1673,7 @@ namespace LumiSoft.Net.IO
             op.CompletedAsync += delegate(object s1,EventArgs<WritePeriodTerminatedAsyncOP> e1){
                 wait.Set();
             };
-            if(!this.WritePeriodTerminatedAsync(op)){
+            if(!WritePeriodTerminatedAsync(op)){
                 wait.Set();
             }
             wait.WaitOne();
@@ -1729,7 +1729,7 @@ namespace LumiSoft.Net.IO
                 m_pOwner      = null;
                 m_pReadLineOP = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1805,12 +1805,12 @@ namespace LumiSoft.Net.IO
                             // Line ends CRLF.
                             if(m_EndsCRLF){
                                 m_BytesWritten += 3;
-                                m_pOwner.BeginWrite(new[]{(byte)'.',(byte)'\r',(byte)'\n'},0,3,this.SendTerminatorCompleted,null);
+                                m_pOwner.BeginWrite(new[]{(byte)'.',(byte)'\r',(byte)'\n'},0,3,SendTerminatorCompleted,null);
                             }
                             // Line doesn't end CRLF, we need to add it.
                             else{
                                 m_BytesWritten += 5;
-                                m_pOwner.BeginWrite(new[]{(byte)'\r',(byte)'\n',(byte)'.',(byte)'\r',(byte)'\n'},0,5,this.SendTerminatorCompleted,null);
+                                m_pOwner.BeginWrite(new[]{(byte)'\r',(byte)'\n',(byte)'.',(byte)'\r',(byte)'\n'},0,5,SendTerminatorCompleted,null);
                             }
 
                             op.Dispose();
@@ -1833,11 +1833,11 @@ namespace LumiSoft.Net.IO
                                 buffer[0] = (byte)'.';
                                 Array.Copy(op.Buffer,0,buffer,1,op.BytesInBuffer);
 
-                                m_pOwner.BeginWrite(buffer,0,buffer.Length,this.SendLineCompleted,null);
+                                m_pOwner.BeginWrite(buffer,0,buffer.Length,SendLineCompleted,null);
                             }
                             // Normal line.
                             else{
-                                m_pOwner.BeginWrite(op.Buffer,0,op.BytesInBuffer,this.SendLineCompleted,null);
+                                m_pOwner.BeginWrite(op.Buffer,0,op.BytesInBuffer,SendLineCompleted,null);
                             }
                         }
                     }
@@ -1901,7 +1901,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1920,7 +1920,7 @@ namespace LumiSoft.Net.IO
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1943,8 +1943,8 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<WritePeriodTerminatedAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<WritePeriodTerminatedAsyncOP>(this));
                 }
             }
         }
@@ -1959,8 +1959,8 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool WritePeriodTerminatedAsync(WritePeriodTerminatedAsyncOP op)
         {
-            if(this.m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(m_IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -1981,7 +1981,7 @@ namespace LumiSoft.Net.IO
         public void WriteHeader(Stream stream)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(stream == null){
                 throw new ArgumentNullException("stream");
@@ -2053,7 +2053,7 @@ namespace LumiSoft.Net.IO
         public override IAsyncResult BeginRead(byte[] buffer,int offset,int count,AsyncCallback callback,object state)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(buffer == null){
                 throw new ArgumentNullException("buffer");
@@ -2129,15 +2129,15 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentOutOfRangeException("count","Argument 'count' is bigger than than argument 'buffer' can store.");
             }
 
-            if(this.BytesInReadBuffer == 0){
-                this.BufferRead(false,null);
+            if(BytesInReadBuffer == 0){
+                BufferRead(false,null);
             }
             
-            if(this.BytesInReadBuffer == 0){
+            if(BytesInReadBuffer == 0){
                 return 0;
             }
 
-            int countToCopy = Math.Min(count,this.BytesInReadBuffer);
+            int countToCopy = Math.Min(count,BytesInReadBuffer);
             Array.Copy(m_pReadBuffer,m_ReadBufferOffset,buffer,offset,countToCopy);
             m_ReadBufferOffset += countToCopy;
 
@@ -2202,7 +2202,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="InvalidOperationException">Is raised when there is data in read buffer and this method is called.</exception>
         private bool BufferRead(bool async,BufferCallback asyncCallback)
         {
-            if(this.BytesInReadBuffer != 0){
+            if(BytesInReadBuffer != 0){
                 throw new InvalidOperationException("There is already data in read buffer.");
             }
 
@@ -2550,7 +2550,7 @@ namespace LumiSoft.Net.IO
                         // Read buffer empty, buff next data block.
                         if(m_pOwner.BytesInReadBuffer == 0){
                             // Buffering started asynchronously.
-                            if(m_pOwner.BufferRead(true,this.Buffering_Completed)){
+                            if(m_pOwner.BufferRead(true,Buffering_Completed)){
                                 return;
                             }
                             // Buffering completed synchronously, continue processing.
@@ -2705,7 +2705,7 @@ namespace LumiSoft.Net.IO
 
                 // Start reading data.
                 #pragma warning disable
-                m_pOwner.BeginReadLine(m_pLineBuffer,0,m_pLineBuffer.Length - 2,m_SizeExceededAction,new AsyncCallback(this.ReadLine_Completed),null);
+                m_pOwner.BeginReadLine(m_pLineBuffer,0,m_pLineBuffer.Length - 2,m_SizeExceededAction,new AsyncCallback(ReadLine_Completed),null);
                 #pragma warning restore
             }
 
@@ -2760,7 +2760,7 @@ namespace LumiSoft.Net.IO
 
                         // Strart reading new line.
                         #pragma warning disable
-                        m_pOwner.BeginReadLine(m_pLineBuffer,0,m_pLineBuffer.Length - 2,m_SizeExceededAction,new AsyncCallback(this.ReadLine_Completed),null);
+                        m_pOwner.BeginReadLine(m_pLineBuffer,0,m_pLineBuffer.Length - 2,m_SizeExceededAction,new AsyncCallback(ReadLine_Completed),null);
                         #pragma warning restore
                     }
                 }
@@ -2900,7 +2900,7 @@ namespace LumiSoft.Net.IO
                         // Read buffer empty, buff next data block.
                         if(m_pOwner.BytesInReadBuffer == 0){
                             // Buffering started asynchronously.
-                            if(m_pOwner.BufferRead(true,this.Buffering_Completed)){
+                            if(m_pOwner.BufferRead(true,Buffering_Completed)){
                                 return;
                             }
                             // Buffering completed synchronously, continue processing.
@@ -3060,7 +3060,7 @@ namespace LumiSoft.Net.IO
                     // Read buffer empty, buff next data block.
                     if(m_pOwner.BytesInReadBuffer == 0){
                         // Buffering started asynchronously.
-                        if(m_pOwner.BufferRead(true,this.Buffering_Completed)){
+                        if(m_pOwner.BufferRead(true,Buffering_Completed)){
                             return;
                         }
                         // Buffering completed synchronously, continue processing.
@@ -3154,7 +3154,7 @@ namespace LumiSoft.Net.IO
         public IAsyncResult BeginReadLine(byte[] buffer,int offset,int maxCount,SizeExceededAction exceededAction,AsyncCallback callback,object state)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(buffer == null){
                 throw new ArgumentNullException("buffer");

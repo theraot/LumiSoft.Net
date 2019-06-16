@@ -108,10 +108,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="InvalidOperationException">Is raised when SMTP client is not connected.</exception>
 		public void Disconnect(bool sendQuit)
 		{
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("SMTP client is not connected.");
             }
 
@@ -155,10 +155,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>NOTE: EHLO command will reset all SMTP session state data.</remarks>
         public void EhloHelo(string hostName)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(hostName == null){
@@ -173,7 +173,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<EhloHeloAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.EhloHeloAsync(op)){
+                if(!EhloHeloAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -230,7 +230,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pSmtpClient = null;
                 m_pReplyLines = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -263,7 +263,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.LogAddWrite(buffer.Length,"EHLO " + m_HostName);
 
                     // Start command sending.
-                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.EhloCommandSendingCompleted,null);                    
+                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,EhloCommandSendingCompleted,null);                    
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -381,7 +381,7 @@ namespace LumiSoft.Net.SMTP.Client
                             m_pSmtpClient.LogAddWrite(buffer.Length,"HELO " + m_HostName);
 
                             // Start command sending.
-                            m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.HeloCommandSendingCompleted,null);
+                            m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,HeloCommandSendingCompleted,null);
                         }
                     }
                 }
@@ -484,7 +484,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -503,7 +503,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'ReplyLines' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -526,8 +526,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<EhloHeloAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<EhloHeloAsyncOP>(this));
                 }
             }
         }
@@ -544,10 +544,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>NOTE: EHLO command will reset all SMTP session state data.</remarks>
         public bool EhloHeloAsync(EhloHeloAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -584,13 +584,13 @@ namespace LumiSoft.Net.SMTP.Client
         /// If unknwon(not SMTP error) error happens during STARTTLS negotiation, SMTP client should disconnect.</remarks>
         public void StartTLS(RemoteCertificateValidationCallback certCallback)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }
 
@@ -599,7 +599,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<StartTlsAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.StartTlsAsync(op)){
+                if(!StartTlsAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -645,7 +645,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pCertCallback = null;
                 m_pSmtpClient   = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -682,7 +682,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.LogAddWrite(buffer.Length,"STARTTLS");
 
                     // Start command sending.
-                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.StartTlsCommandSendingCompleted,null);                    
+                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,StartTlsCommandSendingCompleted,null);                    
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -850,7 +850,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -870,8 +870,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<StartTlsAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<StartTlsAsyncOP>(this));
                 }
             }
         }
@@ -889,13 +889,13 @@ namespace LumiSoft.Net.SMTP.Client
         /// If unknwon(not SMTP error) error happens during STARTTLS negotiation, SMTP client should disconnect.</remarks>
         public bool StartTlsAsync(StartTlsAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }
             if(op == null){
@@ -923,20 +923,20 @@ namespace LumiSoft.Net.SMTP.Client
         /// don't support any of the server authentication mechanisms.</exception>
         public AUTH_SASL_Client AuthGetStrongestMethod(string userName,string password)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            var authMethods = new List<string>(this.SaslAuthMethods);
+            var authMethods = new List<string>(SaslAuthMethods);
             if (authMethods.Count == 0){
                 throw new NotSupportedException("SMTP server does not support authentication.");
             }
 
             if(authMethods.Contains("DIGEST-MD5")){
-                return new AUTH_SASL_Client_DigestMd5("SMTP",this.RemoteEndPoint.Address.ToString(),userName,password);
+                return new AUTH_SASL_Client_DigestMd5("SMTP",RemoteEndPoint.Address.ToString(),userName,password);
             }
             if(authMethods.Contains("CRAM-MD5")){
                 return new AUTH_SASL_Client_CramMd5(userName,password);
@@ -959,13 +959,13 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="SMTP_ClientException">Is raised when SMTP server returns error.</exception>
         public void Auth(AUTH_SASL_Client sasl)
         {            
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 throw new InvalidOperationException("Connection is already authenticated.");
             }
             if(sasl == null){
@@ -977,7 +977,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<AuthAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.AuthAsync(op)){
+                if(!AuthAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -1023,7 +1023,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pException  = null;
                 m_pSmtpClient = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1058,7 +1058,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.LogAddWrite(buffer.Length,Encoding.UTF8.GetString(buffer).TrimEnd());
 
                         // Start command sending.
-                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
+                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
                     }
                     else{
                         var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
@@ -1067,7 +1067,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.LogAddWrite(buffer.Length,"AUTH " + m_pSASL.Name);
 
                         // Start command sending.
-                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
+                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
                     }
                 }
                 catch(Exception x){
@@ -1150,7 +1150,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.LogAddWrite(buffer.Length,Convert.ToBase64String(clientResponse));
 
                         // Start auth-data sending.
-                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
+                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
                     }
                     // Authentication suceeded.
                     else if(op.ReplyLines[0].ReplyCode == 235){
@@ -1185,7 +1185,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1205,8 +1205,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
                 }
             }
         }
@@ -1222,13 +1222,13 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool AuthAsync(AuthAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 throw new InvalidOperationException("Connection is already authenticated.");
             }
             if(op == null){
@@ -1270,10 +1270,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>Before using <b>ret</b> or <b>envid</b> arguments, check that remote server supports(SMTP_Client.EsmtpFeatures) SMTP DSN extention.</remarks>
         public void MailFrom(string from,long messageSize,SMTP_DSN_Ret ret,string envid)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             
@@ -1282,7 +1282,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<MailFromAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.MailFromAsync(op)){
+                if(!MailFromAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -1348,7 +1348,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_EnvID       = null;
                 m_pSmtpClient = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1409,7 +1409,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.LogAddWrite(buffer.Length,cmd.ToString());
 
                     // Start command sending.
-                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.MailCommandSendingCompleted,null);                    
+                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,MailCommandSendingCompleted,null);                    
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -1522,7 +1522,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1542,8 +1542,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<MailFromAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<MailFromAsyncOP>(this));
                 }
             }
         }
@@ -1560,10 +1560,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>Before using <b>ret</b> or <b>envid</b> arguments, check that remote server supports(SMTP_Client.EsmtpFeatures) SMTP DSN extention.</remarks>
         public bool MailFromAsync(MailFromAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -1603,10 +1603,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>Before using <b>notify</b> or <b>orcpt</b> arguments, check that remote server supports(SMTP_Client.EsmtpFeatures) SMTP DSN extention.</remarks>
         public void RcptTo(string to,SMTP_DSN_Notify notify,string orcpt)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             
@@ -1615,7 +1615,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<RcptToAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.RcptToAsync(op)){
+                if(!RcptToAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -1687,7 +1687,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_ORcpt       = null;
                 m_pSmtpClient = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1755,7 +1755,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.LogAddWrite(buffer.Length,cmd.ToString());
 
                     // Start command sending.
-                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.RcptCommandSendingCompleted,null);                    
+                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,RcptCommandSendingCompleted,null);                    
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -1870,7 +1870,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1890,8 +1890,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<RcptToAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<RcptToAsyncOP>(this));
                 }
             }
         }
@@ -1908,10 +1908,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>Before using <b>notify</b> or <b>orcpt</b> arguments, check that remote server supports(SMTP_Client.EsmtpFeatures) SMTP DSN extention.</remarks>
         public bool RcptToAsync(RcptToAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -1934,7 +1934,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>The stream must contain data in MIME format, other formats normally are rejected by SMTP server.</remarks>
         public void SendMessage(Stream stream)
         {
-            this.SendMessage(stream,false);
+            SendMessage(stream,false);
         }
 
         /// <summary>
@@ -1948,10 +1948,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <remarks>The stream must contain data in MIME format, other formats normally are rejected by SMTP server.</remarks>
         public void SendMessage(Stream stream,bool useBdatIfPossibe)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -1960,7 +1960,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<SendMessageAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.SendMessageAsync(op)){
+                if(!SendMessageAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -2014,7 +2014,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pBdatBuffer    = null;
                 m_BdatSendBuffer = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -2052,7 +2052,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_BdatSendBuffer = new byte[64100]; // 100 bytes for "BDAT xxxxxx...CRLF"
 
                         // Start reading message data-block.
-                        m_pStream.BeginRead(m_pBdatBuffer,0,m_pBdatBuffer.Length,this.BdatChunkReadingCompleted,null);
+                        m_pStream.BeginRead(m_pBdatBuffer,0,m_pBdatBuffer.Length,BdatChunkReadingCompleted,null);
                     }
                     // DATA.
                     else{
@@ -2075,7 +2075,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.LogAddWrite(buffer.Length,"DATA");
 
                         // Start command sending.
-                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.DataCommandSendingCompleted,null);
+                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,DataCommandSendingCompleted,null);
                     }                    
                 }
                 catch(Exception x){
@@ -2140,7 +2140,7 @@ namespace LumiSoft.Net.SMTP.Client
                         Array.Copy(m_pBdatBuffer,0,m_BdatSendBuffer,buffer.Length,m_BdatBytesInBuffer);
 
                         // Start command sending.
-                        m_pSmtpClient.TcpStream.BeginWrite(m_BdatSendBuffer,0,buffer.Length + m_BdatBytesInBuffer,this.BdatCommandSendingCompleted,null);
+                        m_pSmtpClient.TcpStream.BeginWrite(m_BdatSendBuffer,0,buffer.Length + m_BdatBytesInBuffer,BdatCommandSendingCompleted,null);
                     }
                     // EOS, we readed all message data.
                     else{
@@ -2150,7 +2150,7 @@ namespace LumiSoft.Net.SMTP.Client
                         m_pSmtpClient.LogAddWrite(buffer.Length,"BDAT 0 LAST");
 
                         // Start command sending.
-                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.BdatCommandSendingCompleted,null);
+                        m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,BdatCommandSendingCompleted,null);
                     }
                 }
                 catch(Exception x){
@@ -2214,7 +2214,7 @@ namespace LumiSoft.Net.SMTP.Client
                             // Send next BDAT data-chunk.
 
                             // Start reading next message data-block.
-                            m_pStream.BeginRead(m_pBdatBuffer,0,m_pBdatBuffer.Length,this.BdatChunkReadingCompleted,null);
+                            m_pStream.BeginRead(m_pBdatBuffer,0,m_pBdatBuffer.Length,BdatChunkReadingCompleted,null);
                         }
                         // BDAT failed.
                         else{
@@ -2392,7 +2392,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2412,8 +2412,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<SendMessageAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<SendMessageAsyncOP>(this));
                 }
             }
         }
@@ -2429,10 +2429,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool SendMessageAsync(SendMessageAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -2453,10 +2453,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="SMTP_ClientException">Is raised when SMTP server returns error.</exception>
         public void Rset()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -2465,7 +2465,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<RsetAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.RsetAsync(op)){
+                if(!RsetAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -2507,7 +2507,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pException  = null;
                 m_pSmtpClient = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -2533,7 +2533,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.LogAddWrite(buffer.Length,"RSET");
 
                     // Start command sending.
-                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.RsetCommandSendingCompleted,null);
+                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,RsetCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -2649,7 +2649,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2669,8 +2669,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
                 }
             }
         }
@@ -2686,10 +2686,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool RsetAsync(RsetAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -2710,10 +2710,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="SMTP_ClientException">Is raised when SMTP server returns error.</exception>
         public void Noop()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -2722,7 +2722,7 @@ namespace LumiSoft.Net.SMTP.Client
                 op.CompletedAsync += delegate(object s1,EventArgs<NoopAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.NoopAsync(op)){
+                if(!NoopAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -2764,7 +2764,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pException  = null;
                 m_pSmtpClient = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -2790,7 +2790,7 @@ namespace LumiSoft.Net.SMTP.Client
                     m_pSmtpClient.LogAddWrite(buffer.Length,"NOOP");
 
                     // Start command sending.
-                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,this.NoopCommandSendingCompleted,null);                    
+                    m_pSmtpClient.TcpStream.BeginWrite(buffer,0,buffer.Length,NoopCommandSendingCompleted,null);                    
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -2908,7 +2908,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2928,8 +2928,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
                 }
             }
         }
@@ -2945,10 +2945,10 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool NoopAsync(NoopAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -3057,7 +3057,7 @@ namespace LumiSoft.Net.SMTP.Client
                 m_pSmtpClient = null;
                 m_pReplyLines = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -3175,7 +3175,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -3194,7 +3194,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 get{
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'ReplyLines' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -3217,8 +3217,8 @@ namespace LumiSoft.Net.SMTP.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<ReadResponseAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<ReadResponseAsyncOP>(this));
                 }
             }
         }
@@ -3233,8 +3233,8 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         private bool ReadResponseAsync(ReadResponseAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -3558,18 +3558,18 @@ namespace LumiSoft.Net.SMTP.Client
         public string LocalHostName
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_LocalHostName; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(this.IsConnected){
+                if(IsConnected){
                     throw new InvalidOperationException("Property LocalHostName is available only when SMTP client is not connected.");
                 }
 
@@ -3585,10 +3585,10 @@ namespace LumiSoft.Net.SMTP.Client
         public string RemoteHostName
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
@@ -3604,10 +3604,10 @@ namespace LumiSoft.Net.SMTP.Client
         public string GreetingText
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
@@ -3623,10 +3623,10 @@ namespace LumiSoft.Net.SMTP.Client
         public bool IsEsmtpSupported
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
@@ -3642,10 +3642,10 @@ namespace LumiSoft.Net.SMTP.Client
         public string[] EsmtpFeatures
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
@@ -3661,15 +3661,15 @@ namespace LumiSoft.Net.SMTP.Client
         public string[] SaslAuthMethods
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
                 // Search AUTH entry.
-                foreach(string feature in this.EsmtpFeatures){
+                foreach(string feature in EsmtpFeatures){
                     if(feature.ToUpper().StartsWith(SMTP_ServiceExtensions.AUTH)){
                         // Remove AUTH<SP> and split authentication methods.
                         return feature.Substring(4).Trim().Split(' ');
@@ -3687,7 +3687,7 @@ namespace LumiSoft.Net.SMTP.Client
         {
             get{ 
                 try{
-                    foreach(string feature in this.EsmtpFeatures){
+                    foreach(string feature in EsmtpFeatures){
                         if(feature.ToUpper().StartsWith(SMTP_ServiceExtensions.SIZE)){
                             return Convert.ToInt64(feature.Split(' ')[1]);
                         }
@@ -3709,10 +3709,10 @@ namespace LumiSoft.Net.SMTP.Client
         public override GenericIdentity AuthenticatedUserIdentity
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
 
@@ -3735,13 +3735,13 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'Auth' instead.")]
         public void Authenticate(string userName,string password)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 throw new InvalidOperationException("Session is already authenticated.");
             }
             if(string.IsNullOrEmpty(userName)){
@@ -3753,7 +3753,7 @@ namespace LumiSoft.Net.SMTP.Client
                         
             // Choose authentication method, we consider LOGIN as default.
             var authMethod = "LOGIN";
-            var authMethods = new List<string>(this.SaslAuthMethods);
+            var authMethods = new List<string>(SaslAuthMethods);
             if (authMethods.Contains("DIGEST-MD5")){
                 authMethod = "DIGEST-MD5";
             }
@@ -3870,7 +3870,7 @@ namespace LumiSoft.Net.SMTP.Client
                     password,Guid.NewGuid().ToString().Replace("-",""),
                     1,
                     challenge.QopOptions[0],
-                    "smtp/" + this.RemoteEndPoint.Address.ToString()
+                    "smtp/" + RemoteEndPoint.Address.ToString()
                 );
 
                 // Send authentication info to server.
@@ -3921,17 +3921,17 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'AuthAsync' instead.")]
         public IAsyncResult BeginAuthenticate(string userName,string password,AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
 
-            var asyncMethod = new AuthenticateDelegate(this.Authenticate);
+            var asyncMethod = new AuthenticateDelegate(Authenticate);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(userName,password,new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -3949,8 +3949,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'AuthAsync' instead.")]
         public void EndAuthenticate(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -3989,14 +3989,14 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'NoopAsync' instead.")]
         public IAsyncResult BeginNoop(AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            var asyncMethod = new NoopDelegate(this.Noop);
+            var asyncMethod = new NoopDelegate(Noop);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -4014,8 +4014,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'NoopAsync' instead.")]
         public void EndNoop(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -4052,17 +4052,17 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method StartTlsAsync instead.")]
         public IAsyncResult BeginStartTLS(AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }
 
-            var asyncMethod = new StartTLSDelegate(this.StartTLS);
+            var asyncMethod = new StartTLSDelegate(StartTLS);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -4080,8 +4080,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method StartTlsAsync instead.")]
         public void EndStartTLS(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -4139,14 +4139,14 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method RcptToAsync instead.")]
         public IAsyncResult BeginRcptTo(string to,SMTP_DSN_Notify notify,string orcpt,AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            var asyncMethod = new RcptToDelegate(this.RcptTo);
+            var asyncMethod = new RcptToDelegate(RcptTo);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(to,notify,orcpt,new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -4164,8 +4164,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method RcptToAsync instead.")]
         public void EndRcptTo(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -4225,14 +4225,14 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method MailFromAsync instead.")]
         public IAsyncResult BeginMailFrom(string from,long messageSize,SMTP_DSN_Ret ret,string envid,AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            var asyncMethod = new MailFromDelegate(this.MailFrom);
+            var asyncMethod = new MailFromDelegate(MailFrom);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(from,(int)messageSize,ret,envid,new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -4250,8 +4250,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method MailFromAsync instead.")]
         public void EndMailFrom(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -4290,14 +4290,14 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use 'RsetAsync' method instead.")]
         public IAsyncResult BeginReset(AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            var asyncMethod = new ResetDelegate(this.Reset);
+            var asyncMethod = new ResetDelegate(Reset);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -4315,8 +4315,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use 'RsetAsync' method instead.")]
         public void EndReset(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -4348,10 +4348,10 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use Rset method instead.")]
         public void Reset()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -4392,17 +4392,17 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'SendMessageAsync' instead.")]
         public IAsyncResult BeginSendMessage(Stream message,AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(message == null){
                 throw new ArgumentNullException("message");
             }
 
-            var asyncMethod = new SendMessageDelegate(this.SendMessage);
+            var asyncMethod = new SendMessageDelegate(SendMessage);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(message,new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -4420,8 +4420,8 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use method 'SendMessageAsync' instead.")]
         public void EndSendMessage(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");

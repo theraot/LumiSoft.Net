@@ -40,21 +40,21 @@ namespace LumiSoft.Net.SIP.Stack
                 return;
             }
 
-            foreach(SIP_ClientTransaction tr in this.ClientTransactions){
+            foreach(SIP_ClientTransaction tr in ClientTransactions){
                 try{
                     tr.Dispose();
                 }
                 catch{
                 }
             }
-            foreach(SIP_ServerTransaction tr in this.ServerTransactions){
+            foreach(SIP_ServerTransaction tr in ServerTransactions){
                 try{
                     tr.Dispose();
                 }
                 catch{
                 }
             }
-            foreach(SIP_Dialog dialog in this.Dialogs){
+            foreach(SIP_Dialog dialog in Dialogs){
                 try{
                     dialog.Dispose();
                 }
@@ -77,7 +77,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_ClientTransaction CreateClientTransaction(SIP_Flow flow,SIP_Request request,bool addVia)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(flow == null){
                 throw new ArgumentNullException("flow");
@@ -129,7 +129,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_ServerTransaction CreateServerTransaction(SIP_Flow flow,SIP_Request request)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(flow == null){
                 throw new ArgumentNullException("flow");
@@ -440,8 +440,8 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 var retVal = new List<SIP_Transaction>();
-                retVal.AddRange(this.ClientTransactions);
-                retVal.AddRange(this.ServerTransactions);
+                retVal.AddRange(ClientTransactions);
+                retVal.AddRange(ServerTransactions);
 
                 return retVal.ToArray();
             }

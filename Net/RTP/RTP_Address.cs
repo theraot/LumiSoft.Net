@@ -89,7 +89,7 @@ namespace LumiSoft.Net.RTP
             if(obj is RTP_Address){
                 var a = (RTP_Address)obj;
 
-                if (a.IP.Equals(this.IP) && a.ControlPort == this.ControlPort && a.DataPort == this.DataPort){
+                if (a.IP.Equals(IP) && a.ControlPort == ControlPort && a.DataPort == DataPort){
                     return true;
                 }
             }

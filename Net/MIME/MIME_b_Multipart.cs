@@ -579,8 +579,8 @@ namespace LumiSoft.Net.MIME
             base.SetParent(entity,setContentType);
 
             // Owner entity has no content-type or has different content-type, just add/overwrite it.
-            if(setContentType && (this.Entity.ContentType == null || !string.Equals(this.Entity.ContentType.TypeWithSubtype,this.MediaType,StringComparison.InvariantCultureIgnoreCase))){
-                this.Entity.ContentType = m_pContentType;
+            if(setContentType && (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype,MediaType,StringComparison.InvariantCultureIgnoreCase))){
+                Entity.ContentType = m_pContentType;
             }
         }
 
@@ -614,14 +614,14 @@ namespace LumiSoft.Net.MIME
             for(int i=0;i<BodyParts.Count;i++){
                 var bodyPart = BodyParts[i];
                 // Start new body part.
-                var bStart = Encoding.UTF8.GetBytes("\r\n--" + this.Entity.ContentType.Param_Boundary + "\r\n");
+                var bStart = Encoding.UTF8.GetBytes("\r\n--" + Entity.ContentType.Param_Boundary + "\r\n");
                 stream.Write(bStart,0,bStart.Length);
                 
                 bodyPart.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
 
                 // Last body part, close boundary.
                 if(i == (BodyParts.Count - 1)){
-                    var bEnd = Encoding.UTF8.GetBytes("\r\n--" + this.Entity.ContentType.Param_Boundary + "--\r\n");
+                    var bEnd = Encoding.UTF8.GetBytes("\r\n--" + Entity.ContentType.Param_Boundary + "--\r\n");
                     stream.Write(bEnd,0,bEnd.Length);
                 }
             }

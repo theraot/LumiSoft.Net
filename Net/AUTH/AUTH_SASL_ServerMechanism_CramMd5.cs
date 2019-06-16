@@ -203,8 +203,8 @@ namespace LumiSoft.Net.AUTH
         {
             var retVal = new AUTH_e_UserInfo(userName);
 
-            if (this.GetUserInfo != null){
-                this.GetUserInfo(this,retVal);
+            if (GetUserInfo != null){
+                GetUserInfo(this,retVal);
             }
 
             return retVal;

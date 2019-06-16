@@ -79,12 +79,12 @@ namespace LumiSoft.Net.MIME
             if(text == null){
                 throw new ArgumentNullException("text");
             }
-            if(this.Entity == null){
+            if(Entity == null){
                 throw new InvalidOperationException("Body must be bounded to some entity first.");
             }
 
             SetData(new MemoryStream(charset.GetBytes(text)),transferEncoding);
-            this.Entity.ContentType.Param_Charset = charset.WebName;            
+            Entity.ContentType.Param_Charset = charset.WebName;            
         }
 
         /// <summary>
@@ -96,20 +96,20 @@ namespace LumiSoft.Net.MIME
         {
             // RFC 2046 4.1.2. The default character set, US-ASCII.
             
-            if(this.Entity.ContentType == null || string.IsNullOrEmpty(this.Entity.ContentType.Param_Charset)){
+            if(Entity.ContentType == null || string.IsNullOrEmpty(Entity.ContentType.Param_Charset)){
                 return Encoding.ASCII;
             }
 
             // Handle custome/extended charsets, just remove "x-" from start.
-            if(this.Entity.ContentType.Param_Charset.ToLower().StartsWith("x-")){
-                return Encoding.GetEncoding(this.Entity.ContentType.Param_Charset.Substring(2));
+            if(Entity.ContentType.Param_Charset.ToLower().StartsWith("x-")){
+                return Encoding.GetEncoding(Entity.ContentType.Param_Charset.Substring(2));
             }
             // Cp1252 is not IANA reggistered, some mail clients send it, it equal to windows-1252.
 
-            if(string.Equals(this.Entity.ContentType.Param_Charset,"cp1252",StringComparison.InvariantCultureIgnoreCase)){
+            if(string.Equals(Entity.ContentType.Param_Charset,"cp1252",StringComparison.InvariantCultureIgnoreCase)){
                 return Encoding.GetEncoding("windows-1252");
             }
-            return Encoding.GetEncoding(this.Entity.ContentType.Param_Charset);
+            return Encoding.GetEncoding(Entity.ContentType.Param_Charset);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="NotSupportedException">Is raised when body contains not supported Content-Transfer-Encoding.</exception>
         public string Text
         {
-            get{ return GetCharset().GetString(this.Data); }
+            get{ return GetCharset().GetString(Data); }
         }
     }
 }

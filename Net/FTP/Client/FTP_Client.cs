@@ -320,10 +320,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="InvalidOperationException">Is raised when FTP client is not connected.</exception>
 		public override void Disconnect()
 		{
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("FTP client is not connected.");
             }
 
@@ -356,10 +356,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void Reinitialize()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -382,13 +382,13 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
 		public void Authenticate(string userName,string password)
 		{
-			if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+			if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 throw new InvalidOperationException("Session is already authenticated.");
             }
             if(string.IsNullOrEmpty(userName)){
@@ -429,10 +429,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void Noop()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -452,10 +452,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void Abort()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -476,10 +476,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public string GetCurrentDir()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
 
@@ -508,10 +508,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void SetCurrentDir(string path)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(path == null){
@@ -551,10 +551,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public FTP_ListItem[] GetList(string path)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(m_pDataConnection.IsActive){
@@ -768,10 +768,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void GetFile(string path,string storePath)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(m_pDataConnection.IsActive){
@@ -807,10 +807,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void GetFile(string path,Stream stream)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(m_pDataConnection.IsActive){
@@ -869,10 +869,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void AppendToFile(string path,Stream stream)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(m_pDataConnection.IsActive){
@@ -931,10 +931,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void StoreFile(string path,string sourcePath)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(m_pDataConnection.IsActive){
@@ -970,10 +970,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void StoreFile(string path,Stream stream)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(m_pDataConnection.IsActive){
@@ -1031,10 +1031,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void DeleteFile(string path)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(path == null){
@@ -1064,10 +1064,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void Rename(string fromPath,string toPath)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(fromPath == null){
@@ -1109,10 +1109,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void CreateDirectory(string path)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(path == null){
@@ -1141,10 +1141,10 @@ namespace LumiSoft.Net.FTP.Client
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
         public void DeleteDirectory(string path)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(path == null){
@@ -1191,7 +1191,7 @@ namespace LumiSoft.Net.FTP.Client
         {           
             string[] response = null;
             // We will try all IP addresses assigned to this machine, the first one that the remote machine likes will be chosen.
-            foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
+            foreach(IPAddress ip in Dns.GetHostAddresses("")){
                 if(ip.AddressFamily == m_pDataConnection.LocalEndPoint.AddressFamily){
                     WriteLine("PORT " + ip.ToString().Replace(".",",") + "," + (m_pDataConnection.LocalEndPoint.Port >> 8) + "," + (m_pDataConnection.LocalEndPoint.Port & 0xFF));
 
@@ -1384,16 +1384,16 @@ namespace LumiSoft.Net.FTP.Client
 		public FTP_TransferMode TransferMode
 		{
 			get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_TransferMode; 
             }
 
 			set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_TransferMode = value; 
@@ -1407,22 +1407,22 @@ namespace LumiSoft.Net.FTP.Client
         public IPAddress DataIP
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pDataConnectionIP; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 m_pDataConnectionIP = value; 
 
                 // If We are connected, we need to reset data connection.
-                if(this.IsConnected){
+                if(IsConnected){
                     m_pDataConnection.CleanUpSocket();
                 }
             }
@@ -1435,22 +1435,22 @@ namespace LumiSoft.Net.FTP.Client
         public PortRange DataPortRange
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pDataPortRange; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_pDataPortRange = value; 
 
                 // If We are connected, we need to reset data connection.
-                if(this.IsConnected){
+                if(IsConnected){
                     m_pDataConnection.CleanUpSocket();
                 }
             }
@@ -1464,10 +1464,10 @@ namespace LumiSoft.Net.FTP.Client
         public string GreetingText
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
@@ -1483,10 +1483,10 @@ namespace LumiSoft.Net.FTP.Client
         public string[] ExtenededCapabilities
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
 
@@ -1502,10 +1502,10 @@ namespace LumiSoft.Net.FTP.Client
         public override GenericIdentity AuthenticatedUserIdentity
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
 

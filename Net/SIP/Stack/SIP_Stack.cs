@@ -79,9 +79,9 @@ namespace LumiSoft.Net.SIP.Stack
             // transaction which accesses stack will get disposed exception.
                         
             // Release events.
-            this.RequestReceived = null;
-            this.ResponseReceived = null;
-            this.Error = null;                      
+            RequestReceived = null;
+            ResponseReceived = null;
+            Error = null;                      
             
             if(m_pTransactionLayer != null){
                 m_pTransactionLayer.Dispose();
@@ -190,7 +190,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Request CreateRequest(string method,SIP_t_NameAddress to,SIP_t_NameAddress from)
         {
             if(State == SIP_StackState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(method == null){
                 throw new ArgumentNullException("method");
@@ -339,7 +339,7 @@ namespace LumiSoft.Net.SIP.Stack
         internal SIP_RequestSender CreateRequestSender(SIP_Request request,SIP_Flow flow)
         {
             if(State == SIP_StackState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(request == null){
                 throw new ArgumentNullException("request");
@@ -853,7 +853,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_UA_Registration CreateRegistration(SIP_Uri server,string aor,AbsoluteUri contact,int expires)
         {
             if(State == SIP_StackState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(server == null){
                 throw new ArgumentNullException("server");
@@ -894,7 +894,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pTransportLayer; 
@@ -909,7 +909,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pTransactionLayer; 
@@ -923,7 +923,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_UserAgent; 
@@ -931,7 +931,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_UserAgent = value;
@@ -946,7 +946,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pNonceManager; 
@@ -973,7 +973,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pProxyServers; 
@@ -989,7 +989,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_Realm; 
@@ -997,7 +997,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_Realm = value ?? throw new ArgumentNullException();
@@ -1013,7 +1013,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_MaxForwards; 
@@ -1021,7 +1021,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 1){
                     throw new ArgumentException("Value must be > 0.");
@@ -1039,7 +1039,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_MinExpireTime; 
@@ -1047,7 +1047,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 10){
                     throw new ArgumentException("Property MinimumExpireTime value must be >= 10 !");
@@ -1066,7 +1066,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pAllow; 
@@ -1082,7 +1082,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSupported; 
@@ -1097,7 +1097,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_MaximumConnections; 
@@ -1105,7 +1105,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 1){
                     m_MaximumConnections = 0;
@@ -1125,7 +1125,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_MaximumMessageSize; 
@@ -1133,7 +1133,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 1){
                     m_MaximumMessageSize = 0;
@@ -1153,7 +1153,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_MinSessionExpires; 
@@ -1161,7 +1161,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 90){
                     throw new ArgumentException("Minimum session expires value must be >= 90 !");
@@ -1180,7 +1180,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_SessionExpires; 
@@ -1188,7 +1188,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 90){
                     throw new ArgumentException("Session expires value can't be < MinimumSessionExpries value !");
@@ -1206,7 +1206,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pCredentials; 
@@ -1222,7 +1222,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pTransportLayer.BindInfo;
@@ -1230,7 +1230,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 m_pTransportLayer.BindInfo = value; 
@@ -1245,7 +1245,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pDnsClient; 
@@ -1260,7 +1260,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pLogger; 
@@ -1275,7 +1275,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(State == SIP_StackState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRegistrations.ToArray();
@@ -1297,8 +1297,8 @@ namespace LumiSoft.Net.SIP.Stack
         internal SIP_ValidateRequestEventArgs OnValidateRequest(SIP_Request request,IPEndPoint remoteEndPoint)
         {
             var eArgs = new SIP_ValidateRequestEventArgs(request,remoteEndPoint);
-            if (this.ValidateRequest != null){
-                this.ValidateRequest(this,eArgs);
+            if (ValidateRequest != null){
+                ValidateRequest(this,eArgs);
             }
 
             return eArgs;
@@ -1315,8 +1315,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         internal void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {
-            if(this.RequestReceived != null){
-                this.RequestReceived(this,e);
+            if(RequestReceived != null){
+                RequestReceived(this,e);
             }
         }
 
@@ -1332,8 +1332,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         internal void OnResponseReceived(SIP_ResponseReceivedEventArgs e)
         {
-            if(this.ResponseReceived != null){
-                this.ResponseReceived(this,e);
+            if(ResponseReceived != null){
+                ResponseReceived(this,e);
             }
         }
 
@@ -1348,8 +1348,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="x">Exception happened.</param>
         internal void OnError(Exception x)
         {
-            if(this.Error != null){
-                this.Error(this,new ExceptionEventArgs(x));
+            if(Error != null){
+                Error(this,new ExceptionEventArgs(x));
             }
         }
     }

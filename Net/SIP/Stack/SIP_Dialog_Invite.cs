@@ -58,12 +58,12 @@ namespace LumiSoft.Net.SIP.Stack
                                 receiving an ACK, the dialog is confirmed, but the session SHOULD be
                                 terminated. 
                             */
-                            if(this.State == SIP_DialogState.Early){
-                                this.SetState(SIP_DialogState.Confirmed,true);
+                            if(State == SIP_DialogState.Early){
+                                SetState(SIP_DialogState.Confirmed,true);
                                 Terminate("ACK was not received for initial INVITE 2xx response.",true);
                             }
-                            else if(this.State == SIP_DialogState.Terminating){
-                                this.SetState(SIP_DialogState.Confirmed,false);
+                            else if(State == SIP_DialogState.Terminating){
+                                SetState(SIP_DialogState.Confirmed,false);
                                 Terminate(m_TerminateReason,true);
                             }
                         }
@@ -105,8 +105,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public override void Dispose()
         {
-            lock(this.SyncRoot){
-                if(this.State == SIP_DialogState.Disposed){
+            lock(SyncRoot){
+                if(State == SIP_DialogState.Disposed){
                     return;
                 }
                                 
@@ -124,11 +124,11 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Terminate(string reason,bool sendBye)
         {
-            lock(this.SyncRoot){
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+            lock(SyncRoot){
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(this.State == SIP_DialogState.Terminating || this.State == SIP_DialogState.Terminated){
+                if(State == SIP_DialogState.Terminating || State == SIP_DialogState.Terminated){
                     return;
                 }
 
@@ -147,8 +147,8 @@ namespace LumiSoft.Net.SIP.Stack
                 */ 
                                 
                 if(sendBye){
-                    if((this.State == SIP_DialogState.Early && m_pActiveInvite is SIP_ClientTransaction) || this.State == SIP_DialogState.Confirmed){
-                        this.SetState(SIP_DialogState.Terminating,true);
+                    if((State == SIP_DialogState.Early && m_pActiveInvite is SIP_ClientTransaction) || State == SIP_DialogState.Confirmed){
+                        SetState(SIP_DialogState.Terminating,true);
 
                         var bye = CreateRequest(SIP_Methods.BYE);
                         if (!string.IsNullOrEmpty(reason)){
@@ -161,7 +161,7 @@ namespace LumiSoft.Net.SIP.Stack
                         // Send BYE, just wait BYE to complete, we don't care about response code.
                         var sender = CreateRequestSender(bye);
                         sender.Completed += delegate(object s,EventArgs a){
-                            this.SetState(SIP_DialogState.Terminated,true);
+                            SetState(SIP_DialogState.Terminated,true);
                         };
                         sender.Start();
                     }
@@ -173,19 +173,19 @@ namespace LumiSoft.Net.SIP.Stack
                         */
 
                         if(m_pActiveInvite != null && m_pActiveInvite.FinalResponse == null){
-                            this.Stack.CreateResponse(SIP_ResponseCodes.x408_Request_Timeout,m_pActiveInvite.Request);
+                            Stack.CreateResponse(SIP_ResponseCodes.x408_Request_Timeout,m_pActiveInvite.Request);
 
-                            this.SetState(SIP_DialogState.Terminated,true);
+                            SetState(SIP_DialogState.Terminated,true);
                         }
                         else{ 
                             // Wait ACK to arrive or timeout. 
 
-                            this.SetState(SIP_DialogState.Terminating,true);
+                            SetState(SIP_DialogState.Terminating,true);
                         }
                     }
                 }
                 else{
-                    this.SetState(SIP_DialogState.Terminated,true);
+                    SetState(SIP_DialogState.Terminated,true);
                 }
             }
         }
@@ -207,17 +207,17 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             if(e.Request.RequestLine.Method == SIP_Methods.ACK){
-                if(this.State == SIP_DialogState.Early){
-                    this.SetState(SIP_DialogState.Confirmed,true);
+                if(State == SIP_DialogState.Early){
+                    SetState(SIP_DialogState.Confirmed,true);
                 }
-                else if(this.State == SIP_DialogState.Terminating){
-                    this.SetState(SIP_DialogState.Confirmed,false);
+                else if(State == SIP_DialogState.Terminating){
+                    SetState(SIP_DialogState.Confirmed,false);
 
                     Terminate(m_TerminateReason,true);
                 }
             }
             else if(e.Request.RequestLine.Method == SIP_Methods.BYE){
-                e.ServerTransaction.SendResponse(this.Stack.CreateResponse(SIP_ResponseCodes.x200_Ok,e.Request));
+                e.ServerTransaction.SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x200_Ok,e.Request));
 
                 m_IsTerminatedByRemoteParty = true;
                 OnTerminatedByRemoteParty(e);
@@ -254,15 +254,15 @@ namespace LumiSoft.Net.SIP.Stack
                     on that dialog is in progress MUST return a 491 (Request Pending)
                     response to the received INVITE.
                 */
-                if(this.HasPendingInvite){
-                    e.ServerTransaction.SendResponse(this.Stack.CreateResponse(SIP_ResponseCodes.x491_Request_Pending,e.Request));
+                if(HasPendingInvite){
+                    e.ServerTransaction.SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x491_Request_Pending,e.Request));
 
                     return true;
                 }
             }
             // RFC 5057 5.6. Refusing New Usages. Decline(603 Decline) new dialog usages.
             else if(SIP_Utils.MethodCanEstablishDialog(e.Request.RequestLine.Method)){
-                e.ServerTransaction.SendResponse(this.Stack.CreateResponse(SIP_ResponseCodes.x603_Decline + " : New dialog usages in dialog not allowed (RFC 5057).",e.Request));
+                e.ServerTransaction.SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x603_Decline + " : New dialog usages in dialog not allowed (RFC 5057).",e.Request));
 
                 return true;
             }
@@ -277,11 +277,11 @@ namespace LumiSoft.Net.SIP.Stack
         public bool HasPendingInvite
         {
             get{
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                foreach(SIP_Transaction tr in this.Transactions){
+                foreach(SIP_Transaction tr in Transactions){
                     if(tr.State == SIP_TransactionState.Calling || tr.State == SIP_TransactionState.Proceeding){
                         return true;
                     }
@@ -298,8 +298,8 @@ namespace LumiSoft.Net.SIP.Stack
         public bool IsTerminatedByRemoteParty
         {
             get{                
-                if(this.State == SIP_DialogState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_DialogState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_IsTerminatedByRemoteParty; 
@@ -318,8 +318,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="bye">BYE request.</param>
         private void OnTerminatedByRemoteParty(SIP_RequestReceivedEventArgs bye)
         {
-            if(this.TerminatedByRemoteParty != null){
-                this.TerminatedByRemoteParty(this,bye);
+            if(TerminatedByRemoteParty != null){
+                TerminatedByRemoteParty(this,bye);
             }
         }
     }

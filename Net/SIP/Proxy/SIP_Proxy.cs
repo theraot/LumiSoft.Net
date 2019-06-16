@@ -269,7 +269,7 @@ namespace LumiSoft.Net.SIP.Proxy
             */
                         
             // We need to auth all foreign calls.            
-            if(!SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString()) || !this.OnIsLocalUri(((SIP_Uri)request.RequestLine.Uri).Host)){
+            if(!SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString()) || !OnIsLocalUri(((SIP_Uri)request.RequestLine.Uri).Host)){
                 // If To: field is registrar AOR and request-URI is local registration contact, skip authentication.
                 bool skipAuth = false;
                 if(request.To.Address.IsSipOrSipsUri){
@@ -360,7 +360,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 var requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
                 // REGISTER is meant for us.
-                if (this.OnIsLocalUri(requestUri.Host)){
+                if (OnIsLocalUri(requestUri.Host)){
                     if((m_ProxyMode & SIP_ProxyMode.Registrar) != 0){
                         m_pRegistrar.Register(e);
 
@@ -409,7 +409,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 var requestUri = (SIP_Uri)e.Request.RequestLine.Uri;
 
                 // Proxy is not responsible for the domain in the Request-URI.
-                if (!this.OnIsLocalUri(requestUri.Host)){
+                if (!OnIsLocalUri(requestUri.Host)){
                     /* NAT traversal.
                         When we do record routing, store request sender flow info and request target flow info.
                         Now the tricky part, how proxy later which flow is target (because both sides can send requests).
@@ -456,7 +456,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     else{
                         // If the Request-URI indicates a resource at this proxy that does not
                         // exist, the proxy MUST return a 404 (Not Found) response.                    
-                        if(!this.OnAddressExists(requestUri.Address)){                        
+                        if(!OnAddressExists(requestUri.Address)){                        
                             e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found,e.Request));
                             return;
                         }
@@ -472,13 +472,13 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             // x.1 Process custom request handlers, if any.
-            foreach(SIP_ProxyHandler handler in this.Handlers){
+            foreach(SIP_ProxyHandler handler in Handlers){
                 try{
                     var h = handler;
 
                     // Reusing existing handler not allowed, create new instance of handler.
                     if (!handler.IsReusable){
-                        h = (SIP_ProxyHandler)System.Activator.CreateInstance(handler.GetType());
+                        h = (SIP_ProxyHandler)Activator.CreateInstance(handler.GetType());
                     }
 
                     if(h.ProcessRequest(requestContext)){
@@ -499,7 +499,7 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             if (statefull){
-                var proxyContext = this.CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
+                var proxyContext = CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
                 proxyContext.Start();
             }
             else{
@@ -715,7 +715,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
             m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
 
-            var eArgs = this.OnAuthenticate(auth);
+            var eArgs = OnAuthenticate(auth);
             // Authenticate failed.
             if (!eArgs.Authenticated){
                 var notAuthenticatedResponse = m_pStack.CreateResponse(SIP_ResponseCodes.x407_Proxy_Authentication_Required + ": Authentication failed.",e.Request);
@@ -786,7 +786,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 request,
                 addRecordRoute,
                 m_ForkingMode,
-                (this.ProxyMode & SIP_ProxyMode.B2BUA) != 0,
+                (ProxyMode & SIP_ProxyMode.B2BUA) != 0,
                 false,
                 false,
                 requestContext.Targets.ToArray()
@@ -809,7 +809,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pStack; 
@@ -825,7 +825,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_ProxyMode; 
@@ -833,7 +833,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                                 
                 // Check for invalid mode ()
@@ -853,7 +853,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_ForkingMode; 
@@ -861,7 +861,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
             set{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_ForkingMode = value; 
@@ -876,7 +876,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRegistrar; 
@@ -891,7 +891,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pB2BUA; 
@@ -909,7 +909,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pHandlers; 
@@ -928,8 +928,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <returns>Returns true if server local URI, otherwise false.</returns>
         internal bool OnIsLocalUri(string uri)
         {
-            if(this.IsLocalUri != null){
-                return this.IsLocalUri(uri);
+            if(IsLocalUri != null){
+                return IsLocalUri(uri);
             }
 
             return true;
@@ -948,8 +948,8 @@ namespace LumiSoft.Net.SIP.Proxy
         internal SIP_AuthenticateEventArgs OnAuthenticate(Auth_HttpDigest auth)
         {
             var eArgs = new SIP_AuthenticateEventArgs(auth);
-            if (this.Authenticate != null){
-                this.Authenticate(eArgs);
+            if (Authenticate != null){
+                Authenticate(eArgs);
             }
 
             return eArgs;
@@ -967,8 +967,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <returns>Returns true if specified address exists, otherwise false.</returns>
         internal bool OnAddressExists(string address)
         {            
-            if(this.AddressExists != null){
-                return this.AddressExists(address);
+            if(AddressExists != null){
+                return AddressExists(address);
             }
                         
             return false;

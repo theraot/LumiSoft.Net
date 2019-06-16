@@ -122,28 +122,28 @@ namespace LumiSoft.Net.SIP.Message
             if (word == null){
                 throw new SIP_ParseException("Via header field protocol-name is missing !");
             }
-            this.ProtocolName = word.Trim();
+            ProtocolName = word.Trim();
             // protocol-version
             word = reader.QuotedReadToDelimiter('/');
             if(word == null){
                 throw new SIP_ParseException("Via header field protocol-version is missing !");
             }        
-            this.ProtocolVersion = word.Trim();
+            ProtocolVersion = word.Trim();
             // transport
             word = reader.ReadWord();
             if(word == null){
                 throw new SIP_ParseException("Via header field transport is missing !");
             }
-            this.ProtocolTransport = word.Trim();
+            ProtocolTransport = word.Trim();
             // sent-by
             word = reader.QuotedReadToDelimiter(new[]{';',','},false);
             if(word == null){
                 throw new SIP_ParseException("Via header field sent-by is missing !");
             }
-            this.SentBy = HostEndPoint.Parse(word.Trim());
+            SentBy = HostEndPoint.Parse(word.Trim());
 
             // Parse parameters
-            this.ParseParameters(reader);
+            ParseParameters(reader);
         }
 
         /// <summary>
@@ -182,9 +182,9 @@ namespace LumiSoft.Net.SIP.Message
             */
 
             var retVal = new StringBuilder();
-            retVal.Append(this.ProtocolName + "/" + this.ProtocolVersion + "/" + this.ProtocolTransport + " ");
-            retVal.Append(this.SentBy.ToString());
-            retVal.Append(this.ParametersToString());
+            retVal.Append(ProtocolName + "/" + ProtocolVersion + "/" + ProtocolTransport + " ");
+            retVal.Append(SentBy.ToString());
+            retVal.Append(ParametersToString());
 
             return retVal.ToString();
         }
@@ -260,7 +260,7 @@ namespace LumiSoft.Net.SIP.Message
                     return m_pSentBy.Port;
                 }
 
-                if(this.ProtocolTransport == SIP_Transport.TLS){
+                if(ProtocolTransport == SIP_Transport.TLS){
                     return 5061;
                 }
 
@@ -276,7 +276,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Branch
         {
             get{ 
-                var parameter = this.Parameters["branch"];
+                var parameter = Parameters["branch"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -286,14 +286,14 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("branch");
+                    Parameters.Remove("branch");
                 }
                 else{
                     if(!value.StartsWith("z9hG4bK")){
                         throw new ArgumentException("Property Branch value must start with magic cookie 'z9hG4bK' !");
                     }
 
-                    this.Parameters.Set("branch",value);
+                    Parameters.Set("branch",value);
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Comp
         {
             get{ 
-                var parameter = this.Parameters["comp"];
+                var parameter = Parameters["comp"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -314,10 +314,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("comp");
+                    Parameters.Remove("comp");
                 }
                 else{
-                    this.Parameters.Set("comp",value);
+                    Parameters.Set("comp",value);
                 }
             }
         }
@@ -328,7 +328,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Maddr
         {
             get{ 
-                var parameter = this.Parameters["maddr"];
+                var parameter = Parameters["maddr"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -338,10 +338,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("maddr");
+                    Parameters.Remove("maddr");
                 }
                 else{
-                    this.Parameters.Set("maddr",value);
+                    Parameters.Set("maddr",value);
                 }
             }
         }
@@ -352,7 +352,7 @@ namespace LumiSoft.Net.SIP.Message
         public IPAddress Received
         {
             get{ 
-                var parameter = this.Parameters["received"];
+                var parameter = Parameters["received"];
                 if (parameter != null){
                     return IPAddress.Parse(parameter.Value);
                 }
@@ -362,10 +362,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("received");
+                    Parameters.Remove("received");
                 }
                 else{
-                    this.Parameters.Set("received",value.ToString());
+                    Parameters.Set("received",value.ToString());
                 }
             }
         }
@@ -376,7 +376,7 @@ namespace LumiSoft.Net.SIP.Message
         public int RPort
         {
             get{ 
-                var parameter = this.Parameters["rport"];
+                var parameter = Parameters["rport"];
                 if (parameter != null)
                 {
                     if(parameter.Value == ""){
@@ -391,13 +391,13 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value < 0){
-                    this.Parameters.Remove("rport");
+                    Parameters.Remove("rport");
                 }
                 else if(value == 0){
-                    this.Parameters.Set("rport","");
+                    Parameters.Set("rport","");
                 }
                 else{
-                    this.Parameters.Set("rport",value.ToString());
+                    Parameters.Set("rport",value.ToString());
                 }
             }
         }
@@ -408,7 +408,7 @@ namespace LumiSoft.Net.SIP.Message
         public int Ttl
         {
             get{ 
-                var parameter = this.Parameters["ttl"];
+                var parameter = Parameters["ttl"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);                    
                 }
@@ -418,10 +418,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value < 0){
-                    this.Parameters.Remove("ttl");
+                    Parameters.Remove("ttl");
                 }
                 else{
-                    this.Parameters.Set("ttl",value.ToString());
+                    Parameters.Set("ttl",value.ToString());
                 }
             }
         }

@@ -73,9 +73,9 @@ namespace LumiSoft.Net.TCP
             m_pTags = null;
 
             // Release events.
-            this.IdleTimeout = null;
-            this.Disonnected  = null;
-            this.Disposed    = null;
+            IdleTimeout = null;
+            Disonnected  = null;
+            Disposed    = null;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace LumiSoft.Net.TCP
                 };
 
                 var op = new SwitchToSecureAsyncOP();
-                op.CompletedAsync += delegate(object sender,EventArgs<TCP_ServerSession.SwitchToSecureAsyncOP> e){
+                op.CompletedAsync += delegate(object sender,EventArgs<SwitchToSecureAsyncOP> e){
                     switchSecureCompleted(op);
                 };
                 // Switch to secure completed synchronously.
@@ -181,7 +181,7 @@ namespace LumiSoft.Net.TCP
                 op.CompletedAsync += delegate(object s1,EventArgs<SwitchToSecureAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.SwitchToSecureAsync(op)){
+                if(!SwitchToSecureAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -218,7 +218,7 @@ namespace LumiSoft.Net.TCP
                 m_pTcpSession = null;
                 m_pSslStream  = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -235,7 +235,7 @@ namespace LumiSoft.Net.TCP
 
                 try{
                     m_pSslStream = new SslStream(m_pTcpSession.TcpStream.SourceStream,true);
-                    m_pSslStream.BeginAuthenticateAsServer(m_pTcpSession.m_pCertificate,this.BeginAuthenticateAsServerCompleted,null);
+                    m_pSslStream.BeginAuthenticateAsServer(m_pTcpSession.m_pCertificate,BeginAuthenticateAsServerCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -307,7 +307,7 @@ namespace LumiSoft.Net.TCP
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -327,8 +327,8 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<SwitchToSecureAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<SwitchToSecureAsyncOP>(this));
                 }
             }
         }
@@ -344,10 +344,10 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool SwitchToSecureAsync(SwitchToSecureAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }            
             if(m_pCertificate == null){
@@ -438,14 +438,14 @@ namespace LumiSoft.Net.TCP
             }
             
             try{
-                var logger = this.Server.GetType().GetProperty("Logger").GetValue(this.Server,null);
+                var logger = Server.GetType().GetProperty("Logger").GetValue(Server,null);
                 if (logger != null){
                     ((Logger)logger).AddText(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                        ID,
+                        AuthenticatedUserIdentity,
                         text,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint
+                        LocalEndPoint,
+                        RemoteEndPoint
                     );
                 }
             }
@@ -465,14 +465,14 @@ namespace LumiSoft.Net.TCP
             }
             
             try{
-                var logger = this.Server.GetType().GetProperty("Logger").GetValue(this.Server,null);
+                var logger = Server.GetType().GetProperty("Logger").GetValue(Server,null);
                 if (logger != null){
                     ((Logger)logger).AddException(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                        ID,
+                        AuthenticatedUserIdentity,
                         exception.Message,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint,
+                        LocalEndPoint,
+                        RemoteEndPoint,
                         exception
                     );
                 }
@@ -674,8 +674,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private void OnIdleTimeout()
         {
-            if(this.IdleTimeout != null){
-                this.IdleTimeout(this,new EventArgs());
+            if(IdleTimeout != null){
+                IdleTimeout(this,new EventArgs());
             }
         }
 
@@ -689,8 +689,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private void OnDisonnected()
         {
-            if(this.Disonnected != null){
-                this.Disonnected(this,new EventArgs());
+            if(Disonnected != null){
+                Disonnected(this,new EventArgs());
             }
         }
 
@@ -704,8 +704,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private void OnDisposed()
         {
-            if(this.Disposed != null){
-                this.Disposed(this,new EventArgs());
+            if(Disposed != null){
+                Disposed(this,new EventArgs());
             }
         }
 
@@ -720,8 +720,8 @@ namespace LumiSoft.Net.TCP
         /// <param name="x">Exception happened.</param>
         protected virtual void OnError(Exception x)
         {
-            if(this.Error != null){
-                this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
+            if(Error != null){
+                Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
     }

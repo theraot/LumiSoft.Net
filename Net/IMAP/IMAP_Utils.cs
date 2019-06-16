@@ -189,7 +189,7 @@ namespace LumiSoft.Net.IMAP
                 }
             }
 
-            return LumiSoft.Net.MIME.MIME_Utils.ParseRfc2822DateTime(date);
+            return MIME.MIME_Utils.ParseRfc2822DateTime(date);
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace LumiSoft.Net.IMAP
 				}
 			}
 
-			return System.Text.Encoding.Default.GetString(retVal.ToArray());
+			return Encoding.Default.GetString(retVal.ToArray());
 		}
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace LumiSoft.Net.IMAP
 					// Decode block
 					else{
 						// Get encoded block
-						var encodedBlock = System.Text.Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
+						var encodedBlock = Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
 
                         // Convert to UTF-16 char						
                         var decodedData = Net_Utils.Base64DecodeEx(encodedBlock,base64Chars);
@@ -401,7 +401,7 @@ namespace LumiSoft.Net.IMAP
             */
 
             if(encoding == IMAP_Mailbox_Encoding.ImapUtf7){
-                return "\"" + IMAP_Utils.Encode_IMAP_UTF7_String(mailbox) + "\"";
+                return "\"" + Encode_IMAP_UTF7_String(mailbox) + "\"";
             }
 
             if(encoding == IMAP_Mailbox_Encoding.ImapUtf8){

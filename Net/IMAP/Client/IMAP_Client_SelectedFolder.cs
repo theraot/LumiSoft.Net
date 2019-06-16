@@ -33,15 +33,15 @@ namespace LumiSoft.Net.IMAP.Client
         public override string ToString()
         {
             var retVal = new StringBuilder();
-            retVal.AppendLine("Name: "                + this.Name);
-            retVal.AppendLine("UidValidity: "         + this.UidValidity);
-            retVal.AppendLine("Flags: "               + StringArrayToString(this.Flags));
-            retVal.AppendLine("PermanentFlags: "      + StringArrayToString(this.PermanentFlags));
-            retVal.AppendLine("IsReadOnly: "          + this.IsReadOnly);
-            retVal.AppendLine("UidNext: "             + this.UidNext);
-            retVal.AppendLine("FirstUnseen: "         + this.FirstUnseen);
-            retVal.AppendLine("MessagesCount: "       + this.MessagesCount);
-            retVal.AppendLine("RecentMessagesCount: " + this.RecentMessagesCount);
+            retVal.AppendLine("Name: "                + Name);
+            retVal.AppendLine("UidValidity: "         + UidValidity);
+            retVal.AppendLine("Flags: "               + StringArrayToString(Flags));
+            retVal.AppendLine("PermanentFlags: "      + StringArrayToString(PermanentFlags));
+            retVal.AppendLine("IsReadOnly: "          + IsReadOnly);
+            retVal.AppendLine("UidNext: "             + UidNext);
+            retVal.AppendLine("FirstUnseen: "         + FirstUnseen);
+            retVal.AppendLine("MessagesCount: "       + MessagesCount);
+            retVal.AppendLine("RecentMessagesCount: " + RecentMessagesCount);
 
             return retVal.ToString();
         }

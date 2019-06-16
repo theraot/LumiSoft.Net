@@ -25,7 +25,7 @@ namespace LumiSoft.Net.RTP
         {
             var retVal = new StringBuilder();
 
-            retVal.AppendLine("CNAME: " + this.CNAME);            
+            retVal.AppendLine("CNAME: " + CNAME);            
             if(!string.IsNullOrEmpty(Name)){
                 retVal.AppendLine("Name: " + Name);
             }
@@ -135,8 +135,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnChanged()
         {
-            if(this.Changed != null){
-                this.Changed(this,new RTP_ParticipantEventArgs(this));
+            if(Changed != null){
+                Changed(this,new RTP_ParticipantEventArgs(this));
             }
         }
     }

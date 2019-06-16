@@ -82,7 +82,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public bool IsAuthenticated
         {
-            get{ return this.AuthenticatedUserIdentity != null; }
+            get{ return AuthenticatedUserIdentity != null; }
         }
 
         /// <summary>

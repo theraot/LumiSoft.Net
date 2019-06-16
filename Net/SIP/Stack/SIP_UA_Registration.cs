@@ -74,10 +74,10 @@ namespace LumiSoft.Net.SIP.Stack
             SetState(SIP_UA_RegistrationState.Disposed);
             OnDisposed();
 
-            this.Registered   = null;
-            this.Unregistered = null;
-            this.Error        = null;
-            this.Disposed     = null;
+            Registered   = null;
+            Unregistered = null;
+            Error        = null;
+            Disposed     = null;
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             // REMOVE ME:
-            if(this.AutoFixContact && (m_pContact is SIP_Uri)){
+            if(AutoFixContact && (m_pContact is SIP_Uri)){
                 // If Via: received or rport paramter won't match to our sent-by, use received and rport to construct new contact value.
                    
                 var       cContact    = ((SIP_Uri)m_pContact);
@@ -184,7 +184,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void BeginRegister(bool autoRefresh)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             // Fix ME: Stack not running, try register on next step.
@@ -205,7 +205,7 @@ namespace LumiSoft.Net.SIP.Stack
             var register = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
             register.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
             register.Route.Add(m_pServer.ToString());
-            register.Contact.Add("<" + this.Contact + ">;expires=" + m_RefreshInterval);
+            register.Contact.Add("<" + Contact + ">;expires=" + m_RefreshInterval);
 
             m_pRegisterSender = m_pStack.CreateRequestSender(register,m_pFlow);
             m_pRegisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pRegisterSender_ResponseReceived);
@@ -220,7 +220,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void BeginUnregister(bool dispose)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             m_AutoDispose = dispose;
@@ -237,7 +237,7 @@ namespace LumiSoft.Net.SIP.Stack
                 var unregister = m_pStack.CreateRequest(SIP_Methods.REGISTER,new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR),new SIP_t_NameAddress(m_pServer.Scheme + ":" + m_AOR));
                 unregister.RequestLine.Uri = SIP_Uri.Parse(m_pServer.Scheme + ":" + m_AOR.Substring(m_AOR.IndexOf('@') + 1));
                 unregister.Route.Add(m_pServer.ToString());
-                unregister.Contact.Add("<" + this.Contact + ">;expires=0");
+                unregister.Contact.Add("<" + Contact + ">;expires=0");
             
                 m_pUnregisterSender = m_pStack.CreateRequestSender(unregister,m_pFlow);
                 m_pUnregisterSender.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(m_pUnregisterSender_ResponseReceived);
@@ -284,7 +284,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return 3600; 
@@ -299,7 +299,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_AOR; 
@@ -314,7 +314,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pContact; 
@@ -329,7 +329,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pContacts.ToArray(); 
@@ -344,7 +344,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 // TODO:
@@ -363,8 +363,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnStateChanged()
         {
-            if(this.StateChanged != null){
-                this.StateChanged(this,new EventArgs());
+            if(StateChanged != null){
+                StateChanged(this,new EventArgs());
             }
         }
 
@@ -378,8 +378,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnRegistered()
         {
-            if(this.Registered != null){
-                this.Registered(this,new EventArgs());
+            if(Registered != null){
+                Registered(this,new EventArgs());
             }
         }
 
@@ -393,8 +393,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnUnregistered()
         {
-            if(this.Unregistered != null){
-                this.Unregistered(this,new EventArgs());
+            if(Unregistered != null){
+                Unregistered(this,new EventArgs());
             }
         }
 
@@ -409,8 +409,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         private void OnError(SIP_ResponseReceivedEventArgs e)
         {
-            if(this.Error != null){
-                this.Error(this,e);
+            if(Error != null){
+                Error(this,e);
             }
         }
 
@@ -424,8 +424,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnDisposed()
         {
-            if(this.Disposed != null){
-                this.Disposed(this,new EventArgs());
+            if(Disposed != null){
+                Disposed(this,new EventArgs());
             }
         }
     }

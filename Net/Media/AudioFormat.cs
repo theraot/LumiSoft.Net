@@ -33,13 +33,13 @@
             }
 
             var format = (AudioFormat)obj;
-            if (format.SamplesPerSecond != this.SamplesPerSecond){
+            if (format.SamplesPerSecond != SamplesPerSecond){
                 return false;
             }
-            if(format.BitsPerSample != this.BitsPerSample){
+            if(format.BitsPerSample != BitsPerSample){
                 return false;
             }
-            if(format.Channels != this.Channels){
+            if(format.Channels != Channels){
                 return false;
             }
 

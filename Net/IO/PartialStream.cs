@@ -124,7 +124,7 @@ namespace LumiSoft.Net.IO
             if(m_pStream.Position != (m_Start + m_Position)){
                 m_pStream.Position = m_Start + m_Position;
             }
-            int readedCount = m_pStream.Read(buffer,offset,Math.Min(count,(int)(this.Length - m_Position)));
+            int readedCount = m_pStream.Read(buffer,offset,Math.Min(count,(int)(Length - m_Position)));
             m_Position += readedCount;
 
             return readedCount;
@@ -227,7 +227,7 @@ namespace LumiSoft.Net.IO
                 if(m_IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
-                if(value < 0 || value > this.Length){
+                if(value < 0 || value > Length){
                     throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
                 }
 

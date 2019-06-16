@@ -21,7 +21,7 @@ namespace LumiSoft.Net
         public static string GetLocalHostName(string hostName)
         {
             if(string.IsNullOrEmpty(hostName)){
-                return System.Net.Dns.GetHostName();
+                return Dns.GetHostName();
             }
 
             return hostName;
@@ -255,7 +255,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ip");
             }
 
-			if(ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork){
+			if(ip.AddressFamily == AddressFamily.InterNetwork){
 				var ipBytes = ip.GetAddressBytes();
 
                 /* Private IPs:
@@ -833,7 +833,7 @@ namespace LumiSoft.Net
 			    return ToHex(hash).ToLower();
             }
 
-            return System.Text.Encoding.Default.GetString(hash);
+            return Encoding.Default.GetString(hash);
         }
 
         //--- Obsolte ------------------------------------------------------------------

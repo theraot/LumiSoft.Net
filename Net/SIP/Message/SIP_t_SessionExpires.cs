@@ -40,7 +40,7 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             m_Expires = expires;
-            this.Refresher = refresher;
+            Refresher = refresher;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Refresher
         {
             get{ 
-                var parameter = this.Parameters["refresher"];
+                var parameter = Parameters["refresher"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -149,10 +149,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("refresher");
+                    Parameters.Remove("refresher");
                 }
                 else{
-                    this.Parameters.Set("refresher",value);
+                    Parameters.Set("refresher",value);
                 }
             }
         }

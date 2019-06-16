@@ -55,8 +55,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event args.</param>
         private void OnNotify(SIP_RequestReceivedEventArgs e)
         {
-            if(this.Notify != null){
-                this.Notify(this,e);
+            if(Notify != null){
+                Notify(this,e);
             }
         }
     }

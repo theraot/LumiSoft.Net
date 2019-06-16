@@ -29,7 +29,7 @@ namespace LumiSoft.Net
         /// <param name="autoReset">Specifies if timer is auto reseted.</param>
         public TimerEx(double interval,bool autoReset) : base(interval)
         {
-            this.AutoReset = autoReset;
+            AutoReset = autoReset;
         }
 
         // TODO: We need to do this class .NET CF compatible.

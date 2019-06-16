@@ -27,8 +27,8 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_ServerTransaction(SIP_Stack stack,SIP_Flow flow,SIP_Request request) : base(stack,flow,request)
         {
             // Log
-            if(this.Stack.Logger != null){
-                this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] created.");
+            if(Stack.Logger != null){
+                Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] created.");
             }
 
             Start();            
@@ -39,7 +39,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public override void Dispose()
         {
-            lock(this.SyncRoot){
+            lock(SyncRoot){
                 if(m_pTimer100 != null){
                     m_pTimer100.Dispose();
                     m_pTimer100 = null;
@@ -74,9 +74,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         private void m_pTimer100_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
         {
-            lock(this.SyncRoot){
+            lock(SyncRoot){
                 // RFC 3261 17.2.1. TU didn't generate response in 200 ms, send '100 Trying' to stop request retransmission.
-                if(this.State == SIP_TransactionState.Proceeding && this.Responses.Length == 0){
+                if(State == SIP_TransactionState.Proceeding && Responses.Length == 0){
                     /* RFC 3261 17.2.1.
                         The 100 (Trying) response is constructed according to the procedures in Section 8.2.6, except that the
                         insertion of tags in the To header field of the response (when none was present in the request) 
@@ -89,13 +89,13 @@ namespace LumiSoft.Net.SIP.Stack
                         between the time of sending of the response and receipt of the request, measured in seconds.
                     */
 
-                    var tryingResponse = this.Stack.CreateResponse(SIP_ResponseCodes.x100_Trying,this.Request);
-                    if (this.Request.Timestamp != null){
-                        tryingResponse.Timestamp = new SIP_t_Timestamp(this.Request.Timestamp.Time,(DateTime.Now - this.CreateTime).Seconds);
+                    var tryingResponse = Stack.CreateResponse(SIP_ResponseCodes.x100_Trying,Request);
+                    if (Request.Timestamp != null){
+                        tryingResponse.Timestamp = new SIP_t_Timestamp(Request.Timestamp.Time,(DateTime.Now - CreateTime).Seconds);
                     }
 
                     try{
-                        this.Stack.TransportLayer.SendResponse(this,tryingResponse);
+                        Stack.TransportLayer.SendResponse(this,tryingResponse);
                     }
                     catch(Exception x){
                         OnTransportError(x);
@@ -125,23 +125,23 @@ namespace LumiSoft.Net.SIP.Stack
                 that value exceeds T2, in which case it is reset with the value of T2.
             */
 
-            lock(this.SyncRoot){
-                if(this.State == SIP_TransactionState.Completed){
+            lock(SyncRoot){
+                if(State == SIP_TransactionState.Completed){
                     // Log
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer G(INVITE response(3xx - 6xx) retransmission) triggered.");
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer G(INVITE response(3xx - 6xx) retransmission) triggered.");
                     }
 
                     try{
-                        this.Stack.TransportLayer.SendResponse(this,this.FinalResponse);
+                        Stack.TransportLayer.SendResponse(this,FinalResponse);
 
                         // Update(double current) next transmit time.
                         m_pTimerG.Interval *= Math.Min(m_pTimerG.Interval * 2,SIP_TimerConstants.T2);
                         m_pTimerG.Enabled = true;
 
                         // Log
-                        if(this.Stack.Logger != null){
-                            this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=false] timer G(INVITE response(3xx - 6xx) retransmission) updated, will trigger after " + m_pTimerG.Interval + ".");
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer G(INVITE response(3xx - 6xx) retransmission) updated, will trigger after " + m_pTimerG.Interval + ".");
                         }
                     }
                     catch(Exception x){
@@ -166,11 +166,11 @@ namespace LumiSoft.Net.SIP.Stack
                 that a transaction failure has occurred.
             */
 
-            lock(this.SyncRoot){
-                if(this.State == SIP_TransactionState.Completed){
+            lock(SyncRoot){
+                if(State == SIP_TransactionState.Completed){
                     // Log
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer H(INVITE ACK wait) triggered.");
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer H(INVITE ACK wait) triggered.");
                     }
 
                     OnTransactionError("ACK was never received.");
@@ -190,10 +190,10 @@ namespace LumiSoft.Net.SIP.Stack
                 Once timer I fires, the server MUST transition to the "Terminated" state.
             */
 
-            lock(this.SyncRoot){
+            lock(SyncRoot){
                 // Log
-                if(this.Stack.Logger != null){
-                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer I(INVITE ACK retransmission wait) triggered.");
+                if(Stack.Logger != null){
+                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer I(INVITE ACK retransmission wait) triggered.");
                 }
 
                 SetState(SIP_TransactionState.Terminated);
@@ -211,10 +211,10 @@ namespace LumiSoft.Net.SIP.Stack
                 Timer J fires, at which point it MUST transition to the "Terminated" state.
             */
 
-            lock(this.SyncRoot){
+            lock(SyncRoot){
                 // Log
-                if(this.Stack.Logger != null){
-                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer I(Non-INVITE request retransmission wait) triggered.");
+                if(Stack.Logger != null){
+                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer I(Non-INVITE request retransmission wait) triggered.");
                 }
 
                 SetState(SIP_TransactionState.Terminated);
@@ -233,10 +233,10 @@ namespace LumiSoft.Net.SIP.Stack
                 the machine MUST transition to the "Terminated" state.
             */
 
-            lock(this.SyncRoot){
+            lock(SyncRoot){
                 // Log
-                if(this.Stack.Logger != null){
-                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer L(ACK wait) triggered.");
+                if(Stack.Logger != null){
+                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer L(ACK wait) triggered.");
                 }
 
                 SetState(SIP_TransactionState.Terminated);
@@ -248,7 +248,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void Start()
         {
-            if(this.Method == SIP_Methods.INVITE){
+            if(Method == SIP_Methods.INVITE){
                 /* RFC 3261 17.2.1.
                     When a server transaction is constructed for a request, it enters the "Proceeding" state. The server 
                     transaction MUST generate a 100 (Trying) response unless it knows that the TU will generate a provisional 
@@ -275,9 +275,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         public void SendResponse(SIP_Response response)
         {
-            lock(this.SyncRoot){
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+            lock(SyncRoot){
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(response == null){
                     throw new ArgumentNullException("response");
@@ -332,18 +332,18 @@ namespace LumiSoft.Net.SIP.Stack
 
                     */
 
-                    if(this.Method == SIP_Methods.INVITE){
-                        if(this.State == SIP_TransactionState.Proceeding){
+                    if(Method == SIP_Methods.INVITE){
+                        if(State == SIP_TransactionState.Proceeding){
                             AddResponse(response);
 
                             // 1xx
                             if(response.StatusCodeType == SIP_StatusCodeType.Provisional){
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                             }
                             // 2xx
                             else if(response.StatusCodeType == SIP_StatusCodeType.Success){
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                                 SetState(SIP_TransactionState.Accpeted);
 
@@ -355,27 +355,27 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerL.Enabled = true;
 
                                 // Log
-                                if(this.Stack.Logger != null){
-                                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer L(ACK wait) started, will trigger after " + m_pTimerL.Interval + ".");
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer L(ACK wait) started, will trigger after " + m_pTimerL.Interval + ".");
                                 }
                             }
                             // 3xx - 6xx
                             else{
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                                 SetState(SIP_TransactionState.Completed);
 
                                 /* RFC 3261 17.2.1.
                                     For unreliable transports, timer G is set to fire in T1 seconds, and is not set to fire for reliable transports.
                                 */
-                                if(!this.Flow.IsReliable){
+                                if(!Flow.IsReliable){
                                     m_pTimerG = new TimerEx(SIP_TimerConstants.T1,false);
                                     m_pTimerG.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerG_Elapsed);
                                     m_pTimerG.Enabled = true;
 
                                     // Log
-                                    if(this.Stack.Logger != null){
-                                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer G(INVITE response(3xx - 6xx) retransmission) started, will trigger after " + m_pTimerG.Interval + ".");
+                                    if(Stack.Logger != null){
+                                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer G(INVITE response(3xx - 6xx) retransmission) started, will trigger after " + m_pTimerG.Interval + ".");
                                     }
                                 }
 
@@ -387,22 +387,22 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerH.Enabled = true;
 
                                 // Log
-                                if(this.Stack.Logger != null){
-                                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer H(INVITE ACK wait) started, will trigger after " + m_pTimerH.Interval + ".");
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer H(INVITE ACK wait) started, will trigger after " + m_pTimerH.Interval + ".");
                                 }
                             }
                         }
-                        else if(this.State == SIP_TransactionState.Accpeted){
-                            this.Stack.TransportLayer.SendResponse(this,response);
+                        else if(State == SIP_TransactionState.Accpeted){
+                            Stack.TransportLayer.SendResponse(this,response);
                             OnResponseSent(response);
                         }
-                        else if(this.State == SIP_TransactionState.Completed){
+                        else if(State == SIP_TransactionState.Completed){
                             // We do nothing here, we just wait ACK to arrive.
                         }
-                        else if(this.State == SIP_TransactionState.Confirmed){
+                        else if(State == SIP_TransactionState.Confirmed){
                             // We do nothing, just wait ACK retransmissions.
                         }
-                        else if(this.State == SIP_TransactionState.Terminated){
+                        else if(State == SIP_TransactionState.Terminated){
                             // We should never rreach here, but if so, skip it.
                         }
                     }
@@ -450,18 +450,18 @@ namespace LumiSoft.Net.SIP.Stack
                     */
 
                     else{
-                        if(this.State == SIP_TransactionState.Trying){
+                        if(State == SIP_TransactionState.Trying){
                             AddResponse(response);
 
                             // 1xx
                             if(response.StatusCodeType == SIP_StatusCodeType.Provisional){
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                                 SetState(SIP_TransactionState.Proceeding);
                             }
                             // 2xx - 6xx
                             else{
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                                 SetState(SIP_TransactionState.Completed);
 
@@ -475,22 +475,22 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerJ.Enabled = true;
 
                                 // Log
-                                if(this.Stack.Logger != null){
-                                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer J(Non-INVITE request retransmission wait) started, will trigger after " + m_pTimerJ.Interval + ".");
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer J(Non-INVITE request retransmission wait) started, will trigger after " + m_pTimerJ.Interval + ".");
                                 }
                             }
                         }
-                        else if(this.State == SIP_TransactionState.Proceeding){
+                        else if(State == SIP_TransactionState.Proceeding){
                             AddResponse(response);
 
                             // 1xx
                             if(response.StatusCodeType == SIP_StatusCodeType.Provisional){
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                             }
                             // 2xx - 6xx
                             else{
-                                this.Stack.TransportLayer.SendResponse(this,response);
+                                Stack.TransportLayer.SendResponse(this,response);
                                 OnResponseSent(response);
                                 SetState(SIP_TransactionState.Completed);
 
@@ -504,23 +504,23 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerJ.Enabled = true;
 
                                 // Log
-                                if(this.Stack.Logger != null){
-                                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer J(Non-INVITE request retransmission wait) started, will trigger after " + m_pTimerJ.Interval + ".");
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer J(Non-INVITE request retransmission wait) started, will trigger after " + m_pTimerJ.Interval + ".");
                                 }
                             }
                         }
-                        else if(this.State == SIP_TransactionState.Completed){
+                        else if(State == SIP_TransactionState.Completed){
                             // Do nothing.
                         }
-                        else if(this.State == SIP_TransactionState.Terminated){
+                        else if(State == SIP_TransactionState.Terminated){
                             // Do nothing.
                         }
                     }
                 }
                 catch(SIP_TransportException x){
                     // Log
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] transport exception: " + x.Message);
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] transport exception: " + x.Message);
                     }
 
                     OnTransportError(x);
@@ -535,24 +535,24 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="InvalidOperationException">Is raised when final response is sent and Cancel method is called after it.</exception>
         public override void Cancel()
         {
-            lock(this.SyncRoot){
-                if(this.State == SIP_TransactionState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+            lock(SyncRoot){
+                if(State == SIP_TransactionState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(this.FinalResponse != null){
+                if(FinalResponse != null){
                     throw new InvalidOperationException("Final response is already sent, CANCEL not allowed.");
                 }
 
                 try{
-                    var response = this.Stack.CreateResponse(SIP_ResponseCodes.x487_Request_Terminated,this.Request);
-                    this.Stack.TransportLayer.SendResponse(this,response);
+                    var response = Stack.CreateResponse(SIP_ResponseCodes.x487_Request_Terminated,Request);
+                    Stack.TransportLayer.SendResponse(this,response);
 
                     OnCanceled();
                 }
                 catch(SIP_TransportException x){
                     // Log
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] transport exception: " + x.Message);
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] transport exception: " + x.Message);
                     }
 
                     OnTransportError(x);
@@ -576,21 +576,21 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("request");
             }
 
-            lock(this.SyncRoot){
-                if(this.State == SIP_TransactionState.Disposed){
+            lock(SyncRoot){
+                if(State == SIP_TransactionState.Disposed){
                     return;
                 }
 
                 try{
                     // Log
-                    if(this.Stack.Logger != null){
+                    if(Stack.Logger != null){
                         var requestData = request.ToByteData();
 
-                        this.Stack.Logger.AddRead(
+                        Stack.Logger.AddRead(
                             Guid.NewGuid().ToString(),
                             null,
                             0,
-                            "Request [transactionID='" +  this.ID + "'; method='" + request.RequestLine.Method + "'; cseq='" + request.CSeq.SequenceNumber + "'; " + 
+                            "Request [transactionID='" +  ID + "'; method='" + request.RequestLine.Method + "'; cseq='" + request.CSeq.SequenceNumber + "'; " + 
                             "transport='" + flow.Transport + "'; size='" + requestData.Length + "'; received '" + flow.LocalEP + "' <- '" + flow.RemoteEP + "'.",
                             flow.LocalEP,
                             flow.RemoteEP,
@@ -598,30 +598,30 @@ namespace LumiSoft.Net.SIP.Stack
                         );
                     }
 
-                    if(this.Method == SIP_Methods.INVITE){
+                    if(Method == SIP_Methods.INVITE){
                         if(request.RequestLine.Method == SIP_Methods.INVITE){
-                            if(this.State == SIP_TransactionState.Proceeding){
+                            if(State == SIP_TransactionState.Proceeding){
                                 /* RFC 3261 17.2.1.
                                     If a request retransmission is received while in the "Proceeding" state, the most recent provisional 
                                     response that was received from the TU MUST be passed to the transport layer for retransmission.
                                 */
-                                var response = this.LastProvisionalResponse;
+                                var response = LastProvisionalResponse;
                                 if (response != null){
-                                    this.Stack.TransportLayer.SendResponse(this,response);
+                                    Stack.TransportLayer.SendResponse(this,response);
                                 }
                             }
-                            else if(this.State == SIP_TransactionState.Completed){
+                            else if(State == SIP_TransactionState.Completed){
                                 /* RFC 3261 17.2.1.
                                     While in the "Completed" state, if a request retransmission is received, the server SHOULD 
                                     pass the response to the transport for retransmission.
                                 */                                
-                                this.Stack.TransportLayer.SendResponse(this,this.FinalResponse);
+                                Stack.TransportLayer.SendResponse(this,FinalResponse);
                             }
                         }
                         else if(request.RequestLine.Method == SIP_Methods.ACK){
-                            if(this.State == SIP_TransactionState.Accpeted){
+                            if(State == SIP_TransactionState.Accpeted){
                             }
-                            else if(this.State == SIP_TransactionState.Completed){
+                            else if(State == SIP_TransactionState.Completed){
                                 /* RFC 3261 17.2.1
                                     If an ACK is received while the server transaction is in the "Completed" state, the server transaction 
                                     MUST transition to the "Confirmed" state.  As Timer G is ignored in this state, any retransmissions of the 
@@ -639,8 +639,8 @@ namespace LumiSoft.Net.SIP.Stack
                                     m_pTimerG = null;
 
                                     // Log
-                                    if(this.Stack.Logger != null){
-                                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer G(INVITE response(3xx - 6xx) retransmission) stopped.");
+                                    if(Stack.Logger != null){
+                                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer G(INVITE response(3xx - 6xx) retransmission) stopped.");
                                     }
                                 }
                                 if(m_pTimerH != null){
@@ -648,8 +648,8 @@ namespace LumiSoft.Net.SIP.Stack
                                     m_pTimerH = null;
 
                                     // Log
-                                    if(this.Stack.Logger != null){
-                                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer H(INVITE ACK wait) stopped.");
+                                    if(Stack.Logger != null){
+                                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer H(INVITE ACK wait) stopped.");
                                     }
                                 }
 
@@ -657,8 +657,8 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerI = new TimerEx((flow.IsReliable ? 0 : SIP_TimerConstants.T4),false);
                                 m_pTimerI.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerI_Elapsed);
                                 // Log
-                                if(this.Stack.Logger != null){
-                                    this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] timer I(INVITE ACK retransission wait) started, will trigger after " + m_pTimerI.Interval + ".");
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer I(INVITE ACK retransission wait) started, will trigger after " + m_pTimerI.Interval + ".");
                                 }
                                 m_pTimerI.Enabled = true;
                             }
@@ -666,28 +666,28 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     else{
                         // Non-INVITE transaction may have only request retransmission requests.
-                        if(this.Method == request.RequestLine.Method){
-                            if(this.State == SIP_TransactionState.Proceeding){
+                        if(Method == request.RequestLine.Method){
+                            if(State == SIP_TransactionState.Proceeding){
                                 /* RFC 3261 17.2.2.
                                     If a retransmission of the request is received while in the "Proceeding" state, the most
                                     recently sent provisional response MUST be passed to the transport layer for retransmission.
                                 */
-                                this.Stack.TransportLayer.SendResponse(this,this.LastProvisionalResponse);
+                                Stack.TransportLayer.SendResponse(this,LastProvisionalResponse);
                             }
-                            else if(this.State == SIP_TransactionState.Completed){
+                            else if(State == SIP_TransactionState.Completed){
                                 /* RFC 3261 17.2.2.
                                     While in the "Completed" state, the server transaction MUST pass the final response to the transport
                                     layer for retransmission whenever a retransmission of the request is received.
                                 */
-                                this.Stack.TransportLayer.SendResponse(this,this.FinalResponse);
+                                Stack.TransportLayer.SendResponse(this,FinalResponse);
                             }
                         }
                     }
                 }
                 catch(SIP_TransportException x){
                     // Log
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=true] transport exception: " + x.Message);
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddText(ID,"Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] transport exception: " + x.Message);
                     }
 
                     OnTransportError(x);
@@ -706,8 +706,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="response">SIP response.</param>
         private void OnResponseSent(SIP_Response response)
         {
-            if(this.ResponseSent != null){
-                this.ResponseSent(this,new SIP_ResponseSentEventArgs(this,response));
+            if(ResponseSent != null){
+                ResponseSent(this,new SIP_ResponseSentEventArgs(this,response));
             }
         }
 
@@ -721,8 +721,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnCanceled()
         {
-            if(this.Canceled != null){
-                this.Canceled(this,new EventArgs());
+            if(Canceled != null){
+                Canceled(this,new EventArgs());
             }
         }
     }

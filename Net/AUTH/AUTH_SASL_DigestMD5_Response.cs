@@ -176,7 +176,7 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentNullException("password");
             }
 
-            if(this.Response == CalculateResponse(userName,password)){
+            if(Response == CalculateResponse(userName,password)){
                 return true;
             }
 
@@ -223,22 +223,22 @@ namespace LumiSoft.Net.AUTH
             */
 
             var retVal = new StringBuilder();
-            retVal.Append("username=\"" + this.UserName + "\"");
-            retVal.Append(",realm=\"" + this.Realm + "\"");
-            retVal.Append(",nonce=\"" + this.Nonce + "\"");
-            retVal.Append(",cnonce=\"" + this.Cnonce + "\"");
-            retVal.Append(",nc=" + this.NonceCount.ToString("x8"));
-            retVal.Append(",qop=" + this.Qop);
-            retVal.Append(",digest-uri=\"" + this.DigestUri + "\"");
-            retVal.Append(",response=" + this.Response);
-            if(!string.IsNullOrEmpty(this.Charset)){
-                retVal.Append(",charset=" + this.Charset);
+            retVal.Append("username=\"" + UserName + "\"");
+            retVal.Append(",realm=\"" + Realm + "\"");
+            retVal.Append(",nonce=\"" + Nonce + "\"");
+            retVal.Append(",cnonce=\"" + Cnonce + "\"");
+            retVal.Append(",nc=" + NonceCount.ToString("x8"));
+            retVal.Append(",qop=" + Qop);
+            retVal.Append(",digest-uri=\"" + DigestUri + "\"");
+            retVal.Append(",response=" + Response);
+            if(!string.IsNullOrEmpty(Charset)){
+                retVal.Append(",charset=" + Charset);
             }
-            if(!string.IsNullOrEmpty(this.Cipher)){
-                retVal.Append(",cipher=\"" + this.Cipher + "\"");
+            if(!string.IsNullOrEmpty(Cipher)){
+                retVal.Append(",cipher=\"" + Cipher + "\"");
             }
-            if(!string.IsNullOrEmpty(this.Authzid)){
-                retVal.Append(",authzid=\"" + this.Authzid + "\"");
+            if(!string.IsNullOrEmpty(Authzid)){
+                retVal.Append(",authzid=\"" + Authzid + "\"");
             }
             // auth-param
 
@@ -282,21 +282,21 @@ namespace LumiSoft.Net.AUTH
             */
 
             byte[] a2 = null;
-            if(string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
-                a2 = Encoding.UTF8.GetBytes(":" + this.DigestUri);
+            if(string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
+                a2 = Encoding.UTF8.GetBytes(":" + DigestUri);
             }
-            else if(this.Qop.ToLower() == "auth-int" || this.Qop.ToLower() == "auth-conf"){
-                a2 = Encoding.UTF8.GetBytes(":" + this.DigestUri + ":00000000000000000000000000000000");
+            else if(Qop.ToLower() == "auth-int" || Qop.ToLower() == "auth-conf"){
+                a2 = Encoding.UTF8.GetBytes(":" + DigestUri + ":00000000000000000000000000000000");
             }            
 
-            if(this.Qop.ToLower() == "auth"){
+            if(Qop.ToLower() == "auth"){
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return "rspauth=" + hex(kd(hex(h(a1(userName,password))),Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2))));
+                return "rspauth=" + hex(kd(hex(h(a1(userName,password))),Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2))));
             }
 
-            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
+            throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
         /// <summary>
@@ -370,14 +370,14 @@ namespace LumiSoft.Net.AUTH
                 mechanism (i.e., MUST NOT be sent, and MUST be ignored if received).
             */
                         
-            if(string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
+            if(string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return hex(kd(hex(h(a1(userName,password))),Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2()))));
+                return hex(kd(hex(h(a1(userName,password))),Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2()))));
             }
 
-            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
+            throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
         /// <summary>
@@ -402,9 +402,9 @@ namespace LumiSoft.Net.AUTH
                 NOTE: HTTP MD5 RFC 2617 supports more algorithms. SASL requires md5-sess.
             */
   
-            if(string.IsNullOrEmpty(this.Authzid)){
-                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
-                var nonce_cnonce   = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce);
+            if(string.IsNullOrEmpty(Authzid)){
+                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
+                var nonce_cnonce   = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce);
 
                 var retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
                 Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
@@ -413,8 +413,8 @@ namespace LumiSoft.Net.AUTH
                 return retVal;
             }
             else{
-                var user_realm_pwd       = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
-                var nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce + ":" + this.Authzid);
+                var user_realm_pwd       = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
+                var nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce + ":" + Authzid);
 
                 var retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
                 Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
@@ -448,14 +448,14 @@ namespace LumiSoft.Net.AUTH
                 NOTE: In SASL entity-body hash always "00000000000000000000000000000000".
             */
 
-            if(string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
-                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + this.DigestUri);
+            if(string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
+                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + DigestUri);
             }
 
-            if(this.Qop.ToLower() == "auth-int" || this.Qop.ToLower() == "auth-conf"){
-                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + this.DigestUri + ":00000000000000000000000000000000");
+            if(Qop.ToLower() == "auth-int" || Qop.ToLower() == "auth-conf"){
+                return Encoding.UTF8.GetBytes("AUTHENTICATE:" + DigestUri + ":00000000000000000000000000000000");
             }
-            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
+            throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
         /// <summary>

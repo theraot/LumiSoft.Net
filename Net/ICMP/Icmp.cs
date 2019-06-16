@@ -104,7 +104,7 @@ namespace LumiSoft.Net.ICMP
 		/// <returns></returns>
 		public static EchoMessage[] Trace(string destIP)
 		{
-            return Trace(System.Net.IPAddress.Parse(destIP),2000);
+            return Trace(IPAddress.Parse(destIP),2000);
         }
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace LumiSoft.Net.ICMP
             var s = new Socket(AddressFamily.InterNetwork,SocketType.Raw,ProtocolType.Icmp);
 
             var ipdest = new IPEndPoint(ip,80);
-            var endpoint = (EndPoint)(new IPEndPoint(System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[0],80));
+            var endpoint = (EndPoint)(new IPEndPoint(Dns.GetHostEntry(Dns.GetHostName()).AddressList[0],80));
 
             ushort id         = (ushort)DateTime.Now.Millisecond;
 			var sendPacket = CreatePacket(id);
@@ -189,7 +189,7 @@ namespace LumiSoft.Net.ICMP
 			var s = new Socket(AddressFamily.InterNetwork,SocketType.Raw,ProtocolType.Icmp);
 
             var ipdest = new IPEndPoint(ip,80);
-            var endpoint = (EndPoint)(new IPEndPoint(System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList[0],80));
+            var endpoint = (EndPoint)(new IPEndPoint(Dns.GetHostEntry(Dns.GetHostName()).AddressList[0],80));
 
             ushort id         = (ushort)DateTime.Now.Millisecond;
 			var sendPacket = CreatePacket(id);

@@ -43,10 +43,10 @@ namespace LumiSoft.Net.Mime
 			// Parse entity and child entities if any (Conent-Type: multipart/xxx...)
             
 			// Multipart entity
-			if((this.ContentType & MediaType_enum.Multipart) != 0){
+			if((ContentType & MediaType_enum.Multipart) != 0){
 				// There must be be boundary ID (rfc 1341 7.2.1  The Content-Type field for multipart entities requires one parameter,
                 // "boundary", which is used to specify the encapsulation boundary.)
-				var boundaryID = this.ContentType_Boundary;
+				var boundaryID = ContentType_Boundary;
                 if (boundaryID == null){
 					// This is invalid message, just skip this mime entity
 				}
@@ -81,7 +81,7 @@ namespace LumiSoft.Net.Mime
 					while(true){					
 						// Parse and add child entity
 						var childEntity = new MimeEntity();
-                        this.ChildEntities.Add(childEntity);
+                        ChildEntities.Add(childEntity);
 				
 						// This is last entity, stop parsing
 						if(childEntity.Parse(stream,boundaryID) == false){
@@ -187,15 +187,15 @@ namespace LumiSoft.Net.Mime
 		public void ToStream(Stream storeStream)
 		{			
 			// Write headers
-			var data = System.Text.Encoding.Default.GetBytes(FoldHeader(this.HeaderString));
+			var data = Encoding.Default.GetBytes(FoldHeader(HeaderString));
             storeStream.Write(data,0,data.Length);
 
 			// If multipart entity, write child entities.(multipart entity don't contain data, it contains nested entities )
-			if((this.ContentType & MediaType_enum.Multipart) != 0){
-				var boundary = this.ContentType_Boundary;
-                foreach (MimeEntity entity in this.ChildEntities){
+			if((ContentType & MediaType_enum.Multipart) != 0){
+				var boundary = ContentType_Boundary;
+                foreach (MimeEntity entity in ChildEntities){
 					// Write boundary start. Syntax: <CRLF>--BoundaryID<CRLF>
-					data = System.Text.Encoding.Default.GetBytes("\r\n--" + boundary + "\r\n");
+					data = Encoding.Default.GetBytes("\r\n--" + boundary + "\r\n");
 					storeStream.Write(data,0,data.Length);
 
 					// Force child entity to store itself
@@ -203,7 +203,7 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Write boundaries end Syntax: <CRLF>--BoundaryID--<CRLF>
-				data = System.Text.Encoding.Default.GetBytes("\r\n--" + boundary + "--\r\n");
+				data = Encoding.Default.GetBytes("\r\n--" + boundary + "--\r\n");
 				storeStream.Write(data,0,data.Length);
 			}
 			// If singlepart (text,image,audio,video,message, ...), write entity data.
@@ -211,8 +211,8 @@ namespace LumiSoft.Net.Mime
 				// Write blank line between headers and content
 				storeStream.Write(new[]{(byte)'\r',(byte)'\n'},0,2);
 
-				if(this.DataEncoded != null){
-					storeStream.Write(this.DataEncoded,0,this.DataEncoded.Length);
+				if(DataEncoded != null){
+					storeStream.Write(DataEncoded,0,DataEncoded.Length);
 				}				
 			}
 		}
@@ -234,7 +234,7 @@ namespace LumiSoft.Net.Mime
 		/// <param name="stream">Stream where to store data.</param>
 		public void DataToStream(Stream stream)
 		{
-			var data = this.Data;
+			var data = Data;
             stream.Write(data,0,data.Length);
 		}
 
@@ -258,7 +258,7 @@ namespace LumiSoft.Net.Mime
 			var data = new byte[stream.Length];
             stream.Read(data,0,(int)stream.Length);
 
-			this.Data = data;
+			Data = data;
 		}
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace LumiSoft.Net.Mime
             }
 
 			set{
-				if(this.DataEncoded != null){
+				if(DataEncoded != null){
 					throw new Exception("ContentType can't be changed while there is data specified, set data to null before !");
 				}
 				if(value == MediaType_enum.Unknown){
@@ -555,7 +555,7 @@ namespace LumiSoft.Net.Mime
             }
 
 			set{ 
-				if(this.DataEncoded != null){
+				if(DataEncoded != null){
 					throw new Exception("ContentType can't be changed while there is data specified, set data to null before !");
 				}
 				if(Header.Contains("Content-Type:")){
@@ -594,13 +594,13 @@ namespace LumiSoft.Net.Mime
 				var encoding = MimeUtils.ContentTransferEncodingToString(value);
 
                 // There is entity data specified and encoding changed, we need to convert existing data
-                if (this.DataEncoded != null){
-					var oldEncoding = this.ContentTransferEncoding;
+                if (DataEncoded != null){
+					var oldEncoding = ContentTransferEncoding;
                     if (oldEncoding == ContentTransferEncoding_enum.Unknown || oldEncoding == ContentTransferEncoding_enum.NotSpecified){
 						throw new Exception("Data can't be converted because old encoding '" + MimeUtils.ContentTransferEncodingToString(oldEncoding) + "' is unknown !");
 					}
 
-					this.DataEncoded = EncodeData(this.Data,value);
+					DataEncoded = EncodeData(Data,value);
 				}
 
 				if(Header.Contains("Content-Transfer-Encoding:")){
@@ -726,7 +726,7 @@ namespace LumiSoft.Net.Mime
 				if(!Header.Contains("Content-Type:")){
 					throw new Exception("Please specify Content-Type first !");
 				}
-				if((this.ContentType & MediaType_enum.Application) == 0){
+				if((ContentType & MediaType_enum.Application) == 0){
 					throw new Exception("Parameter name is available only for ContentType application/xxx !");
 				}
 
@@ -766,25 +766,25 @@ namespace LumiSoft.Net.Mime
 				if(!Header.Contains("Content-Type:")){
 					throw new Exception("Please specify Content-Type first !");
 				}
-				if((this.ContentType & MediaType_enum.Text) == 0){
+				if((ContentType & MediaType_enum.Text) == 0){
 					throw new Exception("Parameter boundary is available only for ContentType text/xxx !");
 				}
 
 				// There is data specified, we need to convert it because charset changed
-				if(this.DataEncoded != null){
-					var currentCharSet = this.ContentType_CharSet;
+				if(DataEncoded != null){
+					var currentCharSet = ContentType_CharSet;
                     if (currentCharSet == null){
                         currentCharSet = "ascii";
                     }
 					try{
-						System.Text.Encoding.GetEncoding(currentCharSet);
+						Encoding.GetEncoding(currentCharSet);
 					}
 					catch{
 						throw new Exception("Data can't be converted because current charset '" + currentCharSet + "' isn't supported !");
 					}
 					try{
-						var encoding = System.Text.Encoding.GetEncoding(value);
-                        this.Data = encoding.GetBytes(this.DataText);
+						var encoding = Encoding.GetEncoding(value);
+                        Data = encoding.GetBytes(DataText);
 					}
 					catch{
 						throw new Exception("Data can't be converted because new charset '" + value + "' isn't supported !");
@@ -826,7 +826,7 @@ namespace LumiSoft.Net.Mime
 				if(!Header.Contains("Content-Type:")){
 					throw new Exception("Please specify Content-Type first !");
 				}
-				if((this.ContentType & MediaType_enum.Multipart) == 0){
+				if((ContentType & MediaType_enum.Multipart) == 0){
 					throw new Exception("Parameter boundary is available only for ContentType multipart/xxx !");
 				}
 
@@ -885,7 +885,7 @@ namespace LumiSoft.Net.Mime
             {
                 if(Header.Contains("Date:")){
 					try{
-						return LumiSoft.Net.MIME.MIME_Utils.ParseRfc2822DateTime(Header.GetFirst("Date:").Value);
+						return MIME.MIME_Utils.ParseRfc2822DateTime(Header.GetFirst("Date:").Value);
 					}
 					catch{
 						return DateTime.MinValue;
@@ -897,7 +897,7 @@ namespace LumiSoft.Net.Mime
 
 			set{ 
 				if(Header.Contains("Date:")){
-					Header.GetFirst("Date:").Value = LumiSoft.Net.MIME.MIME_Utils.DateTimeToRfc2822(value);
+					Header.GetFirst("Date:").Value = MIME.MIME_Utils.DateTimeToRfc2822(value);
 				}
 				else{
 					Header.Add("Date:",MimeUtils.DateTimeToRfc2822(value));
@@ -1314,25 +1314,25 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ 
 				// Decode Data
-				var encoding = this.ContentTransferEncoding;
+				var encoding = ContentTransferEncoding;
                 if (encoding == ContentTransferEncoding_enum.Base64){
-					return Core.Base64Decode(this.DataEncoded);				
+					return Core.Base64Decode(DataEncoded);				
 				}
 
                 if(encoding == ContentTransferEncoding_enum.QuotedPrintable){
-                    return Core.QuotedPrintableDecode(this.DataEncoded);
+                    return Core.QuotedPrintableDecode(DataEncoded);
                 }
-                return this.DataEncoded;
+                return DataEncoded;
             }
 
 			set{
 				if(value == null){
-					this.DataEncoded = null;
+					DataEncoded = null;
 					return;
 				}
 				
-				var encoding = this.ContentTransferEncoding;
-                this.DataEncoded = EncodeData(value,encoding);
+				var encoding = ContentTransferEncoding;
+                DataEncoded = EncodeData(value,encoding);
 			}
 		}
 
@@ -1343,33 +1343,33 @@ namespace LumiSoft.Net.Mime
 		public string DataText
 		{			
 			get{ 
-				if((this.ContentType & MediaType_enum.Text) == 0 && (this.ContentType & MediaType_enum.NotSpecified) == 0){
+				if((ContentType & MediaType_enum.Text) == 0 && (ContentType & MediaType_enum.NotSpecified) == 0){
 					throw new Exception("This property is available only if ContentType is Text/xxx... !");
 				}
 
 				try{
-					var charSet = this.ContentType_CharSet;
+					var charSet = ContentType_CharSet;
                     // Charset isn't specified, use system default
                     if (charSet == null){
-						return System.Text.Encoding.Default.GetString(this.Data);
+						return Encoding.Default.GetString(Data);
 					}
 
-                    return System.Text.Encoding.GetEncoding(charSet).GetString(this.Data);
+                    return Encoding.GetEncoding(charSet).GetString(Data);
                 }
 				// Not supported charset, use default
 				catch{
-					return System.Text.Encoding.Default.GetString(this.Data);
+					return Encoding.Default.GetString(Data);
 				}
 			}
 
 			set{
 				if(value == null){
-					this.DataEncoded = null;
+					DataEncoded = null;
 					return;
 				}
 
 				// Check charset
-				var charSet = this.ContentType_CharSet;
+				var charSet = ContentType_CharSet;
                 if (charSet == null){
 					throw new Exception("Please specify CharSet property first !");
 				}
@@ -1381,7 +1381,7 @@ namespace LumiSoft.Net.Mime
 				catch{
 					throw new Exception("Not supported charset '" + charSet + "' ! If you need to use this charset, then set data through Data or DataEncoded property.");
 				}
-                this.Data = encoding.GetBytes(value);
+                Data = encoding.GetBytes(value);
 			}
 		}
 

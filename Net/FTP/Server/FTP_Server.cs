@@ -19,7 +19,7 @@ namespace LumiSoft.Net.FTP.Server
 		/// </summary>
 		public FTP_Server()
 		{
-            this.SessionIdleTimeout = 3600;
+            SessionIdleTimeout = 3600;
 		}
 
         /// <summary>
@@ -53,15 +53,15 @@ namespace LumiSoft.Net.FTP.Server
         public string GreetingText
         {
             get{                
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_GreetingText; }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_GreetingText = value;
@@ -76,16 +76,16 @@ namespace LumiSoft.Net.FTP.Server
         public int MaxBadCommands
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_MaxBadCommands; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 0){
                     throw new ArgumentException("Property 'MaxBadCommands' value must be >= 0.");

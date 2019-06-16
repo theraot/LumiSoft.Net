@@ -121,7 +121,7 @@ namespace LumiSoft.Net.SIP.Message
         public string RemoteTag
         {
             get{ 
-                var parameter = this.Parameters["remote-tag"];
+                var parameter = Parameters["remote-tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -131,10 +131,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("remote-tag");
+                    Parameters.Remove("remote-tag");
                 }
                 else{
-                    this.Parameters.Set("remote-tag",value);
+                    Parameters.Set("remote-tag",value);
                 }
             }
         }
@@ -145,7 +145,7 @@ namespace LumiSoft.Net.SIP.Message
         public string LocalTag
         {
             get{ 
-                var parameter = this.Parameters["local-tag"];
+                var parameter = Parameters["local-tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -155,10 +155,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("local-tag");
+                    Parameters.Remove("local-tag");
                 }
                 else{
-                    this.Parameters.Set("local-tag",value);
+                    Parameters.Set("local-tag",value);
                 }
             }
         }

@@ -511,7 +511,7 @@ namespace LumiSoft.Net.Media
                 format.wBitsPerSample  = (ushort)m_BitsPerSample;
                 format.cbSize          = 0; 
                 // We must delegate reference, otherwise GC will collect it.
-                m_pWaveOutProc = new waveOutProc(this.OnWaveOutProc);
+                m_pWaveOutProc = new waveOutProc(OnWaveOutProc);
                 int result = WavMethods.waveOutOpen(out m_pWavDevHandle,m_pOutDevice.Index,format,m_pWaveOutProc,0,WavConstants.CALLBACK_FUNCTION);
                 if(result != MMSYSERR.NOERROR){
                     throw new Exception("Failed to open wav device, error: " + result.ToString() + ".");
@@ -573,7 +573,7 @@ namespace LumiSoft.Net.Media
 
                 try{
                     if(uMsg == WavConstants.MM_WOM_DONE){ 
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(this.OnCleanUpFirstBlock));
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(OnCleanUpFirstBlock));
                     }
                 }
                 catch{
@@ -827,7 +827,7 @@ namespace LumiSoft.Net.Media
             if(count < 0 || count > (buffer.Length + offset)){
                 throw new ArgumentOutOfRangeException("count");
             }
-            if((count % this.BlockSize) != 0){
+            if((count % BlockSize) != 0){
                 throw new ArgumentOutOfRangeException("count","Argument 'count' is not n * BlockSize.");
             }
 
@@ -850,7 +850,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pDevice; 
@@ -865,7 +865,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
  
                 return m_pAudioFormat; 
@@ -880,7 +880,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
  
                 return m_pAudioFormat.SamplesPerSecond; 
@@ -895,7 +895,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
             
                 return m_pAudioFormat.BitsPerSample; 
@@ -910,7 +910,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
              
                 return m_pAudioFormat.Channels; 
@@ -925,7 +925,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pAudioFormat.Channels * (m_pAudioFormat.BitsPerSample / 8); 
@@ -941,7 +941,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
  
                 return m_pWaveOut.Volume; 
@@ -949,7 +949,7 @@ namespace LumiSoft.Net.Media
 
             set{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 0 || value > 100){
                     throw new ArgumentException("Property 'Volume' value must be >=0 and <= 100.");
@@ -967,7 +967,7 @@ namespace LumiSoft.Net.Media
         {
             get{ 
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pWaveOut.BytesBuffered; 

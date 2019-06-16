@@ -131,7 +131,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// </summary>
         public override void Dispose()
         {
-            Dispose(new ObjectDisposedException(this.GetType().Name));
+            Dispose(new ObjectDisposedException(GetType().Name));
         }
 
         /// <summary>
@@ -227,9 +227,9 @@ namespace LumiSoft.Net.SMTP.Relay
         public override void Disconnect()
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 return;
             }
 
@@ -244,9 +244,9 @@ namespace LumiSoft.Net.SMTP.Relay
         public void Disconnect(string text)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 return;
             }
 
@@ -452,7 +452,7 @@ namespace LumiSoft.Net.SMTP.Relay
                         m_pActiveTarget = null;
 
                         // Connect failed, if there are more target IPs, try next one.
-                        if(!this.IsDisposed && !this.IsConnected && m_pTargets.Count > 0){
+                        if(!IsDisposed && !IsConnected && m_pTargets.Count > 0){
                             BeginConnect();
                         }
                         else{
@@ -528,7 +528,7 @@ namespace LumiSoft.Net.SMTP.Relay
                         }
 
                         var mailOP = new SMTP_Client.MailFromAsyncOP(
-                            this.From,
+                            From,
                             messageSize,
                             IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
                             IsDsnSupported() ? m_pRelayItem.EnvelopeID : null
@@ -603,7 +603,7 @@ namespace LumiSoft.Net.SMTP.Relay
                     }
 
                     var mailOP = new SMTP_Client.MailFromAsyncOP(
-                        this.From,
+                        From,
                         messageSize,
                         IsDsnSupported() ? m_pRelayItem.DSN_Ret : SMTP_DSN_Ret.NotSpecified,
                         IsDsnSupported() ? m_pRelayItem.EnvelopeID : null
@@ -638,7 +638,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
                 else{
                     var rcptOP = new SMTP_Client.RcptToAsyncOP(
-                        this.To,
+                        To,
                         IsDsnSupported() ? m_pRelayItem.DSN_Notify : SMTP_DSN_Notify.NotSpecified,
                         IsDsnSupported() ? m_pRelayItem.OriginalRecipient : null
                     );
@@ -749,7 +749,7 @@ namespace LumiSoft.Net.SMTP.Relay
             if(m_pServer.Logger != null){
                 GenericIdentity identity = null;
                 try{
-                    identity = this.AuthenticatedUserIdentity;
+                    identity = AuthenticatedUserIdentity;
                 }
                 catch{
                 }
@@ -793,7 +793,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return (m_pLocalBindInfo == null ? "" : m_pLocalBindInfo.HostName); 
@@ -808,7 +808,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SessionCreateTime; 
@@ -823,10 +823,10 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return (int)(m_pServer.SessionIdleTimeout - ((DateTime.Now.Ticks - this.TcpStream.LastActivity.Ticks) / 10000));
+                return (int)(m_pServer.SessionIdleTimeout - ((DateTime.Now.Ticks - TcpStream.LastActivity.Ticks) / 10000));
             }
         }
 
@@ -838,7 +838,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRelayItem.From; 
@@ -853,7 +853,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pRelayItem.To; 
@@ -868,7 +868,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRelayItem.MessageID; 
@@ -883,7 +883,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRelayItem.MessageStream; 
@@ -898,7 +898,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(m_pActiveTarget != null){
@@ -917,7 +917,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRelayItem.Queue; 
@@ -932,7 +932,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{               
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRelayItem.Tag; 
@@ -947,8 +947,8 @@ namespace LumiSoft.Net.SMTP.Relay
         public override GenericIdentity AuthenticatedUserIdentity
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(!m_pSmtpClient.IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
@@ -966,7 +966,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmtpClient.IsConnected; 
@@ -981,7 +981,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SessionID; 
@@ -996,7 +996,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmtpClient.ConnectTime; 
@@ -1011,7 +1011,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmtpClient.LastActivity; 
@@ -1026,7 +1026,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmtpClient.LocalEndPoint; 
@@ -1041,7 +1041,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmtpClient.RemoteEndPoint; 
@@ -1056,7 +1056,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmtpClient.TcpStream; 

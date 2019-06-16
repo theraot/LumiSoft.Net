@@ -130,23 +130,23 @@ namespace LumiSoft.Net.AUTH
             */
 
             var retVal = new StringBuilder();
-            retVal.Append("realm=\"" + Net_Utils.ArrayToString(this.Realm,",") + "\"");
-            retVal.Append(",nonce=\"" + this.Nonce + "\"");
-            if(this.QopOptions != null){
-                retVal.Append(",qop=\"" + Net_Utils.ArrayToString(this.QopOptions,",") + "\"");
+            retVal.Append("realm=\"" + Net_Utils.ArrayToString(Realm,",") + "\"");
+            retVal.Append(",nonce=\"" + Nonce + "\"");
+            if(QopOptions != null){
+                retVal.Append(",qop=\"" + Net_Utils.ArrayToString(QopOptions,",") + "\"");
             }
-            if(this.Stale){
+            if(Stale){
                 retVal.Append(",stale=true");
             }
-            if(this.Maxbuf > 0){
-                retVal.Append(",maxbuf=" + this.Maxbuf);
+            if(Maxbuf > 0){
+                retVal.Append(",maxbuf=" + Maxbuf);
             }
-            if(!string.IsNullOrEmpty(this.Charset)){
-                retVal.Append(",charset=" + this.Charset);
+            if(!string.IsNullOrEmpty(Charset)){
+                retVal.Append(",charset=" + Charset);
             }
-            retVal.Append(",algorithm=" + this.Algorithm);
-            if(!string.IsNullOrEmpty(this.CipherOpts)){
-                retVal.Append(",cipher-opts=\"" + this.CipherOpts + "\"");
+            retVal.Append(",algorithm=" + Algorithm);
+            if(!string.IsNullOrEmpty(CipherOpts)){
+                retVal.Append(",cipher-opts=\"" + CipherOpts + "\"");
             }
             //if(!string.IsNullOrEmpty(this.AuthParam)){
             //    retVal.Append("auth-param=\"" + this.AuthParam + "\"");

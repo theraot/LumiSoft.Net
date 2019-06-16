@@ -129,7 +129,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Alg
         {
             get{ 
-                var parameter = this.Parameters["alg"];
+                var parameter = Parameters["alg"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -139,10 +139,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("alg");
+                    Parameters.Remove("alg");
                 }
                 else{
-                    this.Parameters.Set("alg",value);
+                    Parameters.Set("alg",value);
                 }
             }
         }

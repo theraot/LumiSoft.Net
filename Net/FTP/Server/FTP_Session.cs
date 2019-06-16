@@ -77,7 +77,7 @@ namespace LumiSoft.Net.FTP.Server
             public void Start()
             {
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 // Passive mode, start waiting client connection.
@@ -145,7 +145,7 @@ namespace LumiSoft.Net.FTP.Server
             public void Abort()
             {
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 WriteLine("426 Data connection closed; transfer aborted.");
@@ -229,11 +229,11 @@ namespace LumiSoft.Net.FTP.Server
             
             try{
                 string reply = null;
-                if(string.IsNullOrEmpty(this.Server.GreetingText)){
-                    reply = "220 [" + Net_Utils.GetLocalHostName(this.LocalHostName) + "] FTP Service Ready.";
+                if(string.IsNullOrEmpty(Server.GreetingText)){
+                    reply = "220 [" + Net_Utils.GetLocalHostName(LocalHostName) + "] FTP Service Ready.";
                 }
                 else{
-                    reply = "220 " + this.Server.GreetingText;
+                    reply = "220 " + Server.GreetingText;
                 }
 
                 var e = OnStarted(reply);
@@ -260,7 +260,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="x">Exception happened.</param>
         protected override void OnError(Exception x)
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
             if(x == null){
@@ -319,7 +319,7 @@ namespace LumiSoft.Net.FTP.Server
         /// </summary>
         private void BeginReadCmd()
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -332,7 +332,7 @@ namespace LumiSoft.Net.FTP.Server
                     }
                 });
                 // Process incoming commands while, command reading completes synchronously.
-                while(this.TcpStream.ReadLine(readLineOP,true)){
+                while(TcpStream.ReadLine(readLineOP,true)){
                     if(!ProcessCmd(readLineOP)){
                         break;
                     }
@@ -354,7 +354,7 @@ namespace LumiSoft.Net.FTP.Server
                         
             try{
                 // We are already disposed.
-                if(this.IsDisposed){
+                if(IsDisposed){
                     return false;
                 }
                 // Check errors.
@@ -363,7 +363,7 @@ namespace LumiSoft.Net.FTP.Server
                 }
                 // Remote host shut-down(Socket.ShutDown) socket.
                 if(op.BytesInBuffer == 0){
-                    LogAddText("The remote host '" + this.RemoteEndPoint.ToString() + "' shut down socket.");
+                    LogAddText("The remote host '" + RemoteEndPoint.ToString() + "' shut down socket.");
                     Dispose();
                 
                     return false;
@@ -374,13 +374,13 @@ namespace LumiSoft.Net.FTP.Server
                 var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
 
                 // Log.
-                if (this.Server.Logger != null){
+                if (Server.Logger != null){
                     // Hide password from log.
                     if(cmd == "PASS"){
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,"PASS <***REMOVED***>",this.LocalEndPoint,this.RemoteEndPoint);
+                        Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,"PASS <***REMOVED***>",LocalEndPoint,RemoteEndPoint);
                     }
                     else{
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,this.LocalEndPoint,this.RemoteEndPoint);
+                        Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,LocalEndPoint,RemoteEndPoint);
                     }
                 }
 
@@ -467,7 +467,7 @@ namespace LumiSoft.Net.FTP.Server
                      m_BadCommands++;
 
                      // Maximum allowed bad commands exceeded.
-                     if(this.Server.MaxBadCommands != 0 && m_BadCommands > this.Server.MaxBadCommands){
+                     if(Server.MaxBadCommands != 0 && m_BadCommands > Server.MaxBadCommands){
                          WriteLine("500 Too many bad commands, closing transmission channel.");
                          Disconnect();
 
@@ -491,7 +491,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				WriteLine("500 You are already authenticated");
 
 				return;
@@ -523,7 +523,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				WriteLine("500 You are already authenticated");
 
 				return;
@@ -563,7 +563,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -599,7 +599,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -637,7 +637,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -658,7 +658,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }			
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -709,7 +709,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }			
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -756,7 +756,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -801,7 +801,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -838,7 +838,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -885,7 +885,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -936,7 +936,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -961,7 +961,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1003,7 +1003,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1040,7 +1040,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }			
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1077,7 +1077,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1135,7 +1135,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }			
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1213,7 +1213,7 @@ namespace LumiSoft.Net.FTP.Server
 				argument is changed, Format then returns to the Non-print
 				default.
 			*/
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 				return;
 			}
@@ -1250,7 +1250,7 @@ namespace LumiSoft.Net.FTP.Server
 				where h1 is the high order 8 bits of the internet host
 				address.
 			*/
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1278,7 +1278,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }			
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1292,7 +1292,7 @@ namespace LumiSoft.Net.FTP.Server
 				host and port address this server is listening on.
 			*/
 
-            int port = this.Server.PassiveStartPort;
+            int port = Server.PassiveStartPort;
 
             // We have already passive socket.
             if(m_pPassiveSocket != null){
@@ -1319,11 +1319,11 @@ namespace LumiSoft.Net.FTP.Server
 
 			// Notify client on what IP and port server is listening client to connect.
 			// PORT h1,h2,h3,h4,p1,p2
-            if(this.Server.PassivePublicIP != null){
-                WriteLine("227 Entering Passive Mode (" + this.Server.PassivePublicIP.ToString().Replace(".",",") + "," + (port >> 8) + "," + (port & 255)  + ").");
+            if(Server.PassivePublicIP != null){
+                WriteLine("227 Entering Passive Mode (" + Server.PassivePublicIP.ToString().Replace(".",",") + "," + (port >> 8) + "," + (port & 255)  + ").");
             }
             else{
-                WriteLine("227 Entering Passive Mode (" + this.LocalEndPoint.Address.ToString().Replace(".",",") + "," + (port >> 8) + "," + (port & 255)  + ").");
+                WriteLine("227 Entering Passive Mode (" + LocalEndPoint.Address.ToString().Replace(".",",") + "," + (port >> 8) + "," + (port & 255)  + ").");
             }
 			PassiveMode = true;
 		}
@@ -1341,7 +1341,7 @@ namespace LumiSoft.Net.FTP.Server
 				word one of the system names listed in the current version
 				of the Assigned Numbers document [4].
 			*/
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				WriteLine("530 Please authenticate firtst !");
 
 				return;
@@ -1542,11 +1542,11 @@ namespace LumiSoft.Net.FTP.Server
                 throw new ArgumentNullException("line");
             }
 
-            int countWritten = this.TcpStream.WriteLine(line);
+            int countWritten = TcpStream.WriteLine(line);
 
             // Log.
-            if(this.Server.Logger != null){
-                this.Server.Logger.AddWrite(this.ID,this.AuthenticatedUserIdentity,countWritten,line.TrimEnd(),this.LocalEndPoint,this.RemoteEndPoint);
+            if(Server.Logger != null){
+                Server.Logger.AddWrite(ID,AuthenticatedUserIdentity,countWritten,line.TrimEnd(),LocalEndPoint,RemoteEndPoint);
             }
         }
 
@@ -1562,8 +1562,8 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             // Log
-            if(this.Server.Logger != null){
-                this.Server.Logger.AddText(this.ID,text);
+            if(Server.Logger != null){
+                Server.Logger.AddText(ID,text);
             }
         }
 
@@ -1574,8 +1574,8 @@ namespace LumiSoft.Net.FTP.Server
         public new FTP_Server Server
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return (FTP_Server)base.Server;
@@ -1589,8 +1589,8 @@ namespace LumiSoft.Net.FTP.Server
         public Dictionary<string,AUTH_SASL_ServerMechanism> Authentications
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pAuthentications; 
@@ -1604,8 +1604,8 @@ namespace LumiSoft.Net.FTP.Server
         public int BadCommands
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_BadCommands; 
@@ -1619,8 +1619,8 @@ namespace LumiSoft.Net.FTP.Server
         public override GenericIdentity AuthenticatedUserIdentity
         {
 	        get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
 		        return m_pUser;
@@ -1633,16 +1633,16 @@ namespace LumiSoft.Net.FTP.Server
         public string CurrentDir
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_CurrentDir; 
             }
 
             set{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_CurrentDir = value;
@@ -1668,8 +1668,8 @@ namespace LumiSoft.Net.FTP.Server
         {
             var eArgs = new FTP_e_Started(reply);
 
-            if (this.Started != null){                
-                this.Started(this,eArgs);
+            if (Started != null){                
+                Started(this,eArgs);
             }
 
             return eArgs;
@@ -1690,8 +1690,8 @@ namespace LumiSoft.Net.FTP.Server
         {
             var eArgs = new FTP_e_Authenticate(user,password);
 
-            if (this.Authenticate != null){
-                this.Authenticate(this,eArgs);
+            if (Authenticate != null){
+                Authenticate(this,eArgs);
             }
 
             return eArgs;
@@ -1708,8 +1708,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnGetFile(FTP_e_GetFile e)
         {
-            if(this.GetFile != null){
-                this.GetFile(this,e);
+            if(GetFile != null){
+                GetFile(this,e);
             }
         }
 
@@ -1724,8 +1724,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnStor(FTP_e_Stor e)
         {
-            if(this.Stor != null){
-                this.Stor(this,e);
+            if(Stor != null){
+                Stor(this,e);
             }
         }
 
@@ -1740,8 +1740,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnGetFileSize(FTP_e_GetFileSize e)
         {
-            if(this.GetFileSize != null){
-                this.GetFileSize(this,e);
+            if(GetFileSize != null){
+                GetFileSize(this,e);
             }
         }
 
@@ -1756,8 +1756,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnDele(FTP_e_Dele e)
         {
-            if(this.Dele != null){
-                this.Dele(this,e);
+            if(Dele != null){
+                Dele(this,e);
             }
         }
 
@@ -1772,8 +1772,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnAppe(FTP_e_Appe e)
         {
-            if(this.Appe != null){
-                this.Appe(this,e);
+            if(Appe != null){
+                Appe(this,e);
             }
         }
 
@@ -1788,8 +1788,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnCwd(FTP_e_Cwd e)
         {
-            if(this.Cwd != null){
-                this.Cwd(this,e);
+            if(Cwd != null){
+                Cwd(this,e);
             }
         }
 
@@ -1804,8 +1804,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnCdup(FTP_e_Cdup e)
         {
-            if(this.Cdup != null){
-                this.Cdup(this,e);
+            if(Cdup != null){
+                Cdup(this,e);
             }
         }
 
@@ -1820,8 +1820,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnRmd(FTP_e_Rmd e)
         {
-            if(this.Rmd != null){
-                this.Rmd(this,e);
+            if(Rmd != null){
+                Rmd(this,e);
             }
         }
 
@@ -1836,8 +1836,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnMkd(FTP_e_Mkd e)
         {
-            if(this.Mkd != null){
-                this.Mkd(this,e);
+            if(Mkd != null){
+                Mkd(this,e);
             }
         }
 
@@ -1852,8 +1852,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event arguments.</param>
         private void OnGetDirListing(FTP_e_GetDirListing e)
         {
-            if(this.GetDirListing != null){
-                this.GetDirListing(this,e);
+            if(GetDirListing != null){
+                GetDirListing(this,e);
             }
         }
 
@@ -1868,8 +1868,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnRnto(FTP_e_Rnto e)
         {
-            if(this.Rnto != null){
-                this.Rnto(this,e);
+            if(Rnto != null){
+                Rnto(this,e);
             }
         }
     }

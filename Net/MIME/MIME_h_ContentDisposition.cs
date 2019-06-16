@@ -119,7 +119,7 @@ namespace LumiSoft.Net.MIME
         /// <returns>Returns header field as string.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
-            if(reEncode || this.IsModified){
+            if(reEncode || IsModified){
                 return "Content-Disposition: " + DispositionType + Parameters.ToString(parmetersCharset) + "\r\n";
             }
 
@@ -159,7 +159,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Param_FileName
         {
-            get{ return this.Parameters["filename"]; }
+            get{ return Parameters["filename"]; }
 
             set{ Parameters["filename"] = value; }
         }
@@ -170,7 +170,7 @@ namespace LumiSoft.Net.MIME
         public DateTime Param_CreationDate
         {
             get{ 
-                var value = this.Parameters["creation-date"];
+                var value = Parameters["creation-date"];
                 if (value == null){
                     return DateTime.MinValue;
                 }
@@ -180,10 +180,10 @@ namespace LumiSoft.Net.MIME
 
             set{ 
                 if(value == DateTime.MinValue){
-                    this.Parameters.Remove("creation-date");
+                    Parameters.Remove("creation-date");
                 }
                 else{
-                    this.Parameters["creation-date"] = MIME_Utils.DateTimeToRfc2822(value);
+                    Parameters["creation-date"] = MIME_Utils.DateTimeToRfc2822(value);
                 }
             }
         }
@@ -194,7 +194,7 @@ namespace LumiSoft.Net.MIME
         public DateTime Param_ModificationDate
         {
             get{
-                var value = this.Parameters["modification-date"];
+                var value = Parameters["modification-date"];
                 if (value == null){
                     return DateTime.MinValue;
                 }
@@ -204,10 +204,10 @@ namespace LumiSoft.Net.MIME
 
             set{ 
                 if(value == DateTime.MinValue){
-                    this.Parameters.Remove("modification-date");
+                    Parameters.Remove("modification-date");
                 }
                 else{
-                    this.Parameters["modification-date"] = MIME_Utils.DateTimeToRfc2822(value);
+                    Parameters["modification-date"] = MIME_Utils.DateTimeToRfc2822(value);
                 }
             }
         }
@@ -218,7 +218,7 @@ namespace LumiSoft.Net.MIME
         public DateTime Param_ReadDate
         {
             get{
-                var value = this.Parameters["read-date"];
+                var value = Parameters["read-date"];
                 if (value == null){
                     return DateTime.MinValue;
                 }
@@ -228,10 +228,10 @@ namespace LumiSoft.Net.MIME
 
             set{ 
                 if(value == DateTime.MinValue){
-                    this.Parameters.Remove("read-date");
+                    Parameters.Remove("read-date");
                 }
                 else{
-                    this.Parameters["read-date"] = MIME_Utils.DateTimeToRfc2822(value);
+                    Parameters["read-date"] = MIME_Utils.DateTimeToRfc2822(value);
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace LumiSoft.Net.MIME
         public long Param_Size
         {
             get{
-                var value = this.Parameters["size"];
+                var value = Parameters["size"];
                 if (value == null){
                     return -1;
                 }
@@ -252,10 +252,10 @@ namespace LumiSoft.Net.MIME
 
             set{ 
                 if(value < 0){
-                    this.Parameters.Remove("size");
+                    Parameters.Remove("size");
                 }
                 else{
-                    this.Parameters["size"] = value.ToString();
+                    Parameters["size"] = value.ToString();
                 }
             }
         }

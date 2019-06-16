@@ -733,10 +733,10 @@ namespace LumiSoft.Net.RTP.Debug
             InitUI();
 
             // Windows must be visible, otherwise we may get "window handle not created" if RTP session rises events before window gets visible.
-            this.Visible = true;
+            Visible = true;
 
-            Session.Error += new EventHandler<LumiSoft.Net.ExceptionEventArgs>(m_pSession_Error);
-            Session.SessionCreated += new EventHandler<LumiSoft.Net.EventArgs<RTP_Session>>(m_pSession_SessionCreated);
+            Session.Error += new EventHandler<ExceptionEventArgs>(m_pSession_Error);
+            Session.SessionCreated += new EventHandler<EventArgs<RTP_Session>>(m_pSession_SessionCreated);
             Session.NewParticipant += new EventHandler<RTP_ParticipantEventArgs>(m_pSession_NewParticipant);
             Session.LocalParticipant.SourceAdded += new EventHandler<RTP_SourceEventArgs>(Participant_SourceAdded);
             Session.LocalParticipant.SourceRemoved += new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);
@@ -761,10 +761,10 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private void InitUI()
         {
-            this.ClientSize = new Size(400,500);
-            this.Text = "RTP debug";
+            ClientSize = new Size(400,500);
+            Text = "RTP debug";
             //this.Icon = ; TODO:
-            this.FormClosing += new FormClosingEventHandler(wfrm_RTP_Debug_FormClosing);
+            FormClosing += new FormClosingEventHandler(wfrm_RTP_Debug_FormClosing);
 
             m_pTab = new TabControl();
             m_pTab.Dock = DockStyle.Fill;
@@ -818,7 +818,7 @@ namespace LumiSoft.Net.RTP.Debug
             m_pErrors.DoubleClick += new EventHandler(m_pErrors_DoubleClick);
             m_pTab.TabPages["errors"].Controls.Add(m_pErrors);
 
-            this.Controls.Add(m_pTab);
+            Controls.Add(m_pTab);
         }
 
         private void m_pParticipants_AfterSelect(object sender,TreeViewEventArgs e)
@@ -843,14 +843,14 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Event data.</param>
-        private void m_pSession_Error(object sender,LumiSoft.Net.ExceptionEventArgs e)
+        private void m_pSession_Error(object sender,ExceptionEventArgs e)
         {
             if(m_IsDisposed){
                 return;
             }
 
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 var item = new ListViewItem(e.Exception.Message);
                 item.Tag = e.Exception;
                 m_pErrors.Items.Add(item);
@@ -869,7 +869,7 @@ namespace LumiSoft.Net.RTP.Debug
             }
 
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 var item = new ComboBoxItem("Session: " + e.Value.GetHashCode(),new RTP_SessionStatistics(e.Value));
                 m_pSessions.Items.Add(item);
 
@@ -895,7 +895,7 @@ namespace LumiSoft.Net.RTP.Debug
             e.Participant.SourceRemoved += new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);
             
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 var nodeParticipant = new TreeNode(e.Participant.CNAME);
                 nodeParticipant.Tag = new RTP_ParticipantInfo(e.Participant);
                 nodeParticipant.Nodes.Add("Sources");
@@ -915,7 +915,7 @@ namespace LumiSoft.Net.RTP.Debug
             }
 
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 var nodeParticipant = FindParticipantNode((RTP_Participant)sender);
                 if (nodeParticipant != null){
                     nodeParticipant.Remove();
@@ -937,7 +937,7 @@ namespace LumiSoft.Net.RTP.Debug
             e.Source.StateChanged += new EventHandler(Source_StateChanged);
 
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 TreeNode nodeParticipant = null;
                 if(e.Source is RTP_Source_Remote){
                     nodeParticipant = FindParticipantNode(((RTP_Source_Remote)e.Source).Participant);
@@ -977,7 +977,7 @@ namespace LumiSoft.Net.RTP.Debug
             }
 
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 TreeNode nodeParticipant = null;
                 if(source is RTP_Source_Remote){
                     nodeParticipant = FindParticipantNode(((RTP_Source_Remote)source).Participant);
@@ -1020,7 +1020,7 @@ namespace LumiSoft.Net.RTP.Debug
             uint ssrc = e.Source.SSRC;
 
             // Move processing to UI thread.
-            this.BeginInvoke(new MethodInvoker(delegate(){
+            BeginInvoke(new MethodInvoker(delegate(){
                 var nodeParticipant = FindParticipantNode((RTP_Participant)sender);
                 if (nodeParticipant != null){
                     foreach(TreeNode nodeSource in nodeParticipant.Nodes[0].Nodes){
@@ -1039,7 +1039,7 @@ namespace LumiSoft.Net.RTP.Debug
                 return;
             }
             if(Session.IsDisposed){
-                this.Visible = false;
+                Visible = false;
                 return;
             }
 
@@ -1051,8 +1051,8 @@ namespace LumiSoft.Net.RTP.Debug
         {
             m_IsDisposed = true;
 
-            Session.Error -= new EventHandler<LumiSoft.Net.ExceptionEventArgs>(m_pSession_Error);
-            Session.SessionCreated -= new EventHandler<LumiSoft.Net.EventArgs<RTP_Session>>(m_pSession_SessionCreated);
+            Session.Error -= new EventHandler<ExceptionEventArgs>(m_pSession_Error);
+            Session.SessionCreated -= new EventHandler<EventArgs<RTP_Session>>(m_pSession_SessionCreated);
             Session.NewParticipant -= new EventHandler<RTP_ParticipantEventArgs>(m_pSession_NewParticipant);
             Session.LocalParticipant.SourceAdded -= new EventHandler<RTP_SourceEventArgs>(Participant_SourceAdded);
             Session.LocalParticipant.SourceRemoved -= new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);

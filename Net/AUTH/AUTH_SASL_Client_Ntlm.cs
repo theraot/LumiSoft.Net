@@ -572,7 +572,7 @@ namespace LumiSoft.Net.AUTH
             private static byte[] PasswordToKey(string password,int position) 
             { 
                 var key7 = new byte[7];
-                int len = System.Math.Min(password.Length - position, 7); 
+                int len = Math.Min(password.Length - position, 7); 
                 Encoding.ASCII.GetBytes(password.ToUpper(CultureInfo.CurrentCulture),position,len,key7,0); 
                 var key8 = setup_des_key(key7,0);
 

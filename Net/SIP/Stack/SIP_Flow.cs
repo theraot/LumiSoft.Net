@@ -124,7 +124,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             lock(m_pLock){
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(request == null){
                     throw new ArgumentNullException("request");
@@ -144,7 +144,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             lock(m_pLock){
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(response == null){
                     throw new ArgumentNullException("response");
@@ -163,12 +163,12 @@ namespace LumiSoft.Net.SIP.Stack
         {
             lock(m_pLock){
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 // Log:
                 if(m_pStack.TransportLayer.Stack.Logger != null){
-                    m_pStack.TransportLayer.Stack.Logger.AddWrite("",null,2,"Flow [id='" + this.ID + "'] sent \"ping\"",this.LocalEP,this.RemoteEP);
+                    m_pStack.TransportLayer.Stack.Logger.AddWrite("",null,2,"Flow [id='" + ID + "'] sent \"ping\"",LocalEP,RemoteEP);
                 }
 
                 SendInternal(new[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
@@ -250,7 +250,7 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pMessage,
                 m_pStack.TransportLayer.Stack.MaximumMessageSize,
                 SizeExceededAction.JunkAndThrowException,
-                new AsyncCallback(this.BeginReadHeader_Completed),
+                new AsyncCallback(BeginReadHeader_Completed),
                 null
             );
         }
@@ -267,7 +267,7 @@ namespace LumiSoft.Net.SIP.Stack
                 // We got CRLF(ping or pong).
                 if(countStored == 0){ 
                     // We have ping request.
-                    if(this.IsServer){
+                    if(IsServer){
                         // We have full ping request.
                         if(m_LastCRLF){
                             m_LastCRLF = false;
@@ -295,7 +295,7 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pMessage.Write(new[]{(byte)'\r',(byte)'\n'},0,2);
 
                     m_pMessage.Position = 0;
-                    var contentLengthValue = LumiSoft.Net.MIME.MIME_Utils.ParseHeaderField("Content-Length:",m_pMessage);
+                    var contentLengthValue = MIME.MIME_Utils.ParseHeaderField("Content-Length:",m_pMessage);
                     m_pMessage.Position = m_pMessage.Length;
 
                     int contentLength = 0;
@@ -308,7 +308,7 @@ namespace LumiSoft.Net.SIP.Stack
                     // Start reading message body.
                     if(contentLength > 0){
                         // Read body data.
-                        m_pTcpSession.TcpStream.BeginReadFixedCount(m_pMessage,contentLength,new AsyncCallback(this.BeginReadData_Completed),null);
+                        m_pTcpSession.TcpStream.BeginReadFixedCount(m_pMessage,contentLength,new AsyncCallback(BeginReadData_Completed),null);
                     }
                     // Message with no body.
                     else{
@@ -377,7 +377,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_IsServer; 
@@ -392,7 +392,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_CreateTime; 
@@ -407,7 +407,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_ID; 
@@ -422,7 +422,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pLocalEP; 
@@ -436,7 +436,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 // We may not lock here, because dead lock will happen. Client transaction runs on thread pool threads.
@@ -445,7 +445,7 @@ namespace LumiSoft.Net.SIP.Stack
                         return m_pLocalPublicEP;
                     }
 
-                    m_pLocalPublicEP = this.LocalEP;
+                    m_pLocalPublicEP = LocalEP;
 
                     try{
                         var completionWaiter = new AutoResetEvent(false);
@@ -456,9 +456,9 @@ namespace LumiSoft.Net.SIP.Stack
                     optionsTransaction.ResponseReceived += new EventHandler<SIP_ResponseReceivedEventArgs>(delegate(object s,SIP_ResponseReceivedEventArgs e){
                             var via = e.Response.Via.GetTopMostValue();
 
-                            var publicEP = new IPEndPoint(via.Received == null ? this.LocalEP.Address : via.Received,via.RPort > 0 ? via.RPort : this.LocalEP.Port);
+                            var publicEP = new IPEndPoint(via.Received == null ? LocalEP.Address : via.Received,via.RPort > 0 ? via.RPort : LocalEP.Port);
                             // Set public EP port only if public IP is also different from local EP.
-                            if (!this.LocalEP.Address.Equals(publicEP.Address)){
+                            if (!LocalEP.Address.Equals(publicEP.Address)){
                                 m_pLocalPublicEP = publicEP;
                             }
 
@@ -491,7 +491,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRemoteEP; 
@@ -506,7 +506,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_Transport; 
@@ -521,7 +521,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_Transport != SIP_Transport.UDP; 
@@ -536,7 +536,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(m_Transport == SIP_Transport.TLS){
@@ -555,7 +555,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pKeepAliveTimer != null; 
@@ -563,7 +563,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(value){
@@ -573,7 +573,7 @@ namespace LumiSoft.Net.SIP.Stack
                             try{
                                 // Log:
                                 if(m_pStack.TransportLayer.Stack.Logger != null){
-                                    m_pStack.TransportLayer.Stack.Logger.AddWrite("",null,2,"Flow [id='" + this.ID + "'] sent \"ping\"",this.LocalEP,this.RemoteEP);
+                                    m_pStack.TransportLayer.Stack.Logger.AddWrite("",null,2,"Flow [id='" + ID + "'] sent \"ping\"",LocalEP,RemoteEP);
                                 }
 
                                 SendInternal(new[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
@@ -602,7 +602,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(m_Transport == SIP_Transport.TCP || m_Transport == SIP_Transport.TLS){
@@ -621,7 +621,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastPing;
@@ -638,7 +638,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_BytesWritten; 
@@ -655,8 +655,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnDisposing()
         {
-            if(this.IsDisposing != null){
-                this.IsDisposing(this,new EventArgs());
+            if(IsDisposing != null){
+                IsDisposing(this,new EventArgs());
             }
         }
     }

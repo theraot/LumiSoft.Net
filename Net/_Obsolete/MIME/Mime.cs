@@ -281,7 +281,7 @@ namespace LumiSoft.Net.Mime
 		/// <returns></returns>
 		public string ToStringData()
 		{
-			return System.Text.Encoding.Default.GetString(this.ToByteData());
+			return System.Text.Encoding.Default.GetString(ToByteData());
 		}
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace LumiSoft.Net.Mime
 		{
 			get{                
                 var attachments = new List<MimeEntity>();
-                var entities = this.MimeEntities;
+                var entities = MimeEntities;
                 foreach (MimeEntity entity in entities){
                     if(entity.ContentDisposition == ContentDisposition_enum.Attachment){
                         attachments.Add(entity);
@@ -393,13 +393,13 @@ namespace LumiSoft.Net.Mime
                         Content-type: text/plain; charset=us-ascii
                 */
 
-				if(this.MainEntity.ContentType == MediaType_enum.NotSpecified){
-					if(this.MainEntity.DataEncoded != null){
-						return System.Text.Encoding.ASCII.GetString(this.MainEntity.Data);
+				if(MainEntity.ContentType == MediaType_enum.NotSpecified){
+					if(MainEntity.DataEncoded != null){
+						return System.Text.Encoding.ASCII.GetString(MainEntity.Data);
 					}
 				}
 				else{
-					var entities = this.MimeEntities;
+					var entities = MimeEntities;
                     foreach (MimeEntity entity in entities){
 						if(entity.ContentType == MediaType_enum.Text_plain){
 							return entity.DataText;
@@ -441,7 +441,7 @@ namespace LumiSoft.Net.Mime
 		public string BodyHtml
 		{
 			get{
-				var entities = this.MimeEntities;
+				var entities = MimeEntities;
                 foreach (MimeEntity entity in entities){
 					if(entity.ContentType == MediaType_enum.Text_html){
 						return entity.DataText;

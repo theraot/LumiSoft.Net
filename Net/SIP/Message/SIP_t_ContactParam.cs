@@ -146,11 +146,11 @@ namespace LumiSoft.Net.SIP.Message
         {
             get
             {
-                if(!this.Parameters.Contains("qvalue")){
+                if(!Parameters.Contains("qvalue")){
                     return -1;
                 }
 
-                return double.Parse(this.Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
+                return double.Parse(Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
             }
 
             set{
@@ -159,10 +159,10 @@ namespace LumiSoft.Net.SIP.Message
                 }
 
                 if(value < 0){
-                    this.Parameters.Remove("qvalue");
+                    Parameters.Remove("qvalue");
                 }
                 else{
-                    this.Parameters.Set("qvalue",value.ToString());
+                    Parameters.Set("qvalue",value.ToString());
                 }
             }
         }
@@ -173,7 +173,7 @@ namespace LumiSoft.Net.SIP.Message
         public int Expires
         {
             get{
-                var parameter = this.Parameters["expires"];
+                var parameter = Parameters["expires"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -183,10 +183,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{
                 if(value < 0){
-                    this.Parameters.Remove("expires");
+                    Parameters.Remove("expires");
                 }
                 else{
-                    this.Parameters.Set("expires",value.ToString());
+                    Parameters.Set("expires",value.ToString());
                 }
             }
         }

@@ -110,7 +110,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// This event is raised when new message-info/message-data is added for FETCH processing.
         /// </summary>
-        internal event EventHandler<IMAP_e_Fetch.e_NewMessageData> NewMessageData;
+        internal event EventHandler<e_NewMessageData> NewMessageData;
 
         /// <summary>
         /// Raises <b>NewMessageData</b> event.
@@ -119,8 +119,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="msgData">Message data. NOTE: This value must be as specified by <see cref="IMAP_e_Fetch.FetchDataType"/>.</param>
         private void OnNewMessageData(IMAP_MessageInfo msgInfo,Mail_Message msgData)
         {
-            if(this.NewMessageData != null){
-                this.NewMessageData(this,new e_NewMessageData(msgInfo,msgData));
+            if(NewMessageData != null){
+                NewMessageData(this,new e_NewMessageData(msgInfo,msgData));
             }
         }
     }

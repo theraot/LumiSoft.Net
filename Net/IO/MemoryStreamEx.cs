@@ -225,7 +225,7 @@ namespace LumiSoft.Net.IO
                 if(m_IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
-                if(value < 0 || value > this.Length){
+                if(value < 0 || value > Length){
                     throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
                 }
 

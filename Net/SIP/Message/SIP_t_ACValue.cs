@@ -112,7 +112,7 @@ namespace LumiSoft.Net.SIP.Message
         public bool Require
         {
             get{ 
-                var parameter = this.Parameters["require"];
+                var parameter = Parameters["require"];
                 if (parameter != null){
                     return true;
                 }
@@ -122,10 +122,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{ 
                 if(!value){
-                    this.Parameters.Remove("require");
+                    Parameters.Remove("require");
                 }
                 else{
-                    this.Parameters.Set("require",null);
+                    Parameters.Set("require",null);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace LumiSoft.Net.SIP.Message
         public bool Explicit
         {
             get{ 
-                var parameter = this.Parameters["explicit"];
+                var parameter = Parameters["explicit"];
                 if (parameter != null){
                     return true;
                 }
@@ -146,10 +146,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{ 
                 if(!value){
-                    this.Parameters.Remove("explicit");
+                    Parameters.Remove("explicit");
                 }
                 else{
-                    this.Parameters.Set("explicit",null);
+                    Parameters.Set("explicit",null);
                 }
             }
         }

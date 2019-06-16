@@ -672,7 +672,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         public override void Dispose()
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
             base.Dispose();
@@ -686,31 +686,31 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Release events
-            this.Started         = null;
-            this.Login           = null;
-            this.Namespace       = null;
-            this.List            = null;
-            this.Create          = null;
-            this.Delete          = null;
-            this.Rename          = null;
-            this.LSub            = null;
-            this.Subscribe       = null;
-            this.Unsubscribe     = null;
-            this.Select          = null;
-            this.GetMessagesInfo = null;
-            this.Append          = null;
-            this.GetQuotaRoot    = null;
-            this.GetQuota        = null;
-            this.GetAcl          = null;
-            this.SetAcl          = null;
-            this.DeleteAcl       = null;
-            this.ListRights      = null;
-            this.MyRights        = null;
-            this.Fetch           = null;
-            this.Search          = null;
-            this.Store           = null;
-            this.Copy            = null;
-            this.Expunge         = null;
+            Started         = null;
+            Login           = null;
+            Namespace       = null;
+            List            = null;
+            Create          = null;
+            Delete          = null;
+            Rename          = null;
+            LSub            = null;
+            Subscribe       = null;
+            Unsubscribe     = null;
+            Select          = null;
+            GetMessagesInfo = null;
+            Append          = null;
+            GetQuotaRoot    = null;
+            GetQuota        = null;
+            GetAcl          = null;
+            SetAcl          = null;
+            DeleteAcl       = null;
+            ListRights      = null;
+            MyRights        = null;
+            Fetch           = null;
+            Search          = null;
+            Store           = null;
+            Copy            = null;
+            Expunge         = null;
         }
 
         #endregion
@@ -737,11 +737,11 @@ namespace LumiSoft.Net.IMAP.Server
       
             try{
                 IMAP_r_u_ServerStatus response = null;
-                if(string.IsNullOrEmpty(this.Server.GreetingText)){
-                    response = new IMAP_r_u_ServerStatus("OK","<" + Net_Utils.GetLocalHostName(this.LocalHostName) + "> IMAP4rev1 server ready.");
+                if(string.IsNullOrEmpty(Server.GreetingText)){
+                    response = new IMAP_r_u_ServerStatus("OK","<" + Net_Utils.GetLocalHostName(LocalHostName) + "> IMAP4rev1 server ready.");
                 }
                 else{
-                    response = new IMAP_r_u_ServerStatus("OK",this.Server.GreetingText);
+                    response = new IMAP_r_u_ServerStatus("OK",Server.GreetingText);
                 }
                 
                 var e = OnStarted(response);
@@ -772,7 +772,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="x">Exception happened.</param>
         protected override void OnError(Exception x)
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
             if(x == null){
@@ -838,7 +838,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         private void BeginReadCmd()
         {
-            if(this.IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -851,7 +851,7 @@ namespace LumiSoft.Net.IMAP.Server
                     }
                 });
                 // Process incoming commands while, command reading completes synchronously.
-                while(this.TcpStream.ReadLine(readLineOP,true)){
+                while(TcpStream.ReadLine(readLineOP,true)){
                     if(!ProcessCmd(readLineOP)){
                         break;
                     }
@@ -877,7 +877,7 @@ namespace LumiSoft.Net.IMAP.Server
                         
             try{
                 // We are disposed already.
-                if(this.IsDisposed){
+                if(IsDisposed){
                     return false;
                 }
                 // Check errors.
@@ -886,7 +886,7 @@ namespace LumiSoft.Net.IMAP.Server
                 }
                 // Remote host shut-down(Socket.ShutDown) socket.
                 if(op.BytesInBuffer == 0){
-                    LogAddText("The remote host '" + this.RemoteEndPoint.ToString() + "' shut down socket.");
+                    LogAddText("The remote host '" + RemoteEndPoint.ToString() + "' shut down socket.");
                     Dispose();
                 
                     return false;
@@ -903,13 +903,13 @@ namespace LumiSoft.Net.IMAP.Server
                 var   args     = cmd_args.Length == 3 ? cmd_args[2] : "";
 
                 // Log.
-                if (this.Server.Logger != null){
+                if (Server.Logger != null){
                     // Hide password from log.
                     if(cmd == "LOGIN"){                        
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8.Substring(0,op.LineUtf8.LastIndexOf(' ')) + " <***REMOVED***>",this.LocalEndPoint,this.RemoteEndPoint);
+                        Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8.Substring(0,op.LineUtf8.LastIndexOf(' ')) + " <***REMOVED***>",LocalEndPoint,RemoteEndPoint);
                     }
                     else{
-                        this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,this.LocalEndPoint,this.RemoteEndPoint);
+                        Server.Logger.AddRead(ID,AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,LocalEndPoint,RemoteEndPoint);
                     }
                 }
 
@@ -1026,7 +1026,7 @@ namespace LumiSoft.Net.IMAP.Server
                     m_BadCommands++;
 
                     // Maximum allowed bad commands exceeded.
-                    if(this.Server.MaxBadCommands != 0 && m_BadCommands > this.Server.MaxBadCommands){
+                    if(Server.MaxBadCommands != 0 && m_BadCommands > Server.MaxBadCommands){
                         WriteLine("* BYE Too many bad commands, closing transmission channel.");
                         Disconnect();
 
@@ -1093,17 +1093,17 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","This ommand is only valid in not-authenticated state."));
 
                 return;
             }
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Bad sequence of commands: Connection is already secure."));
 
                 return;
             }
-            if(this.Certificate == null){
+            if(Certificate == null){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","TLS not available: Server has no SSL certificate."));
 
                 return;
@@ -1137,7 +1137,7 @@ namespace LumiSoft.Net.IMAP.Server
                 };
 
                 var op = new SwitchToSecureAsyncOP();
-                op.CompletedAsync += delegate(object sender,EventArgs<TCP_ServerSession.SwitchToSecureAsyncOP> e){
+                op.CompletedAsync += delegate(object sender,EventArgs<SwitchToSecureAsyncOP> e){
                     switchSecureCompleted(op);
                 };
                 // Switch to secure completed synchronously.
@@ -1204,7 +1204,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Re-authentication error."));
 
                 return;
@@ -1376,7 +1376,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Re-authentication error."));
 
                 return;
@@ -1410,14 +1410,14 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-            if (!this.Authentications.ContainsKey(mechanism)){
+            if (!Authentications.ContainsKey(mechanism)){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Not supported authentication mechanism."));
 
                 return;
             }
 
             var clientResponse = initialClientResponse;
-            var auth = this.Authentications[mechanism];
+            var auth = Authentications[mechanism];
             auth.Reset();
             while(true){
                 var serverResponse = auth.Continue(clientResponse);
@@ -1445,13 +1445,13 @@ namespace LumiSoft.Net.IMAP.Server
 
                 // Read client response. 
                 var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                this.TcpStream.ReadLine(readLineOP,false);
+                TcpStream.ReadLine(readLineOP,false);
                 if(readLineOP.Error != null){
                     throw readLineOP.Error;
                 }
                 // Log
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",this.LocalEndPoint,this.RemoteEndPoint);
+                if(Server.Logger != null){
+                    Server.Logger.AddRead(ID,AuthenticatedUserIdentity,readLineOP.BytesInBuffer,"base64 auth-data",LocalEndPoint,RemoteEndPoint);
                 }
 
                 // Client canceled authentication.
@@ -1509,7 +1509,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -1672,7 +1672,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A202 OK LIST completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -1761,7 +1761,7 @@ namespace LumiSoft.Net.IMAP.Server
                     level are created.
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -1832,7 +1832,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A687 OK DELETE Completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -1909,7 +1909,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A685 OK LIST completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -1975,7 +1975,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A003 OK LSUB completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2037,7 +2037,7 @@ namespace LumiSoft.Net.IMAP.Server
                 S: A002 OK SUBSCRIBE completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2074,7 +2074,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A002 OK UNSUBSCRIBE completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2163,7 +2163,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A042 OK STATUS completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2362,7 +2362,7 @@ namespace LumiSoft.Net.IMAP.Server
             // Store start time
 			long startTime = DateTime.Now.Ticks;
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2491,7 +2491,7 @@ namespace LumiSoft.Net.IMAP.Server
                     S: c NO [NOT-UTF-8] Mailbox does not support UTF-8 access
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2622,7 +2622,7 @@ namespace LumiSoft.Net.IMAP.Server
                     envelope information.
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2679,14 +2679,14 @@ namespace LumiSoft.Net.IMAP.Server
                 // Create callback which is called when BeginReadFixedCount completes.
                 AsyncCallback readLiteralCompletedCallback = delegate(IAsyncResult ar){
                     try{
-                        this.TcpStream.EndReadFixedCount(ar);
+                        TcpStream.EndReadFixedCount(ar);
                         // Log.
                         LogAddRead(size,"Readed " + size + " bytes.");
 
                         // TODO: Async
                         // Read command line terminating CRLF.
                         var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000],SizeExceededAction.JunkAndThrowException);
-                        this.TcpStream.ReadLine(readLineOP,false);
+                        TcpStream.ReadLine(readLineOP,false);
                         // Read command line terminating CRLF failed.
                         if(readLineOP.Error != null){
                             OnError(readLineOP.Error);
@@ -2707,7 +2707,7 @@ namespace LumiSoft.Net.IMAP.Server
                     }
                 };
 
-                this.TcpStream.BeginReadFixedCount(e.Stream,size,readLiteralCompletedCallback,null);
+                TcpStream.BeginReadFixedCount(e.Stream,size,readLiteralCompletedCallback,null);
             }
         }
 
@@ -2743,7 +2743,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2795,7 +2795,7 @@ namespace LumiSoft.Net.IMAP.Server
 							
 			*/
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2853,7 +2853,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2915,7 +2915,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -2981,7 +2981,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -3044,7 +3044,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -3099,7 +3099,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -3199,7 +3199,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -3253,7 +3253,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: FXXZ OK CHECK Completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -3308,7 +3308,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A341 OK CLOSE completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -3524,7 +3524,7 @@ namespace LumiSoft.Net.IMAP.Server
             // Store start time
 			long startTime = DateTime.Now.Ticks;
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -4022,7 +4022,7 @@ namespace LumiSoft.Net.IMAP.Server
                                 WriteLine(reponseBuffer.ToString());
                                 reponseBuffer = new StringBuilder();
 
-                                this.TcpStream.WriteStream(tmpFs);
+                                TcpStream.WriteStream(tmpFs);
                                 LogAddWrite(tmpFs.Length,"Wrote " + tmpFs.Length + " bytes.");
                             }
                             // Partial data wanted.
@@ -4039,7 +4039,7 @@ namespace LumiSoft.Net.IMAP.Server
                                     WriteLine(reponseBuffer.ToString());
                                     reponseBuffer = new StringBuilder();
 
-                                    this.TcpStream.WriteStream(tmpFs,count);
+                                    TcpStream.WriteStream(tmpFs,count);
                                     LogAddWrite(tmpFs.Length,"Wrote " + count + " bytes.");
                                 }
                             }
@@ -4102,7 +4102,7 @@ namespace LumiSoft.Net.IMAP.Server
                             WriteLine(reponseBuffer.ToString());
                             reponseBuffer = new StringBuilder();
 
-                            this.TcpStream.WriteStream(tmpFs);
+                            TcpStream.WriteStream(tmpFs);
                             LogAddWrite(tmpFs.Length,"Wrote " + tmpFs.Length + " bytes.");
                         }
                     }
@@ -4120,7 +4120,7 @@ namespace LumiSoft.Net.IMAP.Server
                         WriteLine(reponseBuffer.ToString());
                         reponseBuffer = new StringBuilder();
 
-                        this.TcpStream.WriteStream(ms);
+                        TcpStream.WriteStream(ms);
                         LogAddWrite(ms.Length,"Wrote " + ms.Length + " bytes.");
                     }
 
@@ -4145,7 +4145,7 @@ namespace LumiSoft.Net.IMAP.Server
                             WriteLine(reponseBuffer.ToString());
                             reponseBuffer = new StringBuilder();
 
-                            this.TcpStream.WriteStream(tmpFs);
+                            TcpStream.WriteStream(tmpFs);
                             LogAddWrite(tmpFs.Length,"Wrote " + tmpFs.Length + " bytes.");
                         }
                     }
@@ -4378,7 +4378,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A284 OK SEARCH completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -4509,7 +4509,7 @@ namespace LumiSoft.Net.IMAP.Server
             // Store start time
 			long startTime = DateTime.Now.Ticks;
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -4660,7 +4660,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A003 OK COPY completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -4772,7 +4772,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A999 OK UID FETCH completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -4835,7 +4835,7 @@ namespace LumiSoft.Net.IMAP.Server
                     response for further explanation.
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return;
@@ -4954,7 +4954,7 @@ namespace LumiSoft.Net.IMAP.Server
                             S: A005 OK FETCH completed
             */
 
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO","Authentication required."));
 
                 return true;
@@ -5001,7 +5001,7 @@ namespace LumiSoft.Net.IMAP.Server
                         BeginReadCmd();
                     }
                     else{
-                        while(this.TcpStream.ReadLine(readLineOP,true)){
+                        while(TcpStream.ReadLine(readLineOP,true)){
                             if(readLineOP.Error != null){
                                 LogAddText("Error: " + readLineOP.Error.Message);
                                 timer.Dispose();
@@ -5027,7 +5027,7 @@ namespace LumiSoft.Net.IMAP.Server
                     OnError(x);
                 }
             });
-            while(this.TcpStream.ReadLine(readLineOP,true)){
+            while(TcpStream.ReadLine(readLineOP,true)){
                 if(readLineOP.Error != null){
                     LogAddText("Error: " + readLineOP.Error.Message);
                     timer.Dispose();
@@ -5103,13 +5103,13 @@ namespace LumiSoft.Net.IMAP.Server
             */
 
             var capabilities = new List<string>();
-            if (!this.IsSecureConnection && this.Certificate != null){
+            if (!IsSecureConnection && Certificate != null){
                 capabilities.Add("STARTTLS");
             }
             foreach(string c in m_pCapabilities){
                 capabilities.Add(c);
             }
-            foreach(AUTH_SASL_ServerMechanism auth in this.Authentications.Values){
+            foreach(AUTH_SASL_ServerMechanism auth in Authentications.Values){
                 capabilities.Add("AUTH=" + auth.Name);
             }
 
@@ -5235,11 +5235,11 @@ namespace LumiSoft.Net.IMAP.Server
                 buffer = Encoding.UTF8.GetBytes(line + "\r\n");
             }
 
-            this.TcpStream.Write(buffer,0,buffer.Length);
+            TcpStream.Write(buffer,0,buffer.Length);
             
             // Log.
-            if(this.Server.Logger != null){
-                this.Server.Logger.AddWrite(this.ID,this.AuthenticatedUserIdentity,buffer.Length,line,this.LocalEndPoint,this.RemoteEndPoint);
+            if(Server.Logger != null){
+                Server.Logger.AddWrite(ID,AuthenticatedUserIdentity,buffer.Length,line,LocalEndPoint,RemoteEndPoint);
             }
         }
 
@@ -5255,14 +5255,14 @@ namespace LumiSoft.Net.IMAP.Server
         public void LogAddRead(long size,string text)
         {
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddRead(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                if(Server.Logger != null){
+                    Server.Logger.AddRead(
+                        ID,
+                        AuthenticatedUserIdentity,
                         size,
                         text,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint
+                        LocalEndPoint,
+                        RemoteEndPoint
                     );
                 }
             }
@@ -5283,14 +5283,14 @@ namespace LumiSoft.Net.IMAP.Server
         public void LogAddWrite(long size,string text)
         {
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddWrite(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                if(Server.Logger != null){
+                    Server.Logger.AddWrite(
+                        ID,
+                        AuthenticatedUserIdentity,
                         size,
                         text,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint
+                        LocalEndPoint,
+                        RemoteEndPoint
                     );
                 }
             }
@@ -5315,13 +5315,13 @@ namespace LumiSoft.Net.IMAP.Server
             }
             
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddText(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                if(Server.Logger != null){
+                    Server.Logger.AddText(
+                        ID,
+                        AuthenticatedUserIdentity,
                         text,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint
+                        LocalEndPoint,
+                        RemoteEndPoint
                     );
                 }
             }
@@ -5345,13 +5345,13 @@ namespace LumiSoft.Net.IMAP.Server
             }
             
             try{
-                if(this.Server.Logger != null){
-                    this.Server.Logger.AddException(
-                        this.ID,
-                        this.AuthenticatedUserIdentity,
+                if(Server.Logger != null){
+                    Server.Logger.AddException(
+                        ID,
+                        AuthenticatedUserIdentity,
                         exception.Message,                        
-                        this.LocalEndPoint,
-                        this.RemoteEndPoint,
+                        LocalEndPoint,
+                        RemoteEndPoint,
                         exception
                     );
                 }
@@ -5876,8 +5876,8 @@ namespace LumiSoft.Net.IMAP.Server
         public new IMAP_Server Server
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return (IMAP_Server)base.Server;
@@ -5891,8 +5891,8 @@ namespace LumiSoft.Net.IMAP.Server
         public Dictionary<string,AUTH_SASL_ServerMechanism> Authentications
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pAuthentications; 
@@ -5906,8 +5906,8 @@ namespace LumiSoft.Net.IMAP.Server
         public int BadCommands
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_BadCommands; 
@@ -5921,8 +5921,8 @@ namespace LumiSoft.Net.IMAP.Server
         public override GenericIdentity AuthenticatedUserIdentity
         {
 	        get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
 		        return m_pUser;
@@ -5936,8 +5936,8 @@ namespace LumiSoft.Net.IMAP.Server
         public List<string> Capabilities
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pCapabilities; 
@@ -5986,8 +5986,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Started OnStarted(IMAP_r_u_ServerStatus response)
         {
             var eArgs = new IMAP_e_Started(response);
-            if (this.Started != null){                
-                this.Started(this,eArgs);
+            if (Started != null){                
+                Started(this,eArgs);
             }
 
             return eArgs;
@@ -6011,8 +6011,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Login OnLogin(string user,string password)
         {
             var eArgs = new IMAP_e_Login(user,password);
-            if (this.Login != null){                
-                this.Login(this,eArgs);
+            if (Login != null){                
+                Login(this,eArgs);
             }
 
             return eArgs;
@@ -6035,8 +6035,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Namespace OnNamespace(IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Namespace(response);
-            if (this.Namespace != null){                
-                this.Namespace(this,eArgs);
+            if (Namespace != null){                
+                Namespace(this,eArgs);
             }
 
             return eArgs;
@@ -6060,8 +6060,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_List OnList(string refName,string folder)
         {
             var eArgs = new IMAP_e_List(refName,folder);
-            if (this.List != null){
-                this.List(this,eArgs);
+            if (List != null){
+                List(this,eArgs);
             }
 
             return eArgs;
@@ -6086,8 +6086,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnCreate(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if (this.Create != null){
-                this.Create(this,eArgs);
+            if (Create != null){
+                Create(this,eArgs);
             }
 
             return eArgs;
@@ -6112,8 +6112,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnDelete(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if (this.Delete != null){
-                this.Delete(this,eArgs);
+            if (Delete != null){
+                Delete(this,eArgs);
             }
 
             return eArgs;
@@ -6138,8 +6138,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Rename OnRename(string cmdTag,string currentFolder,string newFolder)
         {
             var eArgs = new IMAP_e_Rename(cmdTag,currentFolder,newFolder);
-            if (this.Rename != null){
-                this.Rename(this,eArgs);
+            if (Rename != null){
+                Rename(this,eArgs);
             }
 
             return eArgs;
@@ -6163,8 +6163,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_LSub OnLSub(string refName,string folder)
         {
             var eArgs = new IMAP_e_LSub(refName,folder);
-            if (this.LSub != null){
-                this.LSub(this,eArgs);
+            if (LSub != null){
+                LSub(this,eArgs);
             }
 
             return eArgs;
@@ -6189,8 +6189,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnSubscribe(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if (this.Subscribe != null){
-                this.Subscribe(this,eArgs);
+            if (Subscribe != null){
+                Subscribe(this,eArgs);
             }
 
             return eArgs;
@@ -6215,8 +6215,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnUnsubscribe(string cmdTag,string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag,folder,response);
-            if (this.Unsubscribe != null){
-                this.Unsubscribe(this,eArgs);
+            if (Unsubscribe != null){
+                Unsubscribe(this,eArgs);
             }
 
             return eArgs;
@@ -6240,8 +6240,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Select OnSelect(string cmdTag,string folder)
         {
             var eArgs = new IMAP_e_Select(cmdTag,folder);
-            if (this.Select != null){
-                this.Select(this,eArgs);
+            if (Select != null){
+                Select(this,eArgs);
             }
 
             return eArgs;
@@ -6264,8 +6264,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_MessagesInfo OnGetMessagesInfo(string folder)
         {
             var eArgs = new IMAP_e_MessagesInfo(folder);
-            if (this.GetMessagesInfo != null){
-                this.GetMessagesInfo(this,eArgs);
+            if (GetMessagesInfo != null){
+                GetMessagesInfo(this,eArgs);
             }
 
             return eArgs;
@@ -6292,8 +6292,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Append OnAppend(string folder,string[] flags,DateTime date,int size,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Append(folder,flags,date,size,response);
-            if (this.Append != null){
-                this.Append(this,eArgs);
+            if (Append != null){
+                Append(this,eArgs);
             }
 
             return eArgs;
@@ -6317,8 +6317,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_GetQuotaRoot OnGetGuotaRoot(string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_GetQuotaRoot(folder,response);
-            if (this.GetQuotaRoot != null){
-                this.GetQuotaRoot(this,eArgs);
+            if (GetQuotaRoot != null){
+                GetQuotaRoot(this,eArgs);
             }
 
             return eArgs;
@@ -6342,8 +6342,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_GetQuota OnGetQuota(string quotaRoot,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_GetQuota(quotaRoot,response);
-            if (this.GetQuota != null){
-                this.GetQuota(this,eArgs);
+            if (GetQuota != null){
+                GetQuota(this,eArgs);
             }
 
             return eArgs;
@@ -6367,8 +6367,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_GetAcl OnGetAcl(string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_GetAcl(folder,response);
-            if (this.GetAcl != null){
-                this.GetAcl(this,eArgs);
+            if (GetAcl != null){
+                GetAcl(this,eArgs);
             }
 
             return eArgs;
@@ -6395,8 +6395,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_SetAcl OnSetAcl(string folder,string identifier,IMAP_Flags_SetType flagsSetType,string rights,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_SetAcl(folder,identifier,flagsSetType,rights,response);
-            if (this.SetAcl != null){
-                this.SetAcl(this,eArgs);
+            if (SetAcl != null){
+                SetAcl(this,eArgs);
             }
 
             return eArgs;
@@ -6421,8 +6421,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_DeleteAcl OnDeleteAcl(string folder,string identifier,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_DeleteAcl(folder,identifier,response);
-            if (this.DeleteAcl != null){
-                this.DeleteAcl(this,eArgs);
+            if (DeleteAcl != null){
+                DeleteAcl(this,eArgs);
             }
 
             return eArgs;
@@ -6447,8 +6447,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_ListRights OnListRights(string folder,string identifier,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_ListRights(folder,identifier,response);
-            if (this.ListRights != null){
-                this.ListRights(this,eArgs);
+            if (ListRights != null){
+                ListRights(this,eArgs);
             }
 
             return eArgs;
@@ -6472,8 +6472,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_MyRights OnMyRights(string folder,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_MyRights(folder,response);
-            if (this.MyRights != null){
-                this.MyRights(this,eArgs);
+            if (MyRights != null){
+                MyRights(this,eArgs);
             }
 
             return eArgs;
@@ -6494,8 +6494,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="e">Event data.</param>
         private void OnFetch(IMAP_e_Fetch e)
         {
-            if(this.Fetch != null){
-                this.Fetch(this,e);
+            if(Fetch != null){
+                Fetch(this,e);
             }
         }
 
@@ -6514,8 +6514,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="e">Event args.</param>
         private void OnSearch(IMAP_e_Search e)
         {
-            if(this.Search != null){
-                this.Search(this,e);
+            if(Search != null){
+                Search(this,e);
             }
         }
 
@@ -6539,8 +6539,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Store OnStore(IMAP_MessageInfo msgInfo,IMAP_Flags_SetType setType,string[] flags,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Store(m_pSelectedFolder.Folder,msgInfo,setType,flags,response);
-            if (this.Store != null){
-                this.Store(this,eArgs);
+            if (Store != null){
+                Store(this,eArgs);
             }
 
             return eArgs;
@@ -6565,8 +6565,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Copy OnCopy(string targetFolder,IMAP_MessageInfo[] messagesInfo,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Copy(m_pSelectedFolder.Folder,targetFolder,messagesInfo,response);
-            if (this.Copy != null){
-                this.Copy(this,eArgs);
+            if (Copy != null){
+                Copy(this,eArgs);
             }
 
             return eArgs;
@@ -6590,8 +6590,8 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Expunge OnExpunge(IMAP_MessageInfo msgInfo,IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Expunge(m_pSelectedFolder.Folder,msgInfo,response);
-            if (this.Expunge != null){
-                this.Expunge(this,eArgs);
+            if (Expunge != null){
+                Expunge(this,eArgs);
             }
 
             return eArgs;

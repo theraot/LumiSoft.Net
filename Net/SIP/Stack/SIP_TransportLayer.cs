@@ -56,7 +56,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     IsDisposed = true;
 
-                    foreach(SIP_Flow flow in this.Flows){
+                    foreach(SIP_Flow flow in Flows){
                         flow.Dispose();
                     }
 
@@ -74,7 +74,7 @@ namespace LumiSoft.Net.SIP.Stack
                         return;
                     }
                 
-                    foreach(SIP_Flow flow in this.Flows){
+                    foreach(SIP_Flow flow in Flows){
                         try{
                             if(flow.LastActivity.AddSeconds(m_IdelTimeout) < DateTime.Now){
                                 flow.Dispose();
@@ -191,7 +191,7 @@ namespace LumiSoft.Net.SIP.Stack
             {
                 get{                
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pFlows.Count; 
@@ -209,7 +209,7 @@ namespace LumiSoft.Net.SIP.Stack
             {
                 get{
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(flowID == null){
                         throw new ArgumentNullException("flowID");
@@ -246,7 +246,7 @@ namespace LumiSoft.Net.SIP.Stack
             {
                 get{ 
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pOwner; 
@@ -396,15 +396,15 @@ namespace LumiSoft.Net.SIP.Stack
             try{
                 // We have "ping"(CRLFCRLF) request, response with "pong".
                 if(message.Length == 4){
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddRead("",null,2,"Flow [id='" + flow.ID + "'] received \"ping\"",flow.LocalEP,flow.RemoteEP);
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddRead("",null,2,"Flow [id='" + flow.ID + "'] received \"ping\"",flow.LocalEP,flow.RemoteEP);
                     }
 
                     // Send "pong".
                     flow.SendInternal(new[]{(byte)'\r',(byte)'\n'});
 
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddWrite("",null,2,"Flow [id='" + flow.ID + "'] sent \"pong\"",flow.LocalEP,flow.RemoteEP);
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddWrite("",null,2,"Flow [id='" + flow.ID + "'] sent \"pong\"",flow.LocalEP,flow.RemoteEP);
                     }
 
                     return;
@@ -412,8 +412,8 @@ namespace LumiSoft.Net.SIP.Stack
                 // We have pong(CRLF), do nothing.
 
                 if(message.Length == 2){
-                    if(this.Stack.Logger != null){
-                        this.Stack.Logger.AddRead("",null,2,"Flow [id='" + flow.ID + "'] received \"pong\"",flow.LocalEP,flow.RemoteEP);
+                    if(Stack.Logger != null){
+                        Stack.Logger.AddRead("",null,2,"Flow [id='" + flow.ID + "'] received \"pong\"",flow.LocalEP,flow.RemoteEP);
                     }
 
                     return;
@@ -623,7 +623,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Flow GetOrCreateFlow(string transport,IPEndPoint localEP,IPEndPoint remoteEP)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(remoteEP == null){
                 throw new ArgumentNullException("remoteEP");
@@ -670,7 +670,7 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Flow GetFlow(string flowID)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(flowID == null){
                 throw new ArgumentNullException("flowID");
@@ -689,7 +689,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void SendRequest(SIP_Request request)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(request == null){
                 throw new ArgumentNullException("request");
@@ -727,7 +727,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void SendRequest(SIP_Request request,IPEndPoint localEP,SIP_Hop hop)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(request == null){
                 throw new ArgumentNullException("request");
@@ -764,7 +764,7 @@ namespace LumiSoft.Net.SIP.Stack
         internal void SendRequest(SIP_Flow flow,SIP_Request request,SIP_ClientTransaction transaction)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(flow == null){
                 throw new ArgumentNullException("flow");
@@ -782,7 +782,7 @@ namespace LumiSoft.Net.SIP.Stack
             // Via sent-by is used only to send responses when request maker data flow is not active.
             // Normally this never used, so just report first local listening point as sent-by.
             HostEndPoint sentBy = null;
-            foreach(IPBindInfo bind in this.BindInfo){
+            foreach(IPBindInfo bind in BindInfo){
                 if(flow.Transport == SIP_Transport.UDP && bind.Protocol == BindInfoProtocol.UDP){
                     if(!string.IsNullOrEmpty(bind.HostName)){
                         sentBy = new HostEndPoint(bind.HostName,bind.Port);
@@ -909,7 +909,7 @@ namespace LumiSoft.Net.SIP.Stack
         private void SendResponseInternal(SIP_ServerTransaction transaction,SIP_Response response,IPEndPoint localEP)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(!IsRunning){
                 throw new InvalidOperationException("Stack has not been started.");
@@ -1381,7 +1381,7 @@ namespace LumiSoft.Net.SIP.Stack
             HostEndPoint retVal = null;
 
             // Find suitable listening point for flow.
-            foreach(IPBindInfo bind in this.BindInfo){
+            foreach(IPBindInfo bind in BindInfo){
                 if(bind.Protocol == BindInfoProtocol.UDP && flow.Transport == SIP_Transport.UDP){
                     // For UDP flow localEP is also listeining EP, so use it.
                     if(bind.IP.AddressFamily == flow.LocalEP.AddressFamily && bind.Port == flow.LocalEP.Port){

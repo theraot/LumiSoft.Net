@@ -40,7 +40,7 @@ namespace LumiSoft.Net.SIP.Message
             */
 
             // Parse header
-            this.Header.Parse(stream);
+            Header.Parse(stream);
 
             // Parse data
             int contentLength = 0;
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.SIP.Message
             if(contentLength > 0){
                 var data = new byte[contentLength];
                 stream.Read(data,0,data.Length);
-                this.Data = data;
+                Data = data;
             }
         }
 

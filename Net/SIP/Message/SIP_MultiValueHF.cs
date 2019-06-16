@@ -92,7 +92,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public override string Value
         {
-            get{ return this.ToStringValue(); }
+            get{ return ToStringValue(); }
 
             set{
                 if(value != null){

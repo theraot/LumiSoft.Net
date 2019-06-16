@@ -94,14 +94,14 @@ namespace LumiSoft.Net.SIP.Proxy
             // We must reverse values, because greater value mean higer priority.
 
             var compareValue = (SIP_RegistrationBinding)obj;
-            if (compareValue.QValue == this.QValue){
+            if (compareValue.QValue == QValue){
                 return 0;
             }
 
-            if(compareValue.QValue > this.QValue){
+            if(compareValue.QValue > QValue){
                 return 1;
             }
-            if(compareValue.QValue < this.QValue){
+            if(compareValue.QValue < QValue){
                 return -1;
             }
 
@@ -118,7 +118,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         public bool IsExpired
         {
-            get{ return this.TTL <= 0; }
+            get{ return TTL <= 0; }
         }
 
         /// <summary>

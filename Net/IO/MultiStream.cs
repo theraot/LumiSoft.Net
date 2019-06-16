@@ -45,7 +45,7 @@ namespace LumiSoft.Net.IO
         public void AppendStream(Stream stream)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(stream == null){
                 throw new ArgumentNullException("stream");

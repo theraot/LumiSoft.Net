@@ -113,7 +113,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Handling
         {
             get{ 
-                var parameter = this.Parameters["handling"];
+                var parameter = Parameters["handling"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -123,10 +123,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("handling");
+                    Parameters.Remove("handling");
                 }
                 else{
-                    this.Parameters.Set("handling",value);
+                    Parameters.Set("handling",value);
                 }
             }
         }

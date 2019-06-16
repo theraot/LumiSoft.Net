@@ -164,18 +164,18 @@ namespace LumiSoft.Net.STUN.Message
             //--- message header -------------------------------------
 
             // STUN Message Type (2 bytes)
-            msg[offset++] = (byte)(((int)this.Type >> 8) & 0x3F);
-            msg[offset++] = (byte)((int)this.Type & 0xFF);
+            msg[offset++] = (byte)(((int)Type >> 8) & 0x3F);
+            msg[offset++] = (byte)((int)Type & 0xFF);
 
             // Message Length (2 bytes) will be assigned at last.
             msg[offset++] = 0;
             msg[offset++] = 0;
 
             // Magic Cookie           
-            msg[offset++] = (byte)((this.MagicCookie >> 24) & 0xFF);
-            msg[offset++] = (byte)((this.MagicCookie >> 16) & 0xFF);
-            msg[offset++] = (byte)((this.MagicCookie >> 8)  & 0xFF);
-            msg[offset++] = (byte)((this.MagicCookie >> 0)  & 0xFF);
+            msg[offset++] = (byte)((MagicCookie >> 24) & 0xFF);
+            msg[offset++] = (byte)((MagicCookie >> 16) & 0xFF);
+            msg[offset++] = (byte)((MagicCookie >> 8)  & 0xFF);
+            msg[offset++] = (byte)((MagicCookie >> 0)  & 0xFF);
 
             // Transaction ID (16 bytes)
             Array.Copy(TransactionID,0,msg,offset,12);
@@ -196,13 +196,13 @@ namespace LumiSoft.Net.STUN.Message
                +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             */
             
-            if(this.MappedAddress != null){
-                StoreEndPoint(AttributeType.MappedAddress,this.MappedAddress,msg,ref offset);
+            if(MappedAddress != null){
+                StoreEndPoint(AttributeType.MappedAddress,MappedAddress,msg,ref offset);
             }
-            else if(this.ResponseAddress != null){
-                StoreEndPoint(AttributeType.ResponseAddress,this.ResponseAddress,msg,ref offset);
+            else if(ResponseAddress != null){
+                StoreEndPoint(AttributeType.ResponseAddress,ResponseAddress,msg,ref offset);
             }
-            else if(this.ChangeRequest != null){
+            else if(ChangeRequest != null){
                 /*
                     The CHANGE-REQUEST attribute is used by the client to request that
                     the server use a different address and/or port when sending the
@@ -235,16 +235,16 @@ namespace LumiSoft.Net.STUN.Message
                 msg[offset++] = 0;
                 msg[offset++] = 0;
                 msg[offset++] = 0;
-                msg[offset++] = (byte)(Convert.ToInt32(this.ChangeRequest.ChangeIP) << 2 | Convert.ToInt32(this.ChangeRequest.ChangePort) << 1);               
+                msg[offset++] = (byte)(Convert.ToInt32(ChangeRequest.ChangeIP) << 2 | Convert.ToInt32(ChangeRequest.ChangePort) << 1);               
             }
-            else if(this.SourceAddress != null){
-                StoreEndPoint(AttributeType.SourceAddress,this.SourceAddress,msg,ref offset);
+            else if(SourceAddress != null){
+                StoreEndPoint(AttributeType.SourceAddress,SourceAddress,msg,ref offset);
             }
-            else if(this.ChangedAddress != null){
-                StoreEndPoint(AttributeType.ChangedAddress,this.ChangedAddress,msg,ref offset);
+            else if(ChangedAddress != null){
+                StoreEndPoint(AttributeType.ChangedAddress,ChangedAddress,msg,ref offset);
             }
-            else if(this.UserName != null){
-                var userBytes = Encoding.ASCII.GetBytes(this.UserName);
+            else if(UserName != null){
+                var userBytes = Encoding.ASCII.GetBytes(UserName);
 
                 // Attribute header
                 msg[offset++] = (int)AttributeType.Username >> 8;
@@ -255,8 +255,8 @@ namespace LumiSoft.Net.STUN.Message
                 Array.Copy(userBytes,0,msg,offset,userBytes.Length);
                 offset += userBytes.Length;
             }
-            else if(this.Password != null){
-                var userBytes = Encoding.ASCII.GetBytes(this.UserName);
+            else if(Password != null){
+                var userBytes = Encoding.ASCII.GetBytes(UserName);
 
                 // Attribute header
                 msg[offset++] = (int)AttributeType.Password >> 8;
@@ -267,7 +267,7 @@ namespace LumiSoft.Net.STUN.Message
                 Array.Copy(userBytes,0,msg,offset,userBytes.Length);
                 offset += userBytes.Length;
             }
-            else if(this.ErrorCode != null){
+            else if(ErrorCode != null){
                 /* 3489 11.2.9.
                     0                   1                   2                   3
                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -278,7 +278,7 @@ namespace LumiSoft.Net.STUN.Message
                     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                 */
 
-                var reasonBytes = Encoding.ASCII.GetBytes(this.ErrorCode.ReasonText);
+                var reasonBytes = Encoding.ASCII.GetBytes(ErrorCode.ReasonText);
 
                 // Header
                 msg[offset++] = 0;
@@ -290,15 +290,15 @@ namespace LumiSoft.Net.STUN.Message
                 msg[offset++] = 0;
                 msg[offset++] = 0;
                 // Class
-                msg[offset++] = (byte)Math.Floor((double)(this.ErrorCode.Code / 100));
+                msg[offset++] = (byte)Math.Floor((double)(ErrorCode.Code / 100));
                 // Number
-                msg[offset++] = (byte)(this.ErrorCode.Code & 0xFF);
+                msg[offset++] = (byte)(ErrorCode.Code & 0xFF);
                 // ReasonPhrase
                 Array.Copy(reasonBytes,msg,reasonBytes.Length);
                 offset += reasonBytes.Length;
             }
-            else if(this.ReflectedFrom != null){
-                StoreEndPoint(AttributeType.ReflectedFrom,this.ReflectedFrom,msg,ref offset);
+            else if(ReflectedFrom != null){
+                StoreEndPoint(AttributeType.ReflectedFrom,ReflectedFrom,msg,ref offset);
             }
 
             // Update Message Length. NOTE: 20 bytes header not included.

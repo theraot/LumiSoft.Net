@@ -61,19 +61,19 @@ namespace LumiSoft.Net.SIP.Message
                 if (word != null && word.Length > 0){
                     var name_value = word.Split(new[]{'='},2);
                     if (name_value[0].ToLower() == "nextnonce"){
-                        this.NextNonce = name_value[1];
+                        NextNonce = name_value[1];
                     }
                     else if(name_value[0].ToLower() == "qop"){
-                        this.Qop = name_value[1];
+                        Qop = name_value[1];
                     }
                     else if(name_value[0].ToLower() == "rspauth"){
-                        this.ResponseAuth = name_value[1];
+                        ResponseAuth = name_value[1];
                     }
                     else if(name_value[0].ToLower() == "cnonce"){
-                        this.CNonce = name_value[1];
+                        CNonce = name_value[1];
                     }
                     else if(name_value[0].ToLower() == "nc"){
-                        this.NonceCount = Convert.ToInt32(name_value[1]);
+                        NonceCount = Convert.ToInt32(name_value[1]);
                     }
                     else{
                         throw new SIP_ParseException("Invalid Authentication-Info value !");

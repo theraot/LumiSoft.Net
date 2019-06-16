@@ -133,11 +133,11 @@ namespace LumiSoft.Net.SIP.Message
         {
             get
             {
-                if(!this.Parameters.Contains("qvalue")){
+                if(!Parameters.Contains("qvalue")){
                     return -1;
                 }
 
-                return double.Parse(this.Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
+                return double.Parse(Parameters["qvalue"].Value,System.Globalization.NumberStyles.Any);
             }
 
             set{
@@ -146,10 +146,10 @@ namespace LumiSoft.Net.SIP.Message
                 }
 
                 if(value < 0){
-                    this.Parameters.Remove("qvalue");
+                    Parameters.Remove("qvalue");
                 }
                 else{
-                    this.Parameters.Set("qvalue",value.ToString());
+                    Parameters.Set("qvalue",value.ToString());
                 }
             }
         }
@@ -160,7 +160,7 @@ namespace LumiSoft.Net.SIP.Message
         public string D_Alg
         {
             get{ 
-                var parameter = this.Parameters["d-alg"];
+                var parameter = Parameters["d-alg"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -170,10 +170,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("d-alg");
+                    Parameters.Remove("d-alg");
                 }
                 else{
-                    this.Parameters.Set("d-alg",value);
+                    Parameters.Set("d-alg",value);
                 }
             }
         }
@@ -184,7 +184,7 @@ namespace LumiSoft.Net.SIP.Message
         public string D_Qop
         {
             get{ 
-                var parameter = this.Parameters["d-qop"];
+                var parameter = Parameters["d-qop"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -194,10 +194,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("d-qop");
+                    Parameters.Remove("d-qop");
                 }
                 else{
-                    this.Parameters.Set("d-qop",value);
+                    Parameters.Set("d-qop",value);
                 }
             }
         }
@@ -208,7 +208,7 @@ namespace LumiSoft.Net.SIP.Message
         public string D_Ver
         {
             get{ 
-                var parameter = this.Parameters["d-ver"];
+                var parameter = Parameters["d-ver"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -218,10 +218,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("d-ver");
+                    Parameters.Remove("d-ver");
                 }
                 else{
-                    this.Parameters.Set("d-ver",value);
+                    Parameters.Set("d-ver",value);
                 }
             }
         }

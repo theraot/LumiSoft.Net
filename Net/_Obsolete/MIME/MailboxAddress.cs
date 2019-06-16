@@ -104,7 +104,7 @@ namespace LumiSoft.Net.Mime
                     retVal = MimeUtils.EncodeWord(m_DisplayName) + " ";
                 }
             }
-            retVal += "<" + this.EmailAddress + ">";
+            retVal += "<" + EmailAddress + ">";
 
             return retVal;
         }
@@ -114,12 +114,12 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		internal void OnChanged()
 		{
-			if(this.Owner != null){
-				if(this.Owner is AddressList){
-					((AddressList)this.Owner).OnCollectionChanged();
+			if(Owner != null){
+				if(Owner is AddressList){
+					((AddressList)Owner).OnCollectionChanged();
 				}
-				else if(this.Owner is MailboxAddressCollection){
-					((MailboxAddressCollection)this.Owner).OnCollectionChanged();
+				else if(Owner is MailboxAddressCollection){
+					((MailboxAddressCollection)Owner).OnCollectionChanged();
 				}
 			}
 		}
@@ -133,10 +133,10 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ 
 				var retVal = "";
-                if (this.DisplayName != ""){
-					retVal += TextUtils.QuoteString(this.DisplayName) + " ";
+                if (DisplayName != ""){
+					retVal += TextUtils.QuoteString(DisplayName) + " ";
 				}
-                retVal += "<" + this.EmailAddress + ">";
+                retVal += "<" + EmailAddress + ">";
 
 				return retVal;
 			}
@@ -182,11 +182,11 @@ namespace LumiSoft.Net.Mime
 		{
 			get
             {
-                if(this.EmailAddress.IndexOf("@") > -1){
-					return this.EmailAddress.Substring(0,this.EmailAddress.IndexOf("@"));
+                if(EmailAddress.IndexOf("@") > -1){
+					return EmailAddress.Substring(0,EmailAddress.IndexOf("@"));
 				}
 
-                return this.EmailAddress;
+                return EmailAddress;
             }
 		}
 
@@ -197,8 +197,8 @@ namespace LumiSoft.Net.Mime
 		{
 			get
             {
-                if(this.EmailAddress.IndexOf("@") != -1){
-					return this.EmailAddress.Substring(this.EmailAddress.IndexOf("@") + 1);
+                if(EmailAddress.IndexOf("@") != -1){
+					return EmailAddress.Substring(EmailAddress.IndexOf("@") + 1);
 				}
 
                 return "";

@@ -445,7 +445,7 @@ namespace LumiSoft.Net.MIME
 				lineData = r.ReadLine();
 			}
 
-			return System.Text.Encoding.Default.GetString(msHeaders.ToArray());
+			return Encoding.Default.GetString(msHeaders.ToArray());
 		}
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace LumiSoft.Net.MIME
 					<TAB or SP>aaaaa<CRLF>
 			*/
 
-			using(TextReader r = new StreamReader(new MemoryStream(System.Text.Encoding.Default.GetBytes(headers)))){
+			using(TextReader r = new StreamReader(new MemoryStream(Encoding.Default.GetBytes(headers)))){
 				var line = r.ReadLine();
                 while (line != null){
 					// Find line where field begins

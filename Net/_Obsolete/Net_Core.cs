@@ -454,7 +454,7 @@ namespace LumiSoft.Net
 				// We need to encode that byte
 				if(b <= 33 || b >= 126 || b == 61){					
 					retVal.Write(new[]{(byte)'='},0,1);
-					retVal.Write(Core.ToHex(b),0,2);
+					retVal.Write(ToHex(b),0,2);
 					lineLength += 3;
 				}
 				// We don't need to encode that byte, just write it to stream
@@ -583,9 +583,9 @@ namespace LumiSoft.Net
 		/// <param name="data">String which to encode.</param>
 		/// <returns>Returns decoded string.</returns>	
         [Obsolete("Use MIME_Utils.QDecode instead of it")]	
-		public static string QDecode(System.Text.Encoding encoding,string data)
+		public static string QDecode(Encoding encoding,string data)
 		{
-			return encoding.GetString(QuotedPrintableDecode(System.Text.Encoding.ASCII.GetBytes(data.Replace("_"," "))));
+			return encoding.GetString(QuotedPrintableDecode(Encoding.ASCII.GetBytes(data.Replace("_"," "))));
 		}
 
         /// <summary>
@@ -637,11 +637,11 @@ namespace LumiSoft.Net
 								var enc = Encoding.GetEncoding(charset_type_text[0]);
                                 // QEncoded text
                                 if (charset_type_text[1].ToLower() == "q"){
-									retVal.Append(Core.QDecode(enc,charset_type_text[2]));
+									retVal.Append(QDecode(enc,charset_type_text[2]));
 								}
 								// Base64 encoded text
 								else{
-                                    retVal.Append(enc.GetString(Core.Base64Decode(Encoding.Default.GetBytes(charset_type_text[2]))));
+                                    retVal.Append(enc.GetString(Base64Decode(Encoding.Default.GetBytes(charset_type_text[2]))));
 								}
 							}
 							catch{
@@ -704,7 +704,7 @@ namespace LumiSoft.Net
 			// Contains non ascii chars, must to encode.
 			if(!IsAscii(str)){
 				var retVal = "=?" + charSet + "?" + "B?";
-                retVal += Convert.ToBase64String(System.Text.Encoding.GetEncoding(charSet).GetBytes(str));
+                retVal += Convert.ToBase64String(Encoding.GetEncoding(charSet).GetBytes(str));
 				retVal += "?=";
 
 				return retVal;
@@ -782,14 +782,14 @@ namespace LumiSoft.Net
                     }
 
 					// Ecode block
-					var encodedData = Core.Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
+					var encodedData = Base64EncodeEx(encodeBlock.ToArray(),base64Chars,false);
                     retVal.WriteByte((byte)'&');
 					retVal.Write(encodedData,0,encodedData.Length);
 					retVal.WriteByte((byte)'-');
 				}
 			}
 
-			return System.Text.Encoding.Default.GetString(retVal.ToArray());
+			return Encoding.Default.GetString(retVal.ToArray());
 		}
 
         /// <summary>
@@ -865,10 +865,10 @@ namespace LumiSoft.Net
 					// Decode block
 					else{
 						// Get encoded block
-						var encodedBlock = System.Text.Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
+						var encodedBlock = Encoding.Default.GetBytes(text.Substring(i + 1,endingPos - i - 1));
 
                         // Convert to UTF-16 char						
-                        var decodedData = Core.Base64DecodeEx(encodedBlock,base64Chars);
+                        var decodedData = Base64DecodeEx(encodedBlock,base64Chars);
                         var decodedChars = new char[decodedData.Length / 2];
                         for (int iC=0;iC<decodedChars.Length;iC++){
 							decodedChars[iC] = (char)(decodedData[iC * 2] << 8 | decodedData[(iC * 2) + 1]);
@@ -999,7 +999,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ip");
             }
 
-			if(ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork){
+			if(ip.AddressFamily == AddressFamily.InterNetwork){
 				var ipBytes = ip.GetAddressBytes();
 
                 /* Private IPs:
@@ -1200,10 +1200,10 @@ namespace LumiSoft.Net
 			var hash = md5.ComputeHash(Encoding.Default.GetBytes(text));
 
             if (hex){
-			    return ToHexString(System.Text.Encoding.Default.GetString(hash)).ToLower();
+			    return ToHexString(Encoding.Default.GetString(hash)).ToLower();
             }
 
-            return System.Text.Encoding.Default.GetString(hash);
+            return Encoding.Default.GetString(hash);
         }
     }
 }

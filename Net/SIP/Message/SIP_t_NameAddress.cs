@@ -44,8 +44,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="ArgumentNullException">Is raised when <b>uri</b> is null reference.</exception>
         public SIP_t_NameAddress(string displayName,AbsoluteUri uri)
         {
-            this.DisplayName = displayName;
-            this.Uri         = uri ?? throw new ArgumentNullException("uri");
+            DisplayName = displayName;
+            Uri         = uri ?? throw new ArgumentNullException("uri");
         }
 
         /// <summary>

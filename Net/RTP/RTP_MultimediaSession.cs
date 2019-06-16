@@ -50,8 +50,8 @@ namespace LumiSoft.Net.RTP
             m_pSessions         = null;
             m_pParticipants     = null;            
 
-            this.NewParticipant = null;
-            this.Error = null;
+            NewParticipant = null;
+            Error = null;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace LumiSoft.Net.RTP
         public void Close(string closeReason)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             foreach(RTP_Session session in m_pSessions.ToArray()){
@@ -79,7 +79,7 @@ namespace LumiSoft.Net.RTP
         public void Start()
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             // TODO:
@@ -92,7 +92,7 @@ namespace LumiSoft.Net.RTP
         public void Stop()
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             // TODO:
@@ -109,7 +109,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Session CreateSession(RTP_Address localEP,RTP_Clock clock)
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(localEP == null){
                 throw new ArgumentNullException("localEP");
@@ -172,7 +172,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSessions.ToArray(); 
@@ -187,7 +187,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pLocalParticipant; 
@@ -202,7 +202,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 lock(m_pParticipants){
@@ -229,8 +229,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("session");
             }
 
-            if(this.SessionCreated != null){
-                this.SessionCreated(this,new EventArgs<RTP_Session>(session));
+            if(SessionCreated != null){
+                SessionCreated(this,new EventArgs<RTP_Session>(session));
             }
         }
 
@@ -245,8 +245,8 @@ namespace LumiSoft.Net.RTP
         /// <param name="participant">New participant.</param>
         private void OnNewParticipant(RTP_Participant_Remote participant)
         {
-            if(this.NewParticipant != null){
-                this.NewParticipant(this,new RTP_ParticipantEventArgs(participant));
+            if(NewParticipant != null){
+                NewParticipant(this,new RTP_ParticipantEventArgs(participant));
             }
         }
 
@@ -261,8 +261,8 @@ namespace LumiSoft.Net.RTP
         /// <param name="exception">Exception.</param>
         internal void OnError(Exception exception)
         {
-            if(this.Error != null){
-                this.Error(this,new ExceptionEventArgs(exception));
+            if(Error != null){
+                Error(this,new ExceptionEventArgs(exception));
             }
         }
     }

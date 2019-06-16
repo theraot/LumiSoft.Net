@@ -74,10 +74,10 @@ namespace LumiSoft.Net.SIP.Message
             ParseParameters(reader);
 
             // Check that to and from tags exist.
-            if(this.Parameters["to-tag"] == null){
+            if(Parameters["to-tag"] == null){
                 throw new SIP_ParseException("Join value mandatory to-tag value is missing !");
             }
-            if(this.Parameters["from-tag"] == null){
+            if(Parameters["from-tag"] == null){
                 throw new SIP_ParseException("Join value mandatory from-tag value is missing !");
             }            
         }
@@ -126,7 +126,7 @@ namespace LumiSoft.Net.SIP.Message
         public string ToTag
         {
             get{ 
-                var parameter = this.Parameters["to-tag"];
+                var parameter = Parameters["to-tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -140,7 +140,7 @@ namespace LumiSoft.Net.SIP.Message
                     throw new ArgumentException("ToTag is mandatory and cant be null or empty !");
                 }
 
-                this.Parameters.Set("to-tag",value);
+                Parameters.Set("to-tag",value);
             }
         }
 
@@ -151,7 +151,7 @@ namespace LumiSoft.Net.SIP.Message
         public string FromTag
         {
             get{ 
-                var parameter = this.Parameters["from-tag"];
+                var parameter = Parameters["from-tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -165,7 +165,7 @@ namespace LumiSoft.Net.SIP.Message
                     throw new ArgumentException("FromTag is mandatory and cant be null or empty !");
                 }
 
-                this.Parameters.Set("from-tag",value);
+                Parameters.Set("from-tag",value);
             }
         }
     }

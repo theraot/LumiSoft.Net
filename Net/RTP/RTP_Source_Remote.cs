@@ -33,7 +33,7 @@ namespace LumiSoft.Net.RTP
                 m_pStream.Dispose();
             }
 
-            this.ApplicationPacket = null;
+            ApplicationPacket = null;
 
             base.Dispose();
         }
@@ -64,7 +64,7 @@ namespace LumiSoft.Net.RTP
 
             // Passive source and first RTP packet.
             if(m_pStream == null){
-                m_pStream = new RTP_ReceiveStream(this.Session,this,packet.SeqNo);
+                m_pStream = new RTP_ReceiveStream(Session,this,packet.SeqNo);
 
                 SetState(RTP_SourceState.Active);
             }
@@ -109,8 +109,8 @@ namespace LumiSoft.Net.RTP
         public override bool IsLocal
         {
             get{ 
-                if(this.State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == RTP_SourceState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return false; 
@@ -124,8 +124,8 @@ namespace LumiSoft.Net.RTP
         public RTP_Participant_Remote Participant
         {
             get{
-                if(this.State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == RTP_SourceState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pParticipant; 
@@ -139,8 +139,8 @@ namespace LumiSoft.Net.RTP
         public RTP_ReceiveStream Stream
         {
             get{ 
-                if(this.State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == RTP_SourceState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pStream; 
@@ -154,11 +154,11 @@ namespace LumiSoft.Net.RTP
         {
             get
             {
-                if(this.Participant != null){
+                if(Participant != null){
                     return null;
                 }
 
-                return this.Participant.CNAME;
+                return Participant.CNAME;
             }
         }
 
@@ -177,8 +177,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("packet");
             }
 
-            if(this.ApplicationPacket != null){
-                this.ApplicationPacket(this,new EventArgs<RTCP_Packet_APP>(packet));
+            if(ApplicationPacket != null){
+                ApplicationPacket(this,new EventArgs<RTCP_Packet_APP>(packet));
             }
         }
     }

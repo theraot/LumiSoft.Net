@@ -56,11 +56,11 @@ namespace LumiSoft.Net.Mime.vCard
                 // Add encoding parameter
                 newParmString += "ENCODING=b;CHARSET=utf-8";
       
-                this.ParametersString = newParmString;
-                this.Value = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(value));
+                ParametersString = newParmString;
+                Value = Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
             }
             else{
-                this.Value = value;
+                Value = value;
             }
         }
 
@@ -199,10 +199,10 @@ namespace LumiSoft.Net.Mime.vCard
                 // Encoding specified, decode data.
                 if(encoding != null){
                     if(encoding == "quoted-printable"){
-                        data = System.Text.Encoding.Default.GetString(MIME_Utils.QuotedPrintableDecode(System.Text.Encoding.Default.GetBytes(data)));
+                        data = Encoding.Default.GetString(MIME_Utils.QuotedPrintableDecode(Encoding.Default.GetBytes(data)));
                     }
                     else if(encoding == "b"){
-                        data = System.Text.Encoding.Default.GetString(Net_Utils.FromBase64(System.Text.Encoding.Default.GetBytes(data)));
+                        data = Encoding.Default.GetString(Net_Utils.FromBase64(Encoding.Default.GetBytes(data)));
                     }
                     else{
                         throw new Exception("Unknown data encoding '" + encoding + "' !");
@@ -210,7 +210,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
                 // Charset specified, convert data to specified charset.
                 if(charset != null){
-                    data = System.Text.Encoding.GetEncoding(charset).GetString(System.Text.Encoding.Default.GetBytes(data));
+                    data = Encoding.GetEncoding(charset).GetString(Encoding.Default.GetBytes(data));
                 }
 
                 // FIX ME: this must be done with structured fields

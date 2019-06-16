@@ -35,8 +35,8 @@ namespace LumiSoft.Net.UDP
             IsDisposed = false;
             Stop();
             // Release all events.
-            this.Error = null;
-            this.PacketReceived = null;
+            Error = null;
+            PacketReceived = null;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace LumiSoft.Net.UDP
                             listeningEPs.Add(epLocalhost);
                         }
                         // Add all host IPs.
-                        foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
+                        foreach(IPAddress ip in Dns.GetHostAddresses("")){
                             var epNew = new IPEndPoint(ip,ep.Port);
                             if (!listeningEPs.Contains(epNew)){
                                 listeningEPs.Add(epNew);
@@ -566,8 +566,8 @@ namespace LumiSoft.Net.UDP
         /// <param name="e">Event data.</param>
         private void OnUdpPacketReceived(UDP_e_PacketReceived e)
         {            
-            if(this.PacketReceived != null){
-                this.PacketReceived(this,e);
+            if(PacketReceived != null){
+                PacketReceived(this,e);
             }
         }
 
@@ -582,8 +582,8 @@ namespace LumiSoft.Net.UDP
         /// <param name="x">Exception occured.</param>
         private void OnError(Exception x)
         {
-            if(this.Error != null){
-                this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
+            if(Error != null){
+                Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
     }

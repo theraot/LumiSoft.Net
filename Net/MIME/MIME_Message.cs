@@ -169,7 +169,7 @@ namespace LumiSoft.Net.MIME
         public MIME_Entity[] GetAllEntities(bool includeEmbbedMessage)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var  retVal       = new List<MIME_Entity>();
@@ -183,14 +183,14 @@ namespace LumiSoft.Net.MIME
                 retVal.Add(currentEntity);
 
                 // Current entity is multipart entity, add it's body-parts for processing.
-                if(this.Body != null && currentEntity.Body.GetType().IsSubclassOf(typeof(MIME_b_Multipart))){
+                if(Body != null && currentEntity.Body.GetType().IsSubclassOf(typeof(MIME_b_Multipart))){
                     var bodyParts = ((MIME_b_Multipart)currentEntity.Body).BodyParts;
                     for (int i=0;i<bodyParts.Count;i++){
                         entitiesQueue.Insert(i,bodyParts[i]);
                     }
                 }
                 // Add embbed message for processing (Embbed message entities will be included).
-                else if(includeEmbbedMessage && this.Body != null && currentEntity.Body is MIME_b_MessageRfc822){
+                else if(includeEmbbedMessage && Body != null && currentEntity.Body is MIME_b_MessageRfc822){
                     entitiesQueue.Add(((MIME_b_MessageRfc822)currentEntity.Body).Message);
                 }
             }
@@ -209,7 +209,7 @@ namespace LumiSoft.Net.MIME
         public MIME_Entity GetEntityByCID(string cid)
         {
             if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
             if(cid == null){
                 throw new ArgumentNullException("cid");
@@ -218,7 +218,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentException("Argument 'cid' value must be specified.","cid");
             }
 
-            foreach(MIME_Entity entity in this.AllEntities){
+            foreach(MIME_Entity entity in AllEntities){
                 if(entity.ContentID == cid){
                     return entity;
                 }
@@ -239,7 +239,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var retVal        = new List<MIME_Entity>();
@@ -253,14 +253,14 @@ namespace LumiSoft.Net.MIME
                     retVal.Add(currentEntity);
 
                     // Current entity is multipart entity, add it's body-parts for processing.
-                    if(this.Body != null && currentEntity.Body.GetType().IsSubclassOf(typeof(MIME_b_Multipart))){
+                    if(Body != null && currentEntity.Body.GetType().IsSubclassOf(typeof(MIME_b_Multipart))){
                         var bodyParts = ((MIME_b_Multipart)currentEntity.Body).BodyParts;
                         for (int i=0;i<bodyParts.Count;i++){
                             entitiesQueue.Insert(i,bodyParts[i]);
                         }
                     }
                     // Add embbed message for processing (Embbed message entities will be included).
-                    else if(this.Body != null && currentEntity.Body is MIME_b_MessageRfc822){
+                    else if(Body != null && currentEntity.Body is MIME_b_MessageRfc822){
                         entitiesQueue.Add(((MIME_b_MessageRfc822)currentEntity.Body).Message);
                     }
                 }

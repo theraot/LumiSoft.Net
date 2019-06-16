@@ -213,7 +213,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Reason
         {
             get{ 
-                var parameter = this.Parameters["reason"];
+                var parameter = Parameters["reason"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -223,10 +223,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("reason");
+                    Parameters.Remove("reason");
                 }
                 else{
-                    this.Parameters.Set("reason",value);
+                    Parameters.Set("reason",value);
                 }
             }
         }
@@ -238,7 +238,7 @@ namespace LumiSoft.Net.SIP.Message
         public int Expires
         {
             get{ 
-                var parameter = this.Parameters["expires"];
+                var parameter = Parameters["expires"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -248,14 +248,14 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(value == -1){
-                    this.Parameters.Remove("expires");
+                    Parameters.Remove("expires");
                 }
                 else{
                     if(value < 0){
                         throw new ArgumentException("Property 'Expires' value must >= 0 !");
                     }
 
-                    this.Parameters.Set("expires",value.ToString());
+                    Parameters.Set("expires",value.ToString());
                 }
             }
         }
@@ -267,7 +267,7 @@ namespace LumiSoft.Net.SIP.Message
         public int RetryAfter
         {
             get{ 
-                var parameter = this.Parameters["retry-after"];
+                var parameter = Parameters["retry-after"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -277,14 +277,14 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(value == -1){
-                    this.Parameters.Remove("retry-after");
+                    Parameters.Remove("retry-after");
                 }
                 else{
                     if(value < 0){
                         throw new ArgumentException("Property 'RetryAfter' value must >= 0 !");
                     }
 
-                    this.Parameters.Set("retry-after",value.ToString());
+                    Parameters.Set("retry-after",value.ToString());
                 }
             }
         }

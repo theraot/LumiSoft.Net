@@ -756,7 +756,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("delimiters");
             }
 
-            if(this.Available == 0){
+            if(Available == 0){
                 return null;
             }
 

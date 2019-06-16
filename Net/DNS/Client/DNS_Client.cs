@@ -161,7 +161,7 @@ namespace LumiSoft.Net.DNS.Client
         public DNS_ClientTransaction CreateTransaction(DNS_QType queryType,string queryText,int timeout)
         {   
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(queryText == null){
                 throw new ArgumentNullException("queryText");
@@ -263,7 +263,7 @@ namespace LumiSoft.Net.DNS.Client
 		public DnsServerResponse Query(string queryText,DNS_QType queryType,int timeout)
 		{
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(queryText == null){
                 throw new ArgumentNullException("queryText");
@@ -304,18 +304,18 @@ namespace LumiSoft.Net.DNS.Client
         public IPAddress[] GetHostAddresses(string hostNameOrIP)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(hostNameOrIP == null){
                 throw new ArgumentNullException("hostNameOrIP");
             }
 
             var wait = new ManualResetEvent(false);
-            using (Dns_Client.GetHostAddressesAsyncOP op = new Dns_Client.GetHostAddressesAsyncOP(hostNameOrIP)){
-                op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetHostAddressesAsyncOP> e1){
+            using (GetHostAddressesAsyncOP op = new GetHostAddressesAsyncOP(hostNameOrIP)){
+                op.CompletedAsync += delegate(object s1,EventArgs<GetHostAddressesAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.GetHostAddressesAsync(op)){
+                if(!GetHostAddressesAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -370,7 +370,7 @@ namespace LumiSoft.Net.DNS.Client
                 m_pIPv4Addresses = null;
                 m_pIPv6Addresses = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -399,7 +399,7 @@ namespace LumiSoft.Net.DNS.Client
                         // This callback is called when BeginGetHostAddresses method has completed.
                         AsyncCallback callback = delegate(IAsyncResult ar){
                             try{
-                                foreach(IPAddress ip in  System.Net.Dns.EndGetHostAddresses(ar)){
+                                foreach(IPAddress ip in  Dns.EndGetHostAddresses(ar)){
                                     if(ip.AddressFamily == AddressFamily.InterNetwork){
                                         m_pIPv4Addresses.Add(ip);
                                     }
@@ -416,7 +416,7 @@ namespace LumiSoft.Net.DNS.Client
                         };
 
                         // Start resolving host ip addresses.
-                        System.Net.Dns.BeginGetHostAddresses(m_HostNameOrIP,callback,null); 
+                        Dns.BeginGetHostAddresses(m_HostNameOrIP,callback,null); 
                     }
                     catch(Exception x){
                         m_pException = x;
@@ -537,7 +537,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -555,7 +555,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_HostNameOrIP; 
@@ -571,7 +571,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Addresses' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -599,8 +599,8 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<GetHostAddressesAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<GetHostAddressesAsyncOP>(this));
                 }
             }
         }
@@ -616,7 +616,7 @@ namespace LumiSoft.Net.DNS.Client
         public bool GetHostAddressesAsync(GetHostAddressesAsyncOP op)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -655,18 +655,18 @@ namespace LumiSoft.Net.DNS.Client
         public HostEntry[] GetHostsAddresses(string[] hostNames,bool resolveAny)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(hostNames == null){
                 throw new ArgumentNullException("hostNames");
             }
 
             var wait = new ManualResetEvent(false);
-            using (Dns_Client.GetHostsAddressesAsyncOP op = new Dns_Client.GetHostsAddressesAsyncOP(hostNames,resolveAny)){
-                op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetHostsAddressesAsyncOP> e1){
+            using (GetHostsAddressesAsyncOP op = new GetHostsAddressesAsyncOP(hostNames,resolveAny)){
+                op.CompletedAsync += delegate(object s1,EventArgs<GetHostsAddressesAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.GetHostsAddressesAsync(op)){
+                if(!GetHostsAddressesAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -732,7 +732,7 @@ namespace LumiSoft.Net.DNS.Client
                 m_pIpLookupQueue = null;
                 m_pHostEntries   = null;
                 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -868,7 +868,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -886,7 +886,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pHostNames; 
@@ -902,7 +902,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'HostEntries' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -925,8 +925,8 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<GetHostsAddressesAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<GetHostsAddressesAsyncOP>(this));
                 }
             }
         }
@@ -942,7 +942,7 @@ namespace LumiSoft.Net.DNS.Client
         public bool GetHostsAddressesAsync(GetHostsAddressesAsyncOP op)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -967,7 +967,7 @@ namespace LumiSoft.Net.DNS.Client
         public HostEntry[] GetEmailHosts(string domain)
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(domain == null){
                 throw new ArgumentNullException("domain");
@@ -977,11 +977,11 @@ namespace LumiSoft.Net.DNS.Client
             }
 
             var wait = new ManualResetEvent(false);
-            using (Dns_Client.GetEmailHostsAsyncOP op = new Dns_Client.GetEmailHostsAsyncOP(domain)){
-                op.CompletedAsync += delegate(object s1,EventArgs<Dns_Client.GetEmailHostsAsyncOP> e1){
+            using (GetEmailHostsAsyncOP op = new GetEmailHostsAsyncOP(domain)){
+                op.CompletedAsync += delegate(object s1,EventArgs<GetEmailHostsAsyncOP> e1){
                     wait.Set();
                 };
-                if(!this.GetEmailHostsAsync(op)){
+                if(!GetEmailHostsAsync(op)){
                     wait.Set();
                 }
                 wait.WaitOne();
@@ -1043,7 +1043,7 @@ namespace LumiSoft.Net.DNS.Client
                 m_Domain     = null;
                 m_pHosts     = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1322,7 +1322,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1340,7 +1340,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_Domain; 
@@ -1356,7 +1356,7 @@ namespace LumiSoft.Net.DNS.Client
             {
                 get{
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1379,8 +1379,8 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<GetEmailHostsAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<GetEmailHostsAsyncOP>(this));
                 }
             }
         }
@@ -1396,7 +1396,7 @@ namespace LumiSoft.Net.DNS.Client
         public bool GetEmailHostsAsync(GetEmailHostsAsyncOP op)
         {         
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(op == null){
                 throw new ArgumentNullException("op");
@@ -1826,7 +1826,7 @@ namespace LumiSoft.Net.DNS.Client
 
 			// This is probably NetBios name
 			if(host.IndexOf(".") == -1){
-				return System.Net.Dns.GetHostEntry(host).AddressList;
+				return Dns.GetHostEntry(host).AddressList;
 			}
 
             // hostName_IP must be host name, try to resolve it's IP

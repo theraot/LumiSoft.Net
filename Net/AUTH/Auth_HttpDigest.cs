@@ -73,7 +73,7 @@ namespace LumiSoft.Net.AUTH
         public bool Authenticate(string userName,string password)
         {
             // Check that our computed digest is same as client provided.
-            if(this.Response == CalculateResponse(userName,password)){
+            if(Response == CalculateResponse(userName,password)){
                 return true;
             }
 
@@ -165,31 +165,31 @@ namespace LumiSoft.Net.AUTH
             var a1 = "";
             var a2 = "";
             // Create A1
-            if (this.Algorithm == "" || this.Algorithm.ToLower() == "md5"){
-                a1 = userName + ":" + this.Realm + ":" + password;
+            if (Algorithm == "" || Algorithm.ToLower() == "md5"){
+                a1 = userName + ":" + Realm + ":" + password;
             }
-            else if(this.Algorithm.ToLower() == "md5-sess"){
-                a1 = Net_Utils.ComputeMd5(userName + ":" + this.Realm + ":" + password,false) + ":" + this.Nonce + ":" + this.CNonce;
+            else if(Algorithm.ToLower() == "md5-sess"){
+                a1 = Net_Utils.ComputeMd5(userName + ":" + Realm + ":" + password,false) + ":" + Nonce + ":" + CNonce;
             }
             else{
-                throw new ArgumentException("Invalid Algorithm value '" + this.Algorithm + "' !");
+                throw new ArgumentException("Invalid Algorithm value '" + Algorithm + "' !");
             }
             // Create A2            
-            if(this.Qop == "" || this.Qop.ToLower() == "auth"){
-                a2 = ":" + this.Uri;
+            if(Qop == "" || Qop.ToLower() == "auth"){
+                a2 = ":" + Uri;
             }
             else{
-                throw new ArgumentException("Invalid qop value '" + this.Qop + "' !");
+                throw new ArgumentException("Invalid qop value '" + Qop + "' !");
             }
 
             // Calculate response value.
             // qop present
-            if(!string.IsNullOrEmpty(this.Qop)){
-                return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + this.Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.CNonce + ":" + this.Qop + ":" + Net_Utils.ComputeMd5(a2,true),true);
+            if(!string.IsNullOrEmpty(Qop)){
+                return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + Nonce + ":" + NonceCount.ToString("x8") + ":" + CNonce + ":" + Qop + ":" + Net_Utils.ComputeMd5(a2,true),true);
             }
             // qop not present
 
-            return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + this.Nonce + ":" + Net_Utils.ComputeMd5(a2,true),true);
+            return Net_Utils.ComputeMd5(Net_Utils.ComputeMd5(a1,true) + ":" + Nonce + ":" + Net_Utils.ComputeMd5(a2,true),true);
         }
 
         /// <summary>
@@ -255,38 +255,38 @@ namespace LumiSoft.Net.AUTH
             */
 
             var A1 = "";
-            if (string.IsNullOrEmpty(this.Algorithm) || this.Algorithm.ToLower() == "md5"){
-                A1 = userName + ":" + this.Realm + ":" + password;
+            if (string.IsNullOrEmpty(Algorithm) || Algorithm.ToLower() == "md5"){
+                A1 = userName + ":" + Realm + ":" + password;
             }
-            else if(this.Algorithm.ToLower() == "md5-sess"){
-                A1 = H(userName + ":" + this.Realm + ":" + password) + ":" + this.Nonce + ":" + this.CNonce;
+            else if(Algorithm.ToLower() == "md5-sess"){
+                A1 = H(userName + ":" + Realm + ":" + password) + ":" + Nonce + ":" + CNonce;
             }
             else{
-                throw new ArgumentException("Invalid 'algorithm' value '" + this.Algorithm + "'.");
+                throw new ArgumentException("Invalid 'algorithm' value '" + Algorithm + "'.");
             }
 
             var A2 = "";
-            if (string.IsNullOrEmpty(this.Qop) || this.Qop.ToLower() == "auth"){
-                A2 = this.RequestMethod + ":" + this.Uri;
+            if (string.IsNullOrEmpty(Qop) || Qop.ToLower() == "auth"){
+                A2 = RequestMethod + ":" + Uri;
             }
             else{
-                throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
+                throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
             }
 
-            if(this.Qop.ToLower() == "auth" || this.Qop.ToLower() == "auth-int"){
+            if(Qop.ToLower() == "auth" || Qop.ToLower() == "auth-int"){
                 // request-digest  = <"> < KD ( H(A1),unq(nonce-value) ":" nc-value ":" unq(cnonce-value) ":" unq(qop-value) ":" H(A2) )> <">
                 // We don't add quoutes here.
 
-                return KD(H(A1),this.Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.CNonce + ":" + this.Qop + ":" + H(A2));
+                return KD(H(A1),Nonce + ":" + NonceCount.ToString("x8") + ":" + CNonce + ":" + Qop + ":" + H(A2));
             }
 
-            if(string.IsNullOrEmpty(this.Qop)){
+            if(string.IsNullOrEmpty(Qop)){
                 // request-digest = <"> < KD ( H(A1), unq(nonce-value) ":" H(A2) ) > <">
                 // We don't add quoutes here.
 
-                return KD(H(A1),this.Nonce + ":" + H(A2));
+                return KD(H(A1),Nonce + ":" + H(A2));
             }
-            throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
+            throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
         }
 
         /// <summary>

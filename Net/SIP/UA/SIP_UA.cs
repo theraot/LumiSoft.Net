@@ -53,8 +53,8 @@ namespace LumiSoft.Net.SIP.UA
 
                 IsDisposed = true;
 
-                this.RequestReceived = null;
-                this.IncomingCall = null;
+                RequestReceived = null;
+                IncomingCall = null;
 
                 m_pStack.Dispose();
                 m_pStack = null;               
@@ -173,7 +173,7 @@ namespace LumiSoft.Net.SIP.UA
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pStack; 
@@ -188,7 +188,7 @@ namespace LumiSoft.Net.SIP.UA
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pCalls.ToArray();
@@ -206,8 +206,8 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="request">SIP request.</param>
         protected void OnRequestReceived(SIP_RequestReceivedEventArgs request)
         {
-            if(this.RequestReceived != null){
-                this.RequestReceived(this,request);
+            if(RequestReceived != null){
+                RequestReceived(this,request);
             }
         }
 
@@ -222,8 +222,8 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="call">Incoming call.</param>
         private void OnIncomingCall(SIP_UA_Call call)
         {
-            if(this.IncomingCall != null){
-                this.IncomingCall(this,new SIP_UA_Call_EventArgs(call));
+            if(IncomingCall != null){
+                IncomingCall(this,new SIP_UA_Call_EventArgs(call));
             }
         }
     }

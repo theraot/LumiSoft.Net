@@ -49,9 +49,9 @@ namespace LumiSoft.Net.RTP
             m_pRtcpEP = null;
             m_pRtpEP = null;
 
-            this.Closed = null;
-            this.Disposing = null;
-            this.StateChanged = null;
+            Closed = null;
+            Disposing = null;
+            StateChanged = null;
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSession; 
@@ -181,7 +181,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SSRC; 
@@ -196,7 +196,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRtcpEP; 
@@ -211,7 +211,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRtpEP; 
@@ -235,7 +235,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastActivity; 
@@ -250,7 +250,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastRtcpPacket; 
@@ -265,7 +265,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastRtpPacket; 
@@ -280,7 +280,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_LastRRTime; 
@@ -295,7 +295,7 @@ namespace LumiSoft.Net.RTP
         {
             get{ 
                 if(State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_CloseReason; 
@@ -325,8 +325,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnClosed()
         {
-            if(this.Closed != null){
-                this.Closed(this,new EventArgs());
+            if(Closed != null){
+                Closed(this,new EventArgs());
             }
         }
 
@@ -340,8 +340,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnDisposing()
         {
-            if(this.Disposing != null){
-                this.Disposing(this,new EventArgs());
+            if(Disposing != null){
+                Disposing(this,new EventArgs());
             }
         }
 
@@ -355,8 +355,8 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnStateChaged()
         {
-            if(this.StateChanged != null){
-                this.StateChanged(this,new EventArgs());
+            if(StateChanged != null){
+                StateChanged(this,new EventArgs());
             }
         }
     }

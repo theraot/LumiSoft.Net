@@ -101,7 +101,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Tag
         {
             get{ 
-                var parameter = this.Parameters["tag"];
+                var parameter = Parameters["tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -111,10 +111,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("tag");
+                    Parameters.Remove("tag");
                 }
                 else{
-                    this.Parameters.Set("tag",value);
+                    Parameters.Set("tag",value);
                 }
             }
         }

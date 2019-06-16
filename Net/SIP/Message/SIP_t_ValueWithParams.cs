@@ -36,10 +36,10 @@ namespace LumiSoft.Net.SIP.Message
                     if (paramString != ""){
                         var name_value = paramString.Split(new[]{'='},2);
                         if (name_value.Length == 2){
-                           this.Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
+                           Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
                         }
                         else{
-                            this.Parameters.Add(name_value[0],null);
+                            Parameters.Add(name_value[0],null);
                         }
                     }
                 }

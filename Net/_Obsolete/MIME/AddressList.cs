@@ -166,7 +166,7 @@ namespace LumiSoft.Net.Mime
 		{
 			// AddressList is bounded to HeaderField, update header field value
 			if(BoundedHeaderField != null){
-				BoundedHeaderField.Value = this.ToAddressListString();
+				BoundedHeaderField.Value = ToAddressListString();
 			}
 		}
 

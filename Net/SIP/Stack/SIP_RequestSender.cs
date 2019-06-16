@@ -67,9 +67,9 @@ namespace LumiSoft.Net.SIP.Stack
 
                 OnDisposed();
 
-                this.ResponseReceived = null;
-                this.Completed = null;
-                this.Disposed = null;
+                ResponseReceived = null;
+                Completed = null;
+                Disposed = null;
                 
                 m_pStack       = null;
                 m_pRequest     = null;
@@ -128,7 +128,7 @@ namespace LumiSoft.Net.SIP.Stack
                         request.CSeq = new SIP_t_CSeq(m_pStack.ConsumeCSeq(),request.CSeq.RequestMethod);
 
                         // All challanges authorized, resend request.
-                        if(Authorize(request,e.Response,this.Credentials.ToArray())){
+                        if(Authorize(request,e.Response,Credentials.ToArray())){
                             var flow  = m_pTransaction.Flow;
                             CleanUpActiveTransaction();            
                             SendToFlow(flow,request);
@@ -232,7 +232,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             lock(m_pLock){
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(m_IsStarted){
                     throw new InvalidOperationException("Start method has been already called.");
@@ -336,7 +336,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             lock(m_pLock){
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(!m_IsStarted){
                     throw new InvalidOperationException("Request sending has not started, nothing to cancel.");
@@ -543,7 +543,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_IsStarted; 
@@ -558,7 +558,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_State == SIP_RequestSenderState.Completed; 
@@ -573,7 +573,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pStack; 
@@ -588,7 +588,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pRequest; 
@@ -603,7 +603,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pFlow; 
@@ -618,7 +618,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ 
                 if(m_State == SIP_RequestSenderState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pCredentials; 
@@ -641,8 +641,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="response">SIP response received.</param>
         private void OnResponseReceived(SIP_Response response)
         {
-            if(this.ResponseReceived != null){
-                this.ResponseReceived(this,new SIP_ResponseReceivedEventArgs(m_pStack,m_pTransaction,response));
+            if(ResponseReceived != null){
+                ResponseReceived(this,new SIP_ResponseReceivedEventArgs(m_pStack,m_pTransaction,response));
             }
         }
 
@@ -667,8 +667,8 @@ namespace LumiSoft.Net.SIP.Stack
         {
             m_State = SIP_RequestSenderState.Completed;
 
-            if(this.Completed != null){
-                this.Completed(this,new EventArgs());
+            if(Completed != null){
+                Completed(this,new EventArgs());
             }
         }
 
@@ -682,8 +682,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnDisposed()
         {
-            if(this.Disposed != null){
-                this.Disposed(this,new EventArgs());
+            if(Disposed != null){
+                Disposed(this,new EventArgs());
             }
         }
     }

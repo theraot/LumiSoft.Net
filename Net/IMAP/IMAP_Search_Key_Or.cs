@@ -40,7 +40,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ParseException("Parse error: Not a SEARCH 'OR' key.");
             }
 
-            return new IMAP_Search_Key_Or(IMAP_Search_Key.ParseKey(r),IMAP_Search_Key.ParseKey(r));
+            return new IMAP_Search_Key_Or(ParseKey(r),ParseKey(r));
         }
 
         /// <summary>

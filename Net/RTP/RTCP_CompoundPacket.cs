@@ -70,7 +70,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns compound packet as raw byte data.</returns>
         public byte[] ToByte()
         {
-            var retVal = new byte[this.TotalSize];
+            var retVal = new byte[TotalSize];
             int    offset = 0;
             ToByte(retVal,ref offset);
 

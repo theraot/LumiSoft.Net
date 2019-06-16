@@ -54,7 +54,7 @@ namespace LumiSoft.Net.RTP
             int  type      = buffer[offset++];
             int  length    = buffer[offset++] << 8 | buffer[offset++];
             if(isPadded){
-                this.PaddBytesCount = buffer[offset + length];
+                PaddBytesCount = buffer[offset + length];
             }
 
             SubType = subType;

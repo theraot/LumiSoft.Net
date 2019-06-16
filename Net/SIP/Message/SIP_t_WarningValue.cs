@@ -65,20 +65,20 @@ namespace LumiSoft.Net.SIP.Message
                 throw new SIP_ParseException("Invalid 'warning-value' value, warn-code is missing !");
             }
             try{
-                this.Code = Convert.ToInt32(word);
+                Code = Convert.ToInt32(word);
             }
             catch{
                 throw new SIP_ParseException("Invalid 'warning-value' warn-code value, warn-code is missing !");
             }
 
             word = reader.ReadWord();
-            this.Agent = word ?? throw new SIP_ParseException("Invalid 'warning-value' value, warn-agent is missing !");
+            Agent = word ?? throw new SIP_ParseException("Invalid 'warning-value' value, warn-agent is missing !");
 
             word = reader.ReadToEnd();
             if(word == null){
                 throw new SIP_ParseException("Invalid 'warning-value' value, warn-text is missing !");
             }
-            this.Agent = TextUtils.UnQuoteString(word);
+            Agent = TextUtils.UnQuoteString(word);
         }
 
         /// <summary>

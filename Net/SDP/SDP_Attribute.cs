@@ -15,7 +15,7 @@ namespace LumiSoft.Net.SDP
         public SDP_Attribute(string name,string value)
         {
             Name     = name;
-            this.Value = value;
+            Value = value;
         }
 
         /// <summary>

@@ -62,8 +62,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="uid">Message UID.</param>
         private void OnMatched(long uid)
         {
-            if(this.Matched != null){
-                this.Matched(this,new EventArgs<long>(uid));
+            if(Matched != null){
+                Matched(this,new EventArgs<long>(uid));
             }
         }
     }

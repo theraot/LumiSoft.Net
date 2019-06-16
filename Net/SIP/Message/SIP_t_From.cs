@@ -83,7 +83,7 @@ namespace LumiSoft.Net.SIP.Message
         {
             var retVal = new StringBuilder();
             retVal.Append(Address.ToStringValue()); 
-            retVal.Append(this.ParametersToString());
+            retVal.Append(ParametersToString());
 
             return retVal.ToString();
         }
@@ -101,7 +101,7 @@ namespace LumiSoft.Net.SIP.Message
         public string Tag
         {
             get{ 
-                var parameter = this.Parameters["tag"];
+                var parameter = Parameters["tag"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -111,10 +111,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(string.IsNullOrEmpty(value)){
-                    this.Parameters.Remove("tag");
+                    Parameters.Remove("tag");
                 }
                 else{
-                    this.Parameters.Set("tag",value);
+                    Parameters.Set("tag",value);
                 }
             }
         }

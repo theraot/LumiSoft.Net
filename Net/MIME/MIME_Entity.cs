@@ -224,7 +224,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pHeader.IsModified || m_pBody.IsModified; 
@@ -239,7 +239,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pParent; 
@@ -254,7 +254,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_pHeader; 
@@ -271,7 +271,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("MIME-Version");
@@ -284,7 +284,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -312,7 +312,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-ID");
@@ -325,7 +325,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(value == null){
@@ -353,7 +353,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Description");
@@ -366,7 +366,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -395,7 +395,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Transfer-Encoding");
@@ -408,7 +408,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -436,7 +436,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Type");
@@ -453,7 +453,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -480,7 +480,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Base");
@@ -493,7 +493,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -522,7 +522,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Location");
@@ -535,7 +535,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -564,7 +564,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-features");
@@ -577,7 +577,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(value == null){
@@ -607,7 +607,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Disposition");
@@ -624,7 +624,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -652,7 +652,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Language");
@@ -665,7 +665,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -693,7 +693,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Alternative");
@@ -706,7 +706,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -734,7 +734,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-MD5");
@@ -747,7 +747,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){
@@ -775,7 +775,7 @@ namespace LumiSoft.Net.MIME
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var h = m_pHeader.GetFirst("Content-Duration");
@@ -788,7 +788,7 @@ namespace LumiSoft.Net.MIME
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 if(value == null){

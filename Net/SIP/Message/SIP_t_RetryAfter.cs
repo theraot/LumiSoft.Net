@@ -123,7 +123,7 @@ namespace LumiSoft.Net.SIP.Message
         public int Duration
         {
             get{ 
-                var parameter = this.Parameters["duration"];
+                var parameter = Parameters["duration"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -133,14 +133,14 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(value == -1){
-                    this.Parameters.Remove("duration");
+                    Parameters.Remove("duration");
                 }
                 else{
                     if(value < 1){
                         throw new ArgumentException("Property Duration value must be >= 1 !");
                     }
 
-                    this.Parameters.Set("duration",value.ToString());
+                    Parameters.Set("duration",value.ToString());
                 }
             }
         }

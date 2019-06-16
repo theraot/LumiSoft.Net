@@ -111,7 +111,7 @@ namespace LumiSoft.Net.SIP.Message
         public double Index
         {
             get{ 
-                var parameter = this.Parameters["index"];
+                var parameter = Parameters["index"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -121,10 +121,10 @@ namespace LumiSoft.Net.SIP.Message
 
             set{                
                 if(value == -1){
-                    this.Parameters.Remove("index");
+                    Parameters.Remove("index");
                 }
                 else{
-                    this.Parameters.Set("index",value.ToString());
+                    Parameters.Set("index",value.ToString());
                 }
             }
         }

@@ -62,7 +62,7 @@ namespace LumiSoft.Net.SIP.Message
 
             // Parse m-type
             var word = reader.ReadWord();
-            this.MediaType = word ?? throw new SIP_ParseException("Invalid 'accept-range' value, m-type is missing !");
+            MediaType = word ?? throw new SIP_ParseException("Invalid 'accept-range' value, m-type is missing !");
 
             // Parse media and accept parameters !!! thats confusing part, RFC invalid.
             bool media_accept = true;
@@ -92,10 +92,10 @@ namespace LumiSoft.Net.SIP.Message
                         }
 
                         if(media_accept){
-                            this.MediaParameters.Add(name,value);
+                            MediaParameters.Add(name,value);
                         }
                         else{
-                            this.Parameters.Add(name,value);
+                            Parameters.Add(name,value);
                         }
                     }
                 }
@@ -179,7 +179,7 @@ namespace LumiSoft.Net.SIP.Message
         public double QValue
         {
             get{
-                var parameter = this.Parameters["qvalue"];
+                var parameter = Parameters["qvalue"];
                 if (parameter != null){
                     return Convert.ToDouble(parameter.Value);
                 }
@@ -193,10 +193,10 @@ namespace LumiSoft.Net.SIP.Message
                 }
 
                 if(value < 0){
-                    this.Parameters.Remove("qvalue");
+                    Parameters.Remove("qvalue");
                 }
                 else{
-                    this.Parameters.Set("qvalue",value.ToString());
+                    Parameters.Set("qvalue",value.ToString());
                 }
             }
         }

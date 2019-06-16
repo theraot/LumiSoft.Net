@@ -28,8 +28,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("rtpEP");
             }
 
-            this.SetRtcpEP(rtcpEP);
-            this.SetRtpEP(rtpEP);
+            SetRtcpEP(rtcpEP);
+            SetRtpEP(rtpEP);
         }
 
         /// <summary>
@@ -39,22 +39,22 @@ namespace LumiSoft.Net.RTP
         /// <param name="packet">Is raised when <b>packet</b> is null reference.</param>
         public void SendApplicationPacket(RTCP_Packet_APP packet)
         {
-            if(this.State == RTP_SourceState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(State == RTP_SourceState.Disposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(packet == null){
                 throw new ArgumentNullException("packet");
             }
 
-            packet.Source = this.SSRC;
+            packet.Source = SSRC;
 
             var p = new RTCP_CompoundPacket();
             var rr = new RTCP_Packet_RR();
-            rr.SSRC = this.SSRC;
+            rr.SSRC = SSRC;
             p.Packets.Add(packet);
 
             // Send APP packet.
-            this.Session.SendRtcpPacket(p);
+            Session.SendRtcpPacket(p);
         }
 
         /// <summary>
@@ -64,23 +64,23 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         internal override void Close(string closeReason)
         {
-            if(this.State == RTP_SourceState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(State == RTP_SourceState.Disposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
 
             var packet = new RTCP_CompoundPacket();
             var rr = new RTCP_Packet_RR();
-            rr.SSRC = this.SSRC;
+            rr.SSRC = SSRC;
             packet.Packets.Add(rr);
             var bye = new RTCP_Packet_BYE();
-            bye.Sources = new[]{this.SSRC};
+            bye.Sources = new[]{SSRC};
             if(!string.IsNullOrEmpty(closeReason)){
                 bye.LeavingReason = closeReason;
             }
             packet.Packets.Add(bye);
 
             // Send packet.
-            this.Session.SendRtcpPacket(packet);
+            Session.SendRtcpPacket(packet);
 
             base.Close(closeReason);
         }
@@ -124,7 +124,7 @@ namespace LumiSoft.Net.RTP
             SetLastRtpPacket(DateTime.Now);
             SetState(RTP_SourceState.Active);
                         
-            return this.Session.SendRtpPacket(Stream,packet);
+            return Session.SendRtpPacket(Stream,packet);
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace LumiSoft.Net.RTP
         public override bool IsLocal
         {
             get{ 
-                if(this.State == RTP_SourceState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == RTP_SourceState.Disposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return true; 
@@ -147,7 +147,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public RTP_Participant_Local Participant
         {
-            get{ return this.Session.Session.LocalParticipant; }
+            get{ return Session.Session.LocalParticipant; }
         }
 
         /// <summary>
@@ -162,11 +162,11 @@ namespace LumiSoft.Net.RTP
         {
             get
             {
-                if(this.Participant != null){
+                if(Participant != null){
                     return null;
                 }
 
-                return this.Participant.CNAME;
+                return Participant.CNAME;
             }
         }
     }

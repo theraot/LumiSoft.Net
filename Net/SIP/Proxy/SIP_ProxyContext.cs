@@ -388,7 +388,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
 
                     // If we have got any response from any client transaction, then all done.
-                    if(this.HasReceivedResponse){
+                    if(HasReceivedResponse){
                         Dispose();
                     }
                 }
@@ -423,7 +423,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 lock(m_pLock){
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(m_IsStarted){
                         throw new InvalidOperationException("Start has already called.");
@@ -456,7 +456,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 lock(m_pLock){
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     if(m_IsStarted){
@@ -580,7 +580,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 get{ 
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsStarted; 
@@ -594,7 +594,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 get{
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_IsCompleted; 
@@ -609,7 +609,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 get{  
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pRequest; 
@@ -624,7 +624,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 get{  
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_pTargetUri; 
@@ -649,7 +649,7 @@ namespace LumiSoft.Net.SIP.Proxy
             {
                 get{
                     if(IsDisposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
 
                     return m_HasReceivedResponse; 
@@ -826,7 +826,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             lock(m_pLock){
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(m_IsStarted){
                     throw new InvalidOperationException("Start has already called.");
@@ -868,7 +868,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             lock(m_pLock){
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(!m_IsStarted){
                     throw new InvalidOperationException("Start method is not called, nothing to cancel.");
@@ -1108,7 +1108,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     if(mustChooseBestFinalResponse){
                         response = GetBestFinalResponse();
                         if(response == null){
-                            response = this.Proxy.Stack.CreateResponse(SIP_ResponseCodes.x408_Request_Timeout,m_pServerTransaction.Request);
+                            response = Proxy.Stack.CreateResponse(SIP_ResponseCodes.x408_Request_Timeout,m_pServerTransaction.Request);
                         }
 
                         forwardResponse = true;
@@ -1310,7 +1310,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{  
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pProxy; 
@@ -1432,7 +1432,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pResponses.ToArray(); 
@@ -1447,7 +1447,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pCredentials; 

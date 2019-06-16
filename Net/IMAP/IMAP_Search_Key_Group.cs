@@ -40,7 +40,7 @@ namespace LumiSoft.Net.IMAP
 
             r.ReadToFirstChar();
             while(r.Available > 0){
-                retVal.Keys.Add(IMAP_Search_Key.ParseKey(r));
+                retVal.Keys.Add(ParseKey(r));
             }
 
             return retVal;

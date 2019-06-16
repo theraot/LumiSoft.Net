@@ -32,7 +32,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns new cloned request.</returns>
         public SIP_Request Copy()
         {
-            var retVal = SIP_Request.Parse(this.ToByteData());
+            var retVal = Parse(ToByteData());
             retVal.Flow           = Flow;
             retVal.LocalEndPoint  = LocalEndPoint;
             retVal.RemoteEndPoint = RemoteEndPoint;
@@ -54,36 +54,36 @@ namespace LumiSoft.Net.SIP.Stack
             // CSeq
             // Max-Forwards RFC 3261 8.1.1.
 
-            if(!this.RequestLine.Version.ToUpper().StartsWith("SIP/2.0")){
-                throw new SIP_ParseException("Not supported SIP version '" + this.RequestLine.Version + "' !");
+            if(!RequestLine.Version.ToUpper().StartsWith("SIP/2.0")){
+                throw new SIP_ParseException("Not supported SIP version '" + RequestLine.Version + "' !");
             }
 
-            if(this.Via.GetTopMostValue() == null){
+            if(Via.GetTopMostValue() == null){
                 throw new SIP_ParseException("Via: header field is missing !");
             }
-            if(this.Via.GetTopMostValue().Branch == null){
+            if(Via.GetTopMostValue().Branch == null){
                 throw new SIP_ParseException("Via: header field branch parameter is missing !");
             }
 
-            if(this.To == null){
+            if(To == null){
                 throw new SIP_ParseException("To: header field is missing !");
             }
 
-            if(this.From == null){
+            if(From == null){
                 throw new SIP_ParseException("From: header field is missing !");
             }
 
-            if(this.CallID == null){
+            if(CallID == null){
                 throw new SIP_ParseException("CallID: header field is missing !");
             }
 
-            if(this.CSeq == null){
+            if(CSeq == null){
                 throw new SIP_ParseException("CSeq: header field is missing !");
             }
 
-            if(this.MaxForwards == -1){
+            if(MaxForwards == -1){
                 // We can fix it by setting it to default value 70.
-                this.MaxForwards = 70;
+                MaxForwards = 70;
             }
 
             /* RFC 3261 12.1.2
@@ -93,14 +93,14 @@ namespace LumiSoft.Net.SIP.Stack
                 request has a Request-URI or a topmost Route header field value with a SIPS URI, the
                 Contact header field MUST contain a SIPS URI.
             */
-            if(SIP_Utils.MethodCanEstablishDialog(this.RequestLine.Method)){
-                if(this.Contact.GetAllValues().Length == 0){
+            if(SIP_Utils.MethodCanEstablishDialog(RequestLine.Method)){
+                if(Contact.GetAllValues().Length == 0){
                     throw new SIP_ParseException("Contact: header field is missing, method that can establish a dialog MUST provide a SIP or SIPS URI !");
                 }
-                if(this.Contact.GetAllValues().Length > 1){
+                if(Contact.GetAllValues().Length > 1){
                     throw new SIP_ParseException("There may be only 1 Contact: header for the method that can establish a dialog !");
                 }
-                if(!this.Contact.GetTopMostValue().Address.IsSipOrSipsUri){
+                if(!Contact.GetTopMostValue().Address.IsSipOrSipsUri){
                     throw new SIP_ParseException("Method that can establish a dialog MUST have SIP or SIPS uri in Contact: header !");
                 }
             }
@@ -176,7 +176,7 @@ namespace LumiSoft.Net.SIP.Stack
             stream.Write(responseLine,0,responseLine.Length);
 
             // Add SIP-message
-            this.InternalToStream(stream);
+            InternalToStream(stream);
         }
 
         /// <summary>

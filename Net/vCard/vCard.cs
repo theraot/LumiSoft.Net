@@ -21,8 +21,8 @@ namespace LumiSoft.Net.Mime.vCard
         public vCard()
         {
             Items          = new ItemCollection();
-            this.Version      = "3.0";
-            this.UID          = Guid.NewGuid().ToString();
+            Version      = "3.0";
+            UID          = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace LumiSoft.Net.Mime.vCard
             }
             retVal.Append("END:VCARD\r\n");
 
-            var data = System.Text.Encoding.UTF8.GetBytes(retVal.ToString());
+            var data = Encoding.UTF8.GetBytes(retVal.ToString());
             stream.Write(data,0,data.Length);
         }
 
@@ -80,7 +80,7 @@ namespace LumiSoft.Net.Mime.vCard
             var line = "";
             bool hasBeginTag = false;
             using (FileStream fs = File.OpenRead(file)) {
-                TextReader r = new StreamReader(fs, System.Text.Encoding.Default);          
+                TextReader r = new StreamReader(fs, Encoding.Default);          
                 while (line != null) {
                     line = r.ReadLine();
                     if (line != null && line.ToUpper() == "BEGIN:VCARD") {
@@ -109,7 +109,7 @@ namespace LumiSoft.Net.Mime.vCard
         public void Parse(string file)
         {
             var fileStrings = new List<string>();
-            var fileStringArray = File.ReadAllLines(file,System.Text.Encoding.Default);
+            var fileStringArray = File.ReadAllLines(file,Encoding.Default);
             foreach (string fileString in fileStringArray) {
                 fileStrings.Add(fileString);
             }
@@ -123,7 +123,7 @@ namespace LumiSoft.Net.Mime.vCard
         public void Parse(FileStream stream) {
             var fileStrings = new List<string>();
             var line = "";
-            TextReader r = new StreamReader(stream, System.Text.Encoding.Default); 
+            TextReader r = new StreamReader(stream, Encoding.Default); 
             while (line != null) {
                 line = r.ReadLine();
                 fileStrings.Add(line);
@@ -264,7 +264,7 @@ namespace LumiSoft.Net.Mime.vCard
             get{ 
                 var item = Items.GetFirst("PHOTO");
                 if (item != null){                    
-                    return Image.FromStream(new MemoryStream(System.Text.Encoding.Default.GetBytes(item.DecodedValue)));
+                    return Image.FromStream(new MemoryStream(Encoding.Default.GetBytes(item.DecodedValue)));
                 }
 
                 return null;

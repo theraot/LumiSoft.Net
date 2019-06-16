@@ -77,8 +77,8 @@ namespace LumiSoft.Net.TCP
                 m_pSocketArgs = null;
                 Tags       = null;
 
-                this.ConnectionAccepted = null;
-                this.Error = null;
+                ConnectionAccepted = null;
+                Error = null;
             }
 
             /// <summary>
@@ -88,7 +88,7 @@ namespace LumiSoft.Net.TCP
             public void Start()
             {
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(m_IsRunning){
                     return;
@@ -123,7 +123,7 @@ namespace LumiSoft.Net.TCP
                             IOCompletionAccept();
                         }
                         else{
-                            m_pSocket.BeginAccept(new AsyncCallback(this.AsyncSocketAccept),null);
+                            m_pSocket.BeginAccept(new AsyncCallback(AsyncSocketAccept),null);
                         }
                     }
                     catch(Exception x){
@@ -183,7 +183,7 @@ namespace LumiSoft.Net.TCP
                 }
 
                 try{
-                    m_pSocket.BeginAccept(new AsyncCallback(this.AsyncSocketAccept),null);
+                    m_pSocket.BeginAccept(new AsyncCallback(AsyncSocketAccept),null);
                 }
                 catch(Exception x){
                     OnError(x);
@@ -206,8 +206,8 @@ namespace LumiSoft.Net.TCP
             /// <param name="socket">Accepted socket.</param>
             private void OnConnectionAccepted(Socket socket)
             {
-                if(this.ConnectionAccepted != null){
-                    this.ConnectionAccepted(this,new EventArgs<Socket>(socket));
+                if(ConnectionAccepted != null){
+                    ConnectionAccepted(this,new EventArgs<Socket>(socket));
                 }
             }
 
@@ -222,8 +222,8 @@ namespace LumiSoft.Net.TCP
             /// <param name="x">Exception happened.</param>
             private void OnError(Exception x)
             {
-                if(this.Error != null){
-                    this.Error(this,new ExceptionEventArgs(x));
+                if(Error != null){
+                    Error(this,new ExceptionEventArgs(x));
                 }
             }
         }
@@ -245,8 +245,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public TCP_Server()
         {
-            m_pConnectionAcceptors = new List<TCP_Server<T>.TCP_Acceptor>();
-            m_pListeningPoints = new List<TCP_Server<T>.ListeningPoint>();
+            m_pConnectionAcceptors = new List<TCP_Acceptor>();
+            m_pListeningPoints = new List<ListeningPoint>();
             m_pSessions = new TCP_SessionCollection<TCP_ServerSession>();
         }
 
@@ -278,10 +278,10 @@ namespace LumiSoft.Net.TCP
             m_pSessions = null;
 
             // Release all events.
-            this.Started  = null;
-            this.Stopped  = null;
-            this.Disposed = null;
-            this.Error    = null;
+            Started  = null;
+            Stopped  = null;
+            Disposed = null;
+            Error    = null;
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace LumiSoft.Net.TCP
         private void m_pTimer_IdleTimeout_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
         {
             try{
-                foreach(T session in this.Sessions.ToArray()){
+                foreach(T session in Sessions.ToArray()){
                     try{
                         if(DateTime.Now > session.TcpStream.LastActivity.AddSeconds(m_SessionIdleTimeout)){;
                             session.OnTimeoutI();
@@ -437,7 +437,7 @@ namespace LumiSoft.Net.TCP
 
                         // Create TCP connection acceptors.
                         for(int i=0;i<10;i++){
-                            var acceptor = new TCP_Server<T>.TCP_Acceptor(socket);
+                            var acceptor = new TCP_Acceptor(socket);
                             acceptor.Tags["bind"] = bind;
                             acceptor.ConnectionAccepted += delegate(object s1,EventArgs<Socket> e1){
                                 // NOTE: We may not use 'bind' variable here, foreach changes it's value before we reach here.
@@ -527,7 +527,7 @@ namespace LumiSoft.Net.TCP
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pBindings; 
@@ -535,7 +535,7 @@ namespace LumiSoft.Net.TCP
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value == null){
                     value = new IPBindInfo[0];
@@ -573,20 +573,20 @@ namespace LumiSoft.Net.TCP
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 var retVal = new List<IPEndPoint>();
-                foreach (IPBindInfo bind in this.Bindings){
+                foreach (IPBindInfo bind in Bindings){
                     if(bind.IP.Equals(IPAddress.Any)){
-                        foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
+                        foreach(IPAddress ip in Dns.GetHostAddresses("")){
                             if(ip.AddressFamily == AddressFamily.InterNetwork && !retVal.Contains(new IPEndPoint(ip,bind.Port))){
                                 retVal.Add(new IPEndPoint(ip,bind.Port));
                             }
                         }
                     }
                     else if(bind.IP.Equals(IPAddress.IPv6Any)){
-                        foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
+                        foreach(IPAddress ip in Dns.GetHostAddresses("")){
                             if(ip.AddressFamily == AddressFamily.InterNetworkV6 && !retVal.Contains(new IPEndPoint(ip,bind.Port))){
                                 retVal.Add(new IPEndPoint(ip,bind.Port));
                             }
@@ -690,7 +690,7 @@ namespace LumiSoft.Net.TCP
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pLogger; 
@@ -698,7 +698,7 @@ namespace LumiSoft.Net.TCP
 
             set{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_pLogger = value; 
@@ -772,8 +772,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected void OnStarted()
         {
-            if(this.Started != null){
-                this.Started(this,new EventArgs());
+            if(Started != null){
+                Started(this,new EventArgs());
             }
         }
 
@@ -787,8 +787,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected void OnStopped()
         {
-            if(this.Stopped != null){
-                this.Stopped(this,new EventArgs());
+            if(Stopped != null){
+                Stopped(this,new EventArgs());
             }
         }
 
@@ -802,8 +802,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected void OnDisposed()
         {
-            if(this.Disposed != null){
-                this.Disposed(this,new EventArgs());
+            if(Disposed != null){
+                Disposed(this,new EventArgs());
             }
         }
 
@@ -818,8 +818,8 @@ namespace LumiSoft.Net.TCP
         /// <param name="session">TCP server session that was created.</param>
         private void OnSessionCreated(T session)
         {
-            if(this.SessionCreated != null){
-                this.SessionCreated(this,new TCP_ServerSessionEventArgs<T>(this,session));
+            if(SessionCreated != null){
+                SessionCreated(this,new TCP_ServerSessionEventArgs<T>(this,session));
             }
         }
 
@@ -834,8 +834,8 @@ namespace LumiSoft.Net.TCP
         /// <param name="x">Exception happened.</param>
         private void OnError(Exception x)
         {
-            if(this.Error != null){
-                this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
+            if(Error != null){
+                Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
     }

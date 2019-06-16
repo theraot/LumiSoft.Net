@@ -47,9 +47,9 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		internal void OnChanged()
 		{
-			if(this.Owner != null){
-				if(this.Owner is AddressList){
-					((AddressList)this.Owner).OnCollectionChanged();
+			if(Owner != null){
+				if(Owner is AddressList){
+					((AddressList)Owner).OnCollectionChanged();
 				}				
 			}
 		}
@@ -59,7 +59,7 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		public string GroupString
 		{
-			get{ return TextUtils.QuoteString(this.DisplayName) + ":" + this.GroupMembers.ToMailboxListString() + ";"; }
+			get{ return TextUtils.QuoteString(DisplayName) + ":" + GroupMembers.ToMailboxListString() + ";"; }
 		}
 
 		/// <summary>

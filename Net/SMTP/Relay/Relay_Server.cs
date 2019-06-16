@@ -64,8 +64,8 @@ namespace LumiSoft.Net.SMTP.Relay
             IsDisposed = true;
 
             // Release events.
-            this.Error = null;
-            this.SessionCompleted = null;
+            Error = null;
+            SessionCompleted = null;
 
             m_pQueues     = null;
             m_pSmartHosts = null;
@@ -82,7 +82,7 @@ namespace LumiSoft.Net.SMTP.Relay
         private void m_pTimerTimeout_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
         {
             try{
-                foreach(Relay_Session session in this.Sessions.ToArray()){
+                foreach(Relay_Session session in Sessions.ToArray()){
                     try{
                         if(session.LastActivity.AddSeconds(m_SessionIdleTimeout) < DateTime.Now){
                             session.Dispose(new Exception("Session idle timeout."));
@@ -104,7 +104,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public virtual void Start()
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(IsRunning){
                 return;
@@ -116,7 +116,7 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pSessions          = new TCP_SessionCollection<Relay_Session>();
             m_pConnectionsPerIP  = new Dictionary<IPAddress,long>();
 
-            var tr1 = new Thread(new ThreadStart(this.Run));
+            var tr1 = new Thread(new ThreadStart(Run));
             tr1.Start();
 
             m_pTimerTimeout = new TimerEx(30000);
@@ -131,7 +131,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public virtual void Stop()
         {
             if(IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(!IsRunning){
                 return;
@@ -164,7 +164,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
                         foreach(IPBindInfo binding in m_pBindings){
                             if(binding.IP == IPAddress.Any){
-                                foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
+                                foreach(IPAddress ip in Dns.GetHostAddresses("")){
                                     if(ip.AddressFamily == AddressFamily.InterNetwork){
                                         var b = new IPBindInfo(binding.HostName,binding.Protocol,ip,25);
                                         if (!m_pLocalEndPointIPv4.Contains(b)){
@@ -174,7 +174,7 @@ namespace LumiSoft.Net.SMTP.Relay
                                 }
                             }
                             else if(binding.IP == IPAddress.IPv6Any){
-                                foreach(IPAddress ip in System.Net.Dns.GetHostAddresses("")){
+                                foreach(IPAddress ip in Dns.GetHostAddresses("")){
                                     if(ip.AddressFamily == AddressFamily.InterNetworkV6){
                                         var b = new IPBindInfo(binding.HostName,binding.Protocol,ip,25);
                                         if (!m_pLocalEndPointIPv6.Contains(b)){
@@ -391,7 +391,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pBindings; 
@@ -399,7 +399,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value == null){
                     value = new IPBindInfo[0];
@@ -434,7 +434,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_RelayMode; 
@@ -442,7 +442,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_RelayMode = value;
@@ -457,7 +457,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pQueues; 
@@ -472,7 +472,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SmartHostsBalanceMode; 
@@ -480,7 +480,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_SmartHostsBalanceMode = value;
@@ -496,7 +496,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pSmartHosts.ToArray();
@@ -504,7 +504,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value == null){
                     throw new ArgumentNullException("SmartHosts");
@@ -523,7 +523,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_MaxConnections; 
@@ -531,7 +531,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(value < 0){
                     throw new ArgumentException("Property 'MaxConnections' value must be >= 0.");
@@ -549,7 +549,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 
                 return m_MaxConnectionsPerIP; 
@@ -557,7 +557,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(m_MaxConnectionsPerIP < 0){
                     throw new ArgumentException("Property 'MaxConnectionsPerIP' value must be >= 0.");
@@ -576,14 +576,14 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_SessionIdleTimeout;
             }
 
             set{if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(m_SessionIdleTimeout < 0){
                     throw new ArgumentException("Property 'SessionIdleTimeout' value must be >= 0.");
@@ -602,7 +602,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{ 
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(!IsRunning){
                     throw new InvalidOperationException("Relay server not running.");
@@ -626,7 +626,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             get{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pDsnClient;
@@ -634,7 +634,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             set{
                 if(IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 m_pDsnClient = value ?? throw new ArgumentNullException("DnsClient");
@@ -653,8 +653,8 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="exception">Exception happened or null if relay completed successfully.</param>
         internal protected virtual void OnSessionCompleted(Relay_Session session,Exception exception)
         {
-            if(this.SessionCompleted != null){
-                this.SessionCompleted(new Relay_SessionCompletedEventArgs(session,exception));
+            if(SessionCompleted != null){
+                SessionCompleted(new Relay_SessionCompletedEventArgs(session,exception));
             }
         }
 
@@ -669,8 +669,8 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="x">Exception happned.</param>
         internal protected virtual void OnError(Exception x)
         {
-            if(this.Error != null){
-                this.Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
+            if(Error != null){
+                Error(this,new Error_EventArgs(x,new System.Diagnostics.StackTrace()));
             }
         }
     }

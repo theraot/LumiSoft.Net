@@ -181,7 +181,7 @@ namespace LumiSoft.Net.IMAP
         public int ContentSize
         {
             get{
-                if(string.Equals(this.ContentType.Type,"multipart",StringComparison.InvariantCultureIgnoreCase)){
+                if(string.Equals(ContentType.Type,"multipart",StringComparison.InvariantCultureIgnoreCase)){
                     throw new Exception("NOTE: ContentSize property is available only for non-multipart contentype !");
                 }
 
@@ -210,7 +210,7 @@ namespace LumiSoft.Net.IMAP
         public int ContentLines
         {
             get{ 
-                if(!string.Equals(this.ContentType.Type,"text",StringComparison.InvariantCultureIgnoreCase)){
+                if(!string.Equals(ContentType.Type,"text",StringComparison.InvariantCultureIgnoreCase)){
                     throw new Exception("NOTE: ContentLines property is available only for text/xxx content type !");
                 }
 

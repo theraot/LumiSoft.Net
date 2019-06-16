@@ -76,12 +76,12 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal void OnCompleted()
         {
-            if(this.Completed != null){
-                this.Completed(this,new EventArgs());
+            if(Completed != null){
+                Completed(this,new EventArgs());
             }
 
             // Release event.
-            this.Completed = null;
+            Completed = null;
         }
     }
 }

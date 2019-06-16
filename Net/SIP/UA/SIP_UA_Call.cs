@@ -89,7 +89,7 @@ namespace LumiSoft.Net.SIP.UA
 
                 // TODO: Clean up
 
-                this.StateChanged = null;
+                StateChanged = null;
             }
         }
 
@@ -100,7 +100,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="e">Event data.</param>
         private void m_pDialog_StateChanged(object sender,EventArgs e)
         {
-            if(this.State == SIP_UA_CallState.Terminated){
+            if(State == SIP_UA_CallState.Terminated){
                 return;
             }
             
@@ -194,7 +194,7 @@ namespace LumiSoft.Net.SIP.UA
         {
             lock(m_pLock){
                 if(State == SIP_UA_CallState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
                 if(State != SIP_UA_CallState.WaitingForStart){
                     throw new InvalidOperationException("Start method can be called only in 'SIP_UA_CallState.WaitingForStart' state.");
@@ -217,7 +217,7 @@ namespace LumiSoft.Net.SIP.UA
         public void SendRinging(SDP_Message sdp)
         {
             if(State == SIP_UA_CallState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(State != SIP_UA_CallState.WaitingToAccept){
                 throw new InvalidOperationException("Accept method can be called only in 'SIP_UA_CallState.WaitingToAccept' state.");
@@ -243,7 +243,7 @@ namespace LumiSoft.Net.SIP.UA
         public void Accept(SDP_Message sdp)
         {
             if(State == SIP_UA_CallState.Disposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(State != SIP_UA_CallState.WaitingToAccept){
                 throw new InvalidOperationException("Accept method can be called only in 'SIP_UA_CallState.WaitingToAccept' state.");
@@ -274,10 +274,10 @@ namespace LumiSoft.Net.SIP.UA
         public void Reject(string statusCode_reason)
         {
             lock(m_pLock){
-                if(this.State == SIP_UA_CallState.Disposed){                
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_UA_CallState.Disposed){                
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(this.State != SIP_UA_CallState.WaitingToAccept){
+                if(State != SIP_UA_CallState.WaitingToAccept){
                     throw new InvalidOperationException("Call is not in valid state.");
                 }
                 if(statusCode_reason == null){
@@ -301,10 +301,10 @@ namespace LumiSoft.Net.SIP.UA
         public void Redirect(SIP_t_ContactParam[] contacts)
         {
             lock(m_pLock){
-                if(this.State == SIP_UA_CallState.Disposed){                
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(State == SIP_UA_CallState.Disposed){                
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(this.State != SIP_UA_CallState.WaitingToAccept){
+                if(State != SIP_UA_CallState.WaitingToAccept){
                     throw new InvalidOperationException("Call is not in valid state.");
                 }
                 if(contacts == null){
@@ -329,7 +329,7 @@ namespace LumiSoft.Net.SIP.UA
         {
             lock(m_pLock){
                 if(State == SIP_UA_CallState.Disposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 if(State == SIP_UA_CallState.Terminating || State == SIP_UA_CallState.Terminated){
@@ -476,8 +476,8 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="state">New call state.</param>
         private void OnStateChanged(SIP_UA_CallState state)
         {
-            if(this.StateChanged != null){
-                this.StateChanged(this,new EventArgs());
+            if(StateChanged != null){
+                StateChanged(this,new EventArgs());
             }
         }
 

@@ -100,7 +100,7 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             get{
                 if(m_pProxyContext == null){
-                    m_pProxy.CreateProxyContext(this,this.Transaction,this.Request,true);
+                    m_pProxy.CreateProxyContext(this,Transaction,Request,true);
                 }
 
                 return m_pProxyContext; 

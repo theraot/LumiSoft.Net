@@ -89,7 +89,7 @@ namespace LumiSoft.Net.RTP
             int  type             = buffer[offset++];
             int  length           = buffer[offset++] << 8 | buffer[offset++];
             if(isPadded){
-                this.PaddBytesCount = buffer[offset + length];
+                PaddBytesCount = buffer[offset + length];
             }
 
             SSRC              = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);

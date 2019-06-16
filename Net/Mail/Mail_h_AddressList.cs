@@ -86,9 +86,9 @@ namespace LumiSoft.Net.Mail
         /// <returns>Returns header field as string.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
-            if(reEncode || this.IsModified){
+            if(reEncode || IsModified){
                 var retVal = new StringBuilder();
-                retVal.Append(this.Name + ": ");
+                retVal.Append(Name + ": ");
                 for(int i=0;i<Addresses.Count;i++){
                     if(i > 0){
                         retVal.Append("\t");

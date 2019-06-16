@@ -51,10 +51,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
             m_IsDisposed = true;
 
-            this.CanRegister     = null;
-            this.AorRegistered   = null;
-            this.AorUnregistered = null;
-            this.AorUpdated      = null;
+            CanRegister     = null;
+            AorRegistered   = null;
+            AorUnregistered = null;
+            AorUpdated      = null;
 
             Proxy = null;
             m_pStack = null;
@@ -387,8 +387,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <returns>Returns true if specified user can register specified address, otherwise false.</returns>
         internal bool OnCanRegister(string userName,string address)
         {
-            if(this.CanRegister != null){
-                return this.CanRegister(userName,address);
+            if(CanRegister != null){
+                return CanRegister(userName,address);
             }
 
             return false;
@@ -405,8 +405,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorRegistered(SIP_Registration registration)
         {
-            if(this.AorRegistered != null){
-                this.AorRegistered(this,new SIP_RegistrationEventArgs(registration));
+            if(AorRegistered != null){
+                AorRegistered(this,new SIP_RegistrationEventArgs(registration));
             }
         }
 
@@ -421,8 +421,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorUnregistered(SIP_Registration registration)
         {
-            if(this.AorUnregistered != null){
-                this.AorUnregistered(this,new SIP_RegistrationEventArgs(registration));
+            if(AorUnregistered != null){
+                AorUnregistered(this,new SIP_RegistrationEventArgs(registration));
             }
         }
 
@@ -437,8 +437,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorUpdated(SIP_Registration registration)
         {
-            if(this.AorUpdated != null){
-                this.AorUpdated(this,new SIP_RegistrationEventArgs(registration));
+            if(AorUpdated != null){
+                AorUpdated(this,new SIP_RegistrationEventArgs(registration));
             }
         }
     }

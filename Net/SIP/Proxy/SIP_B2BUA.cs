@@ -244,8 +244,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="call">Call created.</param>
         protected void OnCallCreated(SIP_B2BUA_Call call)
         {
-            if(this.CallCreated != null){
-                this.CallCreated(call,new EventArgs());
+            if(CallCreated != null){
+                CallCreated(call,new EventArgs());
             }
         }
 
@@ -260,8 +260,8 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="call">Call terminated.</param>
         internal protected void OnCallTerminated(SIP_B2BUA_Call call)
         {
-            if(this.CallTerminated != null){
-                this.CallTerminated(call,new EventArgs());
+            if(CallTerminated != null){
+                CallTerminated(call,new EventArgs());
             }
         }
     }

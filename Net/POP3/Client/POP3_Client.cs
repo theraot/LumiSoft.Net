@@ -73,10 +73,10 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
 		public override void Disconnect()
 		{
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("POP3 client is not connected.");
             }
 
@@ -112,10 +112,10 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         public void Capa()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
@@ -124,7 +124,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<CapaAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.CapaAsync(op)){
+                    if(!CapaAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();
@@ -170,7 +170,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pPop3Client    = null;
                 m_pResponseLines = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -229,7 +229,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"CAPA");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.CapaCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,CapaCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -317,7 +317,7 @@ namespace LumiSoft.Net.POP3.Client
                                     ReadMultiLineResponseLineCompleted(readLineOP);
 
                                     // Read response lines while we get terminator(.).
-                                    while(this.State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                                    while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
                                         ReadMultiLineResponseLineCompleted(readLineOP);
                                     }
                                 }
@@ -328,7 +328,7 @@ namespace LumiSoft.Net.POP3.Client
                                 }
                             };
                             // Read response lines while we get terminator(.).
-                            while(this.State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                            while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
                                 ReadMultiLineResponseLineCompleted(readLineOP);
                             }
                         }
@@ -405,7 +405,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -425,8 +425,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<CapaAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<CapaAsyncOP>(this));
                 }
             }
         }
@@ -442,10 +442,10 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool CapaAsync(CapaAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -467,16 +467,16 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         public void Stls(RemoteCertificateValidationCallback certCallback)
         {    
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
 			}
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }
                         
@@ -485,7 +485,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<StlsAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.StlsAsync(op)){
+                    if(!StlsAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();
@@ -531,7 +531,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pException  = null;
                 m_pPop3Client = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -571,7 +571,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"STLS");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.StlsCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,StlsCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -724,7 +724,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -744,8 +744,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<StlsAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<StlsAsyncOP>(this));
                 }
             }
         }
@@ -761,13 +761,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool StlsAsync(StlsAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
 			}
             if(op == null){
@@ -792,13 +792,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         public void Login(string user,string password)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
             if(user == null){
@@ -816,7 +816,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<LoginAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.LoginAsync(op)){
+                    if(!LoginAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();
@@ -874,7 +874,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pException  = null;
                 m_pPop3Client = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -896,7 +896,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"USER " + m_User);
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.UserCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,UserCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -983,7 +983,7 @@ namespace LumiSoft.Net.POP3.Client
                             m_pPop3Client.LogAddWrite(buffer.Length,"PASS <***REMOVED***>");
 
                             // Start command sending.
-                            m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.PassCommandSendingCompleted,null);
+                            m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,PassCommandSendingCompleted,null);
                         }
                         // Server returned error response.
                         else{
@@ -1113,7 +1113,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1133,8 +1133,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<LoginAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<LoginAsyncOP>(this));
                 }
             }
         }
@@ -1150,13 +1150,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool LoginAsync(LoginAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }            
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
             if(op == null){
@@ -1178,13 +1178,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         public void Auth(AUTH_SASL_Client sasl)
         {            
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 throw new InvalidOperationException("Connection is already authenticated.");
             }
             if(sasl == null){
@@ -1196,7 +1196,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<AuthAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.AuthAsync(op)){
+                    if(!AuthAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();
@@ -1243,7 +1243,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pException  = null;
                 m_pPop3Client = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1281,7 +1281,7 @@ namespace LumiSoft.Net.POP3.Client
                         m_pPop3Client.LogAddWrite(buffer.Length,Encoding.UTF8.GetString(buffer).TrimEnd());
 
                         // Start command sending.
-                        m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
+                        m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
                     }
                     else{
                         var buffer = Encoding.UTF8.GetBytes("AUTH " + m_pSASL.Name + "\r\n");
@@ -1290,7 +1290,7 @@ namespace LumiSoft.Net.POP3.Client
                         m_pPop3Client.LogAddWrite(buffer.Length,"AUTH " + m_pSASL.Name);
 
                         // Start command sending.
-                        m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
+                        m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
                     }
                 }
                 catch(Exception x){
@@ -1395,7 +1395,7 @@ namespace LumiSoft.Net.POP3.Client
                             m_pPop3Client.LogAddWrite(buffer.Length,Convert.ToBase64String(clientResponse));
 
                             // Start auth-data sending.
-                            m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.AuthCommandSendingCompleted,null);
+                            m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,AuthCommandSendingCompleted,null);
                         }
                         // Authentication rejected.
                         else{
@@ -1455,7 +1455,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1475,8 +1475,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<AuthAsyncOP>(this));
                 }
             }
         }
@@ -1492,13 +1492,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool AuthAsync(AuthAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 throw new InvalidOperationException("Connection is already authenticated.");
             }
             if(op == null){
@@ -1519,13 +1519,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         public void Noop()
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				throw new InvalidOperationException("The NOOP command is only valid in TRANSACTION state.");
 			}
 
@@ -1534,7 +1534,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<NoopAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.NoopAsync(op)){
+                    if(!NoopAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();
@@ -1570,7 +1570,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pException  = null;
                 m_pPop3Client = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1610,7 +1610,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"NOOP");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.NoopCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,NoopCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -1723,7 +1723,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -1743,8 +1743,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<NoopAsyncOP>(this));
                 }
             }
         }
@@ -1760,13 +1760,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool NoopAsync(NoopAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				throw new InvalidOperationException("The NOOP command is only valid in TRANSACTION(authenticated) state.");
 			}
             if(op == null){
@@ -1787,13 +1787,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
 		public void Rset()
 		{
-			if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+			if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				throw new InvalidOperationException("The RSET command is only valid in TRANSACTION state.");
 			}
 
@@ -1802,7 +1802,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<RsetAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.RsetAsync(op)){
+                    if(!RsetAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();
@@ -1838,7 +1838,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pException  = null;
                 m_pPop3Client = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -1879,7 +1879,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"RSET");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.RsetCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,RsetCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -1996,7 +1996,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2016,8 +2016,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<RsetAsyncOP>(this));
                 }
             }
         }
@@ -2033,13 +2033,13 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool RsetAsync(RsetAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
-            if(!this.IsAuthenticated){
+            if(!IsAuthenticated){
 				throw new InvalidOperationException("The RSET command is only valid in TRANSACTION(authenticated) state.");
 			}
             if(op == null){
@@ -2075,7 +2075,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pException  = null;
                 m_pPop3Client = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -2223,7 +2223,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2243,8 +2243,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<FillMessagesAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<FillMessagesAsyncOP>(this));
                 }
             }
         }
@@ -2260,10 +2260,10 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         private bool FillMessagesAsync(FillMessagesAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -2309,7 +2309,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pPop3Client    = null;
                 m_pResponseLines = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -2394,7 +2394,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"LIST");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.ListCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,ListCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -2482,7 +2482,7 @@ namespace LumiSoft.Net.POP3.Client
                                     ReadMultiLineResponseLineCompleted(readLineOP);
 
                                     // Read response lines while we get terminator(.).
-                                    while(this.State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                                    while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
                                         ReadMultiLineResponseLineCompleted(readLineOP);
                                     }
                                 }
@@ -2493,7 +2493,7 @@ namespace LumiSoft.Net.POP3.Client
                                 }
                             };
                             // Read response lines while we get terminator(.).
-                            while(this.State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                            while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
                                 ReadMultiLineResponseLineCompleted(readLineOP);
                             }
                         }
@@ -2570,7 +2570,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2589,7 +2589,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2609,8 +2609,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<ListAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<ListAsyncOP>(this));
                 }
             }
         }
@@ -2626,10 +2626,10 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         private bool ListAsync(ListAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -2675,7 +2675,7 @@ namespace LumiSoft.Net.POP3.Client
                 m_pPop3Client    = null;
                 m_pResponseLines = null;
 
-                this.CompletedAsync = null;
+                CompletedAsync = null;
             }
 
             /// <summary>
@@ -2758,7 +2758,7 @@ namespace LumiSoft.Net.POP3.Client
                     m_pPop3Client.LogAddWrite(buffer.Length,"UIDL");
 
                     // Start command sending.
-                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,this.UidlCommandSendingCompleted,null);
+                    m_pPop3Client.TcpStream.BeginWrite(buffer,0,buffer.Length,UidlCommandSendingCompleted,null);
                 }
                 catch(Exception x){
                     m_pException = x;
@@ -2846,7 +2846,7 @@ namespace LumiSoft.Net.POP3.Client
                                     ReadMultiLineResponseLineCompleted(readLineOP);
 
                                     // Read response lines while we get terminator(.).
-                                    while(this.State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                                    while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
                                         ReadMultiLineResponseLineCompleted(readLineOP);
                                     }
                                 }
@@ -2857,7 +2857,7 @@ namespace LumiSoft.Net.POP3.Client
                                 }
                             };
                             // Read response lines while we get terminator(.).
-                            while(this.State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
+                            while(State == AsyncOP_State.Active && m_pPop3Client.TcpStream.ReadLine(readLineOP,true)){
                                 ReadMultiLineResponseLineCompleted(readLineOP);
                             }
                         }
@@ -2934,7 +2934,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2953,7 +2953,7 @@ namespace LumiSoft.Net.POP3.Client
             {
                 get{ 
                     if(State == AsyncOP_State.Disposed){
-                        throw new ObjectDisposedException(this.GetType().Name);
+                        throw new ObjectDisposedException(GetType().Name);
                     }
                     if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
@@ -2973,8 +2973,8 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if(this.CompletedAsync != null){
-                    this.CompletedAsync(this,new EventArgs<UidlAsyncOP>(this));
+                if(CompletedAsync != null){
+                    CompletedAsync(this,new EventArgs<UidlAsyncOP>(this));
                 }
             }
         }
@@ -2990,10 +2990,10 @@ namespace LumiSoft.Net.POP3.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         private bool UidlAsync(UidlAsyncOP op)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("You must connect first.");
             }
             if(op == null){
@@ -3017,7 +3017,7 @@ namespace LumiSoft.Net.POP3.Client
             readGreetingOP.Completed += delegate(object s,EventArgs<SmartStream.ReadLineAsyncOP> e){
                 ReadServerGreetingCompleted(readGreetingOP,callback);
             };
-            if(this.TcpStream.ReadLine(readGreetingOP,true)){
+            if(TcpStream.ReadLine(readGreetingOP,true)){
                 ReadServerGreetingCompleted(readGreetingOP,callback);
             }
         }
@@ -3074,10 +3074,10 @@ namespace LumiSoft.Net.POP3.Client
         public string GreetingText
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
                     throw new InvalidOperationException("You must connect first.");
                 }
 
@@ -3094,10 +3094,10 @@ namespace LumiSoft.Net.POP3.Client
         public string[] ExtenededCapabilities
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
 
@@ -3113,10 +3113,10 @@ namespace LumiSoft.Net.POP3.Client
         public string[] ExtendedCapabilities
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
 
@@ -3133,13 +3133,13 @@ namespace LumiSoft.Net.POP3.Client
         public bool IsUidlSupported
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
-                if(!this.IsAuthenticated){
+                if(!IsAuthenticated){
 				    throw new InvalidOperationException("You must authenticate first.");
 			    }
 
@@ -3156,13 +3156,13 @@ namespace LumiSoft.Net.POP3.Client
         public POP3_ClientMessageCollection Messages
         {
             get{
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
-                if(!this.IsAuthenticated){
+                if(!IsAuthenticated){
 				    throw new InvalidOperationException("You must authenticate first.");
 			    }
 
@@ -3178,10 +3178,10 @@ namespace LumiSoft.Net.POP3.Client
         public override GenericIdentity AuthenticatedUserIdentity
         {
             get{ 
-                if(this.IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                if(IsDisposed){
+                    throw new ObjectDisposedException(GetType().Name);
                 }
-                if(!this.IsConnected){
+                if(!IsConnected){
 				    throw new InvalidOperationException("You must connect first.");
 			    }
 
@@ -3218,16 +3218,16 @@ namespace LumiSoft.Net.POP3.Client
                      S: -ERR Command not permitted when TLS active
             */
 
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
 			}
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }
                         
@@ -3238,7 +3238,7 @@ namespace LumiSoft.Net.POP3.Client
 				throw new POP3_ClientException(line);
 			}
 
-            this.SwitchToSecure();
+            SwitchToSecure();
         }
 
         /// <summary>
@@ -3255,20 +3255,20 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Stls/StlsAsync method instead.")]
         public IAsyncResult BeginStartTLS(AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("The STLS command is only valid in non-authenticated state.");
 			}
-            if(this.IsSecureConnection){
+            if(IsSecureConnection){
                 throw new InvalidOperationException("Connection is already secure.");
             }
 
-            var asyncMethod = new StartTLSDelegate(this.StartTLS);
+            var asyncMethod = new StartTLSDelegate(StartTLS);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -3286,8 +3286,8 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Stls/StlsAsync method instead.")]
         public void EndStartTLS(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -3322,13 +3322,13 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Login/LoginAsync method instead.")]
 		public void Authenticate(string userName,string password,bool tryApop)
 		{
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
             
@@ -3336,10 +3336,10 @@ namespace LumiSoft.Net.POP3.Client
 			if(tryApop && m_ApopHashKey.Length > 0){
                 var hexHash = Net_Utils.ComputeMd5(m_ApopHashKey + password,true);
 
-                int countWritten = this.TcpStream.WriteLine("APOP " + userName + " " + hexHash);
+                int countWritten = TcpStream.WriteLine("APOP " + userName + " " + hexHash);
                 LogAddWrite(countWritten,"APOP " + userName + " " + hexHash);
 
-                var line = this.ReadLine();
+                var line = ReadLine();
                 if (line.StartsWith("+OK")){
 					m_pAuthdUserIdentity = new GenericIdentity(userName,"apop");
 				}
@@ -3349,15 +3349,15 @@ namespace LumiSoft.Net.POP3.Client
 			}
             // Use normal LOGIN, don't support APOP.
 			else{                 
-				int countWritten = this.TcpStream.WriteLine("USER " + userName);
+				int countWritten = TcpStream.WriteLine("USER " + userName);
                 LogAddWrite(countWritten,"USER " + userName);
 
-                var line = this.ReadLine();
+                var line = ReadLine();
                 if (line.StartsWith("+OK")){                    
-					countWritten = this.TcpStream.WriteLine("PASS " + password);
+					countWritten = TcpStream.WriteLine("PASS " + password);
                     LogAddWrite(countWritten,"PASS <***REMOVED***>");
 
-					line = this.ReadLine();
+					line = ReadLine();
 					if(line.StartsWith("+OK")){
 						m_pAuthdUserIdentity = new GenericIdentity(userName,"pop3-user/pass");
 					}
@@ -3370,7 +3370,7 @@ namespace LumiSoft.Net.POP3.Client
 				}				
 			}
 
-            if(this.IsAuthenticated){
+            if(IsAuthenticated){
                 FillMessages();
             }
 		}
@@ -3394,17 +3394,17 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Login/LoginAsync method instead.")]
         public IAsyncResult BeginAuthenticate(string userName,string password,bool tryApop,AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(this.IsAuthenticated){
+			if(IsAuthenticated){
 				throw new InvalidOperationException("Session is already authenticated.");
 			}
 
-            var asyncMethod = new AuthenticateDelegate(this.Authenticate);
+            var asyncMethod = new AuthenticateDelegate(Authenticate);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(userName,password,tryApop,new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -3422,8 +3422,8 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Login/LoginAsync method instead.")]
         public void EndAuthenticate(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -3462,14 +3462,14 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Noop/NoopAsync method instead.")]
         public IAsyncResult BeginNoop(AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
 
-            var asyncMethod = new NoopDelegate(this.Noop);
+            var asyncMethod = new NoopDelegate(Noop);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -3487,8 +3487,8 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Noop/NoopAsync method instead.")]
         public void EndNoop(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -3527,17 +3527,17 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Rset/RsetAsync method instead.")]
         public IAsyncResult BeginReset(AsyncCallback callback,object state)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				throw new InvalidOperationException("The RSET command is only valid in authenticated state.");
 			}
 
-            var asyncMethod = new ResetDelegate(this.Reset);
+            var asyncMethod = new ResetDelegate(Reset);
             var asyncState = new AsyncResultState(this,asyncMethod,callback,state);
             asyncState.SetAsyncResult(asyncMethod.BeginInvoke(new AsyncCallback(asyncState.CompletedCallback),null));
 
@@ -3555,8 +3555,8 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Rset/RsetAsync method instead.")]
         public void EndReset(IAsyncResult asyncResult)
         {
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(asyncResult == null){
                 throw new ArgumentNullException("asyncResult");
@@ -3588,13 +3588,13 @@ namespace LumiSoft.Net.POP3.Client
         [Obsolete("Use Rset/RsetAsync method instead.")]
 		public void Reset()
 		{
-			if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+			if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
 				throw new InvalidOperationException("You must connect first.");
 			}
-			if(!this.IsAuthenticated){
+			if(!IsAuthenticated){
 				throw new InvalidOperationException("The RSET command is only valid in TRANSACTION state.");
 			}
 
@@ -3603,7 +3603,7 @@ namespace LumiSoft.Net.POP3.Client
                     op.CompletedAsync += delegate(object s1,EventArgs<RsetAsyncOP> e1){
                         wait.Set();
                     };
-                    if(!this.RsetAsync(op)){
+                    if(!RsetAsync(op)){
                         wait.Set();
                     }
                     wait.WaitOne();

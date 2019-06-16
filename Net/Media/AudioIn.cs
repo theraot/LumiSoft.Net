@@ -513,7 +513,7 @@ namespace LumiSoft.Net.Media
                 format.wBitsPerSample  = (ushort)m_BitsPerSample;
                 format.cbSize          = 0; 
                 // We must delegate reference, otherwise GC will collect it.
-                m_pWaveInProc = new waveInProc(this.OnWaveInProc);
+                m_pWaveInProc = new waveInProc(OnWaveInProc);
                 int result = waveInOpen(out m_pWavDevHandle,m_pInDevice.Index,format,m_pWaveInProc,0,WavConstants.CALLBACK_FUNCTION);
                 if(result != MMSYSERR.NOERROR){
                     throw new Exception("Failed to open wav device, error: " + result.ToString() + ".");
@@ -1083,7 +1083,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
  
                 return m_SamplesPerSec; 
@@ -1098,7 +1098,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
             
                 return m_BitsPerSample; 
@@ -1113,7 +1113,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
              
                 return m_Channels; 
@@ -1128,7 +1128,7 @@ namespace LumiSoft.Net.Media
         {
             get{
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_Channels * (m_BitsPerSample / 8); 
@@ -1143,7 +1143,7 @@ namespace LumiSoft.Net.Media
         {
             get{ 
                 if(m_IsDisposed){
-                    throw new ObjectDisposedException(this.GetType().Name);
+                    throw new ObjectDisposedException(GetType().Name);
                 }
 
                 return m_pWaveIn.ReadBuffer.Available; 

@@ -18,10 +18,10 @@ namespace LumiSoft.Net.NNTP.Client
         /// <exception cref="InvalidOperationException">Is raised when NNTP client is not connected.</exception>
 		public override void Disconnect()
 		{
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("NNTP client is not connected.");
             }
 
@@ -73,10 +73,10 @@ namespace LumiSoft.Net.NNTP.Client
                    S: .
             */
 
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("NNTP client is not connected.");
             }
 
@@ -141,10 +141,10 @@ namespace LumiSoft.Net.NNTP.Client
                     S: 240 Article posted successfully.
            */
 
-            if(this.IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+            if(IsDisposed){
+                throw new ObjectDisposedException(GetType().Name);
             }
-            if(!this.IsConnected){
+            if(!IsConnected){
                 throw new InvalidOperationException("NNTP client is not connected.");
             }
 
@@ -158,7 +158,7 @@ namespace LumiSoft.Net.NNTP.Client
             }
 
             // POST message
-            this.TcpStream.WritePeriodTerminated(message);
+            TcpStream.WritePeriodTerminated(message);
 
             // Read server response
             responseLine = ReadLine();

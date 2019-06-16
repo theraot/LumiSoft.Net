@@ -36,9 +36,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="method">Request method.</param>
         public SIP_t_RAck(int responseNo,int cseqNo,string method)
         {
-            this.ResponseNumber = responseNo;
-            this.CSeqNumber     = cseqNo;
-            this.Method         = method;
+            ResponseNumber = responseNo;
+            CSeqNumber     = cseqNo;
+            Method         = method;
         }
 
         /// <summary>

@@ -47,8 +47,8 @@ namespace LumiSoft.Net.UDP
             }
             m_pEventArgs = null;
 
-            this.PacketReceived = null;
-            this.Error = null;            
+            PacketReceived = null;
+            Error = null;            
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace LumiSoft.Net.UDP
         public void Start()
         {
             if(m_IsDisposed){
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
             if(m_IsRunning){
                 return;
@@ -113,7 +113,7 @@ namespace LumiSoft.Net.UDP
                             m_BufferSize,
                             SocketFlags.None,
                             ref rtpRemoteEP,
-                            new AsyncCallback(this.AsyncSocketReceive),
+                            new AsyncCallback(AsyncSocketReceive),
                             null
                         );
                     }
@@ -183,7 +183,7 @@ namespace LumiSoft.Net.UDP
                     m_BufferSize,
                     SocketFlags.None,
                     ref rtpRemoteEP,
-                    new AsyncCallback(this.AsyncSocketReceive),
+                    new AsyncCallback(AsyncSocketReceive),
                     null
                 );
             }
@@ -205,10 +205,10 @@ namespace LumiSoft.Net.UDP
         /// <param name="remoteEP">Remote IP end point from where data was received.</param>
         private void OnPacketReceived(byte[] buffer,int count,IPEndPoint remoteEP)
         {
-            if(this.PacketReceived != null){
+            if(PacketReceived != null){
                 m_pEventArgs.Reuse(m_pSocket,buffer,count,remoteEP);
 
-                this.PacketReceived(this,m_pEventArgs);
+                PacketReceived(this,m_pEventArgs);
             }
         }
 
@@ -227,8 +227,8 @@ namespace LumiSoft.Net.UDP
                 return;
             }
 
-            if(this.Error != null){
-                this.Error(this,new ExceptionEventArgs(x));
+            if(Error != null){
+                Error(this,new ExceptionEventArgs(x));
             }
         }
     }

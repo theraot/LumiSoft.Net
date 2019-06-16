@@ -113,11 +113,11 @@ namespace LumiSoft.Net
 
             var sipUri = (SIP_Uri)obj;
 
-            if (this.IsSecure && !sipUri.IsSecure){
+            if (IsSecure && !sipUri.IsSecure){
                 return false;
             }
 
-            if(this.User != sipUri.User){
+            if(User != sipUri.User){
                 return false;
             }
 
@@ -126,11 +126,11 @@ namespace LumiSoft.Net
                 return false;
             }*/
                         
-            if(this.Host.ToLower() != sipUri.Host.ToLower()){
+            if(Host.ToLower() != sipUri.Host.ToLower()){
                 return false;
             }
 
-            if(this.Port != sipUri.Port){
+            if(Port != sipUri.Port){
                 return false;
             }
 
@@ -173,19 +173,19 @@ namespace LumiSoft.Net
             var r = new StringReader(value);
 
             // IsSecure
-            this.IsSecure = r.QuotedReadToDelimiter(':').ToLower() == "sips";
+            IsSecure = r.QuotedReadToDelimiter(':').ToLower() == "sips";
                                     
             // Get username
             if(r.SourceString.IndexOf('@') > -1){
-                this.User = r.QuotedReadToDelimiter('@');
+                User = r.QuotedReadToDelimiter('@');
             }
             
             // Gets host[:port]
             var host_port = r.QuotedReadToDelimiter(new[]{';','?'},false).Split(':');
-            this.Host = host_port[0];
+            Host = host_port[0];
             // Optional port specified
             if(host_port.Length == 2){
-                this.Port = Convert.ToInt32(host_port[1]);
+                Port = Convert.ToInt32(host_port[1]);
             }
           
             // We have parameters and/or header
@@ -196,17 +196,17 @@ namespace LumiSoft.Net
                     if(parameter.Trim() != ""){
                         var name_value = parameter.Trim().Split(new[]{'='},2);
                         if (name_value.Length == 2){
-                            this.Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
+                            Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
                         }
                         else{
-                            this.Parameters.Add(name_value[0],null);
+                            Parameters.Add(name_value[0],null);
                         }
                     }
                 }
 
                 // We have header
                 if(r.Available > 0){
-                    this.Header = r.ReadToEnd();
+                    Header = r.ReadToEnd();
                 }
             }
         }
@@ -220,19 +220,19 @@ namespace LumiSoft.Net
             // Syntax: sip:/sips: username@host *[;parameter] [?header *[&header]]
 
             var retVal = new StringBuilder();
-            if (this.IsSecure){
+            if (IsSecure){
                 retVal.Append("sips:");
             }
             else{
                 retVal.Append("sip:");
             }
-            if(this.User != null){
-                retVal.Append(this.User + "@");
+            if(User != null){
+                retVal.Append(User + "@");
             }
 
-            retVal.Append(this.Host);
-            if(this.Port > -1){
-                retVal.Append(":" + this.Port.ToString());
+            retVal.Append(Host);
+            if(Port > -1){
+                retVal.Append(":" + Port.ToString());
             }
             
             // Add URI parameters.
@@ -255,8 +255,8 @@ namespace LumiSoft.Net
                 }
             }
 
-            if(this.Header != null){
-                retVal.Append("?" + this.Header);
+            if(Header != null){
+                retVal.Append("?" + Header);
             }
 
             return retVal.ToString();
@@ -269,7 +269,7 @@ namespace LumiSoft.Net
         {
             get
             {
-                if(this.IsSecure){
+                if(IsSecure){
                     return "sips";
                 }
 
@@ -345,7 +345,7 @@ namespace LumiSoft.Net
         public int Param_Cause
         {
             get{
-                var parameter = this.Parameters["cause"];
+                var parameter = Parameters["cause"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -355,10 +355,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == -1){
-                    this.Parameters.Remove("cause");
+                    Parameters.Remove("cause");
                 }
                 else{
-                    this.Parameters.Set("cause",value.ToString());
+                    Parameters.Set("cause",value.ToString());
                 }
             }
         }
@@ -369,7 +369,7 @@ namespace LumiSoft.Net
         public string Param_Comp
         {
             get{
-                var parameter = this.Parameters["comp"];
+                var parameter = Parameters["comp"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -379,10 +379,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("comp");
+                    Parameters.Remove("comp");
                 }
                 else{
-                    this.Parameters.Set("comp",value);
+                    Parameters.Set("comp",value);
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace LumiSoft.Net
         public string Param_ContentType
         {
             get{ 
-                var parameter = this.Parameters["content-type"];
+                var parameter = Parameters["content-type"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -403,10 +403,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("content-type");
+                    Parameters.Remove("content-type");
                 }
                 else{
-                    this.Parameters.Set("content-type",value);
+                    Parameters.Set("content-type",value);
                 }
             }
         }
@@ -419,7 +419,7 @@ namespace LumiSoft.Net
         public int Param_Delay
         {
             get{
-                var parameter = this.Parameters["delay"];
+                var parameter = Parameters["delay"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -429,10 +429,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == -1){
-                    this.Parameters.Remove("delay");
+                    Parameters.Remove("delay");
                 }
                 else{
-                    this.Parameters.Set("delay",value.ToString());
+                    Parameters.Set("delay",value.ToString());
                 }
             }
         }
@@ -446,7 +446,7 @@ namespace LumiSoft.Net
         public int Param_Duration
         {
             get{
-                var parameter = this.Parameters["duration"];
+                var parameter = Parameters["duration"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -456,10 +456,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == -1){
-                    this.Parameters.Remove("duration");
+                    Parameters.Remove("duration");
                 }
                 else{
-                    this.Parameters.Set("duration",value.ToString());
+                    Parameters.Set("duration",value.ToString());
                 }
             }
         }
@@ -471,7 +471,7 @@ namespace LumiSoft.Net
         public string Param_Locale
         {
             get{ 
-                var parameter = this.Parameters["locale"];
+                var parameter = Parameters["locale"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -481,10 +481,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("locale");
+                    Parameters.Remove("locale");
                 }
                 else{
-                    this.Parameters.Set("locale",value);
+                    Parameters.Set("locale",value);
                 }
             }
         }
@@ -497,7 +497,7 @@ namespace LumiSoft.Net
         public bool Param_Lr
         {
             get{ 
-                var parameter = this.Parameters["lr"];
+                var parameter = Parameters["lr"];
                 if (parameter != null){
                     return true;
                 }
@@ -507,10 +507,10 @@ namespace LumiSoft.Net
 
             set{
                 if(!value){
-                    this.Parameters.Remove("lr");
+                    Parameters.Remove("lr");
                 }
                 else{
-                    this.Parameters.Set("lr",null);
+                    Parameters.Set("lr",null);
                 }
             }
         }
@@ -524,7 +524,7 @@ namespace LumiSoft.Net
         public string Param_Maddr
         {
             get{ 
-                var parameter = this.Parameters["maddr"];
+                var parameter = Parameters["maddr"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -534,10 +534,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("maddr");
+                    Parameters.Remove("maddr");
                 }
                 else{
-                    this.Parameters.Set("maddr",value);
+                    Parameters.Set("maddr",value);
                 }
             }
         }
@@ -548,7 +548,7 @@ namespace LumiSoft.Net
         public string Param_Method
         {
             get{ 
-                var parameter = this.Parameters["method"];
+                var parameter = Parameters["method"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -558,10 +558,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("method");
+                    Parameters.Remove("method");
                 }
                 else{
-                    this.Parameters.Set("method",value);
+                    Parameters.Set("method",value);
                 }
             }
         }
@@ -575,7 +575,7 @@ namespace LumiSoft.Net
         public string Param_Play
         {
             get{ 
-                var parameter = this.Parameters["play"];
+                var parameter = Parameters["play"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -585,10 +585,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("play");
+                    Parameters.Remove("play");
                 }
                 else{
-                    this.Parameters.Set("play",value);
+                    Parameters.Set("play",value);
                 }
             }
         }
@@ -601,7 +601,7 @@ namespace LumiSoft.Net
         public int Param_Repeat
         {
             get{ 
-                var parameter = this.Parameters["ttl"];
+                var parameter = Parameters["ttl"];
                 if (parameter != null)
                 {
                     if(parameter.Value.ToLower() == "forever"){
@@ -616,13 +616,13 @@ namespace LumiSoft.Net
 
             set{
                 if(value == -1){
-                    this.Parameters.Remove("ttl");
+                    Parameters.Remove("ttl");
                 }
                 else if(value == int.MaxValue){
-                    this.Parameters.Set("ttl","forever");
+                    Parameters.Set("ttl","forever");
                 }
                 else{
-                    this.Parameters.Set("ttl",value.ToString());
+                    Parameters.Set("ttl",value.ToString());
                 }
             }
         }
@@ -633,7 +633,7 @@ namespace LumiSoft.Net
         public string Param_Target
         {
             get{ 
-                var parameter = this.Parameters["target"];
+                var parameter = Parameters["target"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -643,10 +643,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("target");
+                    Parameters.Remove("target");
                 }
                 else{
-                    this.Parameters.Set("target",value);
+                    Parameters.Set("target",value);
                 }
             }
         }
@@ -659,7 +659,7 @@ namespace LumiSoft.Net
         public string Param_Transport
         {
             get{ 
-                var parameter = this.Parameters["transport"];
+                var parameter = Parameters["transport"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -669,10 +669,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("transport");
+                    Parameters.Remove("transport");
                 }
                 else{
-                    this.Parameters.Set("transport",value);
+                    Parameters.Set("transport",value);
                 }
             }
         }
@@ -687,7 +687,7 @@ namespace LumiSoft.Net
         public int Param_Ttl
         {
             get{ 
-                var parameter = this.Parameters["ttl"];
+                var parameter = Parameters["ttl"];
                 if (parameter != null){
                     return Convert.ToInt32(parameter.Value);
                 }
@@ -697,10 +697,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == -1){
-                    this.Parameters.Remove("ttl");
+                    Parameters.Remove("ttl");
                 }
                 else{
-                    this.Parameters.Set("ttl",value.ToString());
+                    Parameters.Set("ttl",value.ToString());
                 }
             }
         }
@@ -711,7 +711,7 @@ namespace LumiSoft.Net
         public string Param_User
         {
             get{ 
-                var parameter = this.Parameters["user"];
+                var parameter = Parameters["user"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -721,10 +721,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("user");
+                    Parameters.Remove("user");
                 }
                 else{
-                    this.Parameters.Set("user",value);
+                    Parameters.Set("user",value);
                 }
             }
         }
@@ -735,7 +735,7 @@ namespace LumiSoft.Net
         public string Param_Voicexml
         {
             get{ 
-                var parameter = this.Parameters["voicexml"];
+                var parameter = Parameters["voicexml"];
                 if (parameter != null){
                     return parameter.Value;
                 }
@@ -745,10 +745,10 @@ namespace LumiSoft.Net
 
             set{
                 if(value == null){
-                    this.Parameters.Remove("voicexml");
+                    Parameters.Remove("voicexml");
                 }
                 else{
-                    this.Parameters.Set("voicexml",value);
+                    Parameters.Set("voicexml",value);
                 }
             }
         }

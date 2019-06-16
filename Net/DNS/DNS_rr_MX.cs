@@ -80,11 +80,11 @@ namespace LumiSoft.Net.DNS
             }
 
             var mx = (DNS_rr_MX)obj;
-            if (this.Preference > mx.Preference){
+            if (Preference > mx.Preference){
                 return 1;
             }
 
-            if(this.Preference < mx.Preference){
+            if(Preference < mx.Preference){
                 return -1;
             }
             return 0;

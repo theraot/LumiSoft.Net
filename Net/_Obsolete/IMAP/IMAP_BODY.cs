@@ -382,7 +382,7 @@ namespace LumiSoft.Net.IMAP
 
             get{ 
                 var attachments = new List<IMAP_BODY_Entity>();
-                var entities = this.Entities;
+                var entities = Entities;
                 foreach (IMAP_BODY_Entity entity in entities){
                     if(entity.ContentType != null){
                         foreach(MIME_h_Parameter parameter in entity.ContentType.Parameters){
