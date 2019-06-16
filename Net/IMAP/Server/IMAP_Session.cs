@@ -660,7 +660,7 @@ namespace LumiSoft.Net.IMAP.Server
             m_pAuthentications = new Dictionary<string,AUTH_SASL_ServerMechanism>(StringComparer.CurrentCultureIgnoreCase);
 
             m_pCapabilities = new List<string>();
-            m_pCapabilities.AddRange(new string[]{"IMAP4rev1","NAMESPACE","QUOTA","ACL","IDLE","ENABLE","UTF8=ACCEPT","SASL-IR"});
+            m_pCapabilities.AddRange(new[]{"IMAP4rev1","NAMESPACE","QUOTA","ACL","IDLE","ENABLE","UTF8=ACCEPT","SASL-IR"});
 
             m_pResponseSender = new ResponseSender(this);
         }
@@ -892,7 +892,7 @@ namespace LumiSoft.Net.IMAP.Server
                     return false;
                 }
                                 
-                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},3);
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new[]{' '},3);
                 if (cmd_args.Length < 2){
                     m_pResponseSender.SendResponseAsync(new IMAP_r_u_ServerStatus("BAD","Error: Command '" + op.LineUtf8 + "' not recognized."));
 
@@ -3213,7 +3213,7 @@ namespace LumiSoft.Net.IMAP.Server
             foreach(string capa in cmdText.Split(' ')){
                 if(string.Equals("UTF8=ACCEPT",capa,StringComparison.InvariantCultureIgnoreCase)){
                     m_MailboxEncoding = IMAP_Mailbox_Encoding.ImapUtf8;
-                    m_pResponseSender.SendResponseAsync(new IMAP_r_u_Enable(new string[]{"UTF8=ACCEPT"}));
+                    m_pResponseSender.SendResponseAsync(new IMAP_r_u_Enable(new[]{"UTF8=ACCEPT"}));
                 }
                 // Ignore as specification says.
                 //else{
@@ -3535,7 +3535,7 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             
-            var parts = cmdText.Split(new char[]{' '},2);
+            var parts = cmdText.Split(new[]{' '},2);
             if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
@@ -3606,7 +3606,7 @@ namespace LumiSoft.Net.IMAP.Server
                         var rSection = new StringReader(section);
                         var remainingSection = rSection.ReadWord();
                         while (remainingSection.Length > 0){
-                            var section_parts = remainingSection.Split(new char[]{'.'},2);
+                            var section_parts = remainingSection.Split(new[]{'.'},2);
                             // Not part number.
                             if (!Net_Utils.IsInteger(section_parts[0])){
                                 // We must have one of the following values here (HEADER,HEADER.FIELDS,HEADER.FIELDS.NOT,MIME,TEXT).
@@ -3930,7 +3930,7 @@ namespace LumiSoft.Net.IMAP.Server
                                     #region HEADER.FIELDS
 
                                     else if(string.Equals(partSpecifier,"HEADER.FIELDS",StringComparison.InvariantCultureIgnoreCase)){                            
-                                        var   fieldsString = section.Split(new char[]{' '},2)[1];
+                                        var   fieldsString = section.Split(new[]{' '},2)[1];
                                         var fieldNames   = fieldsString.Substring(1,fieldsString.Length - 2).Split(' ');
                                         foreach (string filedName in fieldNames){
                                             var fields = entity.Header[filedName];
@@ -3954,7 +3954,7 @@ namespace LumiSoft.Net.IMAP.Server
                                     #region HEADER.FIELDS.NOT
 
                                     else if(string.Equals(partSpecifier,"HEADER.FIELDS.NOT",StringComparison.InvariantCultureIgnoreCase)){
-                                        var   fieldsString = section.Split(new char[]{' '},2)[1];
+                                        var   fieldsString = section.Split(new[]{' '},2)[1];
                                         var fieldNames   = fieldsString.Substring(1,fieldsString.Length - 2).Split(' ');
                                         foreach (MIME_h field in entity.Header){
                                             bool contains = false;
@@ -4050,7 +4050,7 @@ namespace LumiSoft.Net.IMAP.Server
                         // Set Seen flag.
                         if(!m_pSelectedFolder.IsReadOnly && dataItem is IMAP_t_Fetch_i_Body){
                             try{
-                                OnStore(e.MessageInfo,IMAP_Flags_SetType.Add,new string[]{"Seen"},new IMAP_r_ServerStatus("dummy","OK","This is FETCH set Seen flag, this response not used."));
+                                OnStore(e.MessageInfo,IMAP_Flags_SetType.Add,new[]{"Seen"},new IMAP_r_ServerStatus("dummy","OK","This is FETCH set Seen flag, this response not used."));
                             }
                             catch{
                             }
@@ -4405,7 +4405,7 @@ namespace LumiSoft.Net.IMAP.Server
 
                 var charset = r.ReadWord();
                 if (!(string.Equals(charset,"US-ASCII",StringComparison.InvariantCultureIgnoreCase) || string.Equals(charset,"UTF-8",StringComparison.InvariantCultureIgnoreCase))){
-                    m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO",new IMAP_t_orc_BadCharset(new string[]{"US-ASCII","UTF-8"}),"Not supported charset."));
+                    m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"NO",new IMAP_t_orc_BadCharset(new[]{"US-ASCII","UTF-8"}),"Not supported charset."));
 
                     return;
                 }
@@ -4522,7 +4522,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             #region Parse arguments
 
-            var parts = cmdText.Split(new char[]{' '},3);
+            var parts = cmdText.Split(new[]{' '},3);
             if (parts.Length != 3){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
@@ -4671,7 +4671,7 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            var parts = cmdText.Split(new char[]{' '},2);
+            var parts = cmdText.Split(new[]{' '},2);
             if (parts.Length != 2){
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag,"BAD","Error in arguments."));
 
@@ -4783,7 +4783,7 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            var cmd_cmtText = cmdText.Split(new char[]{' '},2);
+            var cmd_cmtText = cmdText.Split(new[]{' '},2);
 
             if (string.Equals(cmd_cmtText[0],"COPY",StringComparison.InvariantCultureIgnoreCase)){
                 COPY(true,cmdTag,cmd_cmtText[1]);

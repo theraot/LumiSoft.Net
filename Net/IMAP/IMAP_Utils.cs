@@ -182,7 +182,7 @@ namespace LumiSoft.Net.IMAP
 			*/
             if(date.IndexOf('-') > -1){
                 try{
-                    return DateTime.ParseExact(date.Trim(),new string[]{"d-MMM-yyyy","d-MMM-yyyy HH:mm:ss zzz"},System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
+                    return DateTime.ParseExact(date.Trim(),new[]{"d-MMM-yyyy","d-MMM-yyyy HH:mm:ss zzz"},System.Globalization.DateTimeFormatInfo.InvariantInfo,System.Globalization.DateTimeStyles.None);
                 }
                 catch{
                     throw new ArgumentException("Argument 'date' value '" + date + "' is not valid IMAP date.");
@@ -235,7 +235,7 @@ namespace LumiSoft.Net.IMAP
 			*/
 
 			// Base64 chars, except '/' is replaced with ','
-			var base64Chars = new char[]{
+			var base64Chars = new[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
@@ -247,7 +247,7 @@ namespace LumiSoft.Net.IMAP
 
 				// The character "&" (0x26) is represented by the two-octet sequence "&-".
 				if(c == '&'){
-					retVal.Write(new byte[]{(byte)'&',(byte)'-'},0,2);
+					retVal.Write(new[]{(byte)'&',(byte)'-'},0,2);
 				}
 				// It is allowed char, don't need to encode
 				else if(c >= 0x20 && c <= 0x25 || c >= 0x27 && c <= 0x7E){
@@ -313,7 +313,7 @@ namespace LumiSoft.Net.IMAP
 			*/
 
             // Base64 chars, except '/' is replaced with ','
-			var base64Chars = new char[]{
+			var base64Chars = new[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','

@@ -124,7 +124,7 @@ namespace LumiSoft.Net.IO
                             byte b2 = readLineOP.Buffer[++i];
                         
                             byte b3 = 0;
-                            if(byte.TryParse(new string(new char[]{(char)b1,(char)b2}),System.Globalization.NumberStyles.HexNumber,null,out b3)){
+                            if(byte.TryParse(new string(new[]{(char)b1,(char)b2}),System.Globalization.NumberStyles.HexNumber,null,out b3)){
                                 m_pDecodedBuffer[m_DecodedCount++] = b3;
                             }
                             // Not hex number, leave it as it is.

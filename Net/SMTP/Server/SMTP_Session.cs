@@ -229,7 +229,7 @@ namespace LumiSoft.Net.SMTP.Server
                     this.Server.Logger.AddRead(this.ID,this.AuthenticatedUserIdentity,op.BytesInBuffer,op.LineUtf8,this.LocalEndPoint,this.RemoteEndPoint);
                 }
 
-                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new[]{' '},2);
                 var   cmd      = cmd_args[0].ToUpperInvariant();
                 var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
 
@@ -368,7 +368,7 @@ namespace LumiSoft.Net.SMTP.Server
                     throw new ArgumentNullException("reply");
                 }
 
-                m_pReplyLines = new SMTP_t_ReplyLine[]{reply};
+                m_pReplyLines = new[]{reply};
             }
 
             /// <summary>
@@ -1283,7 +1283,7 @@ namespace LumiSoft.Net.SMTP.Server
 
             var parameters = string.IsNullOrEmpty(cmdText) ? new string[0] : cmdText.Split(' ');
             foreach (string parameter in parameters){
-                var name_value = parameter.Split(new char[]{'='},2);
+                var name_value = parameter.Split(new[]{'='},2);
 
                 // SIZE
                 if (this.Server.Extentions.Contains(SMTP_ServiceExtensions.SIZE) && name_value[0].ToUpper() == "SIZE"){
@@ -1454,7 +1454,7 @@ namespace LumiSoft.Net.SMTP.Server
 
             var parameters = string.IsNullOrEmpty(cmdText) ? new string[0] : cmdText.Split(' ');
             foreach (string parameter in parameters){
-                var name_value = parameter.Split(new char[]{'='},2);
+                var name_value = parameter.Split(new[]{'='},2);
 
                 // NOTIFY
                 if (this.Server.Extentions.Contains(SMTP_ServiceExtensions.DSN) && name_value[0].ToUpper() == "NOTIFY"){

@@ -43,7 +43,7 @@ namespace LumiSoft.Net.IMAP
                     mailbox with the stated UID(s).
             */
 
-            var code_mailboxUid_sourceSeqSet_targetSeqSet = value.Split(new char[]{' '},4);
+            var code_mailboxUid_sourceSeqSet_targetSeqSet = value.Split(new[]{' '},4);
             if (!string.Equals("COPYUID",code_mailboxUid_sourceSeqSet_targetSeqSet[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid COPYUID response value.","value");
             }

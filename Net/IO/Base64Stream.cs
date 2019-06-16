@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class Base64Stream : Stream,IDisposable
     {
-        private readonly static byte[] BASE64_ENCODE_TABLE = new byte[]{
+        private readonly static byte[] BASE64_ENCODE_TABLE = new[]{
 		    (byte)'A',(byte)'B',(byte)'C',(byte)'D',(byte)'E',(byte)'F',(byte)'G',(byte)'H',(byte)'I',(byte)'J',
             (byte)'K',(byte)'L',(byte)'M',(byte)'N',(byte)'O',(byte)'P',(byte)'Q',(byte)'R',(byte)'S',(byte)'T',
             (byte)'U',(byte)'V',(byte)'W',(byte)'X',(byte)'Y',(byte)'Z',(byte)'a',(byte)'b',(byte)'c',(byte)'d',

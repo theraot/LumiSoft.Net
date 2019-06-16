@@ -18,7 +18,7 @@ namespace LumiSoft.Net.FTP.Client
                 throw new ArgumentNullException("responseLine");
             }
 
-            var code_text = responseLine.Split(new char[]{' '},2);
+            var code_text = responseLine.Split(new[]{' '},2);
             try
             {
                 StatusCode = Convert.ToInt32(code_text[0]);

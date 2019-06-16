@@ -77,9 +77,9 @@ namespace LumiSoft.Net.SIP.Message
 
                 if(reader.SourceString.StartsWith(";")){
                     reader.ReadSpecifiedLength(1);
-                    var paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
+                    var paramString = reader.QuotedReadToDelimiter(new[]{';',','},false);
                     if (paramString != ""){
-                        var name_value = paramString.Split(new char[]{'='},2);
+                        var name_value = paramString.Split(new[]{'='},2);
                         var name  = name_value[0].Trim();
                         var value = "";
                         if (name_value.Length == 2){

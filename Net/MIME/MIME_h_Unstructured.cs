@@ -53,7 +53,7 @@ namespace LumiSoft.Net.MIME
 
             var retVal = new MIME_h_Unstructured();
 
-            var name_value = value.Split(new char[]{':'},2);
+            var name_value = value.Split(new[]{':'},2);
             if (name_value[0].Trim() == string.Empty){
                 throw new ParseException("Invalid header field '" + value + "' syntax.");
             }

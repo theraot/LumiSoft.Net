@@ -209,7 +209,7 @@ namespace LumiSoft.Net.Mime
 			// If singlepart (text,image,audio,video,message, ...), write entity data.
 			else{				
 				// Write blank line between headers and content
-				storeStream.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
+				storeStream.Write(new[]{(byte)'\r',(byte)'\n'},0,2);
 
 				if(this.DataEncoded != null){
 					storeStream.Write(this.DataEncoded,0,this.DataEncoded.Length);

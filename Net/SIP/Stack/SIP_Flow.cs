@@ -171,7 +171,7 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pStack.TransportLayer.Stack.Logger.AddWrite("",null,2,"Flow [id='" + this.ID + "'] sent \"ping\"",this.LocalEP,this.RemoteEP);
                 }
 
-                SendInternal(new byte[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
+                SendInternal(new[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
             }
         }
 
@@ -272,7 +272,7 @@ namespace LumiSoft.Net.SIP.Stack
                         if(m_LastCRLF){
                             m_LastCRLF = false;
 
-                            m_pStack.TransportLayer.OnMessageReceived(this,new byte[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
+                            m_pStack.TransportLayer.OnMessageReceived(this,new[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
                         }
                         // We have first CRLF of ping request.
                         else{
@@ -281,7 +281,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     // We got pong to our ping request.
                     else{
-                        m_pStack.TransportLayer.OnMessageReceived(this,new byte[]{(byte)'\r',(byte)'\n'});
+                        m_pStack.TransportLayer.OnMessageReceived(this,new[]{(byte)'\r',(byte)'\n'});
                     }
 
                     // Wait for new SIP message. 
@@ -292,7 +292,7 @@ namespace LumiSoft.Net.SIP.Stack
                     m_LastCRLF = false;
 
                     // Add header terminator blank line.
-                    m_pMessage.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
+                    m_pMessage.Write(new[]{(byte)'\r',(byte)'\n'},0,2);
 
                     m_pMessage.Position = 0;
                     var contentLengthValue = LumiSoft.Net.MIME.MIME_Utils.ParseHeaderField("Content-Length:",m_pMessage);
@@ -576,7 +576,7 @@ namespace LumiSoft.Net.SIP.Stack
                                     m_pStack.TransportLayer.Stack.Logger.AddWrite("",null,2,"Flow [id='" + this.ID + "'] sent \"ping\"",this.LocalEP,this.RemoteEP);
                                 }
 
-                                SendInternal(new byte[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
+                                SendInternal(new[]{(byte)'\r',(byte)'\n',(byte)'\r',(byte)'\n'});
                             }
                             catch{
                                 // We don't care about errors here.

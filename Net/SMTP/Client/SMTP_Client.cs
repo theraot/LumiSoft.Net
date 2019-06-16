@@ -355,7 +355,7 @@ namespace LumiSoft.Net.SMTP.Client
                                                 "250" SP ehlo-line CRLF )
                             */
 
-                            m_pSmtpClient.m_RemoteHostName = m_pReplyLines[0].Text.Split(new char[]{' '},2)[0];
+                            m_pSmtpClient.m_RemoteHostName = m_pReplyLines[0].Text.Split(new[]{' '},2)[0];
                             m_pSmtpClient.m_IsEsmtpSupported = true;
                             var esmtpFeatures = new List<string>();
                             foreach (SMTP_t_ReplyLine line in m_pReplyLines){
@@ -445,7 +445,7 @@ namespace LumiSoft.Net.SMTP.Client
                                 helo-ok-rsp = "250" SP Domain [ SP helo-greet ] CRLF
                             */
 
-                            m_pSmtpClient.m_RemoteHostName = m_pReplyLines[0].Text.Split(new char[]{' '},2)[0];
+                            m_pSmtpClient.m_RemoteHostName = m_pReplyLines[0].Text.Split(new[]{' '},2)[0];
                             m_pSmtpClient.m_IsEsmtpSupported = true;
                             var esmtpFeatures = new List<string>();
                             foreach (SMTP_t_ReplyLine line in m_pReplyLines){
@@ -3383,7 +3383,7 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("message");
             }
 
-            QuickSendSmartHost(localHost,Dns_Client.Static.GetEmailHosts(to)[0].HostName,25,false,from,new string[]{to},message);
+            QuickSendSmartHost(localHost,Dns_Client.Static.GetEmailHosts(to)[0].HostName,25,false,from,new[]{to},message);
         }
 
         /// <summary>
@@ -3434,7 +3434,7 @@ namespace LumiSoft.Net.SMTP.Client
                 var ms = new MemoryStream();
                 message.ToStream(ms,new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.Q,Encoding.UTF8),Encoding.UTF8);
                 ms.Position = 0;
-                QuickSendSmartHost(null,host,port,ssl,null,null,from,new string[]{recipient},ms);
+                QuickSendSmartHost(null,host,port,ssl,null,null,from,new[]{recipient},ms);
             }            
         }
 

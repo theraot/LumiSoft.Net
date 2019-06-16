@@ -66,7 +66,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException(mediaType);
             }
 
-            var type_subtype = mediaType.Split(new char[]{'/',},2);
+            var type_subtype = mediaType.Split(new[]{'/',},2);
             if (type_subtype.Length == 2){
                 if(type_subtype[0] == "" || !MIME_Reader.IsToken(type_subtype[0])){
                     throw new ArgumentException("Invalid argument 'mediaType' value '" + mediaType + "', value must be token.");
@@ -112,7 +112,7 @@ namespace LumiSoft.Net.MIME
 
             var retVal = new MIME_h_ContentType();
 
-            var name_value = value.Split(new char[]{':'},2);
+            var name_value = value.Split(new[]{':'},2);
             if (name_value.Length != 2){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }

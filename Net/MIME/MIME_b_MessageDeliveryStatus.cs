@@ -105,10 +105,10 @@ namespace LumiSoft.Net.MIME
             }
             
             MessageFields.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
-            stream.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
+            stream.Write(new[]{(byte)'\r',(byte)'\n'},0,2);
             foreach(MIME_h_Collection recipientBlock in RecipientBlocks){
                 recipientBlock.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
-                stream.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
+                stream.Write(new[]{(byte)'\r',(byte)'\n'},0,2);
             }
         }
 

@@ -44,7 +44,7 @@ namespace LumiSoft.Net.IMAP
 
             var values = new List<int>();
             if (response.Split(' ').Length > 2){
-                foreach(string value in response.Split(new char[]{' '},3)[2].Split(' ')){
+                foreach(string value in response.Split(new[]{' '},3)[2].Split(' ')){
                     values.Add(Convert.ToInt32(value));
                 }
             }

@@ -800,7 +800,7 @@ namespace LumiSoft.Net.RTP
                     sdes.Chunks.Add(sdes_chunk);
                     compoundPacket.Packets.Add(sdes);
                     var bye = new RTCP_Packet_BYE();
-                    bye.Sources = new uint[]{oldSSRC};
+                    bye.Sources = new[]{oldSSRC};
                     bye.LeavingReason = "Collision, changing SSRC.";
                     compoundPacket.Packets.Add(bye);
 

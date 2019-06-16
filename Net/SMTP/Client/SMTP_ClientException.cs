@@ -18,7 +18,7 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("responseLine");
             }
 
-            ReplyLines = new SMTP_t_ReplyLine[]{SMTP_t_ReplyLine.Parse(responseLine)};
+            ReplyLines = new[]{SMTP_t_ReplyLine.Parse(responseLine)};
         }
 
         /// <summary>

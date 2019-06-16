@@ -50,7 +50,7 @@ namespace LumiSoft.Net.AUTH
 
             var parameters = TextUtils.SplitQuotedString(challenge,',');
             foreach (string parameter in parameters){
-                var name_value = parameter.Split(new char[]{'='},2);
+                var name_value = parameter.Split(new[]{'='},2);
                 var   name       = name_value[0].Trim();
 
                 if (name_value.Length == 2){

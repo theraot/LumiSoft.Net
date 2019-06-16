@@ -1025,7 +1025,7 @@ namespace LumiSoft.Net.DNS.Client
 
                 // We have email address, parse domain.
                 if(domain.IndexOf("@") > -1){
-                    m_Domain = domain.Split(new char[]{'@'},2)[1];
+                    m_Domain = domain.Split(new[]{'@'},2)[1];
                 }
             }
 
@@ -1196,7 +1196,7 @@ namespace LumiSoft.Net.DNS.Client
                                     var name_to_index_map = new Dictionary<string,int>();
                                     name_to_index_map.Add(domain,0);
 
-                                    var op = new GetHostsAddressesAsyncOP(new string[]{domain});
+                                    var op = new GetHostsAddressesAsyncOP(new[]{domain});
                                     // This event is raised when lookup completes asynchronously.
                                     op.CompletedAsync += delegate(object s2,EventArgs<GetHostsAddressesAsyncOP> e2){
                                         LookupCompleted(op,name_to_index_map);
@@ -1819,7 +1819,7 @@ namespace LumiSoft.Net.DNS.Client
 
 			// If hostName_IP is IP
 			try{
-				return new IPAddress[]{IPAddress.Parse(host)};
+				return new[]{IPAddress.Parse(host)};
 			}
 			catch{
 			}

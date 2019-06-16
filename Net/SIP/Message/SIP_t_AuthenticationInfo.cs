@@ -59,7 +59,7 @@ namespace LumiSoft.Net.SIP.Message
             while(reader.Available > 0){
                 var word = reader.QuotedReadToDelimiter(',');
                 if (word != null && word.Length > 0){
-                    var name_value = word.Split(new char[]{'='},2);
+                    var name_value = word.Split(new[]{'='},2);
                     if (name_value[0].ToLower() == "nextnonce"){
                         this.NextNonce = name_value[1];
                     }

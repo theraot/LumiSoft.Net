@@ -671,8 +671,8 @@ namespace LumiSoft.Net.FTP.Client
                 ms.Position = 0;
                 var listStream =  new SmartStream(ms,true);
 
-                var winDateFormats = new string[]{"M-d-yy h:mmtt","MM-dd-yy HH:mm"};
-                var unixFormats    = new string[]{"MMM d H:mm","MMM d yyyy"};
+                var winDateFormats = new[]{"M-d-yy h:mmtt","MM-dd-yy HH:mm"};
+                var unixFormats    = new[]{"MMM d H:mm","MMM d yyyy"};
 
                 var args = new SmartStream.ReadLineAsyncOP(new byte[8000],SizeExceededAction.JunkAndThrowException);
                 while (true){

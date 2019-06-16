@@ -11,11 +11,11 @@ namespace LumiSoft.Net.MIME
     {
         private readonly string m_Source = "";
 
-        private static readonly char[] atextChars = new char[]{'!','#','$','%','&','\'','*','+','-','/','=','?','^','_','`','{','|','}','~'};
+        private static readonly char[] atextChars = new[]{'!','#','$','%','&','\'','*','+','-','/','=','?','^','_','`','{','|','}','~'};
 
-        private static readonly char[] specials = new char[]{'(',')','<','>','[',']',':',';','@','\\',',','.','"'};
+        private static readonly char[] specials = new[]{'(',')','<','>','[',']',':',';','@','\\',',','.','"'};
 
-        private static readonly char[] tspecials = new char[]{'(',')','<','>','@',',',';',':','\\','"','/','[',']','?','='};
+        private static readonly char[] tspecials = new[]{'(',')','<','>','@',',',';',':','\\','"','/','[',']','?','='};
 
         private static readonly Regex encodedword_regex = new Regex(@"=\?(?<charset>.*?)\?(?<encoding>[qQbB])\?(?<value>.*?)\?=",RegexOptions.IgnoreCase);
 

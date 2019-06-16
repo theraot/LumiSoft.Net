@@ -51,7 +51,7 @@ namespace LumiSoft.Net.SIP.Stack
             m_RegisterCallID = SIP_t_CallID.CreateCallID();
             
             m_pAllow = new List<string>();
-            m_pAllow.AddRange(new string[]{"INVITE","ACK","CANCEL","BYE","MESSAGE"});
+            m_pAllow.AddRange(new[]{"INVITE","ACK","CANCEL","BYE","MESSAGE"});
 
             m_pSupported = new List<string>();
                        

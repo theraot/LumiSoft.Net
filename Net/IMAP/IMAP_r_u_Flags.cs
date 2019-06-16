@@ -44,7 +44,7 @@ namespace LumiSoft.Net.IMAP
                 Example:    S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
             */
 
-            var r = new StringReader(response.Split(new char[]{' '},3)[2]);
+            var r = new StringReader(response.Split(new[]{' '},3)[2]);
 
             return new IMAP_r_u_Flags(r.ReadParenthesized().Split(' '));
         }

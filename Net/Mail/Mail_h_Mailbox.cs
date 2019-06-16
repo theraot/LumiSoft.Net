@@ -52,14 +52,14 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            var name_value = value.Split(new char[]{':'},2);
+            var name_value = value.Split(new[]{':'},2);
             if (name_value.Length != 2){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
 
             var r = new MIME_Reader(name_value[1].Trim());
 
-            var word = r.QuotedReadToDelimiter(new char[]{',','<',':'});
+            var word = r.QuotedReadToDelimiter(new[]{',','<',':'});
             // Invalid value.
             if (word == null){
                 throw new ParseException("Invalid header field value '" + value + "'.");

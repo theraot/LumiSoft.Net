@@ -119,7 +119,7 @@ namespace LumiSoft.Net.SIP.Stack
             // Parse Response-line
             var r = new StreamLineReader(stream);
             r.Encoding = "utf-8";
-            var version_code_text = r.ReadLineString().Split(new char[]{' '},3);
+            var version_code_text = r.ReadLineString().Split(new[]{' '},3);
             if (version_code_text.Length != 3){
                 throw new SIP_ParseException("Invalid SIP Status-Line syntax ! Syntax: {SIP-Version SP Status-Code SP Reason-Phrase}.");
             }
@@ -279,7 +279,7 @@ namespace LumiSoft.Net.SIP.Stack
                     throw new ArgumentNullException("StatusCode_ReasonPhrase");
                 }
 
-                var code_reason = value.Split(new char[]{' '},2);
+                var code_reason = value.Split(new[]{' '},2);
                 if (code_reason.Length != 2){
                     throw new ArgumentException("Invalid property 'StatusCode_ReasonPhrase' Reason-Phrase value !");
                 }

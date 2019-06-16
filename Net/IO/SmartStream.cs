@@ -1805,12 +1805,12 @@ namespace LumiSoft.Net.IO
                             // Line ends CRLF.
                             if(m_EndsCRLF){
                                 m_BytesWritten += 3;
-                                m_pOwner.BeginWrite(new byte[]{(byte)'.',(byte)'\r',(byte)'\n'},0,3,this.SendTerminatorCompleted,null);
+                                m_pOwner.BeginWrite(new[]{(byte)'.',(byte)'\r',(byte)'\n'},0,3,this.SendTerminatorCompleted,null);
                             }
                             // Line doesn't end CRLF, we need to add it.
                             else{
                                 m_BytesWritten += 5;
-                                m_pOwner.BeginWrite(new byte[]{(byte)'\r',(byte)'\n',(byte)'.',(byte)'\r',(byte)'\n'},0,5,this.SendTerminatorCompleted,null);
+                                m_pOwner.BeginWrite(new[]{(byte)'\r',(byte)'\n',(byte)'.',(byte)'\r',(byte)'\n'},0,5,this.SendTerminatorCompleted,null);
                             }
 
                             op.Dispose();

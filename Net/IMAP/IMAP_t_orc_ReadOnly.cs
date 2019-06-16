@@ -19,7 +19,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new char[]{' '},2);
+            var code_value = value.Split(new[]{' '},2);
             if (!string.Equals("READ-ONLY",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid READ-ONLY response value.","value");
             }

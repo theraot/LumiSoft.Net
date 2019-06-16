@@ -218,7 +218,7 @@ namespace LumiSoft.Net.POP3.Client
                         m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
                                             
                         // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
+                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             m_pOwner.m_IsMarkedForDeletion = true;
                             SetState(AsyncOP_State.Completed);
                         }
@@ -594,7 +594,7 @@ namespace LumiSoft.Net.POP3.Client
                         m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
                                             
                         // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
+                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             var readMsgOP = new SmartStream.ReadPeriodTerminatedAsyncOP(m_pStream,long.MaxValue,SizeExceededAction.ThrowException);
                             readMsgOP.Completed += delegate(object sender,EventArgs<SmartStream.ReadPeriodTerminatedAsyncOP> e){
                                 MessageReadingCompleted(readMsgOP);
@@ -966,7 +966,7 @@ namespace LumiSoft.Net.POP3.Client
                         m_pPop3Client.LogAddRead(op.BytesInBuffer,op.LineUtf8);
                                             
                         // Server returned success response.
-                        if(string.Equals(op.LineUtf8.Split(new char[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
+                        if(string.Equals(op.LineUtf8.Split(new[]{' '},2)[0],"+OK",StringComparison.InvariantCultureIgnoreCase)){
                             var readMsgOP = new SmartStream.ReadPeriodTerminatedAsyncOP(m_pStream,long.MaxValue,SizeExceededAction.ThrowException);
                             readMsgOP.Completed += delegate(object sender,EventArgs<SmartStream.ReadPeriodTerminatedAsyncOP> e){
                                 MessageReadingCompleted(readMsgOP);

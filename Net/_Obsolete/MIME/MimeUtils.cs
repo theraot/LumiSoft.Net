@@ -100,21 +100,21 @@ namespace LumiSoft.Net.Mime
             //--- Pase date --------------------------------------------------------------------//
             try
             {
-                day = Convert.ToInt32(s.ReadWord(true,new char[]{'.','-',' '},true));
+                day = Convert.ToInt32(s.ReadWord(true,new[]{'.','-',' '},true));
             }
             catch{
                 throw new Exception("Invalid date value '" + date + "', invalid day value !");
             }
 
             try{
-                month = Convert.ToInt32(s.ReadWord(true,new char[]{'.','-',' '},true));
+                month = Convert.ToInt32(s.ReadWord(true,new[]{'.','-',' '},true));
             }
             catch{
                 throw new Exception("Invalid date value '" + date + "', invalid month value !");
             }
 
             try{
-                year = Convert.ToInt32(s.ReadWord(true,new char[]{'.','-',' '},true));
+                year = Convert.ToInt32(s.ReadWord(true,new[]{'.','-',' '},true));
             }
             catch{
                 throw new Exception("Invalid date value '" + date + "', invalid year value !");
@@ -125,14 +125,14 @@ namespace LumiSoft.Net.Mime
             // Time is optional, so parse it if its included.
             if(s.Available > 0){
                 try{
-                    hour = Convert.ToInt32(s.ReadWord(true,new char[]{':'},true));                
+                    hour = Convert.ToInt32(s.ReadWord(true,new[]{':'},true));                
                 }
                 catch{
                     throw new Exception("Invalid date value '" + date + "', invalid hour value !");
                 }
 
                 try{
-                    minute = Convert.ToInt32(s.ReadWord(true,new char[]{':'},false));
+                    minute = Convert.ToInt32(s.ReadWord(true,new[]{':'},false));
                 }
                 catch{
                     throw new Exception("Invalid date value '" + date + "', invalid minute value !");
@@ -142,7 +142,7 @@ namespace LumiSoft.Net.Mime
                 if(s.StartsWith(":")){
                     s.ReadSpecifiedLength(1);
                     try{
-                        var secondString = s.ReadWord(true,new char[]{' '},true);
+                        var secondString = s.ReadWord(true,new[]{' '},true);
                         // Milli seconds specified, remove them.
                         if (secondString.IndexOf('.') > -1){
                             secondString = secondString.Substring(0,secondString.IndexOf('.'));
@@ -220,7 +220,7 @@ namespace LumiSoft.Net.Mime
 				line with nothing preceding the CRLF).
 			*/
 
-			var crlf = new byte[]{(byte)'\r',(byte)'\n'};
+			var crlf = new[]{(byte)'\r',(byte)'\n'};
             var msHeaders = new MemoryStream();
             var r = new StreamLineReader(entryStrm);
             var lineData = r.ReadLine();

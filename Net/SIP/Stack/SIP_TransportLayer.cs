@@ -401,7 +401,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
 
                     // Send "pong".
-                    flow.SendInternal(new byte[]{(byte)'\r',(byte)'\n'});
+                    flow.SendInternal(new[]{(byte)'\r',(byte)'\n'});
 
                     if(this.Stack.Logger != null){
                         this.Stack.Logger.AddWrite("",null,2,"Flow [id='" + flow.ID + "'] sent \"pong\"",flow.LocalEP,flow.RemoteEP);
@@ -1261,7 +1261,7 @@ namespace LumiSoft.Net.SIP.Stack
             try{
                 IPAddress[] targets = null;
                 if(Net_Utils.IsIPAddress(host)){
-                    targets = new IPAddress[]{IPAddress.Parse(host)};
+                    targets = new[]{IPAddress.Parse(host)};
                 }
                 else{
                     targets = Stack.Dns.GetHostAddresses(host);

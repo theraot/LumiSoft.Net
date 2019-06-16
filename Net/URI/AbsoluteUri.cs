@@ -32,7 +32,7 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Argument 'value' value must be specified.");
             }
             
-            var scheme_value = value.Split(new char[]{':'},2);
+            var scheme_value = value.Split(new[]{':'},2);
             if (scheme_value[0].ToLower() == UriSchemes.sip || scheme_value[0].ToLower() == UriSchemes.sips){
                 var uri = new SIP_Uri();
                 uri.ParseInternal(value);
@@ -58,7 +58,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("value");
             }
 
-            var scheme_value = value.Split(new char[]{':'},1);
+            var scheme_value = value.Split(new[]{':'},1);
             m_Scheme = scheme_value[0].ToLower();
             if(scheme_value.Length == 2){
                 m_Value = scheme_value[1];
@@ -87,7 +87,7 @@ namespace LumiSoft.Net
         /// </summary>
         public string Value
         {
-            get{ return ToString().Split(new char[]{':'},2)[1]; }
+            get{ return ToString().Split(new[]{':'},2)[1]; }
         }
     }
 }

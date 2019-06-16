@@ -15,7 +15,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <param name="replyLine">SMTP server reply line.</param>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>replyLine</b> is null reference.</exception>
-        public SMTP_Reply(int replyCode,string replyLine) : this(replyCode,new string[]{replyLine})
+        public SMTP_Reply(int replyCode,string replyLine) : this(replyCode,new[]{replyLine})
         {
             if(replyLine == null){
                 throw new ArgumentNullException("replyLine");

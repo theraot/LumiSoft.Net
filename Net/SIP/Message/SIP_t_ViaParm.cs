@@ -136,7 +136,7 @@ namespace LumiSoft.Net.SIP.Message
             }
             this.ProtocolTransport = word.Trim();
             // sent-by
-            word = reader.QuotedReadToDelimiter(new char[]{';',','},false);
+            word = reader.QuotedReadToDelimiter(new[]{';',','},false);
             if(word == null){
                 throw new SIP_ParseException("Via header field sent-by is missing !");
             }

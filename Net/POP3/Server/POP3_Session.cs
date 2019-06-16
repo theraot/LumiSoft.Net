@@ -192,7 +192,7 @@ namespace LumiSoft.Net.POP3.Server
                     return false;
                 }
                                 
-                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new[]{' '},2);
                 var   cmd      = cmd_args[0].ToUpperInvariant();
                 var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
 

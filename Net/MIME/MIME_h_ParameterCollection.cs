@@ -277,7 +277,7 @@ namespace LumiSoft.Net.MIME
                     continue;
                 }
 
-                var name_value = part.Trim().Split(new char[]{'='},2);
+                var name_value = part.Trim().Split(new[]{'='},2);
                 var   paramName  = name_value[0].Trim();
                 string   paramValue = null;
                 if(name_value.Length == 2){

@@ -37,7 +37,7 @@ namespace LumiSoft.Net.Mime
             var retVal = new Hashtable();
             // Skip value, other entries are parameters
             for (int i=1;i<paramNameValues.Length;i++){
-				var paramNameValue = paramNameValues[i].Trim().Split(new char[]{'='},2);
+				var paramNameValue = paramNameValues[i].Trim().Split(new[]{'='},2);
                 if (!retVal.ContainsKey(paramNameValue[0].ToLower())){
 					if(paramNameValue.Length == 2){
                         var value = paramNameValue[1];

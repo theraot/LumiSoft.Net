@@ -431,7 +431,7 @@ namespace LumiSoft.Net.MIME
 				line with nothing preceding the CRLF).
 			*/
 
-			var crlf = new byte[]{(byte)'\r',(byte)'\n'};
+			var crlf = new[]{(byte)'\r',(byte)'\n'};
             var msHeaders = new MemoryStream();
             var r = new StreamLineReader(entryStrm);
             var lineData = r.ReadLine();

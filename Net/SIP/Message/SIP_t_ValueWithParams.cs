@@ -32,9 +32,9 @@ namespace LumiSoft.Net.SIP.Message
                 // We have parameter
                 if(reader.SourceString.StartsWith(";")){
                     reader.ReadSpecifiedLength(1);
-                    var paramString = reader.QuotedReadToDelimiter(new char[]{';',','},false);
+                    var paramString = reader.QuotedReadToDelimiter(new[]{';',','},false);
                     if (paramString != ""){
-                        var name_value = paramString.Split(new char[]{'='},2);
+                        var name_value = paramString.Split(new[]{'='},2);
                         if (name_value.Length == 2){
                            this.Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
                         }

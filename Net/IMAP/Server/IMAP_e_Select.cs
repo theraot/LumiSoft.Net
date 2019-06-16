@@ -23,8 +23,8 @@ namespace LumiSoft.Net.IMAP.Server
             PermanentFlags = new List<string>();
 
             // Add default falgs.
-            Flags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
-            PermanentFlags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
+            Flags.AddRange(new[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
+            PermanentFlags.AddRange(new[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
         }
 
         /// <summary>

@@ -68,7 +68,7 @@ namespace LumiSoft.Net.AUTH
             if(m_State == 0){
                 m_State++;
                 
-                var callenge = new AUTH_SASL_DigestMD5_Challenge(new string[]{m_Realm},m_Nonce,new string[]{"auth"},false);
+                var callenge = new AUTH_SASL_DigestMD5_Challenge(new[]{m_Realm},m_Nonce,new[]{"auth"},false);
 
                 return Encoding.UTF8.GetBytes(callenge.ToChallenge());
             }

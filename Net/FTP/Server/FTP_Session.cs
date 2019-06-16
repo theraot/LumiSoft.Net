@@ -369,7 +369,7 @@ namespace LumiSoft.Net.FTP.Server
                     return false;
                 }
                                 
-                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new char[]{' '},2);
+                var cmd_args = Encoding.UTF8.GetString(op.Buffer,0,op.LineBytesInBuffer).Split(new[]{' '},2);
                 var   cmd      = cmd_args[0].ToUpperInvariant();
                 var   args     = cmd_args.Length == 2 ? cmd_args[1] : "";
 
@@ -502,7 +502,7 @@ namespace LumiSoft.Net.FTP.Server
 				return;
 			}
 
-			var param = argsText.Split(new char[]{' '});
+			var param = argsText.Split(new[]{' '});
 
             // There must be only one parameter - userName
             if (argsText.Length > 0 && param.Length == 1){
@@ -534,7 +534,7 @@ namespace LumiSoft.Net.FTP.Server
 				return;
 			}
 
-			var param = argsText.Split(new char[]{' '});
+			var param = argsText.Split(new[]{' '});
 
             // There may be only one parameter - password
             if (param.Length == 1){

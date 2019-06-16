@@ -260,7 +260,7 @@ namespace LumiSoft.Net.DNS.Client
             var ldn = new System.Globalization.IdnMapping();
             qname = ldn.GetAscii(qname);
 
-			var labels = qname.Split(new char[] {'.'});
+			var labels = qname.Split(new[] {'.'});
             int position = 12;
 					
 			// Copy all domain parts(labels) to query

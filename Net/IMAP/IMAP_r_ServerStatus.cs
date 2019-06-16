@@ -77,14 +77,14 @@ namespace LumiSoft.Net.IMAP
 
             // We continuation "+" response.
             if(responseLine.StartsWith("+")){
-                var parts        = responseLine.Split(new char[]{' '},2);
+                var parts        = responseLine.Split(new[]{' '},2);
                 var   responseText = parts.Length == 2 ? parts[1] : null;
 
                 return new IMAP_r_ServerStatus("+","+",responseText);
             }
             // OK/BAD/NO
             else{
-                var   parts        = responseLine.Split(new char[]{' '},3);
+                var   parts        = responseLine.Split(new[]{' '},3);
                 var     commandTag   = parts[0];
                 var     responseCode = parts[1];
                 IMAP_t_orc optResponse  = null;
@@ -194,7 +194,7 @@ namespace LumiSoft.Net.IMAP
                     return null;
                 }
 
-                var code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
+                var code_args = OptionalResponse.ToString().Split(new[]{' '},2);
 
                 return code_args.Length == 2 ? code_args[1] : "";
             }

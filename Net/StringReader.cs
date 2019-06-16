@@ -80,7 +80,7 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public string QuotedReadToDelimiter(char delimiter)
 		{
-            return QuotedReadToDelimiter(new char[]{delimiter});
+            return QuotedReadToDelimiter(new[]{delimiter});
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public string ReadWord(bool unQuote)
 		{
-            return ReadWord(unQuote,new char[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'},false);
+            return ReadWord(unQuote,new[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'},false);
         }
 
 		/// <summary>
@@ -418,7 +418,7 @@ namespace LumiSoft.Net
             if(char.IsSeparator(SourceString[0])){
                 return false;
             }
-            var wordTerminators = new char[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'};
+            var wordTerminators = new[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'};
             foreach (char c in wordTerminators){
                 if(c == SourceString[0]){
                     return false;

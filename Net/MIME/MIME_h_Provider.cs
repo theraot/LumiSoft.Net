@@ -41,7 +41,7 @@ namespace LumiSoft.Net.MIME
             }
 
             MIME_h   headerField = null;
-            var name_value  = field.Split(new char[]{':'},2);
+            var name_value  = field.Split(new[]{':'},2);
             var   name        = name_value[0].Trim();
             if (name == string.Empty){
                 throw new ParseException("Invalid header field value '" + field + "'.");

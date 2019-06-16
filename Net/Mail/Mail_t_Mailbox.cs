@@ -46,7 +46,7 @@ namespace LumiSoft.Net.Mail
             var        r      = new MIME_Reader(value);
             var retVal = new Mail_t_MailboxList();
             while (true){
-                var word = r.QuotedReadToDelimiter(new char[]{',','<'});
+                var word = r.QuotedReadToDelimiter(new[]{',','<'});
                 // We processed all data.
                 if (string.IsNullOrEmpty(word) && r.Available == 0){
                     throw new ParseException("Not valid 'mailbox' value '" + value + "'.");

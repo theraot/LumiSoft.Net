@@ -340,7 +340,7 @@ namespace LumiSoft.Net
                 DIGIT    =  %x30-39             ; 0-9
             */
 
-            var tokenChars = new char[]{'-','.','!','%','*','_','+','`','\'','~'};
+            var tokenChars = new[]{'-','.','!','%','*','_','+','`','\'','~'};
             foreach (char c in value){
                 // We don't have letter or digit, so we only may have token char.
                 if(!((c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A) || (c >= 0x30 && c <= 0x39))){

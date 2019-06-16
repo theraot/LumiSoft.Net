@@ -376,8 +376,8 @@ namespace LumiSoft.Net.SIP.Debug
 					}
 				}
 				// xxx*[xxx...]
-				else if(pattern.IndexOfAny(new char[]{'*'}) > -1){
-					var startPart = pattern.Substring(0,pattern.IndexOfAny(new char[]{'*'}));
+				else if(pattern.IndexOfAny(new[]{'*'}) > -1){
+					var startPart = pattern.Substring(0,pattern.IndexOfAny(new[]{'*'}));
 
                     // Text must startwith
                     if (!text.StartsWith(startPart)){
@@ -385,7 +385,7 @@ namespace LumiSoft.Net.SIP.Debug
 					}
 
 					text = text.Substring(text.IndexOf(startPart) + startPart.Length);
-					pattern = pattern.Substring(pattern.IndexOfAny(new char[]{'*'}));
+					pattern = pattern.Substring(pattern.IndexOfAny(new[]{'*'}));
 				}
 				// xxx
 				else{

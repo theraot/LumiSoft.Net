@@ -73,7 +73,7 @@ namespace LumiSoft.Net.RTP
             rr.SSRC = this.SSRC;
             packet.Packets.Add(rr);
             var bye = new RTCP_Packet_BYE();
-            bye.Sources = new uint[]{this.SSRC};
+            bye.Sources = new[]{this.SSRC};
             if(!string.IsNullOrEmpty(closeReason)){
                 bye.LeavingReason = closeReason;
             }

@@ -74,7 +74,7 @@ namespace LumiSoft.Net
 
             // We have host name with port.
             if(value.IndexOf(':') > -1){
-                var host_port = value.Split(new char[]{':'},2);
+                var host_port = value.Split(new[]{':'},2);
 
                 try
                 {

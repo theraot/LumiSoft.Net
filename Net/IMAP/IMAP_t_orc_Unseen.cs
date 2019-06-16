@@ -28,7 +28,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            var code_value = value.Split(new char[]{' '},2);
+            var code_value = value.Split(new[]{' '},2);
             if (!string.Equals("UNSEEN",code_value[0],StringComparison.InvariantCultureIgnoreCase)){
                 throw new ArgumentException("Invalid UNSEEN response value.","value");
             }

@@ -181,7 +181,7 @@ namespace LumiSoft.Net
             }
             
             // Gets host[:port]
-            var host_port = r.QuotedReadToDelimiter(new char[]{';','?'},false).Split(':');
+            var host_port = r.QuotedReadToDelimiter(new[]{';','?'},false).Split(':');
             this.Host = host_port[0];
             // Optional port specified
             if(host_port.Length == 2){
@@ -194,7 +194,7 @@ namespace LumiSoft.Net
                 var parameters = TextUtils.SplitQuotedString(r.QuotedReadToDelimiter('?'),';');
                 foreach (string parameter in parameters){
                     if(parameter.Trim() != ""){
-                        var name_value = parameter.Trim().Split(new char[]{'='},2);
+                        var name_value = parameter.Trim().Split(new[]{'='},2);
                         if (name_value.Length == 2){
                             this.Parameters.Add(name_value[0],TextUtils.UnQuoteString(name_value[1]));
                         }

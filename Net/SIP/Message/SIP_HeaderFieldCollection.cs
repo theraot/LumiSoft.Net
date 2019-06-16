@@ -242,7 +242,7 @@ namespace LumiSoft.Net.SIP.Message
 					line = r.ReadLineString();
 				}
 
-				var name_value = headerField.Split(new char[]{':'},2);
+				var name_value = headerField.Split(new[]{':'},2);
                 // There must be header field name and value, otherwise invalid header field
                 if (name_value.Length == 2){
 			        Add(name_value[0] + ":",name_value[1].Trim());

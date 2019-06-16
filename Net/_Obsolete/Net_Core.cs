@@ -185,7 +185,7 @@ namespace LumiSoft.Net
 			}
 
 			if(base64Chars == null){
-				base64Chars = new char[]{
+				base64Chars = new[]{
 					'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 					'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 					'0','1','2','3','4','5','6','7','8','9','+','/'
@@ -313,7 +313,7 @@ namespace LumiSoft.Net
 			}
 
 			if(base64Chars == null){
-				base64Chars = new char[]{
+				base64Chars = new[]{
 					'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 					'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 					'0','1','2','3','4','5','6','7','8','9','+','/'
@@ -447,13 +447,13 @@ namespace LumiSoft.Net
             foreach (byte b in data){
 				// Suggested line length is exceeded, add soft line break
 				if(lineLength > 75){
-					retVal.Write(new byte[]{(byte)'=',(byte)'\r',(byte)'\n'},0,3);
+					retVal.Write(new[]{(byte)'=',(byte)'\r',(byte)'\n'},0,3);
 					lineLength = 0;
 				}
 
 				// We need to encode that byte
 				if(b <= 33 || b >= 126 || b == 61){					
-					retVal.Write(new byte[]{(byte)'='},0,1);
+					retVal.Write(new[]{(byte)'='},0,1);
 					retVal.Write(Core.ToHex(b),0,2);
 					lineLength += 3;
 				}
@@ -743,7 +743,7 @@ namespace LumiSoft.Net
 			*/
 
 			// Base64 chars, except '/' is replaced with ','
-			var base64Chars = new char[]{
+			var base64Chars = new[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
@@ -755,7 +755,7 @@ namespace LumiSoft.Net
 
 				// The character "&" (0x26) is represented by the two-octet sequence "&-".
 				if(c == '&'){
-					retVal.Write(new byte[]{(byte)'&',(byte)'-'},0,2);
+					retVal.Write(new[]{(byte)'&',(byte)'-'},0,2);
 				}
 				// It is allowed char, don't need to encode
 				else if(c >= 0x20 && c <= 0x25 || c >= 0x27 && c <= 0x7E){
@@ -822,7 +822,7 @@ namespace LumiSoft.Net
 			*/
 
             // Base64 chars, except '/' is replaced with ','
-			var base64Chars = new char[]{
+			var base64Chars = new[]{
 				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 				'0','1','2','3','4','5','6','7','8','9','+',','
@@ -1084,7 +1084,7 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public static byte[] ToHex(byte byteValue)
 		{
-			return ToHex(new byte[]{byteValue});
+			return ToHex(new[]{byteValue});
 		}
 
 		/// <summary>
@@ -1094,7 +1094,7 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public static byte[] ToHex(byte[] data)
 		{
-			var hexChars = new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+			var hexChars = new[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
             var retVal = new MemoryStream(data.Length * 2);
             foreach (byte b in data){

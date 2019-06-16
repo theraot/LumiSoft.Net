@@ -57,7 +57,7 @@ namespace LumiSoft.Net.Mail
             var        r      = new MIME_Reader(value);
             var retVal = new Mail_t_AddressList();
             while (true){
-                var word = r.QuotedReadToDelimiter(new char[]{',','<',':'});
+                var word = r.QuotedReadToDelimiter(new[]{',','<',':'});
                 // We processed all data.
                 if (word == null && r.Available == 0){
                     break;
@@ -70,7 +70,7 @@ namespace LumiSoft.Net.Mail
                     r.Char(true);
            
                     while(true){
-                        word = r.QuotedReadToDelimiter(new char[]{',','<',':',';'});
+                        word = r.QuotedReadToDelimiter(new[]{',','<',':',';'});
                         // We processed all data.
                         if((word == null && r.Available == 0) || r.Peek(false) == ';'){
                             break;

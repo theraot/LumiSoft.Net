@@ -105,7 +105,7 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("value");
             }
 
-            var name_value = value.Split(new char[]{':'},2);
+            var name_value = value.Split(new[]{':'},2);
             if (name_value.Length != 2){
                 throw new ParseException("Invalid header field value '" + value + "'.");
             }
@@ -131,7 +131,7 @@ namespace LumiSoft.Net.Mail
                     r.Char(false);
 
                     try{
-                        retVal.m_Time = MIME_Utils.ParseRfc2822DateTime(r.QuotedReadToDelimiter(new char[]{';'}));
+                        retVal.m_Time = MIME_Utils.ParseRfc2822DateTime(r.QuotedReadToDelimiter(new[]{';'}));
                     }
                     catch{
                         // We hane some unknown data, skip it.

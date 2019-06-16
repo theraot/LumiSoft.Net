@@ -159,10 +159,10 @@ namespace LumiSoft.Net.Mime.vCard
                     line = fileStrings[lineCount++];
                 }
 
-                var name_value = item.ToString().Split(new char[]{':'},2);
+                var name_value = item.ToString().Split(new[]{':'},2);
 
                 // Item syntax: name[*(;parameter)]:value
-                var name_params = name_value[0].Split(new char[]{';'},2);
+                var name_params = name_value[0].Split(new[]{';'},2);
                 var   name        = name_params[0];
                 var   parameters  = "";
                 if (name_params.Length == 2){
@@ -292,7 +292,7 @@ namespace LumiSoft.Net.Mime.vCard
                 var item = Items.GetFirst("BDAY");
                 if (item != null){
                     var date = item.DecodedValue.Replace("-","");
-                    var dateFormats = new string[]{
+                    var dateFormats = new[]{
                         "yyyyMMdd",
                         "yyyyMMddz"
                     };
