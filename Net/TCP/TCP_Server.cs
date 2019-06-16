@@ -20,8 +20,8 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private class ListeningPoint
         {
-            private Socket     m_pSocket   = null;
-            private IPBindInfo m_pBindInfo = null;
+            private readonly Socket     m_pSocket   = null;
+            private readonly IPBindInfo m_pBindInfo = null;
 
             /// <summary>
             /// Default constructor.
@@ -312,8 +312,8 @@ namespace LumiSoft.Net.TCP
         private Logger                                   m_pLogger              = null;
         private DateTime                                 m_StartTime;
         private long                                     m_ConnectionsProcessed = 0;
-        private List<TCP_Acceptor>                       m_pConnectionAcceptors = null;
-        private List<ListeningPoint>                     m_pListeningPoints     = null;
+        private readonly List<TCP_Acceptor>                       m_pConnectionAcceptors = null;
+        private readonly List<ListeningPoint>                     m_pListeningPoints     = null;
         private TCP_SessionCollection<TCP_ServerSession> m_pSessions            = null;
         private TimerEx                                  m_pTimer_IdleTimeout   = null;
 

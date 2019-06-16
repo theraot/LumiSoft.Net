@@ -13,12 +13,12 @@ namespace LumiSoft.Net.SDP
         private int                       m_Port          = 0;
         private int                       m_NumberOfPorts = 1;
         private string                    m_Protocol      = "";
-        private List<string>              m_pMediaFormats = null;
+        private readonly List<string>              m_pMediaFormats = null;
         private string                    m_Information   = null;
         private SDP_Connection            m_pConnection   = null;
         private string                    m_Bandwidth     = null;
-        private List<SDP_Attribute>       m_pAttributes   = null;
-        private Dictionary<string,object> m_pTags         = null;
+        private readonly List<SDP_Attribute>       m_pAttributes   = null;
+        private readonly Dictionary<string,object> m_pTags         = null;
 
         /// <summary>
         /// Default constructor.

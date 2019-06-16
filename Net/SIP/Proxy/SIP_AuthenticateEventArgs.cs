@@ -8,7 +8,7 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_AuthenticateEventArgs
     {
-        private Auth_HttpDigest m_pAuth         = null;
+        private readonly Auth_HttpDigest m_pAuth         = null;
         private bool            m_Authenticated = false;
 
         /// <summary>

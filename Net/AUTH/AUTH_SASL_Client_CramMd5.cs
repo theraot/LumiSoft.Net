@@ -11,8 +11,8 @@ namespace LumiSoft.Net.AUTH
     {
         private bool   m_IsCompleted = false;
         private int    m_State       = 0;
-        private string m_UserName    = null;
-        private string m_Password    = null;
+        private readonly string m_UserName    = null;
+        private readonly string m_Password    = null;
 
         /// <summary>
         /// Default constructor.

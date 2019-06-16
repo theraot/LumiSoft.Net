@@ -8,12 +8,12 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Status : IMAP_r_u
     {
-        private string m_FolderName   = "";
-        private int    m_MessageCount = 0;
-        private int    m_RecentCount  = 0;
-        private long   m_UidNext      = 0;
-        private long   m_FolderUid    = 0;
-        private int    m_UnseenCount  = 0;
+        private readonly string m_FolderName   = "";
+        private readonly int    m_MessageCount = 0;
+        private readonly int    m_RecentCount  = 0;
+        private readonly long   m_UidNext      = 0;
+        private readonly long   m_FolderUid    = 0;
+        private readonly int    m_UnseenCount  = 0;
 
         /// <summary>
         /// Default constructor.

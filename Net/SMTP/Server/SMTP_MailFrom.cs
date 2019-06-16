@@ -7,11 +7,11 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_MailFrom
     {
-        private string       m_Mailbox = "";
-        private int          m_Size    = -1;
-        private string       m_Body    = null;
-        private SMTP_DSN_Ret m_RET     = SMTP_DSN_Ret.NotSpecified;
-        private string       m_ENVID   = null;
+        private readonly string       m_Mailbox = "";
+        private readonly int          m_Size    = -1;
+        private readonly string       m_Body    = null;
+        private readonly SMTP_DSN_Ret m_RET     = SMTP_DSN_Ret.NotSpecified;
+        private readonly string       m_ENVID   = null;
 
         /// <summary>
         /// Default constructor.

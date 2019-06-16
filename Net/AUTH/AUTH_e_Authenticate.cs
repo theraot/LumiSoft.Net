@@ -8,9 +8,9 @@ namespace LumiSoft.Net.AUTH
     public class AUTH_e_Authenticate : EventArgs
     {
         private bool   m_IsAuthenticated = false;
-        private string m_AuthorizationID = "";
-        private string m_UserName        = "";
-        private string m_Password        = "";
+        private readonly string m_AuthorizationID = "";
+        private readonly string m_UserName        = "";
+        private readonly string m_Password        = "";
 
         /// <summary>
         /// Default constructor.

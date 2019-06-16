@@ -10,8 +10,8 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Encoding_EncodedWord
     {
-        private MIME_EncodedWordEncoding m_Encoding;
-        private Encoding                 m_pCharset = null;
+        private readonly MIME_EncodedWordEncoding m_Encoding;
+        private readonly Encoding                 m_pCharset = null;
         private bool                     m_Split    = true;
 
         private static readonly Regex encodedword_regex = new Regex(@"=\?(((?<charset>.*?)\*.*?)|(?<charset>.*?))\?(?<encoding>[qQbB])\?(?<value>.*?)\?=(?<whitespaces>\s*)",RegexOptions.IgnoreCase);

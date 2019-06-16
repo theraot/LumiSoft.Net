@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Expunge : IMAP_r_u
     {
-        private int m_SeqNo = 1;
+        private readonly int m_SeqNo = 1;
 
         /// <summary>
         /// Default constructor.

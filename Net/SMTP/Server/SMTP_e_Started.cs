@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_Started : EventArgs
     {
-        private SMTP_Session m_pSession = null;
+        private readonly SMTP_Session m_pSession = null;
         private SMTP_Reply   m_pReply   = null;
 
         /// <summary>

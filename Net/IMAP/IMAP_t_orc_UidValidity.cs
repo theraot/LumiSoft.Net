@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_UidValidity : IMAP_t_orc
     {
-        private long m_Uid = 0;
+        private readonly long m_Uid = 0;
 
         /// <summary>
         /// Default constructor.

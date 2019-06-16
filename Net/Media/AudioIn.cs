@@ -140,7 +140,7 @@ namespace LumiSoft.Net.Media
             {
                 private GCHandle m_HeaderHandle;
                 private GCHandle m_DataHandle;
-                private int      m_DataSize = 0;
+                private readonly int      m_DataSize = 0;
 
                 /// <summary>
                 /// Default constructor.
@@ -404,36 +404,36 @@ namespace LumiSoft.Net.Media
                 /// <summary>
                 /// Manufacturer identifier for the device driver for the device.
                 /// </summary>
-                public ushort wMid;
+                public readonly ushort wMid;
                 /// <summary>
                 /// Product identifier for the device.
                 /// </summary>
-                public ushort wPid;
+                public readonly ushort wPid;
                 /// <summary>
                 /// Version number of the device driver for the device.
                 /// </summary>
-                public uint vDriverVersion;
+                public readonly uint vDriverVersion;
                 /// <summary>
                 /// Product name in a null-terminated string.
                 /// </summary>
                 [MarshalAs(UnmanagedType.ByValTStr,SizeConst = 32)]
-                public string szPname;
+                public readonly string szPname;
                 /// <summary>
                 /// Standard formats that are supported.
                 /// </summary>
-                public uint dwFormats;
+                public readonly uint dwFormats;
                 /// <summary>
                 /// Number specifying whether the device supports mono (1) or stereo (2) output.
                 /// </summary>
-                public ushort wChannels;
+                public readonly ushort wChannels;
                 /// <summary>
                 /// Packing.
                 /// </summary>
-                public ushort wReserved1;
+                public readonly ushort wReserved1;
                 /// <summary>
                 /// Optional functionality supported by the device.
                 /// </summary>
-                public uint dwSupport;
+                public readonly uint dwSupport;
             }
 
             #endregion
@@ -507,19 +507,19 @@ namespace LumiSoft.Net.Media
 
             private bool                         m_IsDisposed     = false;
             private AudioInDevice                m_pInDevice      = null;
-            private int                          m_SamplesPerSec  = 8000;
-            private int                          m_BitsPerSample  = 8;
-            private int                          m_Channels       = 1;
-            private int                          m_BufferSize     = 400;
+            private readonly int                          m_SamplesPerSec  = 8000;
+            private readonly int                          m_BitsPerSample  = 8;
+            private readonly int                          m_Channels       = 1;
+            private readonly int                          m_BufferSize     = 400;
             private IntPtr                       m_pWavDevHandle  = IntPtr.Zero;
-            private int                          m_BlockSize      = 0;
+            private readonly int                          m_BlockSize      = 0;
             private BufferItem                   m_pCurrentBuffer = null;
-            private CircleCollection<BufferItem> m_pBuffers       = null;
-            private waveInProc                   m_pWaveInProc    = null;
+            private readonly CircleCollection<BufferItem> m_pBuffers       = null;
+            private readonly waveInProc                   m_pWaveInProc    = null;
             private bool                         m_IsRecording    = false;
-            private FifoBuffer                   m_pReadBuffer    = null;
+            private readonly FifoBuffer                   m_pReadBuffer    = null;
             //private Thread                       m_pBufferThread  = null;
-            private object                       m_pLock          = new object();
+            private readonly object                       m_pLock          = new object();
             
             /// <summary>
             /// Default constructor.
@@ -930,9 +930,9 @@ namespace LumiSoft.Net.Media
 
         private bool          m_IsDisposed    = false;
         private AudioInDevice m_pDevice       = null;
-        private int           m_SamplesPerSec = 8000;
-        private int           m_BitsPerSample = 16;
-        private int           m_Channels      = 1;
+        private readonly int           m_SamplesPerSec = 8000;
+        private readonly int           m_BitsPerSample = 16;
+        private readonly int           m_Channels      = 1;
         private WaveIn        m_pWaveIn       = null;
 
         /// <summary>

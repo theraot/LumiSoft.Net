@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_InternalDate : IMAP_t_Fetch_r_i
     {
-        private DateTime m_Date;
+        private readonly DateTime m_Date;
 
         /// <summary>
         /// Default constructor.

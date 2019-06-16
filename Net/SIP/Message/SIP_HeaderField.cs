@@ -5,7 +5,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_HeaderField
     {
-        private string m_Name         = "";
+        private readonly string m_Name         = "";
         private string m_Value        = "";
         private bool   m_IsMultiValue = false;
 

@@ -12,7 +12,7 @@ namespace LumiSoft.Net.MIME
     public abstract class MIME_b_SinglepartBase : MIME_b
     {
         private bool   m_IsModified         = false;
-        private Stream m_pEncodedDataStream = null;
+        private readonly Stream m_pEncodedDataStream = null;
                 
         /// <summary>
         /// Default constructor.

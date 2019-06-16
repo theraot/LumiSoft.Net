@@ -13,11 +13,11 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class MimeEntity
 	{
-		private HeaderFieldCollection m_pHeader           = null;
-		private MimeEntity            m_pParentEntity     = null;
-		private MimeEntityCollection  m_pChildEntities    = null;
+		private readonly HeaderFieldCollection m_pHeader           = null;
+		private readonly MimeEntity            m_pParentEntity     = null;
+		private readonly MimeEntityCollection  m_pChildEntities    = null;
 		private byte[]                m_EncodedData       = null;
-		private Hashtable             m_pHeaderFieldCache = null;
+		private readonly Hashtable             m_pHeaderFieldCache = null;
 
 		/// <summary>
 		/// Default constructor.

@@ -8,7 +8,7 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_ProseVal : ABNF_Element
     {
-        private string m_Value = "";
+        private readonly string m_Value = "";
 
         /// <summary>
         /// Default constructor.

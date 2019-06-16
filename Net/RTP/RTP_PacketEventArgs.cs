@@ -7,7 +7,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_PacketEventArgs : EventArgs
     {
-        private RTP_Packet m_pPacket = null;
+        private readonly RTP_Packet m_pPacket = null;
 
         /// <summary>
         /// Default constructor.

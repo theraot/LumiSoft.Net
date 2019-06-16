@@ -8,13 +8,13 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Select : EventArgs
     {
-        private string              m_CmdTag          = null;
+        private readonly string              m_CmdTag          = null;
         private IMAP_r_ServerStatus m_pResponse       = null;
-        private string              m_Folder          = null;
+        private readonly string              m_Folder          = null;
         private bool                m_IsReadOnly      = false;
         private int                 m_FolderUID       = 0;
-        private List<string>        m_pFlags          = null;
-        private List<string>        m_pPermanentFlags = null;
+        private readonly List<string>        m_pFlags          = null;
+        private readonly List<string>        m_pPermanentFlags = null;
 
         /// <summary>
         /// Default constructor.

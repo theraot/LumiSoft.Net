@@ -8,7 +8,7 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_GetFile : EventArgs
     {
-        private string            m_FileName    = null;
+        private readonly string            m_FileName    = null;
         private FTP_t_ReplyLine[] m_pReplyLines = null;
         private Stream            m_pFileStream = null;
 

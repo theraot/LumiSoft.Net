@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Attribute
     {
-        private string m_Name  = "";
+        private readonly string m_Name  = "";
         private string m_Value = "";
 
         /// <summary>

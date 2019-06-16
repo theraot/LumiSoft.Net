@@ -7,10 +7,10 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Report_Sender
     {
-        private ulong m_NtpTimestamp      = 0;
-        private uint  m_RtpTimestamp      = 0;
-        private uint  m_SenderPacketCount = 0;
-        private uint  m_SenderOctetCount  = 0;
+        private readonly ulong m_NtpTimestamp      = 0;
+        private readonly uint  m_RtpTimestamp      = 0;
+        private readonly uint  m_SenderPacketCount = 0;
+        private readonly uint  m_SenderOctetCount  = 0;
 
         /// <summary>
         /// Default constructor.

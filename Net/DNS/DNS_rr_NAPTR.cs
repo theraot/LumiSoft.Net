@@ -10,12 +10,12 @@ namespace LumiSoft.Net.DNS
     [Serializable]
     public class DNS_rr_NAPTR : DNS_rr
     {
-        private int    m_Order       = 0;
-        private int    m_Preference  = 0;
-        private string m_Flags       = "";
-        private string m_Services    = "";
-        private string m_Regexp      = "";
-        private string m_Replacement = "";
+        private readonly int    m_Order       = 0;
+        private readonly int    m_Preference  = 0;
+        private readonly string m_Flags       = "";
+        private readonly string m_Services    = "";
+        private readonly string m_Regexp      = "";
+        private readonly string m_Replacement = "";
 
         /// <summary>
         /// Default constructor.

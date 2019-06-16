@@ -9,8 +9,8 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_ProxyTarget
     {
-        private SIP_Uri  m_pTargetUri = null;
-        private SIP_Flow m_pFlow      = null;
+        private readonly SIP_Uri  m_pTargetUri = null;
+        private readonly SIP_Flow m_pFlow      = null;
 
         /// <summary>
         /// Default constructor.

@@ -12,8 +12,8 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_B2BUA : IDisposable
     {
-        private SIP_Proxy            m_pProxy     = null;
-        private List<SIP_B2BUA_Call> m_pCalls     = null;
+        private readonly SIP_Proxy            m_pProxy     = null;
+        private readonly List<SIP_B2BUA_Call> m_pCalls     = null;
         private bool                 m_IsDisposed = false;
 
         /// <summary>

@@ -7,8 +7,8 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_AppendUid : IMAP_t_orc
     {
-        private long m_MailboxUid = 0;
-        private int  m_MessageUid = 0;
+        private readonly long m_MailboxUid = 0;
+        private readonly int  m_MessageUid = 0;
 
         /// <summary>
         /// Default constructor.

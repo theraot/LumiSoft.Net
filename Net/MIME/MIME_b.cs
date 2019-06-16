@@ -12,7 +12,7 @@ namespace LumiSoft.Net.MIME
     public abstract class MIME_b
     {
         private MIME_Entity        m_pEntity      = null;
-        private MIME_h_ContentType m_pContentType = null;
+        private readonly MIME_h_ContentType m_pContentType = null;
 
         /// <summary>
         /// Default constructor.

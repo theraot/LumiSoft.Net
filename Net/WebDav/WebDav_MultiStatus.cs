@@ -10,7 +10,7 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_MultiStatus
     {
-        private List<WebDav_Response> m_pResponses = null;
+        private readonly List<WebDav_Response> m_pResponses = null;
 
         /// <summary>
         /// Default constructor.

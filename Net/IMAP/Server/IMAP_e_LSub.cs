@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_LSub : EventArgs
     {
-        private string              m_FolderReferenceName = null;
-        private string              m_FolderFilter        = null;
-        private List<IMAP_r_u_LSub> m_pFolders            = null;
+        private readonly string              m_FolderReferenceName = null;
+        private readonly string              m_FolderFilter        = null;
+        private readonly List<IMAP_r_u_LSub> m_pFolders            = null;
 
         /// <summary>
         /// Default constructor.

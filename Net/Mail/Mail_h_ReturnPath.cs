@@ -18,7 +18,7 @@ namespace LumiSoft.Net.Mail
     /// </example>
     public class Mail_h_ReturnPath : MIME_h
     {
-        private bool   m_IsModified = false;
+        private readonly bool   m_IsModified = false;
         private string m_Address    = null;
 
         /// <summary>

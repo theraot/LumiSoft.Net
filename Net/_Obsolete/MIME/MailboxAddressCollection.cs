@@ -11,7 +11,7 @@ namespace LumiSoft.Net.Mime
 	public class MailboxAddressCollection : IEnumerable
 	{
 		private Address	             m_pOwner     = null;
-        private List<MailboxAddress> m_pMailboxes = null;
+        private readonly List<MailboxAddress> m_pMailboxes = null;
 
 		/// <summary>
 		/// Default constructor.

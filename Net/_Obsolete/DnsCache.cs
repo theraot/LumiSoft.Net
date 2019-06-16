@@ -13,8 +13,8 @@ namespace LumiSoft.Net.DNS.Client
     [Serializable]
 	internal struct DnsCacheEntry
 	{
-		private DnsServerResponse m_pResponse;
-		private DateTime          m_Time;
+		private readonly DnsServerResponse m_pResponse;
+		private readonly DateTime          m_Time;
 
 		/// <summary>
 		/// Default constructor.

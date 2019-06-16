@@ -10,13 +10,13 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_SOA : DNS_rr
 	{
-		private string m_NameServer = "";
-		private string m_AdminEmail = "";
-		private long   m_Serial     = 0;
-		private long   m_Refresh    = 0;
-		private long   m_Retry      = 0;
-		private long   m_Expire     = 0;
-		private long   m_Minimum    = 0;
+		private readonly string m_NameServer = "";
+		private readonly string m_AdminEmail = "";
+		private readonly long   m_Serial     = 0;
+		private readonly long   m_Refresh    = 0;
+		private readonly long   m_Retry      = 0;
+		private readonly long   m_Expire     = 0;
+		private readonly long   m_Minimum    = 0;
 		
 		/// <summary>
 		/// Default constructor.

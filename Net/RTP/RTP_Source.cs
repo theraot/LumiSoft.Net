@@ -20,7 +20,7 @@ namespace LumiSoft.Net.RTP
         private DateTime             m_LastRtcpPacket = DateTime.MinValue;
         private DateTime             m_LastRtpPacket  = DateTime.MinValue;
         private DateTime             m_LastActivity   = DateTime.Now;
-        private DateTime             m_LastRRTime     = DateTime.MinValue;
+        private readonly DateTime             m_LastRRTime     = DateTime.MinValue;
         private string               m_CloseReason    = null;
         private object               m_pTag           = null;
 

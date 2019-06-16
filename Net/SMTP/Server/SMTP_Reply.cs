@@ -8,8 +8,8 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_Reply
     {
-        private int      m_ReplyCode   = 0;
-        private string[] m_pReplyLines = null;
+        private readonly int      m_ReplyCode   = 0;
+        private readonly string[] m_pReplyLines = null;
 
         /// <summary>
         /// Default constructor.

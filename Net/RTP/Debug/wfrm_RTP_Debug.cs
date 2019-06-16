@@ -19,8 +19,8 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class ComboBoxItem
         {
-            private string m_Text = "";
-            private object m_pTag = null;
+            private readonly string m_Text = "";
+            private readonly object m_pTag = null;
 
             /// <summary>
             /// Default constructor.
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_SessionStatistics
         {
-            private RTP_Session m_pSession = null;
+            private readonly RTP_Session m_pSession = null;
 
             /// <summary>
             /// Default constructor.
@@ -352,7 +352,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_ParticipantInfo
         {
-            private RTP_Participant m_pParticipant = null;
+            private readonly RTP_Participant m_pParticipant = null;
 
             /// <summary>
             /// Default constructor.
@@ -476,7 +476,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_SourceInfo
         {
-            private RTP_Source m_pSource = null;
+            private readonly RTP_Source m_pSource = null;
 
             /// <summary>
             /// Default constructor.
@@ -578,7 +578,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_ReceiveStreamInfo
         {
-            private RTP_ReceiveStream m_pStream = null;
+            private readonly RTP_ReceiveStream m_pStream = null;
 
             /// <summary>
             /// Default constructor.
@@ -706,7 +706,7 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class RTP_SendStreamInfo
         {
-            private RTP_SendStream m_pStream = null;
+            private readonly RTP_SendStream m_pStream = null;
 
             /// <summary>
             /// Default constructor.
@@ -811,8 +811,8 @@ namespace LumiSoft.Net.RTP.Debug
         private ListView       m_pErrors               = null;
 
         private bool                   m_IsDisposed = false;
-        private RTP_MultimediaSession  m_pSession   = null;
-        private Timer                  m_pTimer     = null;
+        private readonly RTP_MultimediaSession  m_pSession   = null;
+        private readonly Timer                  m_pTimer     = null;
 
         /// <summary>
         /// Default constructor.

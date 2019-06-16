@@ -9,7 +9,7 @@ namespace LumiSoft.Net.POP3.Client
     /// </summary>
     public class POP3_ClientMessageCollection : IEnumerable,IDisposable
     {
-        private POP3_Client              m_pPop3Client = null;
+        private readonly POP3_Client              m_pPop3Client = null;
         private List<POP3_ClientMessage> m_pMessages   = null;
         private bool                     m_IsDisposed  = false;
 

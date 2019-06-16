@@ -10,10 +10,10 @@ namespace LumiSoft.Net.AUTH
     public class AUTH_SASL_Client_XOAuth : AUTH_SASL_Client
     {
         private bool                              m_IsCompleted           = false;
-        private int                               m_State                 = 0;
-        private string                            m_UserName              = null;
-        private string                            m_RequestUri            = null;
-        private KeyValueCollection<string,string> m_pRequestUriParameters = null;
+        private readonly int                               m_State                 = 0;
+        private readonly string                            m_UserName              = null;
+        private readonly string                            m_RequestUri            = null;
+        private readonly KeyValueCollection<string,string> m_pRequestUriParameters = null;
 
         /// <summary>
         /// Default constructor.

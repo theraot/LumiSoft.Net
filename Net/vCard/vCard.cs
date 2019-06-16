@@ -11,7 +11,7 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class vCard
     {
-        private ItemCollection            m_pItems          = null;
+        private readonly ItemCollection            m_pItems          = null;
         private DeliveryAddressCollection m_pAddresses      = null;
         private PhoneNumberCollection     m_pPhoneNumbers   = null;
         private EmailAddressCollection    m_pEmailAddresses = null;

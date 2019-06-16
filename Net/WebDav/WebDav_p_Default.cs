@@ -7,9 +7,9 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_p_Default : WebDav_p
     {
-        private string m_Namespace = "";
-        private string m_Name      = null;
-        private string m_Value     = null;
+        private readonly string m_Namespace = "";
+        private readonly string m_Name      = null;
+        private readonly string m_Value     = null;
 
         /// <summary>
         /// Default constructor.

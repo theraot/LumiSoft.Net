@@ -8,9 +8,9 @@ namespace LumiSoft.Net
 	/// </summary>
 	public class Error_EventArgs
 	{
-		private Exception  m_pException  = null;
-		private StackTrace m_pStackTrace = null;
-		private string     m_Text        = "";
+		private readonly Exception  m_pException  = null;
+		private readonly StackTrace m_pStackTrace = null;
+		private readonly string     m_Text        = "";
 
 		/// <summary>
 		/// Default constructor.

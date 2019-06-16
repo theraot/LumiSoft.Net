@@ -5,7 +5,7 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class PhoneNumber
     {
-        private Item                 m_pItem  = null;
+        private readonly Item                 m_pItem  = null;
         private PhoneNumberType_enum m_Type   = PhoneNumberType_enum.Voice;
         private string               m_Number = "";
                 

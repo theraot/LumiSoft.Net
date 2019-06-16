@@ -8,10 +8,10 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_ListRights : IMAP_r_u
     {
-        private string m_FolderName     = "";
-        private string m_Identifier     = "";
-        private string m_RequiredRights = null;
-        private string m_OptionalRights = null;
+        private readonly string m_FolderName     = "";
+        private readonly string m_Identifier     = "";
+        private readonly string m_RequiredRights = null;
+        private readonly string m_OptionalRights = null;
 
         /// <summary>
         /// Default constructor.

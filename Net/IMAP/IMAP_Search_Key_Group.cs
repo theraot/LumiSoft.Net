@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Search_Key_Group : IMAP_Search_Key
     {
-        private List<IMAP_Search_Key> m_pKeys = null;
+        private readonly List<IMAP_Search_Key> m_pKeys = null;
 
         /// <summary>
         /// Default constructor.

@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages with the specified keyword flag set.</remarks>
     public class IMAP_Search_Key_Keyword : IMAP_Search_Key
     {
-        private string m_Value = "";
+        private readonly string m_Value = "";
 
         /// <summary>
         /// Default constructor.

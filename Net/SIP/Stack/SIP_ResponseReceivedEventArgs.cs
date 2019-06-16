@@ -7,9 +7,9 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_ResponseReceivedEventArgs : EventArgs
     {
-        private SIP_Stack             m_pStack       = null;
-        private SIP_Response          m_pResponse    = null;
-        private SIP_ClientTransaction m_pTransaction = null;
+        private readonly SIP_Stack             m_pStack       = null;
+        private readonly SIP_Response          m_pResponse    = null;
+        private readonly SIP_ClientTransaction m_pTransaction = null;
 
         /// <summary>
         /// Default constructor.

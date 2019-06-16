@@ -8,7 +8,7 @@ namespace LumiSoft.Net
     /// </summary>
     public class CircleCollection<T>
     {
-        private List<T> m_pItems = null;
+        private readonly List<T> m_pItems = null;
         private int     m_Index  = 0;
 
         /// <summary>

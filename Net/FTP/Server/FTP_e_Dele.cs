@@ -8,7 +8,7 @@ namespace LumiSoft.Net.FTP.Server
     public class FTP_e_Dele : EventArgs
     {
         private FTP_t_ReplyLine[] m_pReplyLines = null;
-        private string            m_FileName    = null;
+        private readonly string            m_FileName    = null;
 
         /// <summary>
         /// Default constructor.

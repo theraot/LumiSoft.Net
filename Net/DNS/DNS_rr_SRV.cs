@@ -10,10 +10,10 @@ namespace LumiSoft.Net.DNS
     [Serializable]
     public class DNS_rr_SRV : DNS_rr
     {
-        private int    m_Priority = 1;
-        private int    m_Weight   = 1;
-        private int    m_Port     = 0;
-        private string m_Target   = "";
+        private readonly int    m_Priority = 1;
+        private readonly int    m_Weight   = 1;
+        private readonly int    m_Port     = 0;
+        private readonly string m_Target   = "";
 
         /// <summary>
         /// Default constructor.

@@ -7,8 +7,8 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Acl_Entry
     {
-        private string m_Identifier = "";
-        private string m_Rights     = "";
+        private readonly string m_Identifier = "";
+        private readonly string m_Rights     = "";
 
         /// <summary>
         /// Default constructor.

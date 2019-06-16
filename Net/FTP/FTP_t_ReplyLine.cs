@@ -7,9 +7,9 @@ namespace LumiSoft.Net.FTP
     /// </summary>
     public class FTP_t_ReplyLine
     {
-        private int    m_ReplyCode  = 0;
-        private string m_Text       = null;
-        private bool   m_IsLastLine = true;
+        private readonly int    m_ReplyCode  = 0;
+        private readonly string m_Text       = null;
+        private readonly bool   m_IsLastLine = true;
 
         /// <summary>
         /// Default constructor.

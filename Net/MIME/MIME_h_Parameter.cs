@@ -8,7 +8,7 @@ namespace LumiSoft.Net.MIME
     public class MIME_h_Parameter
     {
         private bool   m_IsModified = false;
-        private string m_Name       = "";
+        private readonly string m_Name       = "";
         private string m_Value      = "";
 
         /// <summary>

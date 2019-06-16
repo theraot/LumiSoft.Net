@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public abstract class SIP_t_ValueWithParams : SIP_t_Value
     {
-        private SIP_ParameterCollection m_pParameters = null;
+        private readonly SIP_ParameterCollection m_pParameters = null;
 
         /// <summary>
         /// Default constructor.

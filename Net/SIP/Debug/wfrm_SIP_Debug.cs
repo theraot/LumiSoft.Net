@@ -22,7 +22,7 @@ namespace LumiSoft.Net.SIP.Debug
         private ToolStrip   m_pTabFlows_Toolbar        = null;
         private ListView    m_pTabFlows_List           = null;
 
-        private SIP_Stack m_pStack      = null;
+        private readonly SIP_Stack m_pStack      = null;
         private bool      m_OddLogEntry = false;
 
         /// <summary>

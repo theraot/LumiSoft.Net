@@ -33,9 +33,9 @@ namespace LumiSoft.Net.ICMP
 	/// </summary>
 	public class EchoMessage
 	{
-		private IPAddress m_pIP  = null;
-		private int       m_TTL  = 0;
-		private int       m_Time = 0;
+		private readonly IPAddress m_pIP  = null;
+		private readonly int       m_TTL  = 0;
+		private readonly int       m_Time = 0;
 		
 		/// <summary>
 		/// Default constructor.

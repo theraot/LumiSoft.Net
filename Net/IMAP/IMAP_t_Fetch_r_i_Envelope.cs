@@ -12,16 +12,16 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Envelope : IMAP_t_Fetch_r_i
     {
-        private DateTime         m_Date      = DateTime.MinValue;
-        private string           m_Subject   = null;
-        private Mail_t_Address[] m_pFrom     = null;
-        private Mail_t_Address[] m_pSender   = null;
-        private Mail_t_Address[] m_pReplyTo  = null;
-        private Mail_t_Address[] m_pTo       = null;
-        private Mail_t_Address[] m_pCc       = null;
-        private Mail_t_Address[] m_pBcc       = null;
-        private string           m_InReplyTo = null;
-        private string           m_MessageID = null;
+        private readonly DateTime         m_Date      = DateTime.MinValue;
+        private readonly string           m_Subject   = null;
+        private readonly Mail_t_Address[] m_pFrom     = null;
+        private readonly Mail_t_Address[] m_pSender   = null;
+        private readonly Mail_t_Address[] m_pReplyTo  = null;
+        private readonly Mail_t_Address[] m_pTo       = null;
+        private readonly Mail_t_Address[] m_pCc       = null;
+        private readonly Mail_t_Address[] m_pBcc       = null;
+        private readonly string           m_InReplyTo = null;
+        private readonly string           m_MessageID = null;
 
         /// <summary>
         /// Default constructor.

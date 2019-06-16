@@ -10,13 +10,13 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientTransaction
     {
-        private object                     m_pLock         = new object();
+        private readonly object                     m_pLock         = new object();
         private DNS_ClientTransactionState m_State         = DNS_ClientTransactionState.WaitingForStart;
-        private DateTime                   m_CreateTime;
+        private readonly DateTime                   m_CreateTime;
         private Dns_Client                 m_pOwner        = null;
-        private int                        m_ID            = 1;
-        private string                     m_QName         = "";
-        private DNS_QType                  m_QType         = 0;
+        private readonly int                        m_ID            = 1;
+        private readonly string                     m_QName         = "";
+        private readonly DNS_QType                  m_QType         = 0;
         private TimerEx                    m_pTimeoutTimer = null;
         private DnsServerResponse          m_pResponse     = null;
         private int                        m_ResponseCount = 0;

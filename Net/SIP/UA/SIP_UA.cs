@@ -12,8 +12,8 @@ namespace LumiSoft.Net.SIP.UA
     {
         private bool              m_IsDisposed = false;
         private SIP_Stack         m_pStack     = null;
-        private List<SIP_UA_Call> m_pCalls     = null;
-        private object            m_pLock      = new object();
+        private readonly List<SIP_UA_Call> m_pCalls     = null;
+        private readonly object            m_pLock      = new object();
 
         /// <summary>
         /// Default constructor.

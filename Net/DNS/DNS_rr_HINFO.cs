@@ -8,8 +8,8 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public class DNS_rr_HINFO : DNS_rr
 	{
-		private string m_CPU = "";
-		private string m_OS  = "";
+		private readonly string m_CPU = "";
+		private readonly string m_OS  = "";
 
 		/// <summary>
 		/// Default constructor.

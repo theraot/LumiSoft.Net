@@ -9,7 +9,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Search : IMAP_r_u
     {
-        private int[] m_pValues = null;
+        private readonly int[] m_pValues = null;
 
         /// <summary>
         /// Default constructor.

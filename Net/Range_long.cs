@@ -5,8 +5,8 @@
     /// </summary>
     public class Range_long
     {
-        private long m_Start = 0;
-        private long m_End   = 0;
+        private readonly long m_Start = 0;
+        private readonly long m_End   = 0;
 
         /// <summary>
         /// Default constructor.

@@ -12,7 +12,7 @@ namespace LumiSoft.Net.IMAP
     /// </remarks>
     public class IMAP_Search_Key_Body : IMAP_Search_Key
     {
-        private string m_Value = "";
+        private readonly string m_Value = "";
 
         /// <summary>
         /// Default constructor.

@@ -14,7 +14,7 @@ namespace LumiSoft.Net.Media
         private bool                       m_IsDisposed     = false;
         private bool                       m_IsRunning      = false;
         private AudioInDevice              m_pAudioInDevice = null;
-        private int                        m_AudioFrameSize = 20;
+        private readonly int                        m_AudioFrameSize = 20;
         private Dictionary<int,AudioCodec> m_pAudioCodecs   = null;
         private RTP_SendStream             m_pRTP_Stream    = null;
         private AudioCodec                 m_pActiveCodec   = null;

@@ -7,8 +7,8 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Namespace_Entry
     {
-        private string m_NamespaceName = "";
-        private char   m_Delimiter     = '/'; 
+        private readonly string m_NamespaceName = "";
+        private readonly char   m_Delimiter     = '/'; 
 
         /// <summary>
         /// Default constructor.

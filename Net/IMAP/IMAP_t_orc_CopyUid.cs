@@ -7,9 +7,9 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_CopyUid : IMAP_t_orc
     {
-        private long          m_TargetMailboxUid = 0;
-        private IMAP_t_SeqSet m_pSourceSeqSet    = null;
-        private IMAP_t_SeqSet m_pTargetSeqSet    = null;
+        private readonly long          m_TargetMailboxUid = 0;
+        private readonly IMAP_t_SeqSet m_pSourceSeqSet    = null;
+        private readonly IMAP_t_SeqSet m_pTargetSeqSet    = null;
 
         /// <summary>
         /// Default constructor.

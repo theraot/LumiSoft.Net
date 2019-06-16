@@ -5,9 +5,9 @@
     /// </summary>
     public class AudioFormat
     {
-        private int m_SamplesPerSecond = 0;
-        private int m_BitsPerSample    = 0;
-        private int m_Channels         = 0;
+        private readonly int m_SamplesPerSecond = 0;
+        private readonly int m_BitsPerSample    = 0;
+        private readonly int m_Channels         = 0;
 
         /// <summary>
         /// Default constructor.

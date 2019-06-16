@@ -8,8 +8,8 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Hop
     {
-        private IPEndPoint m_pEndPoint = null;
-        private string     m_Transport = "";
+        private readonly IPEndPoint m_pEndPoint = null;
+        private readonly string     m_Transport = "";
 
         /// <summary>
         /// Default constructor.

@@ -15,7 +15,7 @@ namespace LumiSoft.Net.RTP
         private string                   m_Location                = null;
         private string                   m_Tool                    = null;
         private string                   m_Note                    = null;
-        private CircleCollection<string> m_pOtionalItemsRoundRobin = null;
+        private readonly CircleCollection<string> m_pOtionalItemsRoundRobin = null;
 
         /// <summary>
         /// Default constructor.

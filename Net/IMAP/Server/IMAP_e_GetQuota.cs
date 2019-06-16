@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_GetQuota : EventArgs
     {
-        private List<IMAP_r_u_Quota> m_pQuotaResponses = null;
+        private readonly List<IMAP_r_u_Quota> m_pQuotaResponses = null;
         private IMAP_r_ServerStatus  m_pResponse       = null;
-        private string               m_QuotaRoot       = null;
+        private readonly string               m_QuotaRoot       = null;
 
         /// <summary>
         /// Default constructor.

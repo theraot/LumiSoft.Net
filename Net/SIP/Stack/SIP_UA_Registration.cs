@@ -14,11 +14,11 @@ namespace LumiSoft.Net.SIP.Stack
         private bool                     m_IsDisposed        = false;
         private SIP_UA_RegistrationState m_State             = SIP_UA_RegistrationState.Unregistered;
         private SIP_Stack                m_pStack            = null;
-        private SIP_Uri                  m_pServer           = null;
-        private string                   m_AOR               = "";
-        private AbsoluteUri              m_pContact          = null;
-        private List<AbsoluteUri>        m_pContacts         = null;
-        private int                      m_RefreshInterval   = 300;
+        private readonly SIP_Uri                  m_pServer           = null;
+        private readonly string                   m_AOR               = "";
+        private readonly AbsoluteUri              m_pContact          = null;
+        private readonly List<AbsoluteUri>        m_pContacts         = null;
+        private readonly int                      m_RefreshInterval   = 300;
         private TimerEx                  m_pTimer            = null;
         private SIP_RequestSender        m_pRegisterSender   = null;
         private SIP_RequestSender        m_pUnregisterSender = null;

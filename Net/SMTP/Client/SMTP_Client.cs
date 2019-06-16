@@ -207,7 +207,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class EhloHeloAsyncOP : IDisposable,IAsyncOP
         {
-            private object             m_pLock         = new object();
+            private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
             private Exception          m_pException    = null;
             private string             m_HostName      = null;
@@ -696,7 +696,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class StartTlsAsyncOP : IDisposable,IAsyncOP
         {
-            private object                              m_pLock         = new object();
+            private readonly object                              m_pLock         = new object();
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException    = null;
             private RemoteCertificateValidationCallback m_pCertCallback = null;
@@ -1138,11 +1138,11 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class AuthAsyncOP : IDisposable,IAsyncOP
         {
-            private object           m_pLock         = new object();
+            private readonly object           m_pLock         = new object();
             private AsyncOP_State    m_State         = AsyncOP_State.WaitingForStart;
             private Exception        m_pException    = null;
             private SMTP_Client      m_pSmtpClient   = null;
-            private AUTH_SASL_Client m_pSASL         = null;
+            private readonly AUTH_SASL_Client m_pSASL         = null;
             private bool             m_RiseCompleted = false;
 
             /// <summary>
@@ -1502,12 +1502,12 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class MailFromAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private string        m_MailFrom      = null;
-            private long          m_MessageSize   = -1;
-            private SMTP_DSN_Ret  m_DsnRet        = SMTP_DSN_Ret.NotSpecified;
+            private readonly long          m_MessageSize   = -1;
+            private readonly SMTP_DSN_Ret  m_DsnRet        = SMTP_DSN_Ret.NotSpecified;
             private string        m_EnvID         = null;
             private SMTP_Client   m_pSmtpClient   = null;
             private bool          m_RiseCompleted = false;
@@ -1890,11 +1890,11 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class RcptToAsyncOP : IDisposable,IAsyncOP
         {
-            private object          m_pLock         = new object();
+            private readonly object          m_pLock         = new object();
             private AsyncOP_State   m_State         = AsyncOP_State.WaitingForStart;
             private Exception       m_pException    = null;
             private string          m_To            = null;
-            private SMTP_DSN_Notify m_DsnNotify     = SMTP_DSN_Notify.NotSpecified;
+            private readonly SMTP_DSN_Notify m_DsnNotify     = SMTP_DSN_Notify.NotSpecified;
             private string          m_ORcpt         = null;
             private SMTP_Client     m_pSmtpClient   = null;
             private bool            m_RiseCompleted = false;
@@ -2290,11 +2290,11 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class SendMessageAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock             = new object();
+            private readonly object        m_pLock             = new object();
             private AsyncOP_State m_State             = AsyncOP_State.WaitingForStart;
             private Exception     m_pException        = null;
             private Stream        m_pStream           = null;
-            private bool          m_UseBdat           = false;
+            private readonly bool          m_UseBdat           = false;
             private SMTP_Client   m_pSmtpClient       = null;
             private byte[]        m_pBdatBuffer       = null;
             private int           m_BdatBytesInBuffer = 0;
@@ -2875,7 +2875,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class RsetAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private SMTP_Client   m_pSmtpClient   = null;
@@ -3187,7 +3187,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// </summary>
         public class NoopAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private SMTP_Client   m_pSmtpClient   = null;

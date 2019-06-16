@@ -7,8 +7,8 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_GetTopOfMessage : EventArgs
     {
-        private POP3_ServerMessage m_pMessage  = null;
-        private int                m_LineCount = 0;
+        private readonly POP3_ServerMessage m_pMessage  = null;
+        private readonly int                m_LineCount = 0;
         private byte[]             m_pData     = null;
 
         /// <summary>

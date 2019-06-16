@@ -8,7 +8,7 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Alternation
     {
-        private List<ABNF_Concatenation> m_pItems = null;
+        private readonly List<ABNF_Concatenation> m_pItems = null;
 
         /// <summary>
         /// Default constructor.

@@ -8,8 +8,8 @@ namespace LumiSoft.Net.POP3.Server
     public class POP3_ServerMessage
     {
         private int    m_SequenceNumber      = -1;
-        private string m_UID                 = "";
-        private int    m_Size                = 0;
+        private readonly string m_UID                 = "";
+        private readonly int    m_Size                = 0;
         private bool   m_IsMarkedForDeletion = false;
         private object m_pTag                = null;
 

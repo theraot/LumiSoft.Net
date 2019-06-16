@@ -7,11 +7,11 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_SmartHost
     {
-        private string  m_Host     = "";
-        private int     m_Port     = 25;
-        private SslMode m_SslMode  = SslMode.None;
-        private string  m_UserName = null;
-        private string  m_Password = null;
+        private readonly string  m_Host     = "";
+        private readonly int     m_Port     = 25;
+        private readonly SslMode m_SslMode  = SslMode.None;
+        private readonly string  m_UserName = null;
+        private readonly string  m_Password = null;
 
         /// <summary>
         /// Default constructor.

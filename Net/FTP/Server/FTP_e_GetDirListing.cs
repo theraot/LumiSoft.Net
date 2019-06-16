@@ -8,8 +8,8 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_GetDirListing : EventArgs
     {
-        private string             m_Path        = null;
-        private List<FTP_ListItem> m_pItems      = null;
+        private readonly string             m_Path        = null;
+        private readonly List<FTP_ListItem> m_pItems      = null;
         private FTP_t_ReplyLine[]  m_pReplyLines = null;
 
         /// <summary>

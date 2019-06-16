@@ -8,7 +8,7 @@ namespace LumiSoft.Net
 	/// </summary>
 	public class StringReader
 	{
-        private string m_OriginalString = "";
+        private readonly string m_OriginalString = "";
 		private string m_SourceString   = "";
 
 		/// <summary>

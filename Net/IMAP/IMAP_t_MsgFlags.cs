@@ -42,7 +42,7 @@ namespace LumiSoft.Net.IMAP
 
         #endregion
 
-        private KeyValueCollection<string,string> m_pFlags = null;
+        private readonly KeyValueCollection<string,string> m_pFlags = null;
 
         /// <summary>
         /// Default constructor.

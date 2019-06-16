@@ -14,20 +14,20 @@ namespace LumiSoft.Net.SIP.UA
     public class SIP_UA_Call : IDisposable
     {
         private SIP_UA_CallState          m_State                     = SIP_UA_CallState.WaitingForStart;
-        private SIP_UA                    m_pUA                       = null;
-        private SIP_Request               m_pInvite                   = null;
+        private readonly SIP_UA                    m_pUA                       = null;
+        private readonly SIP_Request               m_pInvite                   = null;
         private SDP_Message               m_pLocalSDP                 = null;
         private SDP_Message               m_pRemoteSDP                = null;
         private DateTime                  m_StartTime;
-        private List<SIP_Dialog_Invite>   m_pEarlyDialogs             = null;
+        private readonly List<SIP_Dialog_Invite>   m_pEarlyDialogs             = null;
         private SIP_Dialog                m_pDialog                   = null;
-        private bool                      m_IsRedirected              = false;
+        private readonly bool                      m_IsRedirected              = false;
         private SIP_RequestSender         m_pInitialInviteSender      = null;
-        private SIP_ServerTransaction     m_pInitialInviteTransaction = null;
-        private AbsoluteUri               m_pLocalUri                 = null;
-        private AbsoluteUri               m_pRemoteUri                = null;
-        private Dictionary<string,object> m_pTags                     = null;
-        private object                    m_pLock                     = "";
+        private readonly SIP_ServerTransaction     m_pInitialInviteTransaction = null;
+        private readonly AbsoluteUri               m_pLocalUri                 = null;
+        private readonly AbsoluteUri               m_pRemoteUri                = null;
+        private readonly Dictionary<string,object> m_pTags                     = null;
+        private readonly object                    m_pLock                     = "";
 
         /// <summary>
         /// Default outgoing call constructor.

@@ -10,7 +10,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_b_Provider
     {
-        private Dictionary<string,Type> m_pBodyTypes = null;
+        private readonly Dictionary<string,Type> m_pBodyTypes = null;
 
         /// <summary>
         /// Default constructor.

@@ -13,9 +13,9 @@ namespace LumiSoft.Net.POP3.Client
     public class POP3_ClientMessage
     {
         private POP3_Client m_Pop3Client          = null;
-        private int         m_SequenceNumber      = 1;
+        private readonly int         m_SequenceNumber      = 1;
         private string      m_UID                 = "";
-        private int         m_Size                = 0;
+        private readonly int         m_Size                = 0;
         private bool        m_IsMarkedForDeletion = false;
         private bool        m_IsDisposed          = false;
 
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class MarkForDeletionAsyncOP : IDisposable,IAsyncOP
         {
-            private object             m_pLock         = new object();
+            private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
             private Exception          m_pException    = null;
             private POP3_ClientMessage m_pOwner        = null;
@@ -521,7 +521,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class MessageToStreamAsyncOP : IDisposable,IAsyncOP
         {
-            private object             m_pLock         = new object();
+            private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
             private Exception          m_pException    = null;
             private POP3_ClientMessage m_pOwner        = null;
@@ -940,14 +940,14 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class MessageTopLinesToStreamAsyncOP : IDisposable,IAsyncOP
         {
-            private object             m_pLock         = new object();
+            private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
             private Exception          m_pException    = null;
             private POP3_ClientMessage m_pOwner        = null;
             private POP3_Client        m_pPop3Client   = null;
             private bool               m_RiseCompleted = false;
             private Stream             m_pStream       = null;
-            private int                m_LineCount     = 0;
+            private readonly int                m_LineCount     = 0;
 
             /// <summary>
             /// Default constructor.

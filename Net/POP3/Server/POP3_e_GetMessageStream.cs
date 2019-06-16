@@ -8,7 +8,7 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_GetMessageStream : EventArgs
     {
-        private POP3_ServerMessage m_pMessage    = null;
+        private readonly POP3_ServerMessage m_pMessage    = null;
         private bool               m_CloseStream = true;
         private Stream             m_pStream     = null;
 

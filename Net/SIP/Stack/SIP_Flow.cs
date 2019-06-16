@@ -22,17 +22,17 @@ namespace LumiSoft.Net.SIP.Stack
     /// </remarks>
     public class SIP_Flow : IDisposable
     {
-        private object       m_pLock           = new object();
+        private readonly object       m_pLock           = new object();
         private bool         m_IsDisposed      = false;
-        private bool         m_IsServer        = false;
-        private SIP_Stack    m_pStack          = null;
+        private readonly bool         m_IsServer        = false;
+        private readonly SIP_Stack    m_pStack          = null;
         private TCP_Session  m_pTcpSession     = null;
-        private DateTime     m_CreateTime;
-        private string       m_ID              = "";
-        private IPEndPoint   m_pLocalEP        = null;
+        private readonly DateTime     m_CreateTime;
+        private readonly string       m_ID              = "";
+        private readonly IPEndPoint   m_pLocalEP        = null;
         private IPEndPoint   m_pLocalPublicEP  = null;
-        private IPEndPoint   m_pRemoteEP       = null;
-        private string       m_Transport       = "";
+        private readonly IPEndPoint   m_pRemoteEP       = null;
+        private readonly string       m_Transport       = "";
         private DateTime     m_LastActivity;
         private DateTime     m_LastPing;
         private long         m_BytesWritten    = 0;

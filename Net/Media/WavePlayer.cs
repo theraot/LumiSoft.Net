@@ -291,7 +291,7 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class WavReader
         {            
-            private BinaryReader m_pBinaryReader = null;
+            private readonly BinaryReader m_pBinaryReader = null;
 
             /// <summary>
             /// Default constructor.
@@ -396,7 +396,7 @@ namespace LumiSoft.Net.Media
 
         private bool           m_IsPlaying     = false;
         private bool           m_Stop          = false;
-        private AudioOutDevice m_pOutputDevice = null;
+        private readonly AudioOutDevice m_pOutputDevice = null;
 
         /// <summary>
         /// Default constructor.

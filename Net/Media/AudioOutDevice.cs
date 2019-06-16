@@ -5,9 +5,9 @@
     /// </summary>
     public class AudioOutDevice
     {
-        private int    m_Index    = 0;
-        private string m_Name     = "";
-        private int    m_Channels = 1;
+        private readonly int    m_Index    = 0;
+        private readonly string m_Name     = "";
+        private readonly int    m_Channels = 1;
 
         /// <summary>
         /// Default constructor.

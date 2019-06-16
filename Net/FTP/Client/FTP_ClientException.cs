@@ -7,8 +7,8 @@ namespace LumiSoft.Net.FTP.Client
     /// </summary>
     public class FTP_ClientException : Exception
     {
-        private int    m_StatusCode   = 500;
-        private string m_ResponseText = "";
+        private readonly int    m_StatusCode   = 500;
+        private readonly string m_ResponseText = "";
 
         /// <summary>
         /// Default constructor.

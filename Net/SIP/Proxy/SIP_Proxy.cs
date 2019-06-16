@@ -41,9 +41,9 @@ namespace LumiSoft.Net.SIP.Proxy
         private  SIP_ForkingMode        m_ForkingMode    = SIP_ForkingMode.Parallel;
         private  SIP_Registrar          m_pRegistrar     = null;
         private  SIP_B2BUA              m_pB2BUA         = null;
-        private  string                 m_Opaque         = "";
+        private readonly string                 m_Opaque         = "";
         internal List<SIP_ProxyContext> m_pProxyContexts = null;
-        private  List<SIP_ProxyHandler> m_pHandlers      = null;
+        private readonly List<SIP_ProxyHandler> m_pHandlers      = null;
 
         /// <summary>
         /// Default constructor.

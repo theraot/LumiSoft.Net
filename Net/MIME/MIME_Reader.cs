@@ -9,7 +9,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Reader
     {
-        private string m_Source = "";
+        private readonly string m_Source = "";
         private int    m_Offset = 0;
 
         #region constants

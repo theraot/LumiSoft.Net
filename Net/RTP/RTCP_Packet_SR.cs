@@ -14,7 +14,7 @@ namespace LumiSoft.Net.RTP
         private uint                          m_RtpTimestamp      = 0;
         private uint                          m_SenderPacketCount = 0;
         private uint                          m_SenderOctetCount  = 0;
-        private List<RTCP_Packet_ReportBlock> m_pReportBlocks     = null;
+        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks     = null;
 
         /// <summary>
         /// Default constructor.

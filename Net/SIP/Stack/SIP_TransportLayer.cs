@@ -28,8 +28,8 @@ namespace LumiSoft.Net.SIP.Stack
             private SIP_TransportLayer          m_pOwner        = null;
             private Dictionary<string,SIP_Flow> m_pFlows        = null;
             private TimerEx                     m_pTimeoutTimer = null;
-            private int                         m_IdelTimeout   = 60 * 5;
-            private object                      m_pLock         = new object();
+            private readonly int                         m_IdelTimeout   = 60 * 5;
+            private readonly object                      m_pLock         = new object();
 
             /// <summary>
             /// Default constructor.
@@ -302,14 +302,14 @@ namespace LumiSoft.Net.SIP.Stack
 
         private bool                          m_IsDisposed   = false;
         private bool                          m_IsRunning    = false;
-        private SIP_Stack                     m_pStack       = null;
+        private readonly SIP_Stack                     m_pStack       = null;
         private IPBindInfo[]                  m_pBinds       = null;
         private UDP_Server                    m_pUdpServer   = null;
         private TCP_Server<TCP_ServerSession> m_pTcpServer   = null;
-        private SIP_FlowManager               m_pFlowManager = null;
+        private readonly SIP_FlowManager               m_pFlowManager = null;
         private string                        m_StunServer   = null;
-        private CircleCollection<IPAddress>   m_pLocalIPv4   = null;
-        private CircleCollection<IPAddress>   m_pLocalIPv6   = null;
+        private readonly CircleCollection<IPAddress>   m_pLocalIPv4   = null;
+        private readonly CircleCollection<IPAddress>   m_pLocalIPv6   = null;
         private Random                        m_pRandom      = null;
                 
         /// <summary>

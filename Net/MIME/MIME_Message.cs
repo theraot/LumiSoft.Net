@@ -12,7 +12,7 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Message : MIME_Entity
     {
-        private bool m_IsDisposed = false;
+        private readonly bool m_IsDisposed = false;
 
         /// <summary>
         /// Default constructor.

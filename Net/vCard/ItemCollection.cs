@@ -8,7 +8,7 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class ItemCollection : IEnumerable
     {
-        private List<Item> m_pItems = null;
+        private readonly List<Item> m_pItems = null;
 
         /// <summary>
         /// Default constructor.

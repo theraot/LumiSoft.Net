@@ -12,7 +12,7 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Request : SIP_Message
     {
-        private SIP_RequestLine m_pRequestLine = null;
+        private readonly SIP_RequestLine m_pRequestLine = null;
         private SIP_Flow        m_pFlow        = null;
         private IPEndPoint      m_pLocalEP     = null;
         private IPEndPoint      m_pRemoteEP    = null;

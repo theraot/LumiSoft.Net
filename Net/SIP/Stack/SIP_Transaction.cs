@@ -14,13 +14,13 @@ namespace LumiSoft.Net.SIP.Stack
         private SIP_Stack            m_pStack      = null;
         private SIP_Flow             m_pFlow       = null;
         private SIP_Request          m_pRequest    = null;
-        private string               m_Method      = "";
-        private string               m_ID          = "";
-        private string               m_Key         = "";
-        private DateTime             m_CreateTime;
-        private List<SIP_Response>   m_pResponses  = null;
+        private readonly string               m_Method      = "";
+        private readonly string               m_ID          = "";
+        private readonly string               m_Key         = "";
+        private readonly DateTime             m_CreateTime;
+        private readonly List<SIP_Response>   m_pResponses  = null;
         private object               m_pTag        = null;
-        private object               m_pLock       = new object();
+        private readonly object               m_pLock       = new object();
 
         /// <summary>
         /// Default constructor.

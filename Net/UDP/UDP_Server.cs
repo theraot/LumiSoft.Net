@@ -18,10 +18,10 @@ namespace LumiSoft.Net.UDP
         private List<Socket>             m_pSockets           = null;
         private CircleCollection<Socket> m_pSendSocketsIPv4   = null;
         private CircleCollection<Socket> m_pSendSocketsIPv6   = null;
-        private int                      m_ReceiversPerSocket = 10;
+        private readonly int                      m_ReceiversPerSocket = 10;
         private List<UDP_DataReceiver>   m_pDataReceivers     = null;
-        private long                     m_BytesReceived      = 0;
-        private long                     m_PacketsReceived    = 0;
+        private readonly long                     m_BytesReceived      = 0;
+        private readonly long                     m_PacketsReceived    = 0;
         private long                     m_BytesSent          = 0;
         private long                     m_PacketsSent        = 0;
 

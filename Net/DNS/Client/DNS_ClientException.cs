@@ -7,7 +7,7 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientException : Exception
     {
-        private DNS_RCode m_RCode;
+        private readonly DNS_RCode m_RCode;
 
         /// <summary>
         /// Default constructor.

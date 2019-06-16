@@ -308,36 +308,36 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Manufacturer identifier for the device driver for the device.
             /// </summary>
-            public ushort wMid;
+            public readonly ushort wMid;
             /// <summary>
             /// Product identifier for the device.
             /// </summary>
-            public ushort wPid;
+            public readonly ushort wPid;
             /// <summary>
             /// Version number of the device driver for the device.
             /// </summary>
-            public uint vDriverVersion;
+            public readonly uint vDriverVersion;
             /// <summary>
             /// Product name in a null-terminated string.
             /// </summary>
             [MarshalAs(UnmanagedType.ByValTStr,SizeConst = 32)]
-            public string szPname;
+            public readonly string szPname;
             /// <summary>
             /// Standard formats that are supported.
             /// </summary>
-            public uint dwFormats;
+            public readonly uint dwFormats;
             /// <summary>
             /// Number specifying whether the device supports mono (1) or stereo (2) output.
             /// </summary>
-            public ushort wChannels;
+            public readonly ushort wChannels;
             /// <summary>
             /// Packing.
             /// </summary>
-            public ushort wReserved1;
+            public readonly ushort wReserved1;
             /// <summary>
             /// Optional functionality supported by the device.
             /// </summary>
-            public uint dwSupport;
+            public readonly uint dwSupport;
         }
 
         #endregion
@@ -416,13 +416,13 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class BufferItem
         {
-            private IntPtr            m_WavDevHandle = IntPtr.Zero;
-            private WAVEHDR           m_Header;
-            private byte[]            m_pBuffer = null;
+            private readonly IntPtr            m_WavDevHandle = IntPtr.Zero;
+            private readonly WAVEHDR           m_Header;
+            private readonly byte[]            m_pBuffer = null;
             private GCHandle          m_ThisHandle;
             private GCHandle          m_HeaderHandle;
             private GCHandle          m_DataHandle;
-            private int               m_DataSize = 0;  
+            private readonly int               m_DataSize = 0;  
             private EventArgs<byte[]> m_pEventArgs = null;
 
             /// <summary>
@@ -554,14 +554,14 @@ namespace LumiSoft.Net.Media
 
         private bool                         m_IsDisposed    = false;
         private AudioInDevice                m_pInDevice     = null;
-        private int                          m_SamplesPerSec = 8000;
-        private int                          m_BitsPerSample = 8;
-        private int                          m_Channels      = 1;
-        private int                          m_BufferSize    = 400;
+        private readonly int                          m_SamplesPerSec = 8000;
+        private readonly int                          m_BitsPerSample = 8;
+        private readonly int                          m_Channels      = 1;
+        private readonly int                          m_BufferSize    = 400;
         private IntPtr                       m_pWavDevHandle = IntPtr.Zero;
-        private int                          m_BlockSize     = 0;
-        private Dictionary<long,BufferItem>  m_pBuffers      = null;
-        private waveInProc                   m_pWaveInProc   = null;
+        private readonly int                          m_BlockSize     = 0;
+        private readonly Dictionary<long,BufferItem>  m_pBuffers      = null;
+        private readonly waveInProc                   m_pWaveInProc   = null;
         private bool                         m_IsRecording   = false;
         private object                       m_pLock         = new object();
             

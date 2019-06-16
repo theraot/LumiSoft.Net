@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_LSub : IMAP_r_u
     {
-        private string   m_FolderName        = "";
-        private char     m_Delimiter         = '/';
-        private string[] m_pFolderAttributes = new string[0];
+        private readonly string   m_FolderName        = "";
+        private readonly char     m_Delimiter         = '/';
+        private readonly string[] m_pFolderAttributes = new string[0];
 
         /// <summary>
         /// Default constructor.

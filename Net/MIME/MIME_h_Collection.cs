@@ -14,8 +14,8 @@ namespace LumiSoft.Net.MIME
     public class MIME_h_Collection : IEnumerable
     {
         private bool            m_IsModified = false;
-        private MIME_h_Provider m_pProvider  = null;
-        private List<MIME_h>    m_pFields    = null;
+        private readonly MIME_h_Provider m_pProvider  = null;
+        private readonly List<MIME_h>    m_pFields    = null;
 
         /// <summary>
         /// Default constructor.

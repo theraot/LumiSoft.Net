@@ -10,7 +10,7 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_p_ResourceType : WebDav_p
     {
-        private List<string> m_pItems = null;
+        private readonly List<string> m_pItems = null;
 
         /// <summary>
         /// Default constructor.

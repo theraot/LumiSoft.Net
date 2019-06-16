@@ -9,7 +9,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_ParameterCollection : IEnumerable
     {
-        private List<SIP_Parameter> m_pCollection = null;
+        private readonly List<SIP_Parameter> m_pCollection = null;
 
         /// <summary>
         /// Default constructor.

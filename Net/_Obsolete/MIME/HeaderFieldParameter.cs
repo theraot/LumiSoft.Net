@@ -8,8 +8,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class HeaderFieldParameter
 	{
-		private string m_Name  = "";
-		private string m_Value = "";
+		private readonly string m_Name  = "";
+		private readonly string m_Value = "";
 
 		/// <summary>
 		/// Default constructor.

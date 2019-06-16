@@ -18,8 +18,8 @@ namespace LumiSoft.Net.SMTP
     /// </example>
     public class SMTP_t_Mailbox
     {
-        private string m_LocalPart = null;
-        private string m_Domain    = null;
+        private readonly string m_LocalPart = null;
+        private readonly string m_Domain    = null;
 
         /// <summary>
         /// Default constructor.

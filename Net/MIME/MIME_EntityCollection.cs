@@ -10,7 +10,7 @@ namespace LumiSoft.Net.MIME
     public class MIME_EntityCollection : IEnumerable
     {
         private bool              m_IsModified  = false;
-        private List<MIME_Entity> m_pCollection = null;
+        private readonly List<MIME_Entity> m_pCollection = null;
 
         /// <summary>
         /// Default constructor.

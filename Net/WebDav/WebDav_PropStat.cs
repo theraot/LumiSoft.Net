@@ -9,7 +9,7 @@ namespace LumiSoft.Net.WebDav
     public class WebDav_PropStat
     {
         private string      m_Status              = null;
-        private string      m_ResponseDescription = null;
+        private readonly string      m_ResponseDescription = null;
         private WebDav_Prop m_pProp               = null;
 
         /// <summary>

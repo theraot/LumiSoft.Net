@@ -7,9 +7,9 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public class DNS_Query
     {
-        private DNS_QClass m_QClass = DNS_QClass.IN;
-        private DNS_QType  m_QType  = DNS_QType.ANY;
-        private string     m_QName  = "";
+        private readonly DNS_QClass m_QClass = DNS_QClass.IN;
+        private readonly DNS_QType  m_QType  = DNS_QType.ANY;
+        private readonly string     m_QName  = "";
 
         /// <summary>
         /// Default constructor.

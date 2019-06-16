@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Search : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse = null;
-        private IMAP_Search_Key     m_pCriteria = null;
+        private readonly IMAP_Search_Key     m_pCriteria = null;
 
         /// <summary>
         /// Default constructor.

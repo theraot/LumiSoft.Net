@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Parse : IMAP_t_orc
     {
-        private string m_ErrorText = null;
+        private readonly string m_ErrorText = null;
 
         /// <summary>
         /// Default constructor.

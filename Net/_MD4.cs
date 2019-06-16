@@ -64,10 +64,10 @@ namespace LumiSoft.Net {
 
 	internal class MD4Managed : _MD4 {
 
-		private uint[] state;
-		private byte[] buffer;
-		private uint[] count;
-		private uint[] x;
+		private readonly uint[] state;
+		private readonly byte[] buffer;
+		private readonly uint[] count;
+		private readonly uint[] x;
 
 		private const int S11 = 3;
 		private const int S12 = 7;
@@ -82,7 +82,7 @@ namespace LumiSoft.Net {
 		private const int S33 = 11;
 		private const int S34 = 15;
 
-		private byte[] digest;
+		private readonly byte[] digest;
 
 		//--- constructor -----------------------------------------------------------
                 

@@ -7,9 +7,9 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_RcptTo
     {
-        private string          m_Mailbox = "";
-        private SMTP_DSN_Notify m_Notify  = SMTP_DSN_Notify.NotSpecified;
-        private string          m_ORCPT   = "";
+        private readonly string          m_Mailbox = "";
+        private readonly SMTP_DSN_Notify m_Notify  = SMTP_DSN_Notify.NotSpecified;
+        private readonly string          m_ORCPT   = "";
 
         /// <summary>
         /// Default constructor.

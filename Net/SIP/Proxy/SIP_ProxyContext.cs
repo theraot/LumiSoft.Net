@@ -21,15 +21,15 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         private class TargetHandler : IDisposable
         {
-            private object                m_pLock               = new object();
+            private readonly object                m_pLock               = new object();
             private bool                  m_IsDisposed          = false;
             private bool                  m_IsStarted           = false;
             private SIP_ProxyContext      m_pOwner              = null;
             private SIP_Request           m_pRequest            = null;
-            private SIP_Flow              m_pFlow               = null;
+            private readonly SIP_Flow              m_pFlow               = null;
             private SIP_Uri               m_pTargetUri          = null;
-            private bool                  m_AddRecordRoute      = true;
-            private bool                  m_IsRecursed          = false;
+            private readonly bool                  m_AddRecordRoute      = true;
+            private readonly bool                  m_IsRecursed          = false;
             private Queue<SIP_Hop>        m_pHops               = null;
             private SIP_ClientTransaction m_pTransaction        = null;
             private TimerEx               m_pTimerC             = null;
@@ -799,20 +799,20 @@ namespace LumiSoft.Net.SIP.Proxy
         private bool                        m_IsStarted           = false;
         private SIP_Proxy                   m_pProxy              = null;
         private SIP_ServerTransaction       m_pServerTransaction  = null;
-        private SIP_Request                 m_pRequest            = null;
-        private bool                        m_AddRecordRoute      = false;
-        private SIP_ForkingMode             m_ForkingMode         = SIP_ForkingMode.Parallel;
-        private bool                        m_IsB2BUA             = true;
-        private bool                        m_NoCancel            = false;
-        private bool                        m_NoRecurse           = true;
-        private string                      m_ID                  = "";
-        private DateTime                    m_CreateTime;
+        private readonly SIP_Request                 m_pRequest            = null;
+        private readonly bool                        m_AddRecordRoute      = false;
+        private readonly SIP_ForkingMode             m_ForkingMode         = SIP_ForkingMode.Parallel;
+        private readonly bool                        m_IsB2BUA             = true;
+        private readonly bool                        m_NoCancel            = false;
+        private readonly bool                        m_NoRecurse           = true;
+        private readonly string                      m_ID                  = "";
+        private readonly DateTime                    m_CreateTime;
         private List<TargetHandler>         m_pTargetsHandlers    = null;
         private List<SIP_Response>          m_pResponses          = null;
         private Queue<TargetHandler>        m_pTargets            = null;
-        private List<NetworkCredential>     m_pCredentials        = null;        
+        private readonly List<NetworkCredential>     m_pCredentials        = null;        
         private bool                        m_IsFinalResponseSent = false;
-        private object                      m_pLock               = new object();
+        private readonly object                      m_pLock               = new object();
 
         /// <summary>
         /// Default constructor.

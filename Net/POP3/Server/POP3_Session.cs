@@ -16,12 +16,12 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_Session : TCP_ServerSession
     {
-        private Dictionary<string,AUTH_SASL_ServerMechanism>  m_pAuthentications = null;
+        private readonly Dictionary<string,AUTH_SASL_ServerMechanism>  m_pAuthentications = null;
         private bool                                          m_SessionRejected  = false;
         private int                                           m_BadCommands      = 0;
         private string                                        m_UserName         = null;
         private GenericIdentity                               m_pUser            = null;
-        private KeyValueCollection<string,POP3_ServerMessage> m_pMessages        = null;
+        private readonly KeyValueCollection<string,POP3_ServerMessage> m_pMessages        = null;
 
         /// <summary>
         /// Default constructor.

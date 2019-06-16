@@ -9,11 +9,11 @@ namespace LumiSoft.Net
     /// </summary>
     public class IPBindInfo
     {
-        private string           m_HostName     = "";
-        private BindInfoProtocol m_Protocol     = BindInfoProtocol.TCP;  
-        private IPEndPoint       m_pEndPoint    = null;
-        private SslMode          m_SslMode      = SslMode.None;
-        private X509Certificate2 m_pCertificate = null;
+        private readonly string           m_HostName     = "";
+        private readonly BindInfoProtocol m_Protocol     = BindInfoProtocol.TCP;  
+        private readonly IPEndPoint       m_pEndPoint    = null;
+        private readonly SslMode          m_SslMode      = SslMode.None;
+        private readonly X509Certificate2 m_pCertificate = null;
         private object           m_Tag          = null;
 
         /// <summary>

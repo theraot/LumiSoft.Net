@@ -8,8 +8,8 @@ namespace LumiSoft.Net
     /// </summary>
     public class HostEndPoint
     {
-        private string m_Host = "";
-        private int    m_Port = 0;
+        private readonly string m_Host = "";
+        private readonly int    m_Port = 0;
 
         /// <summary>
         /// Default constructor.

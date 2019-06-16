@@ -17,7 +17,7 @@ namespace LumiSoft.Net.Mime
 	public class AddressList : IEnumerable
 	{
 		private HeaderField   m_HeaderField = null;
-		private List<Address> m_pAddresses  = null;
+		private readonly List<Address> m_pAddresses  = null;
 
 		/// <summary>
 		/// Default constructor.

@@ -43,8 +43,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         internal class CmdLine
         {
-            private byte[] m_pData   = null;
-            private string m_LogText = null;
+            private readonly byte[] m_pData   = null;
+            private readonly string m_LogText = null;
 
             /// <summary>
             /// Default constructor.
@@ -96,7 +96,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public abstract class CmdAsyncOP<T> : IDisposable,IAsyncOP where T:IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
@@ -461,10 +461,10 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class StartTlsAsyncOP : IDisposable,IAsyncOP
         {
-            private object                              m_pLock          = new object();
+            private readonly object                              m_pLock          = new object();
             private AsyncOP_State                       m_State          = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException     = null;
-            private RemoteCertificateValidationCallback m_pCertCallback  = null;
+            private readonly RemoteCertificateValidationCallback m_pCertCallback  = null;
             private IMAP_r_ServerStatus                 m_pFinalResponse = null;
             private IMAP_Client                         m_pImapClient    = null;
             private bool                                m_RiseCompleted  = false;
@@ -834,14 +834,14 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class LoginAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
             private IMAP_Client                       m_pImapClient    = null;
             private bool                              m_RiseCompleted  = false;
-            private string                            m_User           = null;
-            private string                            m_Password       = null;
+            private readonly string                            m_User           = null;
+            private readonly string                            m_Password       = null;
             private EventHandler<EventArgs<IMAP_r_u>> m_pCallback      = null;
 
             /// <summary>
@@ -1199,11 +1199,11 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class AuthenticateAsyncOP : IDisposable,IAsyncOP
         {
-            private object           m_pLock         = new object();
+            private readonly object           m_pLock         = new object();
             private AsyncOP_State    m_State         = AsyncOP_State.WaitingForStart;
             private Exception        m_pException    = null;
             private IMAP_Client      m_pImapClient   = null;
-            private AUTH_SASL_Client m_pSASL         = null;
+            private readonly AUTH_SASL_Client m_pSASL         = null;
             private bool             m_RiseCompleted = false;
 
             /// <summary>
@@ -1727,7 +1727,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetFoldersAsyncOP : CmdAsyncOP<GetFoldersAsyncOP>
         {
-            private string m_Filter = null;
+            private readonly string m_Filter = null;
 
             /// <summary>
             /// Default constructor.
@@ -1998,7 +1998,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class CreateFolderAsyncOP : CmdAsyncOP<CreateFolderAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -2183,7 +2183,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class DeleteFolderAsyncOP : CmdAsyncOP<DeleteFolderAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -2377,8 +2377,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class RenameFolderAsyncOP : CmdAsyncOP<RenameFolderAsyncOP>
         {
-            private string m_Folder    = null;
-            private string m_NewFolder = null;
+            private readonly string m_Folder    = null;
+            private readonly string m_NewFolder = null;
 
             /// <summary>
             /// Default constructor.
@@ -2590,7 +2590,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetSubscribedFoldersAsyncOP : CmdAsyncOP<GetSubscribedFoldersAsyncOP>
         {
-            private string m_Filter = null;
+            private readonly string m_Filter = null;
 
             /// <summary>
             /// Default constructor.
@@ -2767,7 +2767,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class SubscribeFolderAsyncOP : CmdAsyncOP<SubscribeFolderAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -2932,7 +2932,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class UnsubscribeFolderAsyncOP : CmdAsyncOP<UnsubscribeFolderAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -3097,7 +3097,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class FolderStatusAsyncOP : CmdAsyncOP<FolderStatusAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -3303,13 +3303,13 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class SelectFolderAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
             private IMAP_Client                       m_pImapClient    = null;
             private bool                              m_RiseCompleted  = false;
-            private string                            m_Folder         = null;
+            private readonly string                            m_Folder         = null;
             private EventHandler<EventArgs<IMAP_r_u>> m_pCallback      = null;
 
             /// <summary>
@@ -3712,13 +3712,13 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class ExamineFolderAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
             private IMAP_Client                       m_pImapClient    = null;
             private bool                              m_RiseCompleted  = false;
-            private string                            m_Folder         = null;
+            private readonly string                            m_Folder         = null;
             private EventHandler<EventArgs<IMAP_r_u>> m_pCallback      = null;
 
             /// <summary>
@@ -4092,7 +4092,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetFolderQuotaRootsAsyncOP : CmdAsyncOP<GetFolderQuotaRootsAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -4256,7 +4256,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetQuotaAsyncOP : CmdAsyncOP<GetQuotaAsyncOP>
         {
-            private string m_QuotaRootName = null;
+            private readonly string m_QuotaRootName = null;
 
             /// <summary>
             /// Default constructor.
@@ -4448,7 +4448,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetFolderAclAsyncOP : CmdAsyncOP<GetFolderAclAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -4613,10 +4613,10 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class SetFolderAclAsyncOP : CmdAsyncOP<SetFolderAclAsyncOP>
         {
-            private string             m_Folder       = null;
-            private string             m_Identifier   = null;
-            private IMAP_Flags_SetType m_FlagsSetType = IMAP_Flags_SetType.Replace;
-            private IMAP_ACL_Flags     m_Permissions  = IMAP_ACL_Flags.None;
+            private readonly string             m_Folder       = null;
+            private readonly string             m_Identifier   = null;
+            private readonly IMAP_Flags_SetType m_FlagsSetType = IMAP_Flags_SetType.Replace;
+            private readonly IMAP_ACL_Flags     m_Permissions  = IMAP_ACL_Flags.None;
 
             /// <summary>
             /// Default constructor.
@@ -4822,8 +4822,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class DeleteFolderAclAsyncOP : CmdAsyncOP<DeleteFolderAclAsyncOP>
         {
-            private string m_Folder     = null;
-            private string m_Identifier = null;
+            private readonly string m_Folder     = null;
+            private readonly string m_Identifier = null;
 
             /// <summary>
             /// Default constructor.
@@ -5003,8 +5003,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetFolderRightsAsyncOP : CmdAsyncOP<GetFolderRightsAsyncOP>
         {
-            private string m_Folder     = null;
-            private string m_Identifier = null;
+            private readonly string m_Folder     = null;
+            private readonly string m_Identifier = null;
 
             /// <summary>
             /// Default constructor.
@@ -5187,7 +5187,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class GetFolderMyRightsAsyncOP : CmdAsyncOP<GetFolderMyRightsAsyncOP>
         {
-            private string m_Folder = null;
+            private readonly string m_Folder = null;
 
             /// <summary>
             /// Default constructor.
@@ -5407,17 +5407,17 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class StoreMessageAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
             private IMAP_Client                       m_pImapClient    = null;
             private bool                              m_RiseCompleted  = false;
-            private string                            m_Folder         = null;
-            private IMAP_t_MsgFlags                   m_pFlags         = null;
-            private DateTime                          m_InternalDate;
-            private Stream                            m_pStream        = null;
-            private long                              m_Count          = 0;
+            private readonly string                            m_Folder         = null;
+            private readonly IMAP_t_MsgFlags                   m_pFlags         = null;
+            private readonly DateTime                          m_InternalDate;
+            private readonly Stream                            m_pStream        = null;
+            private readonly long                              m_Count          = 0;
             private EventHandler<EventArgs<IMAP_r_u>> m_pCallback      = null;
 
             /// <summary>
@@ -5964,7 +5964,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class EnableAsyncOP : CmdAsyncOP<EnableAsyncOP>
         {
-            private string[] m_pCapabilities = null;
+            private readonly string[] m_pCapabilities = null;
 
             /// <summary>
             /// Default constructor.
@@ -6151,7 +6151,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class CloseFolderAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
@@ -6517,9 +6517,9 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class FetchAsyncOP : CmdAsyncOP<FetchAsyncOP>
         {
-            private bool             m_Uid        = false;
-            private IMAP_t_SeqSet    m_pSeqSet    = null;
-            private IMAP_t_Fetch_i[] m_pDataItems = null;
+            private readonly bool             m_Uid        = false;
+            private readonly IMAP_t_SeqSet    m_pSeqSet    = null;
+            private readonly IMAP_t_Fetch_i[] m_pDataItems = null;
 
             /// <summary>
             /// Default constructor.
@@ -6716,9 +6716,9 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class SearchAsyncOP : CmdAsyncOP<SearchAsyncOP>
         {
-            private bool            m_Uid       = false;
-            private Encoding        m_pCharset  = null;
-            private IMAP_Search_Key m_pCriteria = null;
+            private readonly bool            m_Uid       = false;
+            private readonly Encoding        m_pCharset  = null;
+            private readonly IMAP_Search_Key m_pCriteria = null;
 
             /// <summary>
             /// Default constructor.
@@ -6954,11 +6954,11 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class StoreMessageFlagsAsyncOP : CmdAsyncOP<StoreMessageFlagsAsyncOP>
         {
-            private bool               m_Uid          = false;
-            private IMAP_t_SeqSet      m_pSeqSet      = null;
-            private bool               m_Silent       = true;
-            private IMAP_Flags_SetType m_FlagsSetType = IMAP_Flags_SetType.Replace;
-            private IMAP_t_MsgFlags    m_pMsgFlags    = null;
+            private readonly bool               m_Uid          = false;
+            private readonly IMAP_t_SeqSet      m_pSeqSet      = null;
+            private readonly bool               m_Silent       = true;
+            private readonly IMAP_Flags_SetType m_FlagsSetType = IMAP_Flags_SetType.Replace;
+            private readonly IMAP_t_MsgFlags    m_pMsgFlags    = null;
 
             /// <summary>
             /// Default constructor.
@@ -7236,9 +7236,9 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class CopyMessagesAsyncOP : CmdAsyncOP<CopyMessagesAsyncOP>
         {
-            private bool          m_Uid          = false;
-            private IMAP_t_SeqSet m_pSeqSet      = null;
-            private string        m_TargetFolder = null;
+            private readonly bool          m_Uid          = false;
+            private readonly IMAP_t_SeqSet m_pSeqSet      = null;
+            private readonly string        m_TargetFolder = null;
 
             /// <summary>
             /// Default constructor.
@@ -7593,7 +7593,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public class IdleAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
@@ -8371,7 +8371,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         private class SendCmdAndReadRespAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
@@ -8703,7 +8703,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         private class ReadResponseAsyncOP : IDisposable,IAsyncOP
         {
-            private object                      m_pLock         = new object();
+            private readonly object                      m_pLock         = new object();
             private AsyncOP_State               m_State         = AsyncOP_State.WaitingForStart;
             private Exception                   m_pException    = null;
             private IMAP_r                      m_pResponse     = null;
@@ -9259,7 +9259,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         private class ReadFinalResponseAsyncOP : IDisposable,IAsyncOP
         {
-            private object                            m_pLock          = new object();
+            private readonly object                            m_pLock          = new object();
             private AsyncOP_State                     m_State          = AsyncOP_State.WaitingForStart;
             private Exception                         m_pException     = null;
             private IMAP_r_ServerStatus               m_pFinalResponse = null;
@@ -9532,11 +9532,11 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         internal class ReadStringLiteralAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private Stream        m_pStream       = null;
-            private int           m_LiteralSize   = 0;
+            private readonly int           m_LiteralSize   = 0;
             private IMAP_Client   m_pImapClient   = null;
             private bool          m_RiseCompleted = false;
 
@@ -10701,10 +10701,10 @@ namespace LumiSoft.Net.IMAP.Client
         [Obsolete("deprecated")]
         internal class _FetchResponseReader
         {
-            private IMAP_Client              m_pImap        = null;
-            private string                   m_FetchLine    = null;
+            private readonly IMAP_Client              m_pImap        = null;
+            private readonly string                   m_FetchLine    = null;
             private StringReader             m_pFetchReader = null;
-            private IMAP_Client_FetchHandler m_pHandler     = null;
+            private readonly IMAP_Client_FetchHandler m_pHandler     = null;
 
             /// <summary>
             /// Default constructor.

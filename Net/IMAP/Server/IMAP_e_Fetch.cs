@@ -20,8 +20,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal class e_NewMessageData : EventArgs
         {            
-            private IMAP_MessageInfo m_pMsgInfo = null;
-            private Mail_Message     m_pMsgData = null;
+            private readonly IMAP_MessageInfo m_pMsgInfo = null;
+            private readonly Mail_Message     m_pMsgData = null;
 
             /// <summary>
             /// Default constructor.
@@ -64,8 +64,8 @@ namespace LumiSoft.Net.IMAP.Server
         #endregion
 
         private IMAP_r_ServerStatus m_pResponse     = null;
-        private IMAP_MessageInfo[]  m_pMessagesInfo = null;
-        private IMAP_Fetch_DataType m_FetchDataType = IMAP_Fetch_DataType.FullMessage;
+        private readonly IMAP_MessageInfo[]  m_pMessagesInfo = null;
+        private readonly IMAP_Fetch_DataType m_FetchDataType = IMAP_Fetch_DataType.FullMessage;
 
         /// <summary>
         /// Default constructor.

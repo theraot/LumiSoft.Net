@@ -10,8 +10,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class MimeEntityCollection : IEnumerable
 	{
-		private MimeEntity       m_pOwnerEntity = null;
-		private List<MimeEntity> m_pEntities    = null;
+		private readonly MimeEntity       m_pOwnerEntity = null;
+		private readonly List<MimeEntity> m_pEntities    = null;
 
 		/// <summary>
 		/// Default constructor.

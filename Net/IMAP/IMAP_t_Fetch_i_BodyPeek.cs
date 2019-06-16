@@ -7,9 +7,9 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_i_BodyPeek : IMAP_t_Fetch_i
     {
-        private string m_Section  = null;
-        private int    m_Offset   = -1;
-        private int    m_MaxCount = -1;
+        private readonly string m_Section  = null;
+        private readonly int    m_Offset   = -1;
+        private readonly int    m_MaxCount = -1;
 
         /// <summary>
         /// Default constructor.

@@ -24,7 +24,7 @@ namespace LumiSoft.Net
         private string                  m_User        = null;
         private string                  m_Host        = "";
         private int                     m_Port        = -1;
-        private SIP_ParameterCollection m_pParameters = null;
+        private readonly SIP_ParameterCollection m_pParameters = null;
         private string                  m_Header      = null;  
 
         /// <summary>

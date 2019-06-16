@@ -10,10 +10,10 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_RegistrationBinding : IComparable
     {
-        private SIP_Registration m_pRegistration = null;
+        private readonly SIP_Registration m_pRegistration = null;
         private DateTime         m_LastUpdate;
         private SIP_Flow         m_pFlow         = null;
-        private AbsoluteUri      m_ContactURI    = null;
+        private readonly AbsoluteUri      m_ContactURI    = null;
         private int              m_Expires       = 3600;
         private double           m_QValue        = 1.0;
         private string           m_CallID        = "";

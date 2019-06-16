@@ -9,7 +9,7 @@ namespace LumiSoft.Net.RTP
     {
         private bool                   m_IsDisposed      = false;
         private RTP_Session            m_pSession        = null;
-        private RTP_Source             m_pSSRC           = null;
+        private readonly RTP_Source             m_pSSRC           = null;
         private RTP_Participant_Remote m_pParticipant    = null;
         private int                    m_SeqNoWrapCount  = 0;
         private ushort                 m_MaxSeqNo        = 0;
@@ -25,10 +25,10 @@ namespace LumiSoft.Net.RTP
         private uint                   m_LastBadSeqPlus1 = 0;
         private int                    m_Probation       = 0;
         private DateTime               m_LastSRTime      = DateTime.MinValue;
-        private int                    MAX_DROPOUT       = 3000;
-        private int                    MAX_MISORDER      = 100;
-        private int                    MIN_SEQUENTIAL    = 2;
-        private uint                   RTP_SEQ_MOD       = (1 << 16);
+        private readonly int                    MAX_DROPOUT       = 3000;
+        private readonly int                    MAX_MISORDER      = 100;
+        private readonly int                    MIN_SEQUENTIAL    = 2;
+        private readonly uint                   RTP_SEQ_MOD       = (1 << 16);
 
         /// <summary>
         /// Default constructor.

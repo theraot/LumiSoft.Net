@@ -7,8 +7,8 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_Ehlo : EventArgs
     {
-        private SMTP_Session m_pSession = null;
-        private string       m_Domain   = "";
+        private readonly SMTP_Session m_pSession = null;
+        private readonly string       m_Domain   = "";
         private SMTP_Reply   m_pReply   = null;
 
         /// <summary>

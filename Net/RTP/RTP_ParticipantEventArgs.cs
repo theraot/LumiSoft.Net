@@ -7,7 +7,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_ParticipantEventArgs : EventArgs
     {
-        private RTP_Participant_Remote m_pParticipant = null;
+        private readonly RTP_Participant_Remote m_pParticipant = null;
 
         /// <summary>
         /// Default constructor.

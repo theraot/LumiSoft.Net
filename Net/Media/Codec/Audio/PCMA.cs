@@ -69,8 +69,8 @@ namespace LumiSoft.Net.Media.Codec.Audio
 
         #endregion
 
-        private AudioFormat m_pAudioFormat           = new AudioFormat(8000,16,1);
-        private AudioFormat m_pCompressedAudioFormat = new AudioFormat(8000,8,1);
+        private readonly AudioFormat m_pAudioFormat           = new AudioFormat(8000,16,1);
+        private readonly AudioFormat m_pCompressedAudioFormat = new AudioFormat(8000,8,1);
 
         /// <summary>
         /// Default constructor.

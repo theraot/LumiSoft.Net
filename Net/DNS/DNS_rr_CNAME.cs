@@ -10,7 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_CNAME : DNS_rr
 	{
-		private string m_Alias = "";
+		private readonly string m_Alias = "";
 
 		/// <summary>
 		/// Default constructor.

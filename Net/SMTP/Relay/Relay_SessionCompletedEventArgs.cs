@@ -7,8 +7,8 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_SessionCompletedEventArgs
     {
-        private Relay_Session m_pSession   = null;
-        private Exception     m_pException = null;
+        private readonly Relay_Session m_pSession   = null;
+        private readonly Exception     m_pException = null;
 
         /// <summary>
         /// Default constructor.

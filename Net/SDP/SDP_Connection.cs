@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Connection
     {
-        private string m_NetType     = "IN";
+        private readonly string m_NetType     = "IN";
         private string m_AddressType = "";
         private string m_Address     = "";
 

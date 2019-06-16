@@ -44,18 +44,18 @@ namespace LumiSoft.Net.IO
 
         private bool        m_IsDisposed         = false;
         private bool        m_IsFinished         = false;
-        private Stream      m_pStream            = null;
-        private bool        m_IsOwner            = false;
-        private bool        m_AddLineBreaks      = true;
-        private FileAccess  m_AccessMode         = FileAccess.ReadWrite;
+        private readonly Stream      m_pStream            = null;
+        private readonly bool        m_IsOwner            = false;
+        private readonly bool        m_AddLineBreaks      = true;
+        private readonly FileAccess  m_AccessMode         = FileAccess.ReadWrite;
         private int         m_EncodeBufferOffset = 0;
         private int         m_OffsetInEncode3x8Block = 0;
-        private byte[]      m_pEncode3x8Block    = new byte[3];
-        private byte[]      m_pEncodeBuffer      = new byte[78];
-        private byte[]      m_pDecodedBlock      = null;
+        private readonly byte[]      m_pEncode3x8Block    = new byte[3];
+        private readonly byte[]      m_pEncodeBuffer      = new byte[78];
+        private readonly byte[]      m_pDecodedBlock      = null;
         private int         m_DecodedBlockOffset = 0;
         private int         m_DecodedBlockCount  = 0;
-        private Base64      m_pBase64            = null;
+        private readonly Base64      m_pBase64            = null;
 
         /// <summary>
         /// Default constructor.

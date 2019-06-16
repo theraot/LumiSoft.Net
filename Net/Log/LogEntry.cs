@@ -9,16 +9,16 @@ namespace LumiSoft.Net.Log
     /// </summary>
     public class LogEntry
     {
-        private LogEntryType    m_Type          = LogEntryType.Text;
-        private string          m_ID            = "";
-        private DateTime        m_Time;
-        private GenericIdentity m_pUserIdentity = null;
-        private long            m_Size          = 0;
-        private string          m_Text          = "";
-        private Exception       m_pException    = null;
-        private IPEndPoint      m_pLocalEP      = null;
-        private IPEndPoint      m_pRemoteEP     = null;
-        private byte[]          m_pData         = null;
+        private readonly LogEntryType    m_Type          = LogEntryType.Text;
+        private readonly string          m_ID            = "";
+        private readonly DateTime        m_Time;
+        private readonly GenericIdentity m_pUserIdentity = null;
+        private readonly long            m_Size          = 0;
+        private readonly string          m_Text          = "";
+        private readonly Exception       m_pException    = null;
+        private readonly IPEndPoint      m_pLocalEP      = null;
+        private readonly IPEndPoint      m_pRemoteEP     = null;
+        private readonly byte[]          m_pData         = null;
 
         /// <summary>
         /// Default constructor.

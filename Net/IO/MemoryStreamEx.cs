@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IO
     {
         private bool   m_IsDisposed = false;
         private Stream m_pStream    = null;
-        private int    m_MaxMemSize = 32000;
+        private readonly int    m_MaxMemSize = 32000;
 
         /// <summary>
         /// Default constructor.

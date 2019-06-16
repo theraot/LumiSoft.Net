@@ -8,7 +8,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public abstract class Address
 	{
-		private bool   m_GroupAddress = false;
+		private readonly bool   m_GroupAddress = false;
 		private object m_pOwner       = null;
 
 		/// <summary>

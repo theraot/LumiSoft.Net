@@ -8,7 +8,7 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public abstract class AUTH_SASL_ServerMechanism
     {
-        private Dictionary<string,object> m_pTags = null;
+        private readonly Dictionary<string,object> m_pTags = null;
 
         /// <summary>
         /// Default constructor.

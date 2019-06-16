@@ -20,7 +20,7 @@ namespace LumiSoft.Net.Mail
     public class Mail_t_AddressList : IEnumerable
     {
         private bool                 m_IsModified = false;
-        private List<Mail_t_Address> m_pList      = null;
+        private readonly List<Mail_t_Address> m_pList      = null;
 
         /// <summary>
         /// Default constructor.

@@ -8,7 +8,7 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_DigestMD5_Response
     {
-        private AUTH_SASL_DigestMD5_Challenge m_pChallenge = null;
+        private readonly AUTH_SASL_DigestMD5_Challenge m_pChallenge = null;
         private string                        m_UserName   = null;
         private string                        m_Password   = null;
         private string                        m_Realm      = null;

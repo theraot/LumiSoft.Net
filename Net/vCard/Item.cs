@@ -10,7 +10,7 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class Item
     {
-        private string m_Name       = "";
+        private readonly string m_Name       = "";
         private string m_Parameters = "";
         private string m_Value      = "";
 

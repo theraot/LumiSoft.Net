@@ -8,7 +8,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public abstract class RTP_Participant
     {
-        private string           m_CNAME    = "";
+        private readonly string           m_CNAME    = "";
         private List<RTP_Source> m_pSources = null;
         private object           m_pTag     = null;
 

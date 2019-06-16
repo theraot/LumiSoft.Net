@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IMAP
     /// specified message sequence number set.</remarks>
     public class IMAP_Search_Key_SeqSet : IMAP_Search_Key
     {
-        private IMAP_t_SeqSet m_pSeqSet = null;
+        private readonly IMAP_t_SeqSet m_pSeqSet = null;
         
         /// <summary>
         /// Default constructor.

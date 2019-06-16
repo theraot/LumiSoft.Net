@@ -56,7 +56,7 @@ namespace LumiSoft.Net.MIME
         private string                     m_ParseValue  = null;
         private string                     m_Type        = "";
         private string                     m_SubType     = "";
-        private MIME_h_ParameterCollection m_pParameters = null;
+        private readonly MIME_h_ParameterCollection m_pParameters = null;
 
         /// <summary>
         /// Default constructor.

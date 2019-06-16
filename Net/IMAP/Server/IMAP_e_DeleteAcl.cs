@@ -8,8 +8,8 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_DeleteAcl : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse  = null;
-        private string              m_Folder     = null;
-        private string              m_Identifier = null;
+        private readonly string              m_Folder     = null;
+        private readonly string              m_Identifier = null;
 
         /// <summary>
         /// Default constructor.

@@ -25,9 +25,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         private class _SelectedFolder
         {
-            private string                 m_Folder        = null;
-            private bool                   m_IsReadOnly    = false;
-            private List<IMAP_MessageInfo> m_pMessagesInfo = null;
+            private readonly string                 m_Folder        = null;
+            private readonly bool                   m_IsReadOnly    = false;
+            private readonly List<IMAP_MessageInfo> m_pMessagesInfo = null;
 
             /// <summary>
             /// Default constructor.
@@ -195,9 +195,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <remarks>Because IMAP command can contain literal strings, then command text can be multiline.</remarks>
         private class _CmdReader
         {
-            private IMAP_Session m_pSession       = null;
-            private string       m_InitialCmdLine = null;
-            private Encoding     m_pCharset       = null;
+            private readonly IMAP_Session m_pSession       = null;
+            private readonly string       m_InitialCmdLine = null;
+            private readonly Encoding     m_pCharset       = null;
             private string       m_CmdLine        = null;
 
             /// <summary>
@@ -427,8 +427,8 @@ namespace LumiSoft.Net.IMAP.Server
             {
                 private bool                               m_IsSent                  = false;
                 private bool                               m_IsAsync                 = false;
-                private IMAP_r                             m_pResponse               = null;
-                private EventHandler<EventArgs<Exception>> m_pCompletedAsyncCallback = null;
+                private readonly IMAP_r                             m_pResponse               = null;
+                private readonly EventHandler<EventArgs<Exception>> m_pCompletedAsyncCallback = null;
 
                 /// <summary>
                 /// Default constructor.
@@ -490,10 +490,10 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-            private object           m_pLock      = new object();
-            private IMAP_Session     m_pImap      = null;
+            private readonly object           m_pLock      = new object();
+            private readonly IMAP_Session     m_pImap      = null;
             private bool             m_IsSending  = false;
-            private Queue<QueueItem> m_pResponses = null;
+            private readonly Queue<QueueItem> m_pResponses = null;
 
             /// <summary>
             /// Default constructor.
@@ -655,11 +655,11 @@ namespace LumiSoft.Net.IMAP.Server
         private bool                                         m_SessionRejected  = false;
         private int                                          m_BadCommands      = 0;
         private List<string>                                 m_pCapabilities    = null;
-        private char                                         m_FolderSeparator  = '/';
+        private readonly char                                         m_FolderSeparator  = '/';
         private GenericIdentity                              m_pUser            = null;
         private _SelectedFolder                              m_pSelectedFolder  = null;
         private IMAP_Mailbox_Encoding                        m_MailboxEncoding  = IMAP_Mailbox_Encoding.ImapUtf7;
-        private ResponseSender                               m_pResponseSender  = null;
+        private readonly ResponseSender                               m_pResponseSender  = null;
 
         /// <summary>
         /// Default constructor.

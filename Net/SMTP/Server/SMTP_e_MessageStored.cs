@@ -8,8 +8,8 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_MessageStored : EventArgs
     {
-        private SMTP_Session m_pSession = null;
-        private Stream       m_pStream  = null;
+        private readonly SMTP_Session m_pSession = null;
+        private readonly Stream       m_pStream  = null;
         private SMTP_Reply   m_pReply   = null;
 
         /// <summary>

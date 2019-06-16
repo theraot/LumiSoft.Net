@@ -196,7 +196,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public class ConnectAsyncOP : IDisposable,IAsyncOP
         {
-            private object                              m_pLock         = new object();
+            private readonly object                              m_pLock         = new object();
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException    = null;
             private IPEndPoint                          m_pLocalEP      = null;
@@ -777,7 +777,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected class SwitchToSecureAsyncOP : IDisposable,IAsyncOP
         {
-            private object                              m_pLock         = new object();
+            private readonly object                              m_pLock         = new object();
             private bool                                m_RiseCompleted = false;
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException    = null;

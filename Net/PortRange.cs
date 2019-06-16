@@ -7,8 +7,8 @@ namespace LumiSoft.Net
     /// </summary>
     public class PortRange
     {
-        private int m_Start = 1000;
-        private int m_End   = 1100;
+        private readonly int m_Start = 1000;
+        private readonly int m_End   = 1100;
 
         /// <summary>
         /// Default constructor.

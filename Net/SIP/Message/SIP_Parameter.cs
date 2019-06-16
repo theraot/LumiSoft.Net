@@ -7,7 +7,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_Parameter
     {
-        private string m_Name  = "";
+        private readonly string m_Name  = "";
         private string m_Value = "";
 
         /// <summary>

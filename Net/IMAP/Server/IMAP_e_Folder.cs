@@ -10,8 +10,8 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Folder : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse = null;
-        private string              m_CmdTag    = null;
-        private string              m_Folder    = "";
+        private readonly string              m_CmdTag    = null;
+        private readonly string              m_Folder    = "";
 
         /// <summary>
         /// Defaultc constructor.

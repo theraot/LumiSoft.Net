@@ -9,9 +9,9 @@ namespace LumiSoft.Net.IO
     public class PartialStream : Stream
     {
         private bool   m_IsDisposed = false;
-        private Stream m_pStream    = null;
-        private long   m_Start      = 0;
-        private long   m_Length     = 0;
+        private readonly Stream m_pStream    = null;
+        private readonly long   m_Start      = 0;
+        private readonly long   m_Length     = 0;
         private long   m_Position   = 0;
 
         /// <summary>

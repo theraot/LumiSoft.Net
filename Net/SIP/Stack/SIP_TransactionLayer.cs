@@ -12,10 +12,10 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_TransactionLayer
     {        
         private bool                                     m_IsDisposed          = false;
-        private SIP_Stack                                m_pStack              = null;
-        private Dictionary<string,SIP_ClientTransaction> m_pClientTransactions = null;
-        private Dictionary<string,SIP_ServerTransaction> m_pServerTransactions = null;
-        private Dictionary<string,SIP_Dialog>            m_pDialogs            = null;
+        private readonly SIP_Stack                                m_pStack              = null;
+        private readonly Dictionary<string,SIP_ClientTransaction> m_pClientTransactions = null;
+        private readonly Dictionary<string,SIP_ServerTransaction> m_pServerTransactions = null;
+        private readonly Dictionary<string,SIP_Dialog>            m_pDialogs            = null;
         
         /// <summary>
         /// Default constructor.

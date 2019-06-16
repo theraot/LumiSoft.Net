@@ -8,7 +8,7 @@ namespace LumiSoft.Net
     /// <typeparam name="T">Event data.</typeparam>
     public class EventArgs<T> : EventArgs
     {
-        private T m_pValue;
+        private readonly T m_pValue;
 
         /// <summary>
         /// Default constructor.

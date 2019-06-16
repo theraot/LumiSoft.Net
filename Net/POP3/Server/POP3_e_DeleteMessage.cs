@@ -7,7 +7,7 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_DeleteMessage : EventArgs
     {
-        private POP3_ServerMessage m_pMessage = null;
+        private readonly POP3_ServerMessage m_pMessage = null;
 
         /// <summary>
         /// Default constructor.

@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Enable : IMAP_r_u
     {
-        private string[] m_Capabilities = null;
+        private readonly string[] m_Capabilities = null;
 
         /// <summary>
         /// Default constructor.

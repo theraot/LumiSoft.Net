@@ -5,7 +5,7 @@
     /// </summary>
     public class IMAP_t_Fetch_r_i_X_GM_MSGID : IMAP_t_Fetch_r_i
     {
-        private ulong m_MsgID = 0;
+        private readonly ulong m_MsgID = 0;
 
         /// <summary>
         /// Default constructor.

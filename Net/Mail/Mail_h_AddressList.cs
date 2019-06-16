@@ -19,8 +19,8 @@ namespace LumiSoft.Net.Mail
     public class Mail_h_AddressList : MIME_h
     {
         private string             m_ParseValue = null;
-        private string             m_Name       = null;
-        private Mail_t_AddressList m_pAddresses = null;
+        private readonly string             m_Name       = null;
+        private readonly Mail_t_AddressList m_pAddresses = null;
 
         /// <summary>
         /// Default constructor.

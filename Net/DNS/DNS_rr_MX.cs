@@ -10,8 +10,8 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_MX : DNS_rr,IComparable
 	{
-		private int    m_Preference = 0;
-		private string m_Host       = "";
+		private readonly int    m_Preference = 0;
+		private readonly string m_Host       = "";
 
 		/// <summary>
 		/// Default constructor.

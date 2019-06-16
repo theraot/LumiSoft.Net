@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IMAP.Client
     /// </summary>
     public class IMAP_Client_SelectedFolder
     {
-        private string   m_Name                = "";
+        private readonly string   m_Name                = "";
         private long     m_UidValidity         = -1;
         private string[] m_pFlags              = new string[0];
         private string[] m_pPermanentFlags     = new string[0];

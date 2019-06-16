@@ -161,7 +161,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class CapaAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock          = new object();
+            private readonly object        m_pLock          = new object();
             private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
             private Exception     m_pException     = null;
             private POP3_Client   m_pPop3Client    = null;
@@ -582,12 +582,12 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class StlsAsyncOP : IDisposable,IAsyncOP
         {
-            private object                              m_pLock         = new object();
+            private readonly object                              m_pLock         = new object();
             private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException    = null;
             private POP3_Client                         m_pPop3Client   = null;
             private bool                                m_RiseCompleted = false;
-            private RemoteCertificateValidationCallback m_pCertCallback = null;
+            private readonly RemoteCertificateValidationCallback m_pCertCallback = null;
 
             /// <summary>
             /// Default constructor.
@@ -972,13 +972,13 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class LoginAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private POP3_Client   m_pPop3Client   = null;
             private bool          m_RiseCompleted = false;
-            private string        m_User          = null;
-            private string        m_Password      = null;
+            private readonly string        m_User          = null;
+            private readonly string        m_Password      = null;
 
             /// <summary>
             /// Default constructor.
@@ -1422,11 +1422,11 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class AuthAsyncOP : IDisposable,IAsyncOP
         {
-            private object           m_pLock         = new object();
+            private readonly object           m_pLock         = new object();
             private AsyncOP_State    m_State         = AsyncOP_State.WaitingForStart;
             private Exception        m_pException    = null;
             private POP3_Client      m_pPop3Client   = null;
-            private AUTH_SASL_Client m_pSASL         = null;
+            private readonly AUTH_SASL_Client m_pSASL         = null;
             private bool             m_RiseCompleted = false;
 
             /// <summary>
@@ -1823,7 +1823,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class NoopAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private POP3_Client   m_pPop3Client   = null;
@@ -2153,7 +2153,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         public class RsetAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private POP3_Client   m_pPop3Client   = null;
@@ -2449,7 +2449,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         private class FillMessagesAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private POP3_Client   m_pPop3Client   = null;
@@ -2731,7 +2731,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         private class ListAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock          = new object();
+            private readonly object        m_pLock          = new object();
             private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
             private Exception     m_pException     = null;
             private POP3_Client   m_pPop3Client    = null;
@@ -3152,7 +3152,7 @@ namespace LumiSoft.Net.POP3.Client
         /// </summary>
         private class UidlAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock          = new object();
+            private readonly object        m_pLock          = new object();
             private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
             private Exception     m_pException     = null;
             private POP3_Client   m_pPop3Client    = null;

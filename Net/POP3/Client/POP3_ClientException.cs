@@ -7,8 +7,8 @@ namespace LumiSoft.Net.POP3.Client
     /// </summary>
     public class POP3_ClientException : Exception
     {
-        private string m_StatusCode   = "";
-        private string m_ResponseText = "";
+        private readonly string m_StatusCode   = "";
+        private readonly string m_ResponseText = "";
 
         /// <summary>
         /// Default constructor.

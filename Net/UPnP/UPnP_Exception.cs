@@ -10,8 +10,8 @@ namespace LumiSoft.Net.UPnP
     /// </summary>
     public class UPnP_Exception : Exception
     {
-        private int    m_ErrorCode = 0;
-        private string m_ErrorText = "";
+        private readonly int    m_ErrorCode = 0;
+        private readonly string m_ErrorText = "";
 
         /// <summary>
         /// Default constructor.

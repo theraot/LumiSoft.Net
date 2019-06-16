@@ -9,10 +9,10 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Dialog
     {
-        private object                 m_pLock            = new object();
+        private readonly object                 m_pLock            = new object();
         private SIP_DialogState        m_State            = SIP_DialogState.Early;
         private SIP_Stack              m_pStack           = null;
-        private DateTime               m_CreateTime;
+        private readonly DateTime               m_CreateTime;
         private string                 m_CallID           = "";
         private string                 m_LocalTag         = "";
         private string                 m_RemoteTag        = "";
@@ -27,7 +27,7 @@ namespace LumiSoft.Net.SIP.Stack
         private string[]               m_pRemoteAllow     = null;
         private string[]               m_pRemoteSupported = null;
         private SIP_Flow               m_pFlow            = null;
-        private List<SIP_Transaction>  m_pTransactions    = null;
+        private readonly List<SIP_Transaction>  m_pTransactions    = null;
 
         /// <summary>
         /// Default constructor.

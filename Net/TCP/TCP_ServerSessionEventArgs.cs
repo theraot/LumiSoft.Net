@@ -7,8 +7,8 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_ServerSessionEventArgs<T> : EventArgs where T : TCP_ServerSession,new()
     {
-        private TCP_Server<T> m_pServer  = null;
-        private T             m_pSession = null;
+        private readonly TCP_Server<T> m_pServer  = null;
+        private readonly T             m_pSession = null;
 
         /// <summary>
         /// Default constructor.

@@ -27,7 +27,7 @@ namespace LumiSoft.Net.FTP.Server
             private bool        m_IsDisposed = false;
             private FTP_Session m_pSession   = null;
             private Stream      m_pStream    = null;
-            private bool        m_Read_Write = false;
+            private readonly bool        m_Read_Write = false;
             private Socket      m_pSocket    = null;
 
             /// <summary>
@@ -222,7 +222,7 @@ namespace LumiSoft.Net.FTP.Server
 
         #endregion
 
-        private Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications = null;
+        private readonly Dictionary<string,AUTH_SASL_ServerMechanism> m_pAuthentications = null;
         private bool                                         m_SessionRejected  = false;
         private int                                          m_BadCommands      = 0;
         private string                                       m_UserName         = null;

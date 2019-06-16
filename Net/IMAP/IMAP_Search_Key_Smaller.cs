@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages with an [RFC-2822] size smaller than the specified number of octets.</remarks>
     public class IMAP_Search_Key_Smaller : IMAP_Search_Key
     {
-        private int m_Value = 0;
+        private readonly int m_Value = 0;
 
         /// <summary>
         /// Default constructor.

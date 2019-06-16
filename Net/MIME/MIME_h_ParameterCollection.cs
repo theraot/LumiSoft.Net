@@ -17,8 +17,8 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public class _ParameterBuilder
         {
-            private string                 m_Name      = null;
-            private SortedList<int,string> m_pParts    = null;
+            private readonly string                 m_Name      = null;
+            private readonly SortedList<int,string> m_pParts    = null;
             private Encoding               m_pEncoding = null;
 
             /// <summary>
@@ -103,8 +103,8 @@ namespace LumiSoft.Net.MIME
         #endregion
 
         private bool                                m_IsModified  = false;
-        private MIME_h                              m_pOwner      = null;
-        private Dictionary<string,MIME_h_Parameter> m_pParameters = null;
+        private readonly MIME_h                              m_pOwner      = null;
+        private readonly Dictionary<string,MIME_h_Parameter> m_pParameters = null;
 
         /// <summary>
         /// Default constructor.

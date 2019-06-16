@@ -5,9 +5,9 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public abstract class DNS_rr
 	{
-        private string    m_Name = "";
-		private DNS_QType m_Type = DNS_QType.A;
-		private int       m_TTL  = -1;
+        private readonly string    m_Name = "";
+		private readonly DNS_QType m_Type = DNS_QType.A;
+		private readonly int       m_TTL  = -1;
 
 		/// <summary>
 		/// Default constructor.

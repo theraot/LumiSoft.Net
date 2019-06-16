@@ -11,7 +11,7 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioOut_RTP : IDisposable
     {
-        private bool                       m_IsDisposed      = false;
+        private readonly bool                       m_IsDisposed      = false;
         private bool                       m_IsRunning       = false;
         private AudioOutDevice             m_pAudioOutDevice = null;
         private RTP_ReceiveStream          m_pRTP_Stream     = null;

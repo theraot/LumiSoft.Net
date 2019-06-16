@@ -11,11 +11,11 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Registration
     {
-        private DateTime                      m_CreateTime;
-        private string                        m_UserName  = "";
-        private string                        m_AOR       = "";
-        private List<SIP_RegistrationBinding> m_pBindings = null;
-        private object                        m_pLock     = new object();
+        private readonly DateTime                      m_CreateTime;
+        private readonly string                        m_UserName  = "";
+        private readonly string                        m_AOR       = "";
+        private readonly List<SIP_RegistrationBinding> m_pBindings = null;
+        private readonly object                        m_pLock     = new object();
 
         /// <summary>
         /// Default constructor.

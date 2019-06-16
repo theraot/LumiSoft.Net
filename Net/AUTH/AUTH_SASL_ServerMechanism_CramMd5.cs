@@ -11,7 +11,7 @@ namespace LumiSoft.Net.AUTH
     {
         private bool   m_IsCompleted     = false;
         private bool   m_IsAuthenticated = false;
-        private bool   m_RequireSSL      = false;
+        private readonly bool   m_RequireSSL      = false;
         private string m_UserName        = "";
         private int    m_State           = 0;
         private string m_Key             = "";

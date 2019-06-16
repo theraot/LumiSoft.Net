@@ -7,8 +7,8 @@ namespace LumiSoft.Net.STUN.Client
     /// </summary>
     public class STUN_Result
     {
-        private STUN_NetType m_NetType         = STUN_NetType.OpenInternet;
-        private IPEndPoint   m_pPublicEndPoint = null;
+        private readonly STUN_NetType m_NetType         = STUN_NetType.OpenInternet;
+        private readonly IPEndPoint   m_pPublicEndPoint = null;
 
         /// <summary>
         /// Default constructor.

@@ -9,8 +9,8 @@ namespace LumiSoft.Net.IMAP.Server
     {
         private IMAP_r_u_ListRights m_pListRightsResponse = null;
         private IMAP_r_ServerStatus m_pResponse           = null;
-        private string              m_Folder              = null;
-        private string              m_Identifier          = null;
+        private readonly string              m_Folder              = null;
+        private readonly string              m_Identifier          = null;
 
         /// <summary>
         /// Default constructor.

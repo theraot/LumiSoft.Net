@@ -9,7 +9,7 @@ namespace LumiSoft.Net.MIME
     public class MIME_h_Provider
     {
         private Type                    m_pDefaultHeaderField = null;
-        private Dictionary<string,Type> m_pHeadrFields        = null;
+        private readonly Dictionary<string,Type> m_pHeadrFields        = null;
 
         /// <summary>
         /// Default constructor.

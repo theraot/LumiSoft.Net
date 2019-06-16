@@ -9,10 +9,10 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Append : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse = null;
-        private string              m_Folder    = null;
-        private string[]            m_pFlags    = null;
-        private DateTime            m_Date      = DateTime.MinValue;
-        private int                 m_Size      = 0;
+        private readonly string              m_Folder    = null;
+        private readonly string[]            m_pFlags    = null;
+        private readonly DateTime            m_Date      = DateTime.MinValue;
+        private readonly int                 m_Size      = 0;
         private Stream              m_pStream   = null;      
 
         /// <summary>

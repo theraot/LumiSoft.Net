@@ -9,9 +9,9 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Namespace : IMAP_r_u
     {
-        private IMAP_Namespace_Entry[] m_pPersonalNamespaces   = null;
-        private IMAP_Namespace_Entry[] m_pOtherUsersNamespaces = null;
-        private IMAP_Namespace_Entry[] m_pSharedNamespaces     = null;
+        private readonly IMAP_Namespace_Entry[] m_pPersonalNamespaces   = null;
+        private readonly IMAP_Namespace_Entry[] m_pOtherUsersNamespaces = null;
+        private readonly IMAP_Namespace_Entry[] m_pSharedNamespaces     = null;
 
         /// <summary>
         /// Default constructor.

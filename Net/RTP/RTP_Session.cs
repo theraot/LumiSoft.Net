@@ -22,7 +22,7 @@ namespace LumiSoft.Net.RTP
         private bool                               m_IsStarted                  = false;
         private RTP_MultimediaSession              m_pSession                   = null;
         private RTP_Address                        m_pLocalEP                   = null;
-        private RTP_Clock                          m_pRtpClock                  = null;
+        private readonly RTP_Clock                          m_pRtpClock                  = null;
         private RTP_StreamMode                     m_StreamMode                 = RTP_StreamMode.SendReceive;
         private List<RTP_Address>                  m_pTargets                   = null;
         private int                                m_Payload                    = 0;
@@ -53,9 +53,9 @@ namespace LumiSoft.Net.RTP
         private long                               m_RemoteCollisions           = 0;
         private long                               m_LocalPacketsLooped         = 0;
         private long                               m_RemotePacketsLooped        = 0;
-        private int                                m_MTU                        = 1400;
+        private readonly int                                m_MTU                        = 1400;
         private TimerEx                            m_pRtcpTimer                 = null;        
-        private KeyValueCollection<int,Codec>      m_pPayloads                  = null;
+        private readonly KeyValueCollection<int,Codec>      m_pPayloads                  = null;
 
         /// <summary>
         /// Default constructor.

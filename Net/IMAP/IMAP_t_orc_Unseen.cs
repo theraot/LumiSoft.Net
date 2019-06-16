@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Unseen : IMAP_t_orc
     {
-        private int m_FirstUnseen = 0;
+        private readonly int m_FirstUnseen = 0;
 
         /// <summary>
         /// Default constructor.

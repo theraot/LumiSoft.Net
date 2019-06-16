@@ -10,13 +10,13 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_BODY_Entity
     {
-        private IMAP_BODY_Entity             m_pParentEntity      = null;
-        private List<IMAP_BODY_Entity>       m_pChildEntities     = null;
-        private MIME_h_ContentType           m_pContentType       = null;
-        private string                       m_ContentID          = null;
-        private string                       m_ContentDescription = null;
-        private string                       m_ContentEncoding    = MIME_TransferEncodings.SevenBit;
-        private int                          m_ContentSize        = 0;
+        private readonly IMAP_BODY_Entity             m_pParentEntity      = null;
+        private readonly List<IMAP_BODY_Entity>       m_pChildEntities     = null;
+        private readonly MIME_h_ContentType           m_pContentType       = null;
+        private readonly string                       m_ContentID          = null;
+        private readonly string                       m_ContentDescription = null;
+        private readonly string                       m_ContentEncoding    = MIME_TransferEncodings.SevenBit;
+        private readonly int                          m_ContentSize        = 0;
         private IMAP_Envelope                m_pEnvelope          = null;
         private int                          m_ContentLines       = 0;
 

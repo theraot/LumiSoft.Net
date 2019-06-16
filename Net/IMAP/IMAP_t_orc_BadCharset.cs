@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_BadCharset : IMAP_t_orc
     {
-        private string[] m_pCharsets = null;
+        private readonly string[] m_pCharsets = null;
 
         /// <summary>
         /// Default constructor.

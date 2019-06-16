@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Flags : IMAP_r_u
     {
-        private string[] m_pFlags = null;
+        private readonly string[] m_pFlags = null;
 
         /// <summary>
         /// Default constructor.

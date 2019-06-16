@@ -15,7 +15,7 @@ namespace LumiSoft.Net.IMAP
     public class IMAP_r_u_Fetch : IMAP_r_u
     {
         private int                    m_MsgSeqNo   = 0;
-        private List<IMAP_t_Fetch_r_i> m_pDataItems = null;
+        private readonly List<IMAP_t_Fetch_r_i> m_pDataItems = null;
 
         /// <summary>
         /// Default constructor.

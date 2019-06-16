@@ -10,7 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_NS : DNS_rr
 	{
-		private string m_NameServer = "";
+		private readonly string m_NameServer = "";
 
 		/// <summary>
 		/// Default constructor.

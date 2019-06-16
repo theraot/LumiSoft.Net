@@ -15,7 +15,7 @@ namespace LumiSoft.Net.MIME
         private MIME_Entity       m_pParent       = null;
         private MIME_h_Collection m_pHeader       = null;
         private MIME_b            m_pBody         = null;
-        private MIME_b_Provider   m_pBodyProvider = null;
+        private readonly MIME_b_Provider   m_pBodyProvider = null;
 
         /// <summary>
         /// Default constructor.

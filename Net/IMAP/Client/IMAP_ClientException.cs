@@ -7,7 +7,7 @@ namespace LumiSoft.Net.IMAP.Client
     /// </summary>
     public class IMAP_ClientException : Exception
     {
-        private IMAP_r_ServerStatus m_pResponse = null;
+        private readonly IMAP_r_ServerStatus m_pResponse = null;
         
         /// <summary>
         /// Default constructor.

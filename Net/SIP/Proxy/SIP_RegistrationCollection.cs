@@ -9,7 +9,7 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_RegistrationCollection : IEnumerable
     {
-        private List<SIP_Registration> m_pRegistrations = null;
+        private readonly List<SIP_Registration> m_pRegistrations = null;
 
         /// <summary>
         /// Default constructor.

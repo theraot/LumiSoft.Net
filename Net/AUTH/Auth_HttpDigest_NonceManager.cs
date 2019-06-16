@@ -16,8 +16,8 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class NonceEntry
         {
-            private string   m_Nonce = "";
-            private DateTime m_CreateTime;
+            private readonly string   m_Nonce = "";
+            private readonly DateTime m_CreateTime;
 
             /// <summary>
             /// Default constructor.

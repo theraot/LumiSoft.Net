@@ -9,7 +9,7 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public abstract class SIP_Message
     {
-        private SIP_HeaderFieldCollection m_pHeader = null;
+        private readonly SIP_HeaderFieldCollection m_pHeader = null;
         private byte[]                    m_Data    = null;
 
         /// <summary>

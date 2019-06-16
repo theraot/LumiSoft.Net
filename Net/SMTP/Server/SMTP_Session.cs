@@ -400,7 +400,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private class SendResponseAsyncOP : IDisposable,IAsyncOP
         {
-            private object             m_pLock         = new object();
+            private readonly object             m_pLock         = new object();
             private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
             private Exception          m_pException    = null;
             private SMTP_t_ReplyLine[] m_pReplyLines   = null;
@@ -647,7 +647,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private class Cmd_DATA : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private SMTP_Session  m_pSession      = null;

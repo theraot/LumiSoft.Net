@@ -8,7 +8,7 @@ namespace LumiSoft.Net.AUTH
     public class AUTH_e_UserInfo : EventArgs
     {
         private bool   m_UserExists = false;
-        private string m_UserName   = "";
+        private readonly string m_UserName   = "";
         private string m_Password   = "";
 
         /// <summary>

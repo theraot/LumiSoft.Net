@@ -25,8 +25,8 @@ namespace LumiSoft.Net.IO
             private bool               m_IsCompletedSync = false;
             private SmartStream        m_pOwner          = null;
             private byte[]             m_pBuffer         = null;
-            private SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
-            private bool               m_CRLFLinesOnly   = true;
+            private readonly SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
+            private readonly bool               m_CRLFLinesOnly   = true;
             private int                m_BytesInBuffer   = 0;
             private int                m_LastByte        = -1;
             private Exception          m_pException      = null;
@@ -445,7 +445,7 @@ namespace LumiSoft.Net.IO
             private bool               m_IsCompletedSync = false;
             private SmartStream        m_pOwner          = null;
             private Stream             m_pStream         = null;
-            private long               m_MaxCount        = 0;
+            private readonly long               m_MaxCount        = 0;
             private SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
             private ReadLineAsyncOP    m_pReadLineOP     = null;
             private long               m_BytesStored     = 0;
@@ -1016,16 +1016,16 @@ namespace LumiSoft.Net.IO
         #endregion
 
         private bool              m_IsDisposed       = false;
-        private Stream            m_pStream          = null;
+        private readonly Stream            m_pStream          = null;
         private bool              m_IsOwner          = false;
         private DateTime          m_LastActivity;
         private long              m_BytesReaded      = 0;
         private long              m_BytesWritten     = 0;
-        private int               m_BufferSize       = 32000;
-        private byte[]            m_pReadBuffer      = null;
+        private readonly int               m_BufferSize       = 32000;
+        private readonly byte[]            m_pReadBuffer      = null;
         private int               m_ReadBufferOffset = 0;
         private int               m_ReadBufferCount  = 0;        
-        private BufferReadAsyncOP m_pReadBufferOP    = null;
+        private readonly BufferReadAsyncOP m_pReadBufferOP    = null;
         private Encoding          m_pEncoding        = Encoding.Default;
 
         /// <summary>
@@ -1596,13 +1596,13 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public class WriteStreamAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private bool          m_RiseCompleted = false;
             private SmartStream   m_pOwner        = null;
             private Stream        m_pStream       = null;
-            private long          m_Count         = 0;
+            private readonly long          m_Count         = 0;
             private byte[]        m_pBuffer       = null;
             private long          m_BytesWritten  = 0;
 
@@ -1971,7 +1971,7 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public class WritePeriodTerminatedAsyncOP : IDisposable,IAsyncOP
         {
-            private object          m_pLock         = new object();
+            private readonly object          m_pLock         = new object();
             private AsyncOP_State   m_State         = AsyncOP_State.WaitingForStart;
             private Exception       m_pException    = null;
             private SmartStream     m_pStream       = null;
@@ -2871,15 +2871,15 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadLineAsyncOperation : IAsyncResult
         {
-            private SmartStream        m_pOwner                 = null;
-            private byte[]             m_pBuffer                = null;
+            private readonly SmartStream        m_pOwner                 = null;
+            private readonly byte[]             m_pBuffer                = null;
             private int                m_OffsetInBuffer         = 0;
-            private int                m_MaxCount               = 0;
-            private SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
-            private AsyncCallback      m_pAsyncCallback         = null;
-            private object             m_pAsyncState            = null;
-            private AutoResetEvent     m_pAsyncWaitHandle       = null;
-            private bool               m_CompletedSynchronously = false;
+            private readonly int                m_MaxCount               = 0;
+            private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
+            private readonly AsyncCallback      m_pAsyncCallback         = null;
+            private readonly object             m_pAsyncState            = null;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly bool               m_CompletedSynchronously = false;
             private bool               m_IsCompleted            = false;
             private bool               m_IsEndCalled            = false;
             private int                m_BytesReaded            = 0;
@@ -3126,19 +3126,19 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadToTerminatorAsyncOperation : IAsyncResult
         {
-            private SmartStream        m_pOwner                 = null;
-            private string             m_Terminator             = "";
-            private byte[]             m_pTerminatorBytes       = null;
-            private Stream             m_pStoreStream           = null;
-            private long               m_MaxCount               = 0;            
-            private SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
-            private AsyncCallback      m_pAsyncCallback         = null;
-            private object             m_pAsyncState            = null;
-            private AutoResetEvent     m_pAsyncWaitHandle       = null;
-            private bool               m_CompletedSynchronously = false;
+            private readonly SmartStream        m_pOwner                 = null;
+            private readonly string             m_Terminator             = "";
+            private readonly byte[]             m_pTerminatorBytes       = null;
+            private readonly Stream             m_pStoreStream           = null;
+            private readonly long               m_MaxCount               = 0;            
+            private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
+            private readonly AsyncCallback      m_pAsyncCallback         = null;
+            private readonly object             m_pAsyncState            = null;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly bool               m_CompletedSynchronously = false;
             private bool               m_IsCompleted            = false;
             private bool               m_IsEndCalled            = false;
-            private byte[]             m_pLineBuffer            = null;
+            private readonly byte[]             m_pLineBuffer            = null;
             private long               m_BytesStored            = 0;
             private Exception          m_pException             = null;
 
@@ -3352,13 +3352,13 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadToStreamAsyncOperation : IAsyncResult
         {
-            private SmartStream        m_pOwner                 = null;
-            private Stream             m_pStoreStream           = null;
-            private long               m_Count                  = 0;
-            private AsyncCallback      m_pAsyncCallback         = null;
-            private object             m_pAsyncState            = null;
-            private AutoResetEvent     m_pAsyncWaitHandle       = null;
-            private bool               m_CompletedSynchronously = false;
+            private readonly SmartStream        m_pOwner                 = null;
+            private readonly Stream             m_pStoreStream           = null;
+            private readonly long               m_Count                  = 0;
+            private readonly AsyncCallback      m_pAsyncCallback         = null;
+            private readonly object             m_pAsyncState            = null;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly bool               m_CompletedSynchronously = false;
             private bool               m_IsCompleted            = false;
             private bool               m_IsEndCalled            = false;
             private long               m_BytesStored            = 0;
@@ -3563,14 +3563,14 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private class ReadAsyncOperation : IAsyncResult
         {
-            private SmartStream        m_pOwner                 = null;
-            private byte[]             m_pBuffer                = null;
-            private int                m_OffsetInBuffer         = 0;
-            private int                m_MaxSize                = 0;
-            private AsyncCallback      m_pAsyncCallback         = null;
-            private object             m_pAsyncState            = null;
-            private AutoResetEvent     m_pAsyncWaitHandle       = null;
-            private bool               m_CompletedSynchronously = false;
+            private readonly SmartStream        m_pOwner                 = null;
+            private readonly byte[]             m_pBuffer                = null;
+            private readonly int                m_OffsetInBuffer         = 0;
+            private readonly int                m_MaxSize                = 0;
+            private readonly AsyncCallback      m_pAsyncCallback         = null;
+            private readonly object             m_pAsyncState            = null;
+            private readonly AutoResetEvent     m_pAsyncWaitHandle       = null;
+            private readonly bool               m_CompletedSynchronously = false;
             private bool               m_IsCompleted            = false;
             private bool               m_IsEndCalled            = false;
             private int                m_BytesStored            = 0;

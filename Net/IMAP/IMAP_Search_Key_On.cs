@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages whose internal date (disregarding time and timezone) is within the specified date.</remarks>
     public class IMAP_Search_Key_On : IMAP_Search_Key
     {
-        private DateTime m_Date;
+        private readonly DateTime m_Date;
 
         /// <summary>
         /// Default constructor.

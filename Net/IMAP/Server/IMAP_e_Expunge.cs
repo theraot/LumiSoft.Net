@@ -8,8 +8,8 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Expunge : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse = null;
-        private string              m_Folder    = null;
-        private IMAP_MessageInfo    m_pMsgInfo  = null;
+        private readonly string              m_Folder    = null;
+        private readonly IMAP_MessageInfo    m_pMsgInfo  = null;
 
         /// <summary>
         /// Default constructor.

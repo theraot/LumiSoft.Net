@@ -18,8 +18,8 @@ namespace LumiSoft.Net.Mail
     /// </example>
     public class Mail_t_Mailbox : Mail_t_Address
     {
-        private string m_DisplayName = null;
-        private string m_Address     = null;
+        private readonly string m_DisplayName = null;
+        private readonly string m_Address     = null;
 
         /// <summary>
         /// Default constructor.

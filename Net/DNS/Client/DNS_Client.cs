@@ -357,7 +357,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public class GetHostAddressesAsyncOP : IDisposable,IAsyncOP
         {
-            private object          m_pLock          = new object();
+            private readonly object          m_pLock          = new object();
             private AsyncOP_State   m_State          = AsyncOP_State.WaitingForStart;
             private Exception       m_pException     = null;
             private string          m_HostNameOrIP   = null;
@@ -764,11 +764,11 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public class GetHostsAddressesAsyncOP : IDisposable,IAsyncOP
         {
-            private object                                  m_pLock          = new object();
+            private readonly object                                  m_pLock          = new object();
             private AsyncOP_State                           m_State          = AsyncOP_State.WaitingForStart;
             private Exception                               m_pException     = null;
             private string[]                                m_pHostNames     = null;
-            private bool                                    m_ResolveAny     = false;
+            private readonly bool                                    m_ResolveAny     = false;
             private Dictionary<int,GetHostAddressesAsyncOP> m_pIpLookupQueue = null;
             private HostEntry[]                             m_pHostEntries   = null;
             private bool                                    m_RiseCompleted  = false;
@@ -1132,7 +1132,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public class GetEmailHostsAsyncOP : IDisposable,IAsyncOP
         {
-            private object        m_pLock         = new object();
+            private readonly object        m_pLock         = new object();
             private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException    = null;
             private string        m_Domain        = null;

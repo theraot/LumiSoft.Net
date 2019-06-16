@@ -16,27 +16,27 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_Stack
     {    
         private SIP_StackState               m_State              = SIP_StackState.Stopped;
-        private SIP_TransportLayer           m_pTransportLayer    = null;
-        private SIP_TransactionLayer         m_pTransactionLayer  = null;
+        private readonly SIP_TransportLayer           m_pTransportLayer    = null;
+        private readonly SIP_TransactionLayer         m_pTransactionLayer  = null;
         private string                       m_UserAgent          = null;
-        private Auth_HttpDigest_NonceManager m_pNonceManager      = null;
-        private List<SIP_Uri>                m_pProxyServers      = null;
+        private readonly Auth_HttpDigest_NonceManager m_pNonceManager      = null;
+        private readonly List<SIP_Uri>                m_pProxyServers      = null;
         private string                       m_Realm              = "";
         private int                          m_CSeq               = 1;
         private int                          m_MaxForwards        = 70;
         private int                          m_MinExpireTime      = 1800;
-        private List<string>                 m_pAllow             = null;
-        private List<string>                 m_pSupported         = null;
+        private readonly List<string>                 m_pAllow             = null;
+        private readonly List<string>                 m_pSupported         = null;
         private int                          m_MaximumConnections = 0;
         private int                          m_MaximumMessageSize = 1000000;
         private int                          m_MinSessionExpires  = 90;
         private int                          m_SessionExpires     = 1800;
-        private List<NetworkCredential>      m_pCredentials       = null;        
-        private List<SIP_UA_Registration>    m_pRegistrations     = null;
-        private SIP_t_CallID                 m_RegisterCallID     = null;
-        private Logger                       m_pLogger            = null;
-        private Dns_Client                   m_pDnsClient         = null;
-        private int                          MTU                  = 1400;
+        private readonly List<NetworkCredential>      m_pCredentials       = null;        
+        private readonly List<SIP_UA_Registration>    m_pRegistrations     = null;
+        private readonly SIP_t_CallID                 m_RegisterCallID     = null;
+        private readonly Logger                       m_pLogger            = null;
+        private readonly Dns_Client                   m_pDnsClient         = null;
+        private readonly int                          MTU                  = 1400;
 
         /// <summary>
         /// Default constructor.

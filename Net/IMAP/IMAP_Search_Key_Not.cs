@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that do not match the specified search key.</remarks>
     public class IMAP_Search_Key_Not : IMAP_Search_Key
     {
-        private IMAP_Search_Key m_pSearchKey = null;
+        private readonly IMAP_Search_Key m_pSearchKey = null;
 
         /// <summary>
         /// Default constructor.

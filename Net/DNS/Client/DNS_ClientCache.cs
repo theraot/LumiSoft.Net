@@ -15,8 +15,8 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private class CacheEntry
         {
-            private DnsServerResponse m_pResponse = null;
-            private DateTime          m_Expires;
+            private readonly DnsServerResponse m_pResponse = null;
+            private readonly DateTime          m_Expires;
 
             /// <summary>
             /// Default constructor.
