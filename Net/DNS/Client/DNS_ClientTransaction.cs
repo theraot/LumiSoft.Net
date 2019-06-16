@@ -349,10 +349,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private void OnStateChanged()
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs<DNS_ClientTransaction>(this));
-            }
+            StateChanged?.Invoke(this, new EventArgs<DNS_ClientTransaction>(this));
         }
 
         /// <summary>
@@ -360,10 +357,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private void OnTimeout()
         {
-            if (Timeout != null)
-            {
-                Timeout(this, new EventArgs());
-            }
+            Timeout?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

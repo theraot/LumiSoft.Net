@@ -401,10 +401,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -413,10 +410,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         private void OnError(SIP_ResponseReceivedEventArgs e)
         {
-            if (Error != null)
-            {
-                Error(this, e);
-            }
+            Error?.Invoke(this, e);
         }
 
         /// <summary>
@@ -424,10 +418,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnRegistered()
         {
-            if (Registered != null)
-            {
-                Registered(this, new EventArgs());
-            }
+            Registered?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -435,10 +426,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnStateChanged()
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs());
-            }
+            StateChanged?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -446,10 +434,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnUnregistered()
         {
-            if (Unregistered != null)
-            {
-                Unregistered(this, new EventArgs());
-            }
+            Unregistered?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

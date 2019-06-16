@@ -60,12 +60,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["local-tag"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -89,12 +84,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["remote-tag"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

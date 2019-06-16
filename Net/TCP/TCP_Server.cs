@@ -480,10 +480,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -513,10 +510,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected void OnStarted()
         {
-            if (Started != null)
-            {
-                Started(this, new EventArgs());
-            }
+            Started?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -524,10 +518,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         protected void OnStopped()
         {
-            if (Stopped != null)
-            {
-                Stopped(this, new EventArgs());
-            }
+            Stopped?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -572,10 +563,7 @@ namespace LumiSoft.Net.TCP
         /// <param name="x">Exception happened.</param>
         private void OnError(Exception x)
         {
-            if (Error != null)
-            {
-                Error(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
-            }
+            Error?.Invoke(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
         }
 
         /// <summary>
@@ -584,10 +572,7 @@ namespace LumiSoft.Net.TCP
         /// <param name="session">TCP server session that was created.</param>
         private void OnSessionCreated(T session)
         {
-            if (SessionCreated != null)
-            {
-                SessionCreated(this, new TCP_ServerSessionEventArgs<T>(this, session));
-            }
+            SessionCreated?.Invoke(this, new TCP_ServerSessionEventArgs<T>(this, session));
         }
 
         /// <summary>
@@ -941,10 +926,7 @@ namespace LumiSoft.Net.TCP
             /// <param name="socket">Accepted socket.</param>
             private void OnConnectionAccepted(Socket socket)
             {
-                if (ConnectionAccepted != null)
-                {
-                    ConnectionAccepted(this, new EventArgs<Socket>(socket));
-                }
+                ConnectionAccepted?.Invoke(this, new EventArgs<Socket>(socket));
             }
 
             /// <summary>
@@ -958,10 +940,7 @@ namespace LumiSoft.Net.TCP
             /// <param name="x">Exception happened.</param>
             private void OnError(Exception x)
             {
-                if (Error != null)
-                {
-                    Error(this, new ExceptionEventArgs(x));
-                }
+                Error?.Invoke(this, new ExceptionEventArgs(x));
             }
         }
     }

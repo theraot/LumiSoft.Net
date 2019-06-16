@@ -53,12 +53,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Accept-Language");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -307,12 +302,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Comments");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -615,12 +605,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Importance");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -664,12 +649,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("In-Reply-To");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -713,12 +693,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Keywords");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -765,12 +740,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-Archive");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -814,12 +784,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-Help");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -863,12 +828,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-ID");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -912,12 +872,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-Owner");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -961,12 +916,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-Post");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1010,12 +960,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-Subscribe");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1059,12 +1004,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("List-Unsubscribe");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1109,12 +1049,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Message-Context");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1159,12 +1094,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Message-ID");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1209,12 +1139,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Original-Message-ID");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1258,12 +1183,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("PICS-Label");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1307,12 +1227,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Priority");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1394,12 +1309,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("References");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -1721,12 +1631,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Resent-Message-ID");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -2044,12 +1949,7 @@ namespace LumiSoft.Net.Mail
                 }
 
                 var h = Header.GetFirst("Subject");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set

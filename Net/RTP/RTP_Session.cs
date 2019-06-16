@@ -1018,10 +1018,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="stream">New receive stream.</param>
         internal void OnNewReceiveStream(RTP_ReceiveStream stream)
         {
-            if (NewReceiveStream != null)
-            {
-                NewReceiveStream(this, new RTP_ReceiveStreamEventArgs(stream));
-            }
+            NewReceiveStream?.Invoke(this, new RTP_ReceiveStreamEventArgs(stream));
         }
 
         /// <summary>
@@ -1434,10 +1431,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnClosed()
         {
-            if (Closed != null)
-            {
-                Closed(this, new EventArgs());
-            }
+            Closed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -1445,10 +1439,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -1457,10 +1448,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="stream">New send stream.</param>
         private void OnNewSendStream(RTP_SendStream stream)
         {
-            if (NewSendStream != null)
-            {
-                NewSendStream(this, new RTP_SendStreamEventArgs(stream));
-            }
+            NewSendStream?.Invoke(this, new RTP_SendStreamEventArgs(stream));
         }
 
         /// <summary>
@@ -1468,10 +1456,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnPayloadChanged()
         {
-            if (PayloadChanged != null)
-            {
-                PayloadChanged(this, new EventArgs());
-            }
+            PayloadChanged?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

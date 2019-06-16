@@ -150,13 +150,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         internal void OnCollectionChanged()
         {
-            if (Owner != null)
-            {
-                if (Owner is GroupAddress)
-                {
-                    ((GroupAddress)Owner).OnChanged();
-                }
-            }
+            (Owner as GroupAddress)?.OnChanged();
         }
     }
 }

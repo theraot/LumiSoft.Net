@@ -215,9 +215,9 @@ namespace LumiSoft.Net.Mime
                 {
                     ((AddressList)Owner).OnCollectionChanged();
                 }
-                else if (Owner is MailboxAddressCollection)
+                else
                 {
-                    ((MailboxAddressCollection)Owner).OnCollectionChanged();
+                    (Owner as MailboxAddressCollection)?.OnCollectionChanged();
                 }
             }
         }

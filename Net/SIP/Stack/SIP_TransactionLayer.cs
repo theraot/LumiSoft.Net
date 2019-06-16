@@ -150,10 +150,7 @@ namespace LumiSoft.Net.SIP.Stack
                 });
 
                 var dialog = MatchDialog(request);
-                if (dialog != null)
-                {
-                    dialog.AddTransaction(transaction);
-                }
+                dialog?.AddTransaction(transaction);
 
                 return transaction;
             }
@@ -198,10 +195,7 @@ namespace LumiSoft.Net.SIP.Stack
                 });
 
                 var dialog = MatchDialog(request);
-                if (dialog != null)
-                {
-                    dialog.AddTransaction(transaction);
-                }
+                dialog?.AddTransaction(transaction);
 
                 return transaction;
             }

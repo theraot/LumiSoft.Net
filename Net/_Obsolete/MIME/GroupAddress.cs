@@ -77,13 +77,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         internal void OnChanged()
         {
-            if (Owner != null)
-            {
-                if (Owner is AddressList)
-                {
-                    ((AddressList)Owner).OnCollectionChanged();
-                }
-            }
+            (Owner as AddressList)?.OnCollectionChanged();
         }
     }
 }

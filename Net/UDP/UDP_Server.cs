@@ -645,10 +645,7 @@ namespace LumiSoft.Net.UDP
         /// <param name="x">Exception occured.</param>
         private void OnError(Exception x)
         {
-            if (Error != null)
-            {
-                Error(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
-            }
+            Error?.Invoke(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
         }
 
         /// <summary>
@@ -657,10 +654,7 @@ namespace LumiSoft.Net.UDP
         /// <param name="e">Event data.</param>
         private void OnUdpPacketReceived(UDP_e_PacketReceived e)
         {
-            if (PacketReceived != null)
-            {
-                PacketReceived(this, e);
-            }
+            PacketReceived?.Invoke(this, e);
         }
 
         /// <summary>

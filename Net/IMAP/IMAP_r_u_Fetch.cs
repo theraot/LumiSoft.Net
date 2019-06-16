@@ -264,10 +264,7 @@ namespace LumiSoft.Net.IMAP
             var response = Encoding.UTF8.GetBytes(responseS);
 
             // Log.
-            if (session != null)
-            {
-                session.LogAddWrite(response.Length, responseS.TrimEnd());
-            }
+            session?.LogAddWrite(response.Length, responseS.TrimEnd());
 
             // Starts writing response to stream.
             var ar = stream.BeginWrite(
@@ -285,17 +282,11 @@ namespace LumiSoft.Net.IMAP
                     {
                         stream.EndWrite(r);
 
-                        if (completedAsyncCallback != null)
-                        {
-                            completedAsyncCallback(this, new EventArgs<Exception>(null));
-                        }
+                        completedAsyncCallback?.Invoke(this, new EventArgs<Exception>(null));
                     }
                     catch (Exception x)
                     {
-                        if (completedAsyncCallback != null)
-                        {
-                            completedAsyncCallback(this, new EventArgs<Exception>(x));
-                        }
+                        completedAsyncCallback?.Invoke(this, new EventArgs<Exception>(x));
                     }
                 },
                 null

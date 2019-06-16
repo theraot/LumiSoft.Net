@@ -1783,10 +1783,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<AuthAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<AuthAsyncOP>(this));
             }
         }
 
@@ -2110,10 +2107,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<CapaAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<CapaAsyncOP>(this));
             }
         }
 
@@ -2332,10 +2326,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<FillMessagesAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<FillMessagesAsyncOP>(this));
             }
         }
 
@@ -2707,10 +2698,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<ListAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<ListAsyncOP>(this));
             }
         }
 
@@ -3056,10 +3044,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<LoginAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<LoginAsyncOP>(this));
             }
         }
 
@@ -3279,10 +3264,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<NoopAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<NoopAsyncOP>(this));
             }
         }
 
@@ -3508,10 +3490,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<RsetAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<RsetAsyncOP>(this));
             }
         }
 
@@ -3788,10 +3767,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<StlsAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<StlsAsyncOP>(this));
             }
         }
 
@@ -4161,10 +4137,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<UidlAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<UidlAsyncOP>(this));
             }
         }
     }

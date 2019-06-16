@@ -719,10 +719,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<MarkForDeletionAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<MarkForDeletionAsyncOP>(this));
             }
         }
 
@@ -1026,10 +1023,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<MessageTopLinesToStreamAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<MessageTopLinesToStreamAsyncOP>(this));
             }
         }
 
@@ -1312,10 +1306,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<MessageToStreamAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<MessageToStreamAsyncOP>(this));
             }
         }
     }

@@ -551,18 +551,12 @@ namespace LumiSoft.Net.SIP.Stack
                 // We have "ping"(CRLFCRLF) request, response with "pong".
                 if (message.Length == 4)
                 {
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddRead("", null, 2, "Flow [id='" + flow.ID + "'] received \"ping\"", flow.LocalEP, flow.RemoteEP);
-                    }
+                    Stack.Logger?.AddRead("", null, 2, "Flow [id='" + flow.ID + "'] received \"ping\"", flow.LocalEP, flow.RemoteEP);
 
                     // Send "pong".
                     flow.SendInternal(new[] { (byte)'\r', (byte)'\n' });
 
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddWrite("", null, 2, "Flow [id='" + flow.ID + "'] sent \"pong\"", flow.LocalEP, flow.RemoteEP);
-                    }
+                    Stack.Logger?.AddWrite("", null, 2, "Flow [id='" + flow.ID + "'] sent \"pong\"", flow.LocalEP, flow.RemoteEP);
 
                     return;
                 }
@@ -570,10 +564,7 @@ namespace LumiSoft.Net.SIP.Stack
 
                 if (message.Length == 2)
                 {
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddRead("", null, 2, "Flow [id='" + flow.ID + "'] received \"pong\"", flow.LocalEP, flow.RemoteEP);
-                    }
+                    Stack.Logger?.AddRead("", null, 2, "Flow [id='" + flow.ID + "'] received \"pong\"", flow.LocalEP, flow.RemoteEP);
 
                     return;
                 }
@@ -587,10 +578,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     catch (Exception x)
                     {
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddText("Skipping message, parse error: " + x.ToString());
-                        }
+                        Stack.Logger?.AddText("Skipping message, parse error: " + x.ToString());
 
                         return;
                     }
@@ -601,10 +589,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     catch (Exception x)
                     {
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddText("Response validation failed: " + x.ToString());
-                        }
+                        Stack.Logger?.AddText("Response validation failed: " + x.ToString());
 
                         return;
                     }
@@ -659,10 +644,7 @@ namespace LumiSoft.Net.SIP.Stack
                     catch (Exception x)
                     {
                         // Log
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddText("Skipping message, parse error: " + x.Message);
-                        }
+                        Stack.Logger?.AddText("Skipping message, parse error: " + x.Message);
 
                         return;
                     }
@@ -673,10 +655,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     catch (Exception x)
                     {
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddText("Request validation failed: " + x.ToString());
-                        }
+                        Stack.Logger?.AddText("Request validation failed: " + x.ToString());
 
                         // Bad request, send error to request maker.
                         SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ". " + x.Message, request));
@@ -1092,10 +1071,7 @@ namespace LumiSoft.Net.SIP.Stack
                             var srv = srvRecords[i];
                             try
                             {
-                                if (Stack.Logger != null)
-                                {
-                                    Stack.Logger.AddText(logID, "Starts sending response to DNS SRV record '" + srv.Target + "'.");
-                                }
+                                Stack.Logger?.AddText(logID, "Starts sending response to DNS SRV record '" + srv.Target + "'.");
 
                                 SendResponseToHost(logID, transactionID, localEP, srv.Target, srv.Port, via.ProtocolTransport, response);
                             }
@@ -1104,29 +1080,20 @@ namespace LumiSoft.Net.SIP.Stack
                                 // Generate error, all SRV records has failed.
                                 if (i == (srvRecords.Length - 1))
                                 {
-                                    if (Stack.Logger != null)
-                                    {
-                                        Stack.Logger.AddText(logID, "Failed to send response to DNS SRV record '" + srv.Target + "'.");
-                                    }
+                                    Stack.Logger?.AddText(logID, "Failed to send response to DNS SRV record '" + srv.Target + "'.");
 
                                     throw new SIP_TransportException("Host '" + via.SentBy.Host + "' is not accessible.");
                                 }
                                 // For loop will try next SRV record.
 
-                                if (Stack.Logger != null)
-                                {
-                                    Stack.Logger.AddText(logID, "Failed to send response to DNS SRV record '" + srv.Target + "', will try next.");
-                                }
+                                Stack.Logger?.AddText(logID, "Failed to send response to DNS SRV record '" + srv.Target + "', will try next.");
                             }
                         }
                     }
                     // If no SRV, use A and AAAA records. (Thats not in 3263 5., but we need to todo it so.)
                     else
                     {
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddText(logID, "No DNS SRV records found, starts sending to Via: sent-by host '" + via.SentBy.Host + "'.");
-                        }
+                        Stack.Logger?.AddText(logID, "No DNS SRV records found, starts sending to Via: sent-by host '" + via.SentBy.Host + "'.");
 
                         SendResponseToHost(logID, transactionID, localEP, via.SentBy.Host, via.SentByPortWithDefault, via.ProtocolTransport, response);
                     }
@@ -1270,20 +1237,17 @@ namespace LumiSoft.Net.SIP.Stack
                     var flow = transaction.Flow;
                     flow.Send(response);
 
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddWrite(
-                            logID,
-                            null,
-                            0,
-                            "Response [flowReuse=true; transactionID='" + transactionID + "'; method='" + response.CSeq.RequestMethod + "'; cseq='" + response.CSeq.SequenceNumber + "'; " +
-                                "transport='" + flow.Transport + "'; size='" + responseData.Length + "'; statusCode='" + response.StatusCode + "'; " +
-                                "reason='" + response.ReasonPhrase + "'; sent '" + flow.LocalEP + "' -> '" + flow.RemoteEP + "'.",
-                            localEP,
-                            flow.RemoteEP,
-                            responseData
-                        );
-                    }
+                    Stack.Logger?.AddWrite(
+                        logID,
+                        null,
+                        0,
+                        "Response [flowReuse=true; transactionID='" + transactionID + "'; method='" + response.CSeq.RequestMethod + "'; cseq='" + response.CSeq.SequenceNumber + "'; " +
+                        "transport='" + flow.Transport + "'; size='" + responseData.Length + "'; statusCode='" + response.StatusCode + "'; " +
+                        "reason='" + response.ReasonPhrase + "'; sent '" + flow.LocalEP + "' -> '" + flow.RemoteEP + "'.",
+                        localEP,
+                        flow.RemoteEP,
+                        responseData
+                    );
 
                     return;
                 }
@@ -1332,20 +1296,17 @@ namespace LumiSoft.Net.SIP.Stack
                     {
                         flow.Send(response);
 
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddWrite(
-                                logID,
-                                null,
-                                0,
-                                "Response [flowReuse=true; transactionID='" + transactionID + "'; method='" + response.CSeq.RequestMethod + "'; cseq='" + response.CSeq.SequenceNumber + "'; " +
-                                    "transport='" + flow.Transport + "'; size='" + responseData.Length + "'; statusCode='" + response.StatusCode + "'; " +
-                                    "reason='" + response.ReasonPhrase + "'; sent '" + flow.RemoteEP + "' -> '" + flow.LocalEP + "'.",
-                                localEP,
-                                remoteEP,
-                                responseData
-                            );
-                        }
+                        Stack.Logger?.AddWrite(
+                            logID,
+                            null,
+                            0,
+                            "Response [flowReuse=true; transactionID='" + transactionID + "'; method='" + response.CSeq.RequestMethod + "'; cseq='" + response.CSeq.SequenceNumber + "'; " +
+                            "transport='" + flow.Transport + "'; size='" + responseData.Length + "'; statusCode='" + response.StatusCode + "'; " +
+                            "reason='" + response.ReasonPhrase + "'; sent '" + flow.RemoteEP + "' -> '" + flow.LocalEP + "'.",
+                            localEP,
+                            remoteEP,
+                            responseData
+                        );
 
                         return;
                     }
@@ -1427,20 +1388,17 @@ namespace LumiSoft.Net.SIP.Stack
                         flow.Send(response);
                         // localEP = flow.LocalEP;
 
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddWrite(
-                                logID,
-                                null,
-                                0,
-                                "Response [transactionID='" + transactionID + "'; method='" + response.CSeq.RequestMethod + "'; cseq='" + response.CSeq.SequenceNumber + "'; " +
-                                    "transport='" + transport + "'; size='" + responseData.Length + "'; statusCode='" + response.StatusCode + "'; " +
-                                    "reason='" + response.ReasonPhrase + "'; sent '" + localEP + "' -> '" + remoteEP + "'.",
-                                localEP,
-                                remoteEP,
-                                responseData
-                            );
-                        }
+                        Stack.Logger?.AddWrite(
+                            logID,
+                            null,
+                            0,
+                            "Response [transactionID='" + transactionID + "'; method='" + response.CSeq.RequestMethod + "'; cseq='" + response.CSeq.SequenceNumber + "'; " +
+                            "transport='" + transport + "'; size='" + responseData.Length + "'; statusCode='" + response.StatusCode + "'; " +
+                            "reason='" + response.ReasonPhrase + "'; sent '" + localEP + "' -> '" + remoteEP + "'.",
+                            localEP,
+                            remoteEP,
+                            responseData
+                        );
 
                         // If we reach so far, send succeeded.
                         return;
@@ -1450,19 +1408,13 @@ namespace LumiSoft.Net.SIP.Stack
                         // Generate error, all IP addresses has failed.
                         if (i == (targets.Length - 1))
                         {
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(logID, "Failed to send response to host '" + host + "' IP end point '" + remoteEP + "'.");
-                            }
+                            Stack.Logger?.AddText(logID, "Failed to send response to host '" + host + "' IP end point '" + remoteEP + "'.");
 
                             throw new SIP_TransportException("Host '" + host + ":" + port + "' is not accessible.");
                         }
                         // For loop will try next IP address.
 
-                        if (Stack.Logger != null)
-                        {
-                            Stack.Logger.AddText(logID, "Failed to send response to host '" + host + "' IP end point '" + remoteEP + "', will try next A record.");
-                        }
+                        Stack.Logger?.AddText(logID, "Failed to send response to host '" + host + "' IP end point '" + remoteEP + "', will try next A record.");
                     }
                 }
             }

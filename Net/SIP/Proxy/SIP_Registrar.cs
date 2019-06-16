@@ -447,10 +447,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorRegistered(SIP_Registration registration)
         {
-            if (AorRegistered != null)
-            {
-                AorRegistered(this, new SIP_RegistrationEventArgs(registration));
-            }
+            AorRegistered?.Invoke(this, new SIP_RegistrationEventArgs(registration));
         }
 
         /// <summary>
@@ -459,10 +456,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorUnregistered(SIP_Registration registration)
         {
-            if (AorUnregistered != null)
-            {
-                AorUnregistered(this, new SIP_RegistrationEventArgs(registration));
-            }
+            AorUnregistered?.Invoke(this, new SIP_RegistrationEventArgs(registration));
         }
 
         /// <summary>
@@ -471,10 +465,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="registration">SIP registration.</param>
         private void OnAorUpdated(SIP_Registration registration)
         {
-            if (AorUpdated != null)
-            {
-                AorUpdated(this, new SIP_RegistrationEventArgs(registration));
-            }
+            AorUpdated?.Invoke(this, new SIP_RegistrationEventArgs(registration));
         }
     }
 }

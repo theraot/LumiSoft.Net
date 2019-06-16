@@ -139,10 +139,7 @@ namespace LumiSoft.Net.AUTH
         {
             var retVal = new AUTH_e_Authenticate(authorizationID, userName, password);
 
-            if (Authenticate != null)
-            {
-                Authenticate(this, retVal);
-            }
+            Authenticate?.Invoke(this, retVal);
 
             return retVal;
         }

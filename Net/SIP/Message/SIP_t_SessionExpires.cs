@@ -72,12 +72,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["refresher"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

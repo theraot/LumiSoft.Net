@@ -365,10 +365,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="bye">BYE request.</param>
         private void OnTerminatedByRemoteParty(SIP_RequestReceivedEventArgs bye)
         {
-            if (TerminatedByRemoteParty != null)
-            {
-                TerminatedByRemoteParty(this, bye);
-            }
+            TerminatedByRemoteParty?.Invoke(this, bye);
         }
     }
 }

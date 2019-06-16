@@ -358,10 +358,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnClosed()
         {
-            if (Closed != null)
-            {
-                Closed(this, new EventArgs());
-            }
+            Closed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -369,10 +366,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnDisposing()
         {
-            if (Disposing != null)
-            {
-                Disposing(this, new EventArgs());
-            }
+            Disposing?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -380,10 +374,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnStateChaged()
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs());
-            }
+            StateChanged?.Invoke(this, new EventArgs());
         }
     }
 }

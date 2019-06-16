@@ -150,10 +150,7 @@ namespace LumiSoft.Net.Log
         /// <param name="entry">Log entry.</param>
         private void OnWriteLog(LogEntry entry)
         {
-            if (WriteLog != null)
-            {
-                WriteLog(this, new WriteLogEventArgs(entry));
-            }
+            WriteLog?.Invoke(this, new WriteLogEventArgs(entry));
         }
     }
 }

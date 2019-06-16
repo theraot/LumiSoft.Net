@@ -905,10 +905,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event args.</param>
         private void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {
-            if (RequestReceived != null)
-            {
-                RequestReceived(this, e);
-            }
+            RequestReceived?.Invoke(this, e);
         }
 
         /// <summary>
@@ -916,10 +913,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnStateChanged()
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs());
-            }
+            StateChanged?.Invoke(this, new EventArgs());
         }
     }
 }

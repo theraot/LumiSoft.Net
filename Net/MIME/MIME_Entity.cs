@@ -55,12 +55,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Alternative");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -105,12 +100,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Base");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -155,12 +145,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Description");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -261,12 +246,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Duration");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -312,12 +292,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-features");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -362,12 +337,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-ID");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -413,12 +383,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Language");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -464,12 +429,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Location");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -514,12 +474,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-MD5");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set
@@ -565,12 +520,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("Content-Transfer-Encoding");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value.Trim();
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value.Trim();
             }
 
             set
@@ -711,12 +661,7 @@ namespace LumiSoft.Net.MIME
                 }
 
                 var h = m_pHeader.GetFirst("MIME-Version");
-                if (h != null)
-                {
-                    return ((MIME_h_Unstructured)h).Value;
-                }
-
-                return null;
+                return ((MIME_h_Unstructured) h)?.Value;
             }
 
             set

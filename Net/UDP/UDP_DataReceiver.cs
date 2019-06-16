@@ -242,10 +242,7 @@ namespace LumiSoft.Net.UDP
                 return;
             }
 
-            if (Error != null)
-            {
-                Error(this, new ExceptionEventArgs(x));
-            }
+            Error?.Invoke(this, new ExceptionEventArgs(x));
         }
 
         /// <summary>

@@ -94,10 +94,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="msgData">Message data. NOTE: This value must be as specified by <see cref="IMAP_e_Fetch.FetchDataType"/>.</param>
         private void OnNewMessageData(IMAP_MessageInfo msgInfo, Mail_Message msgData)
         {
-            if (NewMessageData != null)
-            {
-                NewMessageData(this, new e_NewMessageData(msgInfo, msgData));
-            }
+            NewMessageData?.Invoke(this, new e_NewMessageData(msgInfo, msgData));
         }
         /// <summary>
         /// This class provides data for <b cref="IMAP_e_Fetch.NewMessageData">IMAP_Session.NewMessageData</b> event.

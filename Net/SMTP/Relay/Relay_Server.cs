@@ -600,10 +600,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="x">Exception happned.</param>
         internal protected virtual void OnError(Exception x)
         {
-            if (Error != null)
-            {
-                Error(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
-            }
+            Error?.Invoke(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
         }
 
         /// <summary>
@@ -613,10 +610,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="exception">Exception happened or null if relay completed successfully.</param>
         internal protected virtual void OnSessionCompleted(Relay_Session session, Exception exception)
         {
-            if (SessionCompleted != null)
-            {
-                SessionCompleted(new Relay_SessionCompletedEventArgs(session, exception));
-            }
+            SessionCompleted?.Invoke(new Relay_SessionCompletedEventArgs(session, exception));
         }
 
         /// <summary>

@@ -1493,10 +1493,7 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<GetEmailHostsAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<GetEmailHostsAsyncOP>(this));
             }
         }
 
@@ -1816,10 +1813,7 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<GetHostAddressesAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<GetHostAddressesAsyncOP>(this));
             }
         }
 
@@ -2098,10 +2092,7 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<GetHostsAddressesAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<GetHostsAddressesAsyncOP>(this));
             }
         }
     }

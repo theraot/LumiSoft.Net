@@ -149,10 +149,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnChanged()
         {
-            if (Changed != null)
-            {
-                Changed(this, new RTP_ParticipantEventArgs(this));
-            }
+            Changed?.Invoke(this, new RTP_ParticipantEventArgs(this));
         }
     }
 }

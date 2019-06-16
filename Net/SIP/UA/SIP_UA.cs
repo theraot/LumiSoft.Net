@@ -149,10 +149,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="request">SIP request.</param>
         protected void OnRequestReceived(SIP_RequestReceivedEventArgs request)
         {
-            if (RequestReceived != null)
-            {
-                RequestReceived(this, request);
-            }
+            RequestReceived?.Invoke(this, request);
         }
 
         /// <summary>
@@ -244,10 +241,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="call">Incoming call.</param>
         private void OnIncomingCall(SIP_UA_Call call)
         {
-            if (IncomingCall != null)
-            {
-                IncomingCall(this, new SIP_UA_Call_EventArgs(call));
-            }
+            IncomingCall?.Invoke(this, new SIP_UA_Call_EventArgs(call));
         }
     }
 }

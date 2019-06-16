@@ -30,10 +30,7 @@ namespace LumiSoft.Net.SIP.Stack
         internal SIP_ClientTransaction(SIP_Stack stack, SIP_Flow flow, SIP_Request request) : base(stack, flow, request)
         {
             // Log
-            if (Stack.Logger != null)
-            {
-                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] created.");
-            }
+            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] created.");
 
             SetState(SIP_TransactionState.WaitingToStart);
         }
@@ -115,10 +112,7 @@ namespace LumiSoft.Net.SIP.Stack
                 }
 
                 // Log
-                if (Stack.Logger != null)
-                {
-                    Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] disposed.");
-                }
+                Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] disposed.");
 
                 // Kill timers.
                 if (m_pTimerA != null)
@@ -227,10 +221,7 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerA.Enabled = true;
 
                                 // Log
-                                if (Stack.Logger != null)
-                                {
-                                    Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) started, will trigger after " + m_pTimerA.Interval + ".");
-                                }
+                                Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) started, will trigger after " + m_pTimerA.Interval + ".");
                             }
 
                             // Start timer B.
@@ -239,10 +230,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerB.Enabled = true;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer B(INVITE calling state timeout) started, will trigger after " + m_pTimerB.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer B(INVITE calling state timeout) started, will trigger after " + m_pTimerB.Interval + ".");
                         }
                         else
                         {
@@ -263,10 +251,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerF.Enabled = true;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) started, will trigger after " + m_pTimerF.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) started, will trigger after " + m_pTimerF.Interval + ".");
 
                             try
                             {
@@ -292,10 +277,7 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerE.Enabled = true;
 
                                 // Log
-                                if (Stack.Logger != null)
-                                {
-                                    Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(Non-INVITE request retransmission) started, will trigger after " + m_pTimerE.Interval + ".");
-                                }
+                                Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(Non-INVITE request retransmission) started, will trigger after " + m_pTimerE.Interval + ".");
                             }
                         }
                     }
@@ -411,10 +393,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerA = null;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) stopped.");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) stopped.");
                         }
                         if (m_pTimerB != null)
                         {
@@ -422,10 +401,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerB = null;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer B(INVITE calling state timeout) stopped.");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer B(INVITE calling state timeout) stopped.");
                         }
 
                         // 1xx response.
@@ -448,10 +424,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerM.Enabled = true;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer M(2xx retransmission wait) started, will trigger after " + m_pTimerM.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer M(2xx retransmission wait) started, will trigger after " + m_pTimerM.Interval + ".");
                         }
                         // 3xx - 6xx response.
                         else
@@ -468,10 +441,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerD = new TimerEx(Flow.IsReliable ? 0 : 32000, false);
                             m_pTimerD.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerD_Elapsed);
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer D(INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerD.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer D(INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerD.Interval + ".");
                             m_pTimerD.Enabled = true;
                         }
                     }
@@ -499,10 +469,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerM.Enabled = true;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer M(2xx retransmission wait) started, will trigger after " + m_pTimerM.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=true] timer M(2xx retransmission wait) started, will trigger after " + m_pTimerM.Interval + ".");
                         }
                         // 3xx - 6xx response.
                         else
@@ -519,10 +486,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerD = new TimerEx(Flow.IsReliable ? 0 : 32000, false);
                             m_pTimerD.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerD_Elapsed);
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer D(INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerD.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer D(INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerD.Interval + ".");
                             m_pTimerD.Enabled = true;
                         }
                     }
@@ -603,10 +567,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerE = null;
 
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(Non-INVITE request retransmission) stopped.");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(Non-INVITE request retransmission) stopped.");
                         }
 
                         // 1xx response.
@@ -625,10 +586,7 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerF = null;
 
                                 // Log
-                                if (Stack.Logger != null)
-                                {
-                                    Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) stopped.");
-                                }
+                                Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) stopped.");
                             }
 
                             OnResponseReceived(response);
@@ -642,10 +600,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerK = new TimerEx(Flow.IsReliable ? 1 : SIP_TimerConstants.T4, false);
                             m_pTimerK.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerK_Elapsed);
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer K(Non-INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerK.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer K(Non-INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerK.Interval + ".");
                             m_pTimerK.Enabled = true;
                         }
                     }
@@ -669,10 +624,7 @@ namespace LumiSoft.Net.SIP.Stack
                                 m_pTimerF = null;
 
                                 // Log
-                                if (Stack.Logger != null)
-                                {
-                                    Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) stopped.");
-                                }
+                                Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) stopped.");
                             }
 
                             OnResponseReceived(response);
@@ -686,10 +638,7 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerK = new TimerEx(Flow.IsReliable ? 0 : SIP_TimerConstants.T4, false);
                             m_pTimerK.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerK_Elapsed);
                             // Log
-                            if (Stack.Logger != null)
-                            {
-                                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer K(Non-INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerK.Interval + ".");
-                            }
+                            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer K(Non-INVITE 3xx - 6xx response retransmission wait) started, will trigger after " + m_pTimerK.Interval + ".");
                             m_pTimerK.Enabled = true;
                         }
                     }
@@ -733,10 +682,7 @@ namespace LumiSoft.Net.SIP.Stack
                 if (State == SIP_TransactionState.Calling)
                 {
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) triggered.");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) triggered.");
 
                     try
                     {
@@ -755,10 +701,7 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pTimerA.Enabled = true;
 
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) updated, will trigger after " + m_pTimerA.Interval + ".");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer A(INVITE request retransmission) updated, will trigger after " + m_pTimerA.Interval + ".");
                 }
             }
         }
@@ -783,10 +726,7 @@ namespace LumiSoft.Net.SIP.Stack
                 if (State == SIP_TransactionState.Calling)
                 {
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer B(INVITE calling state timeout) triggered.");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer B(INVITE calling state timeout) triggered.");
 
                     OnTimedOut();
                     SetState(SIP_TransactionState.Terminated);
@@ -823,10 +763,7 @@ namespace LumiSoft.Net.SIP.Stack
                 if (State == SIP_TransactionState.Completed)
                 {
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer D(INVITE 3xx - 6xx response retransmission wait) triggered.");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer D(INVITE 3xx - 6xx response retransmission wait) triggered.");
 
                     SetState(SIP_TransactionState.Terminated);
                 }
@@ -854,10 +791,7 @@ namespace LumiSoft.Net.SIP.Stack
                 if (State == SIP_TransactionState.Trying)
                 {
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(-NonINVITE request retransmission) triggered.");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(-NonINVITE request retransmission) triggered.");
 
                     try
                     {
@@ -876,10 +810,7 @@ namespace LumiSoft.Net.SIP.Stack
                     m_pTimerE.Enabled = true;
 
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(Non-INVITE request retransmission) updated, will trigger after " + m_pTimerE.Interval + ".");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer E(Non-INVITE request retransmission) updated, will trigger after " + m_pTimerE.Interval + ".");
                 }
             }
         }
@@ -904,10 +835,7 @@ namespace LumiSoft.Net.SIP.Stack
                 if (State == SIP_TransactionState.Trying || State == SIP_TransactionState.Proceeding)
                 {
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) triggered.");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer F(Non-INVITE trying,proceeding state timeout) triggered.");
 
                     OnTimedOut();
 
@@ -948,10 +876,7 @@ namespace LumiSoft.Net.SIP.Stack
                 if (State == SIP_TransactionState.Completed)
                 {
                     // Log
-                    if (Stack.Logger != null)
-                    {
-                        Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer K(Non-INVITE 3xx - 6xx response retransmission wait) triggered.");
-                    }
+                    Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer K(Non-INVITE 3xx - 6xx response retransmission wait) triggered.");
 
                     SetState(SIP_TransactionState.Terminated);
                 }
@@ -973,10 +898,7 @@ namespace LumiSoft.Net.SIP.Stack
             lock (SyncRoot)
             {
                 // Log
-                if (Stack.Logger != null)
-                {
-                    Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer M(2xx response retransmission wait) triggered.");
-                }
+                Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=false] timer M(2xx response retransmission wait) triggered.");
 
                 SetState(SIP_TransactionState.Terminated);
             }
@@ -988,10 +910,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="response">SIP response received.</param>
         private void OnResponseReceived(SIP_Response response)
         {
-            if (ResponseReceived != null)
-            {
-                ResponseReceived(this, new SIP_ResponseReceivedEventArgs(Stack, this, response));
-            }
+            ResponseReceived?.Invoke(this, new SIP_ResponseReceivedEventArgs(Stack, this, response));
         }
 
         /// <summary>

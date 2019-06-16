@@ -229,10 +229,7 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             // Log
-            if (Server.Logger != null)
-            {
-                Server.Logger.AddText(ID, text);
-            }
+            Server.Logger?.AddText(ID, text);
         }
 
         /// <summary>
@@ -392,10 +389,7 @@ namespace LumiSoft.Net.FTP.Server
                    processed.
             */
 
-            if (m_pDataConnection != null)
-            {
-                m_pDataConnection.Abort();
-            }
+            m_pDataConnection?.Abort();
 
             WriteLine("226 ABOR command successful.");
         }
@@ -896,10 +890,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnAppe(FTP_e_Appe e)
         {
-            if (Appe != null)
-            {
-                Appe(this, e);
-            }
+            Appe?.Invoke(this, e);
         }
 
         /// <summary>
@@ -912,10 +903,7 @@ namespace LumiSoft.Net.FTP.Server
         {
             var eArgs = new FTP_e_Authenticate(user, password);
 
-            if (Authenticate != null)
-            {
-                Authenticate(this, eArgs);
-            }
+            Authenticate?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -926,10 +914,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnCdup(FTP_e_Cdup e)
         {
-            if (Cdup != null)
-            {
-                Cdup(this, e);
-            }
+            Cdup?.Invoke(this, e);
         }
 
         /// <summary>
@@ -938,10 +923,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnCwd(FTP_e_Cwd e)
         {
-            if (Cwd != null)
-            {
-                Cwd(this, e);
-            }
+            Cwd?.Invoke(this, e);
         }
 
         /// <summary>
@@ -950,10 +932,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnDele(FTP_e_Dele e)
         {
-            if (Dele != null)
-            {
-                Dele(this, e);
-            }
+            Dele?.Invoke(this, e);
         }
 
         /// <summary>
@@ -962,10 +941,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event arguments.</param>
         private void OnGetDirListing(FTP_e_GetDirListing e)
         {
-            if (GetDirListing != null)
-            {
-                GetDirListing(this, e);
-            }
+            GetDirListing?.Invoke(this, e);
         }
 
         /// <summary>
@@ -974,10 +950,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnGetFile(FTP_e_GetFile e)
         {
-            if (GetFile != null)
-            {
-                GetFile(this, e);
-            }
+            GetFile?.Invoke(this, e);
         }
 
         /// <summary>
@@ -986,10 +959,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnGetFileSize(FTP_e_GetFileSize e)
         {
-            if (GetFileSize != null)
-            {
-                GetFileSize(this, e);
-            }
+            GetFileSize?.Invoke(this, e);
         }
 
         /// <summary>
@@ -998,10 +968,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnMkd(FTP_e_Mkd e)
         {
-            if (Mkd != null)
-            {
-                Mkd(this, e);
-            }
+            Mkd?.Invoke(this, e);
         }
 
         /// <summary>
@@ -1010,10 +977,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnRmd(FTP_e_Rmd e)
         {
-            if (Rmd != null)
-            {
-                Rmd(this, e);
-            }
+            Rmd?.Invoke(this, e);
         }
 
         /// <summary>
@@ -1022,10 +986,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnRnto(FTP_e_Rnto e)
         {
-            if (Rnto != null)
-            {
-                Rnto(this, e);
-            }
+            Rnto?.Invoke(this, e);
         }
 
         /// <summary>
@@ -1037,10 +998,7 @@ namespace LumiSoft.Net.FTP.Server
         {
             var eArgs = new FTP_e_Started(reply);
 
-            if (Started != null)
-            {
-                Started(this, eArgs);
-            }
+            Started?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -1051,10 +1009,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <param name="e">Event data.</param>
         private void OnStor(FTP_e_Stor e)
         {
-            if (Stor != null)
-            {
-                Stor(this, e);
-            }
+            Stor?.Invoke(this, e);
         }
 
         private void OPTS(string argsText)
@@ -1909,10 +1864,7 @@ namespace LumiSoft.Net.FTP.Server
             int countWritten = TcpStream.WriteLine(line);
 
             // Log.
-            if (Server.Logger != null)
-            {
-                Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line.TrimEnd(), LocalEndPoint, RemoteEndPoint);
-            }
+            Server.Logger?.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line.TrimEnd(), LocalEndPoint, RemoteEndPoint);
         }
         /// <summary>
         /// This class represents FTP session data connection.

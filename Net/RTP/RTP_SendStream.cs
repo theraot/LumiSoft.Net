@@ -319,10 +319,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnClosed()
         {
-            if (Closed != null)
-            {
-                Closed(this, new EventArgs());
-            }
+            Closed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -330,10 +327,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
     }
 }

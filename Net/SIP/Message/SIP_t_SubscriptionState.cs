@@ -78,12 +78,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["reason"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

@@ -1676,10 +1676,7 @@ namespace LumiSoft.Net.FTP.Client
             /// </summary>
             public void CleanUpSocket()
             {
-                if (m_pSocket != null)
-                {
-                    m_pSocket.Close();
-                }
+                m_pSocket?.Close();
 
                 // We can't reuse socket, so we need to recreate new one for each transfer.
                 CreateSocket();

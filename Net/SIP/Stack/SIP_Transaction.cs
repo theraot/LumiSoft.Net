@@ -368,10 +368,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         protected void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -379,10 +376,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         protected void OnTimedOut()
         {
-            if (TimedOut != null)
-            {
-                TimedOut(this, new EventArgs());
-            }
+            TimedOut?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -391,10 +385,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="errorText">Text describing error.</param>
         protected void OnTransactionError(string errorText)
         {
-            if (TransactionError != null)
-            {
-                TransactionError(this, new EventArgs());
-            }
+            TransactionError?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -409,10 +400,7 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("exception");
             }
 
-            if (TransportError != null)
-            {
-                TransportError(this, new ExceptionEventArgs(exception));
-            }
+            TransportError?.Invoke(this, new ExceptionEventArgs(exception));
         }
 
         /// <summary>
@@ -422,10 +410,7 @@ namespace LumiSoft.Net.SIP.Stack
         protected void SetState(SIP_TransactionState state)
         {
             // Log
-            if (Stack.Logger != null)
-            {
-                Stack.Logger.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=" + (this is SIP_ServerTransaction) + "] switched to '" + state.ToString() + "' state.");
-            }
+            Stack.Logger?.AddText(ID, "Transaction [branch='" + ID + "';method='" + Method + "';IsServer=" + (this is SIP_ServerTransaction) + "] switched to '" + state.ToString() + "' state.");
 
             State = state;
 
@@ -442,10 +427,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnStateChanged()
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs());
-            }
+            StateChanged?.Invoke(this, new EventArgs());
         }
     }
 }

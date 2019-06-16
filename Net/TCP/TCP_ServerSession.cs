@@ -348,10 +348,7 @@ namespace LumiSoft.Net.TCP
             m_pLocalEP = null;
             m_pRemoteEP = null;
             m_pCertificate = null;
-            if (m_pTcpStream != null)
-            {
-                m_pTcpStream.Dispose();
-            }
+            m_pTcpStream?.Dispose();
             m_pTcpStream = null;
             m_pTags = null;
 
@@ -534,10 +531,7 @@ namespace LumiSoft.Net.TCP
         /// <param name="x">Exception happened.</param>
         protected virtual void OnError(Exception x)
         {
-            if (Error != null)
-            {
-                Error(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
-            }
+            Error?.Invoke(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
         }
 
         /// <summary>
@@ -573,17 +567,14 @@ namespace LumiSoft.Net.TCP
             try
             {
                 var logger = Server.GetType().GetProperty("Logger").GetValue(Server, null);
-                if (logger != null)
-                {
-                    ((Logger)logger).AddException(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        exception.Message,
-                        LocalEndPoint,
-                        RemoteEndPoint,
-                        exception
-                    );
-                }
+                ((Logger) logger)?.AddException(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    exception.Message,
+                    LocalEndPoint,
+                    RemoteEndPoint,
+                    exception
+                );
             }
             catch
             {
@@ -605,16 +596,13 @@ namespace LumiSoft.Net.TCP
             try
             {
                 var logger = Server.GetType().GetProperty("Logger").GetValue(Server, null);
-                if (logger != null)
-                {
-                    ((Logger)logger).AddText(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                ((Logger) logger)?.AddText(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -626,10 +614,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private void OnDisonnected()
         {
-            if (Disonnected != null)
-            {
-                Disonnected(this, new EventArgs());
-            }
+            Disonnected?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -637,10 +622,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -648,10 +630,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private void OnIdleTimeout()
         {
-            if (IdleTimeout != null)
-            {
-                IdleTimeout(this, new EventArgs());
-            }
+            IdleTimeout?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -800,10 +779,7 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<SwitchToSecureAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<SwitchToSecureAsyncOP>(this));
             }
         }
     }

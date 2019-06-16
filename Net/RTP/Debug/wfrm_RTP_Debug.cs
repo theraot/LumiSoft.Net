@@ -274,10 +274,7 @@ namespace LumiSoft.Net.RTP.Debug
             BeginInvoke(new MethodInvoker(delegate ()
             {
                 var nodeParticipant = FindParticipantNode((RTP_Participant)sender);
-                if (nodeParticipant != null)
-                {
-                    nodeParticipant.Remove();
-                }
+                nodeParticipant?.Remove();
             }));
         }
 

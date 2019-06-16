@@ -683,17 +683,14 @@ namespace LumiSoft.Net.TCP
         {
             try
             {
-                if (Logger != null)
-                {
-                    Logger.AddException(
-                        IsConnected ? ID : "",
-                        IsConnected ? AuthenticatedUserIdentity : null,
-                        text,
-                        IsConnected ? LocalEndPoint : null,
-                        IsConnected ? RemoteEndPoint : null,
-                        x
-                    );
-                }
+                Logger?.AddException(
+                    IsConnected ? ID : "",
+                    IsConnected ? AuthenticatedUserIdentity : null,
+                    text,
+                    IsConnected ? LocalEndPoint : null,
+                    IsConnected ? RemoteEndPoint : null,
+                    x
+                );
             }
             catch
             {
@@ -710,17 +707,14 @@ namespace LumiSoft.Net.TCP
         {
             try
             {
-                if (Logger != null)
-                {
-                    Logger.AddRead(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Logger?.AddRead(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    size,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -736,16 +730,13 @@ namespace LumiSoft.Net.TCP
         {
             try
             {
-                if (Logger != null)
-                {
-                    Logger.AddText(
-                        IsConnected ? ID : "",
-                        IsConnected ? AuthenticatedUserIdentity : null,
-                        text,
-                        IsConnected ? LocalEndPoint : null,
-                        IsConnected ? RemoteEndPoint : null
-                    );
-                }
+                Logger?.AddText(
+                    IsConnected ? ID : "",
+                    IsConnected ? AuthenticatedUserIdentity : null,
+                    text,
+                    IsConnected ? LocalEndPoint : null,
+                    IsConnected ? RemoteEndPoint : null
+                );
             }
             catch
             {
@@ -762,17 +753,14 @@ namespace LumiSoft.Net.TCP
         {
             try
             {
-                if (Logger != null)
-                {
-                    Logger.AddWrite(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Logger?.AddWrite(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    size,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -1180,14 +1168,8 @@ namespace LumiSoft.Net.TCP
             {
                 try
                 {
-                    if (m_pStream != null)
-                    {
-                        m_pStream.Dispose();
-                    }
-                    if (m_pSocket != null)
-                    {
-                        m_pSocket.Close();
-                    }
+                    m_pStream?.Dispose();
+                    m_pSocket?.Close();
                 }
                 catch
                 {
@@ -1310,10 +1292,7 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<ConnectAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<ConnectAsyncOP>(this));
             }
         }
 
@@ -1498,10 +1477,7 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<SwitchToSecureAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<SwitchToSecureAsyncOP>(this));
             }
         }
     }

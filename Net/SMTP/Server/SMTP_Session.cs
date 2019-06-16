@@ -278,17 +278,14 @@ namespace LumiSoft.Net.SMTP.Server
         {
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddException(
-                        IsConnected ? ID : "",
-                        IsConnected ? AuthenticatedUserIdentity : null,
-                        text,
-                        IsConnected ? LocalEndPoint : null,
-                        IsConnected ? RemoteEndPoint : null,
-                        x
-                    );
-                }
+                Server.Logger?.AddException(
+                    IsConnected ? ID : "",
+                    IsConnected ? AuthenticatedUserIdentity : null,
+                    text,
+                    IsConnected ? LocalEndPoint : null,
+                    IsConnected ? RemoteEndPoint : null,
+                    x
+                );
             }
             catch
             {
@@ -305,17 +302,14 @@ namespace LumiSoft.Net.SMTP.Server
         {
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddRead(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Server.Logger?.AddRead(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    size,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -331,16 +325,13 @@ namespace LumiSoft.Net.SMTP.Server
         {
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddText(
-                        IsConnected ? ID : "",
-                        IsConnected ? AuthenticatedUserIdentity : null,
-                        text,
-                        IsConnected ? LocalEndPoint : null,
-                        IsConnected ? RemoteEndPoint : null
-                    );
-                }
+                Server.Logger?.AddText(
+                    IsConnected ? ID : "",
+                    IsConnected ? AuthenticatedUserIdentity : null,
+                    text,
+                    IsConnected ? LocalEndPoint : null,
+                    IsConnected ? RemoteEndPoint : null
+                );
             }
             catch
             {
@@ -357,17 +348,14 @@ namespace LumiSoft.Net.SMTP.Server
         {
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddWrite(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Server.Logger?.AddWrite(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    size,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -630,10 +618,7 @@ namespace LumiSoft.Net.SMTP.Server
                     throw readLineOP.Error;
                 }
                 // Log
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
-                }
+                Server.Logger?.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
 
                 // Client canceled authentication.
                 if (readLineOP.LineUtf8 == "*")
@@ -1477,10 +1462,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         private void OnMessageStoringCanceled()
         {
-            if (MessageStoringCanceled != null)
-            {
-                MessageStoringCanceled(this, new EventArgs());
-            }
+            MessageStoringCanceled?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -1569,10 +1551,7 @@ namespace LumiSoft.Net.SMTP.Server
                 }
 
                 // Log.
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddRead(ID, AuthenticatedUserIdentity, op.BytesInBuffer, op.LineUtf8, LocalEndPoint, RemoteEndPoint);
-                }
+                Server.Logger?.AddRead(ID, AuthenticatedUserIdentity, op.BytesInBuffer, op.LineUtf8, LocalEndPoint, RemoteEndPoint);
 
                 var cmd_args = Encoding.UTF8.GetString(op.Buffer, 0, op.LineBytesInBuffer).Split(new[] { ' ' }, 2);
                 var cmd = cmd_args[0].ToUpperInvariant();
@@ -2073,10 +2052,7 @@ namespace LumiSoft.Net.SMTP.Server
             int countWritten = TcpStream.WriteLine(line);
 
             // Log.
-            if (Server.Logger != null)
-            {
-                Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line, LocalEndPoint, RemoteEndPoint);
-            }
+            Server.Logger?.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line, LocalEndPoint, RemoteEndPoint);
         }
 
         /// <summary>
@@ -2428,10 +2404,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<Cmd_DATA>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<Cmd_DATA>(this));
             }
         }
 
@@ -2632,10 +2605,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<SendResponseAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<SendResponseAsyncOP>(this));
             }
         }
     }

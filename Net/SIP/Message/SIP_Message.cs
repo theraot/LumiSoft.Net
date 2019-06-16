@@ -112,12 +112,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Call-ID:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -161,12 +156,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Content-Disposition:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_ContentDisposition>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_ContentDisposition>) h)?.ValueX;
             }
 
             set
@@ -227,12 +217,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Content-Type:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -257,12 +242,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("CSeq:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_CSeq>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_CSeq>) h)?.ValueX;
             }
 
             set
@@ -329,12 +309,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Event:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_Event>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_Event>) h)?.ValueX;
             }
 
             set
@@ -389,12 +364,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("From:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_From>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_From>) h)?.ValueX;
             }
 
             set
@@ -431,12 +401,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Identity:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -461,12 +426,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Identity-Info:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_IdentityInfo>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_IdentityInfo>) h)?.ValueX;
             }
 
             set
@@ -501,12 +461,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Join:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_Join>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_Join>) h)?.ValueX;
             }
 
             set
@@ -562,12 +517,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Mime-Version:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -622,12 +572,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Min-SE:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_MinSE>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_MinSE>) h)?.ValueX;
             }
 
             set
@@ -652,12 +597,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Organization:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -691,12 +631,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Priority:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -747,12 +682,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("RAck:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_RAck>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_RAck>) h)?.ValueX;
             }
 
             set
@@ -793,12 +723,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Referred-By:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_ReferredBy>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_ReferredBy>) h)?.ValueX;
             }
 
             set
@@ -822,12 +747,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Refer-Sub:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_ReferSub>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_ReferSub>) h)?.ValueX;
             }
 
             set
@@ -851,12 +771,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Refer-To:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_AddressParam>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_AddressParam>) h)?.ValueX;
             }
 
             set
@@ -888,12 +803,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Replaces:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_Replaces>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_Replaces>) h)?.ValueX;
             }
 
             set
@@ -951,12 +861,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Retry-After:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_RetryAfter>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_RetryAfter>) h)?.ValueX;
             }
 
             set
@@ -1042,12 +947,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Server:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -1080,12 +980,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Session-Expires:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_SessionExpires>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_SessionExpires>) h)?.ValueX;
             }
 
             set
@@ -1109,12 +1004,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("SIP-ETag:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -1138,12 +1028,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("SIP-If-Match:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -1168,12 +1053,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Subject:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set
@@ -1198,12 +1078,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Subscription-State:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_SubscriptionState>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_SubscriptionState>) h)?.ValueX;
             }
 
             set
@@ -1236,12 +1111,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Target-Dialog:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_TargetDialog>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_TargetDialog>) h)?.ValueX;
             }
 
             set
@@ -1266,12 +1136,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("Timestamp:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_Timestamp>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_Timestamp>) h)?.ValueX;
             }
 
             set
@@ -1296,12 +1161,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("To:");
-                if (h != null)
-                {
-                    return ((SIP_SingleValueHF<SIP_t_To>)h).ValueX;
-                }
-
-                return null;
+                return ((SIP_SingleValueHF<SIP_t_To>) h)?.ValueX;
             }
 
             set
@@ -1334,12 +1194,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var h = Header.GetFirst("User-Agent:");
-                if (h != null)
-                {
-                    return h.Value;
-                }
-
-                return null;
+                return h?.Value;
             }
 
             set

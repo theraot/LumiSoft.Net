@@ -416,10 +416,7 @@ namespace LumiSoft.Net.Media
         /// <param name="eArgs">Event arguments.</param>
         private void OnAudioFrameReceived(EventArgs<byte[]> eArgs)
         {
-            if (AudioFrameReceived != null)
-            {
-                AudioFrameReceived(this, eArgs);
-            }
+            AudioFrameReceived?.Invoke(this, eArgs);
         }
 
         /// <summary>

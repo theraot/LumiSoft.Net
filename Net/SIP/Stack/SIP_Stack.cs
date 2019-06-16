@@ -908,22 +908,10 @@ namespace LumiSoft.Net.SIP.Stack
             ResponseReceived = null;
             Error = null;
 
-            if (m_pTransactionLayer != null)
-            {
-                m_pTransactionLayer.Dispose();
-            }
-            if (m_pTransportLayer != null)
-            {
-                m_pTransportLayer.Dispose();
-            }
-            if (m_pNonceManager != null)
-            {
-                m_pNonceManager.Dispose();
-            }
-            if (m_pLogger != null)
-            {
-                m_pLogger.Dispose();
-            }
+            m_pTransactionLayer?.Dispose();
+            m_pTransportLayer?.Dispose();
+            m_pNonceManager?.Dispose();
+            m_pLogger?.Dispose();
         }
 
         /// <summary>
@@ -1465,10 +1453,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="x">Exception happened.</param>
         internal void OnError(Exception x)
         {
-            if (Error != null)
-            {
-                Error(this, new ExceptionEventArgs(x));
-            }
+            Error?.Invoke(this, new ExceptionEventArgs(x));
         }
 
         /// <summary>
@@ -1477,10 +1462,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         internal void OnRequestReceived(SIP_RequestReceivedEventArgs e)
         {
-            if (RequestReceived != null)
-            {
-                RequestReceived(this, e);
-            }
+            RequestReceived?.Invoke(this, e);
         }
 
         /// <summary>
@@ -1489,10 +1471,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         internal void OnResponseReceived(SIP_ResponseReceivedEventArgs e)
         {
-            if (ResponseReceived != null)
-            {
-                ResponseReceived(this, e);
-            }
+            ResponseReceived?.Invoke(this, e);
         }
 
         /// <summary>
@@ -1504,10 +1483,7 @@ namespace LumiSoft.Net.SIP.Stack
         internal SIP_ValidateRequestEventArgs OnValidateRequest(SIP_Request request, IPEndPoint remoteEndPoint)
         {
             var eArgs = new SIP_ValidateRequestEventArgs(request, remoteEndPoint);
-            if (ValidateRequest != null)
-            {
-                ValidateRequest(this, eArgs);
-            }
+            ValidateRequest?.Invoke(this, eArgs);
 
             return eArgs;
         }

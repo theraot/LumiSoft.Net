@@ -77,10 +77,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// </summary>
         internal void OnCompleted()
         {
-            if (Completed != null)
-            {
-                Completed(this, new EventArgs());
-            }
+            Completed?.Invoke(this, new EventArgs());
 
             // Release event.
             Completed = null;

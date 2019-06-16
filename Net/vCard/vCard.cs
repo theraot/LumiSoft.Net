@@ -101,12 +101,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("FN");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("FN", value); }
@@ -200,12 +195,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("NICKNAME");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("NICKNAME", value); }
@@ -219,12 +209,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("NOTE");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("NOTE", value); }
@@ -238,12 +223,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("ORG");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("ORG", value); }
@@ -306,12 +286,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("ROLE");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("ROLE", value); }
@@ -325,12 +300,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("TITLE");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("TITLE", value); }
@@ -344,12 +314,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("UID");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("UID", value); }
@@ -363,12 +328,7 @@ namespace LumiSoft.Net.Mime.vCard
             get
             {
                 var item = Items.GetFirst("VERSION");
-                if (item != null)
-                {
-                    return item.DecodedValue;
-                }
-
-                return null;
+                return item?.DecodedValue;
             }
 
             set { Items.SetDecodedValue("VERSION", value); }

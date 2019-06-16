@@ -329,12 +329,7 @@ namespace LumiSoft.Net.SMTP.Relay
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                if (m_pActiveTarget != null)
-                {
-                    return m_pActiveTarget.HostName;
-                }
-
-                return null;
+                return m_pActiveTarget?.HostName;
             }
         }
 
@@ -478,10 +473,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
             catch (Exception x)
             {
-                if (m_pServer != null)
-                {
-                    m_pServer.OnError(x);
-                }
+                m_pServer?.OnError(x);
             }
         }
 

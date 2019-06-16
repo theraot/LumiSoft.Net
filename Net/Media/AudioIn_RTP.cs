@@ -304,10 +304,7 @@ namespace LumiSoft.Net.Media
         /// <param name="x">Error what happened.</param>
         private void OnError(Exception x)
         {
-            if (Error != null)
-            {
-                Error(this, new ExceptionEventArgs(x));
-            }
+            Error?.Invoke(this, new ExceptionEventArgs(x));
         }
     }
 }

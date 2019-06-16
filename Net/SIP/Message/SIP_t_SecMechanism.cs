@@ -32,12 +32,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["d-alg"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -61,12 +56,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["d-qop"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -90,12 +80,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["d-ver"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

@@ -101,10 +101,7 @@ namespace LumiSoft.Net.RTP
         internal override void Dispose()
         {
             m_pParticipant = null;
-            if (m_pStream != null)
-            {
-                m_pStream.Dispose();
-            }
+            m_pStream?.Dispose();
 
             ApplicationPacket = null;
 
@@ -164,10 +161,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("report");
             }
 
-            if (m_pStream != null)
-            {
-                m_pStream.SetSR(report);
-            }
+            m_pStream?.SetSR(report);
         }
 
         /// <summary>
@@ -191,10 +185,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("packet");
             }
 
-            if (ApplicationPacket != null)
-            {
-                ApplicationPacket(this, new EventArgs<RTCP_Packet_APP>(packet));
-            }
+            ApplicationPacket?.Invoke(this, new EventArgs<RTCP_Packet_APP>(packet));
         }
     }
 }

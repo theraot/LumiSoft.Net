@@ -125,11 +125,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 */
 
                 var trToCancel = m_pProxy.Stack.TransactionLayer.MatchCancelToTransaction(e.Request);
-                if (trToCancel != null)
-                {
-                    trToCancel.Cancel();
-                    //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x200_Ok));
-                }
+                trToCancel?.Cancel();
+                //e.ServerTransaction.SendResponse(request.CreateResponse(SIP_ResponseCodes.x200_Ok));
             }
             // We never should ge BYE here, because transport layer must match it to dialog.
             else if (request.RequestLine.Method == SIP_Methods.BYE)
@@ -270,10 +267,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="call">Call terminated.</param>
         internal protected void OnCallTerminated(SIP_B2BUA_Call call)
         {
-            if (CallTerminated != null)
-            {
-                CallTerminated(call, new EventArgs());
-            }
+            CallTerminated?.Invoke(call, new EventArgs());
         }
 
         /// <summary>
@@ -282,10 +276,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="call">Call created.</param>
         protected void OnCallCreated(SIP_B2BUA_Call call)
         {
-            if (CallCreated != null)
-            {
-                CallCreated(call, new EventArgs());
-            }
+            CallCreated?.Invoke(call, new EventArgs());
         }
     }
 }

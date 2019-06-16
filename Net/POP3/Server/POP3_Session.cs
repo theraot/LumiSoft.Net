@@ -148,10 +148,7 @@ namespace LumiSoft.Net.POP3.Server
             }
 
             // Log
-            if (Server.Logger != null)
-            {
-                Server.Logger.AddText(ID, text);
-            }
+            Server.Logger?.AddText(ID, text);
         }
 
         /// <summary>
@@ -459,10 +456,7 @@ namespace LumiSoft.Net.POP3.Server
                     throw readLineOP.Error;
                 }
                 // Log
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
-                }
+                Server.Logger?.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
 
                 // Client canceled authentication.
                 if (readLineOP.LineUtf8 == "*")
@@ -823,10 +817,7 @@ namespace LumiSoft.Net.POP3.Server
         {
             var eArgs = new POP3_e_Authenticate(user, password);
 
-            if (Authenticate != null)
-            {
-                Authenticate(this, eArgs);
-            }
+            Authenticate?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -837,10 +828,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <param name="message">Message to delete.</param>
         private void OnDeleteMessage(POP3_ServerMessage message)
         {
-            if (DeleteMessage != null)
-            {
-                DeleteMessage(this, new POP3_e_DeleteMessage(message));
-            }
+            DeleteMessage?.Invoke(this, new POP3_e_DeleteMessage(message));
         }
 
         /// <summary>
@@ -851,10 +839,7 @@ namespace LumiSoft.Net.POP3.Server
         {
             var eArgs = new POP3_e_GetMessagesInfo();
 
-            if (GetMessagesInfo != null)
-            {
-                GetMessagesInfo(this, eArgs);
-            }
+            GetMessagesInfo?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -868,10 +853,7 @@ namespace LumiSoft.Net.POP3.Server
         {
             var eArgs = new POP3_e_GetMessageStream(message);
 
-            if (GetMessageStream != null)
-            {
-                GetMessageStream(this, eArgs);
-            }
+            GetMessageStream?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -886,10 +868,7 @@ namespace LumiSoft.Net.POP3.Server
         {
             var eArgs = new POP3_e_GetTopOfMessage(message, lines);
 
-            if (GetTopOfMessage != null)
-            {
-                GetTopOfMessage(this, eArgs);
-            }
+            GetTopOfMessage?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -899,10 +878,7 @@ namespace LumiSoft.Net.POP3.Server
         /// </summary>
         private void OnReset()
         {
-            if (Reset != null)
-            {
-                Reset(this, new EventArgs());
-            }
+            Reset?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -914,10 +890,7 @@ namespace LumiSoft.Net.POP3.Server
         {
             var eArgs = new POP3_e_Started(reply);
 
-            if (Started != null)
-            {
-                Started(this, eArgs);
-            }
+            Started?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -1247,10 +1220,7 @@ namespace LumiSoft.Net.POP3.Server
                         long countWritten = TcpStream.WritePeriodTerminated(e.MessageStream);
 
                         // Log.
-                        if (Server.Logger != null)
-                        {
-                            Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, "Wrote message(" + countWritten + " bytes).", LocalEndPoint, RemoteEndPoint);
-                        }
+                        Server.Logger?.AddWrite(ID, AuthenticatedUserIdentity, countWritten, "Wrote message(" + countWritten + " bytes).", LocalEndPoint, RemoteEndPoint);
                     }
                     finally
                     {
@@ -1509,10 +1479,7 @@ namespace LumiSoft.Net.POP3.Server
                     long countWritten = TcpStream.WritePeriodTerminated(new MemoryStream(e.Data));
 
                     // Log.
-                    if (Server.Logger != null)
-                    {
-                        Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, "Wrote top of message(" + countWritten + " bytes).", LocalEndPoint, RemoteEndPoint);
-                    }
+                    Server.Logger?.AddWrite(ID, AuthenticatedUserIdentity, countWritten, "Wrote top of message(" + countWritten + " bytes).", LocalEndPoint, RemoteEndPoint);
                 }
             }
             else
@@ -1673,10 +1640,7 @@ namespace LumiSoft.Net.POP3.Server
             int countWritten = TcpStream.WriteLine(line);
 
             // Log.
-            if (Server.Logger != null)
-            {
-                Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line, LocalEndPoint, RemoteEndPoint);
-            }
+            Server.Logger?.AddWrite(ID, AuthenticatedUserIdentity, countWritten, line, LocalEndPoint, RemoteEndPoint);
         }
     }
 }

@@ -80,10 +80,7 @@ namespace LumiSoft.Net
         /// <param name="ar">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
         public void CompletedCallback(IAsyncResult ar)
         {
-            if (m_pCallback != null)
-            {
-                m_pCallback(this);
-            }
+            m_pCallback?.Invoke(this);
         }
 
         /// <summary>

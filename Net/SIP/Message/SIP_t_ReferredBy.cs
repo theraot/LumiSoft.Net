@@ -52,12 +52,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["cid"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

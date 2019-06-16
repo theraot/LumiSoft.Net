@@ -387,12 +387,9 @@ namespace LumiSoft.Net.SIP.Proxy
                 if (request.To.Address.IsSipOrSipsUri)
                 {
                     var registration = m_pRegistrar.GetRegistration(((SIP_Uri)request.To.Address.Uri).Address);
-                    if (registration != null)
+                    if (registration?.GetBinding(request.RequestLine.Uri) != null)
                     {
-                        if (registration.GetBinding(request.RequestLine.Uri) != null)
-                        {
-                            skipAuth = true;
-                        }
+                        skipAuth = true;
                     }
                 }
 
@@ -872,10 +869,7 @@ namespace LumiSoft.Net.SIP.Proxy
         internal SIP_AuthenticateEventArgs OnAuthenticate(Auth_HttpDigest auth)
         {
             var eArgs = new SIP_AuthenticateEventArgs(auth);
-            if (Authenticate != null)
-            {
-                Authenticate(eArgs);
-            }
+            Authenticate?.Invoke(eArgs);
 
             return eArgs;
         }

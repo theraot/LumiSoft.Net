@@ -1246,10 +1246,7 @@ namespace LumiSoft.Net.IO
                 {
                     if (e.Value.Error != null)
                     {
-                        if (asyncCallback != null)
-                        {
-                            asyncCallback(e.Value.Error);
-                        }
+                        asyncCallback?.Invoke(e.Value.Error);
                     }
                     else
                     {
@@ -1258,10 +1255,7 @@ namespace LumiSoft.Net.IO
                         m_BytesReaded += e.Value.BytesInBuffer;
                         m_LastActivity = DateTime.Now;
 
-                        if (asyncCallback != null)
-                        {
-                            asyncCallback(null);
-                        }
+                        asyncCallback?.Invoke(null);
                     }
                 });
 
@@ -1520,10 +1514,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompleted()
             {
-                if (Completed != null)
-                {
-                    Completed(this, new EventArgs<BufferReadAsyncOP>(this));
-                }
+                Completed?.Invoke(this, new EventArgs<BufferReadAsyncOP>(this));
             }
         }
 
@@ -1653,10 +1644,7 @@ namespace LumiSoft.Net.IO
             {
                 IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
-                if (m_pAsyncCallback != null)
-                {
-                    m_pAsyncCallback(this);
-                }
+                m_pAsyncCallback?.Invoke(this);
             }
 
             /// <summary>
@@ -2101,10 +2089,7 @@ namespace LumiSoft.Net.IO
             {
                 m_IsCompleted = true;
 
-                if (Completed != null)
-                {
-                    Completed(this, new EventArgs<ReadLineAsyncOP>(this));
-                }
+                Completed?.Invoke(this, new EventArgs<ReadLineAsyncOP>(this));
             }
         }
 
@@ -2276,10 +2261,7 @@ namespace LumiSoft.Net.IO
             {
                 IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
-                if (m_pAsyncCallback != null)
-                {
-                    m_pAsyncCallback(this);
-                }
+                m_pAsyncCallback?.Invoke(this);
             }
 
             /// <summary>
@@ -2636,10 +2618,7 @@ namespace LumiSoft.Net.IO
             {
                 m_IsCompleted = true;
 
-                if (Completed != null)
-                {
-                    Completed(this, new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
-                }
+                Completed?.Invoke(this, new EventArgs<ReadPeriodTerminatedAsyncOP>(this));
             }
         }
 
@@ -2766,10 +2745,7 @@ namespace LumiSoft.Net.IO
             {
                 IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
-                if (m_pAsyncCallback != null)
-                {
-                    m_pAsyncCallback(this);
-                }
+                m_pAsyncCallback?.Invoke(this);
             }
 
             /// <summary>
@@ -2940,10 +2916,7 @@ namespace LumiSoft.Net.IO
             {
                 IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
-                if (m_pAsyncCallback != null)
-                {
-                    m_pAsyncCallback(this);
-                }
+                m_pAsyncCallback?.Invoke(this);
             }
 
             /// <summary>
@@ -3281,10 +3254,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<WritePeriodTerminatedAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<WritePeriodTerminatedAsyncOP>(this));
             }
         }
 
@@ -3573,10 +3543,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void OnCompletedAsync()
             {
-                if (CompletedAsync != null)
-                {
-                    CompletedAsync(this, new EventArgs<WriteStreamAsyncOP>(this));
-                }
+                CompletedAsync?.Invoke(this, new EventArgs<WriteStreamAsyncOP>(this));
             }
         }
     }

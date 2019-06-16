@@ -51,12 +51,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["from-tag"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -79,12 +74,7 @@ namespace LumiSoft.Net.SIP.Message
             get
             {
                 var parameter = Parameters["to-tag"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

@@ -421,10 +421,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal void OnTimeout()
         {
-            if (Timeout != null)
-            {
-                Timeout(this, new EventArgs());
-            }
+            Timeout?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -519,10 +516,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnClosed()
         {
-            if (Closed != null)
-            {
-                Closed(this, new EventArgs());
-            }
+            Closed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -531,10 +525,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="packet">RTP packet.</param>
         private void OnPacketReceived(RTP_Packet packet)
         {
-            if (PacketReceived != null)
-            {
-                PacketReceived(this, new RTP_PacketEventArgs(packet));
-            }
+            PacketReceived?.Invoke(this, new RTP_PacketEventArgs(packet));
         }
 
         /// <summary>
@@ -542,10 +533,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void OnSenderReport()
         {
-            if (SenderReport != null)
-            {
-                SenderReport(this, new EventArgs());
-            }
+            SenderReport?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

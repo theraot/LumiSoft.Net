@@ -641,10 +641,7 @@ namespace LumiSoft.Net.SIP.Stack
         {
             m_State = SIP_RequestSenderState.Completed;
 
-            if (Completed != null)
-            {
-                Completed(this, new EventArgs());
-            }
+            Completed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -652,10 +649,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnDisposed()
         {
-            if (Disposed != null)
-            {
-                Disposed(this, new EventArgs());
-            }
+            Disposed?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -664,10 +658,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="response">SIP response received.</param>
         private void OnResponseReceived(SIP_Response response)
         {
-            if (ResponseReceived != null)
-            {
-                ResponseReceived(this, new SIP_ResponseReceivedEventArgs(m_pStack, m_pTransaction, response));
-            }
+            ResponseReceived?.Invoke(this, new SIP_ResponseReceivedEventArgs(m_pStack, m_pTransaction, response));
         }
 
         /// <summary>

@@ -31,10 +31,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         internal void OnStoringCompleted()
         {
-            if (StoringCompleted != null)
-            {
-                StoringCompleted(this, new EventArgs());
-            }
+            StoringCompleted?.Invoke(this, new EventArgs());
         }
     }
 }

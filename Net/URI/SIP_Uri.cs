@@ -122,12 +122,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["comp"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -151,12 +146,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["content-type"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -244,12 +234,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["locale"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -307,12 +292,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["maddr"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -336,12 +316,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["method"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -368,12 +343,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["play"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -437,12 +407,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["target"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -468,12 +433,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["transport"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -530,12 +490,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["user"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set
@@ -559,12 +514,7 @@ namespace LumiSoft.Net
             get
             {
                 var parameter = Parameters["voicexml"];
-                if (parameter != null)
-                {
-                    return parameter.Value;
-                }
-
-                return null;
+                return parameter?.Value;
             }
 
             set

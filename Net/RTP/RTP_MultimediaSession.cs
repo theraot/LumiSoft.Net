@@ -259,10 +259,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="exception">Exception.</param>
         internal void OnError(Exception exception)
         {
-            if (Error != null)
-            {
-                Error(this, new ExceptionEventArgs(exception));
-            }
+            Error?.Invoke(this, new ExceptionEventArgs(exception));
         }
 
         /// <summary>
@@ -271,10 +268,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="participant">New participant.</param>
         private void OnNewParticipant(RTP_Participant_Remote participant)
         {
-            if (NewParticipant != null)
-            {
-                NewParticipant(this, new RTP_ParticipantEventArgs(participant));
-            }
+            NewParticipant?.Invoke(this, new RTP_ParticipantEventArgs(participant));
         }
 
         /// <summary>
@@ -288,10 +282,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("session");
             }
 
-            if (SessionCreated != null)
-            {
-                SessionCreated(this, new EventArgs<RTP_Session>(session));
-            }
+            SessionCreated?.Invoke(this, new EventArgs<RTP_Session>(session));
         }
     }
 }

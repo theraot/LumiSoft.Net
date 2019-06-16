@@ -142,10 +142,7 @@ namespace LumiSoft.Net.IO
             }
 
             m_IsDisposed = true;
-            if (m_pStream != null)
-            {
-                m_pStream.Close();
-            }
+            m_pStream?.Close();
             m_pStream = null;
 
             base.Dispose();

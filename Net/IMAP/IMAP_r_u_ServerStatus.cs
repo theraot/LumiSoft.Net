@@ -85,12 +85,7 @@ namespace LumiSoft.Net.IMAP
         {
             get
             {
-                if (OptionalResponse == null)
-                {
-                    return null;
-                }
-
-                return OptionalResponse.ToString().Split(' ')[0];
+                return OptionalResponse?.ToString().Split(' ')[0];
             }
         }
 

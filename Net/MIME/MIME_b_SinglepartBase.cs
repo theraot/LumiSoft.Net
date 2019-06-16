@@ -33,10 +33,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         ~MIME_b_SinglepartBase()
         {
-            if (EncodedStream != null)
-            {
-                EncodedStream.Close();
-            }
+            EncodedStream?.Close();
         }
 
         /// <summary>

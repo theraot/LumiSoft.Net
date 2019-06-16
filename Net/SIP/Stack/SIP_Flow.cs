@@ -379,10 +379,7 @@ namespace LumiSoft.Net.SIP.Stack
                             try
                             {
                                 // Log:
-                                if (m_pStack.TransportLayer.Stack.Logger != null)
-                                {
-                                    m_pStack.TransportLayer.Stack.Logger.AddWrite("", null, 2, "Flow [id='" + ID + "'] sent \"ping\"", LocalEP, RemoteEP);
-                                }
+                                m_pStack.TransportLayer.Stack.Logger?.AddWrite("", null, 2, "Flow [id='" + ID + "'] sent \"ping\"", LocalEP, RemoteEP);
 
                                 SendInternal(new[] { (byte)'\r', (byte)'\n', (byte)'\r', (byte)'\n' });
                             }
@@ -511,10 +508,7 @@ namespace LumiSoft.Net.SIP.Stack
                 }
 
                 // Log:
-                if (m_pStack.TransportLayer.Stack.Logger != null)
-                {
-                    m_pStack.TransportLayer.Stack.Logger.AddWrite("", null, 2, "Flow [id='" + ID + "'] sent \"ping\"", LocalEP, RemoteEP);
-                }
+                m_pStack.TransportLayer.Stack.Logger?.AddWrite("", null, 2, "Flow [id='" + ID + "'] sent \"ping\"", LocalEP, RemoteEP);
 
                 SendInternal(new[] { (byte)'\r', (byte)'\n', (byte)'\r', (byte)'\n' });
             }
@@ -739,10 +733,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private void OnDisposing()
         {
-            if (IsDisposing != null)
-            {
-                IsDisposing(this, new EventArgs());
-            }
+            IsDisposing?.Invoke(this, new EventArgs());
         }
     }
 }

@@ -517,10 +517,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="state">New call state.</param>
         private void OnStateChanged(SIP_UA_CallState state)
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs());
-            }
+            StateChanged?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

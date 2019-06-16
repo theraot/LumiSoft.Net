@@ -83,10 +83,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="eArgs">Event args.</param>
         internal void OnBody(IMAP_Client_Fetch_Body_EArgs eArgs)
         {
-            if (Body != null)
-            {
-                Body(this, eArgs);
-            }
+            Body?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -95,10 +92,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="envelope">Envelope value.</param>
         internal void OnEnvelope(IMAP_Envelope envelope)
         {
-            if (Envelope != null)
-            {
-                Envelope(this, new EventArgs<IMAP_Envelope>(envelope));
-            }
+            Envelope?.Invoke(this, new EventArgs<IMAP_Envelope>(envelope));
         }
 
         /// <summary>
@@ -107,10 +101,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="flags">Message flags.</param>
         internal void OnFlags(string[] flags)
         {
-            if (Flags != null)
-            {
-                Flags(this, new EventArgs<string[]>(flags));
-            }
+            Flags?.Invoke(this, new EventArgs<string[]>(flags));
         }
 
         /// <summary>
@@ -119,10 +110,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="date">Message IMAP server internal date.</param>
         internal void OnInternalDate(DateTime date)
         {
-            if (InternalDate != null)
-            {
-                InternalDate(this, new EventArgs<DateTime>(date));
-            }
+            InternalDate?.Invoke(this, new EventArgs<DateTime>(date));
         }
 
         /// <summary>
@@ -130,10 +118,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         internal void OnNextMessage()
         {
-            if (NextMessage != null)
-            {
-                NextMessage(this, new EventArgs());
-            }
+            NextMessage?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -142,10 +127,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="eArgs">Event args.</param>
         internal void OnRfc822(IMAP_Client_Fetch_Rfc822_EArgs eArgs)
         {
-            if (Rfc822 != null)
-            {
-                Rfc822(this, eArgs);
-            }
+            Rfc822?.Invoke(this, eArgs);
         }
 
         /// <summary>
@@ -154,10 +136,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="header">Message header.</param>
         internal void OnRfc822Header(string header)
         {
-            if (Rfc822Header != null)
-            {
-                Rfc822Header(this, new EventArgs<string>(header));
-            }
+            Rfc822Header?.Invoke(this, new EventArgs<string>(header));
         }
 
         /// <summary>
@@ -166,10 +145,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="text">Message body text.</param>
         internal void OnRfc822Text(string text)
         {
-            if (Rfc822Text != null)
-            {
-                Rfc822Text(this, new EventArgs<string>(text));
-            }
+            Rfc822Text?.Invoke(this, new EventArgs<string>(text));
         }
 
         /// <summary>
@@ -178,10 +154,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="size">Message size in bytes.</param>
         internal void OnSize(int size)
         {
-            if (Rfc822Size != null)
-            {
-                Rfc822Size(this, new EventArgs<int>(size));
-            }
+            Rfc822Size?.Invoke(this, new EventArgs<int>(size));
         }
 
         /// <summary>
@@ -190,10 +163,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="uid">Message UID value.</param>
         internal void OnUID(long uid)
         {
-            if (UID != null)
-            {
-                UID(this, new EventArgs<long>(uid));
-            }
+            UID?.Invoke(this, new EventArgs<long>(uid));
         }
 
         /// <summary>
@@ -202,10 +172,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="msgID">Message ID.</param>
         internal void OnX_GM_MSGID(ulong msgID)
         {
-            if (X_GM_MSGID != null)
-            {
-                X_GM_MSGID(this, new EventArgs<ulong>(msgID));
-            }
+            X_GM_MSGID?.Invoke(this, new EventArgs<ulong>(msgID));
         }
 
         /// <summary>
@@ -214,10 +181,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="threadID">Message thread ID.</param>
         internal void OnX_GM_THRID(ulong threadID)
         {
-            if (X_GM_THRID != null)
-            {
-                X_GM_THRID(this, new EventArgs<ulong>(threadID));
-            }
+            X_GM_THRID?.Invoke(this, new EventArgs<ulong>(threadID));
         }
         /// <summary>
         /// Sets <b>CurrentSeqNo</b> property value.

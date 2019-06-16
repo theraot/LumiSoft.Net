@@ -241,12 +241,7 @@ namespace LumiSoft.Net.IMAP.Server
         {
             get
             {
-                if (m_pSelectedFolder == null)
-                {
-                    return null;
-                }
-
-                return m_pSelectedFolder.Folder;
+                return m_pSelectedFolder?.Folder;
             }
         }
 
@@ -303,10 +298,7 @@ namespace LumiSoft.Net.IMAP.Server
             m_pCapabilities = null;
             m_pUser = null;
             m_pSelectedFolder = null;
-            if (m_pResponseSender != null)
-            {
-                m_pResponseSender.Dispose();
-            }
+            m_pResponseSender?.Dispose();
 
             // Release events
             Started = null;
@@ -423,17 +415,14 @@ namespace LumiSoft.Net.IMAP.Server
 
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddException(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        exception.Message,
-                        LocalEndPoint,
-                        RemoteEndPoint,
-                        exception
-                    );
-                }
+                Server.Logger?.AddException(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    exception.Message,
+                    LocalEndPoint,
+                    RemoteEndPoint,
+                    exception
+                );
             }
             catch
             {
@@ -449,17 +438,14 @@ namespace LumiSoft.Net.IMAP.Server
         {
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddRead(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Server.Logger?.AddRead(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    size,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -481,16 +467,13 @@ namespace LumiSoft.Net.IMAP.Server
 
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddText(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Server.Logger?.AddText(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -506,17 +489,14 @@ namespace LumiSoft.Net.IMAP.Server
         {
             try
             {
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddWrite(
-                        ID,
-                        AuthenticatedUserIdentity,
-                        size,
-                        text,
-                        LocalEndPoint,
-                        RemoteEndPoint
-                    );
-                }
+                Server.Logger?.AddWrite(
+                    ID,
+                    AuthenticatedUserIdentity,
+                    size,
+                    text,
+                    LocalEndPoint,
+                    RemoteEndPoint
+                );
             }
             catch
             {
@@ -1040,10 +1020,7 @@ namespace LumiSoft.Net.IMAP.Server
                     throw readLineOP.Error;
                 }
                 // Log
-                if (Server.Logger != null)
-                {
-                    Server.Logger.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
-                }
+                Server.Logger?.AddRead(ID, AuthenticatedUserIdentity, readLineOP.BytesInBuffer, "base64 auth-data", LocalEndPoint, RemoteEndPoint);
 
                 // Client canceled authentication.
                 if (readLineOP.LineUtf8 == "*")
@@ -3934,10 +3911,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Append OnAppend(string folder, string[] flags, DateTime date, int size, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Append(folder, flags, date, size, response);
-            if (Append != null)
-            {
-                Append(this, eArgs);
-            }
+            Append?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -3952,10 +3926,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Copy OnCopy(string targetFolder, IMAP_MessageInfo[] messagesInfo, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Copy(m_pSelectedFolder.Folder, targetFolder, messagesInfo, response);
-            if (Copy != null)
-            {
-                Copy(this, eArgs);
-            }
+            Copy?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -3970,10 +3941,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnCreate(string cmdTag, string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag, folder, response);
-            if (Create != null)
-            {
-                Create(this, eArgs);
-            }
+            Create?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -3988,10 +3956,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnDelete(string cmdTag, string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag, folder, response);
-            if (Delete != null)
-            {
-                Delete(this, eArgs);
-            }
+            Delete?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4006,10 +3971,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_DeleteAcl OnDeleteAcl(string folder, string identifier, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_DeleteAcl(folder, identifier, response);
-            if (DeleteAcl != null)
-            {
-                DeleteAcl(this, eArgs);
-            }
+            DeleteAcl?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4023,10 +3985,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Expunge OnExpunge(IMAP_MessageInfo msgInfo, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Expunge(m_pSelectedFolder.Folder, msgInfo, response);
-            if (Expunge != null)
-            {
-                Expunge(this, eArgs);
-            }
+            Expunge?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4037,10 +3996,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="e">Event data.</param>
         private void OnFetch(IMAP_e_Fetch e)
         {
-            if (Fetch != null)
-            {
-                Fetch(this, e);
-            }
+            Fetch?.Invoke(this, e);
         }
 
         /// <summary>
@@ -4052,10 +4008,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_GetAcl OnGetAcl(string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_GetAcl(folder, response);
-            if (GetAcl != null)
-            {
-                GetAcl(this, eArgs);
-            }
+            GetAcl?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4069,10 +4022,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_GetQuotaRoot OnGetGuotaRoot(string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_GetQuotaRoot(folder, response);
-            if (GetQuotaRoot != null)
-            {
-                GetQuotaRoot(this, eArgs);
-            }
+            GetQuotaRoot?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4085,10 +4035,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_MessagesInfo OnGetMessagesInfo(string folder)
         {
             var eArgs = new IMAP_e_MessagesInfo(folder);
-            if (GetMessagesInfo != null)
-            {
-                GetMessagesInfo(this, eArgs);
-            }
+            GetMessagesInfo?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4102,10 +4049,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_GetQuota OnGetQuota(string quotaRoot, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_GetQuota(quotaRoot, response);
-            if (GetQuota != null)
-            {
-                GetQuota(this, eArgs);
-            }
+            GetQuota?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4119,10 +4063,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_List OnList(string refName, string folder)
         {
             var eArgs = new IMAP_e_List(refName, folder);
-            if (List != null)
-            {
-                List(this, eArgs);
-            }
+            List?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4137,10 +4078,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_ListRights OnListRights(string folder, string identifier, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_ListRights(folder, identifier, response);
-            if (ListRights != null)
-            {
-                ListRights(this, eArgs);
-            }
+            ListRights?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4154,10 +4092,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Login OnLogin(string user, string password)
         {
             var eArgs = new IMAP_e_Login(user, password);
-            if (Login != null)
-            {
-                Login(this, eArgs);
-            }
+            Login?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4171,10 +4106,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_LSub OnLSub(string refName, string folder)
         {
             var eArgs = new IMAP_e_LSub(refName, folder);
-            if (LSub != null)
-            {
-                LSub(this, eArgs);
-            }
+            LSub?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4188,10 +4120,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_MyRights OnMyRights(string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_MyRights(folder, response);
-            if (MyRights != null)
-            {
-                MyRights(this, eArgs);
-            }
+            MyRights?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4204,10 +4133,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Namespace OnNamespace(IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Namespace(response);
-            if (Namespace != null)
-            {
-                Namespace(this, eArgs);
-            }
+            Namespace?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4222,10 +4148,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Rename OnRename(string cmdTag, string currentFolder, string newFolder)
         {
             var eArgs = new IMAP_e_Rename(cmdTag, currentFolder, newFolder);
-            if (Rename != null)
-            {
-                Rename(this, eArgs);
-            }
+            Rename?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4236,10 +4159,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="e">Event args.</param>
         private void OnSearch(IMAP_e_Search e)
         {
-            if (Search != null)
-            {
-                Search(this, e);
-            }
+            Search?.Invoke(this, e);
         }
 
         /// <summary>
@@ -4251,10 +4171,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Select OnSelect(string cmdTag, string folder)
         {
             var eArgs = new IMAP_e_Select(cmdTag, folder);
-            if (Select != null)
-            {
-                Select(this, eArgs);
-            }
+            Select?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4271,10 +4188,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_SetAcl OnSetAcl(string folder, string identifier, IMAP_Flags_SetType flagsSetType, string rights, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_SetAcl(folder, identifier, flagsSetType, rights, response);
-            if (SetAcl != null)
-            {
-                SetAcl(this, eArgs);
-            }
+            SetAcl?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4287,10 +4201,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Started OnStarted(IMAP_r_u_ServerStatus response)
         {
             var eArgs = new IMAP_e_Started(response);
-            if (Started != null)
-            {
-                Started(this, eArgs);
-            }
+            Started?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4306,10 +4217,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Store OnStore(IMAP_MessageInfo msgInfo, IMAP_Flags_SetType setType, string[] flags, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Store(m_pSelectedFolder.Folder, msgInfo, setType, flags, response);
-            if (Store != null)
-            {
-                Store(this, eArgs);
-            }
+            Store?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4324,10 +4232,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnSubscribe(string cmdTag, string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag, folder, response);
-            if (Subscribe != null)
-            {
-                Subscribe(this, eArgs);
-            }
+            Subscribe?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -4342,10 +4247,7 @@ namespace LumiSoft.Net.IMAP.Server
         private IMAP_e_Folder OnUnsubscribe(string cmdTag, string folder, IMAP_r_ServerStatus response)
         {
             var eArgs = new IMAP_e_Folder(cmdTag, folder, response);
-            if (Unsubscribe != null)
-            {
-                Unsubscribe(this, eArgs);
-            }
+            Unsubscribe?.Invoke(this, eArgs);
 
             return eArgs;
         }
@@ -5997,10 +5899,7 @@ namespace LumiSoft.Net.IMAP.Server
             TcpStream.Write(buffer, 0, buffer.Length);
 
             // Log.
-            if (Server.Logger != null)
-            {
-                Server.Logger.AddWrite(ID, AuthenticatedUserIdentity, buffer.Length, line, LocalEndPoint, RemoteEndPoint);
-            }
+            Server.Logger?.AddWrite(ID, AuthenticatedUserIdentity, buffer.Length, line, LocalEndPoint, RemoteEndPoint);
         }
 
         /// <summary>
@@ -6471,9 +6370,9 @@ namespace LumiSoft.Net.IMAP.Server
                         {
                             responseItem.IsSent = true;
 
-                            if (responseItem.IsAsync && responseItem.CompletedAsyncCallback != null)
+                            if (responseItem.IsAsync)
                             {
-                                responseItem.CompletedAsyncCallback(this, e);
+                                responseItem.CompletedAsyncCallback?.Invoke(this, e);
                             }
                         }
 
@@ -6519,9 +6418,9 @@ namespace LumiSoft.Net.IMAP.Server
 
                         // This method(SendResponsesAsync) is called from completedAsyncCallback.
                         // Response sending has completed asynchronously, call callback.
-                        if (responseItem.IsAsync && responseItem.CompletedAsyncCallback != null)
+                        if (responseItem.IsAsync)
                         {
-                            responseItem.CompletedAsyncCallback(this, new EventArgs<Exception>(null));
+                            responseItem.CompletedAsyncCallback?.Invoke(this, new EventArgs<Exception>(null));
                         }
                     }
                 }
