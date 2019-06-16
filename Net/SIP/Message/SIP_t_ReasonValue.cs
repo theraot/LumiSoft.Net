@@ -39,7 +39,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets 'cause' parameter value. The cause parameter contains a SIP status code. 
+        /// Gets or sets 'cause' parameter value. The cause parameter contains a SIP status code.
         /// Value -1 means not specified.
         /// </summary>
         public int Cause

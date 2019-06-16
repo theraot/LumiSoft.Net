@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -92,73 +92,73 @@ namespace LumiSoft.Net.IMAP
         public Mail_t_Address[] To { get; }
 
         /// <summary>
-		/// Construct secified mime entity ENVELOPE string.
-		/// </summary>
-		/// <param name="entity">Mail message.</param>
-		/// <returns></returns>
-		public static string ConstructEnvelope(Mail_Message entity)
+        /// Construct secified mime entity ENVELOPE string.
+        /// </summary>
+        /// <param name="entity">Mail message.</param>
+        /// <returns></returns>
+        public static string ConstructEnvelope(Mail_Message entity)
         {
             /* RFC 3501 7.4.2
-				ENVELOPE
-					A parenthesized list that describes the envelope structure of a
-					message.  This is computed by the server by parsing the
-					[RFC-2822] header into the component parts, defaulting various
-					fields as necessary.
+                ENVELOPE
+                    A parenthesized list that describes the envelope structure of a
+                    message.  This is computed by the server by parsing the
+                    [RFC-2822] header into the component parts, defaulting various
+                    fields as necessary.
 
-					The fields of the envelope structure are in the following
-					order: date, subject, from, sender, reply-to, to, cc, bcc,
-					in-reply-to, and message-id.  The date, subject, in-reply-to,
-					and message-id fields are strings.  The from, sender, reply-to,
-					to, cc, and bcc fields are parenthesized lists of address
-					structures.
+                    The fields of the envelope structure are in the following
+                    order: date, subject, from, sender, reply-to, to, cc, bcc,
+                    in-reply-to, and message-id.  The date, subject, in-reply-to,
+                    and message-id fields are strings.  The from, sender, reply-to,
+                    to, cc, and bcc fields are parenthesized lists of address
+                    structures.
 
-					An address structure is a parenthesized list that describes an
-					electronic mail address.  The fields of an address structure
-					are in the following order: personal name, [SMTP]
-					at-domain-list (source route), mailbox name, and host name.
+                    An address structure is a parenthesized list that describes an
+                    electronic mail address.  The fields of an address structure
+                    are in the following order: personal name, [SMTP]
+                    at-domain-list (source route), mailbox name, and host name.
 
-					[RFC-2822] group syntax is indicated by a special form of
-					address structure in which the host name field is NIL.  If the
-					mailbox name field is also NIL, this is an end of group marker
-					(semi-colon in RFC 822 syntax).  If the mailbox name field is
-					non-NIL, this is a start of group marker, and the mailbox name
-					field holds the group name phrase.
+                    [RFC-2822] group syntax is indicated by a special form of
+                    address structure in which the host name field is NIL.  If the
+                    mailbox name field is also NIL, this is an end of group marker
+                    (semi-colon in RFC 822 syntax).  If the mailbox name field is
+                    non-NIL, this is a start of group marker, and the mailbox name
+                    field holds the group name phrase.
 
-					If the Date, Subject, In-Reply-To, and Message-ID header lines
-					are absent in the [RFC-2822] header, the corresponding member
-					of the envelope is NIL; if these header lines are present but
-					empty the corresponding member of the envelope is the empty
-					string.
-					
-						Note: some servers may return a NIL envelope member in the
-						"present but empty" case.  Clients SHOULD treat NIL and
-						empty string as identical.
+                    If the Date, Subject, In-Reply-To, and Message-ID header lines
+                    are absent in the [RFC-2822] header, the corresponding member
+                    of the envelope is NIL; if these header lines are present but
+                    empty the corresponding member of the envelope is the empty
+                    string.
+                    
+                        Note: some servers may return a NIL envelope member in the
+                        "present but empty" case.  Clients SHOULD treat NIL and
+                        empty string as identical.
 
-						Note: [RFC-2822] requires that all messages have a valid
-						Date header.  Therefore, the date member in the envelope can
-						not be NIL or the empty string.
+                        Note: [RFC-2822] requires that all messages have a valid
+                        Date header.  Therefore, the date member in the envelope can
+                        not be NIL or the empty string.
 
-						Note: [RFC-2822] requires that the In-Reply-To and
-						Message-ID headers, if present, have non-empty content.
-						Therefore, the in-reply-to and message-id members in the
-						envelope can not be the empty string.
+                        Note: [RFC-2822] requires that the In-Reply-To and
+                        Message-ID headers, if present, have non-empty content.
+                        Therefore, the in-reply-to and message-id members in the
+                        envelope can not be the empty string.
 
-					If the From, To, cc, and bcc header lines are absent in the
-					[RFC-2822] header, or are present but empty, the corresponding
-					member of the envelope is NIL.
+                    If the From, To, cc, and bcc header lines are absent in the
+                    [RFC-2822] header, or are present but empty, the corresponding
+                    member of the envelope is NIL.
 
-					If the Sender or Reply-To lines are absent in the [RFC-2822]
-					header, or are present but empty, the server sets the
-					corresponding member of the envelope to be the same value as
-					the from member (the client is not expected to know to do
-					this).
+                    If the Sender or Reply-To lines are absent in the [RFC-2822]
+                    header, or are present but empty, the server sets the
+                    corresponding member of the envelope to be the same value as
+                    the from member (the client is not expected to know to do
+                    this).
 
-						Note: [RFC-2822] requires that all messages have a valid
-						From header.  Therefore, the from, sender, and reply-to
-						members in the envelope can not be NIL.
-		 
-					ENVELOPE ("date" "subject" from sender reply-to to cc bcc "in-reply-to" "messageID")
-			*/
+                        Note: [RFC-2822] requires that all messages have a valid
+                        From header.  Therefore, the from, sender, and reply-to
+                        members in the envelope can not be NIL.
+         
+                    ENVELOPE ("date" "subject" from sender reply-to to cc bcc "in-reply-to" "messageID")
+            */
 
             // NOTE: all header fields and parameters must in ENCODED form !!!
 
@@ -207,8 +207,8 @@ namespace LumiSoft.Net.IMAP
                 retVal.Append(" NIL");
             }
 
-            // sender	
-            //	NOTE: There is confusing part, according rfc 2822 Sender: is MailboxAddress and not AddressList.
+            // sender
+            //  NOTE: There is confusing part, according rfc 2822 Sender: is MailboxAddress and not AddressList.
             if (entity.Sender != null)
             {
                 retVal.Append(" (");
@@ -262,7 +262,7 @@ namespace LumiSoft.Net.IMAP
                 retVal.Append(" NIL");
             }
 
-            // in-reply-to			
+            // in-reply-to
             if (entity.InReplyTo != null)
             {
                 retVal.Append(" " + TextUtils.QuoteString(wordEncoder.Encode(entity.InReplyTo)));
@@ -528,18 +528,18 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Constructs ENVELOPE address structure.
-		/// </summary>
-		/// <param name="address">Mailbox address.</param>
+        /// Constructs ENVELOPE address structure.
+        /// </summary>
+        /// <param name="address">Mailbox address.</param>
         /// <param name="wordEncoder">Unicode words encoder.</param>
-		/// <returns></returns>
-		private static string ConstructAddress(Mail_t_Mailbox address, MIME_Encoding_EncodedWord wordEncoder)
+        /// <returns></returns>
+        private static string ConstructAddress(Mail_t_Mailbox address, MIME_Encoding_EncodedWord wordEncoder)
         {
             /* An address structure is a parenthesized list that describes an
-			   electronic mail address.  The fields of an address structure
-			   are in the following order: personal name, [SMTP]
-			   at-domain-list (source route), mailbox name, and host name.
-			*/
+               electronic mail address.  The fields of an address structure
+               are in the following order: personal name, [SMTP]
+               at-domain-list (source route), mailbox name, and host name.
+            */
 
             // NOTE: all header fields and parameters must in ENCODED form !!!
 
@@ -578,12 +578,12 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Constructs ENVELOPE addresses structure.
-		/// </summary>
-		/// <param name="mailboxes">Mailboxes.</param>
+        /// Constructs ENVELOPE addresses structure.
+        /// </summary>
+        /// <param name="mailboxes">Mailboxes.</param>
         /// <param name="wordEncoder">Unicode words encoder.</param>
-		/// <returns></returns>
-		private static string ConstructAddresses(Mail_t_Mailbox[] mailboxes, MIME_Encoding_EncodedWord wordEncoder)
+        /// <returns></returns>
+        private static string ConstructAddresses(Mail_t_Mailbox[] mailboxes, MIME_Encoding_EncodedWord wordEncoder)
         {
             var retVal = new StringBuilder();
             retVal.Append("(");

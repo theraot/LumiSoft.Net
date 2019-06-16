@@ -8,7 +8,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public abstract class AUTH_SASL_ServerMechanism
     {
-
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>

@@ -12,24 +12,24 @@ using LumiSoft.Net.TCP;
 namespace LumiSoft.Net.FTP.Client
 {
     /// <summary>
-	/// Transfer type.
-	/// </summary>
-	internal enum TransferType
+    /// Transfer type.
+    /// </summary>
+    internal enum TransferType
     {
         /// <summary>
         /// ASCII transfer data.
         /// </summary>
         Ascii = 0,
         /// <summary>
-        /// Binary transfer data. 
+        /// Binary transfer data.
         /// </summary>
         Binary = 1,
     }
 
     /// <summary>
-	/// This class implements FTP client. Defined in RFC 959.
-	/// </summary>
-	public class FTP_Client : TCP_Client
+    /// This class implements FTP client. Defined in RFC 959.
+    /// </summary>
+    public class FTP_Client : TCP_Client
     {
         private string m_GreetingText = "";
         private GenericIdentity m_pAuthdUserIdentity;
@@ -173,10 +173,10 @@ namespace LumiSoft.Net.FTP.Client
         }
 
         /// <summary>
-		/// Gets or sets data connection establish mode.
-		/// </summary>
+        /// Gets or sets data connection establish mode.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-		public FTP_TransferMode TransferMode
+        public FTP_TransferMode TransferMode
         {
             get
             {
@@ -286,10 +286,10 @@ namespace LumiSoft.Net.FTP.Client
             m_pDataConnection.WriteAll(stream);
 
             /* FTP server may give multiline reply here
-			/  For example:
-			/	226-File successfully transferred
-			/	226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
-			*/
+            /  For example:
+            /    226-File successfully transferred
+            /    226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
+            */
             response = ReadResponse();
             if (!response[0].StartsWith("2"))
             {
@@ -298,15 +298,15 @@ namespace LumiSoft.Net.FTP.Client
         }
 
         /// <summary>
-		/// Authenticates user. Authenticate method chooses strongest possible authentication method supported by server.
-		/// </summary>
+        /// Authenticates user. Authenticate method chooses strongest possible authentication method supported by server.
+        /// </summary>
         /// <param name="userName">User login name.</param>
         /// <param name="password">Password.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when FTP client is not connected or is already authenticated.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b> is null.</exception>
         /// <exception cref="FTP_ClientException">Is raised when FTP server returns error.</exception>
-		public void Authenticate(string userName, string password)
+        public void Authenticate(string userName, string password)
         {
             if (IsDisposed)
             {
@@ -337,10 +337,10 @@ namespace LumiSoft.Net.FTP.Client
                 WriteLine("PASS " + password);
 
                 /* FTP server may give multiline reply here
-				   For example:
-					230-User someuser has group access to:  someuser
-			    	230 OK. Current restricted directory is /
-				*/
+                   For example:
+                    230-User someuser has group access to:  someuser
+                    230 OK. Current restricted directory is /
+                */
                 response = ReadResponse();
                 if (!response[0].StartsWith("230"))
                 {
@@ -467,11 +467,11 @@ namespace LumiSoft.Net.FTP.Client
         }
 
         /// <summary>
-		/// Closes connection to FTP server.
-		/// </summary>
+        /// Closes connection to FTP server.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when FTP client is not connected.</exception>
-		public override void Disconnect()
+        public override void Disconnect()
         {
             if (IsDisposed)
             {
@@ -484,7 +484,7 @@ namespace LumiSoft.Net.FTP.Client
 
             try
             {
-                // Send QUIT command to server.                
+                // Send QUIT command to server.
                 WriteLine("QUIT");
             }
             catch
@@ -509,9 +509,9 @@ namespace LumiSoft.Net.FTP.Client
         }
 
         /// <summary>
-		/// Clean up any resources being used. This method is thread-safe.
-		/// </summary>
-		public override void Dispose()
+        /// Clean up any resources being used. This method is thread-safe.
+        /// </summary>
+        public override void Dispose()
         {
             lock (this)
             {
@@ -662,10 +662,10 @@ namespace LumiSoft.Net.FTP.Client
             m_pDataConnection.ReadAll(stream);
 
             /* FTP server may give multiline reply here
-			/  For example:
-			/	226-File successfully transferred
-			/	226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
-			*/
+            /  For example:
+            /    226-File successfully transferred
+            /    226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
+            */
             response = ReadResponse();
             if (!response[0].StartsWith("2"))
             {
@@ -873,7 +873,7 @@ namespace LumiSoft.Net.FTP.Client
 
                     try
                     {
-                        // Windows listing.                 
+                        // Windows listing.
                         if (listingType == "win")
                         {
                             // MM-dd-yy hh:mm <DIR> directoryName
@@ -967,7 +967,7 @@ namespace LumiSoft.Net.FTP.Client
         }
 
         /// <summary>
-        /// Terminates the user and flushes all state information on the server. The connection is left open. 
+        /// Terminates the user and flushes all state information on the server. The connection is left open.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when FTP client is not connected.</exception>
@@ -1191,10 +1191,10 @@ namespace LumiSoft.Net.FTP.Client
             m_pDataConnection.WriteAll(stream);
 
             /* FTP server may give multiline reply here
-			/  For example:
-			/	226-File successfully transferred
-			/	226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
-			*/
+            /  For example:
+            /    226-File successfully transferred
+            /    226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
+            */
             response = ReadResponse();
             if (!response[0].StartsWith("2"))
             {
@@ -1210,15 +1210,15 @@ namespace LumiSoft.Net.FTP.Client
             m_pDataConnection = new DataConnection(this);
 
             /*
-			  Notes: Greeting may be single or multiline response.
-			 		
-			  Examples:
-			 	220<SP>FTP server ready<CRLF> 
-			  
-			 	220-FTP server ready<CRLF>
-			 	220-Addtitional text<CRLF>
-			 	220<SP>final row<CRLF>			  
-			*/
+              Notes: Greeting may be single or multiline response.
+                     
+              Examples:
+                 220<SP>FTP server ready<CRLF> 
+              
+                 220-FTP server ready<CRLF>
+                 220-Addtitional text<CRLF>
+                 220<SP>final row<CRLF>              
+            */
 
             var line = ReadLine();
             if (line.StartsWith("220"))
@@ -1357,8 +1357,8 @@ namespace LumiSoft.Net.FTP.Client
                 Examples:
                     226 File successfully transferred
               
-			    	226-File successfully transferred
-			        226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
+                    226-File successfully transferred
+                    226 0.002 seconds (measured here), 199.65 Mbytes per second 339163 bytes received in 00:00 (8.11 MB/s)
                     
                     226-Maximum disk quota limited to 5120000 kBytes
                         Used disk quota 0 kBytes, available 5120000 kBytes
@@ -1411,10 +1411,10 @@ namespace LumiSoft.Net.FTP.Client
         }
 
         /// <summary>
-		/// Sets transfer typr.
-		/// </summary>
-		/// <param name="type">Transfer type.</param>
-		private void SetTransferType(TransferType type)
+        /// Sets transfer typr.
+        /// </summary>
+        /// <param name="type">Transfer type.</param>
+        private void SetTransferType(TransferType type)
         {
             if (type == TransferType.Ascii)
             {

@@ -30,8 +30,8 @@ namespace LumiSoft.Net.RTP
         public uint CumulativePacketsLost { get; set; }
 
         /// <summary>
-        /// Gets or sets the delay, expressed in units of 1/65536 seconds, between receiving the last SR packet from 
-        /// source SSRC_n and sending this reception report block.  If no SR packet has been received yet from SSRC_n, 
+        /// Gets or sets the delay, expressed in units of 1/65536 seconds, between receiving the last SR packet from
+        /// source SSRC_n and sending this reception report block.  If no SR packet has been received yet from SSRC_n,
         /// the DLSR field is set to zero.
         /// </summary>
         public uint DelaySinceLastSR { get; set; }
@@ -42,7 +42,7 @@ namespace LumiSoft.Net.RTP
         public uint ExtendedHighestSeqNo { get; set; }
 
         /// <summary>
-        /// Gets or sets the fraction of RTP data packets from source SSRC lost since the previous SR or 
+        /// Gets or sets the fraction of RTP data packets from source SSRC lost since the previous SR or
         /// RR packet was sent.
         /// </summary>
         public uint FractionLost { get; set; }
@@ -54,7 +54,7 @@ namespace LumiSoft.Net.RTP
         public uint Jitter { get; set; }
 
         /// <summary>
-        /// Gets or sets The middle 32 bits out of 64 in the NTP timestamp (as explained in Section 4) received as part of 
+        /// Gets or sets The middle 32 bits out of 64 in the NTP timestamp (as explained in Section 4) received as part of
         /// the most recent RTCP sender report (SR) packet from source SSRC_n. If no SR has been received yet, the field is set to zero.
         /// </summary>
         public uint LastSR { get; set; }

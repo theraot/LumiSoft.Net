@@ -853,7 +853,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             method = method.ToUpper();
 
-            // RFC 5057 5.4. Target Refresh Requests.         
+            // RFC 5057 5.4. Target Refresh Requests.
             if (method == SIP_Methods.INVITE)
             {
                 return true;

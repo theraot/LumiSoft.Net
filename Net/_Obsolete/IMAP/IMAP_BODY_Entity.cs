@@ -139,7 +139,7 @@ namespace LumiSoft.Net.IMAP
             }
             else{
                 // Basic fields for non-multipart
-				// contentTypeMainMediaType contentTypeSubMediaType (conentTypeParameters) contentID contentDescription contentEncoding contentSize [envelope] [contentLine]
+                // contentTypeMainMediaType contentTypeSubMediaType (conentTypeParameters) contentID contentDescription contentEncoding contentSize [envelope] [contentLine]
 
                 // Content-Type
                 string contentTypeMainMediaType = r.ReadWord();

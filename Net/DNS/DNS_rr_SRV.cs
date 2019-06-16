@@ -43,7 +43,7 @@ namespace LumiSoft.Net.DNS
         public string Target { get; } = "";
 
         /// <summary>
-        /// Gets weight. The weight field specifies a relative weight for entries with the same priority. 
+        /// Gets weight. The weight field specifies a relative weight for entries with the same priority.
         /// Larger weights SHOULD be given a proportionately higher probability of being selected.
         /// </summary>
         public int Weight { get; } = 1;

@@ -9,7 +9,6 @@ namespace LumiSoft.Net.STUN.Message
     /// </summary>
     public class STUN_Message
     {
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -49,7 +48,7 @@ namespace LumiSoft.Net.STUN.Message
         }
 
         /// <summary>
-        /// Gets or sets IP end point where STUN server will send response back to STUN client 
+        /// Gets or sets IP end point where STUN server will send response back to STUN client
         /// if the "change IP" and "change port" flags had been set in the ChangeRequest.
         /// </summary>
         public IPEndPoint ChangedAddress { get; set; }
@@ -117,7 +116,7 @@ namespace LumiSoft.Net.STUN.Message
 
         /// <summary>
         /// Gets or sets user name. Value null means not specified.
-        /// </summary>          
+        /// </summary>
         public string UserName { get; set; }
 
         /// <summary>
@@ -253,7 +252,7 @@ namespace LumiSoft.Net.STUN.Message
             msg[offset++] = 0;
             msg[offset++] = 0;
 
-            // Magic Cookie           
+            // Magic Cookie
             msg[offset++] = (byte)((MagicCookie >> 24) & 0xFF);
             msg[offset++] = (byte)((MagicCookie >> 16) & 0xFF);
             msg[offset++] = (byte)((MagicCookie >> 8) & 0xFF);

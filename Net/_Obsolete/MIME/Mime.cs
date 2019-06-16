@@ -10,45 +10,45 @@ namespace LumiSoft.Net.Mime
     /// </summary>
     /// <remarks>
     /// <code>
-    /// 
+    ///
     /// Message examples:
-    /// 
+    ///
     /// <B>Simple message:</B>
-    /// 
+    ///
     /// //--- Beginning of message
     /// From: sender@domain.com
     /// To: recipient@domain.com
     /// Subject: Message subject.
     /// Content-Type: text/plain
-    /// 
+    ///
     /// Message body text. Bla blaa
     /// blaa,blaa.
     /// //--- End of message
-    /// 
-    /// 
+    ///
+    ///
     /// In simple message MainEntity is whole message.
-    /// 
+    ///
     /// <B>Message with attachments:</B>
-    /// 
+    ///
     /// //--- Beginning of message
     /// From: sender@domain.com
     /// To: recipient@domain.com
     /// Subject: Message subject.
     /// Content-Type: multipart/mixed; boundary="multipart_mixed"
-    /// 
-    /// --multipart_mixed	/* text entity */
-    ///	Content-Type: text/plain
-    ///	
-    ///	Message body text. Bla blaa
-    ///	blaa,blaa.	
-    ///	--multipart_mixed	/* attachment entity */
-    ///	Content-Type: application/octet-stream
-    ///	
-    ///	attachment_data
-    ///	--multipart_mixed--
-    ///	//--- End of message
-    ///	
-    ///	MainEntity is multipart_mixed entity and text and attachment entities are child entities of MainEntity.
+    ///
+    /// --multipart_mixed /* text entity */
+    /// Content-Type: text/plain
+    ///
+    /// Message body text. Bla blaa
+    /// blaa,blaa.
+    /// --multipart_mixed /* attachment entity */
+    /// Content-Type: application/octet-stream
+    ///
+    /// attachment_data
+    /// --multipart_mixed--
+    /// //--- End of message
+    ///
+    /// MainEntity is multipart_mixed entity and text and attachment entities are child entities of MainEntity.
     /// </code>
     /// </remarks>
     /// <example>
@@ -61,10 +61,10 @@ namespace LumiSoft.Net.Mime
     /// // Create simple message with simple way:
     /// AddressList from = new AddressList();
     /// from.Add(new MailboxAddress("dispaly name","user@domain.com"));
-    ///	AddressList to = new AddressList();
-    ///	to.Add(new MailboxAddress("dispaly name","user@domain.com"));
-    ///	
-    ///	Mime m = Mime.CreateSimple(from,to,"test subject","test body text","");
+    /// AddressList to = new AddressList();
+    /// to.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    ///
+    /// Mime m = Mime.CreateSimple(from,to,"test subject","test body text","");
     /// </code>
     /// <code>
     /// // Creating a new simple message
@@ -80,7 +80,7 @@ namespace LumiSoft.Net.Mime
     /// mainEntity.ContentType = MediaType_enum.Text_plain;
     /// mainEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
     /// mainEntity.DataText = "Message body text.";
-    /// 
+    ///
     /// m.ToFile("message.eml");
     /// </code>
     /// <code>
@@ -95,12 +95,12 @@ namespace LumiSoft.Net.Mime
     /// mainEntity.To.Add(new MailboxAddress("dispaly name","user@domain.com"));
     /// mainEntity.Subject = "subject";
     /// mainEntity.ContentType = MediaType_enum.Multipart_mixed;
-    /// 
+    ///
     /// MimeEntity textEntity = mainEntity.ChildEntities.Add();
     /// textEntity.ContentType = MediaType_enum.Text_plain;
     /// textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
     /// textEntity.DataText = "Message body text.";
-    /// 
+    ///
     /// MimeEntity attachmentEntity = mainEntity.ChildEntities.Add();
     /// attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
     /// attachmentEntity.ContentDisposition = ContentDisposition_enum.Attachment;
@@ -115,9 +115,9 @@ namespace LumiSoft.Net.Mime
     public class Mime
     {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
-		public Mime()
+        /// Default constructor.
+        /// </summary>
+        public Mime()
         {
             MainEntity = new MimeEntity();
 
@@ -239,14 +239,14 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Message main(top-level) entity.
-		/// </summary>
-		public MimeEntity MainEntity { get; }
+        /// Message main(top-level) entity.
+        /// </summary>
+        public MimeEntity MainEntity { get; }
 
         /// <summary>
-		/// Gets all mime entities contained in message, including child entities.
-		/// </summary>
-		public MimeEntity[] MimeEntities
+        /// Gets all mime entities contained in message, including child entities.
+        /// </summary>
+        public MimeEntity[] MimeEntities
         {
             get
             {
@@ -259,15 +259,15 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Creates simple mime message.
-		/// </summary>
-		/// <param name="from">Header field From: value.</param>
-		/// <param name="to">Header field To: value.</param>
-		/// <param name="subject">Header field Subject: value.</param>
-		/// <param name="bodyText">Body text of message. NOTE: Pass null is body text isn't wanted.</param>
-		/// <param name="bodyHtml">Body HTML text of message. NOTE: Pass null is body HTML text isn't wanted.</param>
-		/// <returns></returns>
-		public static Mime CreateSimple(AddressList from, AddressList to, string subject, string bodyText, string bodyHtml)
+        /// Creates simple mime message.
+        /// </summary>
+        /// <param name="from">Header field From: value.</param>
+        /// <param name="to">Header field To: value.</param>
+        /// <param name="subject">Header field Subject: value.</param>
+        /// <param name="bodyText">Body text of message. NOTE: Pass null is body text isn't wanted.</param>
+        /// <param name="bodyHtml">Body HTML text of message. NOTE: Pass null is body HTML text isn't wanted.</param>
+        /// <returns></returns>
+        public static Mime CreateSimple(AddressList from, AddressList to, string subject, string bodyText, string bodyHtml)
         {
             return CreateSimple(from, to, subject, bodyText, bodyHtml, null);
         }
@@ -379,11 +379,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses mime message from byte[] data.
-		/// </summary>
-		/// <param name="data">Mime message data.</param>
-		/// <returns></returns>
-		public static Mime Parse(byte[] data)
+        /// Parses mime message from byte[] data.
+        /// </summary>
+        /// <param name="data">Mime message data.</param>
+        /// <returns></returns>
+        public static Mime Parse(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
             {
@@ -418,10 +418,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Stores mime message to byte[].
-		/// </summary>
-		/// <returns></returns>
-		public byte[] ToByteData()
+        /// Stores mime message to byte[].
+        /// </summary>
+        /// <returns></returns>
+        public byte[] ToByteData()
         {
             using (MemoryStream ms = new MemoryStream())
             {
@@ -432,10 +432,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Stores mime message to specified file.
-		/// </summary>
-		/// <param name="fileName">File name.</param>
-		public void ToFile(string fileName)
+        /// Stores mime message to specified file.
+        /// </summary>
+        /// <param name="fileName">File name.</param>
+        public void ToFile(string fileName)
         {
             using (FileStream fs = File.Create(fileName))
             {
@@ -444,29 +444,29 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Stores mime message to specified stream. Stream position stays where mime writing ends.
-		/// </summary>
-		/// <param name="storeStream">Stream where to store mime message.</param>
-		public void ToStream(Stream storeStream)
+        /// Stores mime message to specified stream. Stream position stays where mime writing ends.
+        /// </summary>
+        /// <param name="storeStream">Stream where to store mime message.</param>
+        public void ToStream(Stream storeStream)
         {
             MainEntity.ToStream(storeStream);
         }
 
         /// <summary>
-		/// Stores mime message to string.
-		/// </summary>
-		/// <returns></returns>
-		public string ToStringData()
+        /// Stores mime message to string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToStringData()
         {
             return System.Text.Encoding.Default.GetString(ToByteData());
         }
 
         /// <summary>
-		/// Gets mime entities, including nested entries. 
-		/// </summary>
-		/// <param name="entities"></param>
-		/// <param name="allEntries"></param>
-		private void GetEntities(MimeEntityCollection entities, List<MimeEntity> allEntries)
+        /// Gets mime entities, including nested entries.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name="allEntries"></param>
+        private void GetEntities(MimeEntityCollection entities, List<MimeEntity> allEntries)
         {
             if (entities != null)
             {

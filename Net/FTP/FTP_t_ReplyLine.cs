@@ -41,7 +41,7 @@ namespace LumiSoft.Net.FTP
         public string Text { get; }
 
         /// <summary>
-        /// Parses FTP reply-line from 
+        /// Parses FTP reply-line from
         /// </summary>
         /// <param name="line">FTP server reply-line.</param>
         /// <returns>Returns parsed FTP server reply-line.</returns>

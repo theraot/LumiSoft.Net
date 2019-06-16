@@ -9,7 +9,6 @@ namespace LumiSoft.Net.Log
     /// </summary>
     public class Logger : IDisposable
     {
-
         /// <summary>
         /// Is raised when new log entry is available.
         /// </summary>

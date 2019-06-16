@@ -284,7 +284,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 e.ServerTransaction.SendResponse(notAuthenticatedResponse);
                 return false;
             }
-            // Valid nonce, consume it so that nonce can't be used any more. 
+            // Valid nonce, consume it so that nonce can't be used any more.
 
             m_pStack.DigestNonceManager.RemoveNonce(auth.Nonce);
 
@@ -379,7 +379,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 fails.
             */
 
-            // We need to auth all foreign calls.            
+            // We need to auth all foreign calls.
             if (!SIP_Utils.IsSipOrSipsUri(request.RequestLine.Uri.ToString()) || !OnIsLocalUri(((SIP_Uri)request.RequestLine.Uri).Host))
             {
                 // If To: field is registrar AOR and request-URI is local registration contact, skip authentication.
@@ -591,7 +591,7 @@ namespace LumiSoft.Net.SIP.Proxy
                     else
                     {
                         // If the Request-URI indicates a resource at this proxy that does not
-                        // exist, the proxy MUST return a 404 (Not Found) response.                    
+                        // exist, the proxy MUST return a 404 (Not Found) response.
                         if (!OnAddressExists(requestUri.Address))
                         {
                             e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found, e.Request));
@@ -599,7 +599,7 @@ namespace LumiSoft.Net.SIP.Proxy
                         }
                     }
 
-                    // If the target set remains empty after applying all of the above, the proxy MUST return an error response, 
+                    // If the target set remains empty after applying all of the above, the proxy MUST return an error response,
                     // which SHOULD be the 480 (Temporarily Unavailable) response.
                     if (requestContext.Targets.Count == 0)
                     {
@@ -950,18 +950,18 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Statefull
                 if ((m_ProxyMode & SIP_ProxyMode.Statefull) != 0)
                 {
-                    // Statefull proxy is transaction statefull proxy only, 
+                    // Statefull proxy is transaction statefull proxy only,
                     // what don't create dialogs and keep dialog state.
 
                     /* RFC 3261 16.10.
                         StateFull proxy:
-	                        If a matching response context is found, the element MUST
-	                        immediately return a 200 (OK) response to the CANCEL request. 
+                            If a matching response context is found, the element MUST
+                            immediately return a 200 (OK) response to the CANCEL request. 
 
-	                        If a response context is not found, the element does not have any
-	                        knowledge of the request to apply the CANCEL to.  It MUST statelessly
-	                        forward the CANCEL request (it may have statelessly forwarded the
-	                        associated request previously).
+                            If a response context is not found, the element does not have any
+                            knowledge of the request to apply the CANCEL to.  It MUST statelessly
+                            forward the CANCEL request (it may have statelessly forwarded the
+                            associated request previously).
                     */
                     if (e.Request.RequestLine.Method == SIP_Methods.CANCEL)
                     {

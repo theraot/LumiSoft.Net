@@ -13,7 +13,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class Net_Utils
     {
-
         /// <summary>
         /// Convert array elements to string.
         /// </summary>
@@ -42,44 +41,44 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Decodes base64 data. Defined in RFC 2045 6.8.  Base64 Content-Transfer-Encoding.
-		/// </summary>
-		/// <param name="base64Data">Base64 decoded data.</param>
-		/// <param name="base64Chars">Custom base64 chars (64 chars) or null if default chars used.</param>
-		/// <returns></returns>
-		public static byte[] Base64DecodeEx(byte[] base64Data, char[] base64Chars)
+        /// Decodes base64 data. Defined in RFC 2045 6.8.  Base64 Content-Transfer-Encoding.
+        /// </summary>
+        /// <param name="base64Data">Base64 decoded data.</param>
+        /// <param name="base64Chars">Custom base64 chars (64 chars) or null if default chars used.</param>
+        /// <returns></returns>
+        public static byte[] Base64DecodeEx(byte[] base64Data, char[] base64Chars)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
-			
-				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
-				are converted to 3 8-bit bytes.
-				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-				
-			
-				Value Encoding  Value Encoding  Value Encoding  Value Encoding
-					0 A            17 R            34 i            51 z
-					1 B            18 S            35 j            52 0
-					2 C            19 T            36 k            53 1
-					3 D            20 U            37 l            54 2
-					4 E            21 V            38 m            55 3
-					5 F            22 W            39 n            56 4
-					6 G            23 X            40 o            57 5
-					7 H            24 Y            41 p            58 6
-					8 I            25 Z            42 q            59 7
-					9 J            26 a            43 r            60 8
-					10 K           27 b            44 s            61 9
-					11 L           28 c            45 t            62 +
-					12 M           29 d            46 u            63 /
-					13 N           30 e            47 v
-					14 O           31 f            48 w         (pad) =
-					15 P           32 g            49 x
-					16 Q           33 h            50 y
-					
-				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes				
-					// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
-					// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
-					// |    8-bit         |    8-bit        |    8-bit         |
-			*/
+            
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+                are converted to 3 8-bit bytes.
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
+                
+            
+                Value Encoding  Value Encoding  Value Encoding  Value Encoding
+                    0 A            17 R            34 i            51 z
+                    1 B            18 S            35 j            52 0
+                    2 C            19 T            36 k            53 1
+                    3 D            20 U            37 l            54 2
+                    4 E            21 V            38 m            55 3
+                    5 F            22 W            39 n            56 4
+                    6 G            23 X            40 o            57 5
+                    7 H            24 Y            41 p            58 6
+                    8 I            25 Z            42 q            59 7
+                    9 J            26 a            43 r            60 8
+                    10 K           27 b            44 s            61 9
+                    11 L           28 c            45 t            62 +
+                    12 M           29 d            46 u            63 /
+                    13 N           30 e            47 v
+                    14 O           31 f            48 w         (pad) =
+                    15 P           32 g            49 x
+                    16 Q           33 h            50 y
+                    
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+                    // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
+                    // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
+                    // |    8-bit         |    8-bit        |    8-bit         |
+            */
 
             if (base64Chars != null && base64Chars.Length != 64)
             {
@@ -130,7 +129,7 @@ namespace LumiSoft.Net
             {
                 byte b = base64Data[i];
 
-                // Read 4 byte base64 block and process it 			
+                // Read 4 byte base64 block and process it
                 // Any characters outside of the base64 alphabet are to be ignored in base64-encoded data.
 
                 // Padding char
@@ -160,7 +159,7 @@ namespace LumiSoft.Net
                 // We have reached at the end of base64 data, there may be some bytes left
                 else if (i == base64Data.Length - 1)
                 {
-                    // Invalid value, we can't have only 6 bit, just skip 
+                    // Invalid value, we can't have only 6 bit, just skip
                     if (nByteInBase64Block == 1)
                     {
                         encodedBytesCount = 0;
@@ -205,11 +204,11 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Encodes specified data with base64 encoding.
-		/// </summary>
-		/// <param name="data">Data to encode.</param>
-		/// <returns></returns>
-		public static byte[] Base64Encode(byte[] data)
+        /// Encodes specified data with base64 encoding.
+        /// </summary>
+        /// <param name="data">Data to encode.</param>
+        /// <returns></returns>
+        public static byte[] Base64Encode(byte[] data)
         {
             return Base64EncodeEx(data, null, true);
         }
@@ -219,42 +218,42 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="data">Data to to encode.</param>
         /// <param name="base64Chars">Custom base64 chars (64 chars) or null if default chars used.</param>
-        /// <param name="padd">Padd missing block chars. Normal base64 must be 4 bytes blocks, if not 4 bytes in block, 
+        /// <param name="padd">Padd missing block chars. Normal base64 must be 4 bytes blocks, if not 4 bytes in block,
         /// missing bytes must be padded with '='. Modified base64 just skips missing bytes.</param>
         /// <returns></returns>
         public static byte[] Base64EncodeEx(byte[] data, char[] base64Chars, bool padd)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
-			
-				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
-				are converted to 3 8-bit bytes.
-				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-				
-			
-				Value Encoding  Value Encoding  Value Encoding  Value Encoding
-					0 A            17 R            34 i            51 z
-					1 B            18 S            35 j            52 0
-					2 C            19 T            36 k            53 1
-					3 D            20 U            37 l            54 2
-					4 E            21 V            38 m            55 3
-					5 F            22 W            39 n            56 4
-					6 G            23 X            40 o            57 5
-					7 H            24 Y            41 p            58 6
-					8 I            25 Z            42 q            59 7
-					9 J            26 a            43 r            60 8
-					10 K           27 b            44 s            61 9
-					11 L           28 c            45 t            62 +
-					12 M           29 d            46 u            63 /
-					13 N           30 e            47 v
-					14 O           31 f            48 w         (pad) =
-					15 P           32 g            49 x
-					16 Q           33 h            50 y
-					
-				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes				
-					// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
-					// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
-					// |    8-bit         |    8-bit        |    8-bit         |
-			*/
+            
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+                are converted to 3 8-bit bytes.
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
+                
+            
+                Value Encoding  Value Encoding  Value Encoding  Value Encoding
+                    0 A            17 R            34 i            51 z
+                    1 B            18 S            35 j            52 0
+                    2 C            19 T            36 k            53 1
+                    3 D            20 U            37 l            54 2
+                    4 E            21 V            38 m            55 3
+                    5 F            22 W            39 n            56 4
+                    6 G            23 X            40 o            57 5
+                    7 H            24 Y            41 p            58 6
+                    8 I            25 Z            42 q            59 7
+                    9 J            26 a            43 r            60 8
+                    10 K           27 b            44 s            61 9
+                    11 L           28 c            45 t            62 +
+                    12 M           29 d            46 u            63 /
+                    13 N           30 e            47 v
+                    14 O           31 f            48 w         (pad) =
+                    15 P           32 g            49 x
+                    16 Q           33 h            50 y
+                    
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+                    // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
+                    // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
+                    // |    8-bit         |    8-bit        |    8-bit         |
+            */
 
             if (base64Chars != null && base64Chars.Length != 64)
             {
@@ -394,13 +393,13 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Compares 2 IP addresses. Returns 0 if IPs are equal, 
+        /// Compares 2 IP addresses. Returns 0 if IPs are equal,
         /// returns positive value if destination IP is bigger than source IP,
         /// returns negative value if destination IP is smaller than source IP.
         /// </summary>
         /// <param name="source">Source IP address.</param>
         /// <param name="destination">Destination IP address.</param>
-        /// <returns>Returns 0 if IPs are equal, 
+        /// <returns>Returns 0 if IPs are equal,
         /// returns positive value if destination IP is bigger than source IP,
         /// returns negative value if destination IP is smaller than source IP.
         /// </returns>
@@ -537,12 +536,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Converts hex byte data to normal byte data. Hex data must be in two bytes pairs, for example: 0F,FF,A3,... .
-		/// </summary>
-		/// <param name="hexData">Hex data.</param>
-		/// <returns>Returns decoded data.</returns>
+        /// Converts hex byte data to normal byte data. Hex data must be in two bytes pairs, for example: 0F,FF,A3,... .
+        /// </summary>
+        /// <param name="hexData">Hex data.</param>
+        /// <returns>Returns decoded data.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>hexData</b> is null reference.</exception>
-		public static byte[] FromHex(byte[] hexData)
+        public static byte[] FromHex(byte[] hexData)
         {
             if (hexData == null)
             {
@@ -674,12 +673,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Checks if specified string is integer(int/long).
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns>Returns true if specified string is integer.</returns>
+        /// Checks if specified string is integer(int/long).
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>Returns true if specified string is integer.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
-		public static bool IsInteger(string value)
+        public static bool IsInteger(string value)
         {
             if (value == null)
             {
@@ -799,12 +798,12 @@ namespace LumiSoft.Net
                 var ipBytes = ip.GetAddressBytes();
 
                 /* Private IPs:
-					First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
-					First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
-					First Octet = 10 (Example: 10.X.X.X)
-					First Octet = 169 AND Second Octet = 254 (Example: 169.254.X.X)
+                    First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
+                    First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
+                    First Octet = 10 (Example: 10.X.X.X)
+                    First Octet = 169 AND Second Octet = 254 (Example: 169.254.X.X)
 
-				*/
+                */
 
                 if (ipBytes[0] == 192 && ipBytes[1] == 168)
                 {
@@ -931,12 +930,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Converts specified data to HEX string.
-		/// </summary>
-		/// <param name="data">Data to convert.</param>
-		/// <returns>Returns hex string.</returns>
+        /// Converts specified data to HEX string.
+        /// </summary>
+        /// <param name="data">Data to convert.</param>
+        /// <returns>Returns hex string.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
-		public static string ToHex(byte[] data)
+        public static string ToHex(byte[] data)
         {
             if (data == null)
             {

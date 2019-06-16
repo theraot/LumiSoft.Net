@@ -12,12 +12,12 @@ namespace LumiSoft.Net.NNTP.Client
     public class NNTP_Client : TCP_Client
     {
         /// <summary>
-		/// Closes connection to NNTP server.
-		/// </summary>
+        /// Closes connection to NNTP server.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when NNTP client is not connected.</exception>
-		public override void Disconnect()
-		{
+        public override void Disconnect()
+        {
             if(IsDisposed){
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -25,19 +25,19 @@ namespace LumiSoft.Net.NNTP.Client
                 throw new InvalidOperationException("NNTP client is not connected.");
             }
 
-			try{
-                // Send QUIT command to server.                
-                WriteLine("QUIT");
-			}
-			catch{
-			}
-
             try{
-                base.Disconnect(); 
+                // Send QUIT command to server.
+                WriteLine("QUIT");
             }
             catch{
             }
-		}
+
+            try{
+                base.Disconnect();
+            }
+            catch{
+            }
+        }
 
         /// <summary>
         /// Gets NNTP newsgoups.
@@ -84,7 +84,7 @@ namespace LumiSoft.Net.NNTP.Client
             WriteLine("LIST");
 
             // Read server response
-			var responseLine = ReadLine();
+            var responseLine = ReadLine();
             if (!responseLine.StartsWith("215")){
                 throw new Exception(responseLine);
             }
@@ -152,7 +152,7 @@ namespace LumiSoft.Net.NNTP.Client
             WriteLine("POST");
 
             // Read server response
-			var responseLine = ReadLine();
+            var responseLine = ReadLine();
             if (!responseLine.StartsWith("340")){
                 throw new Exception(responseLine);
             }
@@ -173,7 +173,7 @@ namespace LumiSoft.Net.NNTP.Client
         protected override void OnConnected()
         {
             // Read first line of reply, check if it's ok.
-			var responseLine = ReadLine();
+            var responseLine = ReadLine();
             if (!responseLine.StartsWith("200")){
                 throw new Exception(responseLine);
             }

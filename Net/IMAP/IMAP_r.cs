@@ -11,7 +11,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public abstract class IMAP_r
     {
-
         /// <summary>
         /// Starts writing response to the specified stream.
         /// </summary>

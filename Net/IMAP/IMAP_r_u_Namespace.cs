@@ -204,7 +204,6 @@ namespace LumiSoft.Net.IMAP
             }
             retVal.Append("\r\n");
 
-
             return retVal.ToString();
         }
     }

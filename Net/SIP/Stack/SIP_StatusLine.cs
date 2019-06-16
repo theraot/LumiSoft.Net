@@ -98,7 +98,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns Status-Line string.</returns>
         public override string ToString()
         {
-            // RFC 3261 25. 
+            // RFC 3261 25.
             //  Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
 
             return m_Version + " " + m_StatusCode + " " + m_Reason + "\r\n";

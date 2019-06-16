@@ -44,7 +44,7 @@ namespace LumiSoft.Net.ABNF
         public string Name { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>

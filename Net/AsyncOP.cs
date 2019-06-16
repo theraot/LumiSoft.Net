@@ -5,7 +5,6 @@
     /// </summary>
     public abstract class AsyncOP
     {
-
         /// <summary>
         /// Gets if asynchronous operation has completed.
         /// </summary>

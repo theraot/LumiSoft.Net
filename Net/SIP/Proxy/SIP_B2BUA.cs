@@ -223,7 +223,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 {
                     b2buaRequest.Allow.Add("INVITE,ACK,OPTIONS,CANCEL,BYE,PRACK");
                 }
-                // Supported to non ACK request. 
+                // Supported to non ACK request.
                 if (request.RequestLine.Method != SIP_Methods.ACK)
                 {
                     b2buaRequest.Supported.Add("100rel,timer");

@@ -187,12 +187,12 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-		/// Calculates keyed md5 hash from specifieed text and with specified hash key.
-		/// </summary>
-		/// <param name="hashKey">MD5 key.</param>
-		/// <param name="text">Text to hash.</param>
-		/// <returns>Returns MD5 hash.</returns>
-		private byte[] HmacMd5(string hashKey, string text)
+        /// Calculates keyed md5 hash from specifieed text and with specified hash key.
+        /// </summary>
+        /// <param name="hashKey">MD5 key.</param>
+        /// <param name="text">Text to hash.</param>
+        /// <returns>Returns MD5 hash.</returns>
+        private byte[] HmacMd5(string hashKey, string text)
         {
             var kMd5 = new HMACMD5(Encoding.Default.GetBytes(text));
 

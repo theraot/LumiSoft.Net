@@ -11,7 +11,6 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public abstract class TCP_Session : IDisposable
     {
-
         /// <summary>
         /// Gets session authenticated user identity , returns null if not authenticated.
         /// </summary>

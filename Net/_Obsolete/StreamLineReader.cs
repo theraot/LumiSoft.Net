@@ -29,9 +29,9 @@ namespace LumiSoft.Net
         public bool CRLF_LinesOnly { get; set; } = true;
 
         /// <summary>
-		/// Gets or sets charset encoding to use for string based methods. Default("") encoding is system default encoding.
-		/// </summary>
-		public string Encoding
+        /// Gets or sets charset encoding to use for string based methods. Default("") encoding is system default encoding.
+        /// </summary>
+        public string Encoding
         {
             get { return m_Encoding; }
 
@@ -45,10 +45,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Reads byte[] line from stream. NOTE: Returns null if end of stream reached.
-		/// </summary>
-		/// <returns>Return null if end of stream reached.</returns>
-		public byte[] ReadLine()
+        /// Reads byte[] line from stream. NOTE: Returns null if end of stream reached.
+        /// </summary>
+        /// <returns>Return null if end of stream reached.</returns>
+        public byte[] ReadLine()
         {
             // TODO: Allow to buffer source stream reads
 
@@ -103,10 +103,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Reads string line from stream. String is converted with specified Encoding property from byte[] line. NOTE: Returns null if end of stream reached.
-		/// </summary>
-		/// <returns></returns>
-		public string ReadLineString()
+        /// Reads string line from stream. String is converted with specified Encoding property from byte[] line. NOTE: Returns null if end of stream reached.
+        /// </summary>
+        /// <returns></returns>
+        public string ReadLineString()
         {
             var line = ReadLine();
             if (line != null)

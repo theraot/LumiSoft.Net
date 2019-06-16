@@ -203,10 +203,10 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pFields.GetEnumerator();
         }
@@ -490,7 +490,7 @@ namespace LumiSoft.Net.MIME
         /// <param name="stream">Stream where to store header.</param>
         /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <param name="parmetersCharset">Charset to use to encode 8-bit header parameters. Value null means parameters not encoded.</param>
-        /// <param name="reEncod">If true always specified encoding is used for header. If false and header field value not modified, 
+        /// <param name="reEncod">If true always specified encoding is used for header. If false and header field value not modified,
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public void ToStream(Stream stream, MIME_Encoding_EncodedWord wordEncoder, Encoding parmetersCharset, bool reEncod)

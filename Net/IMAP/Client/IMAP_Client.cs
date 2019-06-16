@@ -16,24 +16,24 @@ namespace LumiSoft.Net.IMAP.Client
     /// <summary>
     /// IMAP v4 Client. Defined in RFC 3501.
     /// </summary>
-	/// <example>
-	/// <code>
-	/// /*
-	///  To make this code to work, you need to import following namespaces:
-	///  using LumiSoft.Net.IMAP.Client; 
-	/// */
-	/// 
-	/// using(IMAP_Client imap = new IMAP_Client()){
+    /// <example>
+    /// <code>
+    /// /*
+    ///  To make this code to work, you need to import following namespaces:
+    ///  using LumiSoft.Net.IMAP.Client;
+    /// */
+    ///
+    /// using(IMAP_Client imap = new IMAP_Client()){
     ///     imap.Connect("host",143);
     ///     // Call Capability even if you don't care about capabilities, it also controls IMAP client features.
     ///     imap.Capability();
-    ///     
+    ///
     ///     imap.Authenticate(... choose auth method ...);
-    /// 
+    ///
     ///     // Do do your stuff ...
     /// }
-	/// </code>
-	/// </example>
+    /// </code>
+    /// </example>
     public class IMAP_Client : TCP_Client
     {
         private int m_CommandIndex = 1;
@@ -998,11 +998,11 @@ namespace LumiSoft.Net.IMAP.Client
         }
 
         /// <summary>
-		/// Closes connection to IMAP server.
-		/// </summary>
+        /// Closes connection to IMAP server.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when IMAP client is not connected.</exception>
-		public override void Disconnect()
+        public override void Disconnect()
         {
             if (this.IsDisposed)
             {
@@ -1015,7 +1015,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             try
             {
-                // Send LOGOUT command to server.                
+                // Send LOGOUT command to server.
                 WriteLine((m_CommandIndex++).ToString("d5") + " LOGOUT");
             }
             catch
@@ -3594,7 +3594,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="InvalidOperationException">Is raised when IMAP client is not in valid state. For example 'not connected'.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> or <b>stream</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="IMAP_ClientException">Is raised when server refuses to complete this command and returns error.</exception> 
+        /// <exception cref="IMAP_ClientException">Is raised when server refuses to complete this command and returns error.</exception>
         public void StoreMessage(string folder, string[] flags, DateTime internalDate, Stream message, int count)
         {
             StoreMessage(folder, flags != null ? new IMAP_t_MsgFlags(flags) : new IMAP_t_MsgFlags(new string[0]), internalDate, message, count);
@@ -3856,7 +3856,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when IMAP client is not in valid state. For example 'not connected'.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>seqSet</b> is null reference.</exception>
-        /// <exception cref="IMAP_ClientException">Is raised when server refuses to complete this command and returns error.</exception>        
+        /// <exception cref="IMAP_ClientException">Is raised when server refuses to complete this command and returns error.</exception>
         [Obsolete("Use method public void StoreMessageFlags(bool uid,IMAP_t_SeqSet seqSet,IMAP_Flags_SetType setType,IMAP_t_MsgFlags flags) instead.")]
         public void StoreMessageFlags(bool uid, IMAP_SequenceSet seqSet, IMAP_Flags_SetType setType, string[] flags)
         {
@@ -4318,7 +4318,7 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-        //--- OBSOLETE ------------------------         
+        //--- OBSOLETE ------------------------
 
         /// <summary>
         /// Reads IMAP server responses.
@@ -4427,7 +4427,7 @@ namespace LumiSoft.Net.IMAP.Client
                                     folderInfo.SetFirstUnseen(Convert.ToInt32(response.OptionalResponseArgs));
                                 }
                             }
-                            // We don't care about other response codes.                            
+                            // We don't care about other response codes.
                         }
 
                         OnUntaggedStatusResponse(response);
@@ -5454,7 +5454,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
             public CloseFolderAsyncOP(EventHandler<EventArgs<IMAP_r_u>> callback)
@@ -5909,7 +5909,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Gets command lines.
             /// </summary>
@@ -6183,7 +6182,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="identifier">ACL entry identifier. Normally this is user or group name.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
@@ -6404,7 +6403,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
@@ -6804,7 +6803,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
@@ -6914,7 +6913,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is riased when <b>folder</b> is null reference.</exception>
@@ -6973,7 +6972,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is riased when <b>folder</b> is null reference.</exception>
@@ -7025,7 +7024,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
@@ -7085,7 +7084,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="identifier">ACL entry identifier. Normally this is user or group name.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
@@ -7161,7 +7160,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="filter">Folders filter. If this value is null, all folders are returned.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
@@ -7386,7 +7385,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="quotaRootName">Quota root name.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is riased when <b>quotaRootName</b> is null reference.</exception>
@@ -7438,7 +7437,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="filter">Folders filter. If this value is null, all folders are returned.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
@@ -7526,7 +7525,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
             public IdleAsyncOP(EventHandler<EventArgs<IMAP_r_u>> callback)
@@ -8249,7 +8248,6 @@ namespace LumiSoft.Net.IMAP.Client
                     throw new ArgumentNullException("owner");
                 }
 
-
                 m_pImapClient = owner;
 
                 SetState(AsyncOP_State.Active);
@@ -8597,7 +8595,7 @@ namespace LumiSoft.Net.IMAP.Client
                     {
                         m_pException = op.Error;
                     }
-                    // Remote host shut down socket.                        
+                    // Remote host shut down socket.
                     else if (op.BytesInBuffer == 0)
                     {
                         m_pException = new IOException("The remote host shut-down socket.");
@@ -8624,7 +8622,7 @@ namespace LumiSoft.Net.IMAP.Client
                                 m_pResponse = statusResponse;
 
                                 // Process optional response-codes(7.2). ALERT,BADCHARSET,CAPABILITY,PARSE,PERMANENTFLAGS,READ-ONLY,
-                                // READ-WRITE,TRYCREATE,UIDNEXT,UIDVALIDITY,UNSEEN                                
+                                // READ-WRITE,TRYCREATE,UIDNEXT,UIDVALIDITY,UNSEEN
                                 if (statusResponse.OptionalResponse != null)
                                 {
                                     if (statusResponse.OptionalResponse is IMAP_t_orc_PermanentFlags)
@@ -8669,7 +8667,7 @@ namespace LumiSoft.Net.IMAP.Client
                                             m_pImapClient.SelectedFolder.SetFirstUnseen(((IMAP_t_orc_Unseen)statusResponse.OptionalResponse).SeqNo);
                                         }
                                     }
-                                    // We don't care about other response codes.                            
+                                    // We don't care about other response codes.
                                 }
 
                                 m_pImapClient.OnUntaggedStatusResponse((IMAP_r_u)m_pResponse);
@@ -9367,7 +9365,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="callback">Optional callback to be called for each received untagged response.</param>
             /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> is null reference.</exception>
@@ -9752,7 +9750,6 @@ namespace LumiSoft.Net.IMAP.Client
                     throw new ArgumentNullException("owner");
                 }
 
-
                 m_pImapClient = owner;
 
                 SetState(AsyncOP_State.Active);
@@ -9970,7 +9967,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="identifier">ACL entry identifier. Normally this is user or group name.</param>
             /// <param name="setType">Specifies how flags are set.</param>
@@ -10355,7 +10352,7 @@ namespace LumiSoft.Net.IMAP.Client
 
             /// <summary>
             /// Default constructor.
-            /// </summary>             
+            /// </summary>
             /// <param name="folder">Folder name with path.</param>
             /// <param name="flags">Message flags. Value null means no flags.</param>
             /// <param name="internalDate">Message internal data. DateTime.MinValue means server will allocate it.</param>

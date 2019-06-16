@@ -5,9 +5,8 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_TransferEncodings
     {
-
         /// <summary>
-        /// Used to encode arbitrary octet sequences into a form that satisfies the rules of 7bit. Has a fixed overhead and is 
+        /// Used to encode arbitrary octet sequences into a form that satisfies the rules of 7bit. Has a fixed overhead and is
         /// intended for non text data and text that is not ASCII heavy.
         /// Defined in RFC 2045 6.8.
         /// </summary>
@@ -25,14 +24,14 @@ namespace LumiSoft.Net.MIME
         public static readonly string EightBit = "8bit";
 
         /// <summary>
-        /// Used to encode arbitrary octet sequences into a form that satisfies the rules of 7bit. 
-        /// Designed to be efficient and mostly human readable when used for text data consisting primarily of US-ASCII characters 
+        /// Used to encode arbitrary octet sequences into a form that satisfies the rules of 7bit.
+        /// Designed to be efficient and mostly human readable when used for text data consisting primarily of US-ASCII characters
         /// but also containing a small proportion of bytes with values outside that range.
         /// Defined in RFC 2045 6.7.
         /// </summary>
         public static readonly string QuotedPrintable = "quoted-printable";
         /// <summary>
-        /// Up to 998 octets per line of the code range 1..127 with CR and LF (codes 13 and 10 respectively) only allowed to 
+        /// Up to 998 octets per line of the code range 1..127 with CR and LF (codes 13 and 10 respectively) only allowed to
         /// appear as part of a CRLF line ending. This is the default value.
         /// Defined in RFC 2045 6.2.
         /// </summary>

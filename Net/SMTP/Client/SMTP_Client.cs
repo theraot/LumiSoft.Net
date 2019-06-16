@@ -22,48 +22,48 @@ namespace LumiSoft.Net.SMTP.Client
     /// <summary>
     /// This class implements SMTP client. Defined in RFC 5321.
     /// </summary>
-	/// <example>
+    /// <example>
     /// Simple way:
     /// <code>
-	/// /*
-	///  To make this code to work, you need to import following namespaces:
-	///  using LumiSoft.Net.SMTP.Client; 
-	/// */
-    /// 
+    /// /*
+    ///  To make this code to work, you need to import following namespaces:
+    ///  using LumiSoft.Net.SMTP.Client;
+    /// */
+    ///
     /// // You can send any valid SMTP message here, from disk,memory, ... or
     /// // you can use LumiSoft.Net.Mail classes to compose valid SMTP mail message.
-    /// 
+    ///
     /// // SMTP_Client.QuickSendSmartHost(...
     /// or
     /// // SMTP_Client.QuickSend(...
     /// </code>
-    /// 
+    ///
     /// Advanced way:
-	/// <code> 
-	/// /*
-	///  To make this code to work, you need to import following namespaces:
-	///  using LumiSoft.Net.SMTP.Client; 
-	/// */
-	/// 
-	/// using(SMTP_Client smtp = new SMTP_Client()){      
+    /// <code>
+    /// /*
+    ///  To make this code to work, you need to import following namespaces:
+    ///  using LumiSoft.Net.SMTP.Client;
+    /// */
+    ///
+    /// using(SMTP_Client smtp = new SMTP_Client()){
     ///     // You can use Dns_Client.GetEmailHosts(... to get target recipient SMTP hosts for Connect method.
-	///		smtp.Connect("hostName",WellKnownPorts.SMTP); 
-    ///		smtp.EhloHelo("mail.domain.com");
+    ///     smtp.Connect("hostName",WellKnownPorts.SMTP);
+    ///     smtp.EhloHelo("mail.domain.com");
     ///     // Authenticate if target server requires.
     ///     // smtp.Auth(smtp.AuthGetStrongestMethod("user","password"));
     ///     smtp.MailFrom("sender@domain.com");
     ///     // Repeat this for all recipients.
     ///     smtp.RcptTo("to@domain.com");
-    /// 
+    ///
     ///     // Send message to server.
     ///     // You can send any valid SMTP message here, from disk,memory, ... or
     ///     // you can use LumiSoft.Net.Mail classes to compose valid SMTP mail message.
     ///     // smtp.SendMessage(.... .
-    ///     
+    ///
     ///     smtp.Disconnect();
-	///	}
-	/// </code>
-	/// </example>
+    /// }
+    /// </code>
+    /// </example>
     public class SMTP_Client : TCP_Client
     {
         private string m_GreetingText = "";
@@ -337,7 +337,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// <param name="state">User data.</param>
         /// <returns>An IAsyncResult that references the asynchronous method.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>domain</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>        
+        /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         [Obsolete("Use method Dns_Client.GetEmailHostsAsync instead.")]
         public static IAsyncResult BeginGetDomainHosts(string domain, AsyncCallback callback, object state)
         {
@@ -363,7 +363,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// <param name="asyncResult">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
         /// <returns>Returns specified email domain SMTP hosts.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>      
+        /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
         [Obsolete("Use method Dns_Client.GetEmailHostsAsync instead.")]
         public static string[] EndGetDomainHosts(IAsyncResult asyncResult)
         {
@@ -441,9 +441,9 @@ namespace LumiSoft.Net.SMTP.Client
             }
 
             /* RFC 2821 5.
-			    If no MX records are found, but an A RR is found, the A RR is treated as if it 
+                If no MX records are found, but an A RR is found, the A RR is treated as if it 
                 was associated with an implicit MX RR, with a preference of 0, pointing to that host.
-			*/
+            */
             if (retVal.Count == 0)
             {
                 retVal.Add(domain);
@@ -884,10 +884,10 @@ namespace LumiSoft.Net.SMTP.Client
             return op.Start(this);
         }
 
-        //------- OBSOLETE  
+        //------- OBSOLETE
 
         /// <summary>
-        /// Authenticates user. Authenticate method chooses strongest possible authentication method supported by server, 
+        /// Authenticates user. Authenticate method chooses strongest possible authentication method supported by server,
         /// preference order DIGEST-MD5 -> CRAM-MD5 -> LOGIN.
         /// </summary>
         /// <param name="userName">User login name.</param>
@@ -935,14 +935,14 @@ namespace LumiSoft.Net.SMTP.Client
             if (authMethod == "LOGIN")
             {
                 /* LOGIN
-			          Example:
-			            C: AUTH LOGIN<CRLF>
-			            S: 334 VXNlcm5hbWU6<CRLF>   VXNlcm5hbWU6 = base64("USERNAME")
-			            C: base64(username)<CRLF>
-			            S: 334 UGFzc3dvcmQ6<CRLF>   UGFzc3dvcmQ6 = base64("PASSWORD")
-			            C: base64(password)<CRLF>
-			            S: 235 Ok<CRLF>
-			    */
+                      Example:
+                        C: AUTH LOGIN<CRLF>
+                        S: 334 VXNlcm5hbWU6<CRLF>   VXNlcm5hbWU6 = base64("USERNAME")
+                        C: base64(username)<CRLF>
+                        S: 334 UGFzc3dvcmQ6<CRLF>   UGFzc3dvcmQ6 = base64("PASSWORD")
+                        C: base64(password)<CRLF>
+                        S: 235 Ok<CRLF>
+                */
 
                 WriteLine("AUTH LOGIN");
 
@@ -984,12 +984,12 @@ namespace LumiSoft.Net.SMTP.Client
                     Description:
                         HMACMD5 key is "password".
                  
-			        Example:
-					    C: AUTH CRAM-MD5<CRLF>
-					    S: 334 base64(md5_calculation_hash)<CRLF>
-					    C: base64(username password_hash)<CRLF>
-					    S: 235 Ok<CRLF>
-			    */
+                    Example:
+                        C: AUTH CRAM-MD5<CRLF>
+                        S: 334 base64(md5_calculation_hash)<CRLF>
+                        C: base64(username password_hash)<CRLF>
+                        S: 235 Ok<CRLF>
+                */
 
                 WriteLine("AUTH CRAM-MD5");
 
@@ -1021,12 +1021,12 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 /*
                     Example:
-					    C: AUTH DIGEST-MD5<CRLF>
-					    S: 334 base64(digestChallange)<CRLF>
-					    C: base64(digestResponse)<CRLF>
+                        C: AUTH DIGEST-MD5<CRLF>
+                        S: 334 base64(digestChallange)<CRLF>
+                        C: base64(digestResponse)<CRLF>
                         S: 334 base64(serverDigestRpAuth)<CRLF>
                         C: <CRLF>
-					    S: 235 Ok<CRLF>
+                        S: 235 Ok<CRLF>
                 */
 
                 WriteLine("AUTH DIGEST-MD5");
@@ -1096,7 +1096,7 @@ namespace LumiSoft.Net.SMTP.Client
         /// <exception cref="InvalidOperationException">Is raised when SMTP client is not connected .</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>userName</b> or <b>password</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="NotSupportedException">Is raised when SMTP server won't support authentication or we 
+        /// <exception cref="NotSupportedException">Is raised when SMTP server won't support authentication or we
         /// don't support any of the server authentication mechanisms.</exception>
         public AUTH_SASL_Client AuthGetStrongestMethod(string userName, string password)
         {
@@ -1137,8 +1137,8 @@ namespace LumiSoft.Net.SMTP.Client
         /// <summary>
         /// Starts authentication.
         /// </summary>
-		/// <param name="userName">User login name.</param>
-		/// <param name="password">Password.</param>
+        /// <param name="userName">User login name.</param>
+        /// <param name="password">Password.</param>
         /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
         /// <param name="state">User data.</param>
         /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
@@ -1378,22 +1378,22 @@ namespace LumiSoft.Net.SMTP.Client
         }
 
         /// <summary>
-		/// Closes connection to SMTP server.
-		/// </summary>
+        /// Closes connection to SMTP server.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when SMTP client is not connected.</exception>
-		public override void Disconnect()
+        public override void Disconnect()
         {
             Disconnect(true);
         }
 
         /// <summary>
-		/// Closes connection to SMTP server.
-		/// </summary>
+        /// Closes connection to SMTP server.
+        /// </summary>
         /// <param name="sendQuit">If true QUIT command is sent to SMTP server.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when SMTP client is not connected.</exception>
-		public void Disconnect(bool sendQuit)
+        public void Disconnect(bool sendQuit)
         {
             if (IsDisposed)
             {
@@ -1408,7 +1408,7 @@ namespace LumiSoft.Net.SMTP.Client
             {
                 if (sendQuit)
                 {
-                    // Send QUIT command to server.                
+                    // Send QUIT command to server.
                     WriteLine("QUIT");
 
                     // Read QUIT response.
@@ -1438,9 +1438,9 @@ namespace LumiSoft.Net.SMTP.Client
         }
 
         /// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		public override void Dispose()
+        /// Clean up any resources being used.
+        /// </summary>
+        public override void Dispose()
         {
             base.Dispose();
         }
@@ -3155,18 +3155,18 @@ namespace LumiSoft.Net.SMTP.Client
                 try
                 {
                     /* RFC 5321 4.1.1.2. MAIL
-			            mail         = "MAIL FROM:" Reverse-path [SP Mail-parameters] CRLF
+                        mail         = "MAIL FROM:" Reverse-path [SP Mail-parameters] CRLF
                         Reverse-path = Path / "<>"
                         Path         = "<" [ A-d-l ":" ] Mailbox ">"
 
-			  
-			           RFC 1870 adds optional SIZE keyword support.
-			                SIZE keyword may only be used if it's reported in EHLO command response.
-			 	        Examples:
-			 		        MAIL FROM:<ivx@lumisoft.ee> SIZE=1000
+              
+                       RFC 1870 adds optional SIZE keyword support.
+                            SIZE keyword may only be used if it's reported in EHLO command response.
+                         Examples:
+                             MAIL FROM:<ivx@lumisoft.ee> SIZE=1000
              
                        RFC 3461 adds RET and ENVID paramters.
-			        */
+                    */
 
                     bool isSizeSupported = false;
                     foreach (string feature in m_pSmtpClient.EsmtpFeatures)
@@ -3669,11 +3669,11 @@ namespace LumiSoft.Net.SMTP.Client
                     /* RFC 5321 4.1.1.3. RCPT.
                         rcpt = "RCPT TO:" ( "<Postmaster@" Domain ">" / "<Postmaster>" / Forward-path ) [SP Rcpt-parameters] CRLF
 
-			            Examples:
-			 		        RCPT TO:<ivar@lumisoft.ee>
+                        Examples:
+                             RCPT TO:<ivar@lumisoft.ee>
              
                         RFC 3461 adds NOTIFY and ORCPT parameters.
-			        */
+                    */
 
                     // Build command.
                     var cmd = new StringBuilder();
@@ -4429,10 +4429,10 @@ namespace LumiSoft.Net.SMTP.Client
                             actually the terminator of the previous line.
                           
                             Examples:
-			 		            C: DATA<CRLF>
-			 		            S: 354 Start sending message, end with <crlf>.<crlf>.<CRLF>
-			 		            C: send_message
-			 		            C: .<CRLF>
+                                 C: DATA<CRLF>
+                                 S: 354 Start sending message, end with <crlf>.<crlf>.<CRLF>
+                                 C: send_message
+                                 C: .<CRLF>
                                 S: 250 Ok<CRLF>
                         */
 

@@ -46,7 +46,7 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Gets remote participant. 
+        /// Gets remote participant.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
         public RTP_Participant_Remote Participant

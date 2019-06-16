@@ -31,7 +31,7 @@ namespace LumiSoft.Net.SIP.Proxy
             //m_pCaller.Terminated += new EventHandler(m_pCaller_Terminated);
 
             //m_pCallee.RequestReceived += new SIP_RequestReceivedEventHandler(m_pCallee_RequestReceived);
-            //m_pCallee.Terminated += new EventHandler(m_pCallee_Terminated);           
+            //m_pCallee.Terminated += new EventHandler(m_pCallee_Terminated);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// This method is called when callee dialog has terminated, normally this happens 
+        /// This method is called when callee dialog has terminated, normally this happens
         /// when dialog gets BYE request.
         /// </summary>
         /// <param name="sender">Sender.</param>
@@ -228,7 +228,7 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// This method is called when caller dialog has terminated, normally this happens 
+        /// This method is called when caller dialog has terminated, normally this happens
         /// when dialog gets BYE request.
         /// </summary>
         /// <param name="sender">Sender.</param>

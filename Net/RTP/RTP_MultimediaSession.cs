@@ -15,7 +15,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="cname">Canonical name of participant. <seealso cref="LumiSoft.Net.RTP.RTP_Utils.GenerateCNAME"/>RTP_Utils.GenerateCNAME 
+        /// <param name="cname">Canonical name of participant. <seealso cref="LumiSoft.Net.RTP.RTP_Utils.GenerateCNAME"/>RTP_Utils.GenerateCNAME
         /// can be used to create this value.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>cname</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>

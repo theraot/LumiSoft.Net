@@ -17,7 +17,7 @@ namespace LumiSoft.Net.MIME
     ///     disposition-type := "inline" / "attachment" / extension-token
     ///                         ; values are not case-sensitive
     ///
-    ///     disposition-parm := filename-parm 
+    ///     disposition-parm := filename-parm
     ///                         / creation-date-parm
     ///                         / modification-date-parm
     ///                         / read-date-parm
@@ -27,7 +27,7 @@ namespace LumiSoft.Net.MIME
     ///     filename-parm := "filename" "=" value
     ///
     ///     creation-date-parm := "creation-date" "=" quoted-date-time
-    /// 
+    ///
     ///     modification-date-parm := "modification-date" "=" quoted-date-time
     ///
     ///     read-date-parm := "read-date" "=" quoted-date-time

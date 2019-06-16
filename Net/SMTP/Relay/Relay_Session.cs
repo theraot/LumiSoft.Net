@@ -501,7 +501,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
                 LogText("Starting to relay message '" + m_pRelayItem.MessageID + "' from '" + m_pRelayItem.From + "' to '" + m_pRelayItem.To + "'.");
 
-                // Resolve email target hosts.               
+                // Resolve email target hosts.
                 if (m_RelayMode == Relay_Mode.Dns)
                 {
                     var op = new Dns_Client.GetEmailHostsAsyncOP(m_pRelayItem.To);
@@ -593,7 +593,7 @@ namespace LumiSoft.Net.SMTP.Relay
         }
 
         /// <summary>
-        /// Starts connecting to best target. 
+        /// Starts connecting to best target.
         /// </summary>
         private void BeginConnect()
         {
@@ -606,7 +606,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 return;
             }
 
-            // Maximum connections per IP limited.           
+            // Maximum connections per IP limited.
             if (m_pServer.MaxConnectionsPerIP > 0)
             {
                 // For DNS or load-balnced smart host relay, search free target if any.
@@ -687,7 +687,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             // We don't have suitable local IP end point for relay target.
-            // This may heppen for example: if remote server supports only IPv6 and we don't have local IPv6 local end point.            
+            // This may heppen for example: if remote server supports only IPv6 and we don't have local IPv6 local end point.
             if (m_pLocalBindInfo == null)
             {
                 LogText("No suitable IPv4/IPv6 local IP endpoint for relay target.");
@@ -696,7 +696,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 return;
             }
 
-            // If all targets has exeeded maximum allowed connection per IP address, end relay session, 
+            // If all targets has exeeded maximum allowed connection per IP address, end relay session,
             // next relay cycle will try to relay again.
             if (m_pActiveTarget == null)
             {

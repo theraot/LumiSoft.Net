@@ -203,7 +203,7 @@ namespace LumiSoft.Net.RTP
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                // RFC 3550 A.3 Determining Number of Packets Expected and Lost.                
+                // RFC 3550 A.3 Determining Number of Packets Expected and Lost.
                 uint extHighestSeqNo = (uint)((65536 * m_SeqNoWrapCount) + m_MaxSeqNo);
                 uint expected = extHighestSeqNo - m_BaseSeq + 1;
                 long lost = expected - m_PacketsReceived;

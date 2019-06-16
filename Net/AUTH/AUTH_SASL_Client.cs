@@ -7,7 +7,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public abstract class AUTH_SASL_Client
     {
-
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>

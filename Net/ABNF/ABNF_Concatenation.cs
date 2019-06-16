@@ -22,7 +22,7 @@ namespace LumiSoft.Net.ABNF
         public List<ABNF_Repetition> Items { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>

@@ -8,7 +8,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Presence
     {
-
         /// <summary>
         /// Handles NOTIFY method.
         /// </summary>

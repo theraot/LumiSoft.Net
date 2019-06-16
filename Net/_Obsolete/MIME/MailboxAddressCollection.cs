@@ -34,18 +34,18 @@ namespace LumiSoft.Net.Mime
         internal Address Owner { get; set; }
 
         /// <summary>
-		/// Gets mailbox from specified index.
-		/// </summary>
-		public MailboxAddress this[int index]
+        /// Gets mailbox from specified index.
+        /// </summary>
+        public MailboxAddress this[int index]
         {
             get { return (MailboxAddress)m_pMailboxes[index]; }
         }
 
         /// <summary>
-		/// Adds a new mailbox to the end of the collection.
-		/// </summary>
-		/// <param name="mailbox">Mailbox to add.</param>
-		public void Add(MailboxAddress mailbox)
+        /// Adds a new mailbox to the end of the collection.
+        /// </summary>
+        /// <param name="mailbox">Mailbox to add.</param>
+        public void Add(MailboxAddress mailbox)
         {
             m_pMailboxes.Add(mailbox);
 
@@ -53,9 +53,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Clears the collection of all mailboxes.
-		/// </summary>
-		public void Clear()
+        /// Clears the collection of all mailboxes.
+        /// </summary>
+        public void Clear()
         {
             m_pMailboxes.Clear();
 
@@ -63,20 +63,20 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pMailboxes.GetEnumerator();
         }
 
         /// <summary>
-		/// Inserts a new mailbox into the collection at the specified location.
-		/// </summary>
-		/// <param name="index">The location in the collection where you want to add the mailbox.</param>
-		/// <param name="mailbox">Mailbox to add.</param>
-		public void Insert(int index, MailboxAddress mailbox)
+        /// Inserts a new mailbox into the collection at the specified location.
+        /// </summary>
+        /// <param name="index">The location in the collection where you want to add the mailbox.</param>
+        /// <param name="mailbox">Mailbox to add.</param>
+        public void Insert(int index, MailboxAddress mailbox)
         {
             m_pMailboxes.Insert(index, mailbox);
 
@@ -84,12 +84,12 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses mailboxes from Rfc 2822 3.4 mailbox-list string. Syntax: mailbox *(',' mailbox).
-		/// </summary>
-		/// <param name="mailboxList">Mailbox list string.</param>
-		public void Parse(string mailboxList)
+        /// Parses mailboxes from Rfc 2822 3.4 mailbox-list string. Syntax: mailbox *(',' mailbox).
+        /// </summary>
+        /// <param name="mailboxList">Mailbox list string.</param>
+        public void Parse(string mailboxList)
         {
-            // We need to parse right !!! 
+            // We need to parse right !!!
             // Can't use standard String.Split() because commas in quoted strings must be skiped.
             // Example: "ivar, test" <ivar@lumisoft.ee>,"xxx" <ivar2@lumisoft.ee>
 
@@ -101,10 +101,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Removes header field at the specified index from the collection.
-		/// </summary>
-		/// <param name="index">Index of the mailbox which to remove.</param>
-		public void Remove(int index)
+        /// Removes header field at the specified index from the collection.
+        /// </summary>
+        /// <param name="index">Index of the mailbox which to remove.</param>
+        public void Remove(int index)
         {
             m_pMailboxes.RemoveAt(index);
 
@@ -123,10 +123,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Convert addresses to Rfc 2822 mailbox-list string.
-		/// </summary>
-		/// <returns></returns>
-		public string ToMailboxListString()
+        /// Convert addresses to Rfc 2822 mailbox-list string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToMailboxListString()
         {
             var retVal = "";
             for (int i = 0; i < m_pMailboxes.Count; i++)
@@ -146,9 +146,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// This called when collection has changed. Item is added,deleted,changed or collection cleared.
-		/// </summary>
-		internal void OnCollectionChanged()
+        /// This called when collection has changed. Item is added,deleted,changed or collection cleared.
+        /// </summary>
+        internal void OnCollectionChanged()
         {
             if (Owner != null)
             {

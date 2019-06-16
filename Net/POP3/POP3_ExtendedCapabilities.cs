@@ -5,7 +5,6 @@ namespace LumiSoft.Net.POP3
     /// </summary>
     public class POP3_ExtendedCapabilities
     {
-
         /// <summary>
         /// EXPIRE capability. Defined in RFC 2449.
         /// </summary>
@@ -17,20 +16,20 @@ namespace LumiSoft.Net.POP3
         public static readonly string LOGIN_DELAY = "LOGIN-DELAY";
 
         /// <summary>
-        /// The PIPELINING capability indicates the server is capable of accepting multiple commands at a time; 
+        /// The PIPELINING capability indicates the server is capable of accepting multiple commands at a time;
         /// the client does not have to wait for the response to a command before issuing a subsequent command.
         ///  Defined in RFC 2449.
         /// </summary>
         public static readonly string PIPELINING = "PIPELINING";
 
         /// <summary>
-        /// The RESP-CODES capability indicates that any response text issued by this server which begins with an open 
+        /// The RESP-CODES capability indicates that any response text issued by this server which begins with an open
         /// square bracket ("[") is an extended response code. Defined in RFC 2449.
         /// </summary>
         public static readonly string RESP_CODES = "RESP-CODES";
 
         /// <summary>
-        /// The SASL capability indicates that the AUTH command is available and that it supports an optional base64 
+        /// The SASL capability indicates that the AUTH command is available and that it supports an optional base64
         /// encoded second argument for an initial client response as described in the SASL specification. Defined in RFC 2449.
         /// </summary>
         public static readonly string SASL = "SASL";

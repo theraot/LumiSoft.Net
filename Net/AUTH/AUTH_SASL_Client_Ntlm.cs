@@ -189,7 +189,6 @@ namespace LumiSoft.Net.AUTH
 
                 */
 
-
                 short dom_len = (short)m_Domain.Length;
                 short host_len = (short)m_Host.Length;
 
@@ -485,7 +484,7 @@ namespace LumiSoft.Net.AUTH
                 data[10] = 0;
                 data[11] = 0;
 
-                // LM response 
+                // LM response
                 short lmresp_off = (short)(64 + domain.Length + user.Length + host.Length);
                 data[12] = (byte)0x18;
                 data[13] = (byte)0x00;
@@ -494,7 +493,7 @@ namespace LumiSoft.Net.AUTH
                 data[16] = (byte)lmresp_off;
                 data[17] = (byte)(lmresp_off >> 8);
 
-                // NT response 
+                // NT response
                 short ntresp_off = (short)(lmresp_off + 24);
                 data[20] = (byte)0x18;
                 data[21] = (byte)0x00;
@@ -503,7 +502,7 @@ namespace LumiSoft.Net.AUTH
                 data[24] = (byte)ntresp_off;
                 data[25] = (byte)(ntresp_off >> 8);
 
-                // domain 
+                // domain
                 short dom_len = (short)domain.Length;
                 short dom_off = 64;
                 data[28] = (byte)dom_len;
@@ -513,7 +512,7 @@ namespace LumiSoft.Net.AUTH
                 data[32] = (byte)dom_off;
                 data[33] = (byte)(dom_off >> 8);
 
-                // username 
+                // username
                 short uname_len = (short)user.Length;
                 short uname_off = (short)(dom_off + dom_len);
                 data[36] = (byte)uname_len;
@@ -523,7 +522,7 @@ namespace LumiSoft.Net.AUTH
                 data[40] = (byte)uname_off;
                 data[41] = (byte)(uname_off >> 8);
 
-                // host 
+                // host
                 short host_len = (short)host.Length;
                 short host_off = (short)(uname_off + uname_len);
                 data[44] = (byte)host_len;
@@ -533,12 +532,12 @@ namespace LumiSoft.Net.AUTH
                 data[48] = (byte)host_off;
                 data[49] = (byte)(host_off >> 8);
 
-                // message length 
+                // message length
                 short msg_len = (short)data.Length;
                 data[56] = (byte)msg_len;
                 data[57] = (byte)(msg_len >> 8);
 
-                // flags 
+                // flags
                 data[60] = 0x01;
                 data[61] = 0x82;
                 data[62] = 0;
@@ -581,12 +580,12 @@ namespace LumiSoft.Net.AUTH
                 byte[] magic = { 0x4B, 0x47, 0x53, 0x21, 0x40, 0x23, 0x24, 0x25 };
                 byte[] nullEncMagic = { 0xAA, 0xD3, 0xB4, 0x35, 0xB5, 0x14, 0x04, 0xEE };
 
-                // create Lan Manager password 
+                // create Lan Manager password
                 var des = DES.Create();
                 des.Mode = CipherMode.ECB;
 
-                // Note: In .NET DES cannot accept a weak key 
-                // this can happen for a null password 
+                // Note: In .NET DES cannot accept a weak key
+                // this can happen for a null password
                 if (password.Length < 1)
                 {
                     Buffer.BlockCopy(nullEncMagic, 0, lmBuffer, 0, 8);
@@ -597,7 +596,7 @@ namespace LumiSoft.Net.AUTH
                     des.CreateEncryptor().TransformBlock(magic, 0, 8, lmBuffer, 0);
                 }
 
-                // and if a password has less than 8 characters 
+                // and if a password has less than 8 characters
                 if (password.Length < 8)
                 {
                     Buffer.BlockCopy(nullEncMagic, 0, lmBuffer, 8, 8);
@@ -628,7 +627,6 @@ namespace LumiSoft.Net.AUTH
                 {
                     throw new ArgumentNullException("password");
                 }
-
 
                 var ntBuffer = new byte[21];
                 var md4 = _MD4.Create();

@@ -5,7 +5,7 @@ using LumiSoft.Net.MIME;
 namespace LumiSoft.Net.Mime
 {
     /// <summary>
-    /// RFC 2822 3.4. (Address Specification) Mailbox address. 
+    /// RFC 2822 3.4. (Address Specification) Mailbox address.
     /// <p/>
     /// Syntax: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.
     /// </summary>
@@ -43,7 +43,7 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-        /// Gets or sets display name. 
+        /// Gets or sets display name.
         /// </summary>
         public string DisplayName
         {
@@ -111,9 +111,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets Mailbox as RFC 2822(3.4. Address Specification) string. Format: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.
-		/// For example, "Ivar Lumi" &lt;ivar@lumisoft.ee&gt;.
-		/// </summary>
+        /// Gets Mailbox as RFC 2822(3.4. Address Specification) string. Format: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.
+        /// For example, "Ivar Lumi" &lt;ivar@lumisoft.ee&gt;.
+        /// </summary>
         [Obsolete("Use ToMailboxAddressString instead !")]
         public string MailboxString
         {
@@ -131,21 +131,21 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses mailbox from mailbox address string.
-		/// </summary>
-		/// <param name="mailbox">Mailbox string. Format: ["diplay-name"&lt;SP&gt;]&lt;local-part@domain&gt;.</param>
-		/// <returns></returns>
-		public static MailboxAddress Parse(string mailbox)
+        /// Parses mailbox from mailbox address string.
+        /// </summary>
+        /// <param name="mailbox">Mailbox string. Format: ["diplay-name"&lt;SP&gt;]&lt;local-part@domain&gt;.</param>
+        /// <returns></returns>
+        public static MailboxAddress Parse(string mailbox)
         {
             mailbox = mailbox.Trim();
 
             /* We must parse following situations:
-				"Ivar Lumi" <ivar@lumisoft.ee>
-				"Ivar Lumi" ivar@lumisoft.ee
-				<ivar@lumisoft.ee>
-				ivar@lumisoft.ee				
-				Ivar Lumi <ivar@lumisoft.ee>
-			*/
+                "Ivar Lumi" <ivar@lumisoft.ee>
+                "Ivar Lumi" ivar@lumisoft.ee
+                <ivar@lumisoft.ee>
+                ivar@lumisoft.ee                
+                Ivar Lumi <ivar@lumisoft.ee>
+            */
 
             var name = "";
             var emailAddress = mailbox;
@@ -180,7 +180,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Converts this to valid mailbox address string.
         /// Defined in RFC 2822(3.4. Address Specification) string. Format: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.
-		/// For example, "Ivar Lumi" &lt;ivar@lumisoft.ee&gt;.
+        /// For example, "Ivar Lumi" &lt;ivar@lumisoft.ee&gt;.
         /// If display name contains unicode chrs, display name will be encoded with canonical encoding in utf-8 charset.
         /// </summary>
         /// <returns></returns>
@@ -205,9 +205,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// This called when mailox address has changed.
-		/// </summary>
-		internal void OnChanged()
+        /// This called when mailox address has changed.
+        /// </summary>
+        internal void OnChanged()
         {
             if (Owner != null)
             {

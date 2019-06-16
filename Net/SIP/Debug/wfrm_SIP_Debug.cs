@@ -39,12 +39,12 @@ namespace LumiSoft.Net.SIP.Debug
         }
 
         /// <summary>
-		/// Checks if text matches to search pattern.
-		/// </summary>
-		/// <param name="pattern"></param>
-		/// <param name="text"></param>
-		/// <returns></returns>
-		public static bool IsAstericMatch(string pattern, string text)
+        /// Checks if text matches to search pattern.
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static bool IsAstericMatch(string pattern, string text)
         {
             pattern = pattern.ToLower();
             text = text.ToLower();
@@ -71,7 +71,7 @@ namespace LumiSoft.Net.SIP.Debug
                         text = text.Substring(text.IndexOf(indexOfPart) + indexOfPart.Length);
                         pattern = pattern.Substring(pattern.IndexOf("*", 1));
                     }
-                    // *xxx   This is last pattern	
+                    // *xxx   This is last pattern
                     else
                     {
                         return text.EndsWith(pattern.Substring(1));

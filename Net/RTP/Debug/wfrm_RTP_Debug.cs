@@ -12,7 +12,6 @@ namespace LumiSoft.Net.RTP.Debug
     /// </summary>
     public class wfrm_RTP_Debug : Form
     {
-
         private bool m_IsDisposed;
         private ListView m_pErrors;
         private PropertyGrid m_pGlobalSessionInfo;
@@ -283,7 +282,7 @@ namespace LumiSoft.Net.RTP.Debug
         }
 
         /// <summary>
-        /// This method is called when participant creates new source. 
+        /// This method is called when participant creates new source.
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Event data.</param>

@@ -17,28 +17,28 @@ namespace LumiSoft.Net.POP3.Client
     /// </summary>
     /// <example>
     /// <code>
-    /// 
+    ///
     /// /*
     ///  To make this code to work, you need to import following namespaces:
     ///  using LumiSoft.Net.Mail;
-    ///  using LumiSoft.Net.POP3.Client; 
+    ///  using LumiSoft.Net.POP3.Client;
     ///  */
-    /// 
+    ///
     /// using(POP3_Client c = new POP3_Client()){
-    ///		c.Connect("ivx",WellKnownPorts.POP3);
-    ///		c.Login("test","test");
-    ///		// Or Auth(sasl-method);
-    ///				
-    ///		// Get first message if there is any
-    ///		if(c.Messages.Count > 0){
-    ///			// Do your suff
-    ///			
-    ///			// Parse message
-    ///			Mail_Message m = Mail_Message.Parse(c.Messages[0].MessageToByte());
-    ///			string subject = m.Subject;			
-    ///			// ... 
-    ///		}		
-    ///	}
+    ///        c.Connect("ivx",WellKnownPorts.POP3);
+    ///        c.Login("test","test");
+    ///        // Or Auth(sasl-method);
+    ///
+    ///        // Get first message if there is any
+    ///        if(c.Messages.Count > 0){
+    ///            // Do your suff
+    ///
+    ///            // Parse message
+    ///            Mail_Message m = Mail_Message.Parse(c.Messages[0].MessageToByte());
+    ///            string subject = m.Subject;
+    ///            // ...
+    ///        }
+    ///    }
     /// </code>
     /// </example>
     public class POP3_Client : TCP_Client
@@ -171,7 +171,7 @@ namespace LumiSoft.Net.POP3.Client
         /// Gets if POP3 server supports UIDL command.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and 
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and
         /// POP3 client is not connected and authenticated.</exception>
         public bool IsUidlSupported
         {
@@ -198,7 +198,7 @@ namespace LumiSoft.Net.POP3.Client
         /// Gets messages collection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and 
+        /// <exception cref="InvalidOperationException">Is raised when this property is accessed and
         /// POP3 client is not connected and authenticated.</exception>
         public POP3_ClientMessageCollection Messages
         {
@@ -306,11 +306,11 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
-		/// Authenticates user.
-		/// </summary>
-		/// <param name="userName">User login name.</param>
-		/// <param name="password">Password.</param>
-		/// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
+        /// Authenticates user.
+        /// </summary>
+        /// <param name="userName">User login name.</param>
+        /// <param name="password">Password.</param>
+        /// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected or is already authenticated.</exception>
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
@@ -385,9 +385,9 @@ namespace LumiSoft.Net.POP3.Client
         /// <summary>
         /// Starts authentication.
         /// </summary>
-		/// <param name="userName">User login name.</param>
-		/// <param name="password">Password.</param>
-		/// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
+        /// <param name="userName">User login name.</param>
+        /// <param name="password">Password.</param>
+        /// <param name="tryApop"> If true and POP3 server supports APOP, then APOP is used, otherwise normal login used.</param>
         /// <param name="callback">Callback to call when the asynchronous operation is complete.</param>
         /// <param name="state">User data.</param>
         /// <returns>An IAsyncResult that references the asynchronous operation.</returns>
@@ -579,11 +579,11 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
-		/// Closes connection to POP3 server.
-		/// </summary>
+        /// Closes connection to POP3 server.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected.</exception>
-		public override void Disconnect()
+        public override void Disconnect()
         {
             if (IsDisposed)
             {
@@ -596,7 +596,7 @@ namespace LumiSoft.Net.POP3.Client
 
             try
             {
-                // Send QUIT command to server.                
+                // Send QUIT command to server.
                 WriteLine("QUIT");
             }
             catch
@@ -624,9 +624,9 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		public override void Dispose()
+        /// Clean up any resources being used.
+        /// </summary>
+        public override void Dispose()
         {
             base.Dispose();
         }
@@ -970,11 +970,11 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
-		/// Resets session. Messages marked for deletion will be unmarked.
-		/// </summary>
+        /// Resets session. Messages marked for deletion will be unmarked.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
-        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>        
+        /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
         [Obsolete("Use Rset/RsetAsync method instead.")]
         public void Reset()
         {
@@ -1015,12 +1015,12 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
-		/// Resets session. Messages marked for deletion will be unmarked.
-		/// </summary>
+        /// Resets session. Messages marked for deletion will be unmarked.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when POP3 client is not connected and authenticated.</exception>
         /// <exception cref="POP3_ClientException">Is raised when POP3 server returns error.</exception>
-		public void Rset()
+        public void Rset()
         {
             if (IsDisposed)
             {
@@ -1265,16 +1265,16 @@ namespace LumiSoft.Net.POP3.Client
             */
 
             /* NOTE: If reply is +OK, this is multiline respone and is terminated with '.'.
-			Examples:
-				C: LIST
-				S: +OK 2 messages (320 octets)
-				S: 1 120				
-				S: 2 200
-				S: .
-				...
-				C: LIST 3
-				S: -ERR no such message, only 2 messages in maildrop
-			*/
+            Examples:
+                C: LIST
+                S: +OK 2 messages (320 octets)
+                S: 1 120                
+                S: 2 200
+                S: .
+                ...
+                C: LIST 3
+                S: -ERR no such message, only 2 messages in maildrop
+            */
 
             WriteLine("LIST");
 
@@ -1304,16 +1304,16 @@ namespace LumiSoft.Net.POP3.Client
 
             // Try to fill messages UIDs.
             /* NOTE: If reply is +OK, this is multiline respone and is terminated with '.'.
-			Examples:
-				C: UIDL
-				S: +OK
-				S: 1 whqtswO00WBw418f9t5JxYwZ
-				S: 2 QhdPYR:00WBw1Ph7x7
-				S: .
-				...
-				C: UIDL 3
-				S: -ERR no such message
-			*/
+            Examples:
+                C: UIDL
+                S: +OK
+                S: 1 whqtswO00WBw418f9t5JxYwZ
+                S: 2 QhdPYR:00WBw1Ph7x7
+                S: .
+                ...
+                C: UIDL 3
+                S: -ERR no such message
+            */
 
             WriteLine("UIDL");
 
@@ -3344,7 +3344,7 @@ namespace LumiSoft.Net.POP3.Client
                         Examples:
                             C: RSET
                             S: +OK maildrop has 2 messages (320 octets)
-			        */
+                    */
 
                     var buffer = Encoding.UTF8.GetBytes("RSET\r\n");
 

@@ -158,7 +158,7 @@ namespace LumiSoft.Net.SIP.Stack
                         }
                         else
                         {
-                            // Wait ACK to arrive or timeout. 
+                            // Wait ACK to arrive or timeout.
 
                             SetState(SIP_DialogState.Terminating, true);
                         }

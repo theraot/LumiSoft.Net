@@ -7,7 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Utils
     {
-
         /// <summary>
         /// Converts specified DateTime value to short NTP time. Note: NTP time is in UTC.
         /// </summary>

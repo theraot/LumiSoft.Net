@@ -75,7 +75,7 @@ namespace LumiSoft.Net
         public bool IsEndCalled { get; set; }
 
         /// <summary>
-        /// This method is called by AsyncDelegate when asynchronous operation completes. 
+        /// This method is called by AsyncDelegate when asynchronous operation completes.
         /// </summary>
         /// <param name="ar">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
         public void CompletedCallback(IAsyncResult ar)

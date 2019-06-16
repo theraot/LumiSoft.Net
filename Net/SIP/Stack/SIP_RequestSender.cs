@@ -485,7 +485,7 @@ namespace LumiSoft.Net.SIP.Stack
 
                 if (e.Response.StatusCode == 401 || e.Response.StatusCode == 407)
                 {
-                    // Check if authentication failed(We sent authorization data and it's challenged again, 
+                    // Check if authentication failed(We sent authorization data and it's challenged again,
                     // probably user name or password inccorect)
                     bool hasFailedAuthorization = false;
                     foreach (SIP_t_Challenge challange in e.Response.WWWAuthenticate.GetAllValues())
@@ -714,7 +714,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             var contact = request.Contact.GetTopMostValue();
 
-            // Add contact header If request-Method can establish dialog and contact header not present.            
+            // Add contact header If request-Method can establish dialog and contact header not present.
             if (SIP_Utils.MethodCanEstablishDialog(request.RequestLine.Method) && contact == null)
             {
                 var from = (SIP_Uri)request.From.Address.Uri;

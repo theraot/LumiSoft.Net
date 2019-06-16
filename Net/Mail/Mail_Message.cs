@@ -294,7 +294,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets additional comments about the message. Value null means not specified.
         /// </summary>
-        /// <remarks>Contains any additional comments on the text of the body of the message. 
+        /// <remarks>Contains any additional comments on the text of the body of the message.
         /// Warning: Some mailers will not show this field to recipients.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public string Comments
@@ -346,7 +346,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets message date and time. Value <b>DateTime.MinValue</b> means not specified.
         /// </summary>
-        /// <remarks>Specifies the date and time at which the creator of the message indicated that the 
+        /// <remarks>Specifies the date and time at which the creator of the message indicated that the
         /// message was complete and ready to enter the mail delivery system.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
@@ -461,7 +461,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets mailboxes where to send disposition notification message. Value null means not specified.
         /// </summary>
-        /// <remarks>Indicates that the sender wants a disposition notification when this message 
+        /// <remarks>Indicates that the sender wants a disposition notification when this message
         /// is received (read, processed, etc.) by its recipients.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
@@ -519,7 +519,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets message author(s). Value null means not specified.
         /// </summary>
-        /// <remarks>Specifies the author(s) of the message; that is, the mailbox(es) of the person(s) or 
+        /// <remarks>Specifies the author(s) of the message; that is, the mailbox(es) of the person(s) or
         /// system(s) responsible for the writing of the message.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
@@ -602,7 +602,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets message importance. Value null means not specified.
         /// </summary>
-        /// <remarks>A hint from the originator to the recipients about how important a message is. 
+        /// <remarks>A hint from the originator to the recipients about how important a message is.
         /// Values: High, normal, or low.  Not used to control transmission speed.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public string Importance
@@ -746,7 +746,6 @@ namespace LumiSoft.Net.Mail
                 }
             }
         }
-
 
         // Not widely used
         // public string Encoding
@@ -1097,7 +1096,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets type or context of message. Value null means not specified.
         /// </summary>
-        /// <remarks>Provides information about the context and presentation characteristics of a message. 
+        /// <remarks>Provides information about the context and presentation characteristics of a message.
         /// Can have the values 'voice-message', 'fax-message', 'pager-message', 'multimedia-message', 'text-message', or 'none'.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public string MessageContext
@@ -1147,7 +1146,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets message identifier. Value null means not specified.
         /// </summary>
-        /// <remarks>Contains a single unique message identifier that refers to a particular version of a particular message. 
+        /// <remarks>Contains a single unique message identifier that refers to a particular version of a particular message.
         /// If the message is resent without changes, the original Message-ID is retained.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public string MessageID
@@ -1197,7 +1196,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets original message identifier. Value null means not specified.
         /// </summary>
-        /// <remarks>Original message identifier used with resend of message with alternative content format; 
+        /// <remarks>Original message identifier used with resend of message with alternative content format;
         /// identifies the original message data to which it corresponds.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public string OriginalMessageID
@@ -1381,7 +1380,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets related message identifier(s). Value null means not specified.
         /// </summary>
-        /// <remarks>The message identifier(s) of other message(s) to which the current message may be related. 
+        /// <remarks>The message identifier(s) of other message(s) to which the current message may be related.
         /// In RFC 2822, the definition was changed to say that this header field contains a list of all Message-IDs
         /// of messages in the preceding reply chain.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
@@ -1432,7 +1431,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets mailbox for replies to message. Value null means not specified.
         /// </summary>
-        /// <remarks>When the "Reply-To:" field is present, it indicates the mailbox(es) to which the author of 
+        /// <remarks>When the "Reply-To:" field is present, it indicates the mailbox(es) to which the author of
         /// the message suggests that replies be sent.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
@@ -1655,7 +1654,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets mailbox of person for whom message is resent. Value null means not specified.
         /// </summary>
-        /// <remarks>Contains the mailbox of the agent who has reintroduced the message into 
+        /// <remarks>Contains the mailbox of the agent who has reintroduced the message into
         /// the message transfer system, or on whose behalf the message has been resent.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
@@ -1813,7 +1812,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets mailbox of person who actually resends the message. Value null means not specified.
         /// </summary>
-        /// <remarks>Contains the mailbox of the agent who has reintroduced the message into 
+        /// <remarks>Contains the mailbox of the agent who has reintroduced the message into
         /// the message transfer system, if this is different from the Resent-From value.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>

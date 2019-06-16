@@ -8,7 +8,6 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientCache
     {
-
         private Dictionary<string, CacheEntry> m_pCache;
         private TimerEx m_pTimerTimeout;
 
@@ -43,14 +42,14 @@ namespace LumiSoft.Net.DNS.Client
         public int MaxNegativeCacheTtl { get; set; } = 900;
 
         /// <summary>
-		/// Adds dns records to cache. If old entry exists, it is replaced.
-		/// </summary>
-		/// <param name="qname">Query name.</param>
-		/// <param name="qtype">Query type.</param>
-		/// <param name="response">DNS server response.</param>
+        /// Adds dns records to cache. If old entry exists, it is replaced.
+        /// </summary>
+        /// <param name="qname">Query name.</param>
+        /// <param name="qtype">Query type.</param>
+        /// <param name="response">DNS server response.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>qname</b> or <b>response</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-		public void AddToCache(string qname, int qtype, DnsServerResponse response)
+        public void AddToCache(string qname, int qtype, DnsServerResponse response)
         {
             if (qname == null)
             {
@@ -95,9 +94,9 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Clears DNS cache.
-		/// </summary>
-		public void ClearCache()
+        /// Clears DNS cache.
+        /// </summary>
+        public void ClearCache()
         {
             lock (m_pCache)
             {
@@ -106,14 +105,14 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Gets DNS server cached response or null if no cached result.
-		/// </summary>
-		/// <param name="qname">Query name.</param>
-		/// <param name="qtype">Query type.</param>
-		/// <returns>Returns DNS server cached response or null if no cached result.</returns>
+        /// Gets DNS server cached response or null if no cached result.
+        /// </summary>
+        /// <param name="qname">Query name.</param>
+        /// <param name="qtype">Query type.</param>
+        /// <returns>Returns DNS server cached response or null if no cached result.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>qname</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-		public DnsServerResponse GetFromCache(string qname, int qtype)
+        public DnsServerResponse GetFromCache(string qname, int qtype)
         {
             if (qname == null)
             {

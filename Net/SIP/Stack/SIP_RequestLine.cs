@@ -102,7 +102,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns Request-Line string.</returns>
         public override string ToString()
         {
-            // RFC 3261 25. 
+            // RFC 3261 25.
             //  Request-Line = Method SP Request-URI SP SIP-Version CRLF
 
             return m_Method + " " + m_pUri.ToString() + " " + m_Version + "\r\n";

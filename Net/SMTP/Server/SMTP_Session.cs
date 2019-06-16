@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -511,7 +511,7 @@ namespace LumiSoft.Net.SMTP.Server
             }
 
             /* RFC 4954 
-			    AUTH mechanism [initial-response]
+                AUTH mechanism [initial-response]
 
                 Arguments:
                     mechanism: A string identifying a [SASL] authentication mechanism.
@@ -542,7 +542,7 @@ namespace LumiSoft.Net.SMTP.Server
                 If the client wishes to cancel the authentication exchange, 
                 it issues a line with a single "*". If the server receives 
                 such a response, it MUST reject the AUTH command by sending a 501 reply.
-			*/
+            */
 
             if (IsAuthenticated)
             {
@@ -622,7 +622,7 @@ namespace LumiSoft.Net.SMTP.Server
                     WriteLine("334 " + Convert.ToBase64String(serverResponse));
                 }
 
-                // Read client response. 
+                // Read client response.
                 var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
                 TcpStream.ReadLine(readLineOP, false);
                 if (readLineOP.Error != null)
@@ -683,29 +683,29 @@ namespace LumiSoft.Net.SMTP.Server
             }
 
             /* RFC 3030 2
-				The BDAT verb takes two arguments.The first argument indicates the length, 
+                The BDAT verb takes two arguments.The first argument indicates the length, 
                 in octets, of the binary data chunk. The second optional argument indicates 
-                that the data chunk	is the last.
-				
-				The message data is sent immediately after the trailing <CR>
-				<LF> of the BDAT command line.  Once the receiver-SMTP receives the
-				specified number of octets, it will return a 250 reply code.
+                that the data chunk is the last.
+                
+                The message data is sent immediately after the trailing <CR>
+                <LF> of the BDAT command line.  Once the receiver-SMTP receives the
+                specified number of octets, it will return a 250 reply code.
 
-				The optional LAST parameter on the BDAT command indicates that this
-				is the last chunk of message data to be sent.  The last BDAT command
-				MAY have a byte-count of zero indicating there is no additional data
-				to be sent.  Any BDAT command sent after the BDAT LAST is illegal and
-				MUST be replied to with a 503 "Bad sequence of commands" reply code.
-				The state resulting from this error is indeterminate.  A RSET command
-				MUST be sent to clear the transaction before continuing.
-				
-				A 250 response MUST be sent to each successful BDAT data block within
-				a mail transaction.
+                The optional LAST parameter on the BDAT command indicates that this
+                is the last chunk of message data to be sent.  The last BDAT command
+                MAY have a byte-count of zero indicating there is no additional data
+                to be sent.  Any BDAT command sent after the BDAT LAST is illegal and
+                MUST be replied to with a 503 "Bad sequence of commands" reply code.
+                The state resulting from this error is indeterminate.  A RSET command
+                MUST be sent to clear the transaction before continuing.
+                
+                A 250 response MUST be sent to each successful BDAT data block within
+                a mail transaction.
 
-				bdat-cmd   ::= "BDAT" SP chunk-size [ SP end-marker ] CR LF
-				chunk-size ::= 1*DIGIT
-				end-marker ::= "LAST"
-			*/
+                bdat-cmd   ::= "BDAT" SP chunk-size [ SP end-marker ] CR LF
+                chunk-size ::= 1*DIGIT
+                end-marker ::= "LAST"
+            */
 
             var startTime = DateTime.Now;
 
@@ -786,7 +786,7 @@ namespace LumiSoft.Net.SMTP.Server
                         if (last)
                         {
                             // Accoring RFC 3030, client should send RSET and we must wait it and reject transaction commands.
-                            // If we reset internally, then all works as specified. 
+                            // If we reset internally, then all works as specified.
                             Reset();
                         }
                     }
@@ -2438,7 +2438,7 @@ namespace LumiSoft.Net.SMTP.Server
         //
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private class ReadCommandAsyncOP
         {

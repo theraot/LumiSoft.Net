@@ -9,27 +9,27 @@ namespace LumiSoft.Net.DNS
     public class DNS_rr_HINFO : DNS_rr
     {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
+        /// Default constructor.
+        /// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
-		/// <param name="cpu">Host CPU.</param>
-		/// <param name="os">Host OS.</param>
-		/// <param name="ttl">TTL value.</param>
-		public DNS_rr_HINFO(string name, string cpu, string os, int ttl) : base(name, DNS_QType.HINFO, ttl)
+        /// <param name="cpu">Host CPU.</param>
+        /// <param name="os">Host OS.</param>
+        /// <param name="ttl">TTL value.</param>
+        public DNS_rr_HINFO(string name, string cpu, string os, int ttl) : base(name, DNS_QType.HINFO, ttl)
         {
             CPU = cpu;
             OS = os;
         }
 
         /// <summary>
-		/// Gets host's CPU.
-		/// </summary>
-		public string CPU { get; } = "";
+        /// Gets host's CPU.
+        /// </summary>
+        public string CPU { get; } = "";
 
         /// <summary>
-		/// Gets host's OS.
-		/// </summary>
-		public string OS { get; } = "";
+        /// Gets host's OS.
+        /// </summary>
+        public string OS { get; } = "";
 
         /// <summary>
         /// Parses resource record from reply data.
@@ -43,20 +43,20 @@ namespace LumiSoft.Net.DNS
         {
             /* RFC 1035 3.3.2. HINFO RDATA format
 
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			/                      CPU                      /
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			/                       OS                      /
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			
-			CPU     A <character-string> which specifies the CPU type.
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            /                      CPU                      /
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            /                       OS                      /
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            
+            CPU     A <character-string> which specifies the CPU type.
 
-			OS      A <character-string> which specifies the operating
-					system type.
-					
-					Standard values for CPU and OS can be found in [RFC-1010].
+            OS      A <character-string> which specifies the operating
+                    system type.
+                    
+                    Standard values for CPU and OS can be found in [RFC-1010].
 
-			*/
+            */
 
             // CPU
             var cpu = Dns_Client.ReadCharacterString(reply, ref offset);

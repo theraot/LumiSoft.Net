@@ -97,16 +97,16 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pRegistrations.GetEnumerator();
         }
 
         /// <summary>
-        /// Deletes specified registration and all it's contacts. 
+        /// Deletes specified registration and all it's contacts.
         /// </summary>
         /// <param name="addressOfRecord">Registration address of record what to remove.</param>
         public void Remove(string addressOfRecord)

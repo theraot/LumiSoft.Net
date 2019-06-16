@@ -7,13 +7,12 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Option : ABNF_Element
     {
-
         /// <summary>
         /// Gets option alternation elements.
         /// </summary>
         public ABNF_Alternation Alternation { get; private set; }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>

@@ -51,7 +51,7 @@ namespace LumiSoft.Net.SIP.Stack
         internal int RSeq { get; set; } = -1;
 
         /// <summary>
-        /// Starts canceling transaction. 
+        /// Starts canceling transaction.
         /// </summary>
         /// <remarks>If client transaction has got final response, canel has no effect and will be ignored.</remarks>
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>

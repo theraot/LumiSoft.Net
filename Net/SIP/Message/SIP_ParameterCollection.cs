@@ -54,7 +54,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="name">Parameter name.</param>
         /// <param name="value">Parameter value.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>name</b> is null.</exception>
-        /// <exception cref="ArgumentException">Is raised when 'name' is '' or parameter with specified name 
+        /// <exception cref="ArgumentException">Is raised when 'name' is '' or parameter with specified name
         /// already exists in the collection.</exception>
         public void Add(string name, string value)
         {
@@ -95,10 +95,10 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pCollection.GetEnumerator();
         }

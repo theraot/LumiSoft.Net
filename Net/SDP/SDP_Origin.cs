@@ -83,7 +83,7 @@ namespace LumiSoft.Net.SDP
         public long SessionVersion { get; set; }
 
         /// <summary>
-        /// Gets address(DNS host name or IP address). 
+        /// Gets address(DNS host name or IP address).
         /// </summary>
         public string UnicastAddress { get; }
 

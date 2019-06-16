@@ -8,7 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_MsgFlags
     {
-
         /// <summary>
         /// Message flag <b>Answered</b>: Message has been answered.
         /// </summary>

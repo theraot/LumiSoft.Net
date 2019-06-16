@@ -101,7 +101,7 @@ namespace LumiSoft.Net.UPnP
             xml.WriteTo(new XmlTextWriter(xmlString));
             DeviceXml = xmlString.ToString();
 
-            // Set up namespace manager for XPath   
+            // Set up namespace manager for XPath
             var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("n", xml.ChildNodes[1].NamespaceURI);
 

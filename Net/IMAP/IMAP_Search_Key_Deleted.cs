@@ -10,7 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages with the \Deleted flag set.</remarks>
     public class IMAP_Search_Key_Deleted : IMAP_Search_Key
     {
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

@@ -559,7 +559,7 @@ namespace LumiSoft.Net.POP3.Client
                                 ...
                              C: DELE 2
                              S: -ERR message 2 already deleted
-			        */
+                    */
 
                     var buffer = Encoding.UTF8.GetBytes("DELE " + owner.SequenceNumber.ToString() + "\r\n");
 
@@ -827,7 +827,7 @@ namespace LumiSoft.Net.POP3.Client
                                 ...
                              C: TOP 100 3
                              S: -ERR no such message
-			        */
+                    */
 
                     var buffer = Encoding.UTF8.GetBytes("TOP " + owner.SequenceNumber.ToString() + " " + m_LineCount.ToString() + "\r\n");
 
@@ -1113,7 +1113,7 @@ namespace LumiSoft.Net.POP3.Client
                              S: +OK 120 octets
                              S: <the POP3 server sends the entire message here>
                              S: .
-			        */
+                    */
 
                     var buffer = Encoding.UTF8.GetBytes("RETR " + owner.SequenceNumber.ToString() + "\r\n");
 

@@ -5,7 +5,6 @@
     /// </summary>
     public class SDP_MediaTypes
     {
-
         /// <summary>
         /// Application.
         /// </summary>

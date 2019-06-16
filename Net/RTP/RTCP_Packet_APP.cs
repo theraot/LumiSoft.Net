@@ -103,12 +103,12 @@ namespace LumiSoft.Net.RTP
             // length
             buffer[offset++] = (byte)((length >> 8) | 0xFF);
             buffer[offset++] = (byte)((length) | 0xFF);
-            // SSRC/CSRC            
+            // SSRC/CSRC
             buffer[offset++] = (byte)((Source >> 24) | 0xFF);
             buffer[offset++] = (byte)((Source >> 16) | 0xFF);
             buffer[offset++] = (byte)((Source >> 8) | 0xFF);
             buffer[offset++] = (byte)((Source) | 0xFF);
-            // name          
+            // name
             buffer[offset++] = (byte)Name[0];
             buffer[offset++] = (byte)Name[1];
             buffer[offset++] = (byte)Name[2];

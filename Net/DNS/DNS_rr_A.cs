@@ -10,20 +10,20 @@ namespace LumiSoft.Net.DNS
     public class DNS_rr_A : DNS_rr
     {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
+        /// Default constructor.
+        /// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
-		/// <param name="ip">IP address.</param>
-		/// <param name="ttl">TTL value.</param>
-		public DNS_rr_A(string name, IPAddress ip, int ttl) : base(name, DNS_QType.A, ttl)
+        /// <param name="ip">IP address.</param>
+        /// <param name="ttl">TTL value.</param>
+        public DNS_rr_A(string name, IPAddress ip, int ttl) : base(name, DNS_QType.A, ttl)
         {
             IP = ip;
         }
 
         /// <summary>
-		/// Gets host IP address.
-		/// </summary>
-		public IPAddress IP { get; }
+        /// Gets host IP address.
+        /// </summary>
+        public IPAddress IP { get; }
 
         /// <summary>
         /// Parses resource record from reply data.

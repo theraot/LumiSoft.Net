@@ -451,7 +451,7 @@ namespace LumiSoft.Net.SMTP.Relay
 
             // TODO: We need to send notify to all not processed messages, then they can be Disposed as needed.
 
-            // Clean up.            
+            // Clean up.
             m_pLocalEndPointIPv4 = null;
             m_pLocalEndPointIPv6 = null;
             //m_pSessions.Dispose();
@@ -557,7 +557,7 @@ namespace LumiSoft.Net.SMTP.Relay
         }
 
         /// <summary>
-        /// Increases specified IP address connactions count if maximum allowed connections to 
+        /// Increases specified IP address connactions count if maximum allowed connections to
         /// the specified IP address isn't exceeded.
         /// </summary>
         /// <param name="ip">IP address.</param>

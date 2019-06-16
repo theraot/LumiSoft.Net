@@ -470,8 +470,8 @@ namespace LumiSoft.Net.UDP
             // Run only if we have some listening point.
             if (m_pBindings != null)
             {
-                // We must replace IPAddress.Any to all available IPs, otherwise it's impossible to send 
-                // reply back to UDP packet sender on same local EP where packet received. This is very 
+                // We must replace IPAddress.Any to all available IPs, otherwise it's impossible to send
+                // reply back to UDP packet sender on same local EP where packet received. This is very
                 // important when clients are behind NAT.
                 var listeningEPs = new List<IPEndPoint>();
                 foreach (IPEndPoint ep in m_pBindings)
@@ -541,7 +541,7 @@ namespace LumiSoft.Net.UDP
                     }
                 }
 
-                // Create round-robin send sockets. NOTE: We must skip localhost, it can't be used 
+                // Create round-robin send sockets. NOTE: We must skip localhost, it can't be used
                 // for sending out of server.
                 m_pSendSocketsIPv4 = new CircleCollection<Socket>();
                 m_pSendSocketsIPv6 = new CircleCollection<Socket>();

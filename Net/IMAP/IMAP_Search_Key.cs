@@ -21,7 +21,7 @@ namespace LumiSoft.Net.IMAP
             if(r == null){
                 throw new ArgumentNullException("r");
             }
-            
+
             r.ReadToFirstChar();
 
             // Keys group
@@ -169,8 +169,8 @@ namespace LumiSoft.Net.IMAP
             if(r.StartsWith("UNSEEN",false)){
                 return IMAP_Search_Key_Unseen.Parse(r);
             }
-// Check if we hae sequence-set. Because of IMAP specification sucks a little here, why the hell they didn't 
-            // do the keyword(SEQSET) for it, like UID. Now we just have to try if it is sequence-set or BAD key. 
+// Check if we hae sequence-set. Because of IMAP specification sucks a little here, why the hell they didn't
+            // do the keyword(SEQSET) for it, like UID. Now we just have to try if it is sequence-set or BAD key.
             try{
                 return IMAP_Search_Key_SeqSet.Parse(r);
             }

@@ -52,7 +52,7 @@ namespace LumiSoft.Net.ABNF
         public int Min { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>

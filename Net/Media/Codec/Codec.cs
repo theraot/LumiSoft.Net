@@ -5,7 +5,6 @@
     /// </summary>
     public abstract class Codec
     {
-
         /// <summary>
         /// Gets codec name.
         /// </summary>

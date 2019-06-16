@@ -25,7 +25,7 @@ namespace LumiSoft.Net.IMAP
         /// </summary>
         public IMAP_BODY_Entity[] Attachmnets
         {
-            // Cant use these at moment, we need to use extended BODYSTRUCTURE fo that    
+            // Cant use these at moment, we need to use extended BODYSTRUCTURE fo that
             //     *) Content-Disposition: attachment (RFC 2822 message)<p/>
             //     *) Content-Disposition: filename = "" is specified  (RFC 2822 message)<p/>
 
@@ -184,7 +184,7 @@ namespace LumiSoft.Net.IMAP
                     A string giving the content description as defined in [MIME-IMB].
 
                 body encoding
-                    A string giving the content transfer encoding as defined in	[MIME-IMB].
+                    A string giving the content transfer encoding as defined in [MIME-IMB].
 
                 body size
                     A number giving the size of the body in octets.  Note that
@@ -414,7 +414,7 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-        /// Gets mime entities, including nested entries. 
+        /// Gets mime entities, including nested entries.
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="allEntries"></param>

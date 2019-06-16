@@ -82,8 +82,8 @@ namespace LumiSoft.Net.FTP.Server
         }
 
         /// <summary>
-        /// Gets or sets passive mode public IP address what is reported to clients. 
-        /// This property is manly needed if FTP server is running behind NAT. 
+        /// Gets or sets passive mode public IP address what is reported to clients.
+        /// This property is manly needed if FTP server is running behind NAT.
         /// Value null means not spcified.
         /// </summary>
         public IPAddress PassivePublicIP { get; set; }

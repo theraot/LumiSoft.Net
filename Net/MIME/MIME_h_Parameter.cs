@@ -39,7 +39,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ return m_Value; }
 
-            set{ 
+            set{
                 m_Value      = value;
                 IsModified = true;
             }

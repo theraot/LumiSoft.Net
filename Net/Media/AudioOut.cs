@@ -10,7 +10,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioOut : IDisposable
     {
-
         // TODO: Linux WaveOut similar PCM audio player.
 
         private bool m_IsDisposed;
@@ -362,7 +361,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public const int DELETEERROR = 18;
                 /// <summary>
-                /// Registry value not found. 
+                /// Registry value not found.
                 /// </summary>
                 public const int VALNOTFOUND = 19;
                 /// <summary>
@@ -443,9 +442,9 @@ namespace LumiSoft.Net.Media
                 /// Queries the current volume setting of a waveform output device.
                 /// </summary>
                 /// <param name="hWaveOut">Handle to an open waveform-audio output device. This parameter can also be a device identifier.</param>
-                /// <param name="dwVolume">Pointer to a variable to be filled with the current volume setting. 
-                /// The low-order word of this location contains the left-channel volume setting, and the high-order 
-                /// word contains the right-channel setting. A value of 0xFFFF represents full volume, and a 
+                /// <param name="dwVolume">Pointer to a variable to be filled with the current volume setting.
+                /// The low-order word of this location contains the left-channel volume setting, and the high-order
+                /// word contains the right-channel setting. A value of 0xFFFF represents full volume, and a
                 /// value of 0x0000 is silence.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
@@ -461,7 +460,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="dwInstance">User-instance data passed to the callback mechanism.</param>
                 /// <param name="dwFlags">Flags for opening the device.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
-		        [DllImport("winmm.dll")]
+                [DllImport("winmm.dll")]
                 public static extern int waveOutOpen(out IntPtr hWaveOut, int uDeviceID, WAVEFORMATEX lpFormat, waveOutProc dwCallback, int dwInstance, int dwFlags);
 
                 /// <summary>
@@ -479,7 +478,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="lpWaveOutHdr">Pointer to a WAVEHDR structure that identifies the data block to be prepared. The buffer's base address must be aligned with the respect to the sample size.</param>
                 /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
-		        [DllImport("winmm.dll")]
+                [DllImport("winmm.dll")]
                 public static extern int waveOutPrepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
                 /// <summary>
@@ -502,8 +501,8 @@ namespace LumiSoft.Net.Media
                 /// Sets the volume of a waveform output device.
                 /// </summary>
                 /// <param name="hWaveOut">Handle to an open waveform-audio output device. This parameter can also be a device identifier.</param>
-                /// <param name="dwVolume">Specifies a new volume setting. The low-order word contains the left-channel 
-                /// volume setting, and the high-order word contains the right-channel setting. A value of 0xFFFF 
+                /// <param name="dwVolume">Specifies a new volume setting. The low-order word contains the left-channel
+                /// volume setting, and the high-order word contains the right-channel setting. A value of 0xFFFF
                 /// represents full volume, and a value of 0x0000 is silence.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
                 [DllImport("winmm.dll")]
@@ -516,7 +515,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="lpWaveOutHdr">Pointer to a WAVEHDR structure identifying the data block to be cleaned up.</param>
                 /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
-		        [DllImport("winmm.dll")]
+                [DllImport("winmm.dll")]
                 public static extern int waveOutUnprepareHeader(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
 
                 /// <summary>
@@ -526,7 +525,7 @@ namespace LumiSoft.Net.Media
                 /// <param name="lpWaveOutHdr">Pointer to a WAVEHDR structure containing information about the data block.</param>
                 /// <param name="uSize">Size, in bytes, of the WAVEHDR structure.</param>
                 /// <returns>Returns value of MMSYSERR.</returns>
-		        [DllImport("winmm.dll")]
+                [DllImport("winmm.dll")]
                 public static extern int waveOutWrite(IntPtr hWaveOut, IntPtr lpWaveOutHdr, int uSize);
             }
 
@@ -578,34 +577,34 @@ namespace LumiSoft.Net.Media
             private class WAVEFORMATEX
             {
                 /// <summary>
-                /// Waveform-audio format type. Format tags are registered with Microsoft Corporation for many 
-                /// compression algorithms. A complete list of format tags can be found in the Mmreg.h header file. 
-                /// For one- or two-channel PCM data, this value should be WAVE_FORMAT_PCM. When this structure is 
+                /// Waveform-audio format type. Format tags are registered with Microsoft Corporation for many
+                /// compression algorithms. A complete list of format tags can be found in the Mmreg.h header file.
+                /// For one- or two-channel PCM data, this value should be WAVE_FORMAT_PCM. When this structure is
                 /// included in a WAVEFORMATEXTENSIBLE structure, this value must be WAVE_FORMAT_EXTENSIBLE.</summary>
                 public ushort wFormatTag;
                 /// <summary>
-                /// Number of channels in the waveform-audio data. Monaural data uses one channel and stereo data 
+                /// Number of channels in the waveform-audio data. Monaural data uses one channel and stereo data
                 /// uses two channels.
                 /// </summary>
                 public ushort nChannels;
                 /// <summary>
-                /// Sample rate, in samples per second (hertz). If wFormatTag is WAVE_FORMAT_PCM, then common 
+                /// Sample rate, in samples per second (hertz). If wFormatTag is WAVE_FORMAT_PCM, then common
                 /// values for nSamplesPerSec are 8.0 kHz, 11.025 kHz, 22.05 kHz, and 44.1 kHz.
                 /// </summary>
                 public uint nSamplesPerSec;
                 /// <summary>
-                /// Required average data-transfer rate, in bytes per second, for the format tag. If wFormatTag 
+                /// Required average data-transfer rate, in bytes per second, for the format tag. If wFormatTag
                 /// is WAVE_FORMAT_PCM, nAvgBytesPerSec should be equal to the product of nSamplesPerSec and nBlockAlign.
                 /// </summary>
                 public uint nAvgBytesPerSec;
                 /// <summary>
-                /// Block alignment, in bytes. The block alignment is the minimum atomic unit of data for the wFormatTag 
-                /// format type. If wFormatTag is WAVE_FORMAT_PCM or WAVE_FORMAT_EXTENSIBLE, nBlockAlign must be equal 
+                /// Block alignment, in bytes. The block alignment is the minimum atomic unit of data for the wFormatTag
+                /// format type. If wFormatTag is WAVE_FORMAT_PCM or WAVE_FORMAT_EXTENSIBLE, nBlockAlign must be equal
                 /// to the product of nChannels and wBitsPerSample divided by 8 (bits per byte).
                 /// </summary>
                 public ushort nBlockAlign;
                 /// <summary>
-                /// Bits per sample for the wFormatTag format type. If wFormatTag is WAVE_FORMAT_PCM, then 
+                /// Bits per sample for the wFormatTag format type. If wFormatTag is WAVE_FORMAT_PCM, then
                 /// wBitsPerSample should be equal to 8 or 16.
                 /// </summary>
                 public ushort wBitsPerSample;
@@ -630,7 +629,7 @@ namespace LumiSoft.Net.Media
                 /// </summary>
                 public uint dwBufferLength;
                 /// <summary>
-                /// When the header is used in input, this member specifies how much data is in the buffer. 
+                /// When the header is used in input, this member specifies how much data is in the buffer.
                 /// When the header is used in output, this member specifies the number of bytes played from the buffer.
                 /// </summary>
                 public uint dwBytesRecorded;
@@ -731,7 +730,7 @@ namespace LumiSoft.Net.Media
             /// Default constructor.
             /// </summary>
             /// <param name="outputDevice">Output device.</param>
-            /// <param name="samplesPerSec">Sample rate, in samples per second (hertz). For PCM common values are 
+            /// <param name="samplesPerSec">Sample rate, in samples per second (hertz). For PCM common values are
             /// 8.0 kHz, 11.025 kHz, 22.05 kHz, and 44.1 kHz.</param>
             /// <param name="bitsPerSample">Bits per sample. For PCM 8 or 16 are the only valid values.</param>
             /// <param name="channels">Number of channels.</param>
@@ -759,7 +758,7 @@ namespace LumiSoft.Net.Media
                 m_BlockSize = m_Channels * (m_BitsPerSample / 8);
                 m_pPlayItems = new List<PlayItem>();
 
-                // Try to open wav device.            
+                // Try to open wav device.
                 var format = new WAVEFORMATEX();
                 format.wFormatTag = 0x0001; // PCM - 0x0001
                 format.nChannels = (ushort)m_Channels;

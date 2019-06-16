@@ -45,7 +45,7 @@ namespace LumiSoft.Net.MIME
             if(owner.ContentType == null || owner.ContentType.Param_Boundary == null){
                 throw new ParseException("Multipart entity has not required 'boundary' paramter.");
             }
-            
+
             var retVal = new MIME_b_MultipartEncrypted(owner.ContentType);
             ParseInternal(owner,owner.ContentType.TypeWithSubtype,stream,retVal);
 

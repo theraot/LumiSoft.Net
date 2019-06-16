@@ -10,7 +10,7 @@ namespace LumiSoft.Net.SIP.Proxy
     /// <summary>
     /// Implements SIP 'proxy context'. Defined in RFC 3261.
     /// </summary>
-    /// <remarks>Proxy context is bridge between caller and calee. 
+    /// <remarks>Proxy context is bridge between caller and calee.
     /// Proxy context job is to forward request to contact(s) and send received responses back to caller.</remarks>
     public class SIP_ProxyContext : IDisposable
     {
@@ -193,7 +193,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public bool IsDisposed { get; private set; }
 
         /// <summary>
-        /// Gets if proxy cancels forked requests what are not needed any more. If true, 
+        /// Gets if proxy cancels forked requests what are not needed any more. If true,
         /// requests not canceled, otherwise canceled.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this property is accessed.</exception>
@@ -298,7 +298,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
         /// <summary>
         /// Cancels proxy context processing. All client transactions and owner server transaction will be canceled,
-        /// proxy context will be disposed. 
+        /// proxy context will be disposed.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when <b>Start</b> method is not called and this method is accessed.</exception>
@@ -835,7 +835,7 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// Sends SIP response to caller. If proxy context is in B2BUA mode, new response is generated 
+        /// Sends SIP response to caller. If proxy context is in B2BUA mode, new response is generated
         /// as needed.
         /// </summary>
         /// <param name="transaction">Client transaction what response it is.</param>
@@ -875,7 +875,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 {
                     b2buaResponse.Allow.Add("INVITE,ACK,OPTIONS,CANCEL,BYE,PRACK");
                 }
-                // Supported to non ACK request. 
+                // Supported to non ACK request.
                 if (originalRequest.RequestLine.Method != SIP_Methods.ACK)
                 {
                     b2buaResponse.Supported.Add("100rel,timer");

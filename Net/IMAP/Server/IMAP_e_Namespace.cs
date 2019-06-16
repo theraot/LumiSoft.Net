@@ -33,7 +33,7 @@ namespace LumiSoft.Net.IMAP.Server
             get{ return m_pResponse; }
 
             set{
-                m_pResponse = value ?? throw new ArgumentNullException("value"); 
+                m_pResponse = value ?? throw new ArgumentNullException("value");
             }
         }
     }

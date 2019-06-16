@@ -52,7 +52,7 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Gets local participant. 
+        /// Gets local participant.
         /// </summary>
         public RTP_Participant_Local Participant
         {

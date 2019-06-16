@@ -8,7 +8,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public abstract class MIME_h
     {
-
         /// <summary>
         /// Gets if this header field is modified since it has loaded.
         /// </summary>
@@ -51,7 +50,7 @@ namespace LumiSoft.Net.MIME
         /// Returns header field as string.
         /// </summary>
         /// <param name="wordEncoder">8-bit words ecnoder. Value null means that words are not encoded.</param>
-        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded. 
+        /// <param name="parmetersCharset">Charset to use to encode 8-bit characters. Value null means parameters not encoded.
         /// If encoding needed, UTF-8 is strongly reccomended if not sure.</param>
         /// <param name="reEncode">If true always specified encoding is used. If false and header field value not modified, original encoding is kept.</param>
         /// <returns>Returns header field as string.</returns>

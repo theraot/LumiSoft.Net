@@ -74,12 +74,12 @@
         public class Message
         {
             /// <summary>
-            /// "message/rfc822". 
+            /// "message/rfc822".
             /// </summary>
             public static readonly string rfc822 = "message/rfc822";
 
             /// <summary>
-            /// "message/disposition-notification". 
+            /// "message/disposition-notification".
             /// </summary>
             public static readonly string disposition_notification = "message/disposition-notification";
 

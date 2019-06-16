@@ -81,7 +81,7 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         /// <summary>
-        /// Compares the current instance with another object of the same type. 
+        /// Compares the current instance with another object of the same type.
         /// </summary>
         /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>Returns 0 if two objects equal, -1 if this instance is less or 1 this instance is greater.</returns>

@@ -11,7 +11,6 @@ namespace LumiSoft.Net.IMAP
     /// This is functionally equivalent to "(RECENT UNSEEN)".</remarks>
     public class IMAP_Search_Key_New : IMAP_Search_Key
     {
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

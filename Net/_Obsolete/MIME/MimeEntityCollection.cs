@@ -33,18 +33,18 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets mime entity at specified index.
-		/// </summary>
-		public MimeEntity this[int index]
+        /// Gets mime entity at specified index.
+        /// </summary>
+        public MimeEntity this[int index]
         {
             get { return (MimeEntity)m_pEntities[index]; }
         }
 
         /// <summary>
-		/// Creates a new mime entity to the end of the collection.
-		/// </summary>
-		/// <returns></returns>
-		public MimeEntity Add()
+        /// Creates a new mime entity to the end of the collection.
+        /// </summary>
+        /// <returns></returns>
+        public MimeEntity Add()
         {
             var entity = new MimeEntity();
             Add(entity);
@@ -73,38 +73,38 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Clears the collection of all mome entities.
-		/// </summary>
-		public void Clear()
+        /// Clears the collection of all mome entities.
+        /// </summary>
+        public void Clear()
         {
             m_pEntities.Clear();
         }
 
         /// <summary>
-		/// Gets if collection contains specified mime entity.
-		/// </summary>
-		/// <param name="entity">Mime entity.</param>
-		/// <returns></returns>
-		public bool Contains(MimeEntity entity)
+        /// Gets if collection contains specified mime entity.
+        /// </summary>
+        /// <param name="entity">Mime entity.</param>
+        /// <returns></returns>
+        public bool Contains(MimeEntity entity)
         {
             return m_pEntities.Contains(entity);
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pEntities.GetEnumerator();
         }
 
         /// <summary>
-		/// Inserts a new mime entity into the collection at the specified location.
-		/// </summary>
-		/// <param name="index">The location in the collection where you want to add the mime entity.</param>
-		/// <param name="entity">Mime entity.</param>
-		public void Insert(int index, MimeEntity entity)
+        /// Inserts a new mime entity into the collection at the specified location.
+        /// </summary>
+        /// <param name="index">The location in the collection where you want to add the mime entity.</param>
+        /// <param name="entity">Mime entity.</param>
+        public void Insert(int index, MimeEntity entity)
         {
             // Allow to add only for multipart/xxx...
             if ((m_pOwnerEntity.ContentType & MediaType_enum.Multipart) == 0)
@@ -121,10 +121,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Removes mime entity at the specified index from the collection.
-		/// </summary>
-		/// <param name="index">Index of mime entity to remove.</param>
-		public void Remove(int index)
+        /// Removes mime entity at the specified index from the collection.
+        /// </summary>
+        /// <param name="index">Index of mime entity to remove.</param>
+        public void Remove(int index)
         {
             m_pEntities.RemoveAt(index);
         }

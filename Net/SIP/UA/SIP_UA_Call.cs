@@ -435,7 +435,7 @@ namespace LumiSoft.Net.SIP.UA
             {
                 lock (m_pLock)
                 {
-                    // If remote party provided SDP, parse it.               
+                    // If remote party provided SDP, parse it.
                     if (e.Response.ContentType != null && e.Response.ContentType.ToLower().IndexOf("application/sdp") > -1)
                     {
                         RemoteSDP = SDP_Message.Parse(Encoding.UTF8.GetString(e.Response.Data));

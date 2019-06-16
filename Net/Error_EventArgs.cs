@@ -3,35 +3,35 @@ using System.Diagnostics;
 
 namespace LumiSoft.Net
 {
-	/// <summary>
-	/// Provides data for the SysError event for servers.
-	/// </summary>
-	public class Error_EventArgs
-	{
+    /// <summary>
+    /// Provides data for the SysError event for servers.
+    /// </summary>
+    public class Error_EventArgs
+    {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="stackTrace"></param>
-		public Error_EventArgs(Exception x,StackTrace stackTrace)
-		{
-			Exception  = x;
-			StackTrace = stackTrace;
-		}
+        /// Default constructor.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="stackTrace"></param>
+        public Error_EventArgs(Exception x,StackTrace stackTrace)
+        {
+            Exception  = x;
+            StackTrace = stackTrace;
+        }
 
         /// <summary>
-		/// Occured error's exception.
-		/// </summary>
-		public Exception Exception { get; }
+        /// Occured error's exception.
+        /// </summary>
+        public Exception Exception { get; }
 
         /// <summary>
-		/// Occured error's stacktrace.
-		/// </summary>
-		public StackTrace StackTrace { get; }
+        /// Occured error's stacktrace.
+        /// </summary>
+        public StackTrace StackTrace { get; }
 
         /// <summary>
-		/// Gets comment text.
-		/// </summary>
-		public string Text { get; } = "";
+        /// Gets comment text.
+        /// </summary>
+        public string Text { get; } = "";
     }
 }

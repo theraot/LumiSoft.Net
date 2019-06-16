@@ -10,7 +10,6 @@ namespace LumiSoft.Net.Mail
     /// </summary>
     public class Mail_h_DispositionNotificationOptions : MIME_h
     {
-
         /// <summary>
         /// Gets or sets mailbox address.
         /// </summary>

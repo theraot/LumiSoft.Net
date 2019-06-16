@@ -13,12 +13,12 @@ namespace LumiSoft.Net.Mail
     /// <code>
     /// RFC 5321 4.4.
     ///     Time-stamp-line = "Received:" FWS Stamp CRLF
-    ///     
+    ///
     ///     Stamp           = From-domain By-domain Opt-info [CFWS] ";" FWS date-time
     ///                     ; where "date-time" is as defined in RFC 5322 [4]
     ///                     ; but the "obs-" forms, especially two-digit
     ///                     ; years, are prohibited in SMTP and MUST NOT be used.
-    ///                     
+    ///
     ///     From-domain     = "FROM" FWS Extended-Domain
     ///
     ///     By-domain       = CFWS "BY" FWS Extended-Domain
@@ -38,15 +38,15 @@ namespace LumiSoft.Net.Mail
     ///                     ; msg-id is defined in RFC 5322 [4]
     ///
     ///     For            = CFWS "FOR" FWS ( Path / Mailbox )
-    ///     
+    ///
     ///     Additional-Registered-Clauses  = CFWS Atom FWS String
     ///
     ///     Link           = "TCP" / Addtl-Link
     ///
     ///     Addtl-Link     = Atom
-    ///     
+    ///
     ///     Protocol       = "ESMTP" / "SMTP" / Attdl-Protocol
-    ///     
+    ///
     ///     Mailbox        = Local-part "@" ( Domain / address-literal )
     /// </code>
     /// </remarks>

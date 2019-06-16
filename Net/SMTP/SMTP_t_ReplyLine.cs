@@ -41,7 +41,7 @@ namespace LumiSoft.Net.SMTP
         public string Text { get; }
 
         /// <summary>
-        /// Parses SMTP reply-line from 
+        /// Parses SMTP reply-line from
         /// </summary>
         /// <param name="line">SMTP server reply-line.</param>
         /// <returns>Returns parsed SMTP server reply-line.</returns>

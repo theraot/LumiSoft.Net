@@ -4,7 +4,7 @@ using System.Text;
 namespace LumiSoft.Net.RTP
 {
     /// <summary>
-    /// This class implements RTCP SDES packet one "chunk". 
+    /// This class implements RTCP SDES packet one "chunk".
     /// </summary>
     public class RTCP_Packet_SDES_Chunk
     {

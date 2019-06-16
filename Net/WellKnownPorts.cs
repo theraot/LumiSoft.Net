@@ -5,7 +5,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class WellKnownPorts
     {
-
         /// <summary>
         /// DNS protocol.
         /// </summary>

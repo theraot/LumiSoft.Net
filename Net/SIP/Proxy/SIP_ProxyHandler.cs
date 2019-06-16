@@ -7,7 +7,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_ProxyHandler
     {
-
         /// <summary>
         /// Gets a value indicating whether another request can use this handler.
         /// </summary>
@@ -22,7 +21,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public object Tag { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void GetRegistrarContacts()
         {

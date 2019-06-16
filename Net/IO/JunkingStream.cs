@@ -9,7 +9,6 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class JunkingStream : Stream
     {
-
         /// <summary>
         /// Gets a value indicating whether the stream supports reading. This property always returns false.
         /// </summary>

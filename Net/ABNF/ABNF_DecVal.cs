@@ -9,7 +9,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_DecVal : ABNF_Element
     {
-
         /// <summary>
         /// Default 'range' value constructor.
         /// </summary>
@@ -57,7 +56,7 @@ namespace LumiSoft.Net.ABNF
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>

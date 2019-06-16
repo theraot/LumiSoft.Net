@@ -8,7 +8,6 @@ namespace LumiSoft.Net.IMAP.Client
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Client_FetchHandler
     {
-
         //public event EventHandler BodyS = null;
 
         /// <summary>

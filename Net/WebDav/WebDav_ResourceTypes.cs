@@ -5,7 +5,6 @@
     /// </summary>
     public class WebDav_ResourceTypes
     {
-
         /// <summary>
         /// This class represents 'DAV:activity' resurce type.
         /// </summary>

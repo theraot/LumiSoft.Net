@@ -10,13 +10,12 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Utils
     {
-
         /// <summary>
-		/// Parses IMAP_ACL_Flags from string.
-		/// </summary>
-		/// <param name="aclString">String from where to convert</param>
-		/// <returns></returns>
-		public static IMAP_ACL_Flags ACL_From_String(string aclString)
+        /// Parses IMAP_ACL_Flags from string.
+        /// </summary>
+        /// <param name="aclString">String from where to convert</param>
+        /// <returns></returns>
+        public static IMAP_ACL_Flags ACL_From_String(string aclString)
         {
             var retVal = IMAP_ACL_Flags.None;
             aclString = aclString.ToLower();
@@ -61,11 +60,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Converts IMAP_ACL_Flags to string.
-		/// </summary>
-		/// <param name="flags">Flags to convert.</param>
-		/// <returns></returns>
-		public static string ACL_to_String(IMAP_ACL_Flags flags)
+        /// Converts IMAP_ACL_Flags to string.
+        /// </summary>
+        /// <param name="flags">Flags to convert.</param>
+        /// <returns></returns>
+        public static string ACL_to_String(IMAP_ACL_Flags flags)
         {
             var retVal = "";
             if ((flags & IMAP_ACL_Flags.l) != 0)
@@ -109,11 +108,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Converts date time to IMAP date time string.
-		/// </summary>
-		/// <param name="date">DateTime to convert.</param>
-		/// <returns></returns>
-		public static string DateTimeToString(DateTime date)
+        /// Converts date time to IMAP date time string.
+        /// </summary>
+        /// <param name="date">DateTime to convert.</param>
+        /// <returns></returns>
+        public static string DateTimeToString(DateTime date)
         {
             var retVal = "";
             retVal += date.ToString("dd-MMM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
@@ -123,32 +122,32 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
-		/// Example: &amp;APYA9g- is decoded to öö.
-		/// </summary>
-		/// <param name="text">Text to encode.</param>
-		/// <returns></returns>
-		public static string Decode_IMAP_UTF7_String(string text)
+        /// Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
+        /// Example: &amp;APYA9g- is decoded to öö.
+        /// </summary>
+        /// <param name="text">Text to encode.</param>
+        /// <returns></returns>
+        public static string Decode_IMAP_UTF7_String(string text)
         {
             /* RFC 3501 5.1.3.  Mailbox International Naming Convention
-				In modified UTF-7, printable US-ASCII characters, except for "&",
-				represent themselves; that is, characters with octet values 0x20-0x25
-				and 0x27-0x7e.  The character "&" (0x26) is represented by the
-				two-octet sequence "&-".
+                In modified UTF-7, printable US-ASCII characters, except for "&",
+                represent themselves; that is, characters with octet values 0x20-0x25
+                and 0x27-0x7e.  The character "&" (0x26) is represented by the
+                two-octet sequence "&-".
 
-				All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
-				represented in modified BASE64, with a further modification from
-				[UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
-				used to represent any printing US-ASCII character which can represent
-				itself.
-				
-				"&" is used to shift to modified BASE64 and "-" to shift back to
-				US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
-				null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
-				means "&") are not permitted.  However, all names start in US-ASCII,
-				and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
-				ISO-10646 character MUST end with a "-").
-			*/
+                All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
+                represented in modified BASE64, with a further modification from
+                [UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
+                used to represent any printing US-ASCII character which can represent
+                itself.
+                
+                "&" is used to shift to modified BASE64 and "-" to shift back to
+                US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
+                null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
+                means "&") are not permitted.  However, all names start in US-ASCII,
+                and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
+                ISO-10646 character MUST end with a "-").
+            */
 
             // Base64 chars, except '/' is replaced with ','
             var base64Chars = new[]{
@@ -203,7 +202,7 @@ namespace LumiSoft.Net.IMAP
                         // Get encoded block
                         var encodedBlock = Encoding.Default.GetBytes(text.Substring(i + 1, endingPos - i - 1));
 
-                        // Convert to UTF-16 char						
+                        // Convert to UTF-16 char
                         var decodedData = Net_Utils.Base64DecodeEx(encodedBlock, base64Chars);
                         var decodedChars = new char[decodedData.Length / 2];
                         for (int iC = 0; iC < decodedChars.Length; iC++)
@@ -257,32 +256,32 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
-		/// Example: öö is encoded to &amp;APYA9g-.
-		/// </summary>
-		/// <param name="text">Text to encode.</param>
-		/// <returns></returns>
-		public static string Encode_IMAP_UTF7_String(string text)
+        /// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
+        /// Example: öö is encoded to &amp;APYA9g-.
+        /// </summary>
+        /// <param name="text">Text to encode.</param>
+        /// <returns></returns>
+        public static string Encode_IMAP_UTF7_String(string text)
         {
             /* RFC 3501 5.1.3.  Mailbox International Naming Convention
-				In modified UTF-7, printable US-ASCII characters, except for "&",
-				represent themselves; that is, characters with octet values 0x20-0x25
-				and 0x27-0x7e.  The character "&" (0x26) is represented by the
-				two-octet sequence "&-".
+                In modified UTF-7, printable US-ASCII characters, except for "&",
+                represent themselves; that is, characters with octet values 0x20-0x25
+                and 0x27-0x7e.  The character "&" (0x26) is represented by the
+                two-octet sequence "&-".
 
-				All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
-				represented in modified BASE64, with a further modification from
-				[UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
-				used to represent any printing US-ASCII character which can represent
-				itself.
-				
-				"&" is used to shift to modified BASE64 and "-" to shift back to
-				US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
-				null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
-				means "&") are not permitted.  However, all names start in US-ASCII,
-				and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
-				ISO-10646 character MUST end with a "-").
-			*/
+                All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
+                represented in modified BASE64, with a further modification from
+                [UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
+                used to represent any printing US-ASCII character which can represent
+                itself.
+                
+                "&" is used to shift to modified BASE64 and "-" to shift back to
+                US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
+                null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
+                means "&") are not permitted.  However, all names start in US-ASCII,
+                and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
+                ISO-10646 character MUST end with a "-").
+            */
 
             // Base64 chars, except '/' is replaced with ','
             var base64Chars = new[]{
@@ -309,7 +308,7 @@ namespace LumiSoft.Net.IMAP
                 // Not allowed char, encode it
                 else
                 {
-                    // Superfluous shifts are not allowed. 
+                    // Superfluous shifts are not allowed.
                     // For example: öö may not encoded as &APY-&APY-, but must be &APYA9g-.
 
                     // Get all continuous chars that need encoding and encode them as one block
@@ -529,10 +528,10 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Converts message flags to string. Eg. \SEEN \DELETED .
-		/// </summary>
+        /// Converts message flags to string. Eg. \SEEN \DELETED .
+        /// </summary>
         /// <param name="msgFlags">IMAP message flags.</param>
-		/// <returns>Returns message flags as string list.</returns>
+        /// <returns>Returns message flags as string list.</returns>
         [Obsolete("Use method 'MessageFlagsToStringArray' instead.")]
         public static string MessageFlagsToString(IMAP_MessageFlags msgFlags)
         {
@@ -565,7 +564,7 @@ namespace LumiSoft.Net.IMAP
         /// Converts standard IMAP message flags to string array.
         /// </summary>
         /// <param name="msgFlags">IMAP message flags.</param>
-        /// <returns>Returns IMAP message flags as string array.</returns>        
+        /// <returns>Returns IMAP message flags as string array.</returns>
         [Obsolete("Use class IMAP_t_MsgFlags instead.")]
         public static string[] MessageFlagsToStringArray(IMAP_MessageFlags msgFlags)
         {
@@ -623,11 +622,11 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Normalizes folder path.  Example: /Inbox/SubFolder/ will be Inbox/SubFolder.
-		/// </summary>
-		/// <param name="folder">Folder path to normalize.</param>
-		/// <returns>Returns normalized folder path.</returns>
-		public static string NormalizeFolder(string folder)
+        /// Normalizes folder path.  Example: /Inbox/SubFolder/ will be Inbox/SubFolder.
+        /// </summary>
+        /// <param name="folder">Folder path to normalize.</param>
+        /// <returns>Returns normalized folder path.</returns>
+        public static string NormalizeFolder(string folder)
         {
             folder = folder.Replace("\\", "/");
             if (folder.StartsWith("/"))
@@ -643,12 +642,12 @@ namespace LumiSoft.Net.IMAP
         }
 
         /// <summary>
-		/// Parses IMAP date time from string.
-		/// </summary>
-		/// <param name="date">DateTime string.</param>
-		/// <returns>Returns parsed date-time value.</returns>
+        /// Parses IMAP date time from string.
+        /// </summary>
+        /// <param name="date">DateTime string.</param>
+        /// <returns>Returns parsed date-time value.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>date</b> is null reference.</exception>
-		public static DateTime ParseDate(string date)
+        public static DateTime ParseDate(string date)
         {
             if (date == null)
             {
@@ -656,14 +655,14 @@ namespace LumiSoft.Net.IMAP
             }
 
             /* RFC 3501. IMAP date format. 
-			    date-time       = DQUOTE date-day-fixed "-" date-month "-" date-year SP time SP zone DQUOTE
-				date            = day-month-year
+                date-time       = DQUOTE date-day-fixed "-" date-month "-" date-year SP time SP zone DQUOTE
+                date            = day-month-year
                 date-day-fixed  = (SP DIGIT) / 2DIGIT
                                 ; Fixed-format version of date-day
                 date-month      = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
                                   "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
-				time            = 2DIGIT ":" 2DIGIT ":" 2DIGIT
-			*/
+                time            = 2DIGIT ":" 2DIGIT ":" 2DIGIT
+            */
             if (date.IndexOf('-') > -1)
             {
                 try
@@ -682,10 +681,10 @@ namespace LumiSoft.Net.IMAP
         //---- Obsolete
 
         /// <summary>
-		/// Parses message flags from string.
-		/// </summary>
-		/// <param name="flagsString">Message flags string.</param>
-		/// <returns></returns>
+        /// Parses message flags from string.
+        /// </summary>
+        /// <param name="flagsString">Message flags string.</param>
+        /// <returns></returns>
         [Obsolete("Use class IMAP_t_MsgFlags instead.")]
         public static IMAP_MessageFlags ParseMessageFlags(string flagsString)
         {

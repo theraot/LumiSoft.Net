@@ -99,19 +99,19 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         /// <remarks>
         /// <code>
-        /// ; Media Formats: 
-        /// ; If the Transport Protocol is "RTP/AVP" or "RTP/SAVP" the &lt;fmt&gt; 
-        /// ; sub-fields contain RTP payload type numbers, for example: 
-        /// ; - for Audio: 0: PCMU, 4: G723, 8: PCMA, 18: G729 
-        /// ; - for Video: 31: H261, 32: MPV 
-        /// ; If the Transport Protocol is "udp" the &lt;fmt&gt; sub-fields 
-        /// ; must reference a MIME type 
+        /// ; Media Formats:
+        /// ; If the Transport Protocol is "RTP/AVP" or "RTP/SAVP" the &lt;fmt&gt;
+        /// ; sub-fields contain RTP payload type numbers, for example:
+        /// ; - for Audio: 0: PCMU, 4: G723, 8: PCMA, 18: G729
+        /// ; - for Video: 31: H261, 32: MPV
+        /// ; If the Transport Protocol is "udp" the &lt;fmt&gt; sub-fields
+        /// ; must reference a MIME type
         /// </code>
         /// </remarks>
         public List<string> MediaFormats { get; }
 
         /// <summary>
-        /// Gets or sets meadia type. Currently defined media are "audio", "video", "text", 
+        /// Gets or sets meadia type. Currently defined media are "audio", "video", "text",
         /// "application", and "message", although this list may be extended in the future.
         /// </summary>
         public string MediaType { get; private set; } = "";

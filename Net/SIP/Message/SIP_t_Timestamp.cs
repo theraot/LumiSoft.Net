@@ -35,7 +35,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets delay time in seconds. Delay specifies the time between the UAS received 
+        /// Gets or sets delay time in seconds. Delay specifies the time between the UAS received
         /// the request and generated response.
         /// </summary>
         public decimal Delay { get; set; }

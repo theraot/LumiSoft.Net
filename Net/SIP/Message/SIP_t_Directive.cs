@@ -26,7 +26,7 @@ namespace LumiSoft.Net.SIP.Message
         public enum DirectiveType
         {
             /// <summary>
-            /// This directive indicates whether the caller would like each server to proxy request. 
+            /// This directive indicates whether the caller would like each server to proxy request.
             /// </summary>
             Proxy,
 
@@ -36,13 +36,13 @@ namespace LumiSoft.Net.SIP.Message
             Redirect,
 
             /// <summary>
-            /// This directive indicates whether the caller would like each proxy server to send a CANCEL 
+            /// This directive indicates whether the caller would like each proxy server to send a CANCEL
             /// request to forked branches.
             /// </summary>
             Cancel,
 
             /// <summary>
-            /// This directive indicates whether the caller would NOT want each proxy server to send a CANCEL 
+            /// This directive indicates whether the caller would NOT want each proxy server to send a CANCEL
             /// request to forked branches.
             /// </summary>
             NoCancel,
@@ -59,38 +59,38 @@ namespace LumiSoft.Net.SIP.Message
             NoFork,
 
             /// <summary>
-            /// This directive indicates whether a proxy server receiving a 3xx response should send 
+            /// This directive indicates whether a proxy server receiving a 3xx response should send
             /// requests to the addresses listed in the response.
             /// </summary>
             Recurse,
 
             /// <summary>
-            /// This directive indicates whether a proxy server receiving a 3xx response should forward 
+            /// This directive indicates whether a proxy server receiving a 3xx response should forward
             /// the list of addresses upstream towards the caller.
             /// </summary>
             NoRecurse,
 
             /// <summary>
-            /// This directive indicates whether the caller would like the proxy server to proxy 
+            /// This directive indicates whether the caller would like the proxy server to proxy
             /// the request to all known addresses at once.
             /// </summary>
             Parallel,
 
             /// <summary>
             /// This directive indicates whether the caller would like the proxy server to go through
-            /// all known addresses sequentially, contacting the next address only after it has received 
+            /// all known addresses sequentially, contacting the next address only after it has received
             /// a non-2xx or non-6xx final response for the previous one.
             /// </summary>
             Sequential,
 
             /// <summary>
-            /// This directive indicates whether if the called party is temporarily unreachable, caller 
+            /// This directive indicates whether if the called party is temporarily unreachable, caller
             /// wants to have its call queued.
             /// </summary>
             Queue,
 
             /// <summary>
-            /// This directive indicates whether if the called party is temporarily unreachable, caller 
+            /// This directive indicates whether if the called party is temporarily unreachable, caller
             /// don't want its call to be queued.
             /// </summary>
             NoQueue

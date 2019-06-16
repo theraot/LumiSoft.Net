@@ -75,7 +75,7 @@ namespace LumiSoft.Net.SIP.Stack
         public event EventHandler StateChanged;
 
         /// <summary>
-        /// Is raised if transaction is timed out. 
+        /// Is raised if transaction is timed out.
         /// </summary>
         public event EventHandler TimedOut;
 
@@ -86,7 +86,7 @@ namespace LumiSoft.Net.SIP.Stack
         public event EventHandler TransactionError;
 
         /// <summary>
-        /// Is raised when there is transport error. 
+        /// Is raised when there is transport error.
         /// </summary>
         public event EventHandler<ExceptionEventArgs> TransportError;
 

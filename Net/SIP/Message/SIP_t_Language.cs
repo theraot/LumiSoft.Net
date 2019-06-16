@@ -37,7 +37,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
+        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest.
         /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
         /// </summary>
         public double QValue

@@ -194,7 +194,7 @@ namespace LumiSoft.Net.MIME
         /// Gets or sets content disposition. Value null means that header field does not exist.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <remarks>Indicates whether a MIME body part is to be shown inline or is an attachment; can also indicate a 
+        /// <remarks>Indicates whether a MIME body part is to be shown inline or is an attachment; can also indicate a
         /// suggested filename for use when saving an attachment to a file.</remarks>
         /// <exception cref="ParseException">Is raised when header field parsing errors.</exception>
         public MIME_h_ContentDisposition ContentDisposition
@@ -300,7 +300,7 @@ namespace LumiSoft.Net.MIME
         /// Gets or sets content features of a MIME body part. Value null means that header field does not exist.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <remarks>The 'Content-features:' header can be used to annotate a MIME body part with a media feature expression, 
+        /// <remarks>The 'Content-features:' header can be used to annotate a MIME body part with a media feature expression,
         /// to indicate features of the body part content. See also RFC 2533, RFC 2506, and RFC 2045.</remarks>
         public string Contentfeatures
         {
@@ -401,7 +401,7 @@ namespace LumiSoft.Net.MIME
         /// Gets or sets language of message content. Value null means that header field does not exist.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <remarks>Can include a code for the natural language used in a message; e.g., 'en' for English. 
+        /// <remarks>Can include a code for the natural language used in a message; e.g., 'en' for English.
         /// Can also contain a list of languages for a message containing more than one language.</remarks>
         public string ContentLanguage
         {
@@ -550,7 +550,7 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-        /// Gets or sets content transfer encoding. Value null means that header field does not exist. 
+        /// Gets or sets content transfer encoding. Value null means that header field does not exist.
         /// RFC defined values are in <see cref="MIME_TransferEncodings">MIME_TransferEncodings</see>. Defined in RFC 2045 6.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
@@ -797,7 +797,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <param name="headerWordEncoder">Header 8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <param name="headerParmetersCharset">Charset to use to encode 8-bit header parameters. Value null means parameters not encoded.</param>
-        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
+        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified,
         /// original encoding is kept.</param>
         /// <returns>Returns MIME entity as byte[].</returns>
         public byte[] ToByte(MIME_Encoding_EncodedWord headerWordEncoder, Encoding headerParmetersCharset, bool headerReencode)
@@ -829,7 +829,7 @@ namespace LumiSoft.Net.MIME
         /// <param name="file">File name with path where to store MIME entity.</param>
         /// <param name="headerWordEncoder">Header 8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <param name="headerParmetersCharset">Charset to use to encode 8-bit header parameters. Value null means parameters not encoded.</param>
-        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
+        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified,
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>file</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
@@ -868,7 +868,7 @@ namespace LumiSoft.Net.MIME
         /// <param name="stream">Stream where to store MIME entity. Storing starts form stream current position.</param>
         /// <param name="headerWordEncoder">Header 8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <param name="headerParmetersCharset">Charset to use to encode 8-bit header parameters. Value null means parameters not encoded.</param>
-        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
+        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified,
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
         public void ToStream(Stream stream, MIME_Encoding_EncodedWord headerWordEncoder, Encoding headerParmetersCharset, bool headerReencode)
@@ -908,7 +908,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         /// <param name="headerWordEncoder">Header 8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <param name="headerParmetersCharset">Charset to use to encode 8-bit header parameters. Value null means parameters not encoded.</param>
-        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
+        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified,
         /// original encoding is kept.</param>
         /// <returns>Returns MIME entity as string.</returns>
         public string ToString(MIME_Encoding_EncodedWord headerWordEncoder, Encoding headerParmetersCharset, bool headerReencode)

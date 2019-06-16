@@ -44,7 +44,7 @@ namespace LumiSoft.Net.RTP
         public uint ExtendedSequenceNumber { get; }
 
         /// <summary>
-        /// Gets the fraction of RTP data packets from source SSRC lost since the previous SR or 
+        /// Gets the fraction of RTP data packets from source SSRC lost since the previous SR or
         /// RR packet was sent.
         /// </summary>
         public uint FractionLost { get; }

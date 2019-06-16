@@ -41,7 +41,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ArgumentException("Property 'FileSize' value must be >= 0.","FileSize");
                 }
 
-                m_FileSize = value; 
+                m_FileSize = value;
             }
         }
     }

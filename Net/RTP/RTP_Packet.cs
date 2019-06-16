@@ -4,10 +4,10 @@ using System.Text;
 namespace LumiSoft.Net.RTP
 {
     /// <summary>
-    /// A data packet consisting of the fixed RTP header, a possibly empty list of contributing 
-    /// sources (see below), and the payload data. Some underlying protocols may require an 
-    /// encapsulation of the RTP packet to be defined. Typically one packet of the underlying 
-    /// protocol contains a single RTP packet, but several RTP packets MAY be contained if 
+    /// A data packet consisting of the fixed RTP header, a possibly empty list of contributing
+    /// sources (see below), and the payload data. Some underlying protocols may require an
+    /// encapsulation of the RTP packet to be defined. Typically one packet of the underlying
+    /// protocol contains a single RTP packet, but several RTP packets MAY be contained if
     /// permitted by the encapsulation method (see Section 11).
     /// </summary>
     public class RTP_Packet
@@ -114,7 +114,7 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Gets sets packet timestamp. 
+        /// Gets sets packet timestamp.
         /// </summary>
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public uint Timestamp

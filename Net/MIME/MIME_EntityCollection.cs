@@ -104,10 +104,10 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns>Returns IEnumerator interface.</returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns>Returns IEnumerator interface.</returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pCollection.GetEnumerator();
         }

@@ -208,7 +208,7 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Ensures that specified request has matching server transaction. If server transaction doesn't exist, 
+        /// Ensures that specified request has matching server transaction. If server transaction doesn't exist,
         /// it will be created, otherwise existing transaction will be returned.
         /// </summary>
         /// <param name="flow">SIP data flow which is used to receive request.</param>

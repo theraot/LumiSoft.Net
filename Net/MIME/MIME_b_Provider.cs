@@ -69,7 +69,7 @@ namespace LumiSoft.Net.MIME
 
             // We have exact body provider for specified mediaType.
             if(m_pBodyTypes.ContainsKey(mediaType)){
-                bodyType = m_pBodyTypes[mediaType];                
+                bodyType = m_pBodyTypes[mediaType];
             }
             // Use default mediaType.
             else{

@@ -11,20 +11,20 @@ namespace LumiSoft.Net.DNS
     public class DNS_rr_PTR : DNS_rr
     {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
+        /// Default constructor.
+        /// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
-		/// <param name="domainName">DomainName.</param>
-		/// <param name="ttl">TTL value.</param>
-		public DNS_rr_PTR(string name, string domainName, int ttl) : base(name, DNS_QType.PTR, ttl)
+        /// <param name="domainName">DomainName.</param>
+        /// <param name="ttl">TTL value.</param>
+        public DNS_rr_PTR(string name, string domainName, int ttl) : base(name, DNS_QType.PTR, ttl)
         {
             DomainName = domainName;
         }
 
         /// <summary>
-		/// Gets domain name.
-		/// </summary>
-		public string DomainName { get; } = "";
+        /// Gets domain name.
+        /// </summary>
+        public string DomainName { get; } = "";
 
         /// <summary>
         /// Parses resource record from reply data.

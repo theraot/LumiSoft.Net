@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace LumiSoft.Net
 {
     /// <summary>
-    /// Represents a collection that can be accessed either with the key or with the index. 
+    /// Represents a collection that can be accessed either with the key or with the index.
     /// </summary>
     public class KeyValueCollection<K, V> : IEnumerable
     {
@@ -69,10 +69,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns>Returns IEnumerator interface.</returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns>Returns IEnumerator interface.</returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pList.GetEnumerator();
         }

@@ -5,7 +5,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_PacketType
     {
-
         /// <summary>
         /// Application specifiec data.
         /// </summary>

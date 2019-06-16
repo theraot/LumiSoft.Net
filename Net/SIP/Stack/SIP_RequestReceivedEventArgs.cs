@@ -65,9 +65,9 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Request Request { get; }
 
         /// <summary>
-        /// Gets server transaction for that request. Server transaction is created when this property is 
-        /// first accessed. If you don't need server transaction for that request, for example statless proxy, 
-        /// just don't access this property. For ACK method, this method always return null, because ACK 
+        /// Gets server transaction for that request. Server transaction is created when this property is
+        /// first accessed. If you don't need server transaction for that request, for example statless proxy,
+        /// just don't access this property. For ACK method, this method always return null, because ACK
         /// doesn't create transaction !
         /// </summary>
         public SIP_ServerTransaction ServerTransaction

@@ -4,9 +4,9 @@ namespace LumiSoft.Net.SIP.Message
 {
     /// <summary>
     /// Implements SIP "Cseq" value. Defined in RFC 3261.
-    /// A CSeq in a request contains a single decimal sequence number and 
-    /// the request method. The method part of CSeq is case-sensitive. The CSeq header 
-    /// field serves to order transactions within a dialog, to provide a means to uniquely 
+    /// A CSeq in a request contains a single decimal sequence number and
+    /// the request method. The method part of CSeq is case-sensitive. The CSeq header
+    /// field serves to order transactions within a dialog, to provide a means to uniquely
     /// identify transactions, and to differentiate between new requests and request retransmissions.
     /// </summary>
     /// <remarks>

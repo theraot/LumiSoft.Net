@@ -152,9 +152,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets child entities. This property is available only if ContentType = multipart/... .
-		/// </summary>
-		public MimeEntityCollection ChildEntities { get; }
+        /// Gets child entities. This property is available only if ContentType = multipart/... .
+        /// </summary>
+        public MimeEntityCollection ChildEntities { get; }
 
         /// <summary>
         /// Gets or sets header field "<b>Content-class:</b>" value. Returns null if value isn't set.<br/>
@@ -332,7 +332,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets or sets header field "<b>Content-Transfer-Encoding:</b>" value. This property specifies how data is encoded/decoded.
         /// If you set this value, it's recommended that you use QuotedPrintable for text and Base64 for binary data.
-        /// 7bit,_8bit,Binary are today obsolete (used for parsing). 
+        /// 7bit,_8bit,Binary are today obsolete (used for parsing).
         /// </summary>
         public ContentTransferEncoding_enum ContentTransferEncoding
         {
@@ -487,27 +487,27 @@ namespace LumiSoft.Net.Mime
                 //--- Multipart/xxx ---------------------------//
                 else if (value == MediaType_enum.Multipart_mixed)
                 {
-                    contentType = "multipart/mixed;	boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
+                    contentType = "multipart/mixed; boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
                 }
                 else if (value == MediaType_enum.Multipart_alternative)
                 {
-                    contentType = "multipart/alternative;	boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
+                    contentType = "multipart/alternative; boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
                 }
                 else if (value == MediaType_enum.Multipart_parallel)
                 {
-                    contentType = "multipart/parallel;	boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
+                    contentType = "multipart/parallel; boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
                 }
                 else if (value == MediaType_enum.Multipart_related)
                 {
-                    contentType = "multipart/related;	boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
+                    contentType = "multipart/related; boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
                 }
                 else if (value == MediaType_enum.Multipart_signed)
                 {
-                    contentType = "multipart/signed;	boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
+                    contentType = "multipart/signed; boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
                 }
                 else if (value == MediaType_enum.Multipart)
                 {
-                    contentType = "multipart;	boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
+                    contentType = "multipart; boundary=\"part_" + Guid.NewGuid().ToString().Replace("-", "_") + "\"";
                 }
                 //---------------------------------------------//
 
@@ -664,7 +664,7 @@ namespace LumiSoft.Net.Mime
         /// <p/>
         /// Note: Content-Type must be application/xxx or exception is thrown.
         /// This property is obsolete today, it's replaced with <b>Content-Disposition: filename</b> parameter.
-        /// If possible always set FileName property instead of it. 
+        /// If possible always set FileName property instead of it.
         /// </summary>
         public string ContentType_Name
         {
@@ -707,11 +707,10 @@ namespace LumiSoft.Net.Mime
             }
         }
 
-
         /// <summary>
         /// Gets or sets header field "<b>Content-Type:</b>" value. Returns null if value isn't set. This property specifies what entity data is.
         /// This property is meant for advanced users, who needs other values what defined MediaType_enum provides.
-        /// Example value: text/plain; charset="utf-8". 
+        /// Example value: text/plain; charset="utf-8".
         /// NOTE: ContentType can't be changed while there is data specified(Exception is thrown) in this mime entity, because it isn't
         /// possible todo data conversion between different types. For example text/xx has charset parameter and other types don't,
         /// changing loses it and text data becomes useless.
@@ -782,7 +781,7 @@ namespace LumiSoft.Net.Mime
 
         /// <summary>
         /// Gets or sets entity encoded data. If you set this value, be sure that you encode this value as specified by Content-Transfer-Encoding: header field.
-        /// Set this value only if you need custom Content-Transfer-Encoding: what current Mime class won't support, other wise set data through this.Data property. 
+        /// Set this value only if you need custom Content-Transfer-Encoding: what current Mime class won't support, other wise set data through this.Data property.
         /// Note: This property can be set only if Content-Type: isn't multipart.
         /// </summary>
         public byte[] DataEncoded { get; set; }
@@ -973,14 +972,14 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets message header.
-		/// </summary>
-		public HeaderFieldCollection Header { get; }
+        /// Gets message header.
+        /// </summary>
+        public HeaderFieldCollection Header { get; }
 
         /// <summary>
-		/// Gets header as RFC 2822 message headers.
-		/// </summary>
-		public string HeaderString
+        /// Gets header as RFC 2822 message headers.
+        /// </summary>
+        public string HeaderString
         {
             get { return Header.ToHeaderString("utf-8"); }
         }
@@ -1043,9 +1042,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets or sets header field "<b>Mime-Version:</b>" value. Returns null if value isn't set.
-		/// </summary>
-		public string MimeVersion
+        /// Gets or sets header field "<b>Mime-Version:</b>" value. Returns null if value isn't set.
+        /// </summary>
+        public string MimeVersion
         {
             get
             {
@@ -1258,10 +1257,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Loads MimeEntity.Data property from file.
-		/// </summary>
-		/// <param name="fileName">File name.</param>
-		public void DataFromFile(string fileName)
+        /// Loads MimeEntity.Data property from file.
+        /// </summary>
+        /// <param name="fileName">File name.</param>
+        public void DataFromFile(string fileName)
         {
             using (FileStream fs = File.OpenRead(fileName))
             {
@@ -1270,10 +1269,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Loads MimeEntity.Data property from specified stream. Note: reading starts from current position and stream isn't closed.
-		/// </summary>
-		/// <param name="stream">Data stream.</param>
-		public void DataFromStream(Stream stream)
+        /// Loads MimeEntity.Data property from specified stream. Note: reading starts from current position and stream isn't closed.
+        /// </summary>
+        /// <param name="stream">Data stream.</param>
+        public void DataFromStream(Stream stream)
         {
             var data = new byte[stream.Length];
             stream.Read(data, 0, (int)stream.Length);
@@ -1282,10 +1281,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Saves this.Data property value to specified file.
-		/// </summary>
-		/// <param name="fileName">File name where to store data.</param>
-		public void DataToFile(string fileName)
+        /// Saves this.Data property value to specified file.
+        /// </summary>
+        /// <param name="fileName">File name where to store data.</param>
+        public void DataToFile(string fileName)
         {
             using (FileStream fs = File.Create(fileName))
             {
@@ -1294,20 +1293,20 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Saves this.Data property value to specified stream.
-		/// </summary>
-		/// <param name="stream">Stream where to store data.</param>
-		public void DataToStream(Stream stream)
+        /// Saves this.Data property value to specified stream.
+        /// </summary>
+        /// <param name="stream">Stream where to store data.</param>
+        public void DataToStream(Stream stream)
         {
             var data = Data;
             stream.Write(data, 0, data.Length);
         }
 
         /// <summary>
-		/// Stores mime entity and it's child entities to specified stream.
-		/// </summary>
-		/// <param name="storeStream">Stream where to store mime entity.</param>
-		public void ToStream(Stream storeStream)
+        /// Stores mime entity and it's child entities to specified stream.
+        /// </summary>
+        /// <param name="storeStream">Stream where to store mime entity.</param>
+        public void ToStream(Stream storeStream)
         {
             // Write headers
             var data = Encoding.Default.GetBytes(FoldHeader(HeaderString));
@@ -1345,12 +1344,12 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses mime entity from stream.
-		/// </summary>
-		/// <param name="stream">Data stream from where to read data.</param>
-		/// <param name="toBoundary">Entity data is readed to specified boundary.</param>
-		/// <returns>Returns false if last entity. Returns true for mulipart entity, if there are more entities.</returns>
-		internal bool Parse(SmartStream stream, string toBoundary)
+        /// Parses mime entity from stream.
+        /// </summary>
+        /// <param name="stream">Data stream from where to read data.</param>
+        /// <param name="toBoundary">Entity data is readed to specified boundary.</param>
+        /// <returns>Returns false if last entity. Returns true for mulipart entity, if there are more entities.</returns>
+        internal bool Parse(SmartStream stream, string toBoundary)
         {
             // Clear header fields
             Header.Clear();
@@ -1447,7 +1446,7 @@ namespace LumiSoft.Net.Mime
                             lineString = args.LineUtf8;
                         }
 
-                        // Invalid boundary end, there can't be more entities 
+                        // Invalid boundary end, there can't be more entities
                         if (string.IsNullOrEmpty(lineString))
                         {
                             return false;
@@ -1459,7 +1458,7 @@ namespace LumiSoft.Net.Mime
                             return false;
                         }
                         // else{
-                        // There are more entities					
+                        // There are more entities
                         return true;
                     }
                 }
@@ -1514,7 +1513,7 @@ namespace LumiSoft.Net.Mime
                         entityData.Write(readLineOP.Buffer, 0, readLineOP.BytesInBuffer);
                     }
                 }
-                // Boundary isn't specified, read data to the stream end. 
+                // Boundary isn't specified, read data to the stream end.
 
                 var ms = new MemoryStream();
                 stream.ReadAll(ms);
@@ -1525,11 +1524,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Encodes data with specified content transfer encoding.
-		/// </summary>
-		/// <param name="data">Data to encode.</param>
-		/// <param name="encoding">Encoding with what to encode data.</param>
-		private byte[] EncodeData(byte[] data, ContentTransferEncoding_enum encoding)
+        /// Encodes data with specified content transfer encoding.
+        /// </summary>
+        /// <param name="data">Data to encode.</param>
+        /// <param name="encoding">Encoding with what to encode data.</param>
+        private byte[] EncodeData(byte[] data, ContentTransferEncoding_enum encoding)
         {
             // Allow only known Content-Transfer-Encoding (ContentTransferEncoding_enum value),
             // otherwise we don't know how to encode data.
@@ -1555,28 +1554,28 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Folds header.
-		/// </summary>
-		/// <param name="header">Header string.</param>
-		/// <returns></returns>
-		private string FoldHeader(string header)
+        /// Folds header.
+        /// </summary>
+        /// <param name="header">Header string.</param>
+        /// <returns></returns>
+        private string FoldHeader(string header)
         {
             /* Rfc 2822 2.2.3 Long Header Fields
-				Each header field is logically a single line of characters comprising
-				the field name, the colon, and the field body.  For convenience
-				however, and to deal with the 998/78 character limitations per line,
-				the field body portion of a header field can be split into a multiple
-				line representation; this is called "folding".  The general rule is
-				imply WSP characters), a CRLF may be inserted before any WSP.  For
-				example, the header field:
+                Each header field is logically a single line of characters comprising
+                the field name, the colon, and the field body.  For convenience
+                however, and to deal with the 998/78 character limitations per line,
+                the field body portion of a header field can be split into a multiple
+                line representation; this is called "folding".  The general rule is
+                imply WSP characters), a CRLF may be inserted before any WSP.  For
+                example, the header field:
 
-					Subject: This is a test
+                    Subject: This is a test
 
-					can be represented as:
+                    can be represented as:
 
-							Subject: This
-								is a test
-			*/
+                            Subject: This
+                                is a test
+            */
 
             // Just fold header fields what contain <TAB>
 
@@ -1597,7 +1596,7 @@ namespace LumiSoft.Net.Mime
                     retVal.Append(headerLine + "\r\n");
                 }
             }
-            // Split splits last line <CRLF> to element, but we don't need it 
+            // Split splits last line <CRLF> to element, but we don't need it
             if (retVal.Length > 1)
             {
                 return retVal.ToString(0, retVal.Length - 2);

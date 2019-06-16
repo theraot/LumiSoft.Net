@@ -37,19 +37,19 @@ namespace LumiSoft.Net.DNS
         public string Flags { get; } = "";
 
         /// <summary>
-        /// Gets order in which the NAPTR records MUST be processed in order to accurately 
+        /// Gets order in which the NAPTR records MUST be processed in order to accurately
         /// represent the ordered list of Rules.
         /// </summary>
         public int Order { get; }
 
         /// <summary>
-        /// Gets the order in which NAPTR records with equal Order values SHOULD be processed, 
+        /// Gets the order in which NAPTR records with equal Order values SHOULD be processed,
         /// low numbers being processed before high numbers.
         /// </summary>
         public int Preference { get; }
 
         /// <summary>
-        /// Gets regular expression that is applied to the original string held by the client in order to 
+        /// Gets regular expression that is applied to the original string held by the client in order to
         /// construct the next domain name to lookup.
         /// </summary>
         public string Regexp { get; } = "";

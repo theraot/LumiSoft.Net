@@ -9,36 +9,35 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Utils
     {
-
         /// <summary>
-		/// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
-		/// </summary>
-		/// <returns></returns>
-		public static string CreateMessageID()
+        /// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateMessageID()
         {
             return "<" + Guid.NewGuid().ToString().Replace("-", "").Substring(16) + "@" + Guid.NewGuid().ToString().Replace("-", "").Substring(16) + ">";
         }
         /// <summary>
-		/// Converts date to RFC 2822 date time string.
-		/// </summary>
-		/// <param name="dateTime">Date time value to convert..</param>
-		/// <returns>Returns RFC 2822 date time string.</returns>
-		public static string DateTimeToRfc2822(DateTime dateTime)
+        /// Converts date to RFC 2822 date time string.
+        /// </summary>
+        /// <param name="dateTime">Date time value to convert..</param>
+        /// <returns>Returns RFC 2822 date time string.</returns>
+        public static string DateTimeToRfc2822(DateTime dateTime)
         {
             return dateTime.ToString("ddd, dd MMM yyyy HH':'mm':'ss ", System.Globalization.DateTimeFormatInfo.InvariantInfo) + dateTime.ToString("zzz").Replace(":", "");
         }
 
         /// <summary>
-		/// Parse header specified header field value.
-		/// 
-		/// Use this method only if you need to get only one header field, otherwise use
-		/// MimeParser.ParseHeaderField(string fieldName,string headers).
-		/// This avoid parsing headers multiple times.
-		/// </summary>
-		/// <param name="fieldName">Header field which to parse. Eg. Subject: .</param>
-		/// <param name="entryStrm">Stream from where to read headers.</param>
-		/// <returns></returns>
-		public static string ParseHeaderField(string fieldName, Stream entryStrm)
+        /// Parse header specified header field value.
+        ///
+        /// Use this method only if you need to get only one header field, otherwise use
+        /// MimeParser.ParseHeaderField(string fieldName,string headers).
+        /// This avoid parsing headers multiple times.
+        /// </summary>
+        /// <param name="fieldName">Header field which to parse. Eg. Subject: .</param>
+        /// <param name="entryStrm">Stream from where to read headers.</param>
+        /// <returns></returns>
+        public static string ParseHeaderField(string fieldName, Stream entryStrm)
         {
             return ParseHeaderField(fieldName, ParseHeaders(entryStrm));
         }
@@ -51,28 +50,28 @@ namespace LumiSoft.Net.MIME
         public static string ParseHeaderField(string fieldName, string headers)
         {
             /* Rfc 2822 2.2 Header Fields
-				Header fields are lines composed of a field name, followed by a colon
-				(":"), followed by a field body, and terminated by CRLF.  A field
-				name MUST be composed of printable US-ASCII characters (i.e.,
-				characters that have values between 33 and 126, inclusive), except
-				colon.  A field body may be composed of any US-ASCII characters,
-				except for CR and LF.  However, a field body may contain CRLF when
-				used in header "folding" and  "unfolding" as described in section
-				2.2.3.  All field bodies MUST conform to the syntax described in
-				sections 3 and 4 of this standard. 
-				
-			   Rfc 2822 2.2.3 (Multiline header fields)
-				The process of moving from this folded multiple-line representation
-				of a header field to its single line representation is called
-				"unfolding". Unfolding is accomplished by simply removing any CRLF
-				that is immediately followed by WSP.  Each header field should be
-				treated in its unfolded form for further syntactic and semantic
-				evaluation.
-				
-				Example:
-					Subject: aaaaa<CRLF>
-					<TAB or SP>aaaaa<CRLF>
-			*/
+                Header fields are lines composed of a field name, followed by a colon
+                (":"), followed by a field body, and terminated by CRLF.  A field
+                name MUST be composed of printable US-ASCII characters (i.e.,
+                characters that have values between 33 and 126, inclusive), except
+                colon.  A field body may be composed of any US-ASCII characters,
+                except for CR and LF.  However, a field body may contain CRLF when
+                used in header "folding" and  "unfolding" as described in section
+                2.2.3.  All field bodies MUST conform to the syntax described in
+                sections 3 and 4 of this standard. 
+                
+               Rfc 2822 2.2.3 (Multiline header fields)
+                The process of moving from this folded multiple-line representation
+                of a header field to its single line representation is called
+                "unfolding". Unfolding is accomplished by simply removing any CRLF
+                that is immediately followed by WSP.  Each header field should be
+                treated in its unfolded form for further syntactic and semantic
+                evaluation.
+                
+                Example:
+                    Subject: aaaaa<CRLF>
+                    <TAB or SP>aaaaa<CRLF>
+            */
 
             using (TextReader r = new StreamReader(new MemoryStream(Encoding.Default.GetBytes(headers))))
             {
@@ -555,14 +554,14 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.
+        /// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.
         /// Defined in RFC 2047 4.2.
-		/// </summary>
-		/// <param name="encoding">Input string encoding.</param>
-		/// <param name="data">String which to encode.</param>
-		/// <returns>Returns decoded string.</returns>		
+        /// </summary>
+        /// <param name="encoding">Input string encoding.</param>
+        /// <param name="data">String which to encode.</param>
+        /// <returns>Returns decoded string.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>encoding</b> or <b>data</b> is null reference.</exception>
-		public static string QDecode(Encoding encoding, string data)
+        public static string QDecode(Encoding encoding, string data)
         {
             if (encoding == null)
             {
@@ -577,12 +576,12 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// quoted-printable decoder. Defined in RFC 2045 6.7.
-		/// </summary>
-		/// <param name="data">Data which to encode.</param>
-		/// <returns>Returns decoded data.</returns>
+        /// quoted-printable decoder. Defined in RFC 2045 6.7.
+        /// </summary>
+        /// <param name="data">Data which to encode.</param>
+        /// <returns>Returns decoded data.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
-		public static byte[] QuotedPrintableDecode(byte[] data)
+        public static byte[] QuotedPrintableDecode(byte[] data)
         {
             if (data == null)
             {
@@ -590,62 +589,62 @@ namespace LumiSoft.Net.MIME
             }
 
             /* RFC 2045 6.7. Quoted-Printable Content-Transfer-Encoding
-			 
-				(1)	(General 8bit representation) Any octet, except a CR or
-					LF that is part of a CRLF line break of the canonical
-					(standard) form of the data being encoded, may be
-					represented by an "=" followed by a two digit
-					hexadecimal representation of the octet's value.  The
-					digits of the hexadecimal alphabet, for this purpose,
-					are "0123456789ABCDEF".  Uppercase letters must be
-					used; lowercase letters are not allowed.
+             
+                (1) (General 8bit representation) Any octet, except a CR or
+                    LF that is part of a CRLF line break of the canonical
+                    (standard) form of the data being encoded, may be
+                    represented by an "=" followed by a two digit
+                    hexadecimal representation of the octet's value.  The
+                    digits of the hexadecimal alphabet, for this purpose,
+                    are "0123456789ABCDEF".  Uppercase letters must be
+                    used; lowercase letters are not allowed.
 
-				(2) (Literal representation) Octets with decimal values of
-					33 through 60 inclusive, and 62 through 126, inclusive,
-					MAY be represented as the US-ASCII characters which
-					correspond to those octets (EXCLAMATION POINT through
-					LESS THAN, and GREATER THAN through TILDE, respectively).
-					
-				(3) (White Space) Octets with values of 9 and 32 MAY be
-					represented as US-ASCII TAB (HT) and SPACE characters,
-					respectively, but MUST NOT be so represented at the end
-					of an encoded line.  Any TAB (HT) or SPACE characters
-					on an encoded line MUST thus be followed on that line
-					by a printable character.  In particular, an "=" at the
-					end of an encoded line, indicating a soft line break
-					(see rule #5) may follow one or more TAB (HT) or SPACE
-					characters.  It follows that an octet with decimal
-					value 9 or 32 appearing at the end of an encoded line
-					must be represented according to Rule #1.  This rule is
-					necessary because some MTAs (Message Transport Agents,
-					programs which transport messages from one user to
-					another, or perform a portion of such transfers) are
-					known to pad lines of text with SPACEs, and others are
-					known to remove "white space" characters from the end
-					of a line.  Therefore, when decoding a Quoted-Printable
-					body, any trailing white space on a line must be
-					deleted, as it will necessarily have been added by
-					intermediate transport agents.
-					
-				(4) (Line Breaks) A line break in a text body, represented
-				    as a CRLF sequence in the text canonical form, must be
-					represented by a (RFC 822) line break, which is also a
-					CRLF sequence, in the Quoted-Printable encoding.  Since
-					the canonical representation of media types other than
-					text do not generally include the representation of
-					line breaks as CRLF sequences, no hard line breaks
-					(i.e. line breaks that are intended to be meaningful
-					and to be displayed to the user) can occur in the
-					quoted-printable encoding of such types.  Sequences
-					like "=0D", "=0A", "=0A=0D" and "=0D=0A" will routinely
-					appear in non-text data represented in quoted-
-					printable, of course.
+                (2) (Literal representation) Octets with decimal values of
+                    33 through 60 inclusive, and 62 through 126, inclusive,
+                    MAY be represented as the US-ASCII characters which
+                    correspond to those octets (EXCLAMATION POINT through
+                    LESS THAN, and GREATER THAN through TILDE, respectively).
+                    
+                (3) (White Space) Octets with values of 9 and 32 MAY be
+                    represented as US-ASCII TAB (HT) and SPACE characters,
+                    respectively, but MUST NOT be so represented at the end
+                    of an encoded line.  Any TAB (HT) or SPACE characters
+                    on an encoded line MUST thus be followed on that line
+                    by a printable character.  In particular, an "=" at the
+                    end of an encoded line, indicating a soft line break
+                    (see rule #5) may follow one or more TAB (HT) or SPACE
+                    characters.  It follows that an octet with decimal
+                    value 9 or 32 appearing at the end of an encoded line
+                    must be represented according to Rule #1.  This rule is
+                    necessary because some MTAs (Message Transport Agents,
+                    programs which transport messages from one user to
+                    another, or perform a portion of such transfers) are
+                    known to pad lines of text with SPACEs, and others are
+                    known to remove "white space" characters from the end
+                    of a line.  Therefore, when decoding a Quoted-Printable
+                    body, any trailing white space on a line must be
+                    deleted, as it will necessarily have been added by
+                    intermediate transport agents.
+                    
+                (4) (Line Breaks) A line break in a text body, represented
+                    as a CRLF sequence in the text canonical form, must be
+                    represented by a (RFC 822) line break, which is also a
+                    CRLF sequence, in the Quoted-Printable encoding.  Since
+                    the canonical representation of media types other than
+                    text do not generally include the representation of
+                    line breaks as CRLF sequences, no hard line breaks
+                    (i.e. line breaks that are intended to be meaningful
+                    and to be displayed to the user) can occur in the
+                    quoted-printable encoding of such types.  Sequences
+                    like "=0D", "=0A", "=0A=0D" and "=0D=0A" will routinely
+                    appear in non-text data represented in quoted-
+                    printable, of course.
 
-				(5) (Soft Line Breaks) The Quoted-Printable encoding
-					REQUIRES that encoded lines be no more than 76
-					characters long.  If longer lines are to be encoded
-					with the Quoted-Printable encoding, "soft" line breaks
-			*/
+                (5) (Soft Line Breaks) The Quoted-Printable encoding
+                    REQUIRES that encoded lines be no more than 76
+                    characters long.  If longer lines are to be encoded
+                    with the Quoted-Printable encoding, "soft" line breaks
+            */
 
             var msRetVal = new MemoryStream();
             var msSourceStream = new MemoryStream(data);
@@ -712,28 +711,28 @@ namespace LumiSoft.Net.MIME
             }
 
             /* RFC 2822 2.2.3 Long Header Fields.
-				The process of moving from this folded multiple-line representation
-				of a header field to its single line representation is called
-				"unfolding". Unfolding is accomplished by simply removing any CRLF
-				that is immediately followed by WSP.
+                The process of moving from this folded multiple-line representation
+                of a header field to its single line representation is called
+                "unfolding". Unfolding is accomplished by simply removing any CRLF
+                that is immediately followed by WSP.
             */
 
             return value.Replace("\r\n", "");
         }
 
         /// <summary>
-		/// Parses headers from message or mime entry.
-		/// </summary>
-		/// <param name="entryStrm">Stream from where to read headers.</param>
-		/// <returns>Returns header lines.</returns>
-		internal static string ParseHeaders(Stream entryStrm)
+        /// Parses headers from message or mime entry.
+        /// </summary>
+        /// <param name="entryStrm">Stream from where to read headers.</param>
+        /// <returns>Returns header lines.</returns>
+        internal static string ParseHeaders(Stream entryStrm)
         {
             /* Rfc 2822 3.1.  GENERAL DESCRIPTION
-				A message consists of header fields and, optionally, a body.
-				The  body  is simply a sequence of lines containing ASCII charac-
-				ters.  It is separated from the headers by a null line  (i.e.,  a
-				line with nothing preceding the CRLF).
-			*/
+                A message consists of header fields and, optionally, a body.
+                The  body  is simply a sequence of lines containing ASCII charac-
+                ters.  It is separated from the headers by a null line  (i.e.,  a
+                line with nothing preceding the CRLF).
+            */
 
             var crlf = new[] { (byte)'\r', (byte)'\n' };
             var msHeaders = new MemoryStream();

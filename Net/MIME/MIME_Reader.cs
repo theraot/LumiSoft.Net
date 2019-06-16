@@ -9,7 +9,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Reader
     {
-
         private static readonly char[] atextChars = new[] { '!', '#', '$', '%', '&', '\'', '*', '+', '-', '/', '=', '?', '^', '_', '`', '{', '|', '}', '~' };
 
         private static readonly Regex encodedword_regex = new Regex(@"=\?(?<charset>.*?)\?(?<encoding>[qQbB])\?(?<value>.*?)\?=", RegexOptions.IgnoreCase);
@@ -360,7 +359,7 @@ namespace LumiSoft.Net.MIME
 
                 retVal.Append(atom);
 
-                // dot-atom-text continues.                    
+                // dot-atom-text continues.
                 if (Peek(false) == '.')
                 {
                     retVal.Append((char)Char(false));
@@ -540,13 +539,13 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped. 
-		/// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
-		/// </summary>
-		/// <param name="delimiters">Data delimiters.</param>
-		/// <returns>Returns readed string or null if end of string reached.</returns>
+        /// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped.
+        /// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
+        /// </summary>
+        /// <param name="delimiters">Data delimiters.</param>
+        /// <returns>Returns readed string or null if end of string reached.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>delimiters</b> is null reference.</exception>
-		public string QuotedReadToDelimiter(char[] delimiters)
+        public string QuotedReadToDelimiter(char[] delimiters)
         {
             if (delimiters == null)
             {
@@ -672,11 +671,11 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
-		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
-		/// </summary>
-		/// <returns>Returns value between parenthesized.</returns>
-		public string ReadParenthesized()
+        /// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis.
+        /// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
+        /// </summary>
+        /// <returns>Returns value between parenthesized.</returns>
+        public string ReadParenthesized()
         {
             ToFirstChar();
 

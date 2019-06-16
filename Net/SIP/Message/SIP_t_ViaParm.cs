@@ -25,7 +25,7 @@ namespace LumiSoft.Net.SIP.Message
     ///     transport         =  "UDP" / "TCP" / "TLS" / "SCTP" / other-transport
     ///     sent-by           =  host [ COLON port ]
     ///     ttl               =  1*3DIGIT ; 0 to 255
-    ///         
+    ///
     ///     Via extentions:
     ///       // RFC 3486
     ///       via-compression  =  "comp" EQUAL ("sigcomp" / other-compression)
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets 'branch' parameter value. The branch parameter in the Via header field values 
+        /// Gets or sets 'branch' parameter value. The branch parameter in the Via header field values
         /// serves as a transaction identifier. The value of the branch parameter MUST start
         /// with the magic cookie "z9hG4bK". Value null means that branch paramter doesn't exist.
         /// </summary>
@@ -182,7 +182,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets sent protocol version. 
+        /// Gets sent protocol version.
         /// </summary>
         public string ProtocolVersion
         {

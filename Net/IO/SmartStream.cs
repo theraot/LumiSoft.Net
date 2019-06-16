@@ -463,7 +463,7 @@ namespace LumiSoft.Net.IO
         /// Handles the end of an asynchronous data reading.
         /// </summary>
         /// <param name="asyncResult">The reference to the pending asynchronous request to finish.</param>
-        /// <returns>The total number of bytes read into the <b>buffer</b>. This can be less than the number of bytes requested 
+        /// <returns>The total number of bytes read into the <b>buffer</b>. This can be less than the number of bytes requested
         /// if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
         public override int EndRead(IAsyncResult asyncResult)
@@ -567,7 +567,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>asyncResult</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when invalid <b>asyncResult</b> passed to this method.</exception>
         /// <exception cref="InvalidOperationException">Is raised when <b>EndReadLine</b> has already been called for specified <b>asyncResult</b>.</exception>
-        /// <exception cref="LineSizeExceededException">Is raised when <b>maxCount</b> value is exceeded.</exception>        
+        /// <exception cref="LineSizeExceededException">Is raised when <b>maxCount</b> value is exceeded.</exception>
         [Obsolete("Use method 'ReadLine' instead.")]
         public int EndReadLine(IAsyncResult asyncResult)
         {
@@ -1068,7 +1068,7 @@ namespace LumiSoft.Net.IO
         /// <returns>Returns number of bytes written to stream.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
-        /// <exception cref="LineSizeExceededException">Is raised when <b>stream</b> has too big line.</exception>        
+        /// <exception cref="LineSizeExceededException">Is raised when <b>stream</b> has too big line.</exception>
         public long WritePeriodTerminated(Stream stream)
         {
             if (m_IsDisposed)
@@ -1222,11 +1222,11 @@ namespace LumiSoft.Net.IO
         /// Begins buffering read-buffer.
         /// </summary>
         /// <param name="async">If true then this method can complete asynchronously. If false, this method completed always syncronously.</param>
-        /// <param name="asyncCallback">The callback that is executed when asynchronous operation completes. 
+        /// <param name="asyncCallback">The callback that is executed when asynchronous operation completes.
         /// If operation completes synchronously, no callback called.</param>
         /// <returns>
-        /// Returns true if the I/O operation is pending. The BufferReadAsyncEventArgs.Completed event on the context parameter will be raised upon completion of the operation. 
-        /// Returns false if the I/O operation completed synchronously. The BufferReadAsyncEventArgs.Completed event on the context parameter will not be raised and the context object passed as a parameter may be examined immediately after the method call returns to retrieve the result of the operation. 
+        /// Returns true if the I/O operation is pending. The BufferReadAsyncEventArgs.Completed event on the context parameter will be raised upon completion of the operation.
+        /// Returns false if the I/O operation completed synchronously. The BufferReadAsyncEventArgs.Completed event on the context parameter will not be raised and the context object passed as a parameter may be examined immediately after the method call returns to retrieve the result of the operation.
         /// </returns>
         /// <exception cref="InvalidOperationException">Is raised when there is data in read buffer and this method is called.</exception>
         private bool BufferRead(bool async, BufferCallback asyncCallback)
@@ -3187,7 +3187,7 @@ namespace LumiSoft.Net.IO
 
                     // Read next line.
                     // We already have attahed m_pReadLineOP.Completed in start method, so skip it here.
-                    // m_pReadLineOP.Completed += delegate(object s,EventArgs<ReadLineAsyncOP> e){                        
+                    // m_pReadLineOP.Completed += delegate(object s,EventArgs<ReadLineAsyncOP> e){
                     if (m_pStream.ReadLine(m_pReadLineOP, true))
                     {
                         ReadLineCompleted(m_pReadLineOP);

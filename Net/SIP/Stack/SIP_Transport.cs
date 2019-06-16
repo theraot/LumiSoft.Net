@@ -5,7 +5,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Transport
     {
-
         /// <summary>
         /// TCP protocol.
         /// </summary>

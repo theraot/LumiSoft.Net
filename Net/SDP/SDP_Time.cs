@@ -13,9 +13,9 @@ namespace LumiSoft.Net.SDP
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="startTime">Start time when session must start. Network Time Protocol (NTP) time values in 
+        /// <param name="startTime">Start time when session must start. Network Time Protocol (NTP) time values in
         /// seconds since 1900, 0 value means not specified.</param>
-        /// <param name="stopTime">Stop time when session must end.Network Time Protocol (NTP) time values in 
+        /// <param name="stopTime">Stop time when session must end.Network Time Protocol (NTP) time values in
         /// seconds since 1900, 0 value means not specified.</param>
         public SDP_Time(long startTime, long stopTime)
         {
@@ -33,7 +33,7 @@ namespace LumiSoft.Net.SDP
         }
 
         /// <summary>
-        /// Gets or sets start time when session must start. Network Time Protocol (NTP) time values in 
+        /// Gets or sets start time when session must start. Network Time Protocol (NTP) time values in
         /// seconds since 1900. 0 value means not specified, if StopTime is also 0, then means infinite session.
         /// </summary>
         public long StartTime
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.SDP
         }
 
         /// <summary>
-        /// Gets or sets stop time when session must end. Network Time Protocol (NTP) time values in 
+        /// Gets or sets stop time when session must end. Network Time Protocol (NTP) time values in
         /// seconds since 1900. 0 value means not specified, if StopTime is also 0, then means infinite session.
         /// </summary>
         public long StopTime

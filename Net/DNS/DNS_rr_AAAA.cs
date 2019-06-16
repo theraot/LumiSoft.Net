@@ -20,9 +20,9 @@ namespace LumiSoft.Net.DNS
         }
 
         /// <summary>
-		/// Gets host IP address.
-		/// </summary>
-		public IPAddress IP { get; }
+        /// Gets host IP address.
+        /// </summary>
+        public IPAddress IP { get; }
 
         /// <summary>
         /// Parses resource record from reply data.

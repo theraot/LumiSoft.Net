@@ -11,20 +11,20 @@ namespace LumiSoft.Net.DNS
     public class DNS_rr_NS : DNS_rr
     {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
+        /// Default constructor.
+        /// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
-		/// <param name="nameServer">Name server name.</param>
-		/// <param name="ttl">TTL value.</param>
-		public DNS_rr_NS(string name, string nameServer, int ttl) : base(name, DNS_QType.NS, ttl)
+        /// <param name="nameServer">Name server name.</param>
+        /// <param name="ttl">TTL value.</param>
+        public DNS_rr_NS(string name, string nameServer, int ttl) : base(name, DNS_QType.NS, ttl)
         {
             NameServer = nameServer;
         }
 
         /// <summary>
-		/// Gets name server name.
-		/// </summary>
-		public string NameServer { get; } = "";
+        /// Gets name server name.
+        /// </summary>
+        public string NameServer { get; } = "";
 
         /// <summary>
         /// Parses resource record from reply data.

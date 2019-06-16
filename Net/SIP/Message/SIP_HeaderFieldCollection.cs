@@ -6,9 +6,9 @@ using System.Text;
 namespace LumiSoft.Net.SIP.Message
 {
     /// <summary>
-	/// SIP header fields collection.
-	/// </summary>
-	public class SIP_HeaderFieldCollection : IEnumerable
+    /// SIP header fields collection.
+    /// </summary>
+    public class SIP_HeaderFieldCollection : IEnumerable
     {
         private readonly List<SIP_HeaderField> m_pHeaderFields;
 
@@ -29,19 +29,19 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Gets header field from specified index.
-		/// </summary>
-		public SIP_HeaderField this[int index]
+        /// Gets header field from specified index.
+        /// </summary>
+        public SIP_HeaderField this[int index]
         {
             get { return (SIP_HeaderField)m_pHeaderFields[index]; }
         }
 
         /// <summary>
-		/// Adds a new header field with specified name and value to the end of the collection.
-		/// </summary>
-		/// <param name="fieldName">Header field name.</param>
-		/// <param name="value">Header field value.</param>
-		public void Add(string fieldName, string value)
+        /// Adds a new header field with specified name and value to the end of the collection.
+        /// </summary>
+        /// <param name="fieldName">Header field name.</param>
+        /// <param name="value">Header field value.</param>
+        public void Add(string fieldName, string value)
         {
             Add(GetheaderField(fieldName, value));
         }
@@ -56,19 +56,19 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Clears the collection of all header fields.
-		/// </summary>
-		public void Clear()
+        /// Clears the collection of all header fields.
+        /// </summary>
+        public void Clear()
         {
             m_pHeaderFields.Clear();
         }
 
         /// <summary>
-		/// Gets if collection contains specified header field.
-		/// </summary>
-		/// <param name="fieldName">Header field name.</param>
-		/// <returns></returns>
-		public bool Contains(string fieldName)
+        /// Gets if collection contains specified header field.
+        /// </summary>
+        /// <param name="fieldName">Header field name.</param>
+        /// <returns></returns>
+        public bool Contains(string fieldName)
         {
             foreach (SIP_HeaderField h in m_pHeaderFields)
             {
@@ -92,11 +92,11 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Gets header fields with specified name.
-		/// </summary>
-		/// <param name="fieldName">Header field name.</param>
-		/// <returns></returns>
-		public SIP_HeaderField[] Get(string fieldName)
+        /// Gets header fields with specified name.
+        /// </summary>
+        /// <param name="fieldName">Header field name.</param>
+        /// <returns></returns>
+        public SIP_HeaderField[] Get(string fieldName)
         {
             var fields = new List<SIP_HeaderField>();
             foreach (SIP_HeaderField h in m_pHeaderFields)
@@ -111,20 +111,20 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pHeaderFields.GetEnumerator();
         }
 
         /// <summary>
-		/// Gets first header field with specified name, returns null if specified field doesn't exist.
-		/// </summary>
-		/// <param name="fieldName">Header field name.</param>
-		/// <returns></returns>
-		public SIP_HeaderField GetFirst(string fieldName)
+        /// Gets first header field with specified name, returns null if specified field doesn't exist.
+        /// </summary>
+        /// <param name="fieldName">Header field name.</param>
+        /// <returns></returns>
+        public SIP_HeaderField GetFirst(string fieldName)
         {
             foreach (SIP_HeaderField h in m_pHeaderFields)
             {
@@ -138,21 +138,21 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Inserts a new header field into the collection at the specified location.
-		/// </summary>
-		/// <param name="index">The location in the collection where you want to add the header field.</param>
-		/// <param name="fieldName">Header field name.</param>
-		/// <param name="value">Header field value.</param>
-		public void Insert(int index, string fieldName, string value)
+        /// Inserts a new header field into the collection at the specified location.
+        /// </summary>
+        /// <param name="index">The location in the collection where you want to add the header field.</param>
+        /// <param name="fieldName">Header field name.</param>
+        /// <param name="value">Header field value.</param>
+        public void Insert(int index, string fieldName, string value)
         {
             m_pHeaderFields.Insert(index, GetheaderField(fieldName, value));
         }
 
         /// <summary>
-		/// Parses header fields from string.
-		/// </summary>
-		/// <param name="headerString">Header string.</param>
-		public void Parse(string headerString)
+        /// Parses header fields from string.
+        /// </summary>
+        /// <param name="headerString">Header string.</param>
+        public void Parse(string headerString)
         {
             Parse(new MemoryStream(Encoding.Default.GetBytes(headerString)));
         }
@@ -164,28 +164,28 @@ namespace LumiSoft.Net.SIP.Message
         public void Parse(Stream stream)
         {
             /* Rfc 2822 2.2 Header Fields
-				Header fields are lines composed of a field name, followed by a colon
-				(":"), followed by a field body, and terminated by CRLF.  A field
-				name MUST be composed of printable US-ASCII characters (i.e.,
-				characters that have values between 33 and 126, inclusive), except
-				colon.  A field body may be composed of any US-ASCII characters,
-				except for CR and LF.  However, a field body may contain CRLF when
-				used in header "folding" and  "unfolding" as described in section
-				2.2.3.  All field bodies MUST conform to the syntax described in
-				sections 3 and 4 of this standard. 
-				
-			   Rfc 2822 2.2.3 Long Header Fields
-				The process of moving from this folded multiple-line representation
-				of a header field to its single line representation is called
-				"unfolding". Unfolding is accomplished by simply removing any CRLF
-				that is immediately followed by WSP.  Each header field should be
-				treated in its unfolded form for further syntactic and semantic
-				evaluation.
-				
-				Example:
-					Subject: aaaaa<CRLF>
-					<TAB or SP>aaaaa<CRLF>
-			*/
+                Header fields are lines composed of a field name, followed by a colon
+                (":"), followed by a field body, and terminated by CRLF.  A field
+                name MUST be composed of printable US-ASCII characters (i.e.,
+                characters that have values between 33 and 126, inclusive), except
+                colon.  A field body may be composed of any US-ASCII characters,
+                except for CR and LF.  However, a field body may contain CRLF when
+                used in header "folding" and  "unfolding" as described in section
+                2.2.3.  All field bodies MUST conform to the syntax described in
+                sections 3 and 4 of this standard. 
+                
+               Rfc 2822 2.2.3 Long Header Fields
+                The process of moving from this folded multiple-line representation
+                of a header field to its single line representation is called
+                "unfolding". Unfolding is accomplished by simply removing any CRLF
+                that is immediately followed by WSP.  Each header field should be
+                treated in its unfolded form for further syntactic and semantic
+                evaluation.
+                
+                Example:
+                    Subject: aaaaa<CRLF>
+                    <TAB or SP>aaaaa<CRLF>
+            */
 
             m_pHeaderFields.Clear();
 
@@ -205,7 +205,7 @@ namespace LumiSoft.Net.SIP.Message
                 var headerField = line;
                 line = r.ReadLineString();
 
-                // See if header field is multiline. See comment above.				
+                // See if header field is multiline. See comment above.
                 while (line != null && (line.StartsWith("\t") || line.StartsWith(" ")))
                 {
                     headerField += line;
@@ -222,10 +222,10 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Removes header field at the specified index from the collection.
-		/// </summary>
-		/// <param name="index">The index of the header field to remove.</param>
-		public void Remove(int index)
+        /// Removes header field at the specified index from the collection.
+        /// </summary>
+        /// <param name="index">The index of the header field to remove.</param>
+        public void Remove(int index)
         {
             m_pHeaderFields.RemoveAt(index);
         }
@@ -240,10 +240,10 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Removes all header fields with specified name from the collection.
-		/// </summary>
-		/// <param name="fieldName">Header field name.</param>
-		public void RemoveAll(string fieldName)
+        /// Removes all header fields with specified name from the collection.
+        /// </summary>
+        /// <param name="fieldName">Header field name.</param>
+        public void RemoveAll(string fieldName)
         {
             for (int i = 0; i < m_pHeaderFields.Count; i++)
             {
@@ -292,10 +292,10 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-		/// Converts header fields to SIP message header string.
-		/// </summary>
-		/// <returns>Returns SIP message header as string.</returns>
-		public string ToHeaderString()
+        /// Converts header fields to SIP message header string.
+        /// </summary>
+        /// <returns>Returns SIP message header as string.</returns>
+        public string ToHeaderString()
         {
             var headerString = new StringBuilder();
             foreach (SIP_HeaderField f in this)

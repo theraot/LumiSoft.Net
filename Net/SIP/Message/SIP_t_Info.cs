@@ -18,7 +18,7 @@ namespace LumiSoft.Net.SIP.Message
         private readonly string m_Uri = "";
 
         /// <summary>
-        /// Gets or sets 'purpose' parameter value. Value null means not specified. 
+        /// Gets or sets 'purpose' parameter value. Value null means not specified.
         /// Known values: "icon","info","card".
         /// </summary>
         public string Purpose

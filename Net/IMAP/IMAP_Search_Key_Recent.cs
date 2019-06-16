@@ -10,7 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that have the \Recent flag set.</remarks>
     public class IMAP_Search_Key_Recent : IMAP_Search_Key
     {
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

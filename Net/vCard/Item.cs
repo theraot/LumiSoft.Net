@@ -24,7 +24,7 @@ namespace LumiSoft.Net.Mime.vCard
         }
 
         /// <summary>
-        /// Gets item decoded value. If param string specifies Encoding and/or Charset, 
+        /// Gets item decoded value. If param string specifies Encoding and/or Charset,
         /// item.Value will be decoded accordingly.
         /// </summary>
         public string DecodedValue
@@ -96,7 +96,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string ParametersString { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets item encoded value. NOTE: If you set this property value, you must encode data 
+        /// Gets or sets item encoded value. NOTE: If you set this property value, you must encode data
         /// by yourself and also set right ENCODING=encoding; and CHARSET=charset; prameter in item.ParametersString !!!
         /// Normally use method item.SetDecodedStringValue method instead, this does all you need.
         /// </summary>

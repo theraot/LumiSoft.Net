@@ -35,9 +35,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets all mailbox addresses. Note: group address mailbox addresses are also included.
-		/// </summary>
-		public MailboxAddress[] Mailboxes
+        /// Gets all mailbox addresses. Note: group address mailbox addresses are also included.
+        /// </summary>
+        public MailboxAddress[] Mailboxes
         {
             get
             {
@@ -78,10 +78,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Adds a new address to the end of the collection.
-		/// </summary>
-		/// <param name="address">Address to add.</param>
-		public void Add(Address address)
+        /// Adds a new address to the end of the collection.
+        /// </summary>
+        /// <param name="address">Address to add.</param>
+        public void Add(Address address)
         {
             address.Owner = this;
             m_pAddresses.Add(address);
@@ -90,9 +90,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Clears the collection of all addresses.
-		/// </summary>
-		public void Clear()
+        /// Clears the collection of all addresses.
+        /// </summary>
+        public void Clear()
         {
             foreach (Address address in m_pAddresses)
             {
@@ -104,20 +104,20 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pAddresses.GetEnumerator();
         }
 
         /// <summary>
-		/// Inserts a new address into the collection at the specified location.
-		/// </summary>
-		/// <param name="index">The location in the collection where you want to add the address.</param>
-		/// <param name="address">Address to add.</param>
-		public void Insert(int index, Address address)
+        /// Inserts a new address into the collection at the specified location.
+        /// </summary>
+        /// <param name="index">The location in the collection where you want to add the address.</param>
+        /// <param name="address">Address to add.</param>
+        public void Insert(int index, Address address)
         {
             address.Owner = this;
             m_pAddresses.Insert(index, address);
@@ -126,11 +126,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses address-list from string.
-		/// </summary>
-		/// <param name="addressList">Address list string.</param>
-		/// <returns></returns>
-		public void Parse(string addressList)
+        /// Parses address-list from string.
+        /// </summary>
+        /// <param name="addressList">Address list string.</param>
+        /// <returns></returns>
+        public void Parse(string addressList)
         {
             addressList = addressList.Trim();
 
@@ -138,7 +138,7 @@ namespace LumiSoft.Net.Mime
             while (reader.SourceString.Length > 0)
             {
                 // See if mailbox or group. If ',' is before ':', then mailbox
-                // Example: xxx@domain.com,	group:xxxgroup@domain.com;
+                // Example: xxx@domain.com, group:xxxgroup@domain.com;
                 int commaIndex = TextUtils.QuotedIndexOf(reader.SourceString, ',');
                 int colonIndex = TextUtils.QuotedIndexOf(reader.SourceString, ':');
 
@@ -173,10 +173,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Removes address at the specified index from the collection.
-		/// </summary>
-		/// <param name="index">Index of the address which to remove.</param>
-		public void Remove(int index)
+        /// Removes address at the specified index from the collection.
+        /// </summary>
+        /// <param name="index">Index of the address which to remove.</param>
+        public void Remove(int index)
         {
             Remove((Address)m_pAddresses[index]);
         }
@@ -194,10 +194,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Convert addresses to Rfc 2822 address-list string.
-		/// </summary>
-		/// <returns></returns>
-		public string ToAddressListString()
+        /// Convert addresses to Rfc 2822 address-list string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToAddressListString()
         {
             var retVal = new StringBuilder();
             for (int i = 0; i < m_pAddresses.Count; i++)
@@ -232,9 +232,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// This called when collection has changed. Item is added,deleted,changed or collection cleared.
-		/// </summary>
-		internal void OnCollectionChanged()
+        /// This called when collection has changed. Item is added,deleted,changed or collection cleared.
+        /// </summary>
+        internal void OnCollectionChanged()
         {
             // AddressList is bounded to HeaderField, update header field value
             if (BoundedHeaderField != null)

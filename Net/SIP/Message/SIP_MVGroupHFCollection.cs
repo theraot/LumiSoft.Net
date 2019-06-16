@@ -86,7 +86,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets top most header field first value. 
+        /// Gets top most header field first value.
         /// </summary>
         public T GetTopMostValue()
         {
@@ -125,7 +125,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Removes top most header field first value. If value is the last value, 
+        /// Removes top most header field first value. If value is the last value,
         /// the whole header field will be removed.
         /// </summary>
         public void RemoveTopMostValue()

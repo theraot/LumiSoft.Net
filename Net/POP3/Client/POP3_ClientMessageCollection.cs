@@ -139,11 +139,11 @@ namespace LumiSoft.Net.POP3.Client
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns>Returns IEnumerator interface.</returns>
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns>Returns IEnumerator interface.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-		public IEnumerator GetEnumerator()
+        public IEnumerator GetEnumerator()
         {
             if (m_IsDisposed)
             {

@@ -10,7 +10,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class WavePlayer
     {
-
         private bool m_IsPlaying;
         private readonly AudioOutDevice m_pOutputDevice;
         private bool m_Stop;
@@ -362,7 +361,7 @@ namespace LumiSoft.Net.Media
             }
 
             /// <summary>
-            /// Reads RIFF chunk. 
+            /// Reads RIFF chunk.
             /// </summary>
             /// <returns>Returns RIFF chunk.</returns>
             public RIFF_Chunk Read_RIFF()
@@ -374,7 +373,7 @@ namespace LumiSoft.Net.Media
             }
 
             /// <summary>
-            /// Reads fmt chunk. 
+            /// Reads fmt chunk.
             /// </summary>
             /// <returns>Returns fmt chunk.</returns>
             public fmt_Chunk Read_fmt()
@@ -386,7 +385,7 @@ namespace LumiSoft.Net.Media
             }
 
             /// <summary>
-            /// Reads data chunk. 
+            /// Reads data chunk.
             /// </summary>
             /// <returns>Returns data chunk.</returns>
             public data_Chunk Read_data()

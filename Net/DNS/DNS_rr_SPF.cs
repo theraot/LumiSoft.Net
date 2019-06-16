@@ -7,7 +7,7 @@ namespace LumiSoft.Net.DNS
     /// <summary>
     /// This class represent SPF resource record. Defined in RFC 4408.
     /// </summary>
-	[Serializable]
+    [Serializable]
     public class DNS_rr_SPF : DNS_rr
     {
         /// <summary>
@@ -15,15 +15,15 @@ namespace LumiSoft.Net.DNS
         /// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
         /// <param name="text">SPF text.</param>
-		/// <param name="ttl">TTL (time to live) value in seconds.</param>
+        /// <param name="ttl">TTL (time to live) value in seconds.</param>
         public DNS_rr_SPF(string name, string text, int ttl) : base(name, DNS_QType.SPF, ttl)
         {
         }
 
         /// <summary>
-		/// Gets text.
-		/// </summary>
-		public string Text { get; } = "";
+        /// Gets text.
+        /// </summary>
+        public string Text { get; } = "";
 
         /// <summary>
         /// Parses resource record from reply data.

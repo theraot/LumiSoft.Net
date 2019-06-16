@@ -20,7 +20,7 @@ namespace LumiSoft.Net.UPnP.Client
         {
             return Search("upnp:rootdevice",timeout);
         }
-                
+
         /// <summary>
         /// Searches the network for UPnP devices.
         /// </summary>
@@ -185,10 +185,10 @@ namespace LumiSoft.Net.UPnP.Client
             if(timeout < 1){
                 timeout = 1;
             }
-                        
+
             using(Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
                 socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.IpTimeToLive,2);
-               
+
                 var query = new StringBuilder();
                 query.Append("M-SEARCH * HTTP/1.1\r\n");
                 query.Append("MAN: \"ssdp:discover\"\r\n");
@@ -228,7 +228,7 @@ namespace LumiSoft.Net.UPnP.Client
                 }
 
                 return devices.ToArray();
-            }        
+            }
         }
     }
 }

@@ -624,7 +624,7 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pTcpSession.TcpStream.EndReadFixedCount(asyncResult);
 
                 var messageData = m_pMessage.ToArray();
-                // Wait for new SIP message. 
+                // Wait for new SIP message.
                 BeginReadHeader();
 
                 m_pStack.TransportLayer.OnMessageReceived(this, messageData);
@@ -688,7 +688,7 @@ namespace LumiSoft.Net.SIP.Stack
                         m_pStack.TransportLayer.OnMessageReceived(this, new[] { (byte)'\r', (byte)'\n' });
                     }
 
-                    // Wait for new SIP message. 
+                    // Wait for new SIP message.
                     BeginReadHeader();
                 }
                 // We have SIP message header.
@@ -721,7 +721,7 @@ namespace LumiSoft.Net.SIP.Stack
                     else
                     {
                         var messageData = m_pMessage.ToArray();
-                        // Wait for new SIP message. 
+                        // Wait for new SIP message.
                         BeginReadHeader();
 
                         m_pStack.TransportLayer.OnMessageReceived(this, messageData);

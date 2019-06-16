@@ -101,7 +101,7 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server 
+        /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server
         /// listnes and also if connections is SSL.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this property is accessed.</exception>
@@ -787,7 +787,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         /// <param name="statusCode_reasonText">Status-code reasontext.</param>
         /// <param name="request">SIP request.</param>
-        /// <param name="flow">Data flow what sends response. This value is used to construct Contact: header value. 
+        /// <param name="flow">Data flow what sends response. This value is used to construct Contact: header value.
         /// This value can be null, but then adding Contact: header is response sender responsibility.</param>
         /// <returns>Returns created response.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>statusCode_reasonText</b> or <b>request</b> is null reference.</exception>
@@ -900,7 +900,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             // TODO: "clean" clean up with disposing state, wait some time transaction/dialogs to die, block new ones.
 
-            // TODO: Currently stack switched Disposed state before all transactions has disposed, so some active 
+            // TODO: Currently stack switched Disposed state before all transactions has disposed, so some active
             // transaction which accesses stack will get disposed exception.
 
             // Release events.
@@ -1287,7 +1287,7 @@ namespace LumiSoft.Net.SIP.Stack
                 //if(naptrRecords){
                 // We need to get (IP:Port)'s foreach SRV record.
                 //DnsServerResponse response = m_pDnsClient.Query("??? need NAPTR value here",QTYPE.SRV);
-                //}    
+                //}
                 if (transportSetExplicitly)
                 {
                     DnsServerResponse response = null;
@@ -1429,7 +1429,6 @@ namespace LumiSoft.Net.SIP.Stack
                 {
                 }
             }
-
 
             m_pTransportLayer.Stop();
 

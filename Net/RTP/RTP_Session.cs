@@ -1812,7 +1812,7 @@ namespace LumiSoft.Net.RTP
                     rr.SSRC = m_pRtcpSource.SSRC;
                     compundPacket.Packets.Add(rr);
 
-                    // Report blocks added later.                
+                    // Report blocks added later.
                 }
 
                 var sdes = new RTCP_Packet_SDES();

@@ -409,14 +409,14 @@ namespace LumiSoft.Net.IMAP.Server
         #region method GetMimeEntity
 
         /// <summary>
-		/// Gets specified mime entity. Returns null if specified mime entity doesn't exist.
-		/// </summary>
-		/// <param name="message">Mail message.</param>
-		/// <param name="partNumber">MIME part-number specifier. Nested mime entities are pointed by '.'. 
-		/// For example: 1,1.1,2.1, ... .</param>
-		/// <returns></returns>
+        /// Gets specified mime entity. Returns null if specified mime entity doesn't exist.
+        /// </summary>
+        /// <param name="message">Mail message.</param>
+        /// <param name="partNumber">MIME part-number specifier. Nested mime entities are pointed by '.'. 
+        /// For example: 1,1.1,2.1, ... .</param>
+        /// <returns></returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>message</b> is null reference.</exception>
-		public MIME_Entity GetMimeEntity(Mail_Message message, string partNumber)
+        public MIME_Entity GetMimeEntity(Mail_Message message, string partNumber)
         {
             if (message == null)
             {
@@ -425,15 +425,15 @@ namespace LumiSoft.Net.IMAP.Server
 
             // For single part message there is only one entity with value 1.
             // Example:
-            //		header
-            //		entity -> 1
+            //        header
+            //        entity -> 1
 
             // For multipart message, entity counting starts from MainEntity.ChildEntities
             // Example:
-            //		header
-            //		multipart/mixed
-            //			text/plain  -> 1
-            //			application/pdf  -> 2
+            //        header
+            //        multipart/mixed
+            //            text/plain  -> 1
+            //            application/pdf  -> 2
             //          ...
 
             // TODO: nested rfc 822 message
@@ -1418,150 +1418,150 @@ namespace LumiSoft.Net.IMAP.Server
         private string ConstructParts(MIME_Entity entity, bool bodystructure)
         {
             /* RFC 3501 7.4.2 BODYSTRUCTURE
-							  BODY A form of BODYSTRUCTURE without extension data.
-			  
-				A parenthesized list that describes the [MIME-IMB] body
-				structure of a message.  This is computed by the server by
-				parsing the [MIME-IMB] header fields, defaulting various fields
-				as necessary.
+                              BODY A form of BODYSTRUCTURE without extension data.
+              
+                A parenthesized list that describes the [MIME-IMB] body
+                structure of a message.  This is computed by the server by
+                parsing the [MIME-IMB] header fields, defaulting various fields
+                as necessary.
 
-				For example, a simple text message of 48 lines and 2279 octets
-				can have a body structure of: ("TEXT" "PLAIN" ("CHARSET"
-				"US-ASCII") NIL NIL "7BIT" 2279 48)
+                For example, a simple text message of 48 lines and 2279 octets
+                can have a body structure of: ("TEXT" "PLAIN" ("CHARSET"
+                "US-ASCII") NIL NIL "7BIT" 2279 48)
 
-				Multiple parts are indicated by parenthesis nesting.  Instead
-				of a body type as the first element of the parenthesized list,
-				there is a sequence of one or more nested body structures.  The
-				second element of the parenthesized list is the multipart
-				subtype (mixed, digest, parallel, alternative, etc.).
-					
-				For example, a two part message consisting of a text and a
-				BASE64-encoded text attachment can have a body structure of:
-				(("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL "7BIT" 1152
-				23)("TEXT" "PLAIN" ("CHARSET" "US-ASCII" "NAME" "cc.diff")
-				"<960723163407.20117h@cac.washington.edu>" "Compiler diff"
-				"BASE64" 4554 73) "MIXED")
+                Multiple parts are indicated by parenthesis nesting.  Instead
+                of a body type as the first element of the parenthesized list,
+                there is a sequence of one or more nested body structures.  The
+                second element of the parenthesized list is the multipart
+                subtype (mixed, digest, parallel, alternative, etc.).
+                    
+                For example, a two part message consisting of a text and a
+                BASE64-encoded text attachment can have a body structure of:
+                (("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL "7BIT" 1152
+                23)("TEXT" "PLAIN" ("CHARSET" "US-ASCII" "NAME" "cc.diff")
+                "<960723163407.20117h@cac.washington.edu>" "Compiler diff"
+                "BASE64" 4554 73) "MIXED")
 
-				Extension data follows the multipart subtype.  Extension data
-				is never returned with the BODY fetch, but can be returned with
-				a BODYSTRUCTURE fetch.  Extension data, if present, MUST be in
-				the defined order.  The extension data of a multipart body part
-				are in the following order:
+                Extension data follows the multipart subtype.  Extension data
+                is never returned with the BODY fetch, but can be returned with
+                a BODYSTRUCTURE fetch.  Extension data, if present, MUST be in
+                the defined order.  The extension data of a multipart body part
+                are in the following order:
 
-				body parameter parenthesized list
-					A parenthesized list of attribute/value pairs [e.g., ("foo"
-					"bar" "baz" "rag") where "bar" is the value of "foo", and
-					"rag" is the value of "baz"] as defined in [MIME-IMB].
+                body parameter parenthesized list
+                    A parenthesized list of attribute/value pairs [e.g., ("foo"
+                    "bar" "baz" "rag") where "bar" is the value of "foo", and
+                    "rag" is the value of "baz"] as defined in [MIME-IMB].
 
-				body disposition
-					A parenthesized list, consisting of a disposition type
-					string, followed by a parenthesized list of disposition
-					attribute/value pairs as defined in [DISPOSITION].
+                body disposition
+                    A parenthesized list, consisting of a disposition type
+                    string, followed by a parenthesized list of disposition
+                    attribute/value pairs as defined in [DISPOSITION].
 
-				body language
-					A string or parenthesized list giving the body language
-					value as defined in [LANGUAGE-TAGS].
+                body language
+                    A string or parenthesized list giving the body language
+                    value as defined in [LANGUAGE-TAGS].
 
-				body location
-					A string list giving the body content URI as defined in [LOCATION].
+                body location
+                    A string list giving the body content URI as defined in [LOCATION].
 
-				Any following extension data are not yet defined in this
-				version of the protocol.  Such extension data can consist of
-				zero or more NILs, strings, numbers, or potentially nested
-				parenthesized lists of such data.  Client implementations that
-				do a BODYSTRUCTURE fetch MUST be prepared to accept such
-				extension data.  Server implementations MUST NOT send such
-				extension data until it has been defined by a revision of this
-				protocol.
+                Any following extension data are not yet defined in this
+                version of the protocol.  Such extension data can consist of
+                zero or more NILs, strings, numbers, or potentially nested
+                parenthesized lists of such data.  Client implementations that
+                do a BODYSTRUCTURE fetch MUST be prepared to accept such
+                extension data.  Server implementations MUST NOT send such
+                extension data until it has been defined by a revision of this
+                protocol.
 
-				The basic fields of a non-multipart body part are in the
-				following order:
+                The basic fields of a non-multipart body part are in the
+                following order:
 
-				body type
-					A string giving the content media type name as defined in [MIME-IMB].
-				
-				body subtype
-					 A string giving the content subtype name as defined in [MIME-IMB].
+                body type
+                    A string giving the content media type name as defined in [MIME-IMB].
+                
+                body subtype
+                     A string giving the content subtype name as defined in [MIME-IMB].
 
-				body parameter parenthesized list
-					A parenthesized list of attribute/value pairs [e.g., ("foo"
-					"bar" "baz" "rag") where "bar" is the value of "foo" and
-					"rag" is the value of "baz"] as defined in [MIME-IMB].
+                body parameter parenthesized list
+                    A parenthesized list of attribute/value pairs [e.g., ("foo"
+                    "bar" "baz" "rag") where "bar" is the value of "foo" and
+                    "rag" is the value of "baz"] as defined in [MIME-IMB].
 
-				body id
-					A string giving the content id as defined in [MIME-IMB].
+                body id
+                    A string giving the content id as defined in [MIME-IMB].
 
-				body description
-					A string giving the content description as defined in [MIME-IMB].
+                body description
+                    A string giving the content description as defined in [MIME-IMB].
 
-				body encoding
-					A string giving the content transfer encoding as defined in	[MIME-IMB].
+                body encoding
+                    A string giving the content transfer encoding as defined in    [MIME-IMB].
 
-				body size
-					A number giving the size of the body in octets.  Note that
-					this size is the size in its transfer encoding and not the
-					resulting size after any decoding.
+                body size
+                    A number giving the size of the body in octets.  Note that
+                    this size is the size in its transfer encoding and not the
+                    resulting size after any decoding.
 
-				A body type of type MESSAGE and subtype RFC822 contains,
-				immediately after the basic fields, the envelope structure,
-				body structure, and size in text lines of the encapsulated
-				message.
+                A body type of type MESSAGE and subtype RFC822 contains,
+                immediately after the basic fields, the envelope structure,
+                body structure, and size in text lines of the encapsulated
+                message.
 
-				A body type of type TEXT contains, immediately after the basic
-				fields, the size of the body in text lines.  Note that this
-				size is the size in its content transfer encoding and not the
-				resulting size after any decoding.
+                A body type of type TEXT contains, immediately after the basic
+                fields, the size of the body in text lines.  Note that this
+                size is the size in its content transfer encoding and not the
+                resulting size after any decoding.
 
-				Extension data follows the basic fields and the type-specific
-				fields listed above.  Extension data is never returned with the
-				BODY fetch, but can be returned with a BODYSTRUCTURE fetch.
-				Extension data, if present, MUST be in the defined order.
+                Extension data follows the basic fields and the type-specific
+                fields listed above.  Extension data is never returned with the
+                BODY fetch, but can be returned with a BODYSTRUCTURE fetch.
+                Extension data, if present, MUST be in the defined order.
 
-				The extension data of a non-multipart body part are in the
-				following order:
+                The extension data of a non-multipart body part are in the
+                following order:
 
-				body MD5
-					A string giving the body MD5 value as defined in [MD5].
-					
-				body disposition
-					A parenthesized list with the same content and function as
-					the body disposition for a multipart body part.
+                body MD5
+                    A string giving the body MD5 value as defined in [MD5].
+                    
+                body disposition
+                    A parenthesized list with the same content and function as
+                    the body disposition for a multipart body part.
 
-				body language
-					A string or parenthesized list giving the body language
-					value as defined in [LANGUAGE-TAGS].
+                body language
+                    A string or parenthesized list giving the body language
+                    value as defined in [LANGUAGE-TAGS].
 
-				body location
-					A string list giving the body content URI as defined in [LOCATION].
+                body location
+                    A string list giving the body content URI as defined in [LOCATION].
 
-				Any following extension data are not yet defined in this
-				version of the protocol, and would be as described above under
-				multipart extension data.
-			
-			
-				// We don't construct extention fields like rfc says:
-					Server implementations MUST NOT send such
-					extension data until it has been defined by a revision of this
-					protocol.
-			
-										
-				contentTypeMainMediaType - Example: 'TEXT'
-				contentTypeSubMediaType  - Example: 'PLAIN'
-				conentTypeParameters     - Example: '("CHARSET" "iso-8859-1" ...)'
-				contentID                - Content-ID: header field value.
-				contentDescription       - Content-Description: header field value.
-				contentEncoding          - Content-Transfer-Encoding: header field value.
-				contentSize              - mimeEntity ENCODED data size
-				[envelope]               - NOTE: included only if contentType = "message" !!!
-				[contentLines]           - number of ENCODED data lines. NOTE: included only if contentType = "text" !!!
-									   			
-				// Basic fields for multipart
-				(nestedMimeEntries) contentTypeSubMediaType
-												
-				// Basic fields for non-multipart
-				contentTypeMainMediaType contentTypeSubMediaType (conentTypeParameters) contentID contentDescription contentEncoding contentSize [envelope] [contentLine]
+                Any following extension data are not yet defined in this
+                version of the protocol, and would be as described above under
+                multipart extension data.
+            
+            
+                // We don't construct extention fields like rfc says:
+                    Server implementations MUST NOT send such
+                    extension data until it has been defined by a revision of this
+                    protocol.
+            
+                                        
+                contentTypeMainMediaType - Example: 'TEXT'
+                contentTypeSubMediaType  - Example: 'PLAIN'
+                conentTypeParameters     - Example: '("CHARSET" "iso-8859-1" ...)'
+                contentID                - Content-ID: header field value.
+                contentDescription       - Content-Description: header field value.
+                contentEncoding          - Content-Transfer-Encoding: header field value.
+                contentSize              - mimeEntity ENCODED data size
+                [envelope]               - NOTE: included only if contentType = "message" !!!
+                [contentLines]           - number of ENCODED data lines. NOTE: included only if contentType = "text" !!!
+                                                   
+                // Basic fields for multipart
+                (nestedMimeEntries) contentTypeSubMediaType
+                                                
+                // Basic fields for non-multipart
+                contentTypeMainMediaType contentTypeSubMediaType (conentTypeParameters) contentID contentDescription contentEncoding contentSize [envelope] [contentLine]
 
-			*/
+            */
 
             var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8);
             wordEncoder.Split = false;
@@ -3291,14 +3291,14 @@ namespace LumiSoft.Net.IMAP.Server
                 corresponding SETACL command.
 
                 Example:    C: A002 GETACL INBOX
-							S: * ACL INBOX Fred rwipslda
-							S: A002 OK Getacl complete
-							
-							.... Multiple users
-							S: * ACL INBOX Fred rwipslda test rwipslda
-							
-							.... No acl flags for Fred
-							S: * ACL INBOX Fred "" test rwipslda         
+                            S: * ACL INBOX Fred rwipslda
+                            S: A002 OK Getacl complete
+                            
+                            .... Multiple users
+                            S: * ACL INBOX Fred rwipslda test rwipslda
+                            
+                            .... No acl flags for Fred
+                            S: * ACL INBOX Fred "" test rwipslda         
             */
 
             if (!SupportsCap("ACL"))
@@ -3334,7 +3334,7 @@ namespace LumiSoft.Net.IMAP.Server
         private void GETQUOTA(string cmdTag, string cmdText)
         {
             /* RFC 2087 4.2. GETQUOTA
-				Arguments:  quota root
+                Arguments:  quota root
 
                 Data:       untagged responses: QUOTA
 
@@ -3348,8 +3348,8 @@ namespace LumiSoft.Net.IMAP.Server
                 Example:    C: A003 GETQUOTA ""
                             S: * QUOTA "" (STORAGE 10 512)
                             S: A003 OK Getquota completed
-							
-			*/
+                            
+            */
 
             if (!IsAuthenticated)
             {
@@ -3378,7 +3378,7 @@ namespace LumiSoft.Net.IMAP.Server
         private void GETQUOTAROOT(string cmdTag, string cmdText)
         {
             /* RFC 2087 4.3. GETQUOTAROOT
-				Arguments:  mailbox name
+                Arguments:  mailbox name
 
                 Data:       untagged responses: QUOTAROOT, QUOTA
 
@@ -3395,8 +3395,8 @@ namespace LumiSoft.Net.IMAP.Server
                             S: * QUOTAROOT INBOX ""
                             S: * QUOTA "" (STORAGE 10 512)
                             S: A003 OK Getquota completed
-							
-			*/
+                            
+            */
 
             if (!SupportsCap("QUOTA"))
             {

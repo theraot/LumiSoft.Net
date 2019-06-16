@@ -43,7 +43,7 @@ namespace LumiSoft.Net.SIP.Message
 
         /// <summary>
         /// Gets preferred languages for reason phrases, session descriptions, or
-        /// status responses carried as message bodies in the response. If no Accept-Language 
+        /// status responses carried as message bodies in the response. If no Accept-Language
         /// header field is present, the server SHOULD assume all languages are acceptable to the client.
         /// </summary>
         public SIP_MVGroupHFCollection<SIP_t_Language> AcceptLanguage
@@ -60,8 +60,8 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets AlertInfo values collection. When present in an INVITE request, the Alert-Info header 
-        /// field specifies an alternative ring tone to the UAS. When present in a 180 (Ringing) response, 
+        /// Gets AlertInfo values collection. When present in an INVITE request, the Alert-Info header
+        /// field specifies an alternative ring tone to the UAS. When present in a 180 (Ringing) response,
         /// the Alert-Info header field specifies an alternative ringback tone to the UAC.
         /// </summary>
         public SIP_MVGroupHFCollection<SIP_t_AlertParam> AlertInfo
@@ -86,7 +86,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets the Authentication-Info header fields which provides for mutual authentication 
+        /// Gets the Authentication-Info header fields which provides for mutual authentication
         /// with HTTP Digest.
         /// </summary>
         public SIP_SVGroupHFCollection<SIP_t_AuthenticationInfo> AuthenticationInfo
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets the Call-ID header field which uniquely identifies a particular invitation or all 
+        /// Gets or sets the Call-ID header field which uniquely identifies a particular invitation or all
         /// registrations of a particular client.
         /// Value null means not specified.
         /// </summary>
@@ -183,9 +183,9 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets the Content-Encodings which is used as a modifier to the "media-type". When present, 
-        /// its value indicates what additional content codings have been applied to the entity-body, 
-        /// and thus what decoding mechanisms MUST be applied in order to obtain the media-type referenced 
+        /// Gets the Content-Encodings which is used as a modifier to the "media-type". When present,
+        /// its value indicates what additional content codings have been applied to the entity-body,
+        /// and thus what decoding mechanisms MUST be applied in order to obtain the media-type referenced
         /// by the Content-Type header field.
         /// </summary>
         public SIP_MVGroupHFCollection<SIP_t_ContentCoding> ContentEncoding
@@ -453,7 +453,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets Identity-Info header value. Value null means not specified. 
+        /// Gets or sets Identity-Info header value. Value null means not specified.
         /// Defined in RFC 4474.
         /// </summary>
         public SIP_t_IdentityInfo IdentityInfo
@@ -483,7 +483,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets the In-Reply-To header fields which enumerates the Call-IDs that this call 
+        /// Gets the In-Reply-To header fields which enumerates the Call-IDs that this call
         /// references or returns.
         /// </summary>
         public SIP_MVGroupHFCollection<SIP_t_CallID> InReplyTo
@@ -492,8 +492,8 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets Join header which indicates that a new dialog (created by the INVITE in which 
-        /// the Join header field in contained) should be joined with a dialog identified by the header 
+        /// Gets or sets Join header which indicates that a new dialog (created by the INVITE in which
+        /// the Join header field in contained) should be joined with a dialog identified by the header
         /// field, and any associated dialogs or conferences. Defined in 3911. Value null means not specified.
         /// </summary>
         public SIP_t_Join Join
@@ -523,7 +523,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets limit the number of proxies or gateways that can forward the request 
+        /// Gets or sets limit the number of proxies or gateways that can forward the request
         /// to the next downstream server.
         /// Value -1 means that value not specified.
         /// </summary>
@@ -614,7 +614,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets Min-SE header which indicates the minimum value for the session interval, 
+        /// Gets or sets Min-SE header which indicates the minimum value for the session interval,
         /// in units of delta-seconds. Defined in 4028. Value null means not specified.
         /// </summary>
         public SIP_t_MinSE MinSE
@@ -646,7 +646,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets or sets organization name which the SIP element issuing the request or response belongs.
         /// Value null means not specified.
-        /// </summary>        
+        /// </summary>
         public string Organization
         {
             get
@@ -674,7 +674,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets an Path header. It is used in conjunction with SIP REGISTER requests and with 200 
+        /// Gets an Path header. It is used in conjunction with SIP REGISTER requests and with 200
         /// class messages in response to REGISTER (REGISTER responses). Defined in rfc 3327.
         /// </summary>
         public SIP_SVGroupHFCollection<SIP_t_AddressParam> Path
@@ -723,7 +723,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gest credentials containing the authentication information of the user agent 
+        /// Gest credentials containing the authentication information of the user agent
         /// for the proxy and/or realm of the resource being requested.
         /// </summary>
         public SIP_SVGroupHFCollection<SIP_t_Credentials> ProxyAuthorization
@@ -1072,7 +1072,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets Session-Expires expires header. Value null means that value not specified. 
+        /// Gets or sets Session-Expires expires header. Value null means that value not specified.
         /// Defined in rfc 4028.
         /// </summary>
         public SIP_t_SessionExpires SessionExpires
@@ -1190,8 +1190,8 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets Subscription-State header value. Value null means that value not specified. 
-        /// Defined in RFC 3265. 
+        /// Gets or sets Subscription-State header value. Value null means that value not specified.
+        /// Defined in RFC 3265.
         /// </summary>
         public SIP_t_SubscriptionState SubscriptionState
         {
@@ -1228,7 +1228,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets Target-Dialog header value. Value null means that value not specified. 
+        /// Gets or sets Target-Dialog header value. Value null means that value not specified.
         /// Defined in RFC 4538.
         /// </summary>
         public SIP_t_TargetDialog TargetDialog
@@ -1258,7 +1258,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets when the UAC sent the request to the UAS. 
+        /// Gets or sets when the UAC sent the request to the UAS.
         /// Value null means that value not specified.
         /// </summary>
         public SIP_t_Timestamp Timestamp

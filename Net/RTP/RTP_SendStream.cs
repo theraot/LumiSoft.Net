@@ -200,7 +200,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-
         /// <summary>
         /// Gets how many RTCP cycles has passed since we sent data.
         /// </summary>
@@ -255,7 +254,7 @@ namespace LumiSoft.Net.RTP
                 return;
             }
 
-            // RTP was designed around the concept of Application Level Framing (ALF), 
+            // RTP was designed around the concept of Application Level Framing (ALF),
             // because of it we only allow to send packets and don't deal with breaking frames into packets.
 
             packet.SSRC = Source.SSRC;

@@ -53,7 +53,7 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets 'handling' parameter value. Value null means not specified. 
+        /// Gets or sets 'handling' parameter value. Value null means not specified.
         /// Known value: "optional","required".
         /// </summary>
         public string Handling

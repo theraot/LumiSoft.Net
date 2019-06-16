@@ -10,7 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that do not have the \Draft flag set.</remarks>
     public class IMAP_Search_Key_Undraft : IMAP_Search_Key
     {
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

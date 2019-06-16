@@ -9,7 +9,7 @@ namespace LumiSoft.Net.SIP.Message
     /// <remarks>
     /// <code>
     /// RFC 3261 Syntax:
-    ///     accept-range  = media-range [ accept-params ] 
+    ///     accept-range  = media-range [ accept-params ]
     ///     media-range   = ("*//*" / (m-type SLASH "*") / (m-type SLASH m-subtype)) *(SEMI m-parameter)
     ///     accept-params = SEMI "q" EQUAL qvalue *(SEMI generic-param)
     /// </code>
@@ -62,7 +62,7 @@ namespace LumiSoft.Net.SIP.Message
         public SIP_ParameterCollection Parameters { get; }
 
         /// <summary>
-        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 
+        /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest.
         /// This value must be between 0.0 and 1.0. Value -1 means that value not specified.
         /// </summary>
         public double QValue

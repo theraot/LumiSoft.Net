@@ -17,20 +17,20 @@ namespace LumiSoft.Net.DNS.Client
     /// <code>
     /// // Optionally set dns servers, by default DNS client uses defaultt NIC DNS servers.
     /// Dns_Client.DnsServers = new string[]{"194.126.115.18"};
-    /// 
+    ///
     /// Dns_Client dns = Dns_Client.Static;
-    /// 
+    ///
     /// // Get MX records.
     /// DnsServerResponse resp = dns.Query("lumisoft.ee",QTYPE.MX);
     /// if(resp.ConnectionOk &amp;&amp; resp.ResponseCode == RCODE.NO_ERROR){
-    ///		MX_Record[] mxRecords = resp.GetMXRecords();
-    ///		
-    ///		// Do your stuff
-    ///	}
-    ///	else{
-    ///		// Handle error there, for more exact error info see RCODE 
-    ///	}	 
-    /// 
+    ///  MX_Record[] mxRecords = resp.GetMXRecords();
+    ///
+    ///  // Do your stuff
+    /// }
+    /// else{
+    ///  // Handle error there, for more exact error info see RCODE
+    /// }
+    ///
     /// </code>
     /// </example>
     public class Dns_Client : IDisposable
@@ -38,7 +38,7 @@ namespace LumiSoft.Net.DNS.Client
         private static IPAddress[] m_DnsServers;
         private static Dns_Client m_pDnsClient;
 
-        // 
+        //
         private bool m_IsDisposed;
         private Socket m_pIPv4Socket;
         private Socket m_pIPv6Socket;
@@ -91,9 +91,9 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Static constructor.
-		/// </summary>
-		static Dns_Client()
+        /// Static constructor.
+        /// </summary>
+        static Dns_Client()
         {
             // Try to get default NIC dns servers.
             try
@@ -126,10 +126,10 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Gets or sets dns servers.
-		/// </summary>
+        /// Gets or sets dns servers.
+        /// </summary>
         /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
-		public static string[] DnsServers
+        public static string[] DnsServers
         {
             get
             {
@@ -640,14 +640,14 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Queries server with specified query.
-		/// </summary>
-		/// <param name="queryText">Query text. It depends on queryType.</param>
-		/// <param name="queryType">Query type.</param>
-		/// <returns>Returns DSN server response.</returns>
+        /// Queries server with specified query.
+        /// </summary>
+        /// <param name="queryText">Query text. It depends on queryType.</param>
+        /// <param name="queryType">Query type.</param>
+        /// <returns>Returns DSN server response.</returns>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when <b>queryText</b> is null.</exception>
-		public DnsServerResponse Query(string queryText, DNS_QType queryType)
+        public DnsServerResponse Query(string queryText, DNS_QType queryType)
         {
             return Query(queryText, queryType, 2000);
         }
@@ -788,8 +788,8 @@ namespace LumiSoft.Net.DNS.Client
                     if (isPointer)
                     {
                         /* Pointer location number is 2 bytes long
-						    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7  # byte 2 # 0 | 1 | 2 | | 3 | 4 | 5 | 6 | 7
-						    empty | < ---- pointer location number --------------------------------->
+                            0 | 1 | 2 | 3 | 4 | 5 | 6 | 7  # byte 2 # 0 | 1 | 2 | | 3 | 4 | 5 | 6 | 7
+                            empty | < ---- pointer location number --------------------------------->
                         */
                         int pStart = ((reply[offset] & 0x3F) << 8) | (reply[++offset]);
                         offset++;
@@ -798,13 +798,13 @@ namespace LumiSoft.Net.DNS.Client
                     }
 
                     /* Label length (length = 8Bit and first 2 bits always 0)
-						    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
-						    empty | lablel length in bytes 
+                            0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+                            empty | lablel length in bytes 
                         */
                     int labelLength = (reply[offset] & 0x3F);
                     offset++;
 
-                    // Copy label into name 
+                    // Copy label into name
                     name += Encoding.UTF8.GetString(reply, offset, labelLength);
                     offset += labelLength;
 
@@ -827,37 +827,37 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Parses specified count of answers from query.
-		/// </summary>
-		/// <param name="reply">Server returned query.</param>
-		/// <param name="answerCount">Number of answers to parse.</param>
-		/// <param name="offset">Position from where to start parsing answers.</param>
-		/// <returns></returns>
-		private List<DNS_rr> ParseAnswers(byte[] reply, int answerCount, ref int offset)
+        /// Parses specified count of answers from query.
+        /// </summary>
+        /// <param name="reply">Server returned query.</param>
+        /// <param name="answerCount">Number of answers to parse.</param>
+        /// <param name="offset">Position from where to start parsing answers.</param>
+        /// <returns></returns>
+        private List<DNS_rr> ParseAnswers(byte[] reply, int answerCount, ref int offset)
         {
             /* RFC 1035 4.1.3. Resource record format
-			 
-										   1  1  1  1  1  1
-			 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                                               |
-			/                                               /
-			/                      NAME                     /
-			|                                               |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                      TYPE                     |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                     CLASS                     |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                      TTL                      |
-			|                                               |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                   RDLENGTH                    |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
-			/                     RDATA                     /
-			/                                               /
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			*/
+             
+                                           1  1  1  1  1  1
+             0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                                               |
+            /                                               /
+            /                      NAME                     /
+            |                                               |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                      TYPE                     |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                     CLASS                     |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                      TTL                      |
+            |                                               |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                   RDLENGTH                    |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+            /                     RDATA                     /
+            /                                               /
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            */
 
             var answers = new List<DNS_rr>();
             //---- Start parsing answers ------------------------------------------------------------------//
@@ -933,49 +933,49 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Parses query.
-		/// </summary>
-		/// <param name="reply">Dns server reply.</param>
-		/// <returns></returns>
-		private DnsServerResponse ParseQuery(byte[] reply)
+        /// Parses query.
+        /// </summary>
+        /// <param name="reply">Dns server reply.</param>
+        /// <returns></returns>
+        private DnsServerResponse ParseQuery(byte[] reply)
         {
             //--- Parse headers ------------------------------------//
 
             /* RFC 1035 4.1.1. Header section format
-			 
-											1  1  1  1  1  1
-			  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 |                      ID                       |
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 |                    QDCOUNT                    |
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 |                    ANCOUNT                    |
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 |                    NSCOUNT                    |
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 |                    ARCOUNT                    |
-			 +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			 
-			QDCOUNT
-				an unsigned 16 bit integer specifying the number of
-				entries in the question section.
+             
+                                            1  1  1  1  1  1
+              0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             |                      ID                       |
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             |                    QDCOUNT                    |
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             |                    ANCOUNT                    |
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             |                    NSCOUNT                    |
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             |                    ARCOUNT                    |
+             +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+             
+            QDCOUNT
+                an unsigned 16 bit integer specifying the number of
+                entries in the question section.
 
-			ANCOUNT
-				an unsigned 16 bit integer specifying the number of
-				resource records in the answer section.
-				
-			NSCOUNT
-			    an unsigned 16 bit integer specifying the number of name
+            ANCOUNT
+                an unsigned 16 bit integer specifying the number of
+                resource records in the answer section.
+                
+            NSCOUNT
+                an unsigned 16 bit integer specifying the number of name
                 server resource records in the authority records section.
 
-			ARCOUNT
-			    an unsigned 16 bit integer specifying the number of
+            ARCOUNT
+                an unsigned 16 bit integer specifying the number of
                 resource records in the additional records section.
-				
-			*/
+                
+            */
 
             // Get reply code
             int id = (reply[0] << 8 | reply[1]);
@@ -1123,9 +1123,9 @@ namespace LumiSoft.Net.DNS.Client
                     name.  If a CNAME record is found, the resulting name is processed as
                     if it were the initial name.
                  
-			        If no MX records are found, but an A RR is found, the A RR is treated as if it 
+                    If no MX records are found, but an A RR is found, the A RR is treated as if it 
                     was associated with an implicit MX RR, with a preference of 0, pointing to that host.
-			    */
+                */
 
                 try
                 {

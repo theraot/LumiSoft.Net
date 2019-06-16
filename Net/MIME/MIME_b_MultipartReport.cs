@@ -8,7 +8,7 @@ namespace LumiSoft.Net.MIME
     /// This class represents MIME multipart/report body. Defined in RFC 3462.
     /// </summary>
     /// <remarks>
-    /// The Multipart/Report Multipurpose Internet Mail Extensions (MIME) content-type is a general "family" or 
+    /// The Multipart/Report Multipurpose Internet Mail Extensions (MIME) content-type is a general "family" or
     /// "container" type for electronic mail reports of any kind. The most used type is <b>delivery-status</b>.
     /// </remarks>
     public class MIME_b_MultipartReport : MIME_b_Multipart
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.MIME
             if(owner.ContentType == null || owner.ContentType.Param_Boundary == null){
                 throw new ParseException("Multipart entity has not required 'boundary' paramter.");
             }
-            
+
             var retVal = new MIME_b_MultipartReport(owner.ContentType);
             ParseInternal(owner,owner.ContentType.TypeWithSubtype,stream,retVal);
 

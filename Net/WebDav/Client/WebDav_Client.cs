@@ -10,7 +10,6 @@ namespace LumiSoft.Net.WebDav.Client
     /// </summary>
     public class WebDav_Client
     {
-
         // public void Lock()
         // {
         // }
@@ -30,7 +29,7 @@ namespace LumiSoft.Net.WebDav.Client
         /// <param name="sourceUri">Source URI.</param>
         /// <param name="targetUri">Target URI.</param>
         /// <param name="depth">If source is collection, then depth specified how many nested levels will be copied.</param>
-        /// <param name="overwrite">If true and target resource already exists, it will be over written. 
+        /// <param name="overwrite">If true and target resource already exists, it will be over written.
         /// If false and target resource exists, exception is thrown.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceUri</b> or <b>targetUri</b> is null reference.</exception>
         public void Copy(string sourceUri, string targetUri, int depth, bool overwrite)
@@ -137,7 +136,7 @@ namespace LumiSoft.Net.WebDav.Client
         /// <param name="sourceUri">Source URI.</param>
         /// <param name="targetUri">Target URI.</param>
         /// <param name="depth">If source is collection, then depth specified how many nested levels will be copied.</param>
-        /// <param name="overwrite">If true and target resource already exists, it will be over written. 
+        /// <param name="overwrite">If true and target resource already exists, it will be over written.
         /// If false and target resource exists, exception is thrown.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>sourceUri</b> or <b>targetUri</b> is null reference.</exception>
         public void Move(string sourceUri, string targetUri, int depth, bool overwrite)
@@ -229,7 +228,7 @@ namespace LumiSoft.Net.WebDav.Client
             }
 
             // Work around, to casuse authentication, otherwise we may not use AllowWriteStreamBuffering = false later.
-            // All this because ms is so lazy, tries to write all data to memory, instead switching to temp file if bigger 
+            // All this because ms is so lazy, tries to write all data to memory, instead switching to temp file if bigger
             // data sent.
             try
             {

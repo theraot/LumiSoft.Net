@@ -17,7 +17,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_TransportLayer
     {
-
         private bool m_IsDisposed;
         private IPBindInfo[] m_pBinds;
         private readonly SIP_FlowManager m_pFlowManager;
@@ -53,7 +52,7 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         /// <summary>
-        /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server 
+        /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server
         /// listnes and also if connections is SSL.
         /// </summary>
         public IPBindInfo[] BindInfo
@@ -322,7 +321,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="SIP_TransportException">Is raised when <b>response</b> sending has failed.</exception>
-        /// <remarks>Use this method to send SIP responses from stateless SIP elements, like stateless proxy. 
+        /// <remarks>Use this method to send SIP responses from stateless SIP elements, like stateless proxy.
         /// Otherwise SIP_ServerTransaction.SendResponse method should be used.</remarks>
         public void SendResponse(SIP_Response response)
         {
@@ -339,7 +338,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="SIP_TransportException">Is raised when <b>response</b> sending has failed.</exception>
-        /// <remarks>Use this method to send SIP responses from stateless SIP elements, like stateless proxy. 
+        /// <remarks>Use this method to send SIP responses from stateless SIP elements, like stateless proxy.
         /// Otherwise SIP_ServerTransaction.SendResponse method should be used.</remarks>
         public void SendResponse(SIP_Response response, IPEndPoint localEP)
         {
@@ -482,7 +481,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             // We don't have suitable listening point for active flow.
-            // RFC 3261 forces to have, but for TCP based protocls + NAT, server can't connect to use anyway, 
+            // RFC 3261 forces to have, but for TCP based protocls + NAT, server can't connect to use anyway,
             // so just ignore it and report flow local EP.
             if (retVal == null)
             {
@@ -1236,13 +1235,13 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentException("Argument 'response' does not contain required Via: header field.");
             }
 
-            // TODO: If transport is not supported.            
+            // TODO: If transport is not supported.
             //throw new SIP_TransportException("Not supported transport '" + via.ProtocolTransport + "'.");
 
             var logID = Guid.NewGuid().ToString();
             var transactionID = transaction == null ? "" : transaction.ID;
 
-            // Try to get local IP end point which we should use to send response back.            
+            // Try to get local IP end point which we should use to send response back.
             if (transaction != null && transaction.Request.LocalEndPoint != null)
             {
                 localEP = transaction.Request.LocalEndPoint;

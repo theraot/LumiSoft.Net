@@ -10,7 +10,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_h_ParameterCollection : IEnumerable
     {
-
         private bool m_IsModified;
         private readonly Dictionary<string, MIME_h_Parameter> m_pParameters;
 
@@ -118,10 +117,10 @@ namespace LumiSoft.Net.MIME
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             return m_pParameters.Values.GetEnumerator();
         }

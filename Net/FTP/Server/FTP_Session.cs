@@ -420,13 +420,13 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the server-DTP to accept the data
-				transferred via the data connection and to store the data in
-				a file at the server site.  If the file specified in the
-				pathname exists at the server site, then the data shall be
-				appended to that file; otherwise the file specified in the
-				pathname shall be created at the server site.
-			*/
+                This command causes the server-DTP to accept the data
+                transferred via the data connection and to store the data in
+                a file at the server site.  If the file specified in the
+                pathname exists at the server site, then the data shall be
+                appended to that file; otherwise the file specified in the
+                pathname shall be created at the server site.
+            */
 
             var eArgs = new FTP_e_Appe(argsText);
             OnAppe(eArgs);
@@ -510,12 +510,12 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command is a special case of CWD, and is included to
-				simplify the implementation of programs for transferring
-				directory trees between operating systems having different
-				syntaxes for naming the parent directory.  The reply codes
-				shall be identical to the reply codes of CWD.
-			*/
+                This command is a special case of CWD, and is included to
+                simplify the implementation of programs for transferring
+                directory trees between operating systems having different
+                syntaxes for naming the parent directory.  The reply codes
+                shall be identical to the reply codes of CWD.
+            */
 
             var eArgs = new FTP_e_Cdup();
             OnCdup(eArgs);
@@ -550,13 +550,13 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command allows the user to work with a different
-				directory or dataset for file storage or retrieval without
-				altering his login or accounting information.  Transfer
-				parameters are similarly unchanged.  The argument is a
-				pathname specifying a directory or other system dependent
-				file group designator.
-			*/
+                This command allows the user to work with a different
+                directory or dataset for file storage or retrieval without
+                altering his login or accounting information.  Transfer
+                parameters are similarly unchanged.  The argument is a
+                pathname specifying a directory or other system dependent
+                file group designator.
+            */
 
             var eArgs = new FTP_e_Cwd(argsText);
             OnCwd(eArgs);
@@ -595,11 +595,11 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the file specified in the pathname to be
-				deleted at the server site.  If an extra level of protection
-				is desired (such as the query, "Do you really wish to
-				delete?"), it should be provided by the user-FTP process.
-			*/
+                This command causes the file specified in the pathname to be
+                deleted at the server site.  If an extra level of protection
+                is desired (such as the query, "Do you really wish to
+                delete?"), it should be provided by the user-FTP process.
+            */
 
             var eArgs = new FTP_e_Dele(argsText);
             OnDele(eArgs);
@@ -723,19 +723,19 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes a list to be sent from the server to the
-				passive DTP.  If the pathname specifies a directory or other
-				group of files, the server should transfer a list of files
-				in the specified directory.  If the pathname specifies a
-				file then the server should send current information on the
-				file.  A null argument implies the user's current working or
-				default directory.  The data transfer is over the data
-				connection in type ASCII or type EBCDIC.  (The user must
-				ensure that the TYPE is appropriately ASCII or EBCDIC).
-				Since the information on a file may vary widely from system
-				to system, this information may be hard to use automatically
-				in a program, but may be quite useful to a human user.
-			*/
+                This command causes a list to be sent from the server to the
+                passive DTP.  If the pathname specifies a directory or other
+                group of files, the server should transfer a list of files
+                in the specified directory.  If the pathname specifies a
+                file then the server should send current information on the
+                file.  A null argument implies the user's current working or
+                default directory.  The data transfer is over the data
+                connection in type ASCII or type EBCDIC.  (The user must
+                ensure that the TYPE is appropriately ASCII or EBCDIC).
+                Since the information on a file may vary widely from system
+                to system, this information may be hard to use automatically
+                in a program, but may be quite useful to a human user.
+            */
 
             var eArgs = new FTP_e_GetDirListing(argsText);
             OnGetDirListing(eArgs);
@@ -793,11 +793,11 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the directory specified in the pathname
-				to be created as a directory (if the pathname is absolute)
-				or as a subdirectory of the current working directory (if
-				the pathname is relative).
-			*/
+                This command causes the directory specified in the pathname
+                to be created as a directory (if the pathname is absolute)
+                or as a subdirectory of the current working directory (if
+                the pathname is relative).
+            */
 
             var eArgs = new FTP_e_Mkd(argsText);
             OnMkd(eArgs);
@@ -832,19 +832,19 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes a directory listing to be sent from
-				server to user site.  The pathname should specify a
-				directory or other system-specific file group descriptor; a
-				null argument implies the current directory.  The server
-				will return a stream of names of files and no other
-				information.  The data will be transferred in ASCII or
-				EBCDIC type over the data connection as valid pathname
-				strings separated by <CRLF> or <NL>.  (Again the user must
-				ensure that the TYPE is correct.)  This command is intended
-				to return information that can be used by a program to
-				further process the files automatically.  For example, in
-				the implementation of a "multiple get" function.
-			*/
+                This command causes a directory listing to be sent from
+                server to user site.  The pathname should specify a
+                directory or other system-specific file group descriptor; a
+                null argument implies the current directory.  The server
+                will return a stream of names of files and no other
+                information.  The data will be transferred in ASCII or
+                EBCDIC type over the data connection as valid pathname
+                strings separated by <CRLF> or <NL>.  (Again the user must
+                ensure that the TYPE is correct.)  This command is intended
+                to return information that can be used by a program to
+                further process the files automatically.  For example, in
+                the implementation of a "multiple get" function.
+            */
 
             var eArgs = new FTP_e_GetDirListing(argsText);
             OnGetDirListing(eArgs);
@@ -883,10 +883,10 @@ namespace LumiSoft.Net.FTP.Server
                 return;
             }
             /*
-				This command does not affect any parameters or previously
-				entered commands. It specifies no action other than that the
-				server send an OK reply.
-			*/
+                This command does not affect any parameters or previously
+                entered commands. It specifies no action other than that the
+                server send an OK reply.
+            */
             WriteLine("200 OK");
         }
 
@@ -1176,12 +1176,12 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command requests the server-DTP to "listen" on a data
-				port (which is not its default data port) and to wait for a
-				connection rather than initiate one upon receipt of a
-				transfer command.  The response to this command includes the
-				host and port address this server is listening on.
-			*/
+                This command requests the server-DTP to "listen" on a data
+                port (which is not its default data port) and to wait for a
+                connection rather than initiate one upon receipt of a
+                transfer command.  The response to this command includes the
+                host and port address this server is listening on.
+            */
 
             int port = Server.PassiveStartPort;
 
@@ -1235,22 +1235,22 @@ namespace LumiSoft.Net.FTP.Server
                 return;
             }
             /*
-				 The argument is a HOST-PORT specification for the data port
-				to be used in data connection.  There are defaults for both
-				the user and server data ports, and under normal
-				circumstances this command and its reply are not needed.  If
-				this command is used, the argument is the concatenation of a
-				32-bit internet host address and a 16-bit TCP port address.
-				This address information is broken into 8-bit fields and the
-				value of each field is transmitted as a decimal number (in
-				character string representation).  The fields are separated
-				by commas.  A port command would be:
+                 The argument is a HOST-PORT specification for the data port
+                to be used in data connection.  There are defaults for both
+                the user and server data ports, and under normal
+                circumstances this command and its reply are not needed.  If
+                this command is used, the argument is the concatenation of a
+                32-bit internet host address and a 16-bit TCP port address.
+                This address information is broken into 8-bit fields and the
+                value of each field is transmitted as a decimal number (in
+                character string representation).  The fields are separated
+                by commas.  A port command would be:
 
-				PORT h1,h2,h3,h4,p1,p2
+                PORT h1,h2,h3,h4,p1,p2
 
-				where h1 is the high order 8 bits of the internet host
-				address.
-			*/
+                where h1 is the high order 8 bits of the internet host
+                address.
+            */
             if (!IsAuthenticated)
             {
                 WriteLine("530 Please authenticate firtst !");
@@ -1467,9 +1467,9 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the name of the current working
-				directory to be returned in the reply.
-			*/
+                This command causes the name of the current working
+                directory to be returned in the reply.
+            */
 
             WriteLine("257 \"" + m_CurrentDir + "\" is current directory.");
         }
@@ -1477,18 +1477,18 @@ namespace LumiSoft.Net.FTP.Server
         private void QUIT(string argsText)
         {
             /*
-				This command terminates a USER and if file transfer is not
-				in progress, the server closes the control connection.  If
-				file transfer is in progress, the connection will remain
-				open for result response and the server will then close it.
-				If the user-process is transferring files for several USERs
-				but does not wish to close and then reopen connections for
-				each, then the REIN command should be used instead of QUIT.
+                This command terminates a USER and if file transfer is not
+                in progress, the server closes the control connection.  If
+                file transfer is in progress, the connection will remain
+                open for result response and the server will then close it.
+                If the user-process is transferring files for several USERs
+                but does not wish to close and then reopen connections for
+                each, then the REIN command should be used instead of QUIT.
 
-				An unexpected close on the control connection will cause the
-				server to take the effective action of an abort (ABOR) and a
-				logout (QUIT).
-			*/
+                An unexpected close on the control connection will cause the
+                server to take the effective action of an abort (ABOR) and a
+                logout (QUIT).
+            */
 
             try
             {
@@ -1523,11 +1523,11 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the server-DTP to transfer a copy of the
-				file, specified in the pathname, to the server- or user-DTP
-				at the other end of the data connection.  The status and
-				contents of the file at the server site shall be unaffected.
-			*/
+                This command causes the server-DTP to transfer a copy of the
+                file, specified in the pathname, to the server- or user-DTP
+                at the other end of the data connection.  The status and
+                contents of the file at the server site shall be unaffected.
+            */
 
             var eArgs = new FTP_e_GetFile(argsText);
             OnGetFile(eArgs);
@@ -1575,11 +1575,11 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the directory specified in the pathname
-				to be removed as a directory (if the pathname is absolute)
-				or as a subdirectory of the current working directory (if
-				the pathname is relative).
-			*/
+                This command causes the directory specified in the pathname
+                to be removed as a directory (if the pathname is absolute)
+                or as a subdirectory of the current working directory (if
+                the pathname is relative).
+            */
 
             var eArgs = new FTP_e_Rmd(argsText);
             OnRmd(eArgs);
@@ -1618,10 +1618,10 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command specifies the old pathname of the file which is
-				to be renamed.  This command must be immediately followed by
-				a "rename to" command specifying the new file pathname.
-			*/
+                This command specifies the old pathname of the file which is
+                to be renamed.  This command must be immediately followed by
+                a "rename to" command specifying the new file pathname.
+            */
 
             m_RenameFrom = argsText;
         }
@@ -1652,11 +1652,11 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command specifies the new pathname of the file
-				specified in the immediately preceding "rename from"
-				command.  Together the two commands cause a file to be
-				renamed.
-			*/
+                This command specifies the new pathname of the file
+                specified in the immediately preceding "rename from"
+                command.  Together the two commands cause a file to be
+                renamed.
+            */
 
             var eArgs = new FTP_e_Rnto(m_RenameFrom, argsText);
             OnRnto(eArgs);
@@ -1752,11 +1752,11 @@ namespace LumiSoft.Net.FTP.Server
             }
 
             /*
-				This command causes the server-DTP to transfer a copy of the
-				file, specified in the pathname, to the server- or user-DTP
-				at the other end of the data connection.  The status and
-				contents of the file at the server site shall be unaffected.
-			*/
+                This command causes the server-DTP to transfer a copy of the
+                file, specified in the pathname, to the server- or user-DTP
+                at the other end of the data connection.  The status and
+                contents of the file at the server site shall be unaffected.
+            */
 
             var eArgs = new FTP_e_Stor(argsText);
             OnStor(eArgs);
@@ -1793,11 +1793,11 @@ namespace LumiSoft.Net.FTP.Server
                 return;
             }
             /*
-				This command is used to find out the type of operating
-				system at the server.  The reply shall have as its first
-				word one of the system names listed in the current version
-				of the Assigned Numbers document [4].
-			*/
+                This command is used to find out the type of operating
+                system at the server.  The reply shall have as its first
+                word one of the system names listed in the current version
+                of the Assigned Numbers document [4].
+            */
             if (!IsAuthenticated)
             {
                 WriteLine("530 Please authenticate firtst !");
@@ -1817,31 +1817,31 @@ namespace LumiSoft.Net.FTP.Server
                 return;
             }
             /*
-				The argument specifies the representation type as described
-				in the Section on Data Representation and Storage.  Several
-				types take a second parameter.  The first parameter is
-				denoted by a single Telnet character, as is the second
-				Format parameter for ASCII and EBCDIC; the second parameter
-				for local byte is a decimal integer to indicate Bytesize.
-				The parameters are separated by a <SP> (Space, ASCII code
-				32).
+                The argument specifies the representation type as described
+                in the Section on Data Representation and Storage.  Several
+                types take a second parameter.  The first parameter is
+                denoted by a single Telnet character, as is the second
+                Format parameter for ASCII and EBCDIC; the second parameter
+                for local byte is a decimal integer to indicate Bytesize.
+                The parameters are separated by a <SP> (Space, ASCII code
+                32).
 
-				The following codes are assigned for type:
+                The following codes are assigned for type:
 
-							\    /
-				A - ASCII |    | N - Non-print
-							|-><-| T - Telnet format effectors
-				E - EBCDIC|    | C - Carriage Control (ASA)
-							/    \
-				I - Image
-	               
-				L <byte size> - Local byte Byte size
-				
-				The default representation type is ASCII Non-print.  If the
-				Format parameter is changed, and later just the first
-				argument is changed, Format then returns to the Non-print
-				default.
-			*/
+                            \    /
+                A - ASCII |    | N - Non-print
+                            |-><-| T - Telnet format effectors
+                E - EBCDIC|    | C - Carriage Control (ASA)
+                            /    \
+                I - Image
+                   
+                L <byte size> - Local byte Byte size
+                
+                The default representation type is ASCII Non-print.  If the
+                Format parameter is changed, and later just the first
+                argument is changed, Format then returns to the Non-print
+                default.
+            */
             if (!IsAuthenticated)
             {
                 WriteLine("530 Please authenticate firtst !");

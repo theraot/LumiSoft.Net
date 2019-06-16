@@ -92,7 +92,7 @@ namespace LumiSoft.Net.RTP
 
             int chunksStartOffset = offset;
 
-            // Add chunks.            
+            // Add chunks.
             foreach (RTCP_Packet_SDES_Chunk chunk in Chunks)
             {
                 chunk.ToByte(buffer, ref offset);

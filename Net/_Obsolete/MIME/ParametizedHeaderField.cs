@@ -4,7 +4,7 @@ using System.Collections;
 namespace LumiSoft.Net.Mime
 {
     /// <summary>
-    /// Parametized header field. 
+    /// Parametized header field.
     /// <p/>
     /// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... .
     /// Example: (Content-Type:) text/html; charset="ascii".
@@ -15,10 +15,10 @@ namespace LumiSoft.Net.Mime
         private readonly HeaderField m_pHeaderField;
 
         /// <summary>
-		/// Default constructor.
-		/// </summary>
-		/// <param name="headerField">Source header field.</param>
-		public ParametizedHeaderField(HeaderField headerField)
+        /// Default constructor.
+        /// </summary>
+        /// <param name="headerField">Source header field.</param>
+        public ParametizedHeaderField(HeaderField headerField)
         {
             m_pHeaderField = headerField;
 
@@ -26,9 +26,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets header field name.
-		/// </summary>
-		public string Name
+        /// Gets header field name.
+        /// </summary>
+        public string Name
         {
             get { return m_pHeaderField.Name; }
         }
@@ -57,12 +57,12 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses parameters from header field.
-		/// </summary>
-		/// <returns></returns>
-		internal Hashtable ParseParameters()
+        /// Parses parameters from header field.
+        /// </summary>
+        /// <returns></returns>
+        internal Hashtable ParseParameters()
         {
-            // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... 
+            // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;...
             var paramNameValues = TextUtils.SplitQuotedString(m_pHeaderField.EncodedValue, ';');
 
             var retVal = new Hashtable();
@@ -95,11 +95,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Stores parameters to header field Value property.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="parameters"></param>
-		internal void StoreParameters(string value, Hashtable parameters)
+        /// Stores parameters to header field Value property.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="parameters"></param>
+        internal void StoreParameters(string value, Hashtable parameters)
         {
             var retVal = value;
             foreach (DictionaryEntry entry in parameters)

@@ -375,7 +375,7 @@ namespace LumiSoft.Net.TCP
         }
 
         /// <summary>
-        /// Connects to the specified host. If the hostname resolves to more than one IP address, 
+        /// Connects to the specified host. If the hostname resolves to more than one IP address,
         /// all IP addresses will be tried for connection, until one of them connects.
         /// </summary>
         /// <param name="host">Host name or IP address.</param>
@@ -389,7 +389,7 @@ namespace LumiSoft.Net.TCP
         }
 
         /// <summary>
-        /// Connects to the specified host. If the hostname resolves to more than one IP address, 
+        /// Connects to the specified host. If the hostname resolves to more than one IP address,
         /// all IP addresses will be tried for connection, until one of them connects.
         /// </summary>
         /// <param name="host">Host name or IP address.</param>

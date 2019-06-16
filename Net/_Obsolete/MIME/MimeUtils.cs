@@ -10,13 +10,12 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class MimeUtils
     {
-
         /// <summary>
-		/// Converts ContentDisposition_enum to string. NOTE: Returns null for ContentDisposition_enum.NotSpecified.
-		/// </summary>
-		/// <param name="disposition">ContentDisposition_enum value to convert.</param>
-		/// <returns></returns>
-		public static string ContentDispositionToString(ContentDisposition_enum disposition)
+        /// Converts ContentDisposition_enum to string. NOTE: Returns null for ContentDisposition_enum.NotSpecified.
+        /// </summary>
+        /// <param name="disposition">ContentDisposition_enum value to convert.</param>
+        /// <returns></returns>
+        public static string ContentDispositionToString(ContentDisposition_enum disposition)
         {
             if (disposition == ContentDisposition_enum.Attachment)
             {
@@ -35,11 +34,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Converts ContentTransferEncoding_enum to string. NOTE: Returns null for ContentTransferEncoding_enum.NotSpecified.
-		/// </summary>
-		/// <param name="encoding">ContentTransferEncoding_enum value to convert.</param>
-		/// <returns></returns>
-		public static string ContentTransferEncodingToString(ContentTransferEncoding_enum encoding)
+        /// Converts ContentTransferEncoding_enum to string. NOTE: Returns null for ContentTransferEncoding_enum.NotSpecified.
+        /// </summary>
+        /// <param name="encoding">ContentTransferEncoding_enum value to convert.</param>
+        /// <returns></returns>
+        public static string ContentTransferEncodingToString(ContentTransferEncoding_enum encoding)
         {
             if (encoding == ContentTransferEncoding_enum._7bit)
             {
@@ -70,20 +69,20 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
-		/// </summary>
-		/// <returns></returns>
-		public static string CreateMessageID()
+        /// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateMessageID()
         {
             return "<" + Guid.NewGuid().ToString().Replace("-", "") + "@" + Guid.NewGuid().ToString().Replace("-", "") + ">";
         }
 
         /// <summary>
-		/// Converts date to rfc 2822 date time string.
-		/// </summary>
-		/// <param name="dateTime">Date time value.</param>
-		/// <returns></returns>
-		public static string DateTimeToRfc2822(DateTime dateTime)
+        /// Converts date to rfc 2822 date time string.
+        /// </summary>
+        /// <param name="dateTime">Date time value.</param>
+        /// <returns></returns>
+        public static string DateTimeToRfc2822(DateTime dateTime)
         {
             return dateTime.ToUniversalTime().ToString("r", System.Globalization.DateTimeFormatInfo.InvariantInfo);
         }
@@ -238,11 +237,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Encodes header field with quoted-printable encoding, if value contains ANSI or UNICODE chars.
-		/// </summary>
-		/// <param name="text">Text to encode.</param>
-		/// <returns></returns>
-		public static string EncodeHeaderField(string text)
+        /// Encodes header field with quoted-printable encoding, if value contains ANSI or UNICODE chars.
+        /// </summary>
+        /// <param name="text">Text to encode.</param>
+        /// <returns></returns>
+        public static string EncodeHeaderField(string text)
         {
             if (Core.IsAscii(text))
             {
@@ -422,11 +421,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Converts MediaType_enum to string. NOTE: Returns null for MediaType_enum.NotSpecified.
-		/// </summary>
-		/// <param name="mediaType">MediaType_enum value to convert.</param>
-		/// <returns></returns>
-		public static string MediaTypeToString(MediaType_enum mediaType)
+        /// Converts MediaType_enum to string. NOTE: Returns null for MediaType_enum.NotSpecified.
+        /// </summary>
+        /// <param name="mediaType">MediaType_enum value to convert.</param>
+        /// <returns></returns>
+        public static string MediaTypeToString(MediaType_enum mediaType)
         {
             //--- Text/xxx --------------------------------//
             if (mediaType == MediaType_enum.Text_plain)
@@ -541,11 +540,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses ContentDisposition_enum from <b>Content-Disposition:</b> header field value.
-		/// </summary>
-		/// <param name="headerFieldValue"><b>Content-Disposition:</b> header field value. This value can be null, then ContentDisposition_enum.NotSpecified.</param>
-		/// <returns></returns>
-		public static ContentDisposition_enum ParseContentDisposition(string headerFieldValue)
+        /// Parses ContentDisposition_enum from <b>Content-Disposition:</b> header field value.
+        /// </summary>
+        /// <param name="headerFieldValue"><b>Content-Disposition:</b> header field value. This value can be null, then ContentDisposition_enum.NotSpecified.</param>
+        /// <returns></returns>
+        public static ContentDisposition_enum ParseContentDisposition(string headerFieldValue)
         {
             if (headerFieldValue == null)
             {
@@ -566,11 +565,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses ContentTransferEncoding_enum from <b>Content-Transfer-Encoding:</b> header field value.
-		/// </summary>
-		/// <param name="headerFieldValue"><b>Content-Transfer-Encoding:</b> header field value. This value can be null, then ContentTransferEncoding_enum.NotSpecified.</param>
-		/// <returns></returns>
-		public static ContentTransferEncoding_enum ParseContentTransferEncoding(string headerFieldValue)
+        /// Parses ContentTransferEncoding_enum from <b>Content-Transfer-Encoding:</b> header field value.
+        /// </summary>
+        /// <param name="headerFieldValue"><b>Content-Transfer-Encoding:</b> header field value. This value can be null, then ContentTransferEncoding_enum.NotSpecified.</param>
+        /// <returns></returns>
+        public static ContentTransferEncoding_enum ParseContentTransferEncoding(string headerFieldValue)
         {
             if (headerFieldValue == null)
             {
@@ -610,34 +609,34 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public static DateTime ParseDate(string date)
         {
-            /* Rfc 2822 3.3. Date and Time Specification.			 
-				date-time       = [ day-of-week "," ] date FWS time [CFWS]
-				date            = day month year
-				time            = hour ":" minute [ ":" second ] FWS zone
-			*/
+            /* Rfc 2822 3.3. Date and Time Specification.             
+                date-time       = [ day-of-week "," ] date FWS time [CFWS]
+                date            = day month year
+                time            = hour ":" minute [ ":" second ] FWS zone
+            */
 
             /* IMAP date format. 
-			    date-time       = date FWS time [CFWS]
-				date            = day-month-year
-				time            = hour ":" minute [ ":" second ] FWS zone
-			*/
+                date-time       = date FWS time [CFWS]
+                date            = day-month-year
+                time            = hour ":" minute [ ":" second ] FWS zone
+            */
 
             // zone = (( "+" / "-" ) 4DIGIT)
 
             //--- Replace timezone constants -------//
             /*
              UT  -0000            
-			GMT  -0000
-			EDT  -0400
-			EST  -0500
-			CDT  -0500
-			CST  -0600
-			MDT  -0600
-			MST  -0700
-			PDT  -0700
-			PST  -0800			
-			BST  +0100 British Summer Time
-			*/
+            GMT  -0000
+            EDT  -0400
+            EST  -0500
+            CDT  -0500
+            CST  -0600
+            MDT  -0600
+            MST  -0700
+            PDT  -0700
+            PST  -0800            
+            BST  +0100 British Summer Time
+            */
 
             date = date.ToLower();
             date = date.Replace("ut", "-0000");
@@ -812,16 +811,16 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parse header specified header field value.
-		/// 
-		/// Use this method only if you need to get only one header field, otherwise use
-		/// MimeParser.ParseHeaderField(string fieldName,string headers).
-		/// This avoid parsing headers multiple times.
-		/// </summary>
-		/// <param name="fieldName">Header field which to parse. Eg. Subject: .</param>
-		/// <param name="entryStrm">Stream from where to read headers.</param>
-		/// <returns></returns>
-		public static string ParseHeaderField(string fieldName, Stream entryStrm)
+        /// Parse header specified header field value.
+        ///
+        /// Use this method only if you need to get only one header field, otherwise use
+        /// MimeParser.ParseHeaderField(string fieldName,string headers).
+        /// This avoid parsing headers multiple times.
+        /// </summary>
+        /// <param name="fieldName">Header field which to parse. Eg. Subject: .</param>
+        /// <param name="entryStrm">Stream from where to read headers.</param>
+        /// <returns></returns>
+        public static string ParseHeaderField(string fieldName, Stream entryStrm)
         {
             return ParseHeaderField(fieldName, ParseHeaders(entryStrm));
         }
@@ -834,28 +833,28 @@ namespace LumiSoft.Net.Mime
         public static string ParseHeaderField(string fieldName, string headers)
         {
             /* Rfc 2822 2.2 Header Fields
-				Header fields are lines composed of a field name, followed by a colon
-				(":"), followed by a field body, and terminated by CRLF.  A field
-				name MUST be composed of printable US-ASCII characters (i.e.,
-				characters that have values between 33 and 126, inclusive), except
-				colon.  A field body may be composed of any US-ASCII characters,
-				except for CR and LF.  However, a field body may contain CRLF when
-				used in header "folding" and  "unfolding" as described in section
-				2.2.3.  All field bodies MUST conform to the syntax described in
-				sections 3 and 4 of this standard. 
-				
-			   Rfc 2822 2.2.3 (Multiline header fields)
-				The process of moving from this folded multiple-line representation
-				of a header field to its single line representation is called
-				"unfolding". Unfolding is accomplished by simply removing any CRLF
-				that is immediately followed by WSP.  Each header field should be
-				treated in its unfolded form for further syntactic and semantic
-				evaluation.
-				
-				Example:
-					Subject: aaaaa<CRLF>
-					<TAB or SP>aaaaa<CRLF>
-			*/
+                Header fields are lines composed of a field name, followed by a colon
+                (":"), followed by a field body, and terminated by CRLF.  A field
+                name MUST be composed of printable US-ASCII characters (i.e.,
+                characters that have values between 33 and 126, inclusive), except
+                colon.  A field body may be composed of any US-ASCII characters,
+                except for CR and LF.  However, a field body may contain CRLF when
+                used in header "folding" and  "unfolding" as described in section
+                2.2.3.  All field bodies MUST conform to the syntax described in
+                sections 3 and 4 of this standard. 
+                
+               Rfc 2822 2.2.3 (Multiline header fields)
+                The process of moving from this folded multiple-line representation
+                of a header field to its single line representation is called
+                "unfolding". Unfolding is accomplished by simply removing any CRLF
+                that is immediately followed by WSP.  Each header field should be
+                treated in its unfolded form for further syntactic and semantic
+                evaluation.
+                
+                Example:
+                    Subject: aaaaa<CRLF>
+                    <TAB or SP>aaaaa<CRLF>
+            */
 
             using (TextReader r = new StreamReader(new MemoryStream(Encoding.Default.GetBytes(headers))))
             {
@@ -887,15 +886,15 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses header field parameter value. 
-		/// For example: CONTENT-TYPE: application\octet-stream; name="yourFileName.xxx",
-		/// fieldName="CONTENT-TYPE:" and subFieldName="name".
-		/// </summary>
-		/// <param name="fieldName">Main header field name.</param>
-		/// <param name="parameterName">Header field's parameter name.</param>
-		/// <param name="headers">Full headrs string.</param>
-		/// <returns></returns>
-		public static string ParseHeaderFiledParameter(string fieldName, string parameterName, string headers)
+        /// Parses header field parameter value.
+        /// For example: CONTENT-TYPE: application\octet-stream; name="yourFileName.xxx",
+        /// fieldName="CONTENT-TYPE:" and subFieldName="name".
+        /// </summary>
+        /// <param name="fieldName">Main header field name.</param>
+        /// <param name="parameterName">Header field's parameter name.</param>
+        /// <param name="headers">Full headrs string.</param>
+        /// <returns></returns>
+        public static string ParseHeaderFiledParameter(string fieldName, string parameterName, string headers)
         {
             var mainFiled = ParseHeaderField(fieldName, headers);
             // Parse sub field value
@@ -927,18 +926,18 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses headers from message or mime entry.
-		/// </summary>
-		/// <param name="entryStrm">Stream from where to read headers.</param>
-		/// <returns>Returns header lines.</returns>
-		public static string ParseHeaders(Stream entryStrm)
+        /// Parses headers from message or mime entry.
+        /// </summary>
+        /// <param name="entryStrm">Stream from where to read headers.</param>
+        /// <returns>Returns header lines.</returns>
+        public static string ParseHeaders(Stream entryStrm)
         {
             /* Rfc 2822 3.1.  GENERAL DESCRIPTION
-				A message consists of header fields and, optionally, a body.
-				The  body  is simply a sequence of lines containing ASCII charac-
-				ters.  It is separated from the headers by a null line  (i.e.,  a
-				line with nothing preceding the CRLF).
-			*/
+                A message consists of header fields and, optionally, a body.
+                The  body  is simply a sequence of lines containing ASCII charac-
+                ters.  It is separated from the headers by a null line  (i.e.,  a
+                line with nothing preceding the CRLF).
+            */
 
             var crlf = new[] { (byte)'\r', (byte)'\n' };
             var msHeaders = new MemoryStream();
@@ -960,11 +959,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Parses MediaType_enum from <b>Content-Type:</b> header field value.
-		/// </summary>
-		/// <param name="headerFieldValue"><b>Content-Type:</b> header field value. This value can be null, then MediaType_enum.NotSpecified.</param>
-		/// <returns></returns>
-		public static MediaType_enum ParseMediaType(string headerFieldValue)
+        /// Parses MediaType_enum from <b>Content-Type:</b> header field value.
+        /// </summary>
+        /// <param name="headerFieldValue"><b>Content-Type:</b> header field value. This value can be null, then MediaType_enum.NotSpecified.</param>
+        /// <returns></returns>
+        public static MediaType_enum ParseMediaType(string headerFieldValue)
         {
             if (headerFieldValue == null)
             {

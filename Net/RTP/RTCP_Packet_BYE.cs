@@ -46,7 +46,7 @@ namespace LumiSoft.Net.RTP
         }
 
         /// <summary>
-        /// Gets or sets SSRC/CSRC identifiers included in this BYE packet. 
+        /// Gets or sets SSRC/CSRC identifiers included in this BYE packet.
         /// </summary>
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
         public uint[] Sources

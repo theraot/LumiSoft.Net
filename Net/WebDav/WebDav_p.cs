@@ -5,7 +5,6 @@
     /// </summary>
     public abstract class WebDav_p
     {
-
         /// <summary>
         /// Gets property name.
         /// </summary>

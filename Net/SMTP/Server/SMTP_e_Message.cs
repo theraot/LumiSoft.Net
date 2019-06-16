@@ -34,7 +34,7 @@ namespace LumiSoft.Net.SMTP.Server
             get{ return m_pStream; }
 
             set{
-                m_pStream = value ?? throw new ArgumentNullException("Stream"); 
+                m_pStream = value ?? throw new ArgumentNullException("Stream");
             }
         }
     }

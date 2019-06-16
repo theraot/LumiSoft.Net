@@ -173,7 +173,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Gets or sets 'delay' prameter value. Value -1 means not specified. 
+        /// Gets or sets 'delay' prameter value. Value -1 means not specified.
         /// Specifies a delay interval between announcement repetitions. The delay is measured in milliseconds.
         /// Defined in RFC 4240.
         /// </summary>
@@ -204,9 +204,9 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Gets or sets 'duration' prameter value. Value -1 means not specified. 
-        /// Specifies the maximum duration of the announcement. The media server will discontinue 
-        /// the announcement and end the call if the maximum duration has been reached. The duration 
+        /// Gets or sets 'duration' prameter value. Value -1 means not specified.
+        /// Specifies the maximum duration of the announcement. The media server will discontinue
+        /// the announcement and end the call if the maximum duration has been reached. The duration
         /// is measured in milliseconds. Defined in RFC 4240.
         /// </summary>
         public int Param_Duration
@@ -236,7 +236,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Gets or sets 'locale' prameter value. Specifies the language and optionally country 
+        /// Gets or sets 'locale' prameter value. Specifies the language and optionally country
         /// variant of the announcement sequence named in the "play=" parameter. Defined in RFC 4240.
         /// </summary>
         public string Param_Locale
@@ -297,9 +297,9 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Gets or sets 'maddr' parameter value. Value null means not specified. 
+        /// Gets or sets 'maddr' parameter value. Value null means not specified.
         /// <a style="font-weight: bold; color: red">NOTE: This value is deprecated in since SIP 2.0.</a>
-        /// The maddr parameter indicates the server address to be contacted for this user, 
+        /// The maddr parameter indicates the server address to be contacted for this user,
         /// overriding any address derived from the host field. Defined in RFC 3261.
         /// </summary>
         public string Param_Maddr
@@ -360,7 +360,7 @@ namespace LumiSoft.Net
         //  param[n]           No                    [RFC4240]
 
         /// <summary>
-        /// Gets or sets 'play' parameter value. Value null means not specified. 
+        /// Gets or sets 'play' parameter value. Value null means not specified.
         /// Specifies the resource or announcement sequence to be played. Defined in RFC 4240.
         /// </summary>
         public string Param_Play
@@ -391,7 +391,7 @@ namespace LumiSoft.Net
 
         /// <summary>
         /// Gets or sets 'repeat' parameter value. Value -1 means not specified, value int.MaxValue means 'forever'.
-        /// Specifies how many times the media server should repeat the announcement or sequence named by 
+        /// Specifies how many times the media server should repeat the announcement or sequence named by
         /// the "play=" parameter. Defined in RFC 4240.
         /// </summary>
         public int Param_Repeat
@@ -459,7 +459,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Gets or sets 'transport' parameter value. Value null means not specified. 
+        /// Gets or sets 'transport' parameter value. Value null means not specified.
         /// The transport parameter determines the transport mechanism to
         /// be used for sending SIP messages. Defined in RFC 3261.
         /// </summary>

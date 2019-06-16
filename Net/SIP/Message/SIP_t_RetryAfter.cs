@@ -28,8 +28,8 @@ namespace LumiSoft.Net.SIP.Message
         }
 
         /// <summary>
-        /// Gets or sets 'duration' parameter value. The 'duration' parameter indicates how long the 
-        /// called party will be reachable starting at the initial time of availability. If no duration 
+        /// Gets or sets 'duration' parameter value. The 'duration' parameter indicates how long the
+        /// called party will be reachable starting at the initial time of availability. If no duration
         /// parameter is given, the service is assumed to be available indefinitely. Value -1 means not specified.
         /// </summary>
         /// <exception cref="ArgumentException">Is raised when when value less than 1 is passed.</exception>

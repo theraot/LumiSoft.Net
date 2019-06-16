@@ -124,7 +124,7 @@ namespace LumiSoft.Net.SDP
         }
 
         /// <summary>
-        /// Converts this to valid connection data stirng. 
+        /// Converts this to valid connection data stirng.
         /// </summary>
         /// <returns></returns>
         public string ToValue()

@@ -41,17 +41,16 @@ namespace LumiSoft.Net
     }
 
     /// <summary>
-	/// Provides net core utility methods.
-	/// </summary>
+    /// Provides net core utility methods.
+    /// </summary>
     [Obsolete("")]
     public class Core
     {
-
         /// <summary>
-		/// Decodes base64 data. Defined in RFC 2045 6.8.  Base64 Content-Transfer-Encoding.
-		/// </summary>
-		/// <param name="base64Data">Base64 decoded data.</param>
-		/// <returns></returns>
+        /// Decodes base64 data. Defined in RFC 2045 6.8.  Base64 Content-Transfer-Encoding.
+        /// </summary>
+        /// <param name="base64Data">Base64 decoded data.</param>
+        /// <returns></returns>
         [Obsolete("Use Net_Utils.FromBase64 instead of it")]
         public static byte[] Base64Decode(byte[] base64Data)
         {
@@ -67,36 +66,36 @@ namespace LumiSoft.Net
         public static byte[] Base64DecodeEx(byte[] base64Data, char[] base64Chars)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
-			
-				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
-				are converted to 3 8-bit bytes.
-				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-				
-			
-				Value Encoding  Value Encoding  Value Encoding  Value Encoding
-					0 A            17 R            34 i            51 z
-					1 B            18 S            35 j            52 0
-					2 C            19 T            36 k            53 1
-					3 D            20 U            37 l            54 2
-					4 E            21 V            38 m            55 3
-					5 F            22 W            39 n            56 4
-					6 G            23 X            40 o            57 5
-					7 H            24 Y            41 p            58 6
-					8 I            25 Z            42 q            59 7
-					9 J            26 a            43 r            60 8
-					10 K           27 b            44 s            61 9
-					11 L           28 c            45 t            62 +
-					12 M           29 d            46 u            63 /
-					13 N           30 e            47 v
-					14 O           31 f            48 w         (pad) =
-					15 P           32 g            49 x
-					16 Q           33 h            50 y
-					
-				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes				
-					// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
-					// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
-					// |    8-bit         |    8-bit        |    8-bit         |
-			*/
+            
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+                are converted to 3 8-bit bytes.
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
+                
+            
+                Value Encoding  Value Encoding  Value Encoding  Value Encoding
+                    0 A            17 R            34 i            51 z
+                    1 B            18 S            35 j            52 0
+                    2 C            19 T            36 k            53 1
+                    3 D            20 U            37 l            54 2
+                    4 E            21 V            38 m            55 3
+                    5 F            22 W            39 n            56 4
+                    6 G            23 X            40 o            57 5
+                    7 H            24 Y            41 p            58 6
+                    8 I            25 Z            42 q            59 7
+                    9 J            26 a            43 r            60 8
+                    10 K           27 b            44 s            61 9
+                    11 L           28 c            45 t            62 +
+                    12 M           29 d            46 u            63 /
+                    13 N           30 e            47 v
+                    14 O           31 f            48 w         (pad) =
+                    15 P           32 g            49 x
+                    16 Q           33 h            50 y
+                    
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+                    // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
+                    // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
+                    // |    8-bit         |    8-bit        |    8-bit         |
+            */
 
             if (base64Chars != null && base64Chars.Length != 64)
             {
@@ -147,7 +146,7 @@ namespace LumiSoft.Net
             {
                 byte b = base64Data[i];
 
-                // Read 4 byte base64 block and process it 			
+                // Read 4 byte base64 block and process it
                 // Any characters outside of the base64 alphabet are to be ignored in base64-encoded data.
 
                 // Padding char
@@ -177,7 +176,7 @@ namespace LumiSoft.Net
                 // We have reached at the end of base64 data, there may be some bytes left
                 else if (i == base64Data.Length - 1)
                 {
-                    // Invalid value, we can't have only 6 bit, just skip 
+                    // Invalid value, we can't have only 6 bit, just skip
                     if (nByteInBase64Block == 1)
                     {
                         encodedBytesCount = 0;
@@ -222,11 +221,11 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Encodes specified data with base64 encoding.
-		/// </summary>
-		/// <param name="data">Data to encode.</param>
-		/// <returns></returns>
-		public static byte[] Base64Encode(byte[] data)
+        /// Encodes specified data with base64 encoding.
+        /// </summary>
+        /// <param name="data">Data to encode.</param>
+        /// <returns></returns>
+        public static byte[] Base64Encode(byte[] data)
         {
             return Base64EncodeEx(data, null, true);
         }
@@ -236,42 +235,42 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="data">Data to to encode.</param>
         /// <param name="base64Chars">Custom base64 chars (64 chars) or null if default chars used.</param>
-        /// <param name="padd">Padd missing block chars. Normal base64 must be 4 bytes blocks, if not 4 bytes in block, 
+        /// <param name="padd">Padd missing block chars. Normal base64 must be 4 bytes blocks, if not 4 bytes in block,
         /// missing bytes must be padded with '='. Modified base64 just skips missing bytes.</param>
         /// <returns></returns>
         public static byte[] Base64EncodeEx(byte[] data, char[] base64Chars, bool padd)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
-			
-				Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
-				are converted to 3 8-bit bytes.
-				If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-				
-			
-				Value Encoding  Value Encoding  Value Encoding  Value Encoding
-					0 A            17 R            34 i            51 z
-					1 B            18 S            35 j            52 0
-					2 C            19 T            36 k            53 1
-					3 D            20 U            37 l            54 2
-					4 E            21 V            38 m            55 3
-					5 F            22 W            39 n            56 4
-					6 G            23 X            40 o            57 5
-					7 H            24 Y            41 p            58 6
-					8 I            25 Z            42 q            59 7
-					9 J            26 a            43 r            60 8
-					10 K           27 b            44 s            61 9
-					11 L           28 c            45 t            62 +
-					12 M           29 d            46 u            63 /
-					13 N           30 e            47 v
-					14 O           31 f            48 w         (pad) =
-					15 P           32 g            49 x
-					16 Q           33 h            50 y
-					
-				NOTE: 4 base64 6-bit bytes = 3 8-bit bytes				
-					// |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
-					// | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
-					// |    8-bit         |    8-bit        |    8-bit         |
-			*/
+            
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+                are converted to 3 8-bit bytes.
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
+                
+            
+                Value Encoding  Value Encoding  Value Encoding  Value Encoding
+                    0 A            17 R            34 i            51 z
+                    1 B            18 S            35 j            52 0
+                    2 C            19 T            36 k            53 1
+                    3 D            20 U            37 l            54 2
+                    4 E            21 V            38 m            55 3
+                    5 F            22 W            39 n            56 4
+                    6 G            23 X            40 o            57 5
+                    7 H            24 Y            41 p            58 6
+                    8 I            25 Z            42 q            59 7
+                    9 J            26 a            43 r            60 8
+                    10 K           27 b            44 s            61 9
+                    11 L           28 c            45 t            62 +
+                    12 M           29 d            46 u            63 /
+                    13 N           30 e            47 v
+                    14 O           31 f            48 w         (pad) =
+                    15 P           32 g            49 x
+                    16 Q           33 h            50 y
+                    
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+                    // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
+                    // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
+                    // |    8-bit         |    8-bit        |    8-bit         |
+            */
 
             if (base64Chars != null && base64Chars.Length != 64)
             {
@@ -363,27 +362,27 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Canonical decoding. Decodes all canonical encoding occurences in specified text.
-		/// Usually mime message header unicode/8bit values are encoded as Canonical.
-		/// Format: =?charSet?type[Q or B]?encoded_string?= .
-		/// Defined in RFC 2047.
-		/// </summary>
-		/// <param name="text">Text to decode.</param>
-		/// <returns></returns>
+        /// Canonical decoding. Decodes all canonical encoding occurences in specified text.
+        /// Usually mime message header unicode/8bit values are encoded as Canonical.
+        /// Format: =?charSet?type[Q or B]?encoded_string?= .
+        /// Defined in RFC 2047.
+        /// </summary>
+        /// <param name="text">Text to decode.</param>
+        /// <returns></returns>
         [Obsolete("Use MimeUtils.DecodeWords method instead.")]
         public static string CanonicalDecode(string text)
         {
-            /* RFC 2047			 
-				Generally, an "encoded-word" is a sequence of printable ASCII
-				characters that begins with "=?", ends with "?=", and has two "?"s in
-				between.
-				
-				Syntax: =?charSet?type[Q or B]?encoded_string?=
-				
-				Examples:
-					=?utf-8?q?Buy a Rolex?=
-					=?iso-8859-1?B?bORs5D8=?=
-			*/
+            /* RFC 2047             
+                Generally, an "encoded-word" is a sequence of printable ASCII
+                characters that begins with "=?", ends with "?=", and has two "?"s in
+                between.
+                
+                Syntax: =?charSet?type[Q or B]?encoded_string?=
+                
+                Examples:
+                    =?utf-8?q?Buy a Rolex?=
+                    =?iso-8859-1?B?bORs5D8=?=
+            */
 
             var retVal = new StringBuilder();
             int offset = 0;
@@ -477,12 +476,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Canonical encoding.
-		/// </summary>
-		/// <param name="str">String to encode.</param>
-		/// <param name="charSet">With what charset to encode string. If you aren't sure about it, utf-8 is suggested.</param>
-		/// <returns>Returns encoded text.</returns>
-		public static string CanonicalEncode(string str, string charSet)
+        /// Canonical encoding.
+        /// </summary>
+        /// <param name="str">String to encode.</param>
+        /// <param name="charSet">With what charset to encode string. If you aren't sure about it, utf-8 is suggested.</param>
+        /// <returns>Returns encoded text.</returns>
+        public static string CanonicalEncode(string str, string charSet)
         {
             /* RFC 2049 2. (9),(10)
                 =?encodedWord?=
@@ -504,7 +503,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Compares 2 IP addresses. Returns 0 if IPs are equal, 
+        /// Compares 2 IP addresses. Returns 0 if IPs are equal,
         /// returns positive value if destination IP is bigger than source IP,
         /// returns negative value if destination IP is smaller than source IP.
         /// </summary>
@@ -549,7 +548,7 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="text">Text to hash.</param>
         /// <param name="hex">Specifies if md5 value is returned as hex string.</param>
-        /// <returns>Resturns md5 value or md5 hex value.</returns>              
+        /// <returns>Resturns md5 value or md5 hex value.</returns>
         [Obsolete("Use Net_Utils.ComputeMd5 instead of it")]
         public static string ComputeMd5(string text, bool hex)
         {
@@ -569,7 +568,7 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="localEP">Local end point.</param>
         /// <param name="protocolType">Protocol type.</param>
-        /// <returns>Retruns newly created socket.</returns>                   
+        /// <returns>Retruns newly created socket.</returns>
         [Obsolete("Use Net_Utils.CreateSocket instead of it")]
         public static Socket CreateSocket(IPEndPoint localEP, ProtocolType protocolType)
         {
@@ -598,33 +597,33 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
-		/// Example: &amp;APYA9g- is decoded to öö.
-		/// </summary>
-		/// <param name="text">Text to encode.</param>
-		/// <returns></returns>        
+        /// Decodes IMAP modified UTF7 encoded data. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
+        /// Example: &amp;APYA9g- is decoded to ï¿½ï¿½.
+        /// </summary>
+        /// <param name="text">Text to encode.</param>
+        /// <returns></returns>
         [Obsolete("Use IMAP_Utils.Decode_IMAP_UTF7_String instead of it")]
         public static string Decode_IMAP_UTF7_String(string text)
         {
             /* RFC 3501 5.1.3.  Mailbox International Naming Convention
-				In modified UTF-7, printable US-ASCII characters, except for "&",
-				represent themselves; that is, characters with octet values 0x20-0x25
-				and 0x27-0x7e.  The character "&" (0x26) is represented by the
-				two-octet sequence "&-".
+                In modified UTF-7, printable US-ASCII characters, except for "&",
+                represent themselves; that is, characters with octet values 0x20-0x25
+                and 0x27-0x7e.  The character "&" (0x26) is represented by the
+                two-octet sequence "&-".
 
-				All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
-				represented in modified BASE64, with a further modification from
-				[UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
-				used to represent any printing US-ASCII character which can represent
-				itself.
-				
-				"&" is used to shift to modified BASE64 and "-" to shift back to
-				US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
-				null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
-				means "&") are not permitted.  However, all names start in US-ASCII,
-				and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
-				ISO-10646 character MUST end with a "-").
-			*/
+                All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
+                represented in modified BASE64, with a further modification from
+                [UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
+                used to represent any printing US-ASCII character which can represent
+                itself.
+                
+                "&" is used to shift to modified BASE64 and "-" to shift back to
+                US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
+                null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
+                means "&") are not permitted.  However, all names start in US-ASCII,
+                and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
+                ISO-10646 character MUST end with a "-").
+            */
 
             // Base64 chars, except '/' is replaced with ','
             var base64Chars = new[]{
@@ -679,7 +678,7 @@ namespace LumiSoft.Net
                         // Get encoded block
                         var encodedBlock = Encoding.Default.GetBytes(text.Substring(i + 1, endingPos - i - 1));
 
-                        // Convert to UTF-16 char						
+                        // Convert to UTF-16 char
                         var decodedData = Base64DecodeEx(encodedBlock, base64Chars);
                         var decodedChars = new char[decodedData.Length / 2];
                         for (int iC = 0; iC < decodedChars.Length; iC++)
@@ -705,33 +704,33 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
-		/// Example: öö is encoded to &amp;APYA9g-.
-		/// </summary>
-		/// <param name="text">Text to encode.</param>
-		/// <returns></returns>
+        /// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
+        /// Example: ï¿½ï¿½ is encoded to &amp;APYA9g-.
+        /// </summary>
+        /// <param name="text">Text to encode.</param>
+        /// <returns></returns>
         [Obsolete("Use IMAP_Utils.Encode_IMAP_UTF7_String instead of it")]
         public static string Encode_IMAP_UTF7_String(string text)
         {
             /* RFC 3501 5.1.3.  Mailbox International Naming Convention
-				In modified UTF-7, printable US-ASCII characters, except for "&",
-				represent themselves; that is, characters with octet values 0x20-0x25
-				and 0x27-0x7e.  The character "&" (0x26) is represented by the
-				two-octet sequence "&-".
+                In modified UTF-7, printable US-ASCII characters, except for "&",
+                represent themselves; that is, characters with octet values 0x20-0x25
+                and 0x27-0x7e.  The character "&" (0x26) is represented by the
+                two-octet sequence "&-".
 
-				All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
-				represented in modified BASE64, with a further modification from
-				[UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
-				used to represent any printing US-ASCII character which can represent
-				itself.
-				
-				"&" is used to shift to modified BASE64 and "-" to shift back to
-				US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
-				null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
-				means "&") are not permitted.  However, all names start in US-ASCII,
-				and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
-				ISO-10646 character MUST end with a "-").
-			*/
+                All other characters (octet values 0x00-0x1f and 0x7f-0xff) are
+                represented in modified BASE64, with a further modification from
+                [UTF-7] that "," is used instead of "/".  Modified BASE64 MUST NOT be
+                used to represent any printing US-ASCII character which can represent
+                itself.
+                
+                "&" is used to shift to modified BASE64 and "-" to shift back to
+                US-ASCII.  There is no implicit shift from BASE64 to US-ASCII, and
+                null shifts ("-&" while in BASE64; note that "&-" while in US-ASCII
+                means "&") are not permitted.  However, all names start in US-ASCII,
+                and MUST end in US-ASCII; that is, a name that ends with a non-ASCII
+                ISO-10646 character MUST end with a "-").
+            */
 
             // Base64 chars, except '/' is replaced with ','
             var base64Chars = new[]{
@@ -758,8 +757,8 @@ namespace LumiSoft.Net
                 // Not allowed char, encode it
                 else
                 {
-                    // Superfluous shifts are not allowed. 
-                    // For example: öö may not encoded as &APY-&APY-, but must be &APYA9g-.
+                    // Superfluous shifts are not allowed.
+                    // For example: ï¿½ï¿½ may not encoded as &APY-&APY-, but must be &APYA9g-.
 
                     // Get all continuous chars that need encoding and encode them as one block
                     var encodeBlock = new MemoryStream();
@@ -790,10 +789,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Converts hex byte data to normal byte data. Hex data must be in two bytes pairs, for example: 0F,FF,A3,... .
-		/// </summary>
-		/// <param name="hexData">Hex data.</param>
-		/// <returns></returns>             
+        /// Converts hex byte data to normal byte data. Hex data must be in two bytes pairs, for example: 0F,FF,A3,... .
+        /// </summary>
+        /// <param name="hexData">Hex data.</param>
+        /// <returns></returns>
         [Obsolete("Use Net_Utils.FromHex instead of it")]
         public static byte[] FromHex(byte[] hexData)
         {
@@ -884,12 +883,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Gets argument part of command text.
-		/// </summary>
-		/// <param name="input">Input srting from where to remove value.</param>
-		/// <param name="cmdTxtToRemove">Command text which to remove.</param>
-		/// <returns></returns>
-		public static string GetArgsText(string input, string cmdTxtToRemove)
+        /// Gets argument part of command text.
+        /// </summary>
+        /// <param name="input">Input srting from where to remove value.</param>
+        /// <param name="cmdTxtToRemove">Command text which to remove.</param>
+        /// <returns></returns>
+        public static string GetArgsText(string input, string cmdTxtToRemove)
         {
             var buff = input.Trim();
             if (buff.Length >= cmdTxtToRemove.Length)
@@ -902,21 +901,21 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Gets file name from path.
-		/// </summary>
-		/// <param name="filePath">File file path with file name. For examples: c:\fileName.xxx, aaa\fileName.xxx.</param>
-		/// <returns></returns>
-		public static string GetFileNameFromPath(string filePath)
+        /// Gets file name from path.
+        /// </summary>
+        /// <param name="filePath">File file path with file name. For examples: c:\fileName.xxx, aaa\fileName.xxx.</param>
+        /// <returns></returns>
+        public static string GetFileNameFromPath(string filePath)
         {
             return Path.GetFileName(filePath);
         }
         /// <summary>
-		/// Gets host name. If fails returns ip address.
-		/// </summary>
-		/// <param name="ip">IP address which to reverse lookup.</param>
-		/// <returns>Returns host name of specified IP address.</returns>
+        /// Gets host name. If fails returns ip address.
+        /// </summary>
+        /// <param name="ip">IP address which to reverse lookup.</param>
+        /// <returns>Returns host name of specified IP address.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null.</exception>
-		public static string GetHostName(IPAddress ip)
+        public static string GetHostName(IPAddress ip)
         {
             if (ip == null)
             {
@@ -945,10 +944,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Checks if specified string data is acii data.
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
+        /// Checks if specified string data is acii data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [Obsolete("Use Net_Utils.IsAscii instead of it")]
         public static bool IsAscii(string data)
         {
@@ -982,10 +981,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Checks if specified string is number(long).
-		/// </summary>
-		/// <param name="str"></param>
-		/// <returns></returns>
+        /// Checks if specified string is number(long).
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         [Obsolete("Use Net_Utils.IsInteger instead of it")]
         public static bool IsNumber(string str)
         {
@@ -1005,7 +1004,7 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="ip">IP address to check.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
-        /// <returns>Returns true if IP is private IP.</returns>        
+        /// <returns>Returns true if IP is private IP.</returns>
         [Obsolete("Use Net_Utils.IsPrivateIP instead of it")]
         public static bool IsPrivateIP(string ip)
         {
@@ -1022,7 +1021,7 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="ip">IP address to check.</param>
         /// <returns>Returns true if IP is private IP.</returns>
-        /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>             
+        /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
         [Obsolete("Use Net_Utils.IsPrivateIP instead of it")]
         public static bool IsPrivateIP(IPAddress ip)
         {
@@ -1036,12 +1035,12 @@ namespace LumiSoft.Net
                 var ipBytes = ip.GetAddressBytes();
 
                 /* Private IPs:
-					First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
-					First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
-					First Octet = 10 (Example: 10.X.X.X)
-					First Octet = 169 AND Second Octet = 254 (Example: 169.254.X.X)
+                    First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
+                    First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
+                    First Octet = 10 (Example: 10.X.X.X)
+                    First Octet = 169 AND Second Octet = 254 (Example: 169.254.X.X)
 
-				*/
+                */
 
                 if (ipBytes[0] == 192 && ipBytes[1] == 168)
                 {
@@ -1065,12 +1064,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.
+        /// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.
         /// Defined in RFC 2047 4.2.
-		/// </summary>
-		/// <param name="encoding">Input string encoding.</param>
-		/// <param name="data">String which to encode.</param>
-		/// <returns>Returns decoded string.</returns>	
+        /// </summary>
+        /// <param name="encoding">Input string encoding.</param>
+        /// <param name="data">String which to encode.</param>
+        /// <returns>Returns decoded string.</returns>
         [Obsolete("Use MIME_Utils.QDecode instead of it")]
         public static string QDecode(Encoding encoding, string data)
         {
@@ -1078,70 +1077,70 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// quoted-printable decoder. Defined in RFC 2045 6.7.
-		/// </summary>
-		/// <param name="data">Data which to encode.</param>
-		/// <returns></returns>
+        /// quoted-printable decoder. Defined in RFC 2045 6.7.
+        /// </summary>
+        /// <param name="data">Data which to encode.</param>
+        /// <returns></returns>
         [Obsolete("Use MIME_Utils.QuotedPrintableDecode instead of it")]
         public static byte[] QuotedPrintableDecode(byte[] data)
         {
             /* RFC 2045 6.7. Quoted-Printable Content-Transfer-Encoding
-			 
-				(1)	(General 8bit representation) Any octet, except a CR or
-					LF that is part of a CRLF line break of the canonical
-					(standard) form of the data being encoded, may be
-					represented by an "=" followed by a two digit
-					hexadecimal representation of the octet's value.  The
-					digits of the hexadecimal alphabet, for this purpose,
-					are "0123456789ABCDEF".  Uppercase letters must be
-					used; lowercase letters are not allowed.
+             
+                (1) (General 8bit representation) Any octet, except a CR or
+                    LF that is part of a CRLF line break of the canonical
+                    (standard) form of the data being encoded, may be
+                    represented by an "=" followed by a two digit
+                    hexadecimal representation of the octet's value.  The
+                    digits of the hexadecimal alphabet, for this purpose,
+                    are "0123456789ABCDEF".  Uppercase letters must be
+                    used; lowercase letters are not allowed.
 
-				(2) (Literal representation) Octets with decimal values of
-					33 through 60 inclusive, and 62 through 126, inclusive,
-					MAY be represented as the US-ASCII characters which
-					correspond to those octets (EXCLAMATION POINT through
-					LESS THAN, and GREATER THAN through TILDE, respectively).
-					
-				(3) (White Space) Octets with values of 9 and 32 MAY be
-					represented as US-ASCII TAB (HT) and SPACE characters,
-					respectively, but MUST NOT be so represented at the end
-					of an encoded line.  Any TAB (HT) or SPACE characters
-					on an encoded line MUST thus be followed on that line
-					by a printable character.  In particular, an "=" at the
-					end of an encoded line, indicating a soft line break
-					(see rule #5) may follow one or more TAB (HT) or SPACE
-					characters.  It follows that an octet with decimal
-					value 9 or 32 appearing at the end of an encoded line
-					must be represented according to Rule #1.  This rule is
-					necessary because some MTAs (Message Transport Agents,
-					programs which transport messages from one user to
-					another, or perform a portion of such transfers) are
-					known to pad lines of text with SPACEs, and others are
-					known to remove "white space" characters from the end
-					of a line.  Therefore, when decoding a Quoted-Printable
-					body, any trailing white space on a line must be
-					deleted, as it will necessarily have been added by
-					intermediate transport agents.
-					
-				(4) (Line Breaks) A line break in a text body, represented
-				    as a CRLF sequence in the text canonical form, must be
-					represented by a (RFC 822) line break, which is also a
-					CRLF sequence, in the Quoted-Printable encoding.  Since
-					the canonical representation of media types other than
-					text do not generally include the representation of
-					line breaks as CRLF sequences, no hard line breaks
-					(i.e. line breaks that are intended to be meaningful
-					and to be displayed to the user) can occur in the
-					quoted-printable encoding of such types.  Sequences
-					like "=0D", "=0A", "=0A=0D" and "=0D=0A" will routinely
-					appear in non-text data represented in quoted-
-					printable, of course.
+                (2) (Literal representation) Octets with decimal values of
+                    33 through 60 inclusive, and 62 through 126, inclusive,
+                    MAY be represented as the US-ASCII characters which
+                    correspond to those octets (EXCLAMATION POINT through
+                    LESS THAN, and GREATER THAN through TILDE, respectively).
+                    
+                (3) (White Space) Octets with values of 9 and 32 MAY be
+                    represented as US-ASCII TAB (HT) and SPACE characters,
+                    respectively, but MUST NOT be so represented at the end
+                    of an encoded line.  Any TAB (HT) or SPACE characters
+                    on an encoded line MUST thus be followed on that line
+                    by a printable character.  In particular, an "=" at the
+                    end of an encoded line, indicating a soft line break
+                    (see rule #5) may follow one or more TAB (HT) or SPACE
+                    characters.  It follows that an octet with decimal
+                    value 9 or 32 appearing at the end of an encoded line
+                    must be represented according to Rule #1.  This rule is
+                    necessary because some MTAs (Message Transport Agents,
+                    programs which transport messages from one user to
+                    another, or perform a portion of such transfers) are
+                    known to pad lines of text with SPACEs, and others are
+                    known to remove "white space" characters from the end
+                    of a line.  Therefore, when decoding a Quoted-Printable
+                    body, any trailing white space on a line must be
+                    deleted, as it will necessarily have been added by
+                    intermediate transport agents.
+                    
+                (4) (Line Breaks) A line break in a text body, represented
+                    as a CRLF sequence in the text canonical form, must be
+                    represented by a (RFC 822) line break, which is also a
+                    CRLF sequence, in the Quoted-Printable encoding.  Since
+                    the canonical representation of media types other than
+                    text do not generally include the representation of
+                    line breaks as CRLF sequences, no hard line breaks
+                    (i.e. line breaks that are intended to be meaningful
+                    and to be displayed to the user) can occur in the
+                    quoted-printable encoding of such types.  Sequences
+                    like "=0D", "=0A", "=0A=0D" and "=0D=0A" will routinely
+                    appear in non-text data represented in quoted-
+                    printable, of course.
 
-				(5) (Soft Line Breaks) The Quoted-Printable encoding
-					REQUIRES that encoded lines be no more than 76
-					characters long.  If longer lines are to be encoded
-					with the Quoted-Printable encoding, "soft" line breaks
-			*/
+                (5) (Soft Line Breaks) The Quoted-Printable encoding
+                    REQUIRES that encoded lines be no more than 76
+                    characters long.  If longer lines are to be encoded
+                    with the Quoted-Printable encoding, "soft" line breaks
+            */
 
             var msRetVal = new MemoryStream();
             var msSourceStream = new MemoryStream(data);
@@ -1195,32 +1194,32 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Encodes data with quoted-printable encoding.
-		/// </summary>
-		/// <param name="data">Data to encode.</param>
-		/// <returns></returns>
-		public static byte[] QuotedPrintableEncode(byte[] data)
+        /// Encodes data with quoted-printable encoding.
+        /// </summary>
+        /// <param name="data">Data to encode.</param>
+        /// <returns></returns>
+        public static byte[] QuotedPrintableEncode(byte[] data)
         {
             /* Rfc 2045 6.7. Quoted-Printable Content-Transfer-Encoding
-			 
-			(2) (Literal representation) Octets with decimal values of 33 through 60 inclusive, 
-				and 62 through 126, inclusive, MAY be represented as the US-ASCII characters which
-				correspond to those octets (EXCLAMATION POINT through LESS THAN, and GREATER THAN 
-				through TILDE, respectively).
-			
-			(3) (White Space) Octets with values of 9 and 32 MAY be represented as US-ASCII TAB (HT) and 
-			    SPACE characters, respectively, but MUST NOT be so represented at the end of an encoded line. 
-				You must encode it =XX.
-			
-			(5) Encoded lines must not be longer than 76 characters, not counting the trailing CRLF. 
-				If longer lines are to be encoded with the Quoted-Printable encoding, "soft" line breaks
-				must be used.  An equal sign as the last character on a encoded line indicates such 
-				a non-significant ("soft") line break in the encoded text.
-				
-			*)  If binary data is encoded in quoted-printable, care must be taken to encode 
-			    CR and LF characters as "=0D" and "=0A", respectively.	 
+             
+            (2) (Literal representation) Octets with decimal values of 33 through 60 inclusive, 
+                and 62 through 126, inclusive, MAY be represented as the US-ASCII characters which
+                correspond to those octets (EXCLAMATION POINT through LESS THAN, and GREATER THAN 
+                through TILDE, respectively).
+            
+            (3) (White Space) Octets with values of 9 and 32 MAY be represented as US-ASCII TAB (HT) and 
+                SPACE characters, respectively, but MUST NOT be so represented at the end of an encoded line. 
+                You must encode it =XX.
+            
+            (5) Encoded lines must not be longer than 76 characters, not counting the trailing CRLF. 
+                If longer lines are to be encoded with the Quoted-Printable encoding, "soft" line breaks
+                must be used.  An equal sign as the last character on a encoded line indicates such 
+                a non-significant ("soft") line break in the encoded text.
+                
+            *)  If binary data is encoded in quoted-printable, care must be taken to encode 
+                CR and LF characters as "=0D" and "=0A", respectively.     
 
-			*/
+            */
 
             int lineLength = 0;
             // Encode bytes <= 33 , >= 126 and 61 (=)
@@ -1308,21 +1307,21 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Converts string to hex string.
-		/// </summary>
-		/// <param name="data">String to convert.</param>
-		/// <returns>Returns data as hex string.</returns>
-		public static string ToHexString(string data)
+        /// Converts string to hex string.
+        /// </summary>
+        /// <param name="data">String to convert.</param>
+        /// <returns>Returns data as hex string.</returns>
+        public static string ToHexString(string data)
         {
             return Encoding.Default.GetString(ToHex(Encoding.Default.GetBytes(data)));
         }
 
         /// <summary>
-		/// Converts string to hex string.
-		/// </summary>
-		/// <param name="data">Data to convert.</param>
-		/// <returns>Returns data as hex string.</returns>  
-		public static string ToHexString(byte[] data)
+        /// Converts string to hex string.
+        /// </summary>
+        /// <param name="data">Data to convert.</param>
+        /// <returns>Returns data as hex string.</returns>
+        public static string ToHexString(byte[] data)
         {
             return Encoding.Default.GetString(ToHex(data));
         }

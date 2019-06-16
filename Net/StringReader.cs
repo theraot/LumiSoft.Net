@@ -9,20 +9,20 @@ namespace LumiSoft.Net
     public class StringReader
     {
         /// <summary>
-		/// Default constructor.
-		/// </summary>
-		/// <param name="source">Source string.</param>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="source">Source string.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>source</b> is null.</exception>
-		public StringReader(string source)
+        public StringReader(string source)
         {
             OriginalString = source ?? throw new ArgumentNullException("source");
             SourceString = source;
         }
 
         /// <summary>
-		/// Gets how many chars are available for reading.
-		/// </summary>
-		public long Available
+        /// Gets how many chars are available for reading.
+        /// </summary>
+        public long Available
         {
             get { return SourceString.Length; }
         }
@@ -41,25 +41,25 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Gets currently remaining string.
-		/// </summary>
-		public string SourceString { get; private set; } = "";
+        /// Gets currently remaining string.
+        /// </summary>
+        public string SourceString { get; private set; } = "";
 
         /// <summary>
-		/// Appends specified string to SourceString.
-		/// </summary>
-		/// <param name="value">String value to append.</param>
-		public void AppendString(string value)
+        /// Appends specified string to SourceString.
+        /// </summary>
+        /// <param name="value">String value to append.</param>
+        public void AppendString(string value)
         {
             SourceString += value;
         }
 
         /// <summary>
-		/// Gets if source string ends with specified value. Compare is case-sensitive.
-		/// </summary>
-		/// <param name="value">Start string value.</param>
-		/// <returns>Returns true if source string ends with specified value.</returns>
-		public bool EndsWith(string value)
+        /// Gets if source string ends with specified value. Compare is case-sensitive.
+        /// </summary>
+        /// <param name="value">Start string value.</param>
+        /// <returns>Returns true if source string ends with specified value.</returns>
+        public bool EndsWith(string value)
         {
             return SourceString.EndsWith(value);
         }
@@ -93,19 +93,19 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped.
+        /// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped.
         /// Delimiter is removed by default.
-		/// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
-		/// </summary>
-		/// <param name="delimiters">Data delimiters.</param>
-		/// <returns></returns>
-		public string QuotedReadToDelimiter(char[] delimiters)
+        /// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
+        /// </summary>
+        /// <param name="delimiters">Data delimiters.</param>
+        /// <returns></returns>
+        public string QuotedReadToDelimiter(char[] delimiters)
         {
             return QuotedReadToDelimiter(delimiters, true);
         }
 
         /// <summary>
-        /// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped. 
+        /// Reads string to specified delimiter or to end of underlying string. Notes: Delimiters in quoted string is skipped.
         /// For example: delimiter = ',', text = '"aaaa,eee",qqqq' - then result is '"aaaa,eee"'.
         /// </summary>
         /// <param name="delimiters">Data delimiters.</param>
@@ -179,11 +179,11 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
-		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
-		/// </summary>
-		/// <returns></returns>
-		public string ReadParenthesized()
+        /// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis.
+        /// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
+        /// </summary>
+        /// <returns></returns>
+        public string ReadParenthesized()
         {
             ReadToFirstChar();
 
@@ -272,9 +272,9 @@ namespace LumiSoft.Net
             return retVal;
         }
 
-        //	public string ReadToDelimiter(char delimiter)
-        //	{
-        //	}
+        // public string ReadToDelimiter(char delimiter)
+        // {
+        // }
 
         /// <summary>
         /// Reads string with specified length. Throws exception if read length is bigger than source string length.
@@ -312,10 +312,10 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Reads to first char, skips white-space(SP,VTAB,HTAB,CR,LF) from the beginning of source string.
-		/// </summary>
+        /// Reads to first char, skips white-space(SP,VTAB,HTAB,CR,LF) from the beginning of source string.
+        /// </summary>
         /// <returns>Returns white-space chars which was readed.</returns>
-		public string ReadToFirstChar()
+        public string ReadToFirstChar()
         {
             int whiteSpaces = 0;
             for (int i = 0; i < SourceString.Length; i++)
@@ -337,22 +337,22 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Reads word from string. Returns null if no word is available.
-		/// Word reading begins from first char, for example if SP"text", then space is trimmed.
-		/// </summary>
-		/// <returns></returns>
+        /// Reads word from string. Returns null if no word is available.
+        /// Word reading begins from first char, for example if SP"text", then space is trimmed.
+        /// </summary>
+        /// <returns></returns>
         public string ReadWord()
         {
             return ReadWord(true);
         }
 
         /// <summary>
-		/// Reads word from string. Returns null if no word is available.
-		/// Word reading begins from first char, for example if SP"text", then space is trimmed.
-		/// </summary>
-		/// <param name="unQuote">Specifies if quoted string word is unquoted.</param>
-		/// <returns></returns>
-		public string ReadWord(bool unQuote)
+        /// Reads word from string. Returns null if no word is available.
+        /// Word reading begins from first char, for example if SP"text", then space is trimmed.
+        /// </summary>
+        /// <param name="unQuote">Specifies if quoted string word is unquoted.</param>
+        /// <returns></returns>
+        public string ReadWord(bool unQuote)
         {
             return ReadWord(unQuote, new[] { ' ', ',', ';', '{', '}', '(', ')', '[', ']', '<', '>', '\r', '\n' }, false);
         }
@@ -442,11 +442,11 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Gets if source string starts with specified value. Compare is case-sensitive.
-		/// </summary>
-		/// <param name="value">Start string value.</param>
-		/// <returns>Returns true if source string starts with specified value.</returns>
-		public bool StartsWith(string value)
+        /// Gets if source string starts with specified value. Compare is case-sensitive.
+        /// </summary>
+        /// <param name="value">Start string value.</param>
+        /// <returns>Returns true if source string starts with specified value.</returns>
+        public bool StartsWith(string value)
         {
             return SourceString.StartsWith(value);
         }

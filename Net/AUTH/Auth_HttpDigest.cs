@@ -96,8 +96,8 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Gets or sets a server-specified unique data string. It is recommended that this 
-        /// string be base64 or hexadecimal data. 
+        /// Gets or sets a server-specified unique data string. It is recommended that this
+        /// string be base64 or hexadecimal data.
         /// Suggested value: base64(time-stamp hex(time-stamp ":" ETag ":" private-key)).
         /// </summary>
         /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
@@ -118,7 +118,7 @@ namespace LumiSoft.Net.AUTH
 
         /// <summary>
         /// Gets or stets nonce count. This MUST be specified if a qop directive is sent (see above), and
-        /// MUST NOT be specified if the server did not send a qop directive in the WWW-Authenticate 
+        /// MUST NOT be specified if the server did not send a qop directive in the WWW-Authenticate
         /// header field.  The nc-value is the hexadecimal count of the number of requests.
         /// </summary>
         public int NonceCount { get; set; } = 1;
@@ -150,14 +150,14 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets or sets value what indicates "quality of protection" the client has applied to
         /// the message. If present, its value MUST be one of the alternatives the server indicated
-        /// it supports in the WWW-Authenticate header. This directive is optional in order to preserve 
+        /// it supports in the WWW-Authenticate header. This directive is optional in order to preserve
         /// backward compatibility.
         /// </summary>
         public string Qop { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets a string to be displayed to users so they know which username and password 
-        /// to use. This string should contain at least the name of the host performing the 
+        /// Gets or sets a string to be displayed to users so they know which username and password
+        /// to use. This string should contain at least the name of the host performing the
         /// authentication and might additionally indicate the collection of users who might have access.
         /// An example might be "registered_users@gotham.news.com".
         /// </summary>
@@ -193,7 +193,7 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Gets a string of 32 hex digits computed by HTTP digest algorithm, 
+        /// Gets a string of 32 hex digits computed by HTTP digest algorithm,
         /// which proves that the user knows a password.
         /// </summary>
         public string Response { get; private set; } = "";
@@ -405,7 +405,7 @@ namespace LumiSoft.Net.AUTH
             {
                 throw new ArgumentException("Invalid Algorithm value '" + Algorithm + "' !");
             }
-            // Create A2            
+            // Create A2
             if (Qop == "" || Qop.ToLower() == "auth")
             {
                 a2 = ":" + Uri;
@@ -446,7 +446,6 @@ namespace LumiSoft.Net.AUTH
                 digest-response  = 1#( username | realm | nonce | cnonce | nonce-count | qop | digest-uri | response |
                           maxbuf | charset | cipher | authzid | auth-param )
             */
-
 
             var response = "";
             if (string.IsNullOrEmpty(m_Password))
@@ -503,7 +502,7 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Creates 'Challange' data using this class info. 
+        /// Creates 'Challange' data using this class info.
         /// </summary>
         /// <returns>Returns Challange data.</returns>
         public string ToChallange()
@@ -512,7 +511,7 @@ namespace LumiSoft.Net.AUTH
         }
 
         /// <summary>
-        /// Creates 'Challange' data using this class info. 
+        /// Creates 'Challange' data using this class info.
         /// </summary>
         /// <param name="addAuthMethod">Specifies if 'digest ' authe method string constant is added.</param>
         /// <returns>Returns Challange data.</returns>

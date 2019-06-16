@@ -27,19 +27,19 @@ namespace LumiSoft.Net.ICMP
     }
 
     /// <summary>
-	/// Echo reply message.
-	/// </summary>
-	public class EchoMessage
+    /// Echo reply message.
+    /// </summary>
+    public class EchoMessage
     {
         private readonly int m_TTL;
 
         /// <summary>
-		/// Default constructor.
-		/// </summary>
-		/// <param name="ip">IP address what sent echo message.</param>
-		/// <param name="ttl">Time to live in milli seconds.</param>
-		/// <param name="time">Time what elapsed before getting echo response.</param>
-		internal EchoMessage(IPAddress ip, int ttl, int time)
+        /// Default constructor.
+        /// </summary>
+        /// <param name="ip">IP address what sent echo message.</param>
+        /// <param name="ttl">Time to live in milli seconds.</param>
+        /// <param name="time">Time what elapsed before getting echo response.</param>
+        internal EchoMessage(IPAddress ip, int ttl, int time)
         {
             IPAddress = ip;
             m_TTL = ttl;
@@ -65,7 +65,7 @@ namespace LumiSoft.Net.ICMP
         public int ReplyTime { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
@@ -83,7 +83,7 @@ namespace LumiSoft.Net.ICMP
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         [Obsolete("Will be removed !")]
@@ -94,16 +94,16 @@ namespace LumiSoft.Net.ICMP
     }
 
     /// <summary>
-	/// Icmp utils.
-	/// </summary>
-	public class Icmp
+    /// Icmp utils.
+    /// </summary>
+    public class Icmp
     {
         /// <summary>
-		/// Traces specified ip.
-		/// </summary>
-		/// <param name="destIP">Destination IP address.</param>
-		/// <returns></returns>
-		public static EchoMessage[] Trace(string destIP)
+        /// Traces specified ip.
+        /// </summary>
+        /// <param name="destIP">Destination IP address.</param>
+        /// <returns></returns>
+        public static EchoMessage[] Trace(string destIP)
         {
             return Trace(IPAddress.Parse(destIP), 2000);
         }
@@ -118,7 +118,7 @@ namespace LumiSoft.Net.ICMP
         {
             var retVal = new List<EchoMessage>();
 
-            //Create Raw ICMP Socket 
+            //Create Raw ICMP Socket
             var s = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.Icmp);
 
             var ipdest = new IPEndPoint(ip, 80);
@@ -135,7 +135,7 @@ namespace LumiSoft.Net.ICMP
 
                 try
                 {
-                    //Socket options to set TTL and Timeouts 
+                    //Socket options to set TTL and Timeouts
                     s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.IpTimeToLive, ittl);
                     s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, timeout);
                     s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, timeout);
@@ -146,7 +146,7 @@ namespace LumiSoft.Net.ICMP
                     //Send Request
                     s.SendTo(sendPacket, sendPacket.Length, SocketFlags.None, ipdest);
 
-                    //Receive				
+                    //Receive
                     s.ReceiveFrom(buffer, buffer.Length, SocketFlags.None, ref endpoint);
 
                     //Calculate time required
@@ -189,9 +189,9 @@ namespace LumiSoft.Net.ICMP
         /// <param name="ip">IP address to ping.</param>
         /// <param name="timeout">Send recieve timeout in milli seconds.</param>
         /// <returns></returns>
-		public static EchoMessage Ping(IPAddress ip, int timeout)
+        public static EchoMessage Ping(IPAddress ip, int timeout)
         {
-            //Create Raw ICMP Socket 
+            //Create Raw ICMP Socket
             var s = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.Icmp);
 
             var ipdest = new IPEndPoint(ip, 80);
@@ -200,7 +200,7 @@ namespace LumiSoft.Net.ICMP
             ushort id = (ushort)DateTime.Now.Millisecond;
             var sendPacket = CreatePacket(id);
 
-            //Socket options to set TTL and Timeouts 
+            //Socket options to set TTL and Timeouts
             s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.IpTimeToLive, 30);
             s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, timeout);
             s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, timeout);
@@ -233,15 +233,15 @@ namespace LumiSoft.Net.ICMP
         private static byte[] CreatePacket(ushort id)
         {
             /*Rfc 792  Echo or Echo Reply Message
-			  0               8              16              24
-			 +---------------+---------------+---------------+---------------+
-			 |     Type      |     Code      |           Checksum            |
-			 +---------------+---------------+---------------+---------------+
-			 |           ID Number           |            Sequence Number    |
-			 +---------------+---------------+---------------+---------------+
-			 |     Data...        
-			 +---------------+---------------+---------------+---------------+
-			*/
+              0               8              16              24
+             +---------------+---------------+---------------+---------------+
+             |     Type      |     Code      |           Checksum            |
+             +---------------+---------------+---------------+---------------+
+             |           ID Number           |            Sequence Number    |
+             +---------------+---------------+---------------+---------------+
+             |     Data...        
+             +---------------+---------------+---------------+---------------+
+            */
 
             var packet = new byte[8 + 2];
             packet[0] = (byte)ICMP_Type.Echo; // Type

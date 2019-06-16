@@ -13,7 +13,6 @@ namespace LumiSoft.Net.SIP
     /// </summary>
     public class SIP_Utils
     {
-
         /// <summary>
         /// Gets is specified option tags constains specified option tag.
         /// </summary>
@@ -110,7 +109,7 @@ namespace LumiSoft.Net.SIP
         }
 
         /// <summary>
-        /// Gets if specified URI is tel: or sip tel URI. There is special case when SIP URI can be tel:, 
+        /// Gets if specified URI is tel: or sip tel URI. There is special case when SIP URI can be tel:,
         /// sip:+xxxx and sip:xxx;user=phone.
         /// </summary>
         /// <param name="uri">URI to check.</param>

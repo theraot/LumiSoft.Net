@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Net;
 using System.Threading;
@@ -205,40 +205,40 @@ namespace LumiSoft.Net.DNS.Client
         }
 
         /// <summary>
-		/// Creates binary query.
-		/// </summary>
+        /// Creates binary query.
+        /// </summary>
         /// <param name="buffer">Buffer where to store query.</param>
-		/// <param name="ID">Query ID.</param>
-		/// <param name="qname">Query text.</param>
-		/// <param name="qtype">Query type.</param>
-		/// <param name="qclass">Query class.</param>
-		/// <returns>Returns number of bytes stored to <b>buffer</b>.</returns>
-		private int CreateQuery(byte[] buffer, int ID, string qname, DNS_QType qtype, int qclass)
+        /// <param name="ID">Query ID.</param>
+        /// <param name="qname">Query text.</param>
+        /// <param name="qtype">Query type.</param>
+        /// <param name="qclass">Query class.</param>
+        /// <returns>Returns number of bytes stored to <b>buffer</b>.</returns>
+        private int CreateQuery(byte[] buffer, int ID, string qname, DNS_QType qtype, int qclass)
         {
             //---- Create header --------------------------------------------//
             // Header is first 12 bytes of query
 
             /* 4.1.1. Header section format
-										  1  1  1  1  1  1
-			0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                      ID                       |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                    QDCOUNT                    |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                    ANCOUNT                    |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                    NSCOUNT                    |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                    ARCOUNT                    |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			
-			QR  A one bit field that specifies whether this message is a
+                                          1  1  1  1  1  1
+            0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                      ID                       |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                    QDCOUNT                    |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                    ANCOUNT                    |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                    NSCOUNT                    |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                    ARCOUNT                    |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            
+            QR  A one bit field that specifies whether this message is a
                 query (0), or a response (1).
-				
-			OPCODE          A four bit field that specifies kind of query in this
+                
+            OPCODE          A four bit field that specifies kind of query in this
                 message.  This value is set by the originator of a query
                 and copied into the response.  The values are:
 
@@ -247,8 +247,8 @@ namespace LumiSoft.Net.DNS.Client
                 1               an inverse query (IQUERY)
 
                 2               a server status request (STATUS)
-				
-			*/
+                
+            */
 
             //--------- Header part -----------------------------------//
             buffer[0] = (byte)(ID >> 8); buffer[1] = (byte)(ID & 0xFF);
@@ -263,27 +263,27 @@ namespace LumiSoft.Net.DNS.Client
 
             //----Create query ------------------------------------//
 
-            /* 	Rfc 1035 4.1.2. Question section format
-											  1  1  1  1  1  1
-			0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                                               |
-			/                     QNAME                     /
-			/                                               /
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                     QTYPE                     |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			|                     QCLASS                    |
-			+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-			
-			QNAME
-				a domain name represented as a sequence of labels, where
-				each label consists of a length octet followed by that
-				number of octets.  The domain name terminates with the
-				zero length octet for the null label of the root.  Note
-				that this field may be an odd number of octets; no
-				padding is used.
-			*/
+            /* Rfc 1035 4.1.2. Question section format
+                                              1  1  1  1  1  1
+            0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                                               |
+            /                     QNAME                     /
+            /                                               /
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                     QTYPE                     |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            |                     QCLASS                    |
+            +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+            
+            QNAME
+                a domain name represented as a sequence of labels, where
+                each label consists of a length octet followed by that
+                number of octets.  The domain name terminates with the
+                zero length octet for the null label of the root.  Note
+                that this field may be an odd number of octets; no
+                padding is used.
+            */
 
             // Convert unicode domain name. For more info see RFC 5890.
             var ldn = new System.Globalization.IdnMapping();
@@ -311,7 +311,7 @@ namespace LumiSoft.Net.DNS.Client
             // Terminate domain (see note above)
             buffer[position++] = (byte)0;
 
-            // Set QTYPE 
+            // Set QTYPE
             buffer[position++] = (byte)0;
             buffer[position++] = (byte)qtype;
 

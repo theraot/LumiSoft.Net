@@ -5,7 +5,6 @@ namespace LumiSoft.Net.SMTP
     /// </summary>
     public class SMTP_ServiceExtensions
     {
-
         /// <summary>
         /// Use 8-bit data. Defined in RFC 1652.
         /// </summary>

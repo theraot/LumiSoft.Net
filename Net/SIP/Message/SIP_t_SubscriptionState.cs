@@ -23,7 +23,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_SubscriptionState : SIP_t_ValueWithParams
     {
-
         private string m_Value = "";
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace LumiSoft.Net.SIP.Message
 
         /// <summary>
         /// Gets or sets 'reason' parameter value. Known reason values are defined in EventReason class.
-        /// Value null means not specified. 
+        /// Value null means not specified.
         /// </summary>
         public string Reason
         {
@@ -249,43 +248,43 @@ namespace LumiSoft.Net.SIP.Message
         public class EventReason
         {
             /// <summary>
-            /// The subscription has been terminated, but the subscriber SHOULD retry immediately 
-            /// with a new subscription.  One primary use of such a status code is to allow migration of 
+            /// The subscription has been terminated, but the subscriber SHOULD retry immediately
+            /// with a new subscription.  One primary use of such a status code is to allow migration of
             /// subscriptions between nodes.  The "retry-after" parameter has no semantics for "deactivated".
             /// </summary>
             public const string deactivated = "deactivated";
 
             /// <summary>
-            /// The subscription has been terminated, but the client SHOULD retry at some later time. 
+            /// The subscription has been terminated, but the client SHOULD retry at some later time.
             /// If a "retry-after" parameter is also present, the client SHOULD wait at least the number of
             /// seconds specified by that parameter before attempting to re-subscribe.
             /// </summary>
             public const string probation = "probation";
 
             /// <summary>
-            /// The subscription has been terminated due to change in authorization policy. 
-            /// Clients SHOULD NOT attempt to re-subscribe. The "retry-after" parameter has no 
+            /// The subscription has been terminated due to change in authorization policy.
+            /// Clients SHOULD NOT attempt to re-subscribe. The "retry-after" parameter has no
             /// semantics for "rejected".
             /// </summary>
             public const string rejected = "rejected";
 
             /// <summary>
-            /// The subscription has been terminated because it was not refreshed before it expired. 
+            /// The subscription has been terminated because it was not refreshed before it expired.
             /// Clients MAY re-subscribe immediately. The "retry-after" parameter has no semantics for "timeout".
             /// </summary>
             public const string timeout = "timeout";
 
             /// <summary>
-            /// The subscription has been terminated because the notifier could not obtain authorization in a 
+            /// The subscription has been terminated because the notifier could not obtain authorization in a
             /// timely fashion.  If a "retry-after" parameter is also present, the client SHOULD wait at least
-            /// the number of seconds specified by that parameter before attempting to re-subscribe; otherwise, 
+            /// the number of seconds specified by that parameter before attempting to re-subscribe; otherwise,
             /// the client MAY retry immediately, but will likely get put back into pending state.
             /// </summary>
             public const string giveup = "giveup";
 
             /// <summary>
-            /// The subscription has been terminated because the resource state which was being monitored 
-            /// no longer exists. Clients SHOULD NOT attempt to re-subscribe. The "retry-after" parameter 
+            /// The subscription has been terminated because the resource state which was being monitored
+            /// no longer exists. Clients SHOULD NOT attempt to re-subscribe. The "retry-after" parameter
             /// has no semantics for "noresource".
             /// </summary>
             public const string noresource = "noresource";

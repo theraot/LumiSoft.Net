@@ -278,91 +278,91 @@ namespace LumiSoft.Net.POP3.Server
         private void AUTH(string cmdText)
         {
             /* RFC 1734
-				
-				AUTH mechanism
+                
+                AUTH mechanism
 
-					Arguments:
-						a string identifying an IMAP4 authentication mechanism,
-						such as defined by [IMAP4-AUTH].  Any use of the string
-						"imap" used in a server authentication identity in the
-						definition of an authentication mechanism is replaced with
-						the string "pop".
-						
-					Possible Responses:
-						+OK maildrop locked and ready
-						-ERR authentication exchange failed
+                    Arguments:
+                        a string identifying an IMAP4 authentication mechanism,
+                        such as defined by [IMAP4-AUTH].  Any use of the string
+                        "imap" used in a server authentication identity in the
+                        definition of an authentication mechanism is replaced with
+                        the string "pop".
+                        
+                    Possible Responses:
+                        +OK maildrop locked and ready
+                        -ERR authentication exchange failed
 
-					Restrictions:
-						may only be given in the AUTHORIZATION state
+                    Restrictions:
+                        may only be given in the AUTHORIZATION state
 
-					Discussion:
-						The AUTH command indicates an authentication mechanism to
-						the server.  If the server supports the requested
-						authentication mechanism, it performs an authentication
-						protocol exchange to authenticate and identify the user.
-						Optionally, it also negotiates a protection mechanism for
-						subsequent protocol interactions.  If the requested
-						authentication mechanism is not supported, the server						
-						should reject the AUTH command by sending a negative
-						response.
+                    Discussion:
+                        The AUTH command indicates an authentication mechanism to
+                        the server.  If the server supports the requested
+                        authentication mechanism, it performs an authentication
+                        protocol exchange to authenticate and identify the user.
+                        Optionally, it also negotiates a protection mechanism for
+                        subsequent protocol interactions.  If the requested
+                        authentication mechanism is not supported, the server                        
+                        should reject the AUTH command by sending a negative
+                        response.
 
-						The authentication protocol exchange consists of a series
-						of server challenges and client answers that are specific
-						to the authentication mechanism.  A server challenge,
-						otherwise known as a ready response, is a line consisting
-						of a "+" character followed by a single space and a BASE64
-						encoded string.  The client answer consists of a line
-						containing a BASE64 encoded string.  If the client wishes
-						to cancel an authentication exchange, it should issue a
-						line with a single "*".  If the server receives such an
-						answer, it must reject the AUTH command by sending a
-						negative response.
+                        The authentication protocol exchange consists of a series
+                        of server challenges and client answers that are specific
+                        to the authentication mechanism.  A server challenge,
+                        otherwise known as a ready response, is a line consisting
+                        of a "+" character followed by a single space and a BASE64
+                        encoded string.  The client answer consists of a line
+                        containing a BASE64 encoded string.  If the client wishes
+                        to cancel an authentication exchange, it should issue a
+                        line with a single "*".  If the server receives such an
+                        answer, it must reject the AUTH command by sending a
+                        negative response.
 
-						A protection mechanism provides integrity and privacy
-						protection to the protocol session.  If a protection
-						mechanism is negotiated, it is applied to all subsequent
-						data sent over the connection.  The protection mechanism
-						takes effect immediately following the CRLF that concludes
-						the authentication exchange for the client, and the CRLF of
-						the positive response for the server.  Once the protection
-						mechanism is in effect, the stream of command and response
-						octets is processed into buffers of ciphertext.  Each
-						buffer is transferred over the connection as a stream of
-						octets prepended with a four octet field in network byte
-						order that represents the length of the following data.
-						The maximum ciphertext buffer length is defined by the
-						protection mechanism.
+                        A protection mechanism provides integrity and privacy
+                        protection to the protocol session.  If a protection
+                        mechanism is negotiated, it is applied to all subsequent
+                        data sent over the connection.  The protection mechanism
+                        takes effect immediately following the CRLF that concludes
+                        the authentication exchange for the client, and the CRLF of
+                        the positive response for the server.  Once the protection
+                        mechanism is in effect, the stream of command and response
+                        octets is processed into buffers of ciphertext.  Each
+                        buffer is transferred over the connection as a stream of
+                        octets prepended with a four octet field in network byte
+                        order that represents the length of the following data.
+                        The maximum ciphertext buffer length is defined by the
+                        protection mechanism.
 
-						The server is not required to support any particular
-						authentication mechanism, nor are authentication mechanisms
-						required to support any protection mechanisms.  If an AUTH
-						command fails with a negative response, the session remains
-						in the AUTHORIZATION state and client may try another
-						authentication mechanism by issuing another AUTH command,
-						or may attempt to authenticate by using the USER/PASS or
-						APOP commands.  In other words, the client may request
-						authentication types in decreasing order of preference,
-						with the USER/PASS or APOP command as a last resort.
+                        The server is not required to support any particular
+                        authentication mechanism, nor are authentication mechanisms
+                        required to support any protection mechanisms.  If an AUTH
+                        command fails with a negative response, the session remains
+                        in the AUTHORIZATION state and client may try another
+                        authentication mechanism by issuing another AUTH command,
+                        or may attempt to authenticate by using the USER/PASS or
+                        APOP commands.  In other words, the client may request
+                        authentication types in decreasing order of preference,
+                        with the USER/PASS or APOP command as a last resort.
 
-						Should the client successfully complete the authentication
-						exchange, the POP3 server issues a positive response and
-						the POP3 session enters the TRANSACTION state.
-						
-				Examples:
-							S: +OK POP3 server ready
-							C: AUTH KERBEROS_V4
-							S: + AmFYig==
-							C: BAcAQU5EUkVXLkNNVS5FRFUAOCAsho84kLN3/IJmrMG+25a4DT
-								+nZImJjnTNHJUtxAA+o0KPKfHEcAFs9a3CL5Oebe/ydHJUwYFd
-								WwuQ1MWiy6IesKvjL5rL9WjXUb9MwT9bpObYLGOKi1Qh
-							S: + or//EoAADZI=
-							C: DiAF5A4gA+oOIALuBkAAmw==
-							S: +OK Kerberos V4 authentication successful
-								...
-							C: AUTH FOOBAR
-							S: -ERR Unrecognized authentication type
-			 
-			*/
+                        Should the client successfully complete the authentication
+                        exchange, the POP3 server issues a positive response and
+                        the POP3 session enters the TRANSACTION state.
+                        
+                Examples:
+                            S: +OK POP3 server ready
+                            C: AUTH KERBEROS_V4
+                            S: + AmFYig==
+                            C: BAcAQU5EUkVXLkNNVS5FRFUAOCAsho84kLN3/IJmrMG+25a4DT
+                                +nZImJjnTNHJUtxAA+o0KPKfHEcAFs9a3CL5Oebe/ydHJUwYFd
+                                WwuQ1MWiy6IesKvjL5rL9WjXUb9MwT9bpObYLGOKi1Qh
+                            S: + or//EoAADZI=
+                            C: DiAF5A4gA+oOIALuBkAAmw==
+                            S: +OK Kerberos V4 authentication successful
+                                ...
+                            C: AUTH FOOBAR
+                            S: -ERR Unrecognized authentication type
+             
+            */
 
             if (m_SessionRejected)
             {
@@ -451,7 +451,7 @@ namespace LumiSoft.Net.POP3.Server
                     WriteLine("+ " + Convert.ToBase64String(serverResponse));
                 }
 
-                // Read client response. 
+                // Read client response.
                 var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
                 TcpStream.ReadLine(readLineOP, false);
                 if (readLineOP.Error != null)
@@ -523,76 +523,76 @@ namespace LumiSoft.Net.POP3.Server
         private void CAPA(string cmdText)
         {
             /* RFC 2449 5.  The CAPA Command
-			
-				The POP3 CAPA command returns a list of capabilities supported by the
-				POP3 server.  It is available in both the AUTHORIZATION and
-				TRANSACTION states.
+            
+                The POP3 CAPA command returns a list of capabilities supported by the
+                POP3 server.  It is available in both the AUTHORIZATION and
+                TRANSACTION states.
 
-				A capability description MUST document in which states the capability
-				is announced, and in which states the commands are valid.
+                A capability description MUST document in which states the capability
+                is announced, and in which states the commands are valid.
 
-				Capabilities available in the AUTHORIZATION state MUST be announced
-				in both states.
+                Capabilities available in the AUTHORIZATION state MUST be announced
+                in both states.
 
-				If a capability is announced in both states, but the argument might
-				differ after authentication, this possibility MUST be stated in the
-				capability description.
+                If a capability is announced in both states, but the argument might
+                differ after authentication, this possibility MUST be stated in the
+                capability description.
 
-				(These requirements allow a client to issue only one CAPA command if
-				it does not use any TRANSACTION-only capabilities, or any
-				capabilities whose values may differ after authentication.)
+                (These requirements allow a client to issue only one CAPA command if
+                it does not use any TRANSACTION-only capabilities, or any
+                capabilities whose values may differ after authentication.)
 
-				If the authentication step negotiates an integrity protection layer,
-				the client SHOULD reissue the CAPA command after authenticating, to
-				check for active down-negotiation attacks.
+                If the authentication step negotiates an integrity protection layer,
+                the client SHOULD reissue the CAPA command after authenticating, to
+                check for active down-negotiation attacks.
 
-				Each capability may enable additional protocol commands, additional
-				parameters and responses for existing commands, or describe an aspect
-				of server behavior.  These details are specified in the description
-				of the capability.
-				
-				Section 3 describes the CAPA response using [ABNF].  When a
-				capability response describes an optional command, the <capa-tag>
-				SHOULD be identical to the command keyword.  CAPA response tags are
-				case-insensitive.
+                Each capability may enable additional protocol commands, additional
+                parameters and responses for existing commands, or describe an aspect
+                of server behavior.  These details are specified in the description
+                of the capability.
+                
+                Section 3 describes the CAPA response using [ABNF].  When a
+                capability response describes an optional command, the <capa-tag>
+                SHOULD be identical to the command keyword.  CAPA response tags are
+                case-insensitive.
 
-				CAPA
+                CAPA
 
-				Arguments:
-					none
+                Arguments:
+                    none
 
-				Restrictions:
-					none
+                Restrictions:
+                    none
 
-				Discussion:
-					An -ERR response indicates the capability command is not
-					implemented and the client will have to probe for
-					capabilities as before.
+                Discussion:
+                    An -ERR response indicates the capability command is not
+                    implemented and the client will have to probe for
+                    capabilities as before.
 
-					An +OK response is followed by a list of capabilities, one
-					per line.  Each capability name MAY be followed by a single
-					space and a space-separated list of parameters.  Each
-					capability line is limited to 512 octets (including the
-					CRLF).  The capability list is terminated by a line
-					containing a termination octet (".") and a CRLF pair.
+                    An +OK response is followed by a list of capabilities, one
+                    per line.  Each capability name MAY be followed by a single
+                    space and a space-separated list of parameters.  Each
+                    capability line is limited to 512 octets (including the
+                    CRLF).  The capability list is terminated by a line
+                    containing a termination octet (".") and a CRLF pair.
 
-				Possible Responses:
-					+OK -ERR
+                Possible Responses:
+                    +OK -ERR
 
-					Examples:
-						C: CAPA
-						S: +OK Capability list follows
-						S: TOP
-						S: USER
-						S: SASL CRAM-MD5 KERBEROS_V4
-						S: RESP-CODES
-						S: LOGIN-DELAY 900
-						S: PIPELINING
-						S: EXPIRE 60
-						S: UIDL
-						S: IMPLEMENTATION Shlemazle-Plotz-v302
-						S: .
-			*/
+                    Examples:
+                        C: CAPA
+                        S: +OK Capability list follows
+                        S: TOP
+                        S: USER
+                        S: SASL CRAM-MD5 KERBEROS_V4
+                        S: RESP-CODES
+                        S: LOGIN-DELAY 900
+                        S: PIPELINING
+                        S: EXPIRE 60
+                        S: UIDL
+                        S: IMPLEMENTATION Shlemazle-Plotz-v302
+                        S: .
+            */
 
             if (m_SessionRejected)
             {
@@ -633,17 +633,17 @@ namespace LumiSoft.Net.POP3.Server
         private void DELE(string cmdText)
         {
             /* RFC 1939 5. DELE
-			    Arguments:
-				    a message-number (required) which may NOT refer to a
-				    message marked as deleted
-			 
-			    NOTE:
-				    The POP3 server marks the message as deleted.  Any future
-				    reference to the message-number associated with the message
-				    in a POP3 command generates an error.  The POP3 server does
-				    not actually delete the message until the POP3 session
-				    enters the UPDATE state.
-			*/
+                Arguments:
+                    a message-number (required) which may NOT refer to a
+                    message marked as deleted
+             
+                NOTE:
+                    The POP3 server marks the message as deleted.  Any future
+                    reference to the message-number associated with the message
+                    in a POP3 command generates an error.  The POP3 server does
+                    not actually delete the message until the POP3 session
+                    enters the UPDATE state.
+            */
 
             if (m_SessionRejected)
             {
@@ -690,34 +690,34 @@ namespace LumiSoft.Net.POP3.Server
         private void LIST(string cmdText)
         {
             /* RFC 1939 5. LIST
-			Arguments:
-				a message-number (optional), which, if present, may NOT
-				refer to a message marked as deleted
-			 
-			NOTE:
-				If an argument was given and the POP3 server issues a
-				positive response with a line containing information for
-				that message.
+            Arguments:
+                a message-number (optional), which, if present, may NOT
+                refer to a message marked as deleted
+             
+            NOTE:
+                If an argument was given and the POP3 server issues a
+                positive response with a line containing information for
+                that message.
 
-				If no argument was given and the POP3 server issues a
-				positive response, then the response given is multi-line.
-				
-				Note that messages marked as deleted are not listed.
-			
-			Examples:
-				C: LIST
-				S: +OK 2 messages (320 octets)
-				S: 1 120				
-				S: 2 200
-				S: .
-				...
-				C: LIST 2
-				S: +OK 2 200
-				...
-				C: LIST 3
-				S: -ERR no such message, only 2 messages in maildrop
-			 
-			*/
+                If no argument was given and the POP3 server issues a
+                positive response, then the response given is multi-line.
+                
+                Note that messages marked as deleted are not listed.
+            
+            Examples:
+                C: LIST
+                S: +OK 2 messages (320 octets)
+                S: 1 120                
+                S: 2 200
+                S: .
+                ...
+                C: LIST 2
+                S: +OK 2 200
+                ...
+                C: LIST 3
+                S: -ERR no such message, only 2 messages in maildrop
+             
+            */
 
             if (m_SessionRejected)
             {
@@ -792,10 +792,10 @@ namespace LumiSoft.Net.POP3.Server
         private void NOOP(string cmdText)
         {
             /* RFC 1939 5. NOOP
-			    NOTE:
-				    The POP3 server does nothing, it merely replies with a
-				    positive response.
-			*/
+                NOTE:
+                    The POP3 server does nothing, it merely replies with a
+                    positive response.
+            */
 
             if (m_SessionRejected)
             {
@@ -925,25 +925,25 @@ namespace LumiSoft.Net.POP3.Server
         private void PASS(string cmdText)
         {
             /* RFC 1939 7. PASS
-			Arguments:
-				a server/mailbox-specific password (required)
-				
-			Restrictions:
-				may only be given in the AUTHORIZATION state immediately
-				after a successful USER command
-				
-			NOTE:
-				When the client issues the PASS command, the POP3 server
-				uses the argument pair from the USER and PASS commands to
-				determine if the client should be given access to the
-				appropriate maildrop.
-				
-			Possible Responses:
-				+OK maildrop locked and ready
-				-ERR invalid password
-				-ERR unable to lock maildrop
-						
-			*/
+            Arguments:
+                a server/mailbox-specific password (required)
+                
+            Restrictions:
+                may only be given in the AUTHORIZATION state immediately
+                after a successful USER command
+                
+            NOTE:
+                When the client issues the PASS command, the POP3 server
+                uses the argument pair from the USER and PASS commands to
+                determine if the client should be given access to the
+                appropriate maildrop.
+                
+            Possible Responses:
+                +OK maildrop locked and ready
+                -ERR invalid password
+                -ERR unable to lock maildrop
+                        
+            */
 
             if (m_SessionRejected)
             {
@@ -1130,28 +1130,28 @@ namespace LumiSoft.Net.POP3.Server
         private void QUIT(string cmdText)
         {
             /* RFC 1939 6. QUIT
-			   NOTE:
+               NOTE:
                 When the client issues the QUIT command from the TRANSACTION state,
-				the POP3 session enters the UPDATE state.  (Note that if the client
-				issues the QUIT command from the AUTHORIZATION state, the POP3
-				session terminates but does NOT enter the UPDATE state.)
+                the POP3 session enters the UPDATE state.  (Note that if the client
+                issues the QUIT command from the AUTHORIZATION state, the POP3
+                session terminates but does NOT enter the UPDATE state.)
 
-				If a session terminates for some reason other than a client-issued
-				QUIT command, the POP3 session does NOT enter the UPDATE state and
-				MUST not remove any messages from the maildrop.
+                If a session terminates for some reason other than a client-issued
+                QUIT command, the POP3 session does NOT enter the UPDATE state and
+                MUST not remove any messages from the maildrop.
              
-				The POP3 server removes all messages marked as deleted
-				from the maildrop and replies as to the status of this
-				operation.  If there is an error, such as a resource
-				shortage, encountered while removing messages, the
-				maildrop may result in having some or none of the messages
-				marked as deleted be removed.  In no case may the server
-				remove any messages not marked as deleted.
+                The POP3 server removes all messages marked as deleted
+                from the maildrop and replies as to the status of this
+                operation.  If there is an error, such as a resource
+                shortage, encountered while removing messages, the
+                maildrop may result in having some or none of the messages
+                marked as deleted be removed.  In no case may the server
+                remove any messages not marked as deleted.
 
-				Whether the removal was successful or not, the server
-				then releases any exclusive-access lock on the maildrop
-				and closes the TCP connection.
-			*/
+                Whether the removal was successful or not, the server
+                then releases any exclusive-access lock on the maildrop
+                and closes the TCP connection.
+            */
 
             try
             {
@@ -1179,24 +1179,24 @@ namespace LumiSoft.Net.POP3.Server
         private void RETR(string cmdText)
         {
             /* RFC 1939 5. RETR
-			    Arguments:
-				    a message-number (required) which may NOT refer to a
-				    message marked as deleted
-			 
-			    NOTE:
-				    If the POP3 server issues a positive response, then the
-				    response given is multi-line.  After the initial +OK, the
-				    POP3 server sends the message corresponding to the given
-				    message-number, being careful to byte-stuff the termination
-				    character (as with all multi-line responses).
-				
-			    Example:
-				    C: RETR 1
-				    S: +OK 120 octets
-				    S: <the POP3 server sends the entire message here>
-				    S: .
-			
-			*/
+                Arguments:
+                    a message-number (required) which may NOT refer to a
+                    message marked as deleted
+             
+                NOTE:
+                    If the POP3 server issues a positive response, then the
+                    response given is multi-line.  After the initial +OK, the
+                    POP3 server sends the message corresponding to the given
+                    message-number, being careful to byte-stuff the termination
+                    character (as with all multi-line responses).
+                
+                Example:
+                    C: RETR 1
+                    S: +OK 120 octets
+                    S: <the POP3 server sends the entire message here>
+                    S: .
+            
+            */
 
             if (m_SessionRejected)
             {
@@ -1271,11 +1271,11 @@ namespace LumiSoft.Net.POP3.Server
         private void RSET(string cmdText)
         {
             /* RFC 1939 5. RSET
-			Discussion:
-				If any messages have been marked as deleted by the POP3
-				server, they are unmarked.  The POP3 server then replies
-				with a positive response.
-			*/
+            Discussion:
+                If any messages have been marked as deleted by the POP3
+                server, they are unmarked.  The POP3 server then replies
+                with a positive response.
+            */
 
             if (m_SessionRejected)
             {
@@ -1304,18 +1304,18 @@ namespace LumiSoft.Net.POP3.Server
         private void STAT(string cmdText)
         {
             /* RFC 1939 5. STAT
-			NOTE:
-				The positive response consists of "+OK" followed by a single
-				space, the number of messages in the maildrop, a single
-				space, and the size of the maildrop in octets.
-				
-				Note that messages marked as deleted are not counted in
-				either total.
-			 
-			Example:
-				C: STAT
-				S: +OK 2 320
-			*/
+            NOTE:
+                The positive response consists of "+OK" followed by a single
+                space, the number of messages in the maildrop, a single
+                space, and the size of the maildrop in octets.
+                
+                Note that messages marked as deleted are not counted in
+                either total.
+             
+            Example:
+                C: STAT
+                S: +OK 2 320
+            */
 
             if (m_SessionRejected)
             {
@@ -1435,32 +1435,32 @@ namespace LumiSoft.Net.POP3.Server
         private void TOP(string cmdText)
         {
             /* RFC 1939 7. TOP
-			    Arguments:
-				    a message-number (required) which may NOT refer to to a
-				    message marked as deleted, and a non-negative number
-				    of lines (required)
-		
-			    NOTE:
-				    If the POP3 server issues a positive response, then the
-				    response given is multi-line.  After the initial +OK, the
-				    POP3 server sends the headers of the message, the blank
-				    line separating the headers from the body, and then the
-				    number of lines of the indicated message's body, being
-				    careful to byte-stuff the termination character (as with
-				    all multi-line responses).
-			
-			    Examples:
-				    C: TOP 1 10
-				    S: +OK
-				    S: <the POP3 server sends the headers of the
-					    message, a blank line, and the first 10 lines
-					    of the body of the message>
-				    S: .
+                Arguments:
+                    a message-number (required) which may NOT refer to to a
+                    message marked as deleted, and a non-negative number
+                    of lines (required)
+        
+                NOTE:
+                    If the POP3 server issues a positive response, then the
+                    response given is multi-line.  After the initial +OK, the
+                    POP3 server sends the headers of the message, the blank
+                    line separating the headers from the body, and then the
+                    number of lines of the indicated message's body, being
+                    careful to byte-stuff the termination character (as with
+                    all multi-line responses).
+            
+                Examples:
+                    C: TOP 1 10
+                    S: +OK
+                    S: <the POP3 server sends the headers of the
+                        message, a blank line, and the first 10 lines
+                        of the body of the message>
+                    S: .
                     ...
-				    C: TOP 100 3
-				    S: -ERR no such message
-			 
-			*/
+                    C: TOP 100 3
+                    S: -ERR no such message
+             
+            */
 
             if (m_SessionRejected)
             {
@@ -1524,32 +1524,32 @@ namespace LumiSoft.Net.POP3.Server
         private void UIDL(string cmdText)
         {
             /* RFC 1939 UIDL [msg]
-			Arguments:
-			    a message-number (optional), which, if present, may NOT
-				refer to a message marked as deleted
-				
-			NOTE:
-				If an argument was given and the POP3 server issues a positive
-				response with a line containing information for that message.
+            Arguments:
+                a message-number (optional), which, if present, may NOT
+                refer to a message marked as deleted
+                
+            NOTE:
+                If an argument was given and the POP3 server issues a positive
+                response with a line containing information for that message.
 
-				If no argument was given and the POP3 server issues a positive
-				response, then the response given is multi-line.  After the
-				initial +OK, for each message in the maildrop, the POP3 server
-				responds with a line containing information for that message.	
-				
-			Examples:
-				C: UIDL
-				S: +OK
-				S: 1 whqtswO00WBw418f9t5JxYwZ
-				S: 2 QhdPYR:00WBw1Ph7x7
-				S: .
-				...
-				C: UIDL 2
-				S: +OK 2 QhdPYR:00WBw1Ph7x7
-				...
-				C: UIDL 3
-				S: -ERR no such message
-			*/
+                If no argument was given and the POP3 server issues a positive
+                response, then the response given is multi-line.  After the
+                initial +OK, for each message in the maildrop, the POP3 server
+                responds with a line containing information for that message.    
+                
+            Examples:
+                C: UIDL
+                S: +OK
+                S: 1 whqtswO00WBw418f9t5JxYwZ
+                S: 2 QhdPYR:00WBw1Ph7x7
+                S: .
+                ...
+                C: UIDL 2
+                S: +OK 2 QhdPYR:00WBw1Ph7x7
+                ...
+                C: UIDL 3
+                S: -ERR no such message
+            */
 
             if (m_SessionRejected)
             {
@@ -1624,16 +1624,16 @@ namespace LumiSoft.Net.POP3.Server
         private void USER(string cmdText)
         {
             /* RFC 1939 7. USER
-			    Arguments:
-				    a string identifying a mailbox (required), which is of
-				    significance ONLY to the server
-				
-			    NOTE:
-				    If the POP3 server responds with a positive
-				    status indicator ("+OK"), then the client may issue
-				    either the PASS command to complete the authentication,
-				    or the QUIT command to terminate the POP3 session.			 
-			*/
+                Arguments:
+                    a string identifying a mailbox (required), which is of
+                    significance ONLY to the server
+                
+                NOTE:
+                    If the POP3 server responds with a positive
+                    status indicator ("+OK"), then the client may issue
+                    either the PASS command to complete the authentication,
+                    or the QUIT command to terminate the POP3 session.             
+            */
 
             if (m_SessionRejected)
             {

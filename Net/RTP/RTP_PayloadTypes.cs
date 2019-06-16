@@ -6,7 +6,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_PayloadTypes
     {
-
         /// <summary>
         /// CELB video codec. Defined in RFC 2029.
         /// </summary>

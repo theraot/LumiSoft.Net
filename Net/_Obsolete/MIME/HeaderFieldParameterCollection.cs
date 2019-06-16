@@ -29,9 +29,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets or sets specified parameter value.
-		/// </summary>
-		public string this[string parameterName]
+        /// Gets or sets specified parameter value.
+        /// </summary>
+        public string this[string parameterName]
         {
             get
             {
@@ -61,11 +61,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Adds a new header field parameter with specified name and value to the end of the collection.
-		/// </summary>
-		/// <param name="parameterName">Parameter name.</param>
-		/// <param name="parameterValue">Parameter value.</param>
-		public void Add(string parameterName, string parameterValue)
+        /// Adds a new header field parameter with specified name and value to the end of the collection.
+        /// </summary>
+        /// <param name="parameterName">Parameter name.</param>
+        /// <param name="parameterValue">Parameter value.</param>
+        public void Add(string parameterName, string parameterValue)
         {
             parameterName = parameterName.ToLower();
 
@@ -83,9 +83,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Clears the collection of all header field parameters.
-		/// </summary>
-		public void Clear()
+        /// Clears the collection of all header field parameters.
+        /// </summary>
+        public void Clear()
         {
             var parameters = m_pHeaderField.ParseParameters();
             parameters.Clear();
@@ -93,11 +93,11 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets if collection contains specified parameter.
-		/// </summary>
-		/// <param name="parameterName">Parameter name.</param>
-		/// <returns></returns>
-		public bool Contains(string parameterName)
+        /// Gets if collection contains specified parameter.
+        /// </summary>
+        /// <param name="parameterName">Parameter name.</param>
+        /// <returns></returns>
+        public bool Contains(string parameterName)
         {
             parameterName = parameterName.ToLower();
 
@@ -106,10 +106,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Gets enumerator.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+        /// Gets enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator GetEnumerator()
         {
             var parameters = m_pHeaderField.ParseParameters();
             var retVal = new HeaderFieldParameter[parameters.Count];
@@ -124,10 +124,10 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// Removes specified header field parameter from the collection.
-		/// </summary>
-		/// <param name="parameterName">The name of the header field parameter to remove.</param>
-		public void Remove(string parameterName)
+        /// Removes specified header field parameter from the collection.
+        /// </summary>
+        /// <param name="parameterName">The name of the header field parameter to remove.</param>
+        public void Remove(string parameterName)
         {
             parameterName = parameterName.ToLower();
 

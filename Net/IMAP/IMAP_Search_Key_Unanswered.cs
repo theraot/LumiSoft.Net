@@ -10,7 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that do not have the \Answered flag set.</remarks>
     public class IMAP_Search_Key_Unanswered : IMAP_Search_Key
     {
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

@@ -13,7 +13,7 @@ namespace LumiSoft.Net.MIME
     /// <remarks>
     /// <code>
     /// delivery-status-content =  per-message-fields 1*( CRLF per-recipient-fields )
-    /// 
+    ///
     /// per-message-fields =
     ///            [ original-envelope-id-field CRLF ]
     ///            reporting-mta-field CRLF
@@ -21,7 +21,7 @@ namespace LumiSoft.Net.MIME
     ///            [ received-from-mta-field CRLF ]
     ///            [ arrival-date-field CRLF ]
     ///            *( extension-field CRLF )
-    ///            
+    ///
     /// per-recipient-fields =
     ///          [ original-recipient-field CRLF ]
     ///          final-recipient-field CRLF
@@ -87,7 +87,7 @@ namespace LumiSoft.Net.MIME
         /// <param name="stream">Stream where to store body data.</param>
         /// <param name="headerWordEncoder">Header 8-bit words ecnoder. Value null means that words are not encoded.</param>
         /// <param name="headerParmetersCharset">Charset to use to encode 8-bit header parameters. Value null means parameters not encoded.</param>
-        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified, 
+        /// <param name="headerReencode">If true always specified encoding is used for header. If false and header field value not modified,
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         internal protected override void ToStream(Stream stream, MIME_Encoding_EncodedWord headerWordEncoder, Encoding headerParmetersCharset, bool headerReencode)
@@ -130,7 +130,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("stream");
             }
 
-            // We need to buffer all body data, otherwise we don't know if we have readed all data 
+            // We need to buffer all body data, otherwise we don't know if we have readed all data
             // from stream.
             var msBuffer = new MemoryStream();
             Net_Utils.StreamCopy(stream, msBuffer, 32000);

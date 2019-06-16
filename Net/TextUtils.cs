@@ -10,13 +10,12 @@ namespace LumiSoft.Net
     /// </summary>
     public class TextUtils
     {
-
         /// <summary>
         /// Escapes specified chars in the specified string.
         /// </summary>
         /// <param name="text">Text to escape.</param>
         /// <param name="charsToEscape">Chars to escape.</param>
-		public static string EscapeString(string text, char[] charsToEscape)
+        public static string EscapeString(string text, char[] charsToEscape)
         {
             // Create worst scenario buffer, assume all chars must be escaped
             var buffer = new char[text.Length * 2];
@@ -86,16 +85,16 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Gets first index of specified char. The specified char in quoted string is skipped.
-		/// Returns -1 if specified char doesn't exist.
-		/// </summary>
-		/// <param name="text">Text in what to check.</param>
-		/// <param name="indexChar">Char what index to get.</param>
-		/// <returns></returns>
-		public static int QuotedIndexOf(string text, char indexChar)
+        /// Gets first index of specified char. The specified char in quoted string is skipped.
+        /// Returns -1 if specified char doesn't exist.
+        /// </summary>
+        /// <param name="text">Text in what to check.</param>
+        /// <param name="indexChar">Char what index to get.</param>
+        /// <returns></returns>
+        public static int QuotedIndexOf(string text, char indexChar)
         {
             int retVal = -1;
-            bool inQuotedString = false; // Holds flag if position is quoted string or not			
+            bool inQuotedString = false; // Holds flag if position is quoted string or not
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -152,13 +151,13 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Splits string into string arrays. This split method won't split qouted strings, but only text outside of qouted string.
-		/// For example: '"text1, text2",text3' will be 2 parts: "text1, text2" and text3.
-		/// </summary>
-		/// <param name="text">Text to split.</param>
-		/// <param name="splitChar">Char that splits text.</param>
-		/// <returns></returns>
-		public static string[] SplitQuotedString(string text, char splitChar)
+        /// Splits string into string arrays. This split method won't split qouted strings, but only text outside of qouted string.
+        /// For example: '"text1, text2",text3' will be 2 parts: "text1, text2" and text3.
+        /// </summary>
+        /// <param name="text">Text to split.</param>
+        /// <param name="splitChar">Char that splits text.</param>
+        /// <returns></returns>
+        public static string[] SplitQuotedString(string text, char splitChar)
         {
             return SplitQuotedString(text, splitChar, false);
         }
@@ -177,16 +176,16 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Splits string into string arrays. This split method won't split qouted strings, but only text outside of qouted string.
-		/// For example: '"text1, text2",text3' will be 2 parts: "text1, text2" and text3.
-		/// </summary>
-		/// <param name="text">Text to split.</param>
-		/// <param name="splitChar">Char that splits text.</param>
-		/// <param name="unquote">If true, splitted parst will be unqouted if they are qouted.</param>
+        /// Splits string into string arrays. This split method won't split qouted strings, but only text outside of qouted string.
+        /// For example: '"text1, text2",text3' will be 2 parts: "text1, text2" and text3.
+        /// </summary>
+        /// <param name="text">Text to split.</param>
+        /// <param name="splitChar">Char that splits text.</param>
+        /// <param name="unquote">If true, splitted parst will be unqouted if they are qouted.</param>
         /// <param name="count">Maximum number of substrings to return.</param>
-		/// <returns>Returns splitted string.</returns>
+        /// <returns>Returns splitted string.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>text</b> is null reference.</exception>
-		public static string[] SplitQuotedString(string text, char splitChar, bool unquote, int count)
+        public static string[] SplitQuotedString(string text, char splitChar, bool unquote, int count)
         {
             if (text == null)
             {
@@ -254,12 +253,12 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-		/// Splits string into string arrays.
-		/// </summary>
-		/// <param name="text">Text to split.</param>
-		/// <param name="splitChar">Char Char that splits text.</param>
-		/// <returns></returns>
-		public static string[] SplitString(string text, char splitChar)
+        /// Splits string into string arrays.
+        /// </summary>
+        /// <param name="text">Text to split.</param>
+        /// <param name="splitChar">Char Char that splits text.</param>
+        /// <returns></returns>
+        public static string[] SplitString(string text, char splitChar)
         {
             var splitParts = new ArrayList();  // Holds splitted parts
 
@@ -358,7 +357,7 @@ namespace LumiSoft.Net
                 return "";
             }
 
-            // Remove starting and ending quotes.         
+            // Remove starting and ending quotes.
             if (text[startPosInText] == '\"')
             {
                 startPosInText++;

@@ -11,7 +11,6 @@ namespace LumiSoft.Net.IMAP
     /// functionally equivalent to "NOT RECENT" (as opposed to "NOT NEW").</remarks>
     public class IMAP_Search_Key_Old : IMAP_Search_Key
     {
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

@@ -13,9 +13,9 @@ namespace LumiSoft.Net.Mime
         private string m_DisplayName = "";
 
         /// <summary>
-		/// Default constructor.
-		/// </summary>
-		public GroupAddress() : base(true)
+        /// Default constructor.
+        /// </summary>
+        public GroupAddress() : base(true)
         {
             GroupMembers = new MailboxAddressCollection();
             GroupMembers.Owner = this;
@@ -42,19 +42,19 @@ namespace LumiSoft.Net.Mime
         public MailboxAddressCollection GroupMembers { get; }
 
         /// <summary>
-		/// Gets Group as RFC 2822(3.4. Address Specification) string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
-		/// </summary>
-		public string GroupString
+        /// Gets Group as RFC 2822(3.4. Address Specification) string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
+        /// </summary>
+        public string GroupString
         {
             get { return TextUtils.QuoteString(DisplayName) + ":" + GroupMembers.ToMailboxListString() + ";"; }
         }
 
         /// <summary>
-		/// Parses Rfc 2822 3.4 group address from group address string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
-		/// </summary>
-		/// <param name="group">Group address string.</param>
-		/// <returns></returns>
-		public static GroupAddress Parse(string group)
+        /// Parses Rfc 2822 3.4 group address from group address string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
+        /// </summary>
+        /// <param name="group">Group address string.</param>
+        /// <returns></returns>
+        public static GroupAddress Parse(string group)
         {
             var g = new GroupAddress();
 
@@ -73,9 +73,9 @@ namespace LumiSoft.Net.Mime
         }
 
         /// <summary>
-		/// This called when group address has changed.
-		/// </summary>
-		internal void OnChanged()
+        /// This called when group address has changed.
+        /// </summary>
+        internal void OnChanged()
         {
             if (Owner != null)
             {

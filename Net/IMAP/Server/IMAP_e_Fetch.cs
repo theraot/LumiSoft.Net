@@ -13,7 +13,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </remarks>
     public class IMAP_e_Fetch : EventArgs
     {
-
         private IMAP_r_ServerStatus m_pResponse;
 
         /// <summary>
