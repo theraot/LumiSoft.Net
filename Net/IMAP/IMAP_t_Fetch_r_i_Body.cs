@@ -26,7 +26,6 @@ namespace LumiSoft.Net.IMAP
             Stream = stream;
         }
 
-
         /// <summary>
         /// Sets Stream property value.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.IMAP
 
             Stream = stream;
         }
-
 
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).

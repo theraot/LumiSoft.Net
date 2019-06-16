@@ -26,7 +26,6 @@ namespace LumiSoft.Net.IMAP
             Value = value;
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>BODY (string)</b> key.
         /// </summary>
@@ -52,7 +51,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Body(value);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -61,7 +59,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "BODY " + TextUtils.QuoteString(Value);
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -77,7 +74,6 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"BODY "));
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
         }
-
 
         /// <summary>
         /// Gets BODY filter value.

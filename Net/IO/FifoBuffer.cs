@@ -26,7 +26,6 @@ namespace LumiSoft.Net.IO
             m_pBuffer = new byte[maxSize];
         }
 
-
         /// <summary>
         /// Reads up to specified count of bytes from the FIFO buffer.
         /// </summary>
@@ -125,7 +124,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         /// <summary>
         /// Removes unused space from the buffer beginning.
         /// </summary>
@@ -139,7 +137,6 @@ namespace LumiSoft.Net.IO
                 m_WriteOffset = buffer.Length;
             }
         }
-
 
         /// <summary>
         /// Gets maximum number of bytes can buffer in FIFO.

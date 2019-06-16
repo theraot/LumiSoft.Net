@@ -208,7 +208,6 @@ namespace LumiSoft.Net.SIP
             }
         }
 
-
         /// <summary>
         /// Gets if the specified value is "token".
         /// </summary>
@@ -223,7 +222,6 @@ namespace LumiSoft.Net.SIP
 
             return LumiSoft.Net.MIME.MIME_Reader.IsToken(value);
         }
-
 
         /// <summary>
         /// Returns list elements as comma separated string.

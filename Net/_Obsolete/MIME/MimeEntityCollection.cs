@@ -24,7 +24,6 @@ namespace LumiSoft.Net.Mime
 			m_pEntities = new List<MimeEntity>();
 		}
 
-
         /// <summary>
 		/// Creates a new mime entity to the end of the collection.
 		/// </summary>
@@ -74,7 +73,6 @@ namespace LumiSoft.Net.Mime
 			m_pEntities.Insert(index,entity);
 		}
 
-
         /// <summary>
 		/// Removes mime entity at the specified index from the collection.
 		/// </summary>
@@ -101,7 +99,6 @@ namespace LumiSoft.Net.Mime
 			m_pEntities.Clear();
 		}
 
-
         /// <summary>
 		/// Gets if collection contains specified mime entity.
 		/// </summary>
@@ -111,7 +108,6 @@ namespace LumiSoft.Net.Mime
 		{
 			return m_pEntities.Contains(entity);
 		}
-
 
         /// <summary>
 		/// Gets enumerator.

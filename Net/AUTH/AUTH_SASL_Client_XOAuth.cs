@@ -38,7 +38,6 @@ namespace LumiSoft.Net.AUTH
             m_pRequestUriParameters = requestUriParameters;
         }
 
-
         /// <summary>
         /// Continues authentication process.
         /// </summary>
@@ -75,7 +74,6 @@ namespace LumiSoft.Net.AUTH
             return null;
         }
 
-
         /// <summary>
         /// Encodes paramter name or value.
         /// </summary>
@@ -111,7 +109,6 @@ namespace LumiSoft.Net.AUTH
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

@@ -23,7 +23,6 @@ namespace LumiSoft.Net.SMTP.Relay
             Exception = exception;
         }
 
-
         /// <summary>
         /// Gets relay session what completed processing.
         /// </summary>

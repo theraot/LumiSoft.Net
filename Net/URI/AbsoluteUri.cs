@@ -17,7 +17,6 @@ namespace LumiSoft.Net
         {
         }
 
-
         /// <summary>
         /// Parse URI from string value.
         /// </summary>
@@ -48,7 +47,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Parses URI from the specified string.
         /// </summary>
@@ -67,7 +65,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Converts URI to string.
         /// </summary>
@@ -76,7 +73,6 @@ namespace LumiSoft.Net
         {
             return m_Scheme + ":" + m_Value;
         }
-
 
         /// <summary>
         /// Gets URI scheme.

@@ -53,7 +53,6 @@ namespace LumiSoft.Net.SDP
             UnicastAddress = unicastAddress;
         }
 
-
         /// <summary>
         /// Parses SDP Origin("o=") from specified value.
         /// </summary>
@@ -91,7 +90,6 @@ namespace LumiSoft.Net.SDP
             );
         }
 
-
         /// <summary>
         /// Returns origin as SDP string.
         /// </summary>
@@ -100,7 +98,6 @@ namespace LumiSoft.Net.SDP
         {
             return "o=" + UserName + " " + SessionID +  " " + SessionVersion + " " + NetType + " " + AddressType + " " + UnicastAddress + "\r\n";
         }
-
 
         /// <summary>
         /// Gets user name.

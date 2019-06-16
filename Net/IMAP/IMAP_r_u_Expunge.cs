@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             SeqNo = seqNo;
         }
 
-
         /// <summary>
         /// Parses EXPUNGE response from expunge-response string.
         /// </summary>
@@ -79,7 +78,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Expunge(Convert.ToInt32(response.Split(' ')[1]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -90,7 +88,6 @@ namespace LumiSoft.Net.IMAP
 
             return "* " + SeqNo.ToString() + " EXPUNGE\r\n";
         }
-
 
         /// <summary>
         /// Gets message sequence number.

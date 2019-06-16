@@ -34,7 +34,6 @@ namespace LumiSoft.Net.SIP.Proxy
             Flow      = flow;
         }
 
-
         /// <summary>
         /// Gets target URI.
         /// </summary>

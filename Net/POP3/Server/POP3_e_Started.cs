@@ -16,7 +16,6 @@ namespace LumiSoft.Net.POP3.Server
             Response = response;
         }
 
-
         /// <summary>
         /// Gets or sets POP3 server response.
         /// </summary>

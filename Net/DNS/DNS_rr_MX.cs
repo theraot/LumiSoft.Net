@@ -23,7 +23,6 @@ namespace LumiSoft.Net.DNS
 			Host       = host;
         }
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -66,7 +65,6 @@ namespace LumiSoft.Net.DNS
             }
         }
 
-
         /// <summary>
         /// Compares the current instance with another object of the same type. 
         /// </summary>
@@ -93,7 +91,6 @@ namespace LumiSoft.Net.DNS
                 return 0;
             }
         }
-
 
         /// <summary>
 		/// Gets MX record preference. The lower number is the higher priority server.

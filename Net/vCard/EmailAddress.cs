@@ -21,7 +21,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_EmailAddress = emailAddress;
         }
 
-
         /// <summary>
         /// This method is called when some property has changed, wee need to update underlaying vCard item.
         /// </summary>
@@ -30,7 +29,6 @@ namespace LumiSoft.Net.Mime.vCard
             Item.ParametersString = EmailTypeToString(m_Type);
             Item.SetDecodedValue(m_EmailAddress);
         }
-
 
         /// <summary>
         /// Parses email address from vCard EMAIL structure string.
@@ -75,7 +73,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets underlaying vCrad item.

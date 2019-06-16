@@ -37,7 +37,6 @@ namespace LumiSoft.Net.SMTP.Relay
         {
         }
 
-
         /// <summary>
         /// Queues message for relay.
         /// </summary>
@@ -99,7 +98,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
             }
         }
-
 
         /// <summary>
         /// Gets queue name.

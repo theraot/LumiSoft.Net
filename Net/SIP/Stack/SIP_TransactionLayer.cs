@@ -69,7 +69,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_IsDisposed = true;
         }
 
-
         /// <summary>
         /// Creates new client transaction.
         /// </summary>
@@ -207,7 +206,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Matches SIP response to client transaction. If not matching transaction found, returns null.
         /// </summary>
@@ -314,7 +312,6 @@ namespace LumiSoft.Net.SIP.Stack
             return retVal;
         }
 
-
         /// <summary>
         /// Gets existing or creates new dialog.
         /// </summary>
@@ -366,7 +363,6 @@ namespace LumiSoft.Net.SIP.Stack
                 return dialog;
             }
         }
-
 
         /// <summary>
         /// Removes specified dialog from dialogs collection.
@@ -440,7 +436,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return dialog;
         }
-
 
         /// <summary>
         /// Gets all(clinet + server) active transactions.

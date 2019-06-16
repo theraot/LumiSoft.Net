@@ -18,7 +18,6 @@ namespace LumiSoft.Net.IMAP
         {
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>NEW</b> key.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_New();
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -49,7 +47,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "NEW";
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.

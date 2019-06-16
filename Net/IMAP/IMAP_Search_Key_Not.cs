@@ -24,7 +24,6 @@ namespace LumiSoft.Net.IMAP
             SearchKey = key;
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>NOT (search-key)</b> key.
         /// </summary>
@@ -46,7 +45,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Not(IMAP_Search_Key.ParseKey(r));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -55,7 +53,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "NOT " + SearchKey.ToString();
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -71,7 +68,6 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"NOT "));
             SearchKey.ToCmdParts(list);
         }
-
 
         /// <summary>
         /// Gets search KEY.

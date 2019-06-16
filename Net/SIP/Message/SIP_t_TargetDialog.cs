@@ -28,7 +28,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses "Target-Dialog" from specified value.
         /// </summary>
@@ -97,7 +96,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets call ID.

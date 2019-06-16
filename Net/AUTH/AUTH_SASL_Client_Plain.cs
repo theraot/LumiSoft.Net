@@ -36,7 +36,6 @@ namespace LumiSoft.Net.AUTH
             m_Password = password;
         }
 
-
         /// <summary>
         /// Continues authentication process.
         /// </summary>
@@ -80,7 +79,6 @@ namespace LumiSoft.Net.AUTH
                 throw new InvalidOperationException("Authentication is completed.");
             }
         }
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

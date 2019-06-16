@@ -17,7 +17,6 @@ namespace LumiSoft.Net.IMAP
         {
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>UNANSWERED</b> key.
         /// </summary>
@@ -39,7 +38,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Unanswered();
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -48,7 +46,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "UNANSWERED";
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.

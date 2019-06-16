@@ -54,7 +54,6 @@ namespace LumiSoft.Net.IMAP
             m_pDataItems = new List<IMAP_t_Fetch_r_i>();
         }
 
-
         /// <summary>
         /// Starts parsing FETCH response.
         /// </summary>
@@ -94,7 +93,6 @@ namespace LumiSoft.Net.IMAP
 
             ParseDataItems(imap,r,callback);
         }
-
 
         /// <summary>
         /// Starts writing response to the specified stream.
@@ -179,7 +177,6 @@ namespace LumiSoft.Net.IMAP
                 return true;
             }
         }
-
 
         /// <summary>
         /// Starts parsing fetch data-items,
@@ -271,15 +268,12 @@ namespace LumiSoft.Net.IMAP
                     // Continue processing.
                     //else{
                 }
-
                 else if(r.StartsWith("BODY ",false)){
                     //IMAP_t_Fetch_r_i_BodyS
                 }
-
                 else if(r.StartsWith("BODYSTRUCTURE",false)){
                     //IMAP_t_Fetch_r_i_BodyStructure
                 }
-
                 else if(r.StartsWith("ENVELOPE",false)){
                     // Envelope can contain string literals, we just try to parse it.
                     // If parse fails, just get string literal and try again as long as all ENVELOPE data has read.
@@ -310,7 +304,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(IMAP_t_Fetch_r_i_Envelope.Parse(new StringReader(envelope)));
                 }
-
                 else if(r.StartsWith("FLAGS",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         FLAGS
@@ -322,7 +315,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Flags(IMAP_t_MsgFlags.Parse(r.ReadParenthesized())));
                 }
-
                 else if(r.StartsWith("INTERNALDATE",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         INTERNALDATE
@@ -334,7 +326,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_InternalDate(IMAP_Utils.ParseDate(r.ReadWord())));
                 }
-
                 else if(r.StartsWith("RFC822 ",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822
@@ -364,7 +355,6 @@ namespace LumiSoft.Net.IMAP
                     // Continue processing.
                     //else{
                 }
-
                 else if(r.StartsWith("RFC822.HEADER",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.HEADER
@@ -398,7 +388,6 @@ namespace LumiSoft.Net.IMAP
                     // Continue processing.
                     //else{
                 }
-
                 else if(r.StartsWith("RFC822.SIZE",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.SIZE
@@ -410,7 +399,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Rfc822Size(Convert.ToInt32(r.ReadWord())));
                 }
-
                 else if(r.StartsWith("RFC822.TEXT",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         RFC822.TEXT
@@ -440,7 +428,6 @@ namespace LumiSoft.Net.IMAP
                     // Continue processing.
                     //else{
                 }
-
                 else if(r.StartsWith("UID",false)){
                     /* RFC 3501 7.4.2. FETCH Response.
                         UID
@@ -452,7 +439,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_Uid(Convert.ToInt64(r.ReadWord())));
                 }
-
                 else if(r.StartsWith("X-GM-MSGID",false)){
                     /* http://code.google.com/intl/et/apis/gmail/imap X-GM-MSGID.
                 
@@ -463,7 +449,6 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_X_GM_MSGID(Convert.ToUInt64(r.ReadWord())));
                 }
-
                 else if(r.StartsWith("X-GM-THRID",false)){
                     /* http://code.google.com/intl/et/apis/gmail/imap X-GM-THRID.
                 
@@ -474,11 +459,9 @@ namespace LumiSoft.Net.IMAP
 
                     m_pDataItems.Add(new IMAP_t_Fetch_r_i_X_GM_THRID(Convert.ToUInt64(r.ReadWord())));
                 }
-
                 else if(r.StartsWith(")",false)){
                     break;
                 }
-
                 else{
                     throw new ParseException("Not supported FETCH data-item '" + r.ReadToEnd() + "'.");
                 }
@@ -734,7 +717,6 @@ namespace LumiSoft.Net.IMAP
             return true;
         }
 
-
         /// <summary>
         /// Returns specified data-item or null if no such item.
         /// </summary>
@@ -755,7 +737,6 @@ namespace LumiSoft.Net.IMAP
 
             return null;
         }
-
 
         /// <summary>
         /// Gets message 1-based sequence number.

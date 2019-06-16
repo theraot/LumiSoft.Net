@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             MessageCount = messageCount;
         }
 
-
         /// <summary>
         /// Parses RECENT response from recent-response string.
         /// </summary>
@@ -65,7 +64,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Recent(Convert.ToInt32(response.Split(' ')[1]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -76,7 +74,6 @@ namespace LumiSoft.Net.IMAP
 
             return "* " + MessageCount.ToString() + " RECENT\r\n";
         }
-
 
         /// <summary>
         /// Gets number of messages in mailbox with \Recent flag set.

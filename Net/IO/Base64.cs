@@ -41,7 +41,6 @@ namespace LumiSoft.Net.IO
         {
         }
 
-
         /// <summary>
         /// Encodes bytes.
         /// </summary>

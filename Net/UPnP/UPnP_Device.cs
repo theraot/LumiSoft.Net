@@ -49,7 +49,6 @@ namespace LumiSoft.Net.UPnP
             PresentationUrl  = xml.SelectSingleNode("n:root/n:device/n:presentationURL",ns).InnerText;
         }
 
-
         /// <summary>
         /// Gets device base URL.
         /// </summary>

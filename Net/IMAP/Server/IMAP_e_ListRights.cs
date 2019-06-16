@@ -33,7 +33,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponse  = response;
         }
 
-
         /// <summary>
         /// Gets or sets LISTRIGHTS response.
         /// </summary>

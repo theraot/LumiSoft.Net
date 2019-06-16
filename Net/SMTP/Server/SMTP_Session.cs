@@ -59,7 +59,6 @@ namespace LumiSoft.Net.SMTP.Server
             }
         }
 
-
         /// <summary>
         /// Starts session processing.
         /// </summary>
@@ -169,7 +168,6 @@ namespace LumiSoft.Net.SMTP.Server
                 // Skip errors.
             }
         }
-
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -414,7 +412,6 @@ namespace LumiSoft.Net.SMTP.Server
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -461,7 +458,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -497,7 +493,6 @@ namespace LumiSoft.Net.SMTP.Server
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -562,7 +557,6 @@ namespace LumiSoft.Net.SMTP.Server
             return op.Start(this);
         }
 
-
         /// <summary>
         /// Implements SMTP DATA command. Defined in RFC 5321 4.1.1.4.
         /// </summary>
@@ -596,7 +590,6 @@ namespace LumiSoft.Net.SMTP.Server
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -711,7 +704,6 @@ namespace LumiSoft.Net.SMTP.Server
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -853,7 +845,6 @@ namespace LumiSoft.Net.SMTP.Server
                 op.Dispose();
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -893,7 +884,6 @@ namespace LumiSoft.Net.SMTP.Server
                 }
             }
         }
-
 
         private void EHLO(string cmdText)
         {
@@ -1909,7 +1899,6 @@ namespace LumiSoft.Net.SMTP.Server
             Dispose();
         }
 
-
         /// <summary>
         /// Does reset as specified in RFC 5321.
         /// </summary>
@@ -1990,7 +1979,6 @@ namespace LumiSoft.Net.SMTP.Server
                 this.Server.Logger.AddWrite(this.ID,this.AuthenticatedUserIdentity,countWritten,line,this.LocalEndPoint,this.RemoteEndPoint);
             }
         }
-
 
         /// <summary>
         /// Logs read operation.
@@ -2085,7 +2073,6 @@ namespace LumiSoft.Net.SMTP.Server
                 // We skip all logging errors, normally there shouldn't be any.
             }
         }
-
 
         /// <summary>
         /// Gets session owner SMTP server.

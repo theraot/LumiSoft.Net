@@ -44,7 +44,6 @@ namespace LumiSoft.Net.SDP
             m_Address     = address;
         }
 
-
         /// <summary>
         /// Parses media from "c" SDP message field.
         /// </summary>
@@ -96,7 +95,6 @@ namespace LumiSoft.Net.SDP
 
             return "c=" + NetType + " " + AddressType + " " + Address + "\r\n";
         }
-
 
         /// <summary>
         /// Gets net type. Currently it's always IN(Internet).

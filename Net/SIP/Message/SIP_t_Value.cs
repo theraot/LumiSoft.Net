@@ -12,7 +12,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses single value from specified reader.
         /// </summary>

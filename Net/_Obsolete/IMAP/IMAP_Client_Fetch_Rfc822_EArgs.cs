@@ -16,7 +16,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
         }
 
-
         /// <summary>
         /// Gets or sets stream where RFC822 message is stored.
         /// </summary>

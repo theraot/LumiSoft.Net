@@ -21,7 +21,6 @@ namespace LumiSoft.Net.DNS
 			Alias = alias;
         }
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.DNS
                 throw new ArgumentException("Invalid CNAME resource record data !");
             }
         }
-
 
         /// <summary>
 		/// Gets alias.

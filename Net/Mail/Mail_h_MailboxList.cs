@@ -42,7 +42,6 @@ namespace LumiSoft.Net.Mail
             Addresses = values;
         }
 
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -75,7 +74,6 @@ namespace LumiSoft.Net.Mail
 
             return retVal;
         }
-
 
         /// <summary>
         /// Returns header field as string.
@@ -113,7 +111,6 @@ namespace LumiSoft.Net.Mail
                 return m_ParseValue;
             }            
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

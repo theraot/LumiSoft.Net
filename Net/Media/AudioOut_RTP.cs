@@ -60,7 +60,6 @@ namespace LumiSoft.Net.Media
             m_pActiveCodec    = null;
         }
 
-
         /// <summary>
         /// This method is called when new RTP packet received.
         /// </summary>
@@ -103,7 +102,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-
         /// <summary>
         /// Starts receiving RTP audio and palying it out.
         /// </summary>
@@ -144,7 +142,6 @@ namespace LumiSoft.Net.Media
                 m_pAudioOut = null;
             }
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

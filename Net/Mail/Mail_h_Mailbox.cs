@@ -42,7 +42,6 @@ namespace LumiSoft.Net.Mail
             Address = mailbox;
         }
 
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -84,7 +83,6 @@ namespace LumiSoft.Net.Mail
             }
         }
 
-
         /// <summary>
         /// Returns header field as string.
         /// </summary>
@@ -101,7 +99,6 @@ namespace LumiSoft.Net.Mail
                 return m_Name + ": " + Address.ToString(wordEncoder) + "\r\n";
             }
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

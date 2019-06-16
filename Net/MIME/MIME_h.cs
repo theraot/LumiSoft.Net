@@ -15,7 +15,6 @@ namespace LumiSoft.Net.MIME
         {
         }
 
-
         /// <summary>
         /// Returns header field as string.
         /// </summary>
@@ -67,7 +66,6 @@ namespace LumiSoft.Net.MIME
         {
             return ToString(wordEncoder,parmetersCharset).Split(new char[]{':'},2)[1].TrimStart();
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

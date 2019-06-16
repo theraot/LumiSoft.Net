@@ -16,7 +16,6 @@ namespace LumiSoft.Net.IMAP
             Date = date;
         }
 
-
         /// <summary>
         /// Gets message IMAP server internal assigned date-time.
         /// </summary>

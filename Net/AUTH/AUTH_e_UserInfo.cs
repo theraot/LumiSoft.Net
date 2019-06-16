@@ -25,7 +25,6 @@ namespace LumiSoft.Net.AUTH
             UserName = userName;
         }
 
-
         /// <summary>
         /// Gets or sets if specified user exists.
         /// </summary>

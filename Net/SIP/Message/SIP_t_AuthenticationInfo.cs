@@ -20,7 +20,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(new StringReader(value));
         }
 
-
         /// <summary>
         /// Parses "Authentication-Info" from specified value.
         /// </summary>
@@ -138,7 +137,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets server next predicted nonce value. Value null means that value not specified.

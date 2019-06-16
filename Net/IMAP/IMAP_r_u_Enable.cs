@@ -22,7 +22,6 @@ namespace LumiSoft.Net.IMAP
             Capabilities = capabilities;
         }
 
-
         /// <summary>
         /// Parses ENABLE response from enable-response string.
         /// </summary>
@@ -61,7 +60,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Enable(r.ReadToEnd().Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -79,7 +77,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets IMAP capabilities.

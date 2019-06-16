@@ -18,7 +18,6 @@ namespace LumiSoft.Net.IMAP
             MessageUid = msgUid;
         }
 
-
         /// <summary>
         /// Parses APPENDUID optional response from string.
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_AppendUid(Convert.ToInt64(code_mailboxUid_msgUid[1]),Convert.ToInt32(code_mailboxUid_msgUid[2]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -59,7 +57,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "APPENDUID " + MailboxUid + " " + MessageUid;
         }
-
 
         /// <summary>
         /// Gets mailbox(folder) UID value.

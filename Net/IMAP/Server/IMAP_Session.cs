@@ -155,7 +155,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-
             #region Properties implementation
 
             /// <summary>
@@ -223,7 +222,6 @@ namespace LumiSoft.Net.IMAP.Server
                 m_InitialCmdLine = initialCmdLine;
                 m_pCharset       = charset;
             }
-
 
             #region method Start
 
@@ -313,7 +311,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-
             #region method EndsWithLiteralString
 
             /// <summary>
@@ -395,7 +392,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-
             #region Properties implementation
 
             /// <summary>
@@ -445,7 +441,6 @@ namespace LumiSoft.Net.IMAP.Server
                     m_pResponse               = response;
                     m_pCompletedAsyncCallback = completedAsyncCallback;
                 }
-
 
                 #region Properties implementation
 
@@ -522,7 +517,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             #endregion
 
-
             #region method SendResponseAsync
 
             /// <summary>
@@ -576,7 +570,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             #endregion
-
 
             #region method SendResponsesAsync
 
@@ -840,7 +833,6 @@ namespace LumiSoft.Net.IMAP.Server
 
         #endregion
 
-
         #region method BeginReadCmd
 
         /// <summary>
@@ -1054,7 +1046,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
         #endregion
-
 
         #region method STARTTLS
 
@@ -1487,7 +1478,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
         #endregion
-
 
         #region method NAMESPACE
 
@@ -3237,7 +3227,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
         #endregion
-
 
         #region method CHECK
 
@@ -5066,7 +5055,6 @@ namespace LumiSoft.Net.IMAP.Server
 
         #endregion
 
-
         #region method CAPABILITY
 
         private void CAPABILITY(string cmdTag,string cmdText)
@@ -5884,7 +5872,6 @@ namespace LumiSoft.Net.IMAP.Server
 
 		#endregion
 
-
         #region Properties implementation
 
         /// <summary>
@@ -5977,7 +5964,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-
         /// <summary>
         /// Gets mailbox encoding.
         /// </summary>
@@ -6038,7 +6024,6 @@ namespace LumiSoft.Net.IMAP.Server
         }
 
         #endregion
-
 
         /// <summary>
         /// Is raised when IMAP session needs to handle NAMESPACE command.

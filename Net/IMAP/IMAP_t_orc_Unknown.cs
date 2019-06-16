@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             Value = value;
         }
 
-
         /// <summary>
         /// Parses unknown optional response from string.
         /// </summary>
@@ -37,7 +36,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Unknown(value);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -46,7 +44,6 @@ namespace LumiSoft.Net.IMAP
         {
             return Value;
         }
-
 
         /// <summary>
         /// Optional response value.

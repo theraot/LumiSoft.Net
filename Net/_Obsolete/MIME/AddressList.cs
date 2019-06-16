@@ -26,7 +26,6 @@ namespace LumiSoft.Net.Mime
 			m_pAddresses = new List<Address>();
 		}
 
-
         /// <summary>
 		/// Adds a new address to the end of the collection.
 		/// </summary>
@@ -51,7 +50,6 @@ namespace LumiSoft.Net.Mime
 	
 			OnCollectionChanged();
 		}
-
 
         /// <summary>
 		/// Removes address at the specified index from the collection.
@@ -87,7 +85,6 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-
         /// <summary>
 		/// Parses address-list from string.
 		/// </summary>
@@ -106,7 +103,6 @@ namespace LumiSoft.Net.Mime
 
 				// Mailbox
 				if(colonIndex == -1 || (commaIndex < colonIndex && commaIndex != -1)){
-
                     // FIX: why quotes missing
                     //System.Windows.Forms.MessageBox.Show(reader.SourceString + "#" + reader.OriginalString);
 
@@ -131,7 +127,6 @@ namespace LumiSoft.Net.Mime
 
 			OnCollectionChanged();
 		}
-
 
         /// <summary>
 		/// Convert addresses to Rfc 2822 address-list string.
@@ -164,7 +159,6 @@ namespace LumiSoft.Net.Mime
 			return retVal.ToString();
 		}
 
-
         /// <summary>
 		/// This called when collection has changed. Item is added,deleted,changed or collection cleared.
 		/// </summary>
@@ -175,7 +169,6 @@ namespace LumiSoft.Net.Mime
 				BoundedHeaderField.Value = this.ToAddressListString();
 			}
 		}
-
 
         /// <summary>
 		/// Gets enumerator.
@@ -226,7 +219,6 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ return m_pAddresses.Count; }
 		}
-
 
 		/// <summary>
 		/// Bound address-list to specified header field.

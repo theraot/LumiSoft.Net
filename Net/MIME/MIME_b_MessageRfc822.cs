@@ -22,7 +22,6 @@ namespace LumiSoft.Net.MIME
             m_pMessage = new Mail_Message();
         }
 
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-
         /// <summary>
         /// Stores MIME entity body to the specified stream.
         /// </summary>
@@ -68,7 +66,6 @@ namespace LumiSoft.Net.MIME
 
             m_pMessage.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
         }
-
 
         /// <summary>
         /// Gets if body has modified.

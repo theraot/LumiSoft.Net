@@ -64,7 +64,6 @@ namespace LumiSoft.Net.AUTH
             Opaque = opaque;
         }
 
-
         /// <summary>
         /// Authenticates specified user and password using this class parameters.
         /// </summary>
@@ -81,7 +80,6 @@ namespace LumiSoft.Net.AUTH
                 return false;
             }
         }
-
 
         /// <summary>
         /// Parses authetication info from client digest response.
@@ -164,7 +162,6 @@ namespace LumiSoft.Net.AUTH
                 directives MUST BE present if "qop=auth" or "qop=auth-int" is
                 specified.
             */
-
 
             string a1 = "";
             string a2 = "";
@@ -295,7 +292,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-
         /// <summary>
         /// Converts this to valid digest string.
         /// </summary>
@@ -416,7 +412,6 @@ namespace LumiSoft.Net.AUTH
             return retVal;
         }
 
-
         private string H(string value)
         {
             return Net_Utils.ComputeMd5(value,true);
@@ -428,7 +423,6 @@ namespace LumiSoft.Net.AUTH
 
             return H(key + ":" + data);
         }
-
 
         /// <summary>
         /// Creates valid nonce value.
@@ -447,7 +441,6 @@ namespace LumiSoft.Net.AUTH
         {
             return Guid.NewGuid().ToString().Replace("-","");
         }
-
 
         /// <summary>
         /// Gets or sets request method.
@@ -520,7 +513,6 @@ namespace LumiSoft.Net.AUTH
         /// This is normally MD5 or MD5-sess.
         /// </summary>
         public string Algorithm { get; set; } = "";
-
 
         /// <summary>
         /// Gets a string of 32 hex digits computed by HTTP digest algorithm, 

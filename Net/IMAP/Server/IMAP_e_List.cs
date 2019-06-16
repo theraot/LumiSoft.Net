@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP.Server
             Folders = new List<IMAP_r_u_List>();
         }
 
-
         /// <summary>
         /// Gets folder reference name. Value null means not specified.
         /// </summary>

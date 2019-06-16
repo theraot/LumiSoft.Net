@@ -23,7 +23,6 @@
         /// <returns>Returns encoded data.</returns>
         public abstract byte[] Decode(byte[] buffer,int offset,int count);
 
-
         /// <summary>
         /// Gets codec name.
         /// </summary>

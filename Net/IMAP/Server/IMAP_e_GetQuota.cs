@@ -28,7 +28,6 @@ namespace LumiSoft.Net.IMAP.Server
             QuotaResponses = new List<IMAP_r_u_Quota>();
         }
 
-
         /// <summary>
         /// Gets QUOTA responses collection.
         /// </summary>

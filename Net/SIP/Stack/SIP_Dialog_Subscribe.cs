@@ -14,7 +14,6 @@ namespace LumiSoft.Net.SIP.Stack
         {
         }
 
-
         /// <summary>
         /// Sends notify request to remote end point.
         /// </summary>

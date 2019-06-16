@@ -29,7 +29,6 @@ namespace LumiSoft.Net.SMTP.Server
             ENVID   = envid;
         }
 
-
         /// <summary>
         /// Gets SMTP "mailbox" value. Actually this is just email address.
         /// This value can be "" if "null reverse-path".

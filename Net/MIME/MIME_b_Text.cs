@@ -59,7 +59,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-
         /// <summary>
         /// Sets text.
         /// </summary>
@@ -88,7 +87,6 @@ namespace LumiSoft.Net.MIME
             this.Entity.ContentType.Param_Charset = charset.WebName;            
         }
 
-
         /// <summary>
         /// Gets charset from Content-Type. If char set isn't specified, "ascii" is defined as default and it will be returned.
         /// </summary>
@@ -115,7 +113,6 @@ namespace LumiSoft.Net.MIME
                 }
             }
         }
-
 
         /// <summary>
         /// Gets body decoded text.

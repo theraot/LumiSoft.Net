@@ -31,7 +31,6 @@ namespace LumiSoft.Net.FTP
             IsDir    = isDir;
         }
 
-
         /// <summary>
         /// Gets if current item is directory.
         /// </summary>

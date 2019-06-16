@@ -33,7 +33,6 @@ namespace LumiSoft.Net.MIME
             m_Source = value;
         }
 
-
         /// <summary>
         /// Reads RFC 2822 'atom' from source stream.
         /// </summary>
@@ -531,7 +530,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-
         /// <summary>
         /// Gets if the specified char is RFC 822 'ALPHA'.
         /// </summary>
@@ -691,7 +689,6 @@ namespace LumiSoft.Net.MIME
             return true;
         }
 
-
         /// <summary>
 		/// Reads parenthesized value. Supports {},(),[],&lt;&gt; parenthesis. 
 		/// Throws exception if there isn't parenthesized value or closing parenthesize is missing.
@@ -818,7 +815,6 @@ namespace LumiSoft.Net.MIME
 			// If we reached so far then we are end of string, return it.
 			return currentSplitBuffer.ToString();
         }
-
 
         /// <summary>
         /// Gets number of chars has left for processing.

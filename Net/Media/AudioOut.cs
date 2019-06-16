@@ -133,7 +133,6 @@ namespace LumiSoft.Net.Media
                 public const int MM_WIM_CLOSE = 0x3BF;
                 public const int MM_WIM_DATA = 0x3C0;
 
-
 		        public const int CALLBACK_FUNCTION = 0x00030000;
 
                 public const int WAVERR_STILLPLAYING = 0x21;
@@ -274,7 +273,6 @@ namespace LumiSoft.Net.Media
                 /// <returns>Returns value of MMSYSERR.</returns>
 		        [DllImport("winmm.dll")]
 		        public static extern int waveOutWrite(IntPtr hWaveOut,IntPtr lpWaveOutHdr,int uSize);
-
             }
 
             /// <summary>
@@ -433,7 +431,6 @@ namespace LumiSoft.Net.Media
                     m_DataHandle.Free();
                 }
 
-
                 /// <summary>
                 /// Gets header handle.
                 /// </summary>
@@ -565,7 +562,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-
             /// <summary>
             /// This method is called when wav device generates some event.
             /// </summary>
@@ -609,7 +605,6 @@ namespace LumiSoft.Net.Media
                 catch{
                 }
             }
-
 
             /// <summary>
             /// Plays specified audio data bytes. If player is currently playing, data will be queued for playing.
@@ -677,7 +672,6 @@ namespace LumiSoft.Net.Media
                 //--------------------------------------------------------------------------------------------------
             }
 
-
             /// <summary>
             /// Gets all available output audio devices.
             /// </summary>
@@ -697,7 +691,6 @@ namespace LumiSoft.Net.Media
                     return retVal.ToArray(); 
                 }
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -829,7 +822,6 @@ namespace LumiSoft.Net.Media
             m_pWaveOut = null;
         }
 
-
         /// <summary>
         /// Writes specified audio data bytes to the active audio device. If player is currently playing, data will be queued for playing.
         /// </summary>
@@ -856,7 +848,6 @@ namespace LumiSoft.Net.Media
             m_pWaveOut.Play(buffer,offset,count);
         }
 
-
         /// <summary>
         /// Gets all available audio output devices.
         /// </summary>
@@ -864,7 +855,6 @@ namespace LumiSoft.Net.Media
         {
             get{ return WaveOut.Devices; }
         }
-
 
         /// <summary>
         /// Gets audio output device where audio is outputed.

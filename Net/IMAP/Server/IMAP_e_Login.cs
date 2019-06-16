@@ -26,7 +26,6 @@ namespace LumiSoft.Net.IMAP.Server
             Password = password;
         }
 
-
         /// <summary>
         /// Gets or sets if specified user is authenticated.
         /// </summary>

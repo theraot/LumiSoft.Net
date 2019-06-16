@@ -30,7 +30,6 @@ namespace LumiSoft.Net.SDP
             m_StopTime  = stopTime;
         }
 
-
         /// <summary>
         /// Parses media from "t" SDP message field.
         /// </summary>
@@ -74,7 +73,6 @@ namespace LumiSoft.Net.SDP
 
             return "t=" + StartTime + " " + StopTime + "\r\n";
         }
-
 
         /// <summary>
         /// Gets or sets start time when session must start. Network Time Protocol (NTP) time values in 

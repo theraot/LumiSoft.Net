@@ -41,7 +41,6 @@ namespace LumiSoft.Net.IMAP
             ResponseText      = responseText;
         }
 
-
         /// <summary>
         /// Parses IMAP command completion status response from response line.
         /// </summary>
@@ -70,7 +69,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_ServerStatus(responseCode,optResponse,responseText);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -86,7 +84,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets IMAP server status response code(OK,NO,BAD,PREAUTH,BYE).
@@ -110,7 +107,6 @@ namespace LumiSoft.Net.IMAP
         {
             get{ return !ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase); }
         }
-
 
         /// <summary>
         /// Gets IMAP server status response optiona response-code(ALERT,BADCHARSET,CAPABILITY,PARSE,PERMANENTFLAGS,

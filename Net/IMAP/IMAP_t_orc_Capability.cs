@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             Capabilities = capabilities;
         }
 
-
         /// <summary>
         /// Parses CAPABILITY optional response from string.
         /// </summary>
@@ -45,7 +44,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Capability(code_value[1].Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -54,7 +52,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "CAPABILITY (" + Net_Utils.ArrayToString(Capabilities," ") + ")";
         }
-
 
         /// <summary>
         /// Gets list of supported capabilities.

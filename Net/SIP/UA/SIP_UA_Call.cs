@@ -103,7 +103,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-
         /// <summary>
         /// Is called when SIP dialog state has changed.
         /// </summary>
@@ -121,7 +120,6 @@ namespace LumiSoft.Net.SIP.UA
                 m_pDialog.Dispose();
             }
         }
-
 
         /// <summary>
         /// This method is called when initial INVITE sender got response.
@@ -195,9 +193,7 @@ namespace LumiSoft.Net.SIP.UA
             catch(Exception x){  
                 m_pUA.Stack.OnError(x);            
             }
-
         }
-
 
         /// <summary>
         /// Starts calling.
@@ -221,7 +217,6 @@ namespace LumiSoft.Net.SIP.UA
                 m_pInitialInviteSender.Start();
             }
         }
-
 
         /// <summary>
         /// Sends ringing to remote party.
@@ -280,7 +275,6 @@ namespace LumiSoft.Net.SIP.UA
 
             m_pDialog = m_pUA.Stack.TransactionLayer.GetOrCreateDialog(m_pInitialInviteTransaction,response);
             m_pDialog.StateChanged += new EventHandler(m_pDialog_StateChanged);
-
         }
 
         /// <summary>
@@ -339,7 +333,6 @@ namespace LumiSoft.Net.SIP.UA
                 throw new NotImplementedException();
             }
         }
-
 
         /// <summary>
         /// Starts terminating call. To get when call actually terminates, monitor <b>StateChanged</b> event.
@@ -403,7 +396,6 @@ namespace LumiSoft.Net.SIP.UA
             // TODO:
         }
 
-
         /// <summary>
         /// Changes call state.
         /// </summary>
@@ -414,7 +406,6 @@ namespace LumiSoft.Net.SIP.UA
 
             OnStateChanged(state);
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

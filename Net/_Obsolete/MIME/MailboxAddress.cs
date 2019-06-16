@@ -42,7 +42,6 @@ namespace LumiSoft.Net.Mime
 			m_EmailAddress = emailAddress;
 		}
 
-
         /// <summary>
 		/// Parses mailbox from mailbox address string.
 		/// </summary>
@@ -86,7 +85,6 @@ namespace LumiSoft.Net.Mime
 			return new MailboxAddress(name,emailAddress);
 		}
 
-
         /// <summary>
         /// Converts this to valid mailbox address string.
         /// Defined in RFC 2822(3.4. Address Specification) string. Format: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.
@@ -111,7 +109,6 @@ namespace LumiSoft.Net.Mime
             return retVal;
         }
 
-
         /// <summary>
 		/// This called when mailox address has changed.
 		/// </summary>
@@ -126,7 +123,6 @@ namespace LumiSoft.Net.Mime
 				}
 			}
 		}
-
 
         /// <summary>
 		/// Gets Mailbox as RFC 2822(3.4. Address Specification) string. Format: ["display-name"&lt;SP&gt;]&lt;local-part@domain&gt;.

@@ -55,7 +55,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-
         /// <summary>
         /// Gets default body part Content-Type. For more info see RFC 2046 5.1.
         /// </summary>

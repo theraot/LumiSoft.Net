@@ -33,7 +33,6 @@ namespace LumiSoft.Net.ABNF
             Elements = elements;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -54,7 +53,6 @@ namespace LumiSoft.Net.ABNF
 
             return retVal;
         }
-
 
         /// <summary>
         /// Validates 'rulename' value.
@@ -85,7 +83,6 @@ namespace LumiSoft.Net.ABNF
 
             return true;
         }
-
 
         /// <summary>
         /// Gets rule name.

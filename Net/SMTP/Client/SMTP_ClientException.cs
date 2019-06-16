@@ -35,7 +35,6 @@ namespace LumiSoft.Net.SMTP.Client
             ReplyLines = replyLines;            
         }
 
-
         /// <summary>
         /// Gets SMTP status code.
         /// </summary>

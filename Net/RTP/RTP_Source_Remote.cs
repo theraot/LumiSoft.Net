@@ -38,7 +38,6 @@ namespace LumiSoft.Net.RTP
             base.Dispose();
         }
 
-
         /// <summary>
         /// Sets source owner participant.
         /// </summary>
@@ -107,7 +106,6 @@ namespace LumiSoft.Net.RTP
             OnApplicationPacket(packet);
         }
 
-
         /// <summary>
         /// Returns false.
         /// </summary>
@@ -152,7 +150,6 @@ namespace LumiSoft.Net.RTP
                 return m_pStream; 
             }
         }
-
 
         /// <summary>
         /// Gets source CNAME. Value null means that source not binded to participant.

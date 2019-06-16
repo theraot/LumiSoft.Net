@@ -27,7 +27,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "hi-entry" from specified value.
         /// </summary>
@@ -95,7 +94,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets address.

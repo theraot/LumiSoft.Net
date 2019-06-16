@@ -24,7 +24,6 @@ namespace LumiSoft.Net.IMAP
             Value = value;
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>TEXT (string)</b> key.
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Text(value);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -59,7 +57,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "TEXT " + TextUtils.QuoteString(Value);
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -75,7 +72,6 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"TEXT "));
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
         }
-
 
         /// <summary>
         /// Gets TEXT filter value.

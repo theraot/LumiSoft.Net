@@ -68,7 +68,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
         {
         }
 
-
         /// <summary>
         /// Encodes linear 16-bit linear PCM to 8-bit ulaw.
         /// </summary>
@@ -138,7 +137,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
             return retVal;
         }
 
-
         private static byte LinearToMuLawSample(short sample) 
         { 
             int cBias = 0x84; 
@@ -158,7 +156,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
 
             return (byte)compressedByte;
         }
-
 
         /// <summary>
         /// Gets codec name.

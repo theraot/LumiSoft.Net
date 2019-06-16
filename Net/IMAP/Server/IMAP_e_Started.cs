@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP.Server
             Response = response;
         }
 
-
         /// <summary>
         /// Gets or sets IMAP server response.
         /// </summary>

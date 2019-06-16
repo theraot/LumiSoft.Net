@@ -18,7 +18,6 @@ namespace LumiSoft.Net.TCP
             Session = session;
         }
 
-
         /// <summary>
         /// Gets TCP server.
         /// </summary>

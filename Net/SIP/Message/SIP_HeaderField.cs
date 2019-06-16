@@ -18,7 +18,6 @@ namespace LumiSoft.Net.SIP.Message
             m_Value = value;
         }
 
-
         /// <summary>
         /// Sets property IsMultiValue value.
         /// </summary>
@@ -27,7 +26,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             IsMultiValue = value;
         }
-
 
         /// <summary>
         /// Gets header field name.

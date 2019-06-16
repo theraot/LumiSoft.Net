@@ -37,7 +37,6 @@ namespace LumiSoft.Net.AUTH
                 m_Host   = host;
             }
 
-
             /// <summary>
             /// Converts this to binary NTML type 1 message.
             /// </summary>
@@ -170,7 +169,6 @@ namespace LumiSoft.Net.AUTH
                 Nonce = nonce;
             }
 
-
             /// <summary>
             /// Parses NTLM type 2 message.
             /// </summary>
@@ -227,7 +225,6 @@ namespace LumiSoft.Net.AUTH
                 return new MessageType2(nonce);
             }
 
-
             /// <summary>
             /// Gets nonce.
             /// </summary>
@@ -278,7 +275,6 @@ namespace LumiSoft.Net.AUTH
                 m_LM     = lm;
                 m_NT     = nt;
             }
-
 
             /// <summary>
             /// Converts this to binary NTML type 3 message.
@@ -526,7 +522,6 @@ namespace LumiSoft.Net.AUTH
                     des.CreateEncryptor().TransformBlock(magic,0,8,lmBuffer,8);
                 }
 
-
                 return calc_resp(nonce,lmBuffer);
             }
 
@@ -554,7 +549,6 @@ namespace LumiSoft.Net.AUTH
 
                 return calc_resp(nonce,ntBuffer);
             }
-
 
             private static byte[] calc_resp(byte[] nonce,byte[] data)
             {
@@ -639,7 +633,6 @@ namespace LumiSoft.Net.AUTH
             m_Password = password;
         }
 
-
         /// <summary>
         /// Continues authentication process.
         /// </summary>
@@ -685,7 +678,6 @@ namespace LumiSoft.Net.AUTH
                 throw new InvalidOperationException("Authentication is completed.");
             }
         }
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

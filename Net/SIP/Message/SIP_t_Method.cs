@@ -23,7 +23,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "Method" from specified value.
         /// </summary>
@@ -72,7 +71,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_Method;
         }
-
 
         /// <summary>
         /// Gets or sets SIP method what is allowed.

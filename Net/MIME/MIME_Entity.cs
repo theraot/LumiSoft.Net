@@ -41,7 +41,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-
         /// <summary>
         /// Stores MIME entity to the specified file.
         /// </summary>
@@ -176,7 +175,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-
         /// <summary>
         /// Parses MIME entiry from the specified stream.
         /// </summary>
@@ -210,7 +208,6 @@ namespace LumiSoft.Net.MIME
         {
             m_pParent = parent;
         }
-
 
 // Permanent headerds list: http://www.rfc-editor.org/rfc/rfc4021.txt
 

@@ -29,7 +29,6 @@ namespace LumiSoft.Net.IMAP
             SearchKey2 = key2;
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>OR (search-key1) (search-key2)</b> key.
         /// </summary>
@@ -51,7 +50,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Or(IMAP_Search_Key.ParseKey(r),IMAP_Search_Key.ParseKey(r));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -60,7 +58,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "OR " + SearchKey1.ToString() + " " + SearchKey2.ToString();
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -78,7 +75,6 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant," "));
             SearchKey2.ToCmdParts(list);
         }
-
 
         /// <summary>
         /// Gets search-key1.

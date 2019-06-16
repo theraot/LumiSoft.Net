@@ -18,7 +18,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_pItems = new List<Item>();
         }
 
-
         /// <summary>
         /// Adds new vCard item to the collection.
         /// </summary>
@@ -63,7 +62,6 @@ namespace LumiSoft.Net.Mime.vCard
         {
             m_pItems.Clear();
         }
-
 
         /// <summary>
         /// Gets first item with specified name. Returns null if specified item doesn't exists.
@@ -156,7 +154,6 @@ namespace LumiSoft.Net.Mime.vCard
                 m_pItems.Add(new Item(name,parametes,value));
             }
         }
-
 
         /// <summary>
 		/// Gets enumerator.

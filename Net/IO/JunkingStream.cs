@@ -16,7 +16,6 @@ namespace LumiSoft.Net.IO
         {
         }
 
-
         /// <summary>
         /// Not used.
         /// </summary>
@@ -65,7 +64,6 @@ namespace LumiSoft.Net.IO
         public override void Write(byte[] buffer,int offset,int size)
         {
         }
-
 
         /// <summary>
         /// Gets a value indicating whether the stream supports reading. This property always returns false.

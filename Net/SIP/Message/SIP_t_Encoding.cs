@@ -26,7 +26,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "encoding" from specified value.
         /// </summary>
@@ -90,7 +89,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets content encoding. Value *(STAR) means all content encodings.

@@ -16,7 +16,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "event-type" from specified value.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.SIP.Message
         /// <exception cref="SIP_ParseException">Raised when invalid SIP message.</exception>
         public override void Parse(StringReader reader)
         {
-
             if(reader == null){
                 throw new ArgumentNullException("reader");
             }
@@ -61,7 +59,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_EventType;
         }
-
 
         /// <summary>
         /// Gets or sets event type.

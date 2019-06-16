@@ -58,7 +58,6 @@ namespace LumiSoft.Net.SIP.Stack
             Transport = transport;
         }
 
-
         /// <summary>
         /// Gets target IP end point.
         /// </summary>

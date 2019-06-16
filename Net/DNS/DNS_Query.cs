@@ -35,7 +35,6 @@ namespace LumiSoft.Net.DNS
             QueryName  = qname;
         }
 
-
         /// <summary>
         /// Gets DNS query class.
         /// </summary>

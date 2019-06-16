@@ -18,7 +18,6 @@ namespace LumiSoft.Net.STUN.Client
             PublicEndPoint = publicEndPoint;
         }
 
-
         /// <summary>
         /// Gets UDP network type.
         /// </summary>

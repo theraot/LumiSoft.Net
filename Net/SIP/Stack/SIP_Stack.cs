@@ -97,7 +97,6 @@ namespace LumiSoft.Net.SIP.Stack
             }            
         }
 
-
         /// <summary>
         /// Starts SIP stack.
         /// </summary>
@@ -177,7 +176,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             State = SIP_StackState.Stopped;            
         }
-
 
         /// <summary>
         /// Creates new out-off dialog SIP request.
@@ -307,13 +305,11 @@ namespace LumiSoft.Net.SIP.Stack
                 request.Supported.Add(SIP_Utils.ListToString(m_pAllow));
             }
 
-
 // section 8.1.2 suggests to use pre-configured route for proxy.
 
             foreach(SIP_Uri proxy in m_pProxyServers){
                 request.Route.Add(proxy.ToString());
             }
-
 
             if(!string.IsNullOrEmpty(m_UserAgent)){
                 request.UserAgent = m_UserAgent;
@@ -891,7 +887,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Gets stack state.
         /// </summary>
@@ -1318,7 +1313,6 @@ namespace LumiSoft.Net.SIP.Stack
             return eArgs;
         }
 
-
         /// <summary>
         /// This event is raised when new SIP request is received.
         /// </summary>
@@ -1334,7 +1328,6 @@ namespace LumiSoft.Net.SIP.Stack
                 this.RequestReceived(this,e);
             }
         }
-
 
         /// <summary>
         /// This event is raised when new stray SIP response is received.
@@ -1352,7 +1345,6 @@ namespace LumiSoft.Net.SIP.Stack
                 this.ResponseReceived(this,e);
             }
         }
-
 
         /// <summary>
         /// This event is raised by any SIP element when unknown/unhandled error happened.

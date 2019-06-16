@@ -28,7 +28,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponse = response;
         }
 
-
         /// <summary>
         /// Gets or sets MYRIGHTS response.
         /// </summary>

@@ -15,7 +15,6 @@ namespace LumiSoft.Net.SIP.Message
             Parameters = new SIP_ParameterCollection();
         }
 
-
         /// <summary>
         /// Parses parameters from specified reader. Reader position must be where parameters begin.
         /// </summary>
@@ -78,7 +77,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets via parameters.

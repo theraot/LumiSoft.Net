@@ -22,7 +22,6 @@ namespace LumiSoft.Net.SIP.UA
             Call = call;
         }
 
-
         /// <summary>
         /// Gets call.
         /// </summary>

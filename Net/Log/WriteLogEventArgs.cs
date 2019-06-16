@@ -21,7 +21,6 @@ namespace LumiSoft.Net.Log
             LogEntry = logEntry;
         }
 
-
         /// <summary>
         /// Gets new log entry.
         /// </summary>

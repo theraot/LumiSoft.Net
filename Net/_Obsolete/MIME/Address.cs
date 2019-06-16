@@ -17,12 +17,10 @@ namespace LumiSoft.Net.Mime
 			IsGroupAddress = groupAddress;
 		}
 
-
         /// <summary>
 		/// Gets if address is group address or mailbox address.
 		/// </summary>
 		public bool IsGroupAddress { get; }
-
 
         /// <summary>
 		/// Gets or sets owner of this address.

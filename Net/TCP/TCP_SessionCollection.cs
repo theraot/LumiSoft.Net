@@ -21,7 +21,6 @@ namespace LumiSoft.Net.TCP
             m_pConnectionsPerIP = new Dictionary<string,long>();
         }
 
-
         /// <summary>
         /// Adds specified TCP session to the colletion.
         /// </summary>
@@ -72,7 +71,6 @@ namespace LumiSoft.Net.TCP
                         m_pConnectionsPerIP.Remove(session.RemoteEndPoint.Address.ToString());
                     }
                 }                
-                
             }
         }
 
@@ -118,7 +116,6 @@ namespace LumiSoft.Net.TCP
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets number of items in the collection.

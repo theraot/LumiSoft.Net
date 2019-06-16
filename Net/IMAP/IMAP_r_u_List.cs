@@ -39,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             HierarchyDelimiter = delimiter;
         }
 
-
         /// <summary>
         /// Parses LIST response from list-response string.
         /// </summary>
@@ -112,7 +111,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_List(folder,delimiter[0],attributes == string.Empty ? new string[0] : attributes.Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -160,7 +158,6 @@ namespace LumiSoft.Net.IMAP
                 return retVal.ToString();
             }
         }
-
 
         /// <summary>
         /// Gets folder name.

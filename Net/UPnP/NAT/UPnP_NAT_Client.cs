@@ -109,7 +109,6 @@ namespace LumiSoft.Net.UPnP.NAT
             }            
         }
 
-
         /// <summary>
         /// Gets NAT public IP address.
         /// </summary>
@@ -376,7 +375,6 @@ namespace LumiSoft.Net.UPnP.NAT
             }
         }
 
-
         /// <summary>
         /// Sends command to UPnP device and reads response.
         /// </summary>
@@ -402,7 +400,6 @@ namespace LumiSoft.Net.UPnP.NAT
                 return r.ReadToEnd();
             }
         }
-
 
         /// <summary>
         /// Gets if UPnP NAT is supported.

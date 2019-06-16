@@ -43,7 +43,6 @@ namespace LumiSoft.Net
             Port = endPoint.Port;
         }
 
-
         /// <summary>
         /// Parses HostEndPoint from the specified string.
         /// </summary>
@@ -90,7 +89,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Returns HostEndPoint as string.
         /// </summary>
@@ -104,7 +102,6 @@ namespace LumiSoft.Net
                 return Host + ":" + Port.ToString();
             }
         }
-
 
         /// <summary>
         /// Gets if <b>Host</b> is IP address.

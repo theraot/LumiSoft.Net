@@ -31,9 +31,7 @@ using System;
 using System.Security.Cryptography;
 
 namespace LumiSoft.Net { 
-
     internal abstract class _MD4 : HashAlgorithm {
-
 		protected _MD4 () 
 		{
 			// MD4 hash length are 128 bits long
@@ -57,13 +55,11 @@ namespace LumiSoft.Net {
 		}
 	}
 
-
 	// References:
 	// a.     RFC1320: The MD4 Message-Digest Algorithm
 	//        http://www.ietf.org/rfc/rfc1320.txt
 
 	internal class MD4Managed : _MD4 {
-
 		private readonly uint[] state;
 		private readonly byte[] buffer;
 		private readonly uint[] count;

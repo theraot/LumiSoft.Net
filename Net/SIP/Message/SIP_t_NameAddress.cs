@@ -52,7 +52,6 @@ namespace LumiSoft.Net.SIP.Message
             this.Uri         = uri;
         }
 
-
         /// <summary>
         /// Parses "name-addr" or "addr-spec" from specified value.
         /// </summary>
@@ -140,7 +139,6 @@ namespace LumiSoft.Net.SIP.Message
                 return TextUtils.QuoteString(m_DisplayName) + " <" + m_pUri.ToString() + ">";
             }            
         }
-
 
         /// <summary>
         /// Gets or sets display name.

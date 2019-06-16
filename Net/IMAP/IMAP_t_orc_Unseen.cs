@@ -16,7 +16,6 @@ namespace LumiSoft.Net.IMAP
             SeqNo = firstUnseen;
         }
 
-
         /// <summary>
         /// Parses UNSEEN optional response from string.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Unseen(Convert.ToInt32(code_value[1]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -49,7 +47,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "UNSEEN " + SeqNo;
         }
-
 
         /// <summary>
         /// Gets first unseen message sequence number.

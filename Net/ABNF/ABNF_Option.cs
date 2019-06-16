@@ -56,7 +56,6 @@ namespace LumiSoft.Net.ABNF
             return retVal;
         }
 
-
         /// <summary>
         /// Gets option alternation elements.
         /// </summary>

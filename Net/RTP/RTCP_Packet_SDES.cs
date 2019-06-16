@@ -18,7 +18,6 @@ namespace LumiSoft.Net.RTP
             Chunks = new List<RTCP_Packet_SDES_Chunk>();
         }
 
-
         /// <summary>
         /// Parses Source Description(SDES) packet from data buffer.
         /// </summary>
@@ -108,7 +107,6 @@ namespace LumiSoft.Net.RTP
             buffer[lengthOffset]     = (byte)((length >> 8) & 0xFF);
             buffer[lengthOffset + 1] = (byte)((length)      & 0xFF);
         }
-
 
         /// <summary>
         /// Gets RTCP version.

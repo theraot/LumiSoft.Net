@@ -20,7 +20,6 @@ namespace LumiSoft.Net.RTP
             Packet = packet;
         }
 
-
         /// <summary>
         /// Gets RTP packet.
         /// </summary>

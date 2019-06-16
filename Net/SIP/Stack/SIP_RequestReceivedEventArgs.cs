@@ -36,7 +36,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pTransaction = transaction;
         }
 
-
         /// <summary>
         /// Gets data flow what received SIP request.
         /// </summary>

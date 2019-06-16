@@ -19,7 +19,6 @@ namespace LumiSoft.Net.SIP.Stack
             RemoteEndPoint = remoteEndpoint;
         }
 
-
         /// <summary>
         /// Gets incoming SIP request.
         /// </summary>

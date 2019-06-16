@@ -180,7 +180,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
         /// </summary>

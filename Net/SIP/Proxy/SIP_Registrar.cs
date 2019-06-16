@@ -69,12 +69,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-
         private void m_pTimer_Elapsed(object sender,ElapsedEventArgs e)
         {
             m_pRegistrations.RemoveExpired();
         }
-
 
         /// <summary>
         /// Gets specified registration. Returns null if no such registration.
@@ -124,7 +122,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             m_pRegistrations.Remove(addressOfRecord);
         }
-
 
         /// <summary>
         /// Handles REGISTER method.
@@ -236,7 +233,6 @@ namespace LumiSoft.Net.SIP.Proxy
             SIP_Uri               to          = null;
             string                userName    = "";
 
-
             // Probably we need to do validate in SIP stack.
 
             if(SIP_Utils.IsSipOrSipsUri(request.To.Address.Uri.ToString())){
@@ -246,7 +242,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ": To: value must be SIP or SIPS URI.",request));
                 return;
             }
-
 
 // if(m_pProxy.OnIsLocalUri(e.Request.Uri)){
             // }
@@ -360,7 +355,6 @@ namespace LumiSoft.Net.SIP.Proxy
             response.AuthenticationInfo.Add("qop=\"auth\",nextnonce=\"" + m_pStack.DigestNonceManager.CreateNonce() + "\"");
             transaction.SendResponse(response);
         }
-
 
         /// <summary>
         /// Gets owner proxy core.

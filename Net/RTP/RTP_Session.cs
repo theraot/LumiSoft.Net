@@ -145,7 +145,6 @@ namespace LumiSoft.Net.RTP
             this.NewReceiveStream = null;
         }
 
-
         /// <summary>
         /// Closes RTP session, sends BYE with optional reason text to remote targets.
         /// </summary>
@@ -252,7 +251,6 @@ namespace LumiSoft.Net.RTP
 
             throw new NotImplementedException();
         }
-
 
         /// <summary>
         /// Creates new send stream.
@@ -370,7 +368,6 @@ namespace LumiSoft.Net.RTP
             return false;
         }
 
-
         /// <summary>
         /// Sends specified RTCP packet to the session remote party.
         /// </summary>
@@ -458,7 +455,6 @@ namespace LumiSoft.Net.RTP
             return count;
         }
 
-
         /// <summary>
         /// Processes specified RTCP data.
         /// </summary>
@@ -520,7 +516,6 @@ namespace LumiSoft.Net.RTP
                             source.OnAppPacket(app);
                         }
                     }
-
                     else if(packet.Type == RTCP_PacketType.BYE){
                         RTCP_Packet_BYE bye = ((RTCP_Packet_BYE)packet);
                         
@@ -540,7 +535,6 @@ namespace LumiSoft.Net.RTP
                             DoReverseReconsideration();
                         }
                     }
-
                     else if(packet.Type == RTCP_PacketType.RR){
                         RTCP_Packet_RR rr = ((RTCP_Packet_RR)packet);
                             
@@ -557,7 +551,6 @@ namespace LumiSoft.Net.RTP
                             }
                         }                        
                     }
-
                     else if(packet.Type == RTCP_PacketType.SDES){ 
                         foreach(RTCP_Packet_SDES_Chunk sdes in ((RTCP_Packet_SDES)packet).Chunks){
                             RTP_Source source = GetOrCreateSource(true,sdes.Source,sdes.CName,remoteEP);
@@ -577,7 +570,6 @@ namespace LumiSoft.Net.RTP
                             }                            
                         }
                     }
-
                     else if(packet.Type == RTCP_PacketType.SR){
                         RTCP_Packet_SR sr = ((RTCP_Packet_SR)packet);
 
@@ -662,7 +654,6 @@ namespace LumiSoft.Net.RTP
                 m_pSession.OnError(x);
             }
         }
-
 
         /// <summary>
         /// Creates local source.
@@ -1193,7 +1184,6 @@ namespace LumiSoft.Net.RTP
             Schedule(ComputeRtcpTransmissionInterval(m_pMembers.Count,m_pSenders.Count,m_Bandwidth * 0.25,we_sent,m_RtcpAvgPacketSize,false));
         }
 
-
         /// <summary>
         /// Is called when RTP socket has finisehd data sending.
         /// </summary>
@@ -1208,7 +1198,6 @@ namespace LumiSoft.Net.RTP
                 m_RtpFailedTransmissions++;
             }
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

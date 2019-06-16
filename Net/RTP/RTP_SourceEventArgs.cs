@@ -21,7 +21,6 @@ namespace LumiSoft.Net.RTP
             Source = source;
         }
 
-
         /// <summary>
         /// Gets RTP source.
         /// </summary>

@@ -67,7 +67,6 @@ namespace LumiSoft.Net.DNS.Client
             }
         }
 
-
         /// <summary>
         /// Is called when DNS transaction timeout timer triggers.
         /// </summary>
@@ -85,7 +84,6 @@ namespace LumiSoft.Net.DNS.Client
                 Dispose();
             }
         }
-
 
         /// <summary>
         /// Starts DNS transaction processing.
@@ -134,7 +132,6 @@ namespace LumiSoft.Net.DNS.Client
             });
         }
 
-
         /// <summary>
         /// Processes DNS server response through this transaction.
         /// </summary>
@@ -173,7 +170,6 @@ namespace LumiSoft.Net.DNS.Client
                 }                
             }
         }
-
 
         /// <summary>
         /// Sets transaction state.
@@ -243,7 +239,6 @@ namespace LumiSoft.Net.DNS.Client
 
 			//---- End of header --------------------------------------------//
 
-
 			//----Create query ------------------------------------//
 
 			/* 	Rfc 1035 4.1.2. Question section format
@@ -304,7 +299,6 @@ namespace LumiSoft.Net.DNS.Client
 			
 			return position;
 		}
-
 
         /// <summary>
         /// Get DNS transaction state.

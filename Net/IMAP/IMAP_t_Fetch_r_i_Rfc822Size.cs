@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             Size = size;
         }
 
-
         /// <summary>
         /// Gets message size in bytes.
         /// </summary>

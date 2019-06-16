@@ -23,7 +23,6 @@ namespace LumiSoft.Net
 			m_StrmSource = strmSource;
 		}
 
-
         /// <summary>
 		/// Reads byte[] line from stream. NOTE: Returns null if end of stream reached.
 		/// </summary>
@@ -62,7 +61,6 @@ namespace LumiSoft.Net
                 posInBuffer++;
 				prevByte = currByteInt;
 
-
 				// Read next byte
 				currByteInt = m_StrmSource.ReadByte();				
 			}
@@ -96,7 +94,6 @@ namespace LumiSoft.Net
 				return null;
 			}
 		}
-
 
         /// <summary>
 		/// Gets or sets charset encoding to use for string based methods. Default("") encoding is system default encoding.

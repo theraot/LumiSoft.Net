@@ -64,7 +64,6 @@ namespace LumiSoft.Net.FTP.Client
                 m_pOwner = null;
             }
 
-
             /// <summary>
             /// Swtiches FTP data connection to active mode.
             /// </summary>
@@ -98,7 +97,6 @@ namespace LumiSoft.Net.FTP.Client
 
                 m_pOwner.LogAddText("FTP Passive data channel established, localEP='" + m_pSocket.LocalEndPoint.ToString() + "' remoteEP='" + m_pSocket.RemoteEndPoint.ToString() + "'.");
             }
-
 
             /// <summary>
             /// Reads all data from FTP data connection and stores to the specified stream.
@@ -162,7 +160,6 @@ namespace LumiSoft.Net.FTP.Client
                     CleanUpSocket();
                 }
             }
-
 
             /// <summary>
             /// Waits FTP server to connect to this data connection.
@@ -278,7 +275,6 @@ namespace LumiSoft.Net.FTP.Client
                 }
             }
 
-
             /// <summary>
             /// Gets data connection local IP end point.
             /// </summary>
@@ -324,7 +320,6 @@ namespace LumiSoft.Net.FTP.Client
                 m_pDataConnectionIP = null;
             }
 		}
-
 
         /// <summary>
 		/// Closes connection to FTP server.
@@ -664,7 +659,6 @@ namespace LumiSoft.Net.FTP.Client
                     }
                 }
             }
-
             else{
                 if(string.IsNullOrEmpty(path)){
                     WriteLine("LIST");
@@ -1179,7 +1173,6 @@ namespace LumiSoft.Net.FTP.Client
 			}
         }
 
-
         /// <summary>
 		/// Sets transfer typr.
 		/// </summary>
@@ -1242,7 +1235,6 @@ namespace LumiSoft.Net.FTP.Client
 
             m_pDataConnection.SwitchToPassive(new IPEndPoint(IPAddress.Parse(parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3]),(Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5])));
         }
-
 
         /// <summary>
         /// Reads FTP server response line(s).
@@ -1333,7 +1325,6 @@ namespace LumiSoft.Net.FTP.Client
             return retVal.ToArray();
         }
 
-
         /// <summary>
         /// This method is called after TCP client has sucessfully connected.
         /// </summary>
@@ -1397,7 +1388,6 @@ namespace LumiSoft.Net.FTP.Client
                 }
             }
         }
-
 
         /// <summary>
 		/// Gets or sets data connection establish mode.
@@ -1515,7 +1505,6 @@ namespace LumiSoft.Net.FTP.Client
                 return m_pExtCapabilities.ToArray(); 
             }
         }
-
 
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.

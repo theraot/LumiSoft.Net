@@ -37,7 +37,6 @@ namespace LumiSoft.Net.IMAP.Server
             Folder    = folder;
         }
 
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>

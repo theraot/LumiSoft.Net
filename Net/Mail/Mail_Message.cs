@@ -36,7 +36,6 @@ namespace LumiSoft.Net.Mail
             this.Header.FieldsProvider.HeaderFields.Add("Disposition-Notification-Options",typeof(Mail_h_DispositionNotificationOptions));
         }
 
-
         /// <summary>
         /// Parses mail message from the specified byte array.
         /// </summary>
@@ -154,7 +153,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-
         /// <summary>
         /// Gets this message attachments.
         /// </summary>
@@ -220,7 +218,6 @@ namespace LumiSoft.Net.Mail
 
             return retVal.ToArray();
         }
-
 
 // Permanent headerds list: http://www.rfc-editor.org/rfc/rfc4021.txt
 
@@ -1933,7 +1930,6 @@ namespace LumiSoft.Net.Mail
 
         // Not for general use
         // public string OriginatorReturnAddress
-
 
         /// <summary>
         /// Gets this message attachments.

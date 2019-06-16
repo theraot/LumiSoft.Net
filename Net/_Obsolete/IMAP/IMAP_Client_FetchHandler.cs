@@ -15,7 +15,6 @@ namespace LumiSoft.Net.IMAP.Client
         {            
         }
 
-
         /// <summary>
         /// Sets <b>CurrentSeqNo</b> property value.
         /// </summary>
@@ -24,7 +23,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
             CurrentSeqNo = seqNo;
         }
-
 
         /// <summary>
         /// Gets current message sequence number. Value -1 means no current message.
@@ -193,7 +191,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.UID(this,new EventArgs<long>(uid));
             }
         }
-
 
         /// <summary>
         /// Is raised when current message FETCH GMail X-GM-MSGID data-item is returned.

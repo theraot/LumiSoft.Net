@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             Flags = flags;
         }
 
-
         /// <summary>
         /// Parses PERMANENTFLAGS optional response from string.
         /// </summary>
@@ -48,7 +47,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_PermanentFlags(r.ReadParenthesized().Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -57,7 +55,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "PERMANENTFLAGS (" + Net_Utils.ArrayToString(Flags," ") + ")";
         }
-
 
         /// <summary>
         /// Gets list of supported permanent flags.

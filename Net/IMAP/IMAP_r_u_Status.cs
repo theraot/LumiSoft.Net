@@ -36,7 +36,6 @@ namespace LumiSoft.Net.IMAP
             UnseenCount  = unseenCount;
         }
 
-
         /// <summary>
         /// Parses STATUS response from status-response string.
         /// </summary>
@@ -94,7 +93,6 @@ namespace LumiSoft.Net.IMAP
 
             return new IMAP_r_u_Status(folder,messages,recent,uidNext,folderUid,unseen);
         }
-
 
         /// <summary>
         /// Returns this as string.
@@ -155,7 +153,6 @@ namespace LumiSoft.Net.IMAP
             
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets folder name.

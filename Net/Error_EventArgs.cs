@@ -19,7 +19,6 @@ namespace LumiSoft.Net
 			StackTrace = stackTrace;
 		}
 
-
         /// <summary>
 		/// Occured error's exception.
 		/// </summary>

@@ -18,7 +18,6 @@
             Channels = channels;
         }
 
-
         /// <summary>
         /// Gets device name.
         /// </summary>
@@ -28,7 +27,6 @@
         /// Gets number of input channels(mono,stereo,...) supported.
         /// </summary>
         public int Channels { get; } = 1;
-
 
         /// <summary>
         /// Gets device index in devices.

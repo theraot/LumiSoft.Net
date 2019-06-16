@@ -23,7 +23,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-
         /// <summary>
         /// Parses RTCP report block (part of SR or RR packet) from specified buffer.
         /// </summary>
@@ -132,7 +131,6 @@ namespace LumiSoft.Net.RTP
             buffer[offset++] = (byte)((DelaySinceLastSR >> 8)  | 0xFF);
             buffer[offset++] = (byte)((DelaySinceLastSR)       | 0xFF);
         }
-
 
         /// <summary>
         /// Gets the SSRC identifier of the source to which the information in this reception report block pertains.

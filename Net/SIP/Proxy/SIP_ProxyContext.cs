@@ -220,7 +220,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-
             /// <summary>
             /// Is called when client transactions receives response.
             /// </summary>
@@ -422,7 +421,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
 
-
             /// <summary>
             /// Starts target processing.
             /// </summary>
@@ -477,7 +475,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     }
                 }
             }
-
 
             /// <summary>
             /// Starts sending request to next hop in queue.
@@ -577,7 +574,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     m_pTransaction = null;
                 }
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -796,7 +792,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-
         /// <summary>
         /// Is called when server transaction has canceled.
         /// </summary>
@@ -838,7 +833,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
         }
-
 
         /// <summary>
         /// Starts processing.
@@ -902,7 +896,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Server transaction raised Cancled event, we dispose active targets there.
             }
         }
-
 
         /// <summary>
         /// Processes received response.
@@ -1320,7 +1313,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
             return null;
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

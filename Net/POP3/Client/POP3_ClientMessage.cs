@@ -31,7 +31,6 @@ namespace LumiSoft.Net.POP3.Client
             m_Size           = size;
         }
 
-
         /// <summary>
         /// Marks message as deleted.
         /// </summary>
@@ -98,7 +97,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -167,7 +165,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -251,7 +248,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 op.Dispose();
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -487,7 +483,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -554,7 +549,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -671,7 +665,6 @@ namespace LumiSoft.Net.POP3.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -857,7 +850,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -936,7 +928,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1054,7 +1045,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -1122,7 +1112,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// Disposes message.
         /// </summary>
@@ -1153,7 +1142,6 @@ namespace LumiSoft.Net.POP3.Client
         {
             m_IsMarkedForDeletion = isMarkedForDeletion;
         }
-
 
         /// <summary>
         /// Gets if POP3 message is Disposed.

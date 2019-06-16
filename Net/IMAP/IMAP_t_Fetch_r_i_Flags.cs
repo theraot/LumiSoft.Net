@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             Flags = flags;
         }
 
-
         /// <summary>
         /// Gets message flags.
         /// </summary>

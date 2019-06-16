@@ -26,7 +26,6 @@ namespace LumiSoft.Net.AUTH
             m_Nonce = Auth_HttpDigest.CreateNonce();
         }
 
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
@@ -106,7 +105,6 @@ namespace LumiSoft.Net.AUTH
 
             return null;
         }
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

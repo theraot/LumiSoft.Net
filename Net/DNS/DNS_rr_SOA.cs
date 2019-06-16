@@ -33,7 +33,6 @@ namespace LumiSoft.Net.DNS
 			Minimum    = minimum;
 		}
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -130,7 +129,6 @@ namespace LumiSoft.Net.DNS
 
 			return new DNS_rr_SOA(name,nameserver,adminMailBox,serial,refresh,retry,expire,minimum,ttl);
         }
-
 
         /// <summary>
 		/// Gets name server.

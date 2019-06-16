@@ -89,7 +89,6 @@ namespace LumiSoft.Net.SIP.Stack
             this.Disposed     = null;
         }
 
-
         /// <summary>
         /// This method is raised when registration needs to refresh server registration.
         /// </summary>
@@ -185,7 +184,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pUnregisterSender = null;
         }
 
-
         /// <summary>
         /// Starts registering.
         /// </summary>
@@ -265,7 +263,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Changes current registration state.
         /// </summary>
@@ -276,7 +273,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             OnStateChanged();
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

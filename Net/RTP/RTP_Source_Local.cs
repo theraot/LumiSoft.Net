@@ -32,7 +32,6 @@ namespace LumiSoft.Net.RTP
             this.SetRtpEP(rtpEP);
         }
 
-
         /// <summary>
         /// Sends specified application packet to the RTP session target(s).
         /// </summary>
@@ -57,7 +56,6 @@ namespace LumiSoft.Net.RTP
             // Send APP packet.
             this.Session.SendRtcpPacket(p);
         }
-
 
         /// <summary>
         /// Closes this source, sends BYE to remote party.
@@ -129,7 +127,6 @@ namespace LumiSoft.Net.RTP
             return this.Session.SendRtpPacket(Stream,packet);
         }
 
-
         /// <summary>
         /// Returns true.
         /// </summary>
@@ -157,7 +154,6 @@ namespace LumiSoft.Net.RTP
         /// Gets the stream we send. Value null means that source is passive and doesn't send any RTP data.
         /// </summary>
         public RTP_SendStream Stream { get; private set; }
-
 
         /// <summary>
         /// Gets source CNAME. Value null means that source not binded to participant.

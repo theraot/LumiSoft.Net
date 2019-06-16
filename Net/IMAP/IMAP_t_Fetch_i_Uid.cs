@@ -12,7 +12,6 @@
         {
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

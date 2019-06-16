@@ -92,7 +92,6 @@ namespace LumiSoft.Net.Mail
             m_Time = time;
         }
 
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -225,7 +224,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-
         /// <summary>
         /// Returns header field as string.
         /// </summary>
@@ -292,9 +290,7 @@ namespace LumiSoft.Net.Mail
             else{
                 return m_ParseValue;
             }
-            
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

@@ -78,7 +78,6 @@ namespace LumiSoft.Net.RTP
             RtcpEP = new IPEndPoint(ip,controlPort);
         }
 
-
         /// <summary>
         /// Determines whether the specified Object is equal to the current Object.
         /// </summary>
@@ -109,7 +108,6 @@ namespace LumiSoft.Net.RTP
         {
             return base.GetHashCode();
         }
-
 
         /// <summary>
         /// Gets if this is multicast RTP address.

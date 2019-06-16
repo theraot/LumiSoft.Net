@@ -19,7 +19,6 @@ namespace LumiSoft.Net.WebDav
             m_pProperties = new List<WebDav_p>();
         }
 
-
         /// <summary>
         /// Parses WebDav_Prop from 'DAV:prop' element.
         /// </summary>
@@ -53,7 +52,6 @@ namespace LumiSoft.Net.WebDav
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets properties.

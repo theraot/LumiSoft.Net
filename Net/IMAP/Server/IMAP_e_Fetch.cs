@@ -34,7 +34,6 @@ namespace LumiSoft.Net.IMAP.Server
                 MessageData = msgData;
             }
 
-
             /// <summary>
             /// Gets message info.
             /// </summary>
@@ -69,7 +68,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponse     = response;
         }
 
-
         /// <summary>
         /// Adds specified message for FETCH response processing.
         /// </summary>
@@ -96,7 +94,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             OnNewMessageData(msgInfo,msgData);
         }
-
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.

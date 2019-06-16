@@ -21,7 +21,6 @@ namespace LumiSoft.Net.FTP.Server
             FileName = fileName;
         }
 
-
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>

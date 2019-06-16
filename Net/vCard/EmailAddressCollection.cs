@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-
         /// <summary>
         /// Add new email address to the collection.
         /// </summary>
@@ -61,7 +60,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
             m_pCollection.Clear();
         }
-
 
         /// <summary>
 		/// Gets enumerator.

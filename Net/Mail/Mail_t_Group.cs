@@ -21,7 +21,6 @@ namespace LumiSoft.Net.Mail
             Members = new List<Mail_t_Mailbox>();
         }
 
-
         /// <summary>
         /// Returns mailbox as string.
         /// </summary>
@@ -60,7 +59,6 @@ namespace LumiSoft.Net.Mail
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets diplay name. Value null means not specified.

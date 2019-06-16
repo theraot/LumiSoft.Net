@@ -91,12 +91,10 @@ namespace LumiSoft.Net.SIP.Stack
             this.TransportError = null;
         }
 
-
         /// <summary>
         /// Cancels current transaction.
         /// </summary>
         public abstract void Cancel();
-
 
         /// <summary>
         /// Changes transaction state.
@@ -134,7 +132,6 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pResponses.Add(response);
             }
         }
-
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the dialog.
@@ -335,7 +332,6 @@ namespace LumiSoft.Net.SIP.Stack
         /// Gets or sets user data.
         /// </summary>
         public object Tag { get; set; }
-
 
         /// <summary>
         /// Gets transaction indexing key.

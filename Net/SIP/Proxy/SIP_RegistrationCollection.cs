@@ -19,7 +19,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pRegistrations = new List<SIP_Registration>();
         }
 
-
         /// <summary>
         /// Adds specified registration to collection.
         /// </summary>
@@ -69,7 +68,6 @@ namespace LumiSoft.Net.SIP.Proxy
             return false;
         }
 
-
         /// <summary>
         /// Removes all expired registrations from the collection.
         /// </summary>
@@ -89,7 +87,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
         }
-
 
         /// <summary>
 		/// Gets enumerator.

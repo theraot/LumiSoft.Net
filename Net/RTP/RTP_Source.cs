@@ -58,7 +58,6 @@ namespace LumiSoft.Net.RTP
             this.StateChanged = null;
         }
 
-
         /// <summary>
         /// Closes specified source.
         /// </summary>
@@ -96,7 +95,6 @@ namespace LumiSoft.Net.RTP
         internal void SetActivePassive(bool active)
         {            
             if(active){
-
             }
             else{
             }
@@ -134,9 +132,7 @@ namespace LumiSoft.Net.RTP
             if(rr == null){
                 throw new ArgumentNullException("rr");
             }
-
         }
-
 
         /// <summary>
         /// Generates new SSRC value. This must be called only if SSRC collision of local source.
@@ -145,7 +141,6 @@ namespace LumiSoft.Net.RTP
         {
             m_SSRC = RTP_Utils.GenerateSSRC();
         }
-
 
         /// <summary>
         /// Sets source state.
@@ -163,7 +158,6 @@ namespace LumiSoft.Net.RTP
                 OnStateChaged();
             }
         }
-
 
         /// <summary>
         /// Gets source state.
@@ -318,7 +312,6 @@ namespace LumiSoft.Net.RTP
         /// Gets or sets user data.
         /// </summary>
         public object Tag { get; set; }
-
 
         /// <summary>
         /// Gets source CNAME. Value null means that source not binded to participant.

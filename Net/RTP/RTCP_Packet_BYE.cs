@@ -18,7 +18,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-
         /// <summary>
         /// Parses BYE packet from raw byte[] bye packet.
         /// </summary>
@@ -131,7 +130,6 @@ namespace LumiSoft.Net.RTP
                 offset += reasonBytes.Length;
             }
         }
-
 
         /// <summary>
         /// Gets RTCP version.

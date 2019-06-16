@@ -32,7 +32,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
         /// <summary>
         /// Parses LSUB response from lsub-response string.
         /// </summary>
@@ -71,7 +70,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_LSub(folder,delimiter[0],attributes == string.Empty ? new string[0] : attributes.Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -107,7 +105,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets folder name.

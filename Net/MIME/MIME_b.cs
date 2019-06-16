@@ -28,7 +28,6 @@ namespace LumiSoft.Net.MIME
             m_pContentType = contentType;
         }
 
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -52,7 +51,6 @@ namespace LumiSoft.Net.MIME
 
             throw new NotImplementedException("Body provider class does not implement required Parse method.");
         }
-
 
         /// <summary>
         /// Sets body parent.
@@ -79,7 +77,6 @@ namespace LumiSoft.Net.MIME
         /// original encoding is kept.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         internal protected abstract void ToStream(Stream stream,MIME_Encoding_EncodedWord headerWordEncoder,Encoding headerParmetersCharset,bool headerReencode);
-
 
         /// <summary>
         /// Gets if body has modified.

@@ -20,7 +20,6 @@ namespace LumiSoft.Net.SIP.Message
 			m_pHeaderFields = new List<SIP_HeaderField>();
 		}
 
-
         /// <summary>
 		/// Adds a new header field with specified name and value to the end of the collection.
 		/// </summary>
@@ -67,7 +66,6 @@ namespace LumiSoft.Net.SIP.Message
                 this.Add(fieldName,value);
             }
         }
-
 
         /// <summary>
 		/// Removes header field at the specified index from the collection.
@@ -124,7 +122,6 @@ namespace LumiSoft.Net.SIP.Message
 			m_pHeaderFields.Clear();
 		}
 
-
         /// <summary>
 		/// Gets if collection contains specified header field.
 		/// </summary>
@@ -150,7 +147,6 @@ namespace LumiSoft.Net.SIP.Message
 		{
 			return m_pHeaderFields.Contains(headerField);
 		}
-
 
         /// <summary>
 		/// Gets first header field with specified name, returns null if specified field doesn't exist.
@@ -184,7 +180,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return fields.ToArray();
 		}
-
 
         /// <summary>
 		/// Parses header fields from string.
@@ -269,7 +264,6 @@ namespace LumiSoft.Net.SIP.Message
 
 			return headerString.ToString();
 		}
-
 
         /// <summary>
         /// Gets right type header field.
@@ -513,7 +507,6 @@ namespace LumiSoft.Net.SIP.Message
                 return new SIP_HeaderField(name,value);
             }
         }
-
 
         /// <summary>
 		/// Gets enumerator.

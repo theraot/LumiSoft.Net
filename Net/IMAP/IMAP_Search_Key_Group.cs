@@ -18,7 +18,6 @@ namespace LumiSoft.Net.IMAP
             Keys = new List<IMAP_Search_Key>();
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>AND</b> key group.
         /// </summary>
@@ -47,7 +46,6 @@ namespace LumiSoft.Net.IMAP
             return retVal;
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -66,7 +64,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -88,7 +85,6 @@ namespace LumiSoft.Net.IMAP
             }
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,")"));
         }
-
 
         /// <summary>
         /// Gets AND-ded keys collection.

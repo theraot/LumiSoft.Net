@@ -40,7 +40,6 @@ namespace LumiSoft.Net.SIP.Message
             m_RequestMethod  = requestMethod;
         }
 
-
         /// <summary>
         /// Parses "CSeq" from specified value.
         /// </summary>
@@ -98,7 +97,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_SequenceNumber + " " + m_RequestMethod;
         }
-
 
         /// <summary>
         /// Gets or sets sequence number.

@@ -386,7 +386,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-
         /// <summary>
         /// Unfolds folded header field.
         /// </summary>
@@ -409,7 +408,6 @@ namespace LumiSoft.Net.MIME
             return value.Replace("\r\n","");
         }
 
-
         /// <summary>
 		/// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
 		/// </summary>
@@ -418,7 +416,6 @@ namespace LumiSoft.Net.MIME
 		{
 			return "<" + Guid.NewGuid().ToString().Replace("-","").Substring(16) + "@" + Guid.NewGuid().ToString().Replace("-","").Substring(16) + ">";
 		}
-
 
         /// <summary>
 		/// Parses headers from message or mime entry.
@@ -521,7 +518,6 @@ namespace LumiSoft.Net.MIME
 
 			return "";
 		}
-
 
         /// <summary>
 		/// "Q" decoder. This is same as quoted-printable, except '_' is converted to ' '.

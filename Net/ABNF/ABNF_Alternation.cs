@@ -16,7 +16,6 @@ namespace LumiSoft.Net.ABNF
             Items = new List<ABNF_Concatenation>();
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -54,7 +53,6 @@ namespace LumiSoft.Net.ABNF
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets alternation items.

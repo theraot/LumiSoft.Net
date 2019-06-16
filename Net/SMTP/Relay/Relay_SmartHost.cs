@@ -47,7 +47,6 @@ namespace LumiSoft.Net.SMTP.Relay
             Password = password;
         }
 
-
         /// <summary>
         /// Compares the current instance with another object of the same type.
         /// </summary>
@@ -90,7 +89,6 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             return base.GetHashCode();
         }
-
 
         /// <summary>
         /// Gets smart host name or IP address.

@@ -25,7 +25,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "language" from specified value.
         /// </summary>
@@ -87,7 +86,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets language range. Value *(STAR) means all languages.

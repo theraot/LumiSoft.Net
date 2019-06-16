@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-
         /// <summary>
         /// Add new delivery address to the collection.
         /// </summary>
@@ -73,7 +72,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
             m_pCollection.Clear();
         }
-
 
         /// <summary>
 		/// Gets enumerator.

@@ -56,7 +56,6 @@ namespace LumiSoft.Net.IO
             base.Dispose();
         }
 
-
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -148,7 +147,6 @@ namespace LumiSoft.Net.IO
  
             throw new NotSupportedException();
         }
-
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.

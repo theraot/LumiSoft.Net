@@ -21,7 +21,6 @@ namespace LumiSoft.Net.POP3.Server
             Message = message;
         }
 
-
         /// <summary>
         /// Gets message info.
         /// </summary>

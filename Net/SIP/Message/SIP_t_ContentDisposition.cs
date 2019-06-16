@@ -30,7 +30,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses "Content-Disposition" from specified value.
         /// </summary>
@@ -90,7 +89,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets disposition type. Known values: "render","session","icon","alert".

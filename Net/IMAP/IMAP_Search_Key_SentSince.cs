@@ -20,7 +20,6 @@ namespace LumiSoft.Net.IMAP
             Date = value;
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>SENTSINCE (string)</b> key.
         /// </summary>
@@ -53,7 +52,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_SentSince(date);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -62,7 +60,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "SENTSINCE " + Date.ToString("dd-MMM-yyyy");
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -77,7 +74,6 @@ namespace LumiSoft.Net.IMAP
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
         }
-
 
         /// <summary>
         /// Gets date value.

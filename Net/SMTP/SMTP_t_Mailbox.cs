@@ -37,7 +37,6 @@ namespace LumiSoft.Net.SMTP
             Domain    = domain;
         }
 
-
         /*
         /// <summary>
         /// Parses SMTP mailbox from the specified string.
@@ -72,7 +71,6 @@ namespace LumiSoft.Net.SMTP
         }
         */
 
-
         /// <summary>
         /// Returns mailbox as string.
         /// </summary>
@@ -86,7 +84,6 @@ namespace LumiSoft.Net.SMTP
                 return TextUtils.QuoteString(LocalPart) + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
             }
         }
-
 
         /// <summary>
         /// Gets local-part of mailbox.

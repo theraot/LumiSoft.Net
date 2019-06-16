@@ -106,7 +106,6 @@ namespace LumiSoft.Net.SIP.Stack
             BeginReadHeader();
         }
 
-
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>
@@ -130,7 +129,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-
 
         /// <summary>
         /// Sends specified request to flow remote end point.
@@ -193,7 +191,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Starts flow processing.
         /// </summary>
@@ -225,7 +222,6 @@ namespace LumiSoft.Net.SIP.Stack
             startLock.Close();
         }
 
-
         /// <summary>
         /// Sends specified data to the remote end point.
         /// </summary>
@@ -256,7 +252,6 @@ namespace LumiSoft.Net.SIP.Stack
                 throw x;
             }
         }
-
 
         /// <summary>
         /// Starts reading SIP message header.
@@ -366,7 +361,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// This method is called when flow gets new UDP packet.
         /// </summary>
@@ -385,7 +379,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             m_pStack.TransportLayer.OnMessageReceived(this,data);
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

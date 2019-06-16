@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             AlertText = text;
         }
 
-
         /// <summary>
         /// Parses ALERT optional response from string.
         /// </summary>
@@ -42,7 +41,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_Alert(code_value.Length == 2 ? code_value[1] : "");
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -51,7 +49,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "ALERT " + AlertText;
         }
-
 
         /// <summary>
         /// Gets alert text.

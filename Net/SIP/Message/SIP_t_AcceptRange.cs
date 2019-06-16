@@ -27,7 +27,6 @@ namespace LumiSoft.Net.SIP.Message
             Parameters      = new SIP_ParameterCollection();
         }
 
-
         /// <summary>
         /// Parses "accept-range" from specified value.
         /// </summary>
@@ -143,7 +142,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets media type. Value *(STAR) means all values. Syntax: mediaType / mediaSubType.

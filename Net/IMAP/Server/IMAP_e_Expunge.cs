@@ -33,7 +33,6 @@ namespace LumiSoft.Net.IMAP.Server
             MessageInfo  = msgInfo;
         }
 
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>

@@ -51,7 +51,6 @@ namespace LumiSoft.Net.SIP.Message
             m_pSentBy           = new HostEndPoint("localhost",-1);
         }
 
-
         /// <summary>
         /// Creates new branch paramter value.
         /// </summary>
@@ -62,7 +61,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return "z9hG4bK-" + Guid.NewGuid().ToString().Replace("-","");
         }
-
 
         /// <summary>
         /// Parses "via-parm" from specified value.
@@ -190,7 +188,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets sent protocol name. Normally this is always SIP.

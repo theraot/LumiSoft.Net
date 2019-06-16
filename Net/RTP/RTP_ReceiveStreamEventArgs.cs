@@ -21,7 +21,6 @@ namespace LumiSoft.Net.RTP
             Stream = stream;
         }
 
-
         /// <summary>
         /// Gets RTP stream.
         /// </summary>

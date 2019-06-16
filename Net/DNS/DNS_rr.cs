@@ -18,7 +18,6 @@ namespace LumiSoft.Net.DNS
 			TTL  = ttl;
         }
 
-
         /// <summary>
         /// Gets DNS domain name that owns a resource record.
         /// </summary>

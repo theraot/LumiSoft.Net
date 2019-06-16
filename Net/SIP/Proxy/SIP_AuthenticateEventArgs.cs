@@ -17,7 +17,6 @@ namespace LumiSoft.Net.SIP.Proxy
             AuthContext = auth;
         }
 
-
         /// <summary>
         /// Gets authentication context.
         /// </summary>

@@ -42,7 +42,6 @@ namespace LumiSoft.Net.SIP.Proxy
             }
         }
 
-
         /// <summary>
         /// This method is called when new request is received.
         /// </summary>
@@ -179,7 +178,6 @@ namespace LumiSoft.Net.SIP.Proxy
             // All reponses must match to transactions, so we never should reach here.
         }
 
-
         /// <summary>
         /// Adds specified call to calls list.
         /// </summary>
@@ -221,7 +219,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             return null;
         }
-
 
         /// <summary>
         /// Gets B2BUA owner SIP stack.

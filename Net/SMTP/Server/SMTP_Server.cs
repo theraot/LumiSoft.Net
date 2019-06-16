@@ -34,7 +34,6 @@ namespace LumiSoft.Net.SMTP.Server
 
         //public override Dispose
 
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
@@ -58,7 +57,6 @@ namespace LumiSoft.Net.SMTP.Server
         {
             session.TcpStream.WriteLine("421 Client host rejected: too many connections from your IP(" + session.RemoteEndPoint.Address + "), please try again later.");
         }
-
 
         /// <summary>
         /// Gets or sets SMTP server supported service extentions.
@@ -240,7 +238,6 @@ namespace LumiSoft.Net.SMTP.Server
                 m_MaxRecipients = value;
             }
         }
-
 
         /// <summary>
         /// Gets SMTP service extentions list.

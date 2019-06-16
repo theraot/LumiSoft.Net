@@ -26,7 +26,6 @@ namespace LumiSoft.Net.IMAP.Client
             Value = data;
         }
 
-
         /// <summary>
         /// Gets command part ype.
         /// </summary>

@@ -20,7 +20,6 @@ namespace LumiSoft.Net
             m_pList = new List<V>();
         }
 
-
         /// <summary>
         /// Adds the specified key and value to the collection.
         /// </summary>
@@ -110,7 +109,6 @@ namespace LumiSoft.Net
                 return m_pList.ToArray();
             }
         }
-
 
         /// <summary>
 		/// Gets enumerator.

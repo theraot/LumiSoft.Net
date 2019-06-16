@@ -102,7 +102,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -314,7 +313,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         /// <summary>
         /// Completes encoding. Call this method if all data has written and no more data. 
         /// </summary>
@@ -348,12 +346,10 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
         public bool IsDisposed { get; private set; }
-
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.

@@ -19,7 +19,6 @@ namespace LumiSoft.Net.SIP.Message
             m_pCollection = new List<SIP_Parameter>();
         }
 
-
         /// <summary>
         /// Adds new parameter to the collection.
         /// </summary>
@@ -90,7 +89,6 @@ namespace LumiSoft.Net.SIP.Message
                 return false;
             }
         }
-
 
         /// <summary>
 		/// Gets enumerator.

@@ -221,7 +221,6 @@ namespace LumiSoft.Net.ICMP
 			return new EchoMessage(((IPEndPoint)endpoint).Address,0,ts.Milliseconds);
         }
 
-
         private static byte[] CreatePacket(ushort id)
 		{
 			/*Rfc 792  Echo or Echo Reply Message

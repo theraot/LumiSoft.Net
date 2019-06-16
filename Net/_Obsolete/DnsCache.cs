@@ -49,7 +49,6 @@ namespace LumiSoft.Net.DNS.Client
 			m_pCache = new Hashtable();
 		}
 
-
         /// <summary>
 		/// Tries to get dns records from cache, if any.
 		/// </summary>
@@ -109,7 +108,6 @@ namespace LumiSoft.Net.DNS.Client
 			}
 		}
 
-
         /// <summary>
 		/// Serializes current cache.
 		/// </summary>
@@ -139,7 +137,6 @@ namespace LumiSoft.Net.DNS.Client
 			    m_pCache = (Hashtable)b.Deserialize(retVal);
             }
 		}
-
 
         /// <summary>
 		/// Gets or sets how long(seconds) to cache dns query.

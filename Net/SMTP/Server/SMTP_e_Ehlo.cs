@@ -37,7 +37,6 @@ namespace LumiSoft.Net.SMTP.Server
             m_pReply   = reply;
         }
 
-
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>

@@ -22,7 +22,6 @@ namespace LumiSoft.Net.MIME
             HeaderFields.Add("Content-Disposition",typeof(MIME_h_ContentDisposition));
         }
 
-
         /// <summary>
         /// Parses specified header field.
         /// </summary>
@@ -63,7 +62,6 @@ namespace LumiSoft.Net.MIME
 
             return headerField;
         }
-
 
         /// <summary>
         /// Gets or sets default header field what is used to reperesent unknown header fields.

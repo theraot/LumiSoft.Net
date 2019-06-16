@@ -15,7 +15,6 @@ namespace LumiSoft.Net.WebDav
         {
         }
 
-
         /// <summary>
         /// Parses WebDav_PropStat from 'DAV:propstat' element.
         /// </summary>
@@ -47,7 +46,6 @@ namespace LumiSoft.Net.WebDav
 
             return retVAl;
         }
-
 
         /// <summary>
         /// Gets property HTTP status.

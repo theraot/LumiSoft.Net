@@ -52,7 +52,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -61,7 +60,6 @@ namespace LumiSoft.Net.IMAP
         {
             return Value.ToString();
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -77,12 +75,10 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,ToString()));
         }
 
-
         /// <summary>
         /// Gets sequence-set value.
         /// </summary>
         public IMAP_t_SeqSet Value { get; }
-
 
         //--- OBSOLETE
 

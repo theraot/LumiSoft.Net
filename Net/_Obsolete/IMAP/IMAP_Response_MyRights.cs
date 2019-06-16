@@ -30,7 +30,6 @@ namespace LumiSoft.Net.IMAP
             Rights = rights;
         }
 
-
         /// <summary>
         /// Parses MYRIGHTS response from MYRIGHTS-response string.
         /// </summary>
@@ -71,7 +70,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Response_MyRights(folder,rights);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -85,7 +83,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets folder name.

@@ -32,7 +32,6 @@ namespace LumiSoft.Net.POP3.Server
             m_pMessages = new KeyValueCollection<string,POP3_ServerMessage>();
         }
 
-
         /// <summary>
         /// Starts session processing.
         /// </summary>
@@ -137,7 +136,6 @@ namespace LumiSoft.Net.POP3.Server
                 // Skip errors.
             }
         }
-
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -276,7 +274,6 @@ namespace LumiSoft.Net.POP3.Server
 
              return readNextCommand;
         }
-
 
         private void STLS(string cmdText)
         {
@@ -650,7 +647,6 @@ namespace LumiSoft.Net.POP3.Server
                 }
             }
         }
-
 
         private void STAT(string cmdText)
         {
@@ -1134,7 +1130,6 @@ namespace LumiSoft.Net.POP3.Server
             OnReset();
         }
 
-
         private void CAPA(string cmdText)
         {
             /* RFC 2449 5.  The CAPA Command
@@ -1284,7 +1279,6 @@ namespace LumiSoft.Net.POP3.Server
             Dispose();
         }
 
-
         /// <summary>
         /// Sends and logs specified line to connected host.
         /// </summary>
@@ -1319,7 +1313,6 @@ namespace LumiSoft.Net.POP3.Server
                 this.Server.Logger.AddText(this.ID,text);
             }
         }
-
 
         /// <summary>
         /// Gets session owner POP3 server.

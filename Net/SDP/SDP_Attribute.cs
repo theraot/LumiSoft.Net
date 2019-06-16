@@ -18,7 +18,6 @@ namespace LumiSoft.Net.SDP
             this.Value = value;
         }
 
-
         /// <summary>
         /// Parses media from "a" SDP message field.
         /// </summary>
@@ -69,7 +68,6 @@ namespace LumiSoft.Net.SDP
                 return "a=" + Name + ":" + Value + "\r\n";
             }
         }
-
 
         /// <summary>
         /// Gets attribute name.

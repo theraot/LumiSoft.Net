@@ -146,7 +146,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Compares 2 IP addresses. Returns 0 if IPs are equal, 
         /// returns positive value if destination IP is bigger than source IP,
@@ -308,7 +307,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
 		/// Checks if specified string is integer(int/long).
 		/// </summary>
@@ -346,7 +344,6 @@ namespace LumiSoft.Net
 
 			return true;
         }
-
 
         /// <summary>
         /// Gets if socket async methods supported by OS.
@@ -400,7 +397,6 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Invalid IPEndPoint address family.");
             }
         }
-
 
         /// <summary>
 		/// Converts specified data to HEX string.
@@ -510,7 +506,6 @@ namespace LumiSoft.Net
 
 			return retVal.ToArray();
 		}
-
 
         /// <summary>
         /// Decodes specified base64 data.
@@ -821,7 +816,6 @@ namespace LumiSoft.Net
 			}
 		}
 
-
         /// <summary>
         /// Computes md5 hash.
         /// </summary>
@@ -845,7 +839,6 @@ namespace LumiSoft.Net
                 return System.Text.Encoding.Default.GetString(hash);
             }
         }
-
 
         //--- Obsolte ------------------------------------------------------------------
 

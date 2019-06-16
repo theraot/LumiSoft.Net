@@ -17,7 +17,6 @@ namespace LumiSoft.Net.IMAP
         {
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>DELETED</b> key.
         /// </summary>
@@ -39,7 +38,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Deleted();
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -48,7 +46,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "DELETED";
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.

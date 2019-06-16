@@ -32,7 +32,6 @@ namespace LumiSoft.Net.MIME
             m_pFields = new List<MIME_h>();
         }
 
-
         /// <summary>
         /// Inserts a new header field into the collection at the specified location.
         /// </summary>
@@ -225,7 +224,6 @@ namespace LumiSoft.Net.MIME
             return m_pFields.ToArray();
         }
 
-
         /// <summary>
         /// Stores header to the specified file.
         /// </summary>
@@ -417,7 +415,6 @@ namespace LumiSoft.Net.MIME
                 }
             }        
         }
-
 
         /// <summary>
 		/// Gets enumerator.

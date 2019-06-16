@@ -59,7 +59,6 @@ namespace LumiSoft.Net.MIME
                     LineBuffer = new byte[32000];
                 }
 
-
                 /// <summary>
                 /// Assigns data line info from rea line operation.
                 /// </summary>
@@ -74,7 +73,6 @@ namespace LumiSoft.Net.MIME
                     BytesInBuffer = op.BytesInBuffer;
                     Array.Copy(op.Buffer,LineBuffer,op.BytesInBuffer);
                 }
-
 
                 /// <summary>
                 /// Gets line data buffer.
@@ -116,7 +114,6 @@ namespace LumiSoft.Net.MIME
                 m_pTextPreamble = new StringBuilder();
                 m_pTextEpilogue = new StringBuilder();
             }
-
 
             /// <summary>
             /// Moves to next "body part". Returns true if moved to next "body part" or false if there are no more parts.
@@ -209,7 +206,6 @@ namespace LumiSoft.Net.MIME
            
                 return false;
             }
-
 
             /// <summary>
             /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -413,7 +409,6 @@ namespace LumiSoft.Net.MIME
                 throw new NotSupportedException();
             }
 
-
             /// <summary>
             /// Gets a value indicating whether the current stream supports reading.
             /// </summary>
@@ -516,7 +511,6 @@ namespace LumiSoft.Net.MIME
             BodyParts = new MIME_EntityCollection();
         }
 
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -588,7 +582,6 @@ namespace LumiSoft.Net.MIME
             body.BodyParts.SetModified(false);
         }
 
-
         /// <summary>
         /// Sets body parent.
         /// </summary>
@@ -652,7 +645,6 @@ namespace LumiSoft.Net.MIME
                 stream.Write(epilogoueBytes,0,epilogoueBytes.Length);
             }
         }
-
 
         /// <summary>
         /// Gets if body has modified.

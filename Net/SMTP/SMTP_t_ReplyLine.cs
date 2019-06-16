@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SMTP
             IsLastLine = isLastLine;
         }
 
-
         /// <summary>
         /// Parses SMTP reply-line from 
         /// </summary>
@@ -68,7 +67,6 @@ namespace LumiSoft.Net.SMTP
             return new SMTP_t_ReplyLine(replyCode,text,isLastLine);
         }
 
-
         /// <summary>
         /// Returns this as SMTP server <b>reply-line</b>.
         /// </summary>
@@ -82,7 +80,6 @@ namespace LumiSoft.Net.SMTP
                 return ReplyCode.ToString() + "-" + Text + "\r\n";
             }
         }
-
 
         /// <summary>
         /// Gets SMTP server reply code.

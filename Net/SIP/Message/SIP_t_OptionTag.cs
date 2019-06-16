@@ -22,7 +22,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "option-tag" from specified value.
         /// </summary>
@@ -68,7 +67,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_OptionTag;
         }
-
 
         /// <summary>
         /// Gets or sets option tag.

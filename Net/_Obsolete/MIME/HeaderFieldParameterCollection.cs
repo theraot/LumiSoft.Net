@@ -40,7 +40,6 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-
         /// <summary>
 		/// Removes specified header field parameter from the collection.
 		/// </summary>
@@ -67,7 +66,6 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderField.StoreParameters(m_pHeaderField.Value,parameters);
 		}
 
-
         /// <summary>
 		/// Gets if collection contains specified parameter.
 		/// </summary>
@@ -80,7 +78,6 @@ namespace LumiSoft.Net.Mime
 			Hashtable parameters = m_pHeaderField.ParseParameters();
 			return parameters.ContainsKey(parameterName);
 		}
-
 
         /// <summary>
 		/// Gets enumerator.

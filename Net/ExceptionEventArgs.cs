@@ -21,7 +21,6 @@ namespace LumiSoft.Net
             Exception = exception;
         }
 
-
         /// <summary>
         /// Gets exception.
         /// </summary>

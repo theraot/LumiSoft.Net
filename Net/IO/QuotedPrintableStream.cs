@@ -35,7 +35,6 @@ namespace LumiSoft.Net.IO
             m_pEncodedBuffer = new byte[78];
         }
 
-
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -225,7 +224,6 @@ namespace LumiSoft.Net.IO
                 }                
             }
         }
-
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.

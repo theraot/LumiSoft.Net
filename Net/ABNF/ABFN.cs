@@ -77,7 +77,6 @@ namespace LumiSoft.Net.ABNF
 */
         }
 
-
         /// <summary>
         /// Parses and adds ABNF rules from the specified ABFN string.
         /// </summary>
@@ -91,7 +90,6 @@ namespace LumiSoft.Net.ABNF
 
             // TODO:
         }
-
 
         /// <summary>
         /// Gets ABNF rules collection.

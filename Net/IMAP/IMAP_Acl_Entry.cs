@@ -30,7 +30,6 @@ namespace LumiSoft.Net.IMAP
             Rights     = rights;
         }
 
-
         /// <summary>
         /// Gets ACL identifier. Normally this is user or group name.
         /// </summary>

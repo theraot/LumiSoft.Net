@@ -29,7 +29,6 @@ namespace LumiSoft.Net.DNS.Client
                 Expires   = expires;
             }
 
-
             /// <summary>
             /// Gets DNS server response.
             /// </summary>
@@ -67,7 +66,6 @@ namespace LumiSoft.Net.DNS.Client
             m_pTimerTimeout = null;
         }
 
-
         /// <summary>
         /// Is called when cache expired entries check timer triggers.
         /// </summary>
@@ -90,7 +88,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
         }
-
 
         /// <summary>
 		/// Gets DNS server cached response or null if no cached result.
@@ -176,7 +173,6 @@ namespace LumiSoft.Net.DNS.Client
 				m_pCache.Clear();
 			}
 		}
-
 
         /// <summary>
         /// Gets or sets maximum number of seconds to cache positive DNS responses.

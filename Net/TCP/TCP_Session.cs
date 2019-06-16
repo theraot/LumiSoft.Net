@@ -23,12 +23,10 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public abstract void Dispose();
 
-
         /// <summary>
         /// Disconnects session.
         /// </summary>
         public abstract void Disconnect();
-
 
         /// <summary>
         /// Gets if session is connected.

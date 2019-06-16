@@ -68,7 +68,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Compares the current instance with another object of the same type.
         /// </summary>
@@ -111,7 +110,6 @@ namespace LumiSoft.Net
         {
             return base.GetHashCode();
         }
-
 
         /// <summary>
         /// Gets host name.
@@ -162,7 +160,6 @@ namespace LumiSoft.Net
         {
             get{ return SSL_Certificate; }
         }
-
 
         /// <summary>
         /// Gets or sets user data. This is used internally don't use it !!!.

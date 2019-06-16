@@ -60,7 +60,6 @@ namespace LumiSoft.Net.IMAP.Client
                 LogText = logText;
             }
 
-
             /// <summary>
             /// Gets command line data.
             /// </summary>
@@ -114,7 +113,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -200,13 +198,11 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
             /// <param name="imap">IMAP client.</param>
             protected abstract void OnInitCmdLine(IMAP_Client imap);
-
 
             /// <summary>
             /// Sets operation state.
@@ -226,7 +222,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -308,7 +303,6 @@ namespace LumiSoft.Net.IMAP.Client
         {
         }
 
-
         /// <summary>
 		/// Closes connection to IMAP server.
 		/// </summary>
@@ -344,7 +338,6 @@ namespace LumiSoft.Net.IMAP.Client
             m_pSelectedFolder    = null;
             m_MailboxEncoding    = IMAP_Mailbox_Encoding.ImapUtf7;
 		}
-
 
         /// <summary>
         /// Switches connection to secure connection.
@@ -430,7 +423,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -501,7 +493,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -568,7 +559,6 @@ namespace LumiSoft.Net.IMAP.Client
                     op.Dispose();
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -665,7 +655,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return op.Start(this);
         }
-
 
         /// <summary>
         /// Authenticates user using IMAP-LOGIN method.
@@ -772,7 +761,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -884,7 +872,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -903,7 +890,6 @@ namespace LumiSoft.Net.IMAP.Client
                     }
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1082,7 +1068,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1146,7 +1131,6 @@ namespace LumiSoft.Net.IMAP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1237,7 +1221,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -1311,7 +1294,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// Gets IMAP server namespaces.
         /// </summary>
@@ -1375,7 +1357,6 @@ namespace LumiSoft.Net.IMAP.Client
             public GetNamespacesAsyncOP(EventHandler<EventArgs<IMAP_r_u>> callback) : base(callback)
             {
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -1529,7 +1510,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
                 m_Filter = filter;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -1786,7 +1766,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -1954,7 +1933,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 m_Folder = folder;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -2142,7 +2120,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_NewFolder = newFolder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -2329,7 +2306,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Filter = filter;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -2491,7 +2467,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -2640,7 +2615,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -2788,7 +2762,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 m_Folder = folder;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -3004,7 +2977,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -3118,7 +3090,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -3176,7 +3147,6 @@ namespace LumiSoft.Net.IMAP.Client
                     op.Dispose();
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3369,7 +3339,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -3439,7 +3408,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -3497,7 +3465,6 @@ namespace LumiSoft.Net.IMAP.Client
                     op.Dispose();
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3680,7 +3647,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -3824,7 +3790,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 m_QuotaRootName = quotaRootName;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -3997,7 +3962,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Folder = folder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -4163,7 +4127,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_FlagsSetType = setType;
                 m_Permissions  = permissions;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -4348,7 +4311,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Identifier = identifier;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -4513,7 +4475,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_Identifier = identifier;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -4671,7 +4632,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 m_Folder = folder;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -4922,7 +4882,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -5060,7 +5019,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -5181,7 +5139,6 @@ namespace LumiSoft.Net.IMAP.Client
                     writeOP.Dispose();
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -5387,7 +5344,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCapabilities = capabilities;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -5486,7 +5442,6 @@ namespace LumiSoft.Net.IMAP.Client
             m_MailboxEncoding = IMAP_Mailbox_Encoding.ImapUtf8;
         }
 
-
         /// <summary>
         /// Closes selected folder, all messages marked as Deleted will be expunged.
         /// </summary>
@@ -5568,7 +5523,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -5643,7 +5597,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -5695,7 +5648,6 @@ namespace LumiSoft.Net.IMAP.Client
                     op.Dispose();
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -5885,7 +5837,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pDataItems = items;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -6061,7 +6012,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pCharset  = charset;
                 m_pCriteria = criteria;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -6292,7 +6242,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_FlagsSetType = setType;
                 m_pMsgFlags    = msgFlags;
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -6556,7 +6505,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_TargetFolder = targetFolder;
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -6604,7 +6552,6 @@ namespace LumiSoft.Net.IMAP.Client
                     this.CmdLines.Add(new CmdLine(cmdLine,Encoding.UTF8.GetString(cmdLine).TrimEnd()));
                 }
             }
-
 
             /// <summary>
             /// Gets <b>COPYUID</b> optional response. Returns null if IMAP server doesn't support <b>UIDPLUS</b> extention.
@@ -6766,7 +6713,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -6883,7 +6829,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts exiting IDLE state.
             /// </summary>
@@ -6921,7 +6866,6 @@ namespace LumiSoft.Net.IMAP.Client
                     null
                 );
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -7021,7 +6965,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -7114,7 +7057,6 @@ namespace LumiSoft.Net.IMAP.Client
                     op.Dispose();
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -7212,7 +7154,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// Gets IMAP server capabilities.
         /// </summary>
@@ -7273,7 +7214,6 @@ namespace LumiSoft.Net.IMAP.Client
             public CapabilityAsyncOP(EventHandler<EventArgs<IMAP_r_u>> callback) : base(callback)
             {
             }
-
 
             /// <summary>
             /// Is called when we need to init command line info.
@@ -7412,7 +7352,6 @@ namespace LumiSoft.Net.IMAP.Client
             {
             }
 
-
             /// <summary>
             /// Is called when we need to init command line info.
             /// </summary>
@@ -7472,7 +7411,6 @@ namespace LumiSoft.Net.IMAP.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// This method is called when TCP client has sucessfully connected.
         /// </summary>
@@ -7529,7 +7467,6 @@ namespace LumiSoft.Net.IMAP.Client
             // Complete TCP_Client connect operation.
             connectCallback(error);
         }
-
 
         /// <summary>
         /// This class represents <see cref="IMAP_Client.SendCmdAndReadRespAsync"/> asynchronous operation.
@@ -7606,7 +7543,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -7634,7 +7570,6 @@ namespace LumiSoft.Net.IMAP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -7738,7 +7673,6 @@ namespace LumiSoft.Net.IMAP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -7861,7 +7795,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -7915,7 +7848,6 @@ namespace LumiSoft.Net.IMAP.Client
                 m_pImapClient   = null;
                 m_RiseCompleted = false;
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -8058,23 +7990,18 @@ namespace LumiSoft.Net.IMAP.Client
                                 m_pImapClient.m_pCapabilities = new List<string>();
                                 m_pImapClient.m_pCapabilities.AddRange(((IMAP_r_u_Capability)m_pResponse).Capabilities);
                             }
-
                             else if(word.Equals("LIST",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_List.Parse(responseLine);
                             }
-
                             else if(word.Equals("LSUB",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_LSub.Parse(responseLine);
                             }
-
                             else if(word.Equals("STATUS",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Status.Parse(responseLine);
                             }
-
                             else if(word.Equals("SEARCH",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Search.Parse(responseLine);
                             }
-
                             else if(word.Equals("FLAGS",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Flags.Parse(responseLine);
 
@@ -8116,7 +8043,6 @@ namespace LumiSoft.Net.IMAP.Client
                                 // Return skips SetState(AsyncOP_State.Completed), it will be called when fetch has completed.
                                 return;
                             }
-
                             else if(word.Equals("ACL",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Acl.Parse(responseLine);
                             }
@@ -8126,18 +8052,15 @@ namespace LumiSoft.Net.IMAP.Client
                             else if(word.Equals("MYRIGHTS",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_MyRights.Parse(responseLine);
                             }
-
                             else if(word.Equals("QUOTA",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Quota.Parse(responseLine);
                             }
                             else if(word.Equals("QUOTAROOT",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_QuotaRoot.Parse(responseLine);
                             }
-
                             else if(word.Equals("NAMESPACE",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Namespace.Parse(responseLine);
                             }
-
                             else if(word.Equals("ENABLED",StringComparison.InvariantCultureIgnoreCase)){
                                 m_pResponse = IMAP_r_u_Enable.Parse(responseLine);
                             }
@@ -8163,7 +8086,6 @@ namespace LumiSoft.Net.IMAP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-
             /// <summary>
             /// This method is called when FETCH parsing has completed.
             /// </summary>
@@ -8186,7 +8108,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -8306,7 +8227,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -8364,7 +8284,6 @@ namespace LumiSoft.Net.IMAP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -8419,7 +8338,6 @@ namespace LumiSoft.Net.IMAP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -8545,7 +8463,6 @@ namespace LumiSoft.Net.IMAP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -8570,7 +8487,6 @@ namespace LumiSoft.Net.IMAP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -8609,7 +8525,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -8715,7 +8630,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return false;
         }
-
 
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.
@@ -8908,7 +8822,6 @@ namespace LumiSoft.Net.IMAP.Client
             }
         }
 
-
         //--- OBSOLETE ------------------------         
 
         /// <summary>
@@ -9026,25 +8939,21 @@ namespace LumiSoft.Net.IMAP.Client
                             capability.Add(IMAP_r_u_Capability.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("LIST",StringComparison.InvariantCultureIgnoreCase)){
                         if(list != null){
                             list.Add(IMAP_r_u_List.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("LSUB",StringComparison.InvariantCultureIgnoreCase)){
                         if(lsub != null){
                             lsub.Add(IMAP_r_u_LSub.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("STATUS",StringComparison.InvariantCultureIgnoreCase)){
                         if(status != null){
                             status.Add(IMAP_r_u_Status.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("SEARCH",StringComparison.InvariantCultureIgnoreCase)){
                         /* RFC 3501 7.2.5.  SEARCH Response
                             Contents:   zero or more numbers
@@ -9066,7 +8975,6 @@ namespace LumiSoft.Net.IMAP.Client
                             }
                         }
                     }
-
                     else if(word.Equals("FLAGS",StringComparison.InvariantCultureIgnoreCase)){
                         /* RFC 3501 7.2.6. FLAGS Response.                         
                             Contents:   flag parenthesized list
@@ -9120,7 +9028,6 @@ namespace LumiSoft.Net.IMAP.Client
                         _FetchResponseReader r = new _FetchResponseReader(this,responseLine,fetchHandler);
                         r.Start();                        
                     }
-
                     else if(word.Equals("ACL",StringComparison.InvariantCultureIgnoreCase)){
                         if(acl != null){
                             acl.Add(IMAP_r_u_Acl.Parse(responseLine));
@@ -9136,7 +9043,6 @@ namespace LumiSoft.Net.IMAP.Client
                             myRights.Add(IMAP_Response_MyRights.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("QUOTA",StringComparison.InvariantCultureIgnoreCase)){
                         if(quota != null){
                             quota.Add(IMAP_r_u_Quota.Parse(responseLine));
@@ -9147,13 +9053,11 @@ namespace LumiSoft.Net.IMAP.Client
                             quotaRoot.Add(IMAP_r_u_QuotaRoot.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("NAMESPACE",StringComparison.InvariantCultureIgnoreCase)){
                         if(nspace != null){
                             nspace.Add(IMAP_r_u_Namespace.Parse(responseLine));
                         }
                     }
-
                     else if(word.Equals("ENABLED",StringComparison.InvariantCultureIgnoreCase)){
                         if(enable != null){
                             enable.Add(IMAP_r_u_Enable.Parse(responseLine));
@@ -9574,7 +9478,6 @@ namespace LumiSoft.Net.IMAP.Client
 
                     if(m_pFetchReader.StartsWith("BODY ",false)){
                     }
-
                     else if(m_pFetchReader.StartsWith("BODY[",false)){
                         // Eat BODY word.
                         m_pFetchReader.ReadWord();
@@ -9587,7 +9490,6 @@ namespace LumiSoft.Net.IMAP.Client
                         if(m_pFetchReader.StartsWith("<")){
                             offset = Convert.ToInt32(m_pFetchReader.ReadParenthesized().Split(' ')[0]);
                         }
-
 
                         // Get Message store stream.
                         IMAP_Client_Fetch_Body_EArgs eArgs = new IMAP_Client_Fetch_Body_EArgs(section,offset);
@@ -9624,11 +9526,9 @@ namespace LumiSoft.Net.IMAP.Client
 
                     else if(m_pFetchReader.StartsWith("BODYSTRUCTURE ",false)){
                     }
-
                     else if(m_pFetchReader.StartsWith("ENVELOPE ",false)){
                         m_pHandler.OnEnvelope(IMAP_Envelope.Parse(this));
                     }
-
                     else if(m_pFetchReader.StartsWith("FLAGS ",false)){
                         // Eat FLAGS word.
                         m_pFetchReader.ReadWord();
@@ -9641,14 +9541,12 @@ namespace LumiSoft.Net.IMAP.Client
 
                         m_pHandler.OnFlags(flags);
                     }
-
                     else if(m_pFetchReader.StartsWith("INTERNALDATE ",false)){
                          // Eat INTERNALDATE word.
                         m_pFetchReader.ReadWord();
 
                         m_pHandler.OnInternalDate(IMAP_Utils.ParseDate(m_pFetchReader.ReadWord()));
                     }
-
                     else if(m_pFetchReader.StartsWith("RFC822 ",false)){
                         // Eat RFC822 word.
                         m_pFetchReader.ReadWord(false,new char[]{' '},false);
@@ -9683,7 +9581,6 @@ namespace LumiSoft.Net.IMAP.Client
                         // Notify that message storing has completed.
                         eArgs.OnStoringCompleted();
                     }
-
                     else if(m_pFetchReader.StartsWith("RFC822.HEADER ",false)){
                         // Eat RFC822.HEADER word.
                         m_pFetchReader.ReadWord(false,new char[]{' '},false);
@@ -9711,14 +9608,12 @@ namespace LumiSoft.Net.IMAP.Client
 
                         m_pHandler.OnRfc822Header(text);
                     }
-
                     else if(m_pFetchReader.StartsWith("RFC822.SIZE ",false)){
                         // Eat RFC822.SIZE word.
                         m_pFetchReader.ReadWord(false,new char[]{' '},false);
 
                         m_pHandler.OnSize(Convert.ToInt32(m_pFetchReader.ReadWord()));
                     }
-
                     else if(m_pFetchReader.StartsWith("RFC822.TEXT ",false)){
                         // Eat RFC822.TEXT word.
                         m_pFetchReader.ReadWord(false,new char[]{' '},false);
@@ -9746,38 +9641,32 @@ namespace LumiSoft.Net.IMAP.Client
 
                         m_pHandler.OnRfc822Text(text);
                     }
-
                     else if(m_pFetchReader.StartsWith("UID ",false)){
                         // Eat UID word.
                         m_pFetchReader.ReadWord();
 
                         m_pHandler.OnUID(Convert.ToInt64(m_pFetchReader.ReadWord()));
                     }
-
                     else if(m_pFetchReader.StartsWith("X-GM-MSGID ",false)){
                         // Eat X-GM-MSGID word.
                         m_pFetchReader.ReadWord();
 
                         m_pHandler.OnX_GM_MSGID(Convert.ToUInt64(m_pFetchReader.ReadWord()));
                     }
-
                     else if(m_pFetchReader.StartsWith("X-GM-THRID ",false)){
                         // Eat X-GM-THRID word.
                         m_pFetchReader.ReadWord();
 
                         m_pHandler.OnX_GM_THRID(Convert.ToUInt64(m_pFetchReader.ReadWord()));
                     }
-
                     else if(m_pFetchReader.StartsWith(")",false)){
                         break;
                     }
-
                     else{
                         throw new NotSupportedException("Not supported IMAP FETCH data-item '" + m_pFetchReader.ReadToEnd() + "'.");
                     }
                 }
             }
-
 
             /// <summary>
             /// Gets FETCH current line data reader.

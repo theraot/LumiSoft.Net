@@ -17,7 +17,6 @@ namespace LumiSoft.Net.WebDav.Client
         {
         }
 
-
         /// <summary>
         /// Executes PROPFIND method.
         /// </summary>
@@ -245,7 +244,6 @@ namespace LumiSoft.Net.WebDav.Client
         // public void Unlock()
         // {
         // }
-
 
         /// <summary>
         /// Gets or sets credentials.

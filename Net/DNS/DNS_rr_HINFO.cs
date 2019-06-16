@@ -21,7 +21,6 @@ namespace LumiSoft.Net.DNS
 			OS  = os;
 		}
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -57,7 +56,6 @@ namespace LumiSoft.Net.DNS
 
 			return new DNS_rr_HINFO(name,cpu,os,ttl);
         }
-
 
         /// <summary>
 		/// Gets host's CPU.

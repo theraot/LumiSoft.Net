@@ -34,7 +34,6 @@ namespace LumiSoft.Net.MIME
                 m_pParts = new SortedList<int,string>();
             }
 
-
             /// <summary>
             /// Adds header field parameter part to paramter buffer.
             /// </summary>
@@ -75,7 +74,6 @@ namespace LumiSoft.Net.MIME
                 }
             }
 
-
             /// <summary>
             /// Gets parameter name.
             /// </summary>
@@ -100,7 +98,6 @@ namespace LumiSoft.Net.MIME
 
             m_pParameters = new Dictionary<string,MIME_h_Parameter>(StringComparer.CurrentCultureIgnoreCase);
         }
-
 
         /// <summary>
         /// Removes specified parametr from the collection.
@@ -138,7 +135,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal;
         }
-
 
         /// <summary>
         /// Returns header field parameters as string.
@@ -332,7 +328,6 @@ namespace LumiSoft.Net.MIME
             m_IsModified = false;
         }
 
-
         /// <summary>
         /// Decodes non-ascii text with MIME <b>ext-octet</b> method. Defined in RFC 2231 7.
         /// </summary>
@@ -363,7 +358,6 @@ namespace LumiSoft.Net.MIME
 
             return charset.GetString(decodedBuffer,0,offset);
         }
-
 
         /// <summary>
 		/// Gets enumerator.

@@ -12,7 +12,6 @@
         {
         }
 
-
         /// <summary>
         /// Gets property namespace.
         /// </summary>

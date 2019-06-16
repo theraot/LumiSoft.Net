@@ -14,7 +14,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
         }
 
-
         /// <summary>
         /// This method is called when new SIP request received.
         /// </summary>
@@ -73,7 +72,6 @@ namespace LumiSoft.Net.SIP.Proxy
         }
         */
 
-
         /// <summary>
         /// Gets if the specified URI is local URI.
         /// </summary>
@@ -89,7 +87,6 @@ namespace LumiSoft.Net.SIP.Proxy
         public void GetRegistrarContacts()
         {
         }
-
 
         /// <summary>
         /// Gets a value indicating whether another request can use this handler.

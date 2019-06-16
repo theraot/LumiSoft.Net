@@ -29,7 +29,6 @@ namespace LumiSoft.Net.WebDav
             Value     = value;
         }
 
-
         /// <summary>
         /// Gets property namespace.
         /// </summary>

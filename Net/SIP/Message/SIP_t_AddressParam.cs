@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses this from specified value.
         /// </summary>
@@ -84,7 +83,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets address.

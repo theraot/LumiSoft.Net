@@ -29,7 +29,6 @@ namespace LumiSoft.Net.Mime.vCard
         {
         }
 
-
         /// <summary>
         /// Converts item to vCard N structure string.
         /// </summary>
@@ -38,7 +37,6 @@ namespace LumiSoft.Net.Mime.vCard
         {
             return LastName + ";" + FirstName + ";" + AdditionalNames + ";" + HonorificPerfix + ";" + HonorificSuffix;
         }
-
 
         /// <summary>
         /// Parses name info from vCard N item.
@@ -65,7 +63,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
             return name;
         }
-
 
         /// <summary>
         /// Gets last name.

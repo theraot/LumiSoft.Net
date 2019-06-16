@@ -27,7 +27,6 @@ namespace LumiSoft.Net.DNS
             Target   = target;
         }
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -55,7 +54,6 @@ namespace LumiSoft.Net.DNS
 
             return new DNS_rr_SRV(name,priority,weight,port,target,ttl);
         }
-
 
         /// <summary>
         /// Gets service priority. Lowest value means greater priority.

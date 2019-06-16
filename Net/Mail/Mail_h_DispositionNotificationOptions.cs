@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mail
             importance = "required" / "optional"
         */
 
-
         /// <summary>
         /// Returns header field as string.
         /// </summary>
@@ -37,7 +36,6 @@ namespace LumiSoft.Net.Mail
         {
             return "TODO:";
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

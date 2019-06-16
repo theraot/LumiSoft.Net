@@ -26,7 +26,6 @@ namespace LumiSoft.Net.FTP.Server
             Password = password;
         }
 
-
         /// <summary>
         /// Gets or sets if session is authenticated.
         /// </summary>

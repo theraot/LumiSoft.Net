@@ -25,7 +25,6 @@ namespace LumiSoft.Net
             AsyncState         = state;
         }
 
-
         /// <summary>
         /// Sets AsyncResult value.
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Gets or sets caller's async object.
         /// </summary>
@@ -70,7 +68,6 @@ namespace LumiSoft.Net
         /// Gets if the user called the End*() method.
         /// </summary>
         public bool IsEndCalled { get; set; }
-
 
         /// <summary>
         /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.

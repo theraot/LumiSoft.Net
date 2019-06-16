@@ -39,7 +39,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pBindings  = new List<SIP_RegistrationBinding>();
         }
 
-
         /// <summary>
         /// Gets matching binding. Returns null if no match.
         /// </summary>
@@ -145,7 +144,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
         }
-
 
         /// <summary>
         /// Gets time when this registration entry was created.

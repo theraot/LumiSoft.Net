@@ -19,7 +19,6 @@ namespace LumiSoft.Net.MIME
         {
         }
 
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -46,7 +45,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets certificates contained in pkcs 7.
@@ -141,7 +139,6 @@ namespace LumiSoft.Net.MIME
 
             return MIME_Message.ParseFromStream(new MemoryStream(envelopedCms.Encode()));
         }
-
 
         // public void CreateSigned(X509Certificate2 cert,MIME_Entity entity)
 

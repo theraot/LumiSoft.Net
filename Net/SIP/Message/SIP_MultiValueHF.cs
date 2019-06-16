@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses multi value header field values.
         /// </summary>
@@ -68,7 +67,6 @@ namespace LumiSoft.Net.SIP.Message
             return retVal.ToString();
         }
 
-
         /// <summary>
         /// Gets header field values.
         /// </summary>
@@ -88,7 +86,6 @@ namespace LumiSoft.Net.SIP.Message
                 Values.RemoveAt(index);
             }
         }
-
 
         /// <summary>
         /// Gets or sets header field value.

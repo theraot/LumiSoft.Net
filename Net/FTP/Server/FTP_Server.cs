@@ -22,7 +22,6 @@ namespace LumiSoft.Net.FTP.Server
             this.SessionIdleTimeout = 3600;
 		}
 
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
@@ -46,7 +45,6 @@ namespace LumiSoft.Net.FTP.Server
         {
             session.TcpStream.WriteLine("500 Client host rejected: too many connections from your IP(" + session.RemoteEndPoint.Address + "), please try again later.");
         }
-
 
         /// <summary>
         /// Gets or sets server greeting text.

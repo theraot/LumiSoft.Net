@@ -26,7 +26,6 @@
             End   = end;
         }
 
-
         /// <summary>
         /// Gets if the specified value is within range.
         /// </summary>
@@ -40,7 +39,6 @@
 
             return false;
         }
-
 
         /// <summary>
         /// Gets range start.

@@ -38,7 +38,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponse = response;
         }
 
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>

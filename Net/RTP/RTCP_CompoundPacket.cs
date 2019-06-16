@@ -16,7 +16,6 @@ namespace LumiSoft.Net.RTP
             Packets = new List<RTCP_Packet>();
         }
 
-
         /// <summary>
         /// Parses RTP compound packet.
         /// </summary>
@@ -143,12 +142,10 @@ namespace LumiSoft.Net.RTP
             }          
         }
 
-
         /// <summary>
         /// Gets compound packets.
         /// </summary>
         public List<RTCP_Packet> Packets { get; }
-
 
         /// <summary>
         /// Gets total packets size in bytes which is needed for this compound packet.

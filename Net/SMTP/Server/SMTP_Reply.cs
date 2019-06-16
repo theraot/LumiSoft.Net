@@ -45,7 +45,6 @@ namespace LumiSoft.Net.SMTP.Server
             ReplyLines = replyLines;
         }
 
-
         /// <summary>
         /// Returns SMTP server reply as string.
         /// </summary>
@@ -65,7 +64,6 @@ namespace LumiSoft.Net.SMTP.Server
 
             return retVal.ToString(); 
         }
-
 
         /// <summary>
         /// Gets SMTP server reply code.

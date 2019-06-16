@@ -27,7 +27,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses "Retry-After" from specified value.
         /// </summary>
@@ -97,7 +96,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets how many seconds the service is expected to be unavailable to the requesting client.

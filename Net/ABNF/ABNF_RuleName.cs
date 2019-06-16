@@ -26,7 +26,6 @@ namespace LumiSoft.Net.ABNF
             RuleName = ruleName;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -65,7 +64,6 @@ namespace LumiSoft.Net.ABNF
             return new ABNF_RuleName(ruleName.ToString());
         }
 
-
         /// <summary>
         /// Validates 'rulename' value.
         /// </summary>
@@ -95,7 +93,6 @@ namespace LumiSoft.Net.ABNF
 
             return true;
         }
-
 
         /// <summary>
         /// Gets rule name.

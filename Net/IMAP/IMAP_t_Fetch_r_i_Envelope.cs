@@ -39,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             MessageID = messageID;
         }
 
-
         /// <summary>
         /// Parses IMAP FETCH ENVELOPE from reader.
         /// </summary>
@@ -323,7 +322,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();			
 		}
 
-
         /// <summary>
         /// Reads parenthesized list of addresses.
         /// </summary>
@@ -501,7 +499,6 @@ namespace LumiSoft.Net.IMAP
 
             return value.Replace("\r","").Replace("\n","");
         }
-
 
         /// <summary>
         /// Gets message <b>Date</b> header field value. Value DateTime.Min means no <b>Date</b> header field.

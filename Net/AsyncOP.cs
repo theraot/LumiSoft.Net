@@ -12,7 +12,6 @@
         {
         }
 
-
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>

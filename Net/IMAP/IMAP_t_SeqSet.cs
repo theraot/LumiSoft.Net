@@ -31,7 +31,6 @@ namespace LumiSoft.Net.IMAP
             m_pSequenceParts = new List<Range_long>();
         }
 
-
         /// <summary>
         /// Parses <b>sequense-set</b> from string.
         /// </summary>
@@ -119,7 +118,6 @@ namespace LumiSoft.Net.IMAP
             return retVal;
         }
 
-
         /// <summary>
 		/// Gets if sequence-set contains specified number.
 		/// </summary>
@@ -143,7 +141,6 @@ namespace LumiSoft.Net.IMAP
         {
             return m_SequenceString;
         }
-
 
         /// <summary>
 		/// Parses seq-number from specified value. Throws exception if invalid seq-number value.
@@ -169,7 +166,6 @@ namespace LumiSoft.Net.IMAP
 				}
 			}
 		}
-
 
         /// <summary>
         /// Gets sequence set ranges.

@@ -26,7 +26,6 @@ namespace LumiSoft.Net.SIP.Message
             Refresh();
         }
 
-
         /// <summary>
         /// Refreshes header fields in group from actual header.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
 
         /// <summary>
         /// Adds specified header field value to the end of header.
@@ -110,7 +108,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToArray();
         }
-
 
         /// <summary>
         /// Gets header field name what this group holds.

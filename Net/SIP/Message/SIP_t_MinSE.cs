@@ -34,7 +34,6 @@ namespace LumiSoft.Net.SIP.Message
             m_Time = minExpires;
         }
 
-
         /// <summary>
         /// Parses "Min-SE" from specified value.
         /// </summary>
@@ -102,7 +101,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets time in seconds when session expires.

@@ -28,7 +28,6 @@ namespace LumiSoft.Net.IMAP
             Entries      = entries;
         }
 
-
         /// <summary>
         /// Parses QUOTA response from quota-response string.
         /// </summary>
@@ -77,7 +76,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Quota(name,entries.ToArray());
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -98,7 +96,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets quota root name.

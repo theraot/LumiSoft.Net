@@ -26,7 +26,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>

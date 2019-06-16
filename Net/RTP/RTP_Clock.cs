@@ -25,7 +25,6 @@ namespace LumiSoft.Net.RTP
             m_CreateTime = DateTime.Now;
         }
 
-
         /// <summary>
         /// Convers milliseconds to RTP clock ticks. For example clock 8khz 20ms will be 160 RTP clock ticks.
         /// </summary>
@@ -35,7 +34,6 @@ namespace LumiSoft.Net.RTP
         {
             return ((Rate * milliseconds) / 1000);
         }
-
 
         /// <summary>
         /// Gets clock base value from where clock started.

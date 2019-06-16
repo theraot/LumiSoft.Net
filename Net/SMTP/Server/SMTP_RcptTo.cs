@@ -25,7 +25,6 @@ namespace LumiSoft.Net.SMTP.Server
             ORCPT   = orcpt;
         }
 
-
         /// <summary>
         /// Gets SMTP "mailbox" value. Actually this is just email address.
         /// </summary>

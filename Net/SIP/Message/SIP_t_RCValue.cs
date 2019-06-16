@@ -22,7 +22,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "rc-value" from specified value.
         /// </summary>

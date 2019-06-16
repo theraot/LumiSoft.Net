@@ -41,7 +41,6 @@ namespace LumiSoft.Net.RTP
             this.SourceRemoved = null;
         }
 
-
         /// <summary>
         /// Adds specified source to participant if participant doesn't contain the specified source.
         /// </summary>
@@ -71,7 +70,6 @@ namespace LumiSoft.Net.RTP
                 });
             }
         }
-
 
         /// <summary>
         /// Gets canonical name of participant.

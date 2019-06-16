@@ -23,7 +23,6 @@ namespace LumiSoft.Net.IMAP
             m_pChildEntities = new List<IMAP_BODY_Entity>();
         }
 
-
         /// <summary>
         /// Parses entity and it's child entities.
         /// </summary>
@@ -136,7 +135,6 @@ namespace LumiSoft.Net.IMAP
                 }                
             }   */         
         }
-
 
         /// <summary>
         /// Gets parent entity of this entity. If this entity is top level, then this property returns null.

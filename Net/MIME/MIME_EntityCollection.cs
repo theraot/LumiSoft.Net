@@ -20,7 +20,6 @@ namespace LumiSoft.Net.MIME
             m_pCollection = new List<MIME_Entity>();
         }
 
-
         /// <summary>
         /// Adds specified MIME enity to the collection.
         /// </summary>
@@ -103,7 +102,6 @@ namespace LumiSoft.Net.MIME
             return m_pCollection.Contains(entity);
         }
 
-
         /// <summary>
         /// Sets IsModified property value.
         /// </summary>
@@ -112,7 +110,6 @@ namespace LumiSoft.Net.MIME
         {
             m_IsModified = isModified;
         }
-
 
         /// <summary>
 		/// Gets enumerator.

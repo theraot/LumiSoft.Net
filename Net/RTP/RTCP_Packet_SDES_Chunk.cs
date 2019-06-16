@@ -41,7 +41,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-
         /// <summary>
         /// Parses SDES chunk from the specified buffer.
         /// </summary>
@@ -203,7 +202,6 @@ namespace LumiSoft.Net.RTP
                 buffer[offset++] = 0;
             }            
         }
-
 
         /// <summary>
         /// Gets SSRC or CSRC identifier.

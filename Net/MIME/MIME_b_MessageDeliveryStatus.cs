@@ -46,7 +46,6 @@ namespace LumiSoft.Net.MIME
             RecipientBlocks = new List<MIME_h_Collection>();
         }
 
-
         /// <summary>
         /// Parses body from the specified stream
         /// </summary>
@@ -90,7 +89,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-
         /// <summary>
         /// Stores MIME entity body to the specified stream.
         /// </summary>
@@ -113,7 +111,6 @@ namespace LumiSoft.Net.MIME
                 stream.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
             }
         }
-
 
         /// <summary>
         /// Gets if body has modified.

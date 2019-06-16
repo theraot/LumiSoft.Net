@@ -18,7 +18,6 @@ namespace LumiSoft.Net.RTP
             Data = new byte[0];
         }
 
-
         /// <summary>
         /// Parses APP packet from the specified buffer.
         /// </summary>
@@ -118,7 +117,6 @@ namespace LumiSoft.Net.RTP
             Array.Copy(Data,0,buffer,offset,Data.Length);
             offset += Data.Length;
         }
-
 
         /// <summary>
         /// Gets RTCP version.

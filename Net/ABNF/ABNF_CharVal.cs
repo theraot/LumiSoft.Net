@@ -26,7 +26,6 @@ namespace LumiSoft.Net.ABNF
             Value = value;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -78,7 +77,6 @@ namespace LumiSoft.Net.ABNF
             return new ABNF_CharVal(value.ToString());
         }
 
-
         /// <summary>
         /// Validates "prose-val" value.
         /// </summary>
@@ -114,7 +112,6 @@ namespace LumiSoft.Net.ABNF
 
             return true;
         }
-
 
         /// <summary>
         /// Gets value.

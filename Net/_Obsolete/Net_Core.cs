@@ -75,7 +75,6 @@ namespace LumiSoft.Net
             return retVal;
 		}
 
-
         /// <summary>
 		/// Gets argument part of command text.
 		/// </summary>
@@ -92,7 +91,6 @@ namespace LumiSoft.Net
 
 			return buff;
 		}
-
 
         /// <summary>
 		/// Checks if specified string is number(long).
@@ -111,7 +109,6 @@ namespace LumiSoft.Net
 			}
 		}
 
-
         /// <summary>
         /// Reverses the specified array elements.
         /// </summary>
@@ -129,7 +126,6 @@ namespace LumiSoft.Net
 
             return array;
         }
-
 
         /// <summary>
 		/// Encodes specified data with base64 encoding.
@@ -909,7 +905,6 @@ namespace LumiSoft.Net
 			return true;
 		}
 
-
         /// <summary>
 		/// Gets file name from path.
 		/// </summary>
@@ -919,7 +914,6 @@ namespace LumiSoft.Net
 		{
 			return Path.GetFileName(filePath);
 		}
-
 
         /// <summary>
         /// Gets if specified value is IP address.
@@ -1030,7 +1024,6 @@ namespace LumiSoft.Net
 			return false;
         }
 
-
         /// <summary>
         /// Creates new socket for the specified end point.
         /// </summary>
@@ -1061,7 +1054,6 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Invalid IPEndPoint address family.");
             }
         }
-
 
         /// <summary>
 		/// Converts string to hex string.
@@ -1192,7 +1184,6 @@ namespace LumiSoft.Net
 
 			return retVal.ToArray();
 		}
-
 
         /// <summary>
         /// Computes md5 hash.

@@ -46,7 +46,6 @@ namespace LumiSoft.Net.UDP
             this.PacketReceived = null;
         }
 
-
         /// <summary>
         /// Starts UDP server.
         /// </summary>
@@ -167,7 +166,6 @@ namespace LumiSoft.Net.UDP
                 Start();
             }
         }
-
 
         /// <summary>
         /// Sends specified UDP packet to the specified remote end point.
@@ -363,7 +361,6 @@ namespace LumiSoft.Net.UDP
             }
         }
 
-
         /// <summary>
         /// Processes specified incoming UDP packet.
         /// </summary>
@@ -377,7 +374,6 @@ namespace LumiSoft.Net.UDP
 
             OnUdpPacketReceived(e);
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

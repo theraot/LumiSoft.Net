@@ -67,7 +67,6 @@ namespace LumiSoft.Net.SDP
             Tags = new Dictionary<string,object>();
         }
 
-
         /// <summary>
         /// Parses media from "m" SDP message field.
         /// </summary>
@@ -120,7 +119,6 @@ namespace LumiSoft.Net.SDP
 
             return media;
         }
-
 
         /// <summary>
         /// Sets SDP media stream mode.
@@ -205,7 +203,6 @@ namespace LumiSoft.Net.SDP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets meadia type. Currently defined media are "audio", "video", "text", 

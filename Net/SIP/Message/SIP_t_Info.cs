@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "info" from specified value.
         /// </summary>
@@ -81,7 +80,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets 'purpose' parameter value. Value null means not specified. 

@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             Charsets = charsets;
         }
 
-
         /// <summary>
         /// Parses BADCHARSET optional response from string.
         /// </summary>
@@ -42,7 +41,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_BadCharset(code_value[1].Trim().Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -51,7 +49,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "BADCHARSET " + Net_Utils.ArrayToString(Charsets," ");
         }
-
 
         /// <summary>
         /// Gets list of supported charsets.

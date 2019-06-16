@@ -77,7 +77,6 @@ namespace LumiSoft.Net.UPnP
             return new UPnP_Exception(errorCode,errorText);
         }
 
-
         /// <summary>
         /// Gets UPnP error code.
         /// </summary>

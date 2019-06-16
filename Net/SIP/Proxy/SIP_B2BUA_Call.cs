@@ -34,7 +34,6 @@ namespace LumiSoft.Net.SIP.Proxy
             //m_pCallee.Terminated += new EventHandler(m_pCallee_Terminated);           
         }
 
-
         /// <summary>
         /// Is called when caller sends new request.
         /// </summary>
@@ -89,7 +88,6 @@ namespace LumiSoft.Net.SIP.Proxy
             //serverTransaction.SendResponse(response);
         }
 
-
         /// <summary>
         /// Is called when callee sends new request.
         /// </summary>
@@ -141,7 +139,6 @@ namespace LumiSoft.Net.SIP.Proxy
             //CopyMessage(e.Response,response,new string[]{"Via:","Call-Id:","To:","From:","CSeq:","Contact:","Route:","Record-Route:","Allow:","Supported:"});
             //serverTransaction.SendResponse(response);
         }
-
 
         /// <summary>
         /// Terminates call.
@@ -203,7 +200,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             destination.Data = source.Data;
         }
-
 
         /// <summary>
         /// Gets call start time.

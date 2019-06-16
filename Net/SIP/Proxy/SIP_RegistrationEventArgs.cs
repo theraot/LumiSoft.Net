@@ -21,7 +21,6 @@ namespace LumiSoft.Net.SIP.Proxy
             Registration = registration;
         }
 
-
         /// <summary>
         /// Gets SIP registration.
         /// </summary>

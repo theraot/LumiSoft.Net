@@ -60,7 +60,6 @@ namespace LumiSoft.Net.IMAP.Client
             Response = IMAP_r_ServerStatus.Parse(responseCode + " " + responseText);
         }
 
-
         /// <summary>
         /// Gets IMAP server response.
         /// </summary>

@@ -81,7 +81,6 @@ namespace LumiSoft.Net.SIP.Proxy
             m_pProxyContexts = null;
         }
 
-
         /// <summary>
         /// This method is called when SIP stack receives new request.
         /// </summary>
@@ -101,7 +100,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             OnResponseReceived(e);            
         }
-
 
         /// <summary>
         /// This method is called when new request is received.
@@ -156,7 +154,6 @@ namespace LumiSoft.Net.SIP.Proxy
                     // Stateless proxy don't do transaction, just forwards all.
                     ForwardRequest(false,e,true);
                 }
-
                 else{
                     e.ServerTransaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x501_Not_Implemented,request));
                 }
@@ -219,7 +216,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 }
             }
         }
-
 
         /// <summary>
         /// Forwards specified request to target recipient.
@@ -510,7 +506,6 @@ namespace LumiSoft.Net.SIP.Proxy
                 SIP_ProxyContext proxyContext = this.CreateProxyContext(requestContext,e.ServerTransaction,request,addRecordRoute);
                 proxyContext.Start();
             }
-
             else{
                 /* RFC 3261 16.6 Request Forwarding.
                 For each target, the proxy forwards the request following these steps:
@@ -805,7 +800,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             return proxyContext;
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

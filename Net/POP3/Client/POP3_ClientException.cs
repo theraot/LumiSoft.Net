@@ -26,7 +26,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-
         /// <summary>
         /// Gets POP3 server error status code.
         /// </summary>

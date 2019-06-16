@@ -16,7 +16,6 @@ namespace LumiSoft.Net.Mail
         {
         }
 
-
         /// <summary>
         /// Returns address as string value.
         /// </summary>

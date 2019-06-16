@@ -30,7 +30,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "warning-value" from specified value.
         /// </summary>
@@ -100,7 +99,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_Code + " " + m_Agent + " " + TextUtils.QuoteString(m_Text);
         }
-
 
         /// <summary>
         /// Gets or sets warning code.

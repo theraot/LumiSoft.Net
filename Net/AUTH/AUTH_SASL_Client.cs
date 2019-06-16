@@ -14,7 +14,6 @@ namespace LumiSoft.Net.AUTH
         {
         }
 
-
         /// <summary>
         /// Continues authentication process.
         /// </summary>
@@ -22,7 +21,6 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Returns challange request what must be sent to server or null if authentication has completed.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>serverResponse</b> is null reference.</exception>
         public abstract byte[] Continue(byte[] serverResponse);
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

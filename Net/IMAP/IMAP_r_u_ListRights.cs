@@ -38,7 +38,6 @@ namespace LumiSoft.Net.IMAP
             OptionalRights = optionalRights == string.Empty ? null : optionalRights;
         }
 
-
         /// <summary>
         /// Parses LISTRIGHTS response from LISTRIGHTS-response string.
         /// </summary>
@@ -92,7 +91,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_ListRights(folder,identifier,reqRights,optRights);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -116,7 +114,6 @@ namespace LumiSoft.Net.IMAP
             
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets folder name.

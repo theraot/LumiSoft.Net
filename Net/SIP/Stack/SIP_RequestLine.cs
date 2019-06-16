@@ -35,7 +35,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_Version = "SIP/2.0";
         }
 
-
         /// <summary>
         /// Returns Request-Line string.
         /// </summary>
@@ -47,7 +46,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return m_Method + " " + m_pUri.ToString() + " " + m_Version + "\r\n";
         }
-
 
         /// <summary>
         /// Gets or sets request method. This value is always in upper-case.

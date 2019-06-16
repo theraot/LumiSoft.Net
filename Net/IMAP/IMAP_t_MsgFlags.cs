@@ -57,7 +57,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
         /// <summary>
         /// Parses message flags from flags-string.
         /// </summary>
@@ -83,7 +82,6 @@ namespace LumiSoft.Net.IMAP
 
             return new IMAP_t_MsgFlags(flags);
         }
-
 
         /// <summary>
         /// Returns this as flags string.
@@ -126,7 +124,6 @@ namespace LumiSoft.Net.IMAP
         {
             return m_pFlags.ToArray();
         }
-
 
         /// <summary>
         /// Gets number of flags in the collection.

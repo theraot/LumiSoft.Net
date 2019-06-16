@@ -26,7 +26,6 @@ namespace LumiSoft.Net.SIP.Stack
             Response    = response;
         }
 
-
         /// <summary>
         /// Gets server transaction which sent response.
         /// </summary>

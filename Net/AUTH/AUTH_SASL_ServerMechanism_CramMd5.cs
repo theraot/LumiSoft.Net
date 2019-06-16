@@ -24,7 +24,6 @@ namespace LumiSoft.Net.AUTH
             RequireSSL = requireSSL;
         }
 
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
@@ -141,7 +140,6 @@ namespace LumiSoft.Net.AUTH
             return null;
         }
 
-
         /// <summary>
 		/// Calculates keyed md5 hash from specifieed text and with specified hash key.
 		/// </summary>
@@ -154,7 +152,6 @@ namespace LumiSoft.Net.AUTH
 			
 			return kMd5.ComputeHash(Encoding.ASCII.GetBytes(hashKey));
 		}
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

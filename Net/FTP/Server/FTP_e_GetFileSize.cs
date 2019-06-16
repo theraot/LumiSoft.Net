@@ -23,7 +23,6 @@ namespace LumiSoft.Net.FTP.Server
             FileName = fileName;
         }
 
-
         /// <summary>
         /// Gets or sets error response.
         /// </summary>

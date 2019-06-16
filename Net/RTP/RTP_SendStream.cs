@@ -54,7 +54,6 @@ namespace LumiSoft.Net.RTP
             this.Closed = null;
         }
 
-
         /// <summary>
         /// Closes this sending stream.
         /// </summary>
@@ -80,7 +79,6 @@ namespace LumiSoft.Net.RTP
             OnClosed();
             Dispose();
         }
-
 
         /// <summary>
         /// Sends specified packet to the RTP session remote party.
@@ -118,7 +116,6 @@ namespace LumiSoft.Net.RTP
             RtcpCyclesSinceWeSent = 0;
         }
 
-
         /// <summary>
         /// Is called by RTP session if RTCP cycle compled.
         /// </summary>
@@ -126,7 +123,6 @@ namespace LumiSoft.Net.RTP
         {
             RtcpCyclesSinceWeSent++;
         }
-
 
         /// <summary>
         /// Gets next packet sequence number.
@@ -142,7 +138,6 @@ namespace LumiSoft.Net.RTP
             
             return (ushort)m_SeqNo++;
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

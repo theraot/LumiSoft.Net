@@ -14,7 +14,6 @@ namespace LumiSoft.Net.IMAP
         {
         }
 
-
         /// <summary>
         /// Parses READ-WRITE optional response from string.
         /// </summary>
@@ -34,7 +33,6 @@ namespace LumiSoft.Net.IMAP
 
             return new IMAP_t_orc_ReadWrite();
         }
-
 
         /// <summary>
         /// Returns this as string.

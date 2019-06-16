@@ -32,7 +32,6 @@ namespace LumiSoft.Net
             Aliases   = (aliases == null ? new string[0] : aliases);
         }
 
-
         /// <summary>
         /// Gets DNS host name.
         /// </summary>

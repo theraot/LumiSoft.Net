@@ -18,7 +18,6 @@ namespace LumiSoft.Net.WebDav
             Responses = new List<WebDav_Response>();
         }
 
-
         /// <summary>
         /// Parses WebDav_MultiResponse from 'DAV:multistatus' element.
         /// </summary>
@@ -49,7 +48,6 @@ namespace LumiSoft.Net.WebDav
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets responses collection.

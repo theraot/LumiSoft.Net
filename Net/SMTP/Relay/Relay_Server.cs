@@ -74,7 +74,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pDsnClient = null;
         }
 
-
         /// <summary>
         /// Is called when we need to check timed out relay sessions.
         /// </summary>
@@ -97,7 +96,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 OnError(x);
             }
         }
-
 
         /// <summary>
         /// Starts SMTP relay server.
@@ -151,7 +149,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pTimerTimeout.Dispose();
             m_pTimerTimeout = null;
         }
-
 
         /// <summary>
         /// Processes relay queue.
@@ -258,7 +255,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
             }
         }
-
 
         /// <summary>
         /// Gets local IP binding for specified remote IP.
@@ -382,7 +378,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 }
             }
         }
-
 
         /// <summary>
         /// Gets if server is disposed.

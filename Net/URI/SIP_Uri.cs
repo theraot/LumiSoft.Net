@@ -30,7 +30,6 @@ namespace LumiSoft.Net
             Parameters = new SIP_ParameterCollection();
         }
 
-
         /// <summary>
         /// Parse SIP or SIPS URI from string value.
         /// </summary>
@@ -47,7 +46,6 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Argument 'value' is not valid SIP or SIPS URI.");
             }
         }
-
 
         /// <summary>
         /// Compares the current instance with another object of the same type.
@@ -152,7 +150,6 @@ namespace LumiSoft.Net
             return base.GetHashCode();
         }
 
-
         /// <summary>
         /// Parses SIP_Uri from SIP-URI string.
         /// </summary>
@@ -215,7 +212,6 @@ namespace LumiSoft.Net
             }
         }
 
-
         /// <summary>
         /// Converts SIP_Uri to valid SIP-URI string.
         /// </summary>
@@ -266,7 +262,6 @@ namespace LumiSoft.Net
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets URI scheme.

@@ -19,7 +19,6 @@ namespace LumiSoft.Net.WebDav
             m_pPropStats = new List<WebDav_PropStat>();
         }
 
-
         /// <summary>
         /// Parses WebDav_Response from 'DAV:response' element.
         /// </summary>
@@ -51,7 +50,6 @@ namespace LumiSoft.Net.WebDav
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets response href.

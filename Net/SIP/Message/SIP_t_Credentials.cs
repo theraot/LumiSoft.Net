@@ -27,7 +27,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(new StringReader(value));
         }
 
-
         /// <summary>
         /// Parses "credentials" from specified value.
         /// </summary>
@@ -82,7 +81,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_Method + " " + m_AuthData;
         }
-
 
         /// <summary>
         /// Gets or sets authentication method. Normally this value is always 'Digest'.

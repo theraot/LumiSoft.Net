@@ -70,7 +70,6 @@ namespace LumiSoft.Net.Media
             m_pActiveCodec    = null;
         }
 
-
         /// <summary>
         /// Is called when RTP session sending payload has changed.
         /// </summary>
@@ -125,7 +124,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-
         /// <summary>
         /// Starts capturing from audio-in device and sending it to RTP stream.
         /// </summary>
@@ -169,7 +167,6 @@ namespace LumiSoft.Net.Media
                 m_pWaveIn = null;
             }
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

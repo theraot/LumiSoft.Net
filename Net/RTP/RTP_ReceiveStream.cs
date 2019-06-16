@@ -73,7 +73,6 @@ namespace LumiSoft.Net.RTP
             this.PacketReceived = null;
         }
 
-
         /// <summary>
         /// Processes specified RTP packet thorugh this stream.
         /// </summary>
@@ -124,11 +123,9 @@ namespace LumiSoft.Net.RTP
                     d = -d;
                 }
                 m_Jitter += (1.0/16.0) * ((double)d - m_Jitter);
-
             }
             // else Packet not valid, skip it.
         }
-
 
         /// <summary>
         /// Initializes new sequence number.
@@ -221,7 +218,6 @@ namespace LumiSoft.Net.RTP
 
             return true;
         }
-
 
         /// <summary>
         /// Sets property <b>LastSR</b> value.
@@ -319,7 +315,6 @@ namespace LumiSoft.Net.RTP
 
             return rr;
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

@@ -32,7 +32,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_Reason     = reason;
         }
 
-
         /// <summary>
         /// Returns Status-Line string.
         /// </summary>
@@ -44,7 +43,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return m_Version + " " + m_StatusCode + " " + m_Reason + "\r\n";
         }
-
 
         /// <summary>
         /// Gets or sets SIP version.

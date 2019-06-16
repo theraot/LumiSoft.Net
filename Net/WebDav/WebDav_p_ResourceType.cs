@@ -20,7 +20,6 @@ namespace LumiSoft.Net.WebDav
             m_pItems = new List<string>();
         }
 
-
         /// <summary>
         /// Checks if this 'resourcetype' property contains the specified resource type.
         /// </summary>
@@ -36,7 +35,6 @@ namespace LumiSoft.Net.WebDav
 
             return false;
         }
-
 
         /// <summary>
         /// Parses WebDav_p_ResourceType from 'DAV:resourcetype' xml element.
@@ -64,7 +62,6 @@ namespace LumiSoft.Net.WebDav
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets property namespace.

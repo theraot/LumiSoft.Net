@@ -21,7 +21,6 @@ namespace LumiSoft.Net.RTP
             Participant = participant;
         }
 
-
         /// <summary>
         /// Gets participant.
         /// </summary>

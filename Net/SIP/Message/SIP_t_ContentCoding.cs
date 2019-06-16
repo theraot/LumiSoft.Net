@@ -22,7 +22,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "content-coding" from specified value.
         /// </summary>
@@ -70,7 +69,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_Encoding;
         }
-
 
         /// <summary>
         /// Gets or sets content encoding.

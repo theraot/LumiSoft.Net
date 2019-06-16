@@ -27,7 +27,6 @@ namespace LumiSoft.Net.RTP
             m_pOtionalItemsRoundRobin = new CircleCollection<string>();
         }
 
-
         /// <summary>
         /// Adds next(round-robined) optional SDES item to SDES chunk, if any available.
         /// </summary>
@@ -65,7 +64,6 @@ namespace LumiSoft.Net.RTP
             }
         }
 
-
         /// <summary>
         /// Constructs optional SDES items round-robin.
         /// </summary>
@@ -94,7 +92,6 @@ namespace LumiSoft.Net.RTP
                 }                
             }
         }
-
 
         /// <summary>
         /// Gets or sets the real name, eg. "John Doe". Value null means not specified.

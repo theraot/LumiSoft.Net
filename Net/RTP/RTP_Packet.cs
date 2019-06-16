@@ -24,7 +24,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-
         /// <summary>
         /// Parses RTP packet.
         /// </summary>
@@ -138,7 +137,6 @@ namespace LumiSoft.Net.RTP
             return retVal.ToString();
         }
 
-
         /// <summary>
         /// Parses RTP packet from the specified buffer.
         /// </summary>
@@ -213,7 +211,6 @@ namespace LumiSoft.Net.RTP
             m_Data = new byte[size - offset];
             Array.Copy(buffer,offset,m_Data,0,m_Data.Length);
         }
-
 
         /// <summary>
         /// Gets RTP version.

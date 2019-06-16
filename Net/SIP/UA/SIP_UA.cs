@@ -61,7 +61,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-
         /// <summary>
         /// This method is called when SIP stack received new message.
         /// </summary>
@@ -136,7 +135,6 @@ namespace LumiSoft.Net.SIP.UA
             }
         }
 
-
         /// <summary>
         /// Creates call to <b>invite</b> specified recipient.
         /// </summary>
@@ -161,7 +159,6 @@ namespace LumiSoft.Net.SIP.UA
                 return call;
             }
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

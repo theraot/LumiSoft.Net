@@ -23,7 +23,6 @@ namespace LumiSoft.Net.Mime.vCard
             Value      = value;
         }
 
-
         /// <summary>
         /// Sets item decoded value. Value will be encoded as needed and stored to item.Value property.
         /// Also property item.ParametersString is updated to reflect right encoding(always base64, required by rfc) and charset (utf-8).
@@ -65,7 +64,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-
         /// <summary>
         /// Converts item to vCal item string.
         /// </summary>
@@ -79,7 +77,6 @@ namespace LumiSoft.Net.Mime.vCard
                 return Name + ":" + FoldData(Value);
             }
         }
-
 
         /// <summary>
         /// CHecks if specified value must be encoded.
@@ -102,7 +99,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return false;
         }
-
 
         // Is it needed ?
 
@@ -156,7 +152,6 @@ namespace LumiSoft.Net.Mime.vCard
                 return data;
             }
         }
-
 
         /// <summary>
         /// Gest item name.

@@ -16,7 +16,6 @@ namespace LumiSoft.Net.UDP
         {
         }
 
-
         /// <summary>
         /// Reuses this class.
         /// </summary>
@@ -31,7 +30,6 @@ namespace LumiSoft.Net.UDP
             Count     = count;
             RemoteEP = remoteEP;
         }
-
 
         /// <summary>
         /// Gets socket which received data.

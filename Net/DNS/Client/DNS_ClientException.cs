@@ -16,7 +16,6 @@ namespace LumiSoft.Net.DNS.Client
             ErrorCode = rcode;
         }
 
-
         /// <summary>
         /// Gets DNS server returned error code.
         /// </summary>

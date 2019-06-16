@@ -24,7 +24,6 @@ namespace LumiSoft.Net.AUTH
                 CreateTime = DateTime.Now;
             }
 
-
             /// <summary>
             /// Gets nonce value.
             /// </summary>
@@ -68,12 +67,10 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-
         private void m_pTimer_Elapsed(object sender,ElapsedEventArgs e)
         {
             RemoveExpiredNonces();
         }
-
 
         /// <summary>
         /// Creates new nonce and adds it to active nonces collection.
@@ -121,7 +118,6 @@ namespace LumiSoft.Net.AUTH
             }
         }
 
-
         /// <summary>
         /// Removes not used nonces what has expired.
         /// </summary>
@@ -137,7 +133,6 @@ namespace LumiSoft.Net.AUTH
                 }
             }
         }
-
 
         /// <summary>
         /// Gets or sets nonce expire time in seconds.

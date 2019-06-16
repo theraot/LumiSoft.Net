@@ -43,7 +43,6 @@ namespace LumiSoft.Net.SIP.Message
             this.Refresher = refresher;
         }
 
-
         /// <summary>
         /// Parses "Session-Expires" from specified value.
         /// </summary>
@@ -115,7 +114,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets after how many seconds session expires.

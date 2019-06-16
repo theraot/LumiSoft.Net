@@ -31,7 +31,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "sec-mechanism" from specified value.
         /// </summary>
@@ -109,7 +108,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets security mechanism name. Defined values: "digest","tls","ipsec-ike","ipsec-man".

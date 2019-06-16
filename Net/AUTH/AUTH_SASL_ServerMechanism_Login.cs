@@ -23,7 +23,6 @@ namespace LumiSoft.Net.AUTH
             RequireSSL = requireSSL;
         }
 
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
@@ -83,7 +82,6 @@ namespace LumiSoft.Net.AUTH
 
             return null;
         }
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

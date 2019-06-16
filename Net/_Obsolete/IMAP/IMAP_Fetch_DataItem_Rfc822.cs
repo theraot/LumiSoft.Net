@@ -15,7 +15,6 @@ namespace LumiSoft.Net.IMAP
         {
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>

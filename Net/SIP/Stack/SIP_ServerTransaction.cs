@@ -67,7 +67,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Is raised when INVITE 100 (Trying) response must be sent if no response sent by transaction user.
         /// </summary>
@@ -244,7 +243,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Starts transaction processing.
         /// </summary>
@@ -263,13 +261,11 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pTimer100.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimer100_Elapsed);
                 m_pTimer100.Enabled = true;
             }
-
             else{
                 // RFC 3261 17.2.2. The state machine is initialized in the "Trying" state.
                 SetState(SIP_TransactionState.Trying);
             }
         }
-
 
         /// <summary>
         /// Sends specified response to remote party.
@@ -396,20 +392,16 @@ namespace LumiSoft.Net.SIP.Stack
                                 }
                             }
                         }
-
                         else if(this.State == SIP_TransactionState.Accpeted){
                             this.Stack.TransportLayer.SendResponse(this,response);
                             OnResponseSent(response);
                         }
-
                         else if(this.State == SIP_TransactionState.Completed){
                             // We do nothing here, we just wait ACK to arrive.
                         }
-
                         else if(this.State == SIP_TransactionState.Confirmed){
                             // We do nothing, just wait ACK retransmissions.
                         }
-
                         else if(this.State == SIP_TransactionState.Terminated){
                             // We should never rreach here, but if so, skip it.
                         }
@@ -488,7 +480,6 @@ namespace LumiSoft.Net.SIP.Stack
                                 }
                             }
                         }
-
                         else if(this.State == SIP_TransactionState.Proceeding){
                             AddResponse(response);
 
@@ -518,11 +509,9 @@ namespace LumiSoft.Net.SIP.Stack
                                 }
                             }
                         }
-
                         else if(this.State == SIP_TransactionState.Completed){
                             // Do nothing.
                         }
-
                         else if(this.State == SIP_TransactionState.Terminated){
                             // Do nothing.
                         }
@@ -571,7 +560,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-
 
         /// <summary>
         /// Processes specified request through this transaction.
@@ -630,12 +618,9 @@ namespace LumiSoft.Net.SIP.Stack
                                 this.Stack.TransportLayer.SendResponse(this,this.FinalResponse);
                             }
                         }
-
                         else if(request.RequestLine.Method == SIP_Methods.ACK){
                             if(this.State == SIP_TransactionState.Accpeted){
-                                
                             }
-
                             else if(this.State == SIP_TransactionState.Completed){
                                 /* RFC 3261 17.2.1
                                     If an ACK is received while the server transaction is in the "Completed" state, the server transaction 
@@ -679,7 +664,6 @@ namespace LumiSoft.Net.SIP.Stack
                             }
                         }
                     }
-
                     else{
                         // Non-INVITE transaction may have only request retransmission requests.
                         if(this.Method == request.RequestLine.Method){

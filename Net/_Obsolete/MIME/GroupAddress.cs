@@ -21,7 +21,6 @@ namespace LumiSoft.Net.Mime
 			GroupMembers.Owner = this;
 		}
 
-
         /// <summary>
 		/// Parses Rfc 2822 3.4 group address from group address string. Syntax: display-name':'[mailbox *(',' mailbox)]';'
 		/// </summary>
@@ -43,7 +42,6 @@ namespace LumiSoft.Net.Mime
 			return g;
 		}
 
-
         /// <summary>
 		/// This called when group address has changed.
 		/// </summary>
@@ -55,7 +53,6 @@ namespace LumiSoft.Net.Mime
 				}				
 			}
 		}
-
 
         /// <summary>
 		/// Gets Group as RFC 2822(3.4. Address Specification) string. Syntax: display-name':'[mailbox *(',' mailbox)]';'

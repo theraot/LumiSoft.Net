@@ -24,7 +24,6 @@ namespace LumiSoft.Net.IMAP.Server
             MessagesInfo = new List<IMAP_MessageInfo>();
         }
 
-
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
@@ -34,7 +33,6 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets messages info collection.
         /// </summary>
         public List<IMAP_MessageInfo> MessagesInfo { get; }
-
 
         /// <summary>
         /// Gets messages count.

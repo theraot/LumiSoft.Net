@@ -24,7 +24,6 @@ namespace LumiSoft.Net.FTP.Server
             Items = new List<FTP_ListItem>();
         }
 
-
         /// <summary>
         /// Gets or sets error response.
         /// </summary>

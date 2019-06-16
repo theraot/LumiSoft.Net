@@ -22,7 +22,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Creates new call ID value.
         /// </summary>
@@ -34,7 +33,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return callID;
         }
-
 
         /// <summary>
         /// Parses "callid" from specified value.
@@ -81,7 +79,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return m_CallID;
         }
-
 
         /// <summary>
         /// Gets or sets call ID.

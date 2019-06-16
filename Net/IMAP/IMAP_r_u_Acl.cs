@@ -31,7 +31,6 @@ namespace LumiSoft.Net.IMAP
             Entires   = entries;
         }
 
-
         /// <summary>
         /// Parses ACL response from acl-response string.
         /// </summary>
@@ -75,7 +74,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Acl(folderName,entries.ToArray());
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -104,7 +102,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets folder name.

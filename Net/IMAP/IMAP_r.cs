@@ -39,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             return ToStreamAsync(null,stream,mailboxEncoding,completedAsyncCallback);
         }
 
-
         /// <summary>
         /// Starts sending response to the specified IMAP session remote endpoint.
         /// </summary>
@@ -56,7 +55,6 @@ namespace LumiSoft.Net.IMAP
 
             return ToStreamAsync(session,session.TcpStream,session.MailboxEncoding,completedAsyncCallback);
         }
-
 
         /// <summary>
         /// Starts writing response to the specified stream.

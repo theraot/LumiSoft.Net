@@ -54,7 +54,6 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields.Insert(index,new HeaderField(fieldName,value));
 		}
 
-
         /// <summary>
 		/// Removes header field at the specified index from the collection.
 		/// </summary>
@@ -96,7 +95,6 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFields.Clear();
 		}
 
-
         /// <summary>
 		/// Gets if collection contains specified header field.
 		/// </summary>
@@ -122,7 +120,6 @@ namespace LumiSoft.Net.Mime
 		{
 			return m_pHeaderFields.Contains(headerField);
 		}
-
 
         /// <summary>
 		/// Gets first header field with specified name, returns null if specified field doesn't exist.
@@ -164,7 +161,6 @@ namespace LumiSoft.Net.Mime
 				return null;
 			}
 		}
-
 
         /// <summary>
 		/// Parses header fields from string.
@@ -270,7 +266,6 @@ namespace LumiSoft.Net.Mime
 
 			return headerString.ToString();
 		}
-
 
         /// <summary>
 		/// Gets enumerator.

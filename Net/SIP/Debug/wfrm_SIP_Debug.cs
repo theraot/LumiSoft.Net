@@ -166,7 +166,6 @@ namespace LumiSoft.Net.SIP.Debug
             this.Controls.Add(m_pTab);
         }
 
-
         /// <summary>
         /// Is raised when SIP stack has new log entry.
         /// </summary>
@@ -204,7 +203,6 @@ namespace LumiSoft.Net.SIP.Debug
                 m_pTabLog_Text.AppendText(text);
             }));
         }
-
 
         /// <summary>
         /// This method is called when when log toolbar button is pressed.
@@ -338,7 +336,6 @@ namespace LumiSoft.Net.SIP.Debug
             }
         }
 
-
         /// <summary>
         /// This method is called when debug window is closed.
         /// </summary>
@@ -348,7 +345,6 @@ namespace LumiSoft.Net.SIP.Debug
         {
             m_pStack.Logger.WriteLog -= new EventHandler<LumiSoft.Net.Log.WriteLogEventArgs>(Logger_WriteLog);
         }
-
 
         /// <summary>
 		/// Checks if text matches to search pattern.

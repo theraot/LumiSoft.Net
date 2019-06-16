@@ -27,7 +27,6 @@ namespace LumiSoft.Net.IMAP
             SharedNamespaces     = sharedNamespaces;
         }
 
-
         /// <summary>
         /// Parses NAMESPACE response from namespace-response string.
         /// </summary>
@@ -119,7 +118,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Namespace(personal.ToArray(),other.ToArray(),shared.ToArray());
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -176,7 +174,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets personal namespaces. Value null means not specified.

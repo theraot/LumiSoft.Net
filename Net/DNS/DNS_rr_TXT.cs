@@ -21,7 +21,6 @@ namespace LumiSoft.Net.DNS
 			Text = text;
 		}
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -38,7 +37,6 @@ namespace LumiSoft.Net.DNS
 
 			return new DNS_rr_TXT(name,text,ttl);
         }
-
 
         /// <summary>
 		/// Gets text.

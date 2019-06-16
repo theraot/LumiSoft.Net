@@ -27,7 +27,6 @@ namespace LumiSoft.Net.IMAP.Client
             DataItem      = dataItem;
         }
 
-
         /// <summary>
         /// Gets related FETCH response.
         /// </summary>

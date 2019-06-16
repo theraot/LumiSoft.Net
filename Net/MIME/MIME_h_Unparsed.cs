@@ -34,7 +34,6 @@ namespace LumiSoft.Net.MIME
             Exception = exception;
         }
 
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -45,7 +44,6 @@ namespace LumiSoft.Net.MIME
         {
             throw new InvalidOperationException();
         }
-
 
         /// <summary>
         /// Returns header field as string.
@@ -58,7 +56,6 @@ namespace LumiSoft.Net.MIME
         {
             return m_ParseValue;
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

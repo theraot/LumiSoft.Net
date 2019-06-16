@@ -14,7 +14,6 @@
             ThreadID = threadID;
         }
 
-
         /// <summary>
         /// Gets thread ID.
         /// </summary>

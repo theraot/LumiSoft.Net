@@ -71,7 +71,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-
             private void m_pTimeoutTimer_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
             {
                 lock(m_pLock){
@@ -91,7 +90,6 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                 }
             }
-
 
             /// <summary>
             /// Returns existing flow if exists, otherwise new created flow.
@@ -184,7 +182,6 @@ namespace LumiSoft.Net.SIP.Stack
                     return flow;
                 }
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -324,7 +321,6 @@ namespace LumiSoft.Net.SIP.Stack
             UdpServer = null;
         }
 
-
         /// <summary>
         /// This method is called when new SIP UDP packet has received.
         /// </summary>
@@ -361,7 +357,6 @@ namespace LumiSoft.Net.SIP.Stack
             m_pFlowManager.CreateFromSession(e.Session);
         }
 
-
         /// <summary>
         /// Starts listening incoming requests and responses.
         /// </summary>
@@ -390,7 +385,6 @@ namespace LumiSoft.Net.SIP.Stack
             UdpServer.Stop();
             m_pTcpServer.Stop();        
         }
-
 
         /// <summary>
         /// Is called when specified SIP flow has got new SIP message.
@@ -626,7 +620,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Gets existing flow or if flow doesn't exist, new one is created and returned.
         /// </summary>
@@ -694,7 +687,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return m_pFlowManager.GetFlow(flowID);
         }
-
 
         /// <summary>
         /// Sends request using methods as described in RFC 3261 [4](RFC 3263).
@@ -891,7 +883,6 @@ namespace LumiSoft.Net.SIP.Stack
             SendResponseInternal(null,response,localEP);
         }
 
-
         /// <summary>
         /// Sends specified response back to request maker using RFC 3261 18. rules.
         /// </summary>
@@ -911,7 +902,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             SendResponseInternal(transaction,response,null);
         }
-
 
         /// <summary>
         /// Sends response to request maker using RFC 3261 18. rules.
@@ -1058,7 +1048,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
-
             if(SIP_Utils.IsReliableTransport(via.ProtocolTransport)){
                 // Get original request remote end point.
                 IPEndPoint remoteEP = null;
@@ -1122,19 +1111,15 @@ namespace LumiSoft.Net.SIP.Stack
 
                 SendResponse_RFC_3263_5(logID,transactionID,localEP,response);
             }
-
             else if(via.Maddr != null){
                 throw new SIP_TransportException("Sending responses to multicast address(Via: 'maddr') is not supported.");
             }
-
             else if(via.Maddr == null && via.Received != null && via.RPort > 0){
                 SendResponseToHost(logID,transactionID,localEP,via.Received.ToString(),via.RPort,via.ProtocolTransport,response);
             }
-
             else if(via.Received != null){
                 SendResponseToHost(logID,transactionID,localEP,via.Received.ToString(),via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
-
             else{
                 SendResponse_RFC_3263_5(logID,transactionID,localEP,response);
             }
@@ -1202,11 +1187,9 @@ namespace LumiSoft.Net.SIP.Stack
             if(via.SentBy.IsIPAddress){
                 SendResponseToHost(logID,transactionID,localEP,via.SentBy.Host,via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
-
             else if(via.SentBy.Port != -1){
                 SendResponseToHost(logID,transactionID,localEP,via.SentBy.Host,via.SentByPortWithDefault,via.ProtocolTransport,response);
             }
-
             else{
                 try{
                     // Query SRV records.
@@ -1479,7 +1462,6 @@ namespace LumiSoft.Net.SIP.Stack
             return null;
         }
 
-
         /// <summary>
         /// Gets if transport layer is running.
         /// </summary>
@@ -1496,7 +1478,6 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public IPBindInfo[] BindInfo
         {
-            
             get{ return m_pBinds; }
             
             set{
@@ -1555,7 +1536,6 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{ return m_pFlowManager.Flows; }
         }
-
 
         /// <summary>
         /// Gets UDP server.

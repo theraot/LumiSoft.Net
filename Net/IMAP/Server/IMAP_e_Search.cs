@@ -28,7 +28,6 @@ namespace LumiSoft.Net.IMAP.Server
             Criteria = criteria;
         }
 
-
         /// <summary>
         /// Adds message which matches search criteria.
         /// </summary>
@@ -37,7 +36,6 @@ namespace LumiSoft.Net.IMAP.Server
         {
             OnMatched(uid);
         }
-
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.

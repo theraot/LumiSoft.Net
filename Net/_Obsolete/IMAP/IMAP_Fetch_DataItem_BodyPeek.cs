@@ -29,7 +29,6 @@ namespace LumiSoft.Net.IMAP
             MaxCount = maxCount;
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -52,7 +51,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets body section. Value null means not specified.

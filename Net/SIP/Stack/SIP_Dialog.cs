@@ -208,7 +208,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Terminates dialog.
         /// </summary>
@@ -223,7 +222,6 @@ namespace LumiSoft.Net.SIP.Stack
                 this.SetState(SIP_DialogState.Terminated,true);
             }
         }
-
 
         /// <summary>
         /// Creates new SIP request using this dialog info.
@@ -428,7 +426,6 @@ namespace LumiSoft.Net.SIP.Stack
             return false;
         }
 
-
         /// <summary>
         /// Sets dialog state.
         /// </summary>
@@ -448,7 +445,6 @@ namespace LumiSoft.Net.SIP.Stack
         }
 
         // TODO: Early timer.
-
 
         /// <summary>
         /// Processes specified request through this dialog.
@@ -538,7 +534,6 @@ namespace LumiSoft.Net.SIP.Stack
                 m_pTransactions.Remove(transaction);
             });            
         }
-
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the dialog.

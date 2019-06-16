@@ -27,7 +27,6 @@ namespace LumiSoft.Net.Mail
             Address = address;
         }
 
-
         /// <summary>
         /// Parses header field from the specified value.
         /// </summary>
@@ -61,7 +60,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-
         /// <summary>
         /// Returns header field as string.
         /// </summary>
@@ -78,7 +76,6 @@ namespace LumiSoft.Net.Mail
                 return "Return-Path: <" + Address + ">\r\n";
             }
         }
-
 
         /// <summary>
         /// Gets if this header field is modified since it has loaded.

@@ -21,7 +21,6 @@ namespace LumiSoft.Net.DNS
 			DomainName = domainName;
 		}
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.DNS
                 throw new ArgumentException("Invalid PTR resource record data !");
             }
         }
-
 
         /// <summary>
 		/// Gets domain name.

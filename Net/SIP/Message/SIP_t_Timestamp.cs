@@ -34,7 +34,6 @@ namespace LumiSoft.Net.SIP.Message
             Delay = delay;
         }
 
-
         /// <summary>
         /// Parses "Timestamp" from specified value.
         /// </summary>
@@ -102,7 +101,6 @@ namespace LumiSoft.Net.SIP.Message
                 return Time.ToString();
             }
         }
-
 
         /// <summary>
         /// Gets or sets time in seconds when request was sent.

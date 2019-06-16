@@ -17,7 +17,6 @@ namespace LumiSoft.Net.SIP.Message
             Header = new SIP_HeaderFieldCollection();
         }
 
-
         /// <summary>
         /// Parses SIP message from specified byte array.
         /// </summary>
@@ -81,7 +80,6 @@ namespace LumiSoft.Net.SIP.Message
                 stream.Write(Data,0,Data.Length);
             }
         }
-
 
         /// <summary>
         /// Gets direct access to header.
@@ -501,7 +499,6 @@ namespace LumiSoft.Net.SIP.Message
                 }
             }
         }
-
 
         /// <summary>
         /// Gets the In-Reply-To header fields which enumerates the Call-IDs that this call 

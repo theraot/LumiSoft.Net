@@ -23,7 +23,6 @@ namespace LumiSoft.Net
 			SourceString   = source;
 		}
 
-
         /// <summary>
 		/// Appends specified string to SourceString.
 		/// </summary>
@@ -32,7 +31,6 @@ namespace LumiSoft.Net
 		{
 			SourceString += value;
 		}
-
 
         /// <summary>
 		/// Reads to first char, skips white-space(SP,VTAB,HTAB,CR,LF) from the beginning of source string.
@@ -361,7 +359,6 @@ namespace LumiSoft.Net
             SourceString = SourceString.Substring(0,SourceString.Length - count);
         }
 
-
         /// <summary>
 		/// Gets if source string starts with specified value. Compare is case-sensitive.
 		/// </summary>
@@ -440,7 +437,6 @@ namespace LumiSoft.Net
 
             return true;
         }
-
 
         /// <summary>
 		/// Gets how many chars are available for reading.

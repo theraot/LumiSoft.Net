@@ -55,7 +55,6 @@ namespace LumiSoft.Net.UDP
             this.Error = null;            
         }
 
-
         /// <summary>
         /// Starts receiving data.
         /// </summary>
@@ -129,7 +128,6 @@ namespace LumiSoft.Net.UDP
             });
         }
 
-
         /// <summary>
         /// Receives synchornously(if packet(s) available now) or starts waiting UDP packet asynchronously if no packets at moment.
         /// </summary>
@@ -197,7 +195,6 @@ namespace LumiSoft.Net.UDP
                  OnError(x);
             }
         }
-
 
         /// <summary>
         /// Is raised when when new UDP packet is available.

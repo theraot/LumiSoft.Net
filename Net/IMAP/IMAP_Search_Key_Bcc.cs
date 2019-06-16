@@ -24,7 +24,6 @@ namespace LumiSoft.Net.IMAP
             Value = value;
         }
 
-
         /// <summary>
         /// Returns parsed IMAP SEARCH <b>BCC (string)</b> key.
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_Search_Key_Bcc(value);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -59,7 +57,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "BCC " + TextUtils.QuoteString(Value);
         }
-
 
         /// <summary>
         /// Stores IMAP search-key command parts to the specified array.
@@ -75,7 +72,6 @@ namespace LumiSoft.Net.IMAP
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"BCC "));
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
         }
-
 
         /// <summary>
         /// Gets BCC filter value.

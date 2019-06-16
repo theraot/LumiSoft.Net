@@ -29,7 +29,6 @@ namespace LumiSoft.Net.Mail
             m_pList = new List<Mail_t_Address>();
         }
 
-
         /// <summary>
         /// Parses <b>address-list</b> from specified string value.
         /// </summary>
@@ -119,7 +118,6 @@ namespace LumiSoft.Net.Mail
             return retVal;
         }
 
-
         /// <summary>
         /// Inserts a address into the collection at the specified location.
         /// </summary>
@@ -206,7 +204,6 @@ namespace LumiSoft.Net.Mail
             return retVal.ToString();
         }
 
-
         /// <summary>
         /// Resets IsModified property to false.
         /// </summary>
@@ -214,7 +211,6 @@ namespace LumiSoft.Net.Mail
         {
             IsModified = false;
         }
-
 
         /// <summary>
 		/// Gets enumerator.

@@ -19,7 +19,6 @@ namespace LumiSoft.Net.POP3.Server
         {
         }
 
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
@@ -43,7 +42,6 @@ namespace LumiSoft.Net.POP3.Server
         {
             session.TcpStream.WriteLine("-ERR Client host rejected: too many connections from your IP(" + session.RemoteEndPoint.Address + "), please try again later.");
         }
-
 
         /// <summary>
         /// Gets or sets server greeting text.

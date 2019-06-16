@@ -104,7 +104,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses "Subscription-State" from specified value.
         /// </summary>
@@ -185,7 +184,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets subscription state value. Known values are defined in SubscriptionState class.

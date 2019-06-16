@@ -14,7 +14,6 @@
             MsgID = msgID;
         }
 
-
         /// <summary>
         /// Gets message ID.
         /// </summary>

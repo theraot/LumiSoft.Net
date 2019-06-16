@@ -31,7 +31,6 @@ namespace LumiSoft.Net.IMAP.Server
             AclResponses = new List<IMAP_r_u_Acl>();
         }
 
-
         /// <summary>
         /// Gets ACL responses collection.
         /// </summary>

@@ -20,7 +20,6 @@ namespace LumiSoft.Net.Mime
 			m_pMailboxes = new List<MailboxAddress>();
 		}
 
-
         /// <summary>
 		/// Adds a new mailbox to the end of the collection.
 		/// </summary>
@@ -43,7 +42,6 @@ namespace LumiSoft.Net.Mime
 
 			OnCollectionChanged();
 		}
-
 
         /// <summary>
 		/// Removes header field at the specified index from the collection.
@@ -77,7 +75,6 @@ namespace LumiSoft.Net.Mime
 			OnCollectionChanged();
 		}
 
-
         /// <summary>
 		/// Parses mailboxes from Rfc 2822 3.4 mailbox-list string. Syntax: mailbox *(',' mailbox).
 		/// </summary>
@@ -93,7 +90,6 @@ namespace LumiSoft.Net.Mime
 				m_pMailboxes.Add(MailboxAddress.Parse(mailbox));
 			}
 		}
-
 
         /// <summary>
 		/// Convert addresses to Rfc 2822 mailbox-list string.
@@ -115,7 +111,6 @@ namespace LumiSoft.Net.Mime
 			return retVal;
 		}
 
-
         /// <summary>
 		/// This called when collection has changed. Item is added,deleted,changed or collection cleared.
 		/// </summary>
@@ -127,7 +122,6 @@ namespace LumiSoft.Net.Mime
 				}				
 			}
 		}
-
 
         /// <summary>
 		/// Gets enumerator.
@@ -153,7 +147,6 @@ namespace LumiSoft.Net.Mime
 		{
 			get{ return m_pMailboxes.Count; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets owner of this collection.

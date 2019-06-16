@@ -127,7 +127,6 @@ namespace LumiSoft.Net.Mime
 			MainEntity.MimeVersion = "1.0";
 		}
 
-
         /// <summary>
 		/// Parses mime message from byte[] data.
 		/// </summary>
@@ -164,7 +163,6 @@ namespace LumiSoft.Net.Mime
 
 			return mime;
 		}
-
 
         /// <summary>
 		/// Creates simple mime message.
@@ -277,7 +275,6 @@ namespace LumiSoft.Net.Mime
 			return m;
 		}
 
-
         /// <summary>
 		/// Stores mime message to string.
 		/// </summary>
@@ -320,7 +317,6 @@ namespace LumiSoft.Net.Mime
 			MainEntity.ToStream(storeStream);
 		}
 
-
         /// <summary>
 		/// Gets mime entities, including nested entries. 
 		/// </summary>
@@ -339,7 +335,6 @@ namespace LumiSoft.Net.Mime
 				}
 			}
 		}
-
 
         /// <summary>
 		/// Message main(top-level) entity.

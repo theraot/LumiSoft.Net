@@ -170,7 +170,6 @@ namespace LumiSoft.Net
             return new string(buffer,0,nChars);
         }
 
-
         /// <summary>
 		/// Splits string into string arrays. This split method won't split qouted strings, but only text outside of qouted string.
 		/// For example: '"text1, text2",text3' will be 2 parts: "text1, text2" and text3.
@@ -263,7 +262,6 @@ namespace LumiSoft.Net
 			return splitParts.ToArray();
 		}
 
-
         /// <summary>
 		/// Gets first index of specified char. The specified char in quoted string is skipped.
 		/// Returns -1 if specified char doesn't exist.
@@ -291,7 +289,6 @@ namespace LumiSoft.Net
 
 			return retVal;
 		}
-
 
         /// <summary>
 		/// Splits string into string arrays.
@@ -323,7 +320,6 @@ namespace LumiSoft.Net
 
 			return retVal;
 		}
-
 
         /// <summary>
         /// Gets if specified string is valid "token" value.

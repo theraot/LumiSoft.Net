@@ -34,7 +34,6 @@ namespace LumiSoft.Net.SMTP.Relay
             Tag              = tag;
         }
 
-
         /// <summary>
         /// Gets this relay item owner queue.
         /// </summary>

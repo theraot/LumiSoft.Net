@@ -27,7 +27,6 @@ namespace LumiSoft.Net.SIP.Message
             Address = new SIP_t_NameAddress();
         }
 
-
         /// <summary>
         /// Parses "contact-param" from specified value.
         /// </summary>
@@ -118,7 +117,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets is this SIP contact is special STAR contact.

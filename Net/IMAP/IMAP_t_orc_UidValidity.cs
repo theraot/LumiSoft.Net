@@ -16,7 +16,6 @@ namespace LumiSoft.Net.IMAP
             Uid = uid;
         }
 
-
         /// <summary>
         /// Parses UIDVALIDITY optional response from string.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_UidValidity(Convert.ToInt64(code_value[1]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -49,7 +47,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "UIDVALIDITY " + Uid;
         }
-
 
         /// <summary>
         /// Gets mailbox(folder) UID value.

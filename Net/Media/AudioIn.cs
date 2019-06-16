@@ -155,7 +155,6 @@ namespace LumiSoft.Net.Media
                     m_DataHandle.Free();
                 }
 
-
                 /// <summary>
                 /// Gets header handle.
                 /// </summary>
@@ -301,7 +300,6 @@ namespace LumiSoft.Net.Media
                 public const int MM_WIM_OPEN = 0x3BE;   
                 public const int MM_WIM_CLOSE = 0x3BF;
                 public const int MM_WIM_DATA = 0x3C0;
-
 
 		        public const int CALLBACK_FUNCTION = 0x00030000;
 
@@ -565,7 +563,6 @@ namespace LumiSoft.Net.Media
                 }
             }
 
-
             /// <summary>
             /// Starts recording.
             /// </summary>
@@ -597,7 +594,6 @@ namespace LumiSoft.Net.Media
                     throw new Exception("Failed to stop wav device, error: " + result + ".");
                 }
             }
-
 
             /// <summary>
             /// This method is called when wav device generates some event.
@@ -714,7 +710,6 @@ namespace LumiSoft.Net.Media
                 m_pCurrentBuffer = m_pBuffers[0];
             }
 
-
             /// <summary>
             /// Gets all available input audio devices.
             /// </summary>
@@ -734,7 +729,6 @@ namespace LumiSoft.Net.Media
                     return retVal.ToArray();
                 }
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -901,7 +895,6 @@ namespace LumiSoft.Net.Media
             m_pWaveIn = null;
         }
 
-
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -996,7 +989,6 @@ namespace LumiSoft.Net.Media
             throw new NotSupportedException();
         }
 
-
         /// <summary>
         /// Gets all available audio input devices.
         /// </summary>
@@ -1004,7 +996,6 @@ namespace LumiSoft.Net.Media
         {
             get{ return WaveIn.Devices; }
         }
-
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.

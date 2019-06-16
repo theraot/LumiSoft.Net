@@ -54,7 +54,6 @@ namespace LumiSoft.Net.RTP
             this.Error = null;
         }
 
-
         /// <summary>
         /// Closes RTP multimedia session, sends BYE with optional reason text to remote targets.
         /// </summary>
@@ -130,7 +129,6 @@ namespace LumiSoft.Net.RTP
             return session;
         }
 
-
         /// <summary>
         /// Gets or creates new participant if participant does not exist.
         /// </summary>
@@ -160,7 +158,6 @@ namespace LumiSoft.Net.RTP
                 return participant;
             }
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

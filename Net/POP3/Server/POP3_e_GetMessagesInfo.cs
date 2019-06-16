@@ -16,7 +16,6 @@ namespace LumiSoft.Net.POP3.Server
             Messages = new List<POP3_ServerMessage>();
         }
 
-
         /// <summary>
         /// Gets POP3 messages info collection.
         /// </summary>

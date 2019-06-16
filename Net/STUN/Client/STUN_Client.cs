@@ -320,7 +320,6 @@ namespace LumiSoft.Net.STUN.Client
             }
         }
 
-
         private void GetSharedSecret()
         {
             /*
@@ -396,7 +395,6 @@ namespace LumiSoft.Net.STUN.Client
 
             return null;
         }
-
 
         // TODO: Update to RFC 5389
 

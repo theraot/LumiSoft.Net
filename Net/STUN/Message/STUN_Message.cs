@@ -48,7 +48,6 @@ namespace LumiSoft.Net.STUN.Message
             new Random().NextBytes(TransactionID);
         }
 
-
         /// <summary>
         /// Parses STUN message from raw data packet.
         /// </summary>
@@ -313,7 +312,6 @@ namespace LumiSoft.Net.STUN.Message
             return retVal;
         }
 
-
         /// <summary>
         /// Parses attribute from data.
         /// </summary>
@@ -519,7 +517,6 @@ namespace LumiSoft.Net.STUN.Message
             message[offset++] = ipBytes[3];
         }
 
-
         /// <summary>
         /// Gets STUN message type.
         /// </summary>
@@ -580,7 +577,6 @@ namespace LumiSoft.Net.STUN.Message
         /// Gets or sets error info. Returns null if not specified.
         /// </summary>
         public STUN_t_ErrorCode ErrorCode { get; set; }
-
 
         /// <summary>
         /// Gets or sets IP endpoint from which IP end point STUN server got STUN client request.

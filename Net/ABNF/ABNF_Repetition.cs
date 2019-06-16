@@ -36,7 +36,6 @@ namespace LumiSoft.Net.ABNF
             Element = element;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -116,7 +115,6 @@ namespace LumiSoft.Net.ABNF
 
             return null;
         }
-
 
         /// <summary>
         /// Gets minimum repetitions.

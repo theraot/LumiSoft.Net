@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mime.vCard
             this.UID          = Guid.NewGuid().ToString();
         }
 
-
         /// <summary>
         /// Stores vCard structure to byte[].
         /// </summary>
@@ -70,7 +69,6 @@ namespace LumiSoft.Net.Mime.vCard
             byte[] data = System.Text.Encoding.UTF8.GetBytes(retVal.ToString());
             stream.Write(data,0,data.Length);
         }
-
 
         /// <summary>
         /// Parses multiple vCards from the specified file (Apple Address Book and Gmail exports)
@@ -177,7 +175,6 @@ namespace LumiSoft.Net.Mime.vCard
                 Items.Add(name,parameters,value);
             }
         }
-
 
         /// <summary>
         /// Gets reference to vCard items.

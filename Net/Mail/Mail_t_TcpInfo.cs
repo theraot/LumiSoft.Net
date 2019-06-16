@@ -31,7 +31,6 @@ namespace LumiSoft.Net.Mail
             HostName = hostName;
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -45,7 +44,6 @@ namespace LumiSoft.Net.Mail
                 return HostName + " [" + IP.ToString() + "]";
             }
         }
-
 
         /// <summary>
         /// Gets IP address.

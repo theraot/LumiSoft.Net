@@ -17,7 +17,6 @@ namespace LumiSoft.Net.RTP
         {
         }
 
-
         /// <summary>
         /// Returns participant as string.
         /// </summary>
@@ -48,7 +47,6 @@ namespace LumiSoft.Net.RTP
 
             return retVal.ToString().TrimEnd();
         }
-
 
         /// <summary>
         /// Updates participant data from SDES items.
@@ -91,7 +89,6 @@ namespace LumiSoft.Net.RTP
                 OnChanged();
             }
         }
-
 
         /// <summary>
         /// Gets the real name, eg. "John Doe". Value null means not specified.

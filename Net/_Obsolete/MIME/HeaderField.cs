@@ -28,7 +28,6 @@ namespace LumiSoft.Net.Mime
 			this.Value = value;
 		}
 
-
         /// <summary>
 		/// Gets or sets header field name. Header field name must end with colon(:) and may contain US-ASCII character values between 33 and 126.
 		/// </summary>

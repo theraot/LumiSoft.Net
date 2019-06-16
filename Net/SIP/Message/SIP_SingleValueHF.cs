@@ -18,7 +18,6 @@ namespace LumiSoft.Net.SIP.Message
             ValueX = value;
         }
 
-
         /// <summary>
         /// Parses single value from specified reader.
         /// </summary>
@@ -36,7 +35,6 @@ namespace LumiSoft.Net.SIP.Message
         {
             return ValueX.ToStringValue();
         }
-
 
 // FIX ME: Change base class Value property or this to new name
 

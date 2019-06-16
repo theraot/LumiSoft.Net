@@ -29,7 +29,6 @@ namespace LumiSoft.Net.IMAP
             MaxUsage     = maxUsage;
         }
 
-
         /// <summary>
         /// Gets resource limit name.
         /// </summary>

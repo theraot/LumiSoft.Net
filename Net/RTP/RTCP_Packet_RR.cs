@@ -28,7 +28,6 @@ namespace LumiSoft.Net.RTP
             ReportBlocks = new List<RTCP_Packet_ReportBlock>();
         }
 
-
         /// <summary>
         /// Parses receiver report(RR) from byte buffer.
         /// </summary>
@@ -171,7 +170,6 @@ namespace LumiSoft.Net.RTP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets RTCP version.

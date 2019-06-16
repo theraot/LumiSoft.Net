@@ -29,7 +29,6 @@ namespace LumiSoft.Net.TCP
                 BindInfo = bind;
             }
 
-
             /// <summary>
             /// Gets socket.
             /// </summary>
@@ -86,7 +85,6 @@ namespace LumiSoft.Net.TCP
                 this.Error = null;
             }
 
-
             /// <summary>
             /// Starts accpeting connections.
             /// </summary>
@@ -128,7 +126,6 @@ namespace LumiSoft.Net.TCP
 
                             IOCompletionAccept();
                         }
-
                         else{
                             m_pSocket.BeginAccept(new AsyncCallback(this.AsyncSocketAccept),null);
                         }
@@ -138,7 +135,6 @@ namespace LumiSoft.Net.TCP
                     }
                 });
             }
-
 
             /// <summary>
             /// Accpets connection synchornously(if connection(s) available now) or starts waiting TCP connection asynchronously if no connections at moment.
@@ -197,7 +193,6 @@ namespace LumiSoft.Net.TCP
                     OnError(x);
                 }
             }
-
 
             /// <summary>
             /// Gets user data items.
@@ -293,7 +288,6 @@ namespace LumiSoft.Net.TCP
             this.Error    = null;
         }
 
-
         /// <summary>
         /// Is called when session idle check timer triggered.
         /// </summary>
@@ -321,7 +315,6 @@ namespace LumiSoft.Net.TCP
                 OnError(x);
             }
         }
-
 
         /// <summary>
         /// Starts TCP server.
@@ -387,7 +380,6 @@ namespace LumiSoft.Net.TCP
             Start();
         }
 
-
         /// <summary>
         /// Is called when new incoming session and server maximum allowed connections exceeded.
         /// </summary>
@@ -409,7 +401,6 @@ namespace LumiSoft.Net.TCP
         protected virtual void OnMaxConnectionsPerIPExceeded(T session)
         {
         }
-
 
         /// <summary>
         /// Starts listening incoming connections. NOTE: All active listening points will be disposed.
@@ -521,7 +512,6 @@ namespace LumiSoft.Net.TCP
                 OnError(x);
             }
         }
-
 
         /// <summary>
         /// Gets if server is disposed.
@@ -775,7 +765,6 @@ namespace LumiSoft.Net.TCP
                 return m_pSessions; 
             }
         }
-
 
         /// <summary>
         /// This event is raised when TCP server has started.

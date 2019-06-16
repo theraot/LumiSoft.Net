@@ -66,7 +66,6 @@ namespace LumiSoft.Net.POP3.Client
 			base.Dispose();
 		}
 
-
         /// <summary>
 		/// Closes connection to POP3 server.
 		/// </summary>
@@ -94,7 +93,6 @@ namespace LumiSoft.Net.POP3.Client
             catch{
             }
 
-
             m_GreetingText       = "";
             m_ApopHashKey        = "";
             m_pExtCapabilities   = new List<string>();
@@ -105,7 +103,6 @@ namespace LumiSoft.Net.POP3.Client
             } 
             m_pAuthdUserIdentity = null;
 		}
-
 
         /// <summary>
         /// Executes CAPA command.
@@ -175,7 +172,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -253,7 +249,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -400,7 +395,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -467,7 +461,6 @@ namespace LumiSoft.Net.POP3.Client
 
             return op.Start(this);
         }
-
 
         /// <summary>
         /// Executes STLS command.
@@ -545,7 +538,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -603,7 +595,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -726,7 +717,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -898,7 +888,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -938,7 +927,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1126,7 +1114,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -1278,7 +1265,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1344,7 +1330,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1478,7 +1463,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 op.Dispose();
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1619,7 +1603,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1677,7 +1660,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1760,7 +1742,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 op.Dispose();
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1901,7 +1882,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1960,7 +1940,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -2048,7 +2027,6 @@ namespace LumiSoft.Net.POP3.Client
                 op.Dispose();
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -2119,7 +2097,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// This class represents <see cref="POP3_Client.FillMessagesAsync"/> asynchronous operation.
         /// </summary>
@@ -2152,7 +2129,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -2194,7 +2170,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -2289,7 +2264,6 @@ namespace LumiSoft.Net.POP3.Client
 
                 op.Dispose();
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2394,7 +2368,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -2497,7 +2470,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -2644,7 +2616,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -2767,7 +2738,6 @@ namespace LumiSoft.Net.POP3.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -2868,7 +2838,6 @@ namespace LumiSoft.Net.POP3.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -3015,7 +2984,6 @@ namespace LumiSoft.Net.POP3.Client
                 }
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -3102,7 +3070,6 @@ namespace LumiSoft.Net.POP3.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// This method is called when TCP client has sucessfully connected.
         /// </summary>
@@ -3162,7 +3129,6 @@ namespace LumiSoft.Net.POP3.Client
             // Complete TCP_Client connect operation.
             connectCallback(error);
         }
-
 
         /// <summary>
         /// Gets greeting text which was sent by POP3 server.
@@ -3268,7 +3234,6 @@ namespace LumiSoft.Net.POP3.Client
             }
         }
 
-
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.
         /// </summary>
@@ -3287,7 +3252,6 @@ namespace LumiSoft.Net.POP3.Client
                 return m_pAuthdUserIdentity; 
             }
         }
-
 
         //--- Obsolete -------------------------------------------------------------------
 

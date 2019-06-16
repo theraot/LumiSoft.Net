@@ -26,7 +26,6 @@ namespace LumiSoft.Net.SIP.Stack
             RequestLine = new SIP_RequestLine(method,new AbsoluteUri());
         }
 
-
         /// <summary>
         /// Clones this request.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return retVal;
         }
-
 
         /// <summary>
         /// Checks if SIP request has all required values as request line,header fields and their values.
@@ -87,7 +85,6 @@ namespace LumiSoft.Net.SIP.Stack
                 // We can fix it by setting it to default value 70.
                 this.MaxForwards = 70;
             }
-
 
             /* RFC 3261 12.1.2
                 When a UAC sends a request that can establish a dialog (such as an INVITE) it MUST 
@@ -202,7 +199,6 @@ namespace LumiSoft.Net.SIP.Stack
         {
             return Encoding.UTF8.GetString(ToByteData());
         }
-
 
         /// <summary>
         /// Gets request-line.

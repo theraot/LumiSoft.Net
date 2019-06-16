@@ -50,7 +50,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-
         /// <summary>
         /// Connects to the specified host. If the hostname resolves to more than one IP address, 
         /// all IP addresses will be tried for connection, until one of them connects.
@@ -233,7 +232,6 @@ namespace LumiSoft.Net.TCP
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -289,7 +287,6 @@ namespace LumiSoft.Net.TCP
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -431,7 +428,6 @@ namespace LumiSoft.Net.TCP
                                 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -627,7 +623,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-
         /// <summary>
         /// Switches session to secure connection.
         /// </summary>
@@ -714,7 +709,6 @@ namespace LumiSoft.Net.TCP
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -748,7 +742,6 @@ namespace LumiSoft.Net.TCP
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -815,7 +808,6 @@ namespace LumiSoft.Net.TCP
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -887,7 +879,6 @@ namespace LumiSoft.Net.TCP
             return op.Start(this);
         }
 
-
         /// <summary>
         /// This method is called after TCP client has sucessfully connected.
         /// </summary>
@@ -916,7 +907,6 @@ namespace LumiSoft.Net.TCP
                 callback(x);
             }
         }
-
 
         /// <summary>
         /// Reads and logs specified line from connected host.
@@ -954,7 +944,6 @@ namespace LumiSoft.Net.TCP
             int countWritten = this.TcpStream.WriteLine(line);
             LogAddWrite(countWritten,line);
         }
-
 
         /// <summary>
         /// Logs read operation.
@@ -1050,7 +1039,6 @@ namespace LumiSoft.Net.TCP
             }
         }
 
-
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
@@ -1060,7 +1048,6 @@ namespace LumiSoft.Net.TCP
         /// Gets or sets TCP client logger. Value null means no logging.
         /// </summary>
         public Logger Logger { get; set; }
-
 
         /// <summary>
         /// Gets if TCP client is connected.
@@ -1214,7 +1201,6 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         /// <remarks>This timeout applies only synchronous TCP read/write operations.</remarks>
         public int Timeout { get; set; } = 61000;
-
 
         // OBSOLETE
 

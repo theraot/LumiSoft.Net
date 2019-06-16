@@ -28,7 +28,6 @@ namespace LumiSoft.Net.RTP.Debug
                 Tag = tag;
             }
 
-
             /// <summary>
             /// Returns ComboBox text.
             /// </summary>
@@ -37,7 +36,6 @@ namespace LumiSoft.Net.RTP.Debug
             {
                 return Text;
             }
-
 
             /// <summary>
             /// Gets text.
@@ -70,7 +68,6 @@ namespace LumiSoft.Net.RTP.Debug
 
                 m_pSession = session;
             }
-
 
             /// <summary>
             /// Gets total members count.
@@ -336,7 +333,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pParticipant = participant;
             }
 
-
             /// <summary>
             /// Gets or sets the real name, eg. "John Doe". Value null means not specified.
             /// </summary>
@@ -452,7 +448,6 @@ namespace LumiSoft.Net.RTP.Debug
                 m_pSource = source;
             }
 
-
             /// <summary>
             /// Gets source state.
             /// </summary>
@@ -544,7 +539,6 @@ namespace LumiSoft.Net.RTP.Debug
 
                 m_pStream = stream;
             }
-
 
             /// <summary>
             /// Gets stream owner RTP session.
@@ -664,7 +658,6 @@ namespace LumiSoft.Net.RTP.Debug
 
                 m_pStream = stream;
             }
-
 
             /// <summary>
             /// Gets stream owner RTP session.
@@ -788,7 +781,6 @@ namespace LumiSoft.Net.RTP.Debug
             }
         }
 
-
         /// <summary>
         /// Creates and initializes UI.
         /// </summary>
@@ -854,7 +846,6 @@ namespace LumiSoft.Net.RTP.Debug
             this.Controls.Add(m_pTab);
         }
 
-
         private void m_pParticipants_AfterSelect(object sender,TreeViewEventArgs e)
         {
             m_pParticipantData.SelectedObject = e.Node.Tag;
@@ -871,7 +862,6 @@ namespace LumiSoft.Net.RTP.Debug
                 MessageBox.Show(this,"Error: " + ((Exception)m_pErrors.SelectedItems[0].Tag).ToString(),"Error:",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
-
 
         /// <summary>
         /// Is called when RTP session gets unhandled error.
@@ -1095,7 +1085,6 @@ namespace LumiSoft.Net.RTP.Debug
             m_pTimer.Dispose();
         }
 
-
         /// <summary>
         /// Searches specified participant tree node.
         /// </summary>
@@ -1115,7 +1104,6 @@ namespace LumiSoft.Net.RTP.Debug
 
             return null;
         }
-
 
         /// <summary>
         /// Gets RTP session what UI debugs.

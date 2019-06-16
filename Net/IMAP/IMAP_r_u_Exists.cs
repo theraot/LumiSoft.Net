@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             MessageCount = messageCount;
         }
 
-
         /// <summary>
         /// Parses EXISTS response from exists-response string.
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Exists(Convert.ToInt32(response.Split(' ')[1]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -61,7 +59,6 @@ namespace LumiSoft.Net.IMAP
 
             return "* " + MessageCount.ToString() + " EXISTS\r\n";
         }
-
 
         /// <summary>
         /// Gets number of messages in mailbox.

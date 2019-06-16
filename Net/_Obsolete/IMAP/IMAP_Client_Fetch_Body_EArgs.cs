@@ -20,7 +20,6 @@ namespace LumiSoft.Net.IMAP.Client
             Offset  = offset;
         }
 
-
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).
         /// </summary>

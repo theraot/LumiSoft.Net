@@ -41,7 +41,6 @@ namespace LumiSoft.Net.SIP.Message
             this.Method         = method;
         }
 
-
         /// <summary>
         /// Parses "RAck" from specified value.
         /// </summary>
@@ -121,7 +120,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return m_ResponseNumber + " " + m_CSeqNumber + " " + m_Method;
         }
-
 
         /// <summary>
         /// Gets or sets response number.

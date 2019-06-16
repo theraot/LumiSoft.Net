@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SMTP.Server
             Session = session;
         }
 
-
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>

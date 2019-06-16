@@ -22,7 +22,6 @@ namespace LumiSoft.Net.IMAP
             Stream = stream;
         }
 
-
         /// <summary>
         /// Sets Stream property value.
         /// </summary>
@@ -36,7 +35,6 @@ namespace LumiSoft.Net.IMAP
 
             Stream = stream;
         }
-
 
         /// <summary>
         /// Gets message body text stream.

@@ -28,7 +28,6 @@
             LeaseDuration = leaseDuration;
         }
 
-
         /// <summary>
         /// Gets if NAT port map is enabled.
         /// </summary>

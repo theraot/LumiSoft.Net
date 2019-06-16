@@ -146,7 +146,6 @@ namespace LumiSoft.Net.DNS.Client
             Cache = null;
         }
 
-
         /// <summary>
         /// Creates new DNS client transaction.
         /// </summary>
@@ -379,7 +378,6 @@ namespace LumiSoft.Net.DNS.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -511,7 +509,6 @@ namespace LumiSoft.Net.DNS.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -530,7 +527,6 @@ namespace LumiSoft.Net.DNS.Client
                     }
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -731,7 +727,6 @@ namespace LumiSoft.Net.DNS.Client
                 m_pIpLookupQueue = new Dictionary<int,GetHostAddressesAsyncOP>();
             }
 
-
             /// <summary>
             /// Cleans up any resource being used.
             /// </summary>
@@ -749,7 +744,6 @@ namespace LumiSoft.Net.DNS.Client
                 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -799,7 +793,6 @@ namespace LumiSoft.Net.DNS.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -870,7 +863,6 @@ namespace LumiSoft.Net.DNS.Client
 
                 op.Dispose();
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1065,7 +1057,6 @@ namespace LumiSoft.Net.DNS.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1105,7 +1096,6 @@ namespace LumiSoft.Net.DNS.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1329,7 +1319,6 @@ namespace LumiSoft.Net.DNS.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -1430,7 +1419,6 @@ namespace LumiSoft.Net.DNS.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// Sends specified packet to the specified target IP end point.
         /// </summary>
@@ -1458,7 +1446,6 @@ namespace LumiSoft.Net.DNS.Client
             catch{
             }
         }
-
 
         /// <summary>
         /// Processes received UDP packet.
@@ -1492,7 +1479,6 @@ namespace LumiSoft.Net.DNS.Client
                 // We don't care about receiving errors here, skip them.
             }
         }
-
 
         internal static bool GetQName(byte[] reply,ref int offset,ref string name)
 		{
@@ -1749,7 +1735,6 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
         }
 
-
         /// <summary>
         /// Gets static DNS client.
         /// </summary>
@@ -1802,7 +1787,6 @@ namespace LumiSoft.Net.DNS.Client
         /// Gets DNS cache.
         /// </summary>
         public DNS_ClientCache Cache { get; private set; }
-
 
         //--- OBSOLETE --------------------
 

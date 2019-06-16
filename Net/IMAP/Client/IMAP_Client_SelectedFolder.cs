@@ -26,7 +26,6 @@ namespace LumiSoft.Net.IMAP.Client
             Name = name;
         }
 
-
         /// <summary>
         /// Returns this object as human readable string.
         /// </summary>
@@ -46,7 +45,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Sets UidValidity property value.
@@ -120,7 +118,6 @@ namespace LumiSoft.Net.IMAP.Client
             RecentMessagesCount = value;
         }
 
-
         /// <summary>
         /// Coneverts string array to comma separated value.
         /// </summary>
@@ -142,7 +139,6 @@ namespace LumiSoft.Net.IMAP.Client
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets selected folder name(path included).

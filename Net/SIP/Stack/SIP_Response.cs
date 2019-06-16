@@ -31,7 +31,6 @@ namespace LumiSoft.Net.SIP.Stack
             Request = request;
         }
 
-
         /// <summary>
         /// Clones this request.
         /// </summary>
@@ -42,7 +41,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return retVal;
         }
-
 
         /// <summary>
         /// Checks if SIP response has all required values as response line,header fields and their values.
@@ -78,7 +76,6 @@ namespace LumiSoft.Net.SIP.Stack
             if(this.CSeq == null){
                 throw new SIP_ParseException("CSeq: header field is missing !");
             }
-
 
             // TODO: INVITE 2xx must have only 1 contact header with SIP or SIPS.
         }
@@ -187,7 +184,6 @@ namespace LumiSoft.Net.SIP.Stack
         {
             return Encoding.UTF8.GetString(ToByteData());
         }
-
 
         /// <summary>
         /// Gets SIP request which response it is. This value is null if this is stateless response.

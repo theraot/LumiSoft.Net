@@ -16,7 +16,6 @@ namespace LumiSoft.Net.IMAP
             UidNext = uidNext;
         }
 
-
         /// <summary>
         /// Parses UIDNEXT optional response from string.
         /// </summary>
@@ -40,7 +39,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_t_orc_UidNext(Convert.ToInt32(code_value[1]));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -49,7 +47,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "UIDNEXT " + UidNext;
         }
-
 
         /// <summary>
         /// Gets next message predicted UID value.

@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mime
 			Parameters = new HeaderFieldParameterCollection(this);
 		}
 
-
         /// <summary>
 		/// Parses parameters from header field.
 		/// </summary>
@@ -74,7 +73,6 @@ namespace LumiSoft.Net.Mime
 			// Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
 			m_pHeaderField.Value = retVal;
 		}
-
 
         /// <summary>
 		/// Gets header field name.

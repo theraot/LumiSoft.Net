@@ -22,7 +22,6 @@ namespace LumiSoft.Net.IMAP
             Values = values;
         }
 
-
         /// <summary>
         /// Parses SEARCH response from exists-response string.
         /// </summary>
@@ -57,7 +56,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Search(values.ToArray());
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -75,7 +73,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets search matching messages seqNo/UID(Depeneds on UID SEARCH) list.

@@ -31,7 +31,6 @@ namespace LumiSoft.Net.MIME
             m_pCharset = charset;
         }
 
-
         /// <summary>
         /// Encodes specified text if it contains 8-bit chars, otherwise text won't be encoded.
         /// </summary>
@@ -61,7 +60,6 @@ namespace LumiSoft.Net.MIME
 
             return DecodeS(text);
         }
-
 
         /// <summary>
         /// Checks if specified text must be encoded.
@@ -140,7 +138,6 @@ namespace LumiSoft.Net.MIME
                     if(encoding == MIME_EncodedWordEncoding.B){
                         retVal.Append("=?" + charset.WebName + "?B?" + Convert.ToBase64String(data) + "?=");
                     }
-
                     else{
                         retVal.Append("=?" + charset.WebName + "?Q?");
                         int stored = 0;
@@ -252,7 +249,6 @@ namespace LumiSoft.Net.MIME
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets or sets if long words(over 75 char) are splitted.

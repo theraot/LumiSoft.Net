@@ -43,7 +43,6 @@ namespace LumiSoft.Net.AUTH
         {
         }
 
-
         /// <summary>
         /// Parses DIGEST-MD5 challenge from challenge-string.
         /// </summary>
@@ -108,7 +107,6 @@ namespace LumiSoft.Net.AUTH
             return retVal;
         }
 
-
         /// <summary>
         /// Returns DIGEST-MD5 "digest-challenge" string.
         /// </summary>
@@ -166,7 +164,6 @@ namespace LumiSoft.Net.AUTH
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets realm value. For more info see RFC 2831.

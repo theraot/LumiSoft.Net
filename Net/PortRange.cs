@@ -29,7 +29,6 @@ namespace LumiSoft.Net
             End   = end;
         }
 
-
         /// <summary>
         /// Gets start port.
         /// </summary>

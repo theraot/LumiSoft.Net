@@ -43,7 +43,6 @@ namespace LumiSoft.Net.POP3.Server
             Tag = tag;
         }
 
-
         /// <summary>
         /// Sets IsMarkedForDeletion proerty value.
         /// </summary>
@@ -52,7 +51,6 @@ namespace LumiSoft.Net.POP3.Server
         {
             IsMarkedForDeletion = value;
         }
-
 
         /// <summary>
         /// Gets message UID. NOTE: Before accessing this property, check that server supports UIDL command.
@@ -73,7 +71,6 @@ namespace LumiSoft.Net.POP3.Server
         /// Gets or sets user data.
         /// </summary>
         public object Tag { get; set; }
-
 
         /// <summary>
         /// Gets message 1 based sequence number.

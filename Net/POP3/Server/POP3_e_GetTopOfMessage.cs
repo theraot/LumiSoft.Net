@@ -27,7 +27,6 @@ namespace LumiSoft.Net.POP3.Server
             LineCount = lines;
         }
 
-
         /// <summary>
         /// Gets message info.
         /// </summary>

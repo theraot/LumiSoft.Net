@@ -76,7 +76,6 @@ namespace LumiSoft.Net.Log
             Time = DateTime.Now;
         }
 
-
         /// <summary>
         /// Gets log entry type.
         /// </summary>

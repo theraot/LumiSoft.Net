@@ -19,7 +19,6 @@ namespace LumiSoft.Net
             m_pItems = new List<T>();
         }
 
-
         /// <summary>
         /// Adds specified items to the collection.
         /// </summary>
@@ -91,7 +90,6 @@ namespace LumiSoft.Net
             return m_pItems.Contains(item);
         }
 
-
         /// <summary>
         /// Gets next item from the collection. This method is thread-safe.
         /// </summary>
@@ -146,7 +144,6 @@ namespace LumiSoft.Net
                 return retVal;
             }
         }
-
 
         /// <summary>
         /// Gets number of items in the collection.

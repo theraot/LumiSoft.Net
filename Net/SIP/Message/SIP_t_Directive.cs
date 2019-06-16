@@ -103,7 +103,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "directive" from specified value.
         /// </summary>
@@ -245,7 +244,6 @@ namespace LumiSoft.Net.SIP.Message
                 throw new ArgumentException("Invalid property Directive value, this should never happen !");
             }
         }
-
 
         /// <summary>
         /// Gets or sets directive.

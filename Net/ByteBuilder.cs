@@ -21,7 +21,6 @@ namespace LumiSoft.Net
             m_pCharset = Encoding.UTF8;
         }
 
-
         /// <summary>
         /// Appends specified string value to the buffer. String is encoded with <see cref="Charset"/>.
         /// </summary>
@@ -103,7 +102,6 @@ namespace LumiSoft.Net
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets number of bytes in byte builder buffer.

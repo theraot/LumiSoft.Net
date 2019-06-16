@@ -90,7 +90,6 @@ namespace LumiSoft.Net.SMTP.Client
 			base.Dispose();
 		}
 
-
         /// <summary>
 		/// Closes connection to SMTP server.
 		/// </summary>
@@ -234,7 +233,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -285,7 +283,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -477,7 +474,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -656,7 +652,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -711,7 +706,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -849,7 +843,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1046,7 +1039,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1109,7 +1101,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1196,7 +1187,6 @@ namespace LumiSoft.Net.SMTP.Client
                     SetState(AsyncOP_State.Completed);
                 }
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1378,7 +1368,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1457,7 +1446,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1540,7 +1528,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1724,7 +1711,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1811,7 +1797,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -1895,7 +1880,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2062,7 +2046,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -2142,7 +2125,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -2430,7 +2412,6 @@ namespace LumiSoft.Net.SMTP.Client
                 op.Dispose();
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -2563,7 +2544,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -2607,7 +2587,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -2693,7 +2672,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -2827,7 +2805,6 @@ namespace LumiSoft.Net.SMTP.Client
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -2871,7 +2848,6 @@ namespace LumiSoft.Net.SMTP.Client
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -2960,7 +2936,6 @@ namespace LumiSoft.Net.SMTP.Client
                 SetState(AsyncOP_State.Completed);
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -3028,7 +3003,6 @@ namespace LumiSoft.Net.SMTP.Client
             return op.Start(this);
         }
 
-
         /// <summary>
         /// This method is called when TCP client has sucessfully connected.
         /// </summary>
@@ -3094,7 +3068,6 @@ namespace LumiSoft.Net.SMTP.Client
             connectCallback(error);
         }
 
-
         /// <summary>
         /// This class represents <see cref="SMTP_Client.ReadResponseAsync"/> asynchronous operation.
         /// </summary>
@@ -3128,7 +3101,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 this.CompletedAsync = null;
             }
-
 
             /// <summary>
             /// Starts operation processing.
@@ -3191,7 +3163,6 @@ namespace LumiSoft.Net.SMTP.Client
                 }                
             }
 
-
             /// <summary>
             /// Sets operation state.
             /// </summary>
@@ -3235,7 +3206,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 return false;
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -3321,7 +3291,6 @@ namespace LumiSoft.Net.SMTP.Client
 
             return op.Start(this);
         }
-
 
         /// <summary>
         /// Sends specified mime message.
@@ -3627,7 +3596,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-
         /// <summary>
         /// Gets or sets host name which is reported to SMTP server. If value null, then local computer name is used.
         /// </summary>
@@ -3779,7 +3747,6 @@ namespace LumiSoft.Net.SMTP.Client
             }
         }
 
-
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.
         /// </summary>
@@ -3798,7 +3765,6 @@ namespace LumiSoft.Net.SMTP.Client
                 return m_pAuthdUserIdentity; 
             }
         }
-
 
         //------- OBSOLETE  
 
@@ -3883,7 +3849,6 @@ namespace LumiSoft.Net.SMTP.Client
 
                 m_pAuthdUserIdentity = new GenericIdentity(userName,"LOGIN");
             }
-
             else if(authMethod == "CRAM-MD5"){
                 /* CRAM-M5
                     Description:
@@ -3920,7 +3885,6 @@ namespace LumiSoft.Net.SMTP.Client
          
                 m_pAuthdUserIdentity = new GenericIdentity(userName,"CRAM-MD5");
             }
-
             else if(authMethod == "DIGEST-MD5"){
                 /*
                     Example:
@@ -4525,7 +4489,6 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentException("Argument asyncResult was not returned by a call to the BeginSendMessage method.");
             }
         }
-
 
         /// <summary>
         /// Internal helper method for asynchronous SendMessage method.

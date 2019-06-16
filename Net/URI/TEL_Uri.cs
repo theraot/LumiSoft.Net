@@ -12,7 +12,6 @@
         {
         }
 
-
         public bool IsGlobal
         {
             get{ return false; }

@@ -18,7 +18,6 @@ namespace LumiSoft.Net.UPnP.Client
         {
         }
 
-
         /// <summary>
         /// Searches the network for UPnP root devices.
         /// </summary>

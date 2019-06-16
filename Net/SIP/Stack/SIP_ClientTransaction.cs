@@ -88,7 +88,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Is raised when INVITE timer A triggered.
         /// </summary>
@@ -334,7 +333,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Starts transaction processing.
         /// </summary>
@@ -403,7 +401,6 @@ namespace LumiSoft.Net.SIP.Stack
                                 this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=false] timer B(INVITE calling state timeout) started, will trigger after " + m_pTimerB.Interval + ".");
                             }
                         }
-
                         else{
                             /* RFC 3261 17.1.2.2.
                                 The "Trying" state is entered when the TU initiates a new client
@@ -498,7 +495,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Processes specified response through this transaction.
         /// </summary>
@@ -543,7 +539,6 @@ namespace LumiSoft.Net.SIP.Stack
                         responseData
                     );
                 }
-
 
                 /* RFC 6026 7.2. INVITE client transaction. (Udpates RFC 3261)
                       +-----------+                        +-----------+
@@ -654,7 +649,6 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerD.Enabled = true;
                         }
                     }
-
                     else if(this.State == SIP_TransactionState.Proceeding){
                         // Store response.
                         AddResponse(response);
@@ -700,20 +694,17 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerD.Enabled = true;
                         }
                     }
-
                     else if(this.State == SIP_TransactionState.Accpeted){
                         if(response.StatusCodeType == SIP_StatusCodeType.Success){
                             OnResponseReceived(response);
                         }
                     }
-
                     else if(this.State == SIP_TransactionState.Completed){
                         // 3xx - 6xx
                         if(response.StatusCode >= 300){
                             SendAck(response);
                         }
                     }
-
                     else if(this.State == SIP_TransactionState.Terminated){
                         // We should never reach here, but if so, do nothing.
                     }
@@ -812,7 +803,6 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerK.Enabled = true;
                         }
                     }
-
                     else if(this.State == SIP_TransactionState.Proceeding){
                         // Store response.
                         AddResponse(response);
@@ -851,11 +841,9 @@ namespace LumiSoft.Net.SIP.Stack
                             m_pTimerK.Enabled = true;
                         }
                     }
-
                     else if(this.State == SIP_TransactionState.Completed){
                         // Eat retransmited response.
                     }
-
                     else if(this.State == SIP_TransactionState.Terminated){
                         // We should never reach here, but if so, do nothing.
                     }
@@ -957,7 +945,6 @@ namespace LumiSoft.Net.SIP.Stack
                 SetState(SIP_TransactionState.Terminated);
             }
         }
-
 
 // FIX ME:
 

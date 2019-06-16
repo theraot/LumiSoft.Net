@@ -32,7 +32,6 @@ namespace LumiSoft.Net.SIP.Proxy
             ContactURI    = contactUri;
         }
 
-
         /// <summary>
         /// Updates specified binding.
         /// </summary>
@@ -86,7 +85,6 @@ namespace LumiSoft.Net.SIP.Proxy
 
             return retVal.ToStringValue();
         }
-
 
         /// <summary>
         /// Compares the current instance with another object of the same type. 

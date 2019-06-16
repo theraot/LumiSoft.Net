@@ -21,7 +21,6 @@ namespace LumiSoft.Net.MIME
         {
         }
 
-
         /// <summary>
         /// Parses MIME message from the specified file.
         /// </summary>
@@ -168,7 +167,6 @@ namespace LumiSoft.Net.MIME
             return retVal;
         }
 
-
         /// <summary>
         /// Gets all MIME entities as list.
         /// </summary>
@@ -238,7 +236,6 @@ namespace LumiSoft.Net.MIME
 
         // TODO:
         //public MIME_Entity GetEntityByPartsSpecifier(string partsSpecifier)
-
 
         /// <summary>
         /// Gets all MIME entities as list.

@@ -28,7 +28,6 @@ namespace LumiSoft.Net.IMAP
             TargetSeqSet    = targetSeqSet;
         }
 
-
         /// <summary>
         /// Parses COPYUID optional response from string.
         /// </summary>
@@ -66,7 +65,6 @@ namespace LumiSoft.Net.IMAP
             );
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -75,7 +73,6 @@ namespace LumiSoft.Net.IMAP
         {
             return "COPYUID " + "m_MailboxUid" + " " + "m_MessageUid";
         }
-
 
         /// <summary>
         /// Gets target mailbox UID value.

@@ -21,7 +21,6 @@ namespace LumiSoft.Net.IMAP
             UID = uid;
         }
 
-
         /// <summary>
         /// Gets message UID value.
         /// </summary>

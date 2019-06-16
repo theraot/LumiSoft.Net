@@ -37,7 +37,6 @@ namespace LumiSoft.Net.IMAP.Server
             Flags    = flags;
         }
 
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>

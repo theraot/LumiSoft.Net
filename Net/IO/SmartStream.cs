@@ -68,7 +68,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-
             /// <summary>
             /// Starts reading line.
             /// </summary>
@@ -94,7 +93,6 @@ namespace LumiSoft.Net.IO
 
                 return m_IsCompletedSync;
             }
-
 
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
@@ -181,7 +179,6 @@ namespace LumiSoft.Net.IO
                 return true;
             }
 
-
             /// <summary>
             /// Sets specified field values.
             /// </summary>
@@ -194,7 +191,6 @@ namespace LumiSoft.Net.IO
                 m_BytesInBuffer   = bytesInBuffer;
                 m_pException      = exception;
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -457,7 +453,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-
             /// <summary>
             /// Starts period-terminated data reading.
             /// </summary>
@@ -482,7 +477,6 @@ namespace LumiSoft.Net.IO
    
                 return m_IsCompletedSync;
             }
-
 
             /// <summary>
             /// Is called when asynchronous line reading has completed.
@@ -574,7 +568,6 @@ namespace LumiSoft.Net.IO
 
                 return false;
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -742,7 +735,6 @@ namespace LumiSoft.Net.IO
                 this.Completed = null;
             }
 
-
             /// <summary>
             /// Starts asynchronous operation.
             /// </summary>
@@ -810,7 +802,6 @@ namespace LumiSoft.Net.IO
             {
                 this.Completed = null;
             }
-
 
             /// <summary>
             /// Gets if this object is disposed.
@@ -959,7 +950,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         /// <summary>
         /// Begins line reading.
         /// </summary>
@@ -976,7 +966,6 @@ namespace LumiSoft.Net.IO
             if(async){
                 return op.Start(async,this);
             }
-
             else{
                 byte[]             buffer         = op.Buffer;
                 int                bytesInBuffer  = 0;
@@ -1464,7 +1453,6 @@ namespace LumiSoft.Net.IO
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1491,7 +1479,6 @@ namespace LumiSoft.Net.IO
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1619,7 +1606,6 @@ namespace LumiSoft.Net.IO
 
                 return false;
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -1788,7 +1774,6 @@ namespace LumiSoft.Net.IO
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -1829,7 +1814,6 @@ namespace LumiSoft.Net.IO
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -1949,7 +1933,6 @@ namespace LumiSoft.Net.IO
                 SetState(AsyncOP_State.Completed);
             }
 
-
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
@@ -2053,7 +2036,6 @@ namespace LumiSoft.Net.IO
             SmartStream reader = new SmartStream(stream,false);
             reader.ReadHeader(this,0,SizeExceededAction.ThrowException);
         }
-
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -2254,7 +2236,6 @@ namespace LumiSoft.Net.IO
             m_BytesWritten += count;
         }
 
-
         /// <summary>
         /// Begins buffering read-buffer.
         /// </summary>
@@ -2312,7 +2293,6 @@ namespace LumiSoft.Net.IO
                     return false;
                 }
             }
-
             else{
                 int countReaded = m_pStream.Read(m_pReadBuffer,0,m_pReadBuffer.Length);
                 m_ReadBufferCount  =  countReaded;
@@ -2322,7 +2302,6 @@ namespace LumiSoft.Net.IO
                 return false;
             }
         }
-
 
         /// <summary>
         /// Gets this stream underlying stream.
@@ -2449,7 +2428,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
@@ -2537,7 +2515,6 @@ namespace LumiSoft.Net.IO
             }
         }
 
-
         //------- Obsolete
 
         /// <summary>
@@ -2598,7 +2575,6 @@ namespace LumiSoft.Net.IO
 
                 DoLineReading();                                
             }
-
 
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
@@ -2699,7 +2675,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
@@ -2722,7 +2697,6 @@ namespace LumiSoft.Net.IO
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
             public bool IsCompleted { get; private set; }
-
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
@@ -2804,7 +2778,6 @@ namespace LumiSoft.Net.IO
                 #pragma warning restore
             }
 
-
             /// <summary>
             /// This method is called when asyynchronous line reading has completed.
             /// </summary>
@@ -2878,7 +2851,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-
             /// <summary>
             /// Gets terminator.
             /// </summary>
@@ -2906,7 +2878,6 @@ namespace LumiSoft.Net.IO
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
             public bool IsCompleted { get; private set; }
-
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
@@ -2972,7 +2943,6 @@ namespace LumiSoft.Net.IO
                     DoDataReading();
                 }
             }
-
 
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
@@ -3047,7 +3017,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
@@ -3070,7 +3039,6 @@ namespace LumiSoft.Net.IO
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
             public bool IsCompleted { get; private set; }
-
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
@@ -3142,7 +3110,6 @@ namespace LumiSoft.Net.IO
                 DoRead();
             }
 
-
             /// <summary>
             /// Is called when asynchronous read buffer buffering has completed.
             /// </summary>
@@ -3211,7 +3178,6 @@ namespace LumiSoft.Net.IO
                 }
             }
 
-
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
@@ -3235,7 +3201,6 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public bool IsCompleted { get; private set; }
 
-
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
             /// </summary>
@@ -3251,7 +3216,6 @@ namespace LumiSoft.Net.IO
             /// </summary>
             internal int BytesStored { get; private set; }
         }
-
 
         /// <summary>
         /// Begins an asynchronous line reading from the source stream.

@@ -25,7 +25,6 @@ namespace LumiSoft.Net.SIP.Message
         {
         }
 
-
         /// <summary>
         /// Parses "r-value" from specified value.
         /// </summary>
@@ -86,7 +85,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return m_Namespace + "." + m_Priority;
         }
-
 
         /// <summary>
         /// Gets or sets Namespace.

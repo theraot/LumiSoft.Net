@@ -22,7 +22,6 @@ namespace LumiSoft.Net.Media
             {
             }
 
-
             /// <summary>
             /// Parses RIFF chunk from the specified reader.
             /// </summary>
@@ -37,7 +36,6 @@ namespace LumiSoft.Net.Media
                 ChunkSize = reader.ReadUInt32();
                 Format    = new string(reader.ReadChars(4)).Trim();
             }
-
 
             /// <summary>
             /// Returns "RIFF".
@@ -69,7 +67,6 @@ namespace LumiSoft.Net.Media
             public fmt_Chunk()
             {
             }
-
 
             /// <summary>
             /// Parses fmt chunk from the specified reader.
@@ -113,7 +110,6 @@ namespace LumiSoft.Net.Media
 
                 return retVal.ToString();
             }
-
 
             /// <summary>
             /// Returns "fmt".
@@ -171,7 +167,6 @@ namespace LumiSoft.Net.Media
             {
             }
 
-
             /// <summary>
             /// Parses data chunk from the specified reader.
             /// </summary>
@@ -185,7 +180,6 @@ namespace LumiSoft.Net.Media
 
                 ChunkSize = reader.ReadUInt32();
             }
-
 
             /// <summary>
             /// Returns "data".
@@ -221,7 +215,6 @@ namespace LumiSoft.Net.Media
 
                 m_pBinaryReader = reader;
             }
-
 
             /// <summary>
             /// Reads 4 char chunk ID.
@@ -286,7 +279,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-
         private bool           m_IsPlaying;
         private bool           m_Stop;
         private readonly AudioOutDevice m_pOutputDevice;
@@ -304,7 +296,6 @@ namespace LumiSoft.Net.Media
 
             m_pOutputDevice = device;
         }
-
 
         /// <summary>
         /// Starts playing specified wave file for the specified number of times.

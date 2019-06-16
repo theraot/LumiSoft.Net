@@ -24,7 +24,6 @@ namespace LumiSoft.Net.RTP
             SenderOctetCount  = sr.SenderOctetCount;
         }
 
-
         /// <summary>
         /// Gets the wallclock time (see Section 4) when this report was sent.
         /// </summary>

@@ -16,7 +16,6 @@ namespace LumiSoft.Net.STUN.Message
             ReasonText = reasonText;
         }
 
-
         /// <summary>
         /// Gets or sets error code.
         /// </summary>

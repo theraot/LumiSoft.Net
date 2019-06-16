@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mime
 			m_pHeaderFieldCache = new Hashtable();            
 		}
 
-
         /// <summary>
 		/// Parses mime entity from stream.
 		/// </summary>
@@ -185,7 +184,6 @@ namespace LumiSoft.Net.Mime
 			return false;
 		}
 
-
         /// <summary>
 		/// Stores mime entity and it's child entities to specified stream.
 		/// </summary>
@@ -222,7 +220,6 @@ namespace LumiSoft.Net.Mime
 				}				
 			}
 		}
-
 
         /// <summary>
 		/// Saves this.Data property value to specified file.
@@ -267,7 +264,6 @@ namespace LumiSoft.Net.Mime
 
 			this.Data = data;
 		}
-
 
         /// <summary>
 		/// Encodes data with specified content transfer encoding.
@@ -345,7 +341,6 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-
         /// <summary>
 		/// Gets message header.
 		/// </summary>
@@ -368,7 +363,6 @@ namespace LumiSoft.Net.Mime
 		/// Gets child entities. This property is available only if ContentType = multipart/... .
 		/// </summary>
 		public MimeEntityCollection ChildEntities { get; }
-
 
         /// <summary>
 		/// Gets or sets header field "<b>Mime-Version:</b>" value. Returns null if value isn't set.
@@ -418,7 +412,6 @@ namespace LumiSoft.Net.Mime
                 }
             }
         }
-
 
 		/// <summary>
 		/// Gets or sets header field "<b>Content-Type:</b>" value. This property specifies what entity data is.
@@ -1327,7 +1320,6 @@ namespace LumiSoft.Net.Mime
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets or sets entity data. Data is encoded/decoded with "<b>Content-Transfer-Encoding:</b>" header field value.

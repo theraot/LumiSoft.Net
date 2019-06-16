@@ -68,7 +68,6 @@ namespace LumiSoft.Net.Mail
             throw new ParseException("Not valid 'mailbox' value '" + value + "'.");
         }
 
-
         /// <summary>
         /// Returns mailbox as string.
         /// </summary>
@@ -97,7 +96,6 @@ namespace LumiSoft.Net.Mail
                 }
             }
         }
-
 
         /// <summary>
         /// Gets display name. Value null means not specified.

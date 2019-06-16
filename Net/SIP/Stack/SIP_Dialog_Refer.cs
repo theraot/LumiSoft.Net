@@ -14,12 +14,10 @@ namespace LumiSoft.Net.SIP.Stack
         {
         }
 
-
         private void CreateNotify(string statusLine)
         {
             // TODO: Block for UAC ? because UAS can generate NOTIFY requests only.
         }
-
 
         /// <summary>
         /// Processes specified request through this dialog.

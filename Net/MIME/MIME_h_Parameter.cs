@@ -24,7 +24,6 @@ namespace LumiSoft.Net.MIME
             m_Value = value;
         }
 
-
         /// <summary>
         /// Gets if this header field parameter is modified since it has loaded.
         /// </summary>

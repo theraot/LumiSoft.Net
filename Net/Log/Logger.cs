@@ -23,7 +23,6 @@ namespace LumiSoft.Net.Log
         {
         }
 
-
         /// <summary>
         /// Adds read log entry.
         /// </summary>

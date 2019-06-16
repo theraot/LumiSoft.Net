@@ -87,7 +87,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Is called when client transactions receives response.
         /// </summary>
@@ -230,7 +229,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Starts sending request.
         /// </summary>
@@ -361,7 +359,6 @@ namespace LumiSoft.Net.SIP.Stack
             // Transaction waits lock for us and we wait lock to transaction.
             m_pTransaction.Cancel();
         }
-
 
         /// <summary>
         /// Creates authorization for each challange in <b>response</b>.
@@ -537,7 +534,6 @@ namespace LumiSoft.Net.SIP.Stack
             }
         }
 
-
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
@@ -656,7 +652,6 @@ namespace LumiSoft.Net.SIP.Stack
                 this.ResponseReceived(this,new SIP_ResponseReceivedEventArgs(m_pStack,m_pTransaction,response));
             }
         }
-
 
         /// <summary>
         /// Raises event <b>TransportError</b>.

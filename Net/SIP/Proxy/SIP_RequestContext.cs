@@ -41,7 +41,6 @@ namespace LumiSoft.Net.SIP.Proxy
             Targets = new List<SIP_ProxyTarget>();
         }
 
-
         /// <summary>
         /// Forwards current request statelessly.
         /// </summary>
@@ -59,7 +58,6 @@ namespace LumiSoft.Net.SIP.Proxy
             throw new NotImplementedException();
         }
 
-
         /// <summary>
         /// Sets current user.
         /// </summary>
@@ -68,7 +66,6 @@ namespace LumiSoft.Net.SIP.Proxy
         {
             User = user;
         }
-
 
         /// <summary>
         /// Gets current incoming SIP request.

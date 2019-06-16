@@ -18,7 +18,6 @@ namespace LumiSoft.Net.NNTP.Client
         {
         }
 
-
         /// <summary>
 		/// Closes connection to NNTP server.
 		/// </summary>
@@ -46,7 +45,6 @@ namespace LumiSoft.Net.NNTP.Client
             catch{
             }
 		}
-
 
         /// <summary>
         /// Gets NNTP newsgoups.
@@ -174,9 +172,7 @@ namespace LumiSoft.Net.NNTP.Client
             if(!responseLine.StartsWith("240")){
                 throw new Exception(responseLine);
             }
-
         }
-
 
         /// <summary>
         /// This method is called after TCP client has sucessfully connected.

@@ -67,7 +67,6 @@ namespace LumiSoft.Net.AUTH
         {
         }
 
-
         /// <summary>
         /// Parses DIGEST-MD5 response from response-string.
         /// </summary>
@@ -183,7 +182,6 @@ namespace LumiSoft.Net.AUTH
             return retVal;
         }
 
-
         /// <summary>
         /// Authenticates user.
         /// </summary>
@@ -206,7 +204,6 @@ namespace LumiSoft.Net.AUTH
 
             return false;
         }
-
 
         /// <summary>
         /// Creates digest response for challenge.
@@ -324,7 +321,6 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
             }            
         }
-
 
         /// <summary>
         /// Calculates digest response.
@@ -515,7 +511,6 @@ namespace LumiSoft.Net.AUTH
         {
             return Net_Utils.ToHex(value);
         }
-
 
         /// <summary>
         /// Gets user name.

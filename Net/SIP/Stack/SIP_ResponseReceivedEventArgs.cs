@@ -22,7 +22,6 @@ namespace LumiSoft.Net.SIP.Stack
             ClientTransaction = transaction;
         }
 
-
         /// <summary>
         /// Gets response received by SIP stack.
         /// </summary>

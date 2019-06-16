@@ -22,7 +22,6 @@ namespace LumiSoft.Net.IMAP
             Text = text;
         }
 
-
         /// <summary>
         /// Parses BYE response from bye-response string.
         /// </summary>
@@ -79,7 +78,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Bye(r.ReadToEnd());
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -93,7 +91,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets BYE reason text.

@@ -18,7 +18,6 @@
             Channels         = channels;
         }
 
-
         /// <summary>
         /// Compares the current instance with another object of the same type.
         /// </summary>
@@ -55,7 +54,6 @@
         {
             return base.GetHashCode();
         }
-
 
         /// <summary>
         /// Gets the number of samples per second that are provided by the audio format.

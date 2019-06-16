@@ -25,7 +25,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
         }
 
-
         /// <summary>
         /// Add new phone number to the collection.
         /// </summary>
@@ -57,7 +56,6 @@ namespace LumiSoft.Net.Mime.vCard
             }
             m_pCollection.Clear();
         }
-
 
         /// <summary>
 		/// Gets enumerator.

@@ -19,7 +19,6 @@ namespace LumiSoft.Net.IMAP
             MainEntity = new IMAP_BODY_Entity();
         }
 
-
         /// <summary>
 		/// Constructs FETCH BODY and BODYSTRUCTURE response.
 		/// </summary>
@@ -324,7 +323,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal.ToString();
 		}
 
-
         /// <summary>
         /// Parses IMAP BODYSTRUCTURE from body structure string.
         /// </summary>
@@ -334,7 +332,6 @@ namespace LumiSoft.Net.IMAP
             MainEntity = new IMAP_BODY_Entity();
             MainEntity.Parse(bodyStructureString);
         }
-
 
         /// <summary>
 		/// Gets mime entities, including nested entries. 
@@ -354,7 +351,6 @@ namespace LumiSoft.Net.IMAP
 				}
 			}
         }
-
 
         /// <summary>
         /// Gets main entity.

@@ -76,7 +76,6 @@ namespace LumiSoft.Net.SIP.Stack
             else{
                 if(response.StatusCodeType == SIP_StatusCodeType.Success){
                     SetState(SIP_DialogState.Confirmed,false);
-                
                 }
                 else if(response.StatusCodeType == SIP_StatusCodeType.Provisional){
                     SetState(SIP_DialogState.Early,false);
@@ -91,7 +90,6 @@ namespace LumiSoft.Net.SIP.Stack
                     // Once we receive 2xx response, dialog will switch to confirmed state.
                     ((SIP_ClientTransaction)transaction).ResponseReceived += delegate(object s,SIP_ResponseReceivedEventArgs a){
                         if(a.Response.StatusCodeType == SIP_StatusCodeType.Success){
-                            
                             SetState(SIP_DialogState.Confirmed,true);
                         }
                     };
@@ -117,7 +115,6 @@ namespace LumiSoft.Net.SIP.Stack
                 base.Dispose();
             }
         }
-
 
         /// <summary>
         /// Starts terminating dialog.
@@ -192,7 +189,6 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
         }
-
 
         /// <summary>
         /// Processes specified request through this dialog.
@@ -273,7 +269,6 @@ namespace LumiSoft.Net.SIP.Stack
 
             return false;
         }
-
 
         /// <summary>
         /// Gets if dialog has pending INVITE transaction.

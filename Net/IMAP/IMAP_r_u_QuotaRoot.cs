@@ -32,7 +32,6 @@ namespace LumiSoft.Net.IMAP
             QuotaRoots = quotaRoots;
         }
 
-
         /// <summary>
         /// Parses QUOTAROOT response from quotaRoot-response string.
         /// </summary>
@@ -78,7 +77,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_QuotaRoot(folderName,quotaRoots.ToArray());
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -106,7 +104,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets folder name.

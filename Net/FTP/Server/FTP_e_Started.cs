@@ -16,7 +16,6 @@ namespace LumiSoft.Net.FTP.Server
             Response = response;
         }
 
-
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>

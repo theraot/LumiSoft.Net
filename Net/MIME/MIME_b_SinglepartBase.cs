@@ -37,7 +37,6 @@ namespace LumiSoft.Net.MIME
             }
         }
 
-
         /// <summary>
         /// Sets body parent.
         /// </summary>
@@ -79,7 +78,6 @@ namespace LumiSoft.Net.MIME
         {
             m_IsModified = isModified;
         }
-
 
         /// <summary>
         /// Gets body encoded data stream.
@@ -241,7 +239,6 @@ namespace LumiSoft.Net.MIME
             }            
         }
 
-
         /// <summary>
         /// Gets if body has modified.
         /// </summary>
@@ -288,7 +285,6 @@ namespace LumiSoft.Net.MIME
                 return ms.ToArray(); 
             }
         }
-
 
         /// <summary>
         /// Gets encoded data stream.

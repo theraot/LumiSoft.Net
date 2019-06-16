@@ -50,7 +50,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 Password = password;
             }
 
-
             /// <summary>
             /// Gets target host name.
             /// </summary>
@@ -193,7 +192,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-
         /// <summary>
         /// Start processing relay message.
         /// </summary>
@@ -239,7 +237,6 @@ namespace LumiSoft.Net.SMTP.Relay
             }
         }
 
-
         /// <summary>
         /// Closes relay connection.
         /// </summary>
@@ -273,7 +270,6 @@ namespace LumiSoft.Net.SMTP.Relay
             m_pSmtpClient.TcpStream.WriteLine(text);
             Disconnect();
         }
-
 
         /// <summary>
         /// Is called when email domain target servers resolve operation has completed.
@@ -734,7 +730,6 @@ namespace LumiSoft.Net.SMTP.Relay
             op.Dispose();
         }
 
-
         /// <summary>
         /// Thsi method is called when SMTP client has new log entry available.
         /// </summary>
@@ -801,7 +796,6 @@ namespace LumiSoft.Net.SMTP.Relay
 
             return false;
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.
@@ -961,7 +955,6 @@ namespace LumiSoft.Net.SMTP.Relay
                 return m_pRelayItem.Tag; 
             }
         }
-
 
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.

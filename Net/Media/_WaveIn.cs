@@ -434,7 +434,6 @@ namespace LumiSoft.Net.Media
                 EventArgs = null;
             }
 
-
             /// <summary>
             /// Queues buffer for recording.
             /// </summary>
@@ -461,7 +460,6 @@ namespace LumiSoft.Net.Media
                     }
                 }
             }
-
 
             /// <summary>
             /// Gets wave header.
@@ -597,7 +595,6 @@ namespace LumiSoft.Net.Media
             }
         }
 
-
         /// <summary>
         /// Starts recording.
         /// </summary>
@@ -629,7 +626,6 @@ namespace LumiSoft.Net.Media
                 throw new Exception("Failed to stop wav device, error: " + result + ".");
             }
         }
-
 
         /// <summary>
         /// This method is called when wav device generates some event.
@@ -686,7 +682,6 @@ namespace LumiSoft.Net.Media
             } 
         }
 
-
         /// <summary>
         /// Gets all available input audio devices.
         /// </summary>
@@ -706,7 +701,6 @@ namespace LumiSoft.Net.Media
                 return retVal.ToArray();
             }
         }
-
 
         /// <summary>
         /// Gets if this object is disposed.

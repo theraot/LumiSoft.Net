@@ -19,7 +19,6 @@ namespace LumiSoft.Net.Mime
 			Value = parameterValue;
 		}
 
-
         /// <summary>
 		/// Gets header field parameter name.
 		/// </summary>

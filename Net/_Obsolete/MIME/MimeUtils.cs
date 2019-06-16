@@ -206,7 +206,6 @@ namespace LumiSoft.Net.Mime
 			return dateTime.ToUniversalTime().ToString("r",System.Globalization.DateTimeFormatInfo.InvariantInfo);
 		}
 
-
         /// <summary>
 		/// Parses headers from message or mime entry.
 		/// </summary>
@@ -345,7 +344,6 @@ namespace LumiSoft.Net.Mime
 			
 			return "";			
 		}
-
 
         /// <summary>
 		/// Parses MediaType_enum from <b>Content-Type:</b> header field value.
@@ -653,7 +651,6 @@ namespace LumiSoft.Net.Mime
 			}
 		}
 
-
         /// <summary>
         /// Encodes specified text as "encoded-word" if encode is required. For more information see RFC 2047.
         /// </summary>
@@ -909,7 +906,6 @@ namespace LumiSoft.Net.Mime
 			return Core.CanonicalEncode(text,"utf-8");
 		}
 
-
         /// <summary>
 		/// Creates Rfc 2822 3.6.4 message-id. Syntax: '&lt;' id-left '@' id-right '&gt;'.
 		/// </summary>
@@ -918,7 +914,6 @@ namespace LumiSoft.Net.Mime
 		{
 			return "<" + Guid.NewGuid().ToString().Replace("-","") + "@" + Guid.NewGuid().ToString().Replace("-","") + ">";
 		}
-
 
         /// <summary>
         /// Folds long data line to folded lines.

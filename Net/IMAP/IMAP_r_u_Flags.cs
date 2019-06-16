@@ -22,7 +22,6 @@ namespace LumiSoft.Net.IMAP
             Flags = flags;
         }
 
-
         /// <summary>
         /// Parses FLAGS response from exists-response string.
         /// </summary>
@@ -54,7 +53,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Flags(r.ReadParenthesized().Split(' '));
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -75,7 +73,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets mailbox supported flags.

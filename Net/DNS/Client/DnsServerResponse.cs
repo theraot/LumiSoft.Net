@@ -23,7 +23,6 @@ namespace LumiSoft.Net.DNS.Client
 			m_pAdditionalAnswers  = additionalAnswers;
 		}
 
-
         /// <summary>
 		/// Gets IPv4 host addess records.
 		/// </summary>
@@ -220,7 +219,6 @@ namespace LumiSoft.Net.DNS.Client
             return retVal.ToArray();
 		}
 
-
         /// <summary>
 		/// Filters out specified type of records from answer.
 		/// </summary>
@@ -239,7 +237,6 @@ namespace LumiSoft.Net.DNS.Client
             return retVal;
 		}
 
-
         /// <summary>
 		/// Gets if connection to dns server was successful.
 		/// </summary>
@@ -254,7 +251,6 @@ namespace LumiSoft.Net.DNS.Client
 		/// Gets dns server response code.
 		/// </summary>
 		public DNS_RCode ResponseCode { get; } = DNS_RCode.NO_ERROR;
-
 
         /// <summary>
 		/// Gets all resource records returned by server (answer records section + authority records section + additional records section). 

@@ -40,7 +40,6 @@ namespace LumiSoft.Net.IMAP.Server
             InternalDate = internalDate;
         }
 
-
         /// <summary>
         /// Gets if this message info contains specified message flag.
         /// </summary>
@@ -60,7 +59,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return false;
         }
-
 
         /// <summary>
         /// Flags to IMAP flags string.
@@ -105,7 +103,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-
         /// <summary>
         /// Gets message ID value.
         /// </summary>
@@ -130,7 +127,6 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets message IMAP internal date.
         /// </summary>
         public DateTime InternalDate { get; }
-
 
         /// <summary>
         /// Gets or sets message one-based sequnece number.

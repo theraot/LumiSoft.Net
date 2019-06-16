@@ -22,7 +22,6 @@ namespace LumiSoft.Net.IMAP
             Capabilities = capabilities;
         }
 
-
         /// <summary>
         /// Parses CAPABILITY response from capability-response string.
         /// </summary>
@@ -94,7 +93,6 @@ namespace LumiSoft.Net.IMAP
             return new IMAP_r_u_Capability(capabilities);
         }
 
-
         /// <summary>
         /// Returns this as string.
         /// </summary>
@@ -112,7 +110,6 @@ namespace LumiSoft.Net.IMAP
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets capabilities list.

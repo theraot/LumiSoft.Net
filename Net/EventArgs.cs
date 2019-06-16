@@ -17,7 +17,6 @@ namespace LumiSoft.Net
             Value = value;
         }
 
-
         /// <summary>
         /// Gets event data.
         /// </summary>

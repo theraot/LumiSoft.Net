@@ -32,7 +32,6 @@ namespace LumiSoft.Net.SIP.Message
             Parse(value);
         }
 
-
         /// <summary>
         /// Parses "Refer-Sub" from specified value.
         /// </summary>
@@ -104,7 +103,6 @@ namespace LumiSoft.Net.SIP.Message
 
             return retVal.ToString();
         }
-
 
         /// <summary>
         /// Gets or sets refer-sub-value value.

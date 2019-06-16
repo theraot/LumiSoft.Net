@@ -80,7 +80,6 @@ namespace LumiSoft.Net.IMAP
             return retVal.ToArray();
         }
 
-
         /// <summary>
 		/// Converts IMAP_ACL_Flags to string.
 		/// </summary>
@@ -160,7 +159,6 @@ namespace LumiSoft.Net.IMAP
 			return retVal;
 		}
 
-
         /// <summary>
 		/// Parses IMAP date time from string.
 		/// </summary>
@@ -208,7 +206,6 @@ namespace LumiSoft.Net.IMAP
 
 			return retVal;
 		}
-
 
         /// <summary>
 		/// Encodes specified data with IMAP modified UTF7 encoding. Defined in RFC 3501 5.1.3.  Mailbox International Naming Convention.
@@ -441,7 +438,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
         /// <summary>
 		/// Normalizes folder path.  Example: /Inbox/SubFolder/ will be Inbox/SubFolder.
 		/// </summary>
@@ -471,7 +467,6 @@ namespace LumiSoft.Net.IMAP
 
             return true;
         }
-
 
         /// <summary>
         /// Gets if specified string must be sent as IMAP literal-string.
@@ -550,7 +545,6 @@ namespace LumiSoft.Net.IMAP
             }
         }
 
-
         /// <summary>
         /// Reads IMAP string/astring/nstring/utf8-quoted from string reader.
         /// </summary>
@@ -583,7 +577,6 @@ namespace LumiSoft.Net.IMAP
                 return word;
             }
         }
-
 
         //---- Obsolete
 

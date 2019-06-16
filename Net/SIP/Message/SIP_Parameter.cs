@@ -33,7 +33,6 @@ namespace LumiSoft.Net.SIP.Message
             Value = value;
         }
 
-
         /// <summary>
         /// Gets parameter name.
         /// </summary>

@@ -15,7 +15,6 @@ namespace LumiSoft.Net.AUTH
         {
         }
 
-
         /// <summary>
         /// Resets any authentication state data.
         /// </summary>
@@ -28,7 +27,6 @@ namespace LumiSoft.Net.AUTH
         /// <returns>Retunrns challange response what must be sent to client or null if authentication has completed.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>clientRespone</b> is null reference.</exception>
         public abstract byte[] Continue(byte[] clientResponse);
-
 
         /// <summary>
         /// Gets if the authentication exchange has completed.

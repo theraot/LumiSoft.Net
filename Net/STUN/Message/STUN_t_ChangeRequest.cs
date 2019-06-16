@@ -23,7 +23,6 @@ namespace LumiSoft.Net.STUN.Message
             ChangePort = changePort;
         }
 
-
         /// <summary>
         /// Gets or sets if STUN server must send response to different IP than request was received.
         /// </summary>

@@ -32,7 +32,6 @@ namespace LumiSoft.Net.MIME
             m_pBodyTypes.Add("multipart/signed",typeof(MIME_b_MultipartSigned));
         }
 
-
         /// <summary>
         /// Parses MIME entity body from specified stream.
         /// </summary>

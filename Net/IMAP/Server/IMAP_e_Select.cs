@@ -34,7 +34,6 @@ namespace LumiSoft.Net.IMAP.Server
             PermanentFlags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
         }
 
-
         /// <summary>
         /// Gets command tag.
         /// </summary>

@@ -29,7 +29,6 @@ namespace LumiSoft.Net.FTP.Client
             }
         }
 
-
         /// <summary>
         /// Gets FTP status code.
         /// </summary>

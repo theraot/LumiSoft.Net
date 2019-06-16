@@ -21,7 +21,6 @@ namespace LumiSoft.Net.DNS
 			NameServer = nameServer;
 		}
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -42,7 +41,6 @@ namespace LumiSoft.Net.DNS
                 throw new ArgumentException("Invalid NS resource record data !");
             }
         }
-
 
         /// <summary>
 		/// Gets name server name.

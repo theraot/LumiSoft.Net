@@ -78,7 +78,6 @@ namespace LumiSoft.Net.TCP
             this.Disposed    = null;
         }
 
-
         /// <summary>
         /// Initializes session. This method is called from TCP_Server when new session created.
         /// </summary>
@@ -160,7 +159,6 @@ namespace LumiSoft.Net.TCP
         {
         }
 
-
         /// <summary>
         /// Switches session to secure connection.
         /// </summary>
@@ -230,7 +228,6 @@ namespace LumiSoft.Net.TCP
                 this.CompletedAsync = null;
             }
 
-
             /// <summary>
             /// Starts operation processing.
             /// </summary>
@@ -264,7 +261,6 @@ namespace LumiSoft.Net.TCP
                     return State == AsyncOP_State.Active;
                 }
             }
-
 
             /// <summary>
             /// Sets operation state.
@@ -307,7 +303,6 @@ namespace LumiSoft.Net.TCP
 
                 SetState(AsyncOP_State.Completed);
             }
-
 
             /// <summary>
             /// Gets asynchronous operation state.
@@ -423,7 +418,6 @@ namespace LumiSoft.Net.TCP
             Dispose();
         }
 
-
         /// <summary>
         /// This method is called when specified session times out.
         /// </summary>
@@ -442,7 +436,6 @@ namespace LumiSoft.Net.TCP
         {
             OnTimeout();
         }
-
 
         /// <summary>
         /// Logs specified text.
@@ -498,7 +491,6 @@ namespace LumiSoft.Net.TCP
             catch{
             }
         }
-
 
         /// <summary>
         /// Gets if TCP server session is disposed.
@@ -569,7 +561,6 @@ namespace LumiSoft.Net.TCP
                 return m_pTags; 
             }
         }
-
 
         /// <summary>
         /// Gets if session is connected.

@@ -39,7 +39,6 @@ namespace LumiSoft.Net.Mime.vCard
             m_Country           = country;
         }
 
-
         /// <summary>
         /// This method is called when some property has changed, we need to update underlaying vCard item.
         /// </summary>
@@ -57,7 +56,6 @@ namespace LumiSoft.Net.Mime.vCard
             Item.ParametersString = AddressTypeToString(m_Type);
             Item.SetDecodedValue(value);
         }
-
 
         /// <summary>
         /// Parses delivery address from vCard ADR structure string.
@@ -137,7 +135,6 @@ namespace LumiSoft.Net.Mime.vCard
 
             return retVal;
         }
-
 
         /// <summary>
         /// Gets underlaying vCrad item.

@@ -52,7 +52,6 @@ namespace LumiSoft.Net.ABNF
             // TODO:
         }
 
-
         /// <summary>
         /// 
         /// </summary>

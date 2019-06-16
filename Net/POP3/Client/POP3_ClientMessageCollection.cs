@@ -41,7 +41,6 @@ namespace LumiSoft.Net.POP3.Client
             m_pMessages = null;
         }
 
-
         /// <summary>
         /// Adds new message to messages collection.
         /// </summary>
@@ -50,7 +49,6 @@ namespace LumiSoft.Net.POP3.Client
         {
             m_pMessages.Add(new POP3_ClientMessage(m_pPop3Client,m_pMessages.Count + 1,size));
         }
-
 
         /// <summary>
 		/// Gets enumerator.

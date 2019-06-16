@@ -40,7 +40,6 @@ namespace LumiSoft.Net.IMAP.Server
             Rights     = rights;
         }
 
-
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>

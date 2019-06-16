@@ -77,7 +77,6 @@ namespace LumiSoft.Net.FTP.Server
                 }
             }
 
-
             /// <summary>
             /// Starts data connection processing.
             /// </summary>
@@ -160,7 +159,6 @@ namespace LumiSoft.Net.FTP.Server
                 Dispose();
             }
 
-
             /// <summary>
             /// Writes line to control connection.
             /// </summary>
@@ -235,7 +233,6 @@ namespace LumiSoft.Net.FTP.Server
                 m_pPassiveSocket = null;
             }
         }
-
 
         /// <summary>
         /// Starts session processing.
@@ -330,7 +327,6 @@ namespace LumiSoft.Net.FTP.Server
                 // Skip errors.
             }
         }
-
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -502,7 +498,6 @@ namespace LumiSoft.Net.FTP.Server
              return readNextCommand;
         }
 
-
         private void USER(string argsText)
 		{
             if(m_SessionRejected){
@@ -574,7 +569,6 @@ namespace LumiSoft.Net.FTP.Server
 				WriteLine("500 Syntax error. Syntax:{PASS userName}");
 			}
 		}
-
 
         private void CWD(string argsText)
 		{
@@ -670,7 +664,6 @@ namespace LumiSoft.Net.FTP.Server
 
 			WriteLine("257 \"" + m_CurrentDir + "\" is current directory.");
 		}
-
 
         private void ABOR(string argsText)
 		{
@@ -950,7 +943,6 @@ namespace LumiSoft.Net.FTP.Server
             }            
         }
 
-
         private void RNFR(string argsText)
 		{
             if(m_SessionRejected){
@@ -1017,7 +1009,6 @@ namespace LumiSoft.Net.FTP.Server
                 }
             }
 		}
-
 
         private void RMD(string argsText)
 		{
@@ -1203,7 +1194,6 @@ namespace LumiSoft.Net.FTP.Server
             }
 		}
 
-
         private void TYPE(string argsText)
 		{
             if(m_SessionRejected){
@@ -1374,7 +1364,6 @@ namespace LumiSoft.Net.FTP.Server
 			WriteLine("215 Windows_NT");
 		}
 
-
         private void NOOP(string argsText)
 		{
             if(m_SessionRejected){
@@ -1414,7 +1403,6 @@ namespace LumiSoft.Net.FTP.Server
             Disconnect();
             Dispose();
 		}
-
 
         private void FEAT(string argsText)
         {
@@ -1558,7 +1546,6 @@ namespace LumiSoft.Net.FTP.Server
             }
         }
 
-
         /// <summary>
         /// Sends and logs specified line to connected host.
         /// </summary>
@@ -1593,7 +1580,6 @@ namespace LumiSoft.Net.FTP.Server
                 this.Server.Logger.AddText(this.ID,text);
             }
         }
-
 
         /// <summary>
         /// Gets session owner FTP server.

@@ -36,7 +36,6 @@ namespace LumiSoft.Net.IO
             base.Dispose();
         }
 
-
         /// <summary>
         /// Appends this stream to read queue.
         /// </summary>
@@ -54,7 +53,6 @@ namespace LumiSoft.Net.IO
 
             m_pStreams.Enqueue(stream);
         }
-
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -151,7 +149,6 @@ namespace LumiSoft.Net.IO
  
             throw new NotSupportedException();
         }
-
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.

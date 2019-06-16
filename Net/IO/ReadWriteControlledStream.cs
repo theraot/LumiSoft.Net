@@ -27,7 +27,6 @@ namespace LumiSoft.Net.IO
             m_AccessMode = access;
         }
 
-
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
@@ -111,7 +110,6 @@ namespace LumiSoft.Net.IO
 
             m_pStream.Write(buffer,offset,count);
         }
-
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.

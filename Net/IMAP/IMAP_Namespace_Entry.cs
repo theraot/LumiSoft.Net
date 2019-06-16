@@ -23,7 +23,6 @@ namespace LumiSoft.Net.IMAP
             NamespaceName = name;
         }
 
-
         /// <summary>
         /// Gets namespace name.
         /// </summary>

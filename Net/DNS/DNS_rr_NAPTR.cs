@@ -31,7 +31,6 @@ namespace LumiSoft.Net.DNS
             Replacement = replacement;
         }
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -77,7 +76,6 @@ namespace LumiSoft.Net.DNS
 
             return new DNS_rr_NAPTR(name,order,preference,flags,services,regexp,replacement,ttl);
         }
-
 
         /// <summary>
         /// Gets order in which the NAPTR records MUST be processed in order to accurately 

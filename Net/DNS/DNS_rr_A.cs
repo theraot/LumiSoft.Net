@@ -20,7 +20,6 @@ namespace LumiSoft.Net.DNS
 			IP = ip;
 		}
 
-
         /// <summary>
         /// Parses resource record from reply data.
         /// </summary>
@@ -39,7 +38,6 @@ namespace LumiSoft.Net.DNS
             
 			return new DNS_rr_A(name,new IPAddress(ip),ttl);
         }
-
 
         /// <summary>
 		/// Gets host IP address.

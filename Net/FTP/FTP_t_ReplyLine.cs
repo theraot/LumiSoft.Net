@@ -24,7 +24,6 @@ namespace LumiSoft.Net.FTP
             IsLastLine = isLastLine;
         }
 
-
         /// <summary>
         /// Parses FTP reply-line from 
         /// </summary>
@@ -59,7 +58,6 @@ namespace LumiSoft.Net.FTP
             return new FTP_t_ReplyLine(replyCode,text,isLastLine);
         }
 
-
         /// <summary>
         /// Returns this as FTP server <b>reply-line</b>.
         /// </summary>
@@ -73,7 +71,6 @@ namespace LumiSoft.Net.FTP
                 return ReplyCode.ToString() + "-" + Text + "\r\n";
             }
         }
-
 
         /// <summary>
         /// Gets SMTP server reply code.
