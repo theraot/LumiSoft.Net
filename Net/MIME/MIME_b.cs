@@ -11,7 +11,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public abstract class MIME_b
     {
-        private MIME_Entity        m_pEntity;
         private readonly MIME_h_ContentType m_pContentType;
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace LumiSoft.Net.MIME
         /// <param name="setContentType">If true sets entity.ContentType header value.</param>
         internal virtual void SetParent(MIME_Entity entity,bool setContentType)
         {
-            m_pEntity = entity;
+            Entity = entity;
 
             // Owner entity has no content-type or has different content-type, just add/overwrite it.
             if(setContentType &&(entity.ContentType == null || !string.Equals(entity.ContentType.TypeWithSubtype,this.MediaType,StringComparison.InvariantCultureIgnoreCase))){
@@ -107,10 +106,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets body owner entity. Returns null if body not bounded to any entity yet.
         /// </summary>
-        public MIME_Entity Entity
-        {
-            get{ return m_pEntity; }
-        }
+        public MIME_Entity Entity { get; private set; }
 
         /// <summary>
         /// Gets body media type. For example: 'text/plain'.

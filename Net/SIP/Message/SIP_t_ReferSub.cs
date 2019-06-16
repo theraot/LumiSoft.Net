@@ -16,8 +16,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_ReferSub : SIP_t_ValueWithParams
     {
-        private bool m_Value;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -76,7 +74,7 @@ namespace LumiSoft.Net.SIP.Message
                 throw new SIP_ParseException("Refer-Sub refer-sub-value value is missing !");
             }
             try{
-                m_Value = Convert.ToBoolean(word);
+                Value = Convert.ToBoolean(word);
             }
             catch{
                 throw new SIP_ParseException("Invalid Refer-Sub refer-sub-value value !");
@@ -105,7 +103,7 @@ namespace LumiSoft.Net.SIP.Message
             StringBuilder retVal = new StringBuilder();
             
             // refer-sub-value
-            retVal.Append(m_Value.ToString());
+            retVal.Append(Value.ToString());
 
             // Add parameters
             retVal.Append(ParametersToString());
@@ -121,14 +119,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets or sets refer-sub-value value.
         /// </summary>
-        public bool Value
-        {
-            get{ return m_Value; }
+        public bool Value { get; set; }
 
-            set{ m_Value = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

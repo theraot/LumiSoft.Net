@@ -8,8 +8,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_SingleValueHF<T> : SIP_HeaderField where T : SIP_t_Value
     {
-        private T m_pValue;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -17,7 +15,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         public SIP_SingleValueHF(string name,T value) : base(name,"")
         {
-            m_pValue = value;
+            ValueX = value;
         }
 
 
@@ -29,7 +27,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="reader">Reader what contains </param>
         public void Parse(StringReader reader)
         {
-            m_pValue.Parse(reader);
+            ValueX.Parse(reader);
         }
 
         #endregion
@@ -42,7 +40,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns>Returns this as string value.</returns>
         public string ToStringValue()
         {
-            return m_pValue.ToStringValue();
+            return ValueX.ToStringValue();
         }
 
         #endregion
@@ -71,14 +69,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets or sets header field value.
         /// </summary>
-        public T ValueX
-        {
-            get{ return m_pValue; }
+        public T ValueX { get; set; }
 
-            set{ m_pValue = value;}
-        }
-
-        #endregion
+#endregion
 
     }
 }

@@ -7,15 +7,13 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_UidValidity : IMAP_t_orc
     {
-        private readonly long m_Uid;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="uid">Mailbox UID value.</param>
         public IMAP_t_orc_UidValidity(long uid)
         {
-            m_Uid = uid;
+            Uid = uid;
         }
 
 
@@ -55,7 +53,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "UIDVALIDITY " + m_Uid;
+            return "UIDVALIDITY " + Uid;
         }
 
         #endregion
@@ -66,11 +64,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets mailbox(folder) UID value.
         /// </summary>
-        public long Uid
-        {
-            get{ return m_Uid; }
-        }
+        public long Uid { get; }
 
-        #endregion
+#endregion
     }
 }

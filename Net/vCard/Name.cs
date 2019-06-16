@@ -5,12 +5,6 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class Name
     {
-        private string m_LastName        = "";
-        private string m_FirstName       = "";
-        private string m_AdditionalNames = "";
-        private string m_HonorificPrefix = "";
-        private string m_HonorificSuffix = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,11 +15,11 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="honorificSuffix">Honorific suffix.</param>
         public Name(string lastName,string firstName,string additionalNames,string honorificPrefix,string honorificSuffix)
         {
-            m_LastName        = lastName;
-            m_FirstName       = firstName;
-            m_AdditionalNames = additionalNames;
-            m_HonorificPrefix = honorificPrefix;
-            m_HonorificSuffix = honorificSuffix;
+            LastName        = lastName;
+            FirstName       = firstName;
+            AdditionalNames = additionalNames;
+            HonorificPerfix = honorificPrefix;
+            HonorificSuffix = honorificSuffix;
         }
 
         /// <summary>
@@ -44,7 +38,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         public string ToValueString()
         {
-            return m_LastName + ";" + m_FirstName + ";" + m_AdditionalNames + ";" + m_HonorificPrefix + ";" + m_HonorificSuffix;
+            return LastName + ";" + FirstName + ";" + AdditionalNames + ";" + HonorificPerfix + ";" + HonorificSuffix;
         }
 
         #endregion
@@ -61,19 +55,19 @@ namespace LumiSoft.Net.Mime.vCard
             string[] items = item.DecodedValue.Split(';');
             Name name = new Name();
             if(items.Length >= 1){
-                name.m_LastName = items[0];
+                name.LastName = items[0];
             }
             if(items.Length >= 2){
-                name.m_FirstName = items[1];
+                name.FirstName = items[1];
             }
             if(items.Length >= 3){
-                name.m_AdditionalNames = items[2];
+                name.AdditionalNames = items[2];
             }
             if(items.Length >= 4){
-                name.m_HonorificPrefix = items[3];
+                name.HonorificPerfix = items[3];
             }
             if(items.Length >= 5){
-                name.m_HonorificSuffix = items[4];
+                name.HonorificSuffix = items[4];
             }
             return name;
         }
@@ -86,44 +80,29 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets last name.
         /// </summary>
-        public string LastName
-        {
-            get{ return m_LastName; }
-        }
+        public string LastName { get; private set; } = "";
 
         /// <summary>
         /// Gets first name.
         /// </summary>
-        public string FirstName
-        {
-            get{ return m_FirstName; }
-        }
+        public string FirstName { get; private set; } = "";
 
         /// <summary>
         /// Gets comma separated additional names.
         /// </summary>
-        public string AdditionalNames
-        {
-            get{ return m_AdditionalNames; }
-        }
+        public string AdditionalNames { get; private set; } = "";
 
         /// <summary>
         /// Gets honorific prefix.
         /// </summary>
-        public string HonorificPerfix
-        {
-            get{ return m_HonorificPrefix; }
-        }
+        public string HonorificPerfix { get; private set; } = "";
 
         /// <summary>
         /// Gets honorific suffix.
         /// </summary>
-        public string HonorificSuffix
-        {
-            get{ return m_HonorificSuffix; }
-        }
+        public string HonorificSuffix { get; private set; } = "";
 
-        #endregion
+#endregion
 
     }
 }

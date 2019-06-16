@@ -10,7 +10,6 @@ namespace LumiSoft.Net
     {
         private readonly int      m_BlockSize = 1024;
         private byte[]   m_pBuffer;
-        private int      m_Count;
         private Encoding m_pCharset;
 
         /// <summary>
@@ -85,14 +84,14 @@ namespace LumiSoft.Net
             }
 
             // Increase buffer if needed.
-            while((m_pBuffer.Length - m_Count) < count){
+            while((m_pBuffer.Length - Count) < count){
                 byte[] newBuffer = new byte[m_pBuffer.Length + m_BlockSize];
-                Array.Copy(m_pBuffer,newBuffer,m_Count);
+                Array.Copy(m_pBuffer,newBuffer,Count);
                 m_pBuffer = newBuffer;
             }
 
-            Array.Copy(value,offset,m_pBuffer,m_Count,count);
-            m_Count += value.Length;
+            Array.Copy(value,offset,m_pBuffer,Count,count);
+            Count += value.Length;
         }
 
         #endregion
@@ -105,8 +104,8 @@ namespace LumiSoft.Net
         /// <returns>Returns this as byte[] data.</returns>
         public byte[] ToByte()
         {
-            byte[] retVal = new byte[m_Count];
-            Array.Copy(m_pBuffer,retVal,m_Count);
+            byte[] retVal = new byte[Count];
+            Array.Copy(m_pBuffer,retVal,Count);
 
             return retVal;
         }
@@ -119,10 +118,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets number of bytes in byte builder buffer.
         /// </summary>
-        public int Count
-        {
-            get{ return m_Count; }
-        }
+        public int Count { get; private set; }
 
         /// <summary>
         /// Gets or sets default charset encoding used for string related operations.

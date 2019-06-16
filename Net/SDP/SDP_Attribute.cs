@@ -7,9 +7,6 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Attribute
     {
-        private readonly string m_Name  = "";
-        private string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -17,7 +14,7 @@ namespace LumiSoft.Net.SDP
         /// <param name="value">Attribute value.</param>
         public SDP_Attribute(string name,string value)
         {
-            m_Name     = name;
+            Name     = name;
             this.Value = value;
         }
 
@@ -70,12 +67,12 @@ namespace LumiSoft.Net.SDP
             // a=<attribute>:<value>
 
             // a=<attribute>
-            if(string.IsNullOrEmpty(m_Value)){
-                return "a=" + m_Name + "\r\n";
+            if(string.IsNullOrEmpty(Value)){
+                return "a=" + Name + "\r\n";
             }
             // a=<attribute>:<value>
             else{
-                return "a=" + m_Name + ":" + m_Value + "\r\n";
+                return "a=" + Name + ":" + Value + "\r\n";
             }
         }
 
@@ -87,22 +84,14 @@ namespace LumiSoft.Net.SDP
         /// <summary>
         /// Gets attribute name.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
         /// Gets or sets attribute value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
+        public string Value { get; set; } = "";
 
-            set{ m_Value = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

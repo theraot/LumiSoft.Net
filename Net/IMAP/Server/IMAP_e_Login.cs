@@ -7,10 +7,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Login : EventArgs
     {
-        private bool   m_IsAuthenticated;
-        private readonly string m_User            = "";
-        private readonly string m_Password        = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,8 +22,8 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("password");
             }
 
-            m_User     = user;
-            m_Password = password;
+            UserName     = user;
+            Password = password;
         }
 
 
@@ -36,29 +32,18 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets or sets if specified user is authenticated.
         /// </summary>
-        public bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
-
-            set{ m_IsAuthenticated = value; }
-        }
+        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Gets user name.
         /// </summary>
-        public string UserName
-        {
-            get{ return m_User; }
-        }
+        public string UserName { get; } = "";
 
         /// <summary>
         /// Gets user password.
         /// </summary>
-        public string Password
-        {
-            get{ return m_Password; }
-        }
+        public string Password { get; } = "";
 
-        #endregion
+#endregion
     }
 }

@@ -9,10 +9,6 @@ namespace LumiSoft.Net.IMAP
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Fetch_DataItem_BodyPeek : IMAP_Fetch_DataItem
     {
-        private readonly string m_Section;
-        private readonly int    m_Offset   = -1;
-        private readonly int    m_MaxCount = -1;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,9 +24,9 @@ namespace LumiSoft.Net.IMAP
         /// <param name="maxCount">Maximum number of bytes to return. Value -1 means not specified.</param>
         public IMAP_Fetch_DataItem_BodyPeek(string section,int offset,int maxCount)
         {
-            m_Section  = section;
-            m_Offset   = offset;
-            m_MaxCount = maxCount;
+            Section  = section;
+            Offset   = offset;
+            MaxCount = maxCount;
         }
 
 
@@ -44,14 +40,14 @@ namespace LumiSoft.Net.IMAP
         {
             StringBuilder retVal = new StringBuilder();
             retVal.Append("BODY.PEEK[");
-            if(m_Section != null){
-                retVal.Append(m_Section);
+            if(Section != null){
+                retVal.Append(Section);
             }
             retVal.Append("]");                        
-            if(m_Offset > -1){
-                retVal.Append("<" + m_Offset);
-                if(m_MaxCount > -1){
-                    retVal.Append("." + m_MaxCount);
+            if(Offset > -1){
+                retVal.Append("<" + Offset);
+                if(MaxCount > -1){
+                    retVal.Append("." + MaxCount);
                 }
                 retVal.Append(">");
             }
@@ -67,27 +63,18 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets body section. Value null means not specified.
         /// </summary>
-        public string Section
-        {
-            get{ return m_Section; }
-        }
+        public string Section { get; }
 
         /// <summary>
         /// Gets start offset. Value -1 means not specified.
         /// </summary>
-        public int Offset
-        {
-            get{ return m_Offset; }
-        }
+        public int Offset { get; } = -1;
 
         /// <summary>
         /// Gets maximum count of bytes to fetch. Value -1 means not specified.
         /// </summary>
-        public int MaxCount
-        {
-            get{ return m_MaxCount; }
-        }
+        public int MaxCount { get; } = -1;
 
-        #endregion
+#endregion
     }
 }

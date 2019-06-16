@@ -8,13 +8,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Participant_Remote : RTP_Participant
     {
-        private string m_Name;
-        private string m_Email;
-        private string m_Phone;
-        private string m_Location;
-        private string m_Tool;
-        private string m_Note;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -36,23 +29,23 @@ namespace LumiSoft.Net.RTP
             StringBuilder retVal = new StringBuilder();
 
             retVal.AppendLine("CNAME: " + this.CNAME);            
-            if(!string.IsNullOrEmpty(m_Name)){
-                retVal.AppendLine("Name: " + m_Name);
+            if(!string.IsNullOrEmpty(Name)){
+                retVal.AppendLine("Name: " + Name);
             }
-            if(!string.IsNullOrEmpty(m_Email)){
-                retVal.AppendLine("Email: " + m_Email);
+            if(!string.IsNullOrEmpty(Email)){
+                retVal.AppendLine("Email: " + Email);
             }
-            if(!string.IsNullOrEmpty(m_Phone)){
-                retVal.AppendLine("Phone: " + m_Phone);
+            if(!string.IsNullOrEmpty(Phone)){
+                retVal.AppendLine("Phone: " + Phone);
             }
-            if(!string.IsNullOrEmpty(m_Location)){
-                retVal.AppendLine("Location: " + m_Location);
+            if(!string.IsNullOrEmpty(Location)){
+                retVal.AppendLine("Location: " + Location);
             }
-            if(!string.IsNullOrEmpty(m_Tool)){
-                retVal.AppendLine("Tool: " + m_Tool);
+            if(!string.IsNullOrEmpty(Tool)){
+                retVal.AppendLine("Tool: " + Tool);
             }
-            if(!string.IsNullOrEmpty(m_Note)){
-                retVal.AppendLine("Note: " + m_Note);
+            if(!string.IsNullOrEmpty(Note)){
+                retVal.AppendLine("Note: " + Note);
             }
 
             return retVal.ToString().TrimEnd();
@@ -75,28 +68,28 @@ namespace LumiSoft.Net.RTP
             }
 
             bool changed = false;
-            if(!string.IsNullOrEmpty(sdes.Name) && !string.Equals(m_Name,sdes.Name)){
-                m_Name = sdes.Name;
+            if(!string.IsNullOrEmpty(sdes.Name) && !string.Equals(Name,sdes.Name)){
+                Name = sdes.Name;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Email) && !string.Equals(m_Email,sdes.Email)){
-                m_Email = sdes.Email;
+            if(!string.IsNullOrEmpty(sdes.Email) && !string.Equals(Email,sdes.Email)){
+                Email = sdes.Email;
                 changed = true;
             }
             if(!string.IsNullOrEmpty(sdes.Phone) && !string.Equals(Phone,sdes.Phone)){
-                m_Phone = sdes.Phone;
+                Phone = sdes.Phone;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Location) && !string.Equals(m_Location,sdes.Location)){
-                m_Location = sdes.Location;
+            if(!string.IsNullOrEmpty(sdes.Location) && !string.Equals(Location,sdes.Location)){
+                Location = sdes.Location;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Tool) && !string.Equals(m_Tool,sdes.Tool)){
-                m_Tool = sdes.Tool;
+            if(!string.IsNullOrEmpty(sdes.Tool) && !string.Equals(Tool,sdes.Tool)){
+                Tool = sdes.Tool;
                 changed = true;
             }
-            if(!string.IsNullOrEmpty(sdes.Note) && !string.Equals(m_Note,sdes.Note)){
-                m_Note = sdes.Note;
+            if(!string.IsNullOrEmpty(sdes.Note) && !string.Equals(Note,sdes.Note)){
+                Note = sdes.Note;
                 changed = true;
             }
 
@@ -113,53 +106,35 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets the real name, eg. "John Doe". Value null means not specified.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets email address. For example "John.Doe@example.com". Value null means not specified.
         /// </summary>
-        public string Email
-        {
-            get{ return m_Email; }
-        }
+        public string Email { get; private set; }
 
         /// <summary>
         /// Gets phone number. For example "+1 908 555 1212". Value null means not specified.
         /// </summary>
-        public string Phone
-        {
-            get{ return m_Phone; }
-        }
+        public string Phone { get; private set; }
 
         /// <summary>
         /// Gets location string. It may be geographic address or for example chat room name.
         /// Value null means not specified.
         /// </summary>
-        public string Location
-        {
-            get{ return m_Location; }
-        }
+        public string Location { get; private set; }
 
         /// <summary>
         /// Gets streaming application name/version.
         /// Value null means not specified.
         /// </summary>
-        public string Tool
-        {
-            get{ return m_Tool; }
-        }
+        public string Tool { get; private set; }
 
         /// <summary>
         /// Gets note text. The NOTE item is intended for transient messages describing the current state
         /// of the source, e.g., "on the phone, can't talk". Value null means not specified.
         /// </summary>
-        public string Note
-        {
-            get{ return m_Note; }
-        }
+        public string Note { get; private set; }
 
         // TODO: PRIV
                 

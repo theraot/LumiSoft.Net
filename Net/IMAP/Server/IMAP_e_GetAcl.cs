@@ -8,9 +8,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_GetAcl : EventArgs
     {
-        private readonly List<IMAP_r_u_Acl>  m_pAclResponses;
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
 
         /// <summary>
         /// Default constructor.
@@ -27,10 +25,10 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
 
-            m_Folder    = folder;
+            Folder    = folder;
             m_pResponse = response;
 
-            m_pAclResponses = new List<IMAP_r_u_Acl>();
+            AclResponses = new List<IMAP_r_u_Acl>();
         }
 
 
@@ -39,10 +37,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets ACL responses collection.
         /// </summary>
-        public List<IMAP_r_u_Acl> AclResponses
-        {
-            get{ return m_pAclResponses; }
-        }
+        public List<IMAP_r_u_Acl> AclResponses { get; }
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -64,11 +59,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
-        #endregion
+#endregion
     }
 }

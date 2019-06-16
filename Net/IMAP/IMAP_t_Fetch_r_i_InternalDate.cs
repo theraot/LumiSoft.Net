@@ -7,15 +7,13 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_InternalDate : IMAP_t_Fetch_r_i
     {
-        private readonly DateTime m_Date;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="date">IMAP server internal assigned date-time.</param>
         public IMAP_t_Fetch_r_i_InternalDate(DateTime date)
         {
-            m_Date = date;
+            Date = date;
         }
 
 
@@ -24,11 +22,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message IMAP server internal assigned date-time.
         /// </summary>
-        public DateTime Date
-        {
-            get{ return m_Date; }
-        }
+        public DateTime Date { get; }
 
-        #endregion
+#endregion
     }
 }

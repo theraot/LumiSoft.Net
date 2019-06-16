@@ -401,7 +401,6 @@ namespace LumiSoft.Net.SMTP.Server
         private class SendResponseAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object             m_pLock         = new object();
-            private AsyncOP_State      m_State         = AsyncOP_State.WaitingForStart;
             private Exception          m_pException;
             private SMTP_t_ReplyLine[] m_pReplyLines;
             private SMTP_Session       m_pSession;
@@ -446,7 +445,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -505,7 +504,7 @@ namespace LumiSoft.Net.SMTP.Server
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -520,14 +519,14 @@ namespace LumiSoft.Net.SMTP.Server
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -562,10 +561,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -575,10 +571,10 @@ namespace LumiSoft.Net.SMTP.Server
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -648,7 +644,6 @@ namespace LumiSoft.Net.SMTP.Server
         private class Cmd_DATA : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private SMTP_Session  m_pSession;
             private DateTime      m_StartTime;
@@ -668,7 +663,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -794,7 +789,7 @@ namespace LumiSoft.Net.SMTP.Server
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -809,17 +804,17 @@ namespace LumiSoft.Net.SMTP.Server
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed){
+                    if(State == AsyncOP_State.Completed){
                         m_pSession.Reset();
                     }
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -967,10 +962,7 @@ namespace LumiSoft.Net.SMTP.Server
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -980,10 +972,10 @@ namespace LumiSoft.Net.SMTP.Server
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 

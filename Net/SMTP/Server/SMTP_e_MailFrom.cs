@@ -7,8 +7,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_MailFrom : EventArgs
     {
-        private readonly SMTP_Session  m_pSession;
-        private readonly SMTP_MailFrom m_pMailFrom;
         private SMTP_Reply    m_pReply;
 
         /// <summary>
@@ -30,8 +28,8 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("reply");
             }
 
-            m_pSession  = session;
-            m_pMailFrom = from;
+            Session  = session;
+            MailFrom = from;
             m_pReply    = reply;
         }
 
@@ -41,18 +39,12 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>
-        public SMTP_Session Session
-        {
-            get{ return m_pSession; }
-        }
+        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets MAIL FROM: value.
         /// </summary>
-        public SMTP_MailFrom MailFrom
-        {
-            get{ return m_pMailFrom; }
-        }
+        public SMTP_MailFrom MailFrom { get; }
 
         /// <summary>
         /// Gets or sets SMTP server reply.

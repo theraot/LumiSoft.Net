@@ -7,10 +7,6 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Rnto : EventArgs
     {
-        private FTP_t_ReplyLine[] m_pReplyLines;
-        private readonly string            m_SourcePath;
-        private readonly string            m_TargetPath;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,8 +22,8 @@ namespace LumiSoft.Net.FTP.Server
                 throw new ArgumentNullException("targetPath");
             }
 
-            m_SourcePath = sourcePath;
-            m_TargetPath = targetPath;
+            SourcePath = sourcePath;
+            TargetPath = targetPath;
         }
 
 
@@ -36,29 +32,18 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>
-        public FTP_t_ReplyLine[] Response
-        {
-            get{ return m_pReplyLines; }
-
-            set{ m_pReplyLines = value; }
-        }
+        public FTP_t_ReplyLine[] Response { get; set; }
 
         /// <summary>
         /// Gets source path.
         /// </summary>
-        public string SourcePath
-        {
-            get{ return m_SourcePath; }
-        }
+        public string SourcePath { get; }
 
         /// <summary>
         /// Gets target path.
         /// </summary>
-        public string TargetPath
-        {
-            get{ return m_TargetPath; }
-        }
+        public string TargetPath { get; }
 
-        #endregion
+#endregion
     }
 }

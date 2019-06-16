@@ -8,8 +8,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public abstract class AUTH_SASL_ServerMechanism
     {
-        private readonly Dictionary<string,object> m_pTags = null;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -87,12 +85,9 @@ namespace LumiSoft.Net.AUTH
         /// Gets user data items collection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public Dictionary<string,object> Tags
-        {
-            get{ return m_pTags; }
-        }
-        
-        #endregion
+        public Dictionary<string,object> Tags { get; } = null;
+
+#endregion
 
     }
 }

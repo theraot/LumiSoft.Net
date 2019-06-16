@@ -17,15 +17,13 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_To : SIP_t_ValueWithParams
     {
-        private readonly SIP_t_NameAddress m_pAddress;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">To: header field value.</param>
         public SIP_t_To(string value)
         {
-            m_pAddress = new SIP_t_NameAddress();
+            Address = new SIP_t_NameAddress();
 
             Parse(new StringReader(value));
         }
@@ -36,7 +34,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="address">To address.</param>
         public SIP_t_To(SIP_t_NameAddress address)
         {
-            m_pAddress = address;
+            Address = address;
         }
 
 
@@ -74,7 +72,7 @@ namespace LumiSoft.Net.SIP.Message
             }
 
             // Parse address
-            m_pAddress.Parse(reader);
+            Address.Parse(reader);
 
             // Parse parameters
             ParseParameters(reader);
@@ -91,7 +89,7 @@ namespace LumiSoft.Net.SIP.Message
         public override string ToStringValue()
         {
             StringBuilder retVal = new StringBuilder();           
-            retVal.Append(m_pAddress.ToStringValue());
+            retVal.Append(Address.ToStringValue());
             retVal.Append(ParametersToString());
 
             return retVal.ToString();
@@ -105,10 +103,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets to address.
         /// </summary>
-        public SIP_t_NameAddress Address
-        {
-            get{ return m_pAddress; }
-        }
+        public SIP_t_NameAddress Address { get; }
 
         /// <summary>
         /// Gets or sets tag parameter value.

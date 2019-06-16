@@ -7,10 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_CopyUid : IMAP_t_orc
     {
-        private readonly long          m_TargetMailboxUid;
-        private readonly IMAP_t_SeqSet m_pSourceSeqSet;
-        private readonly IMAP_t_SeqSet m_pTargetSeqSet;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,9 +23,9 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("targetSeqSet");
             }
 
-            m_TargetMailboxUid = targetMailboxUid;
-            m_pSourceSeqSet    = sourceSeqSet;
-            m_pTargetSeqSet    = targetSeqSet;
+            TargetMailboxUid = targetMailboxUid;
+            SourceSeqSet    = sourceSeqSet;
+            TargetSeqSet    = targetSeqSet;
         }
 
 
@@ -94,27 +90,18 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets target mailbox UID value.
         /// </summary>
-        public long TargetMailboxUid
-        {
-            get{ return m_TargetMailboxUid; }
-        }
+        public long TargetMailboxUid { get; }
 
         /// <summary>
         /// Gets source messages UID sequence set.
         /// </summary>
-        public IMAP_t_SeqSet SourceSeqSet
-        {
-            get{ return m_pSourceSeqSet; }
-        }
+        public IMAP_t_SeqSet SourceSeqSet { get; }
 
         /// <summary>
         /// Gets target messages UID sequence set.
         /// </summary>
-        public IMAP_t_SeqSet TargetSeqSet
-        {
-            get{ return m_pTargetSeqSet; }
-        }
+        public IMAP_t_SeqSet TargetSeqSet { get; }
 
-        #endregion
+#endregion
     }
 }

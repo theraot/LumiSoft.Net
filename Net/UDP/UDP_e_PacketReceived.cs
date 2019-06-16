@@ -9,11 +9,6 @@ namespace LumiSoft.Net.UDP
     /// </summary>
     public class UDP_e_PacketReceived : EventArgs
     {
-        private Socket     m_pSocket;
-        private byte[]     m_pBuffer;
-        private int        m_Count;
-        private IPEndPoint m_pRemoteEP;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -33,10 +28,10 @@ namespace LumiSoft.Net.UDP
         /// <param name="remoteEP">Remote IP end point from where data was received.</param>
         internal void Reuse(Socket socket,byte[] buffer,int count,IPEndPoint remoteEP)
         {        
-            m_pSocket   = socket;
-            m_pBuffer   = buffer;
-            m_Count     = count;
-            m_pRemoteEP = remoteEP;
+            Socket   = socket;
+            Buffer   = buffer;
+            Count     = count;
+            RemoteEP = remoteEP;
         }
 
         #endregion
@@ -47,36 +42,24 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// Gets socket which received data.
         /// </summary>
-        public Socket Socket
-        {
-            get{ return m_pSocket; }
-        }
+        public Socket Socket { get; private set; }
 
         /// <summary>
         /// Gets data buffer.
         /// </summary>
-        public byte[] Buffer
-        {
-            get{ return m_pBuffer; }
-        }
+        public byte[] Buffer { get; private set; }
 
         /// <summary>
         /// Gets number of bytes stored to <b>Buffer</b>.
         /// </summary>
-        public int Count
-        {
-            get{ return m_Count; }
-        }
+        public int Count { get; private set; }
 
         /// <summary>
         /// Gets remote host from where data was received.
         /// </summary>
-        public IPEndPoint RemoteEP
-        {
-            get{ return m_pRemoteEP; }
-        }
+        public IPEndPoint RemoteEP { get; private set; }
 
-        #endregion
+#endregion
 
     }
 }

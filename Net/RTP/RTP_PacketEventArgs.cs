@@ -7,8 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_PacketEventArgs : EventArgs
     {
-        private readonly RTP_Packet m_pPacket;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -19,7 +17,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("packet");
             }
 
-            m_pPacket = packet;
+            Packet = packet;
         }
 
 
@@ -28,12 +26,9 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTP packet.
         /// </summary>
-        public RTP_Packet Packet
-        {
-            get{ return m_pPacket; }
-        }
+        public RTP_Packet Packet { get; }
 
-        #endregion
+#endregion
 
     }
 }

@@ -10,18 +10,15 @@ namespace LumiSoft.Net.Mail
     /// </summary>
     public class Mail_t_Group : Mail_t_Address
     {
-        private string               m_DisplayName;
-        private readonly List<Mail_t_Mailbox> m_pList;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="displayName">Display name. Value null means not specified.</param>
         public Mail_t_Group(string displayName)
         {
-            m_DisplayName = displayName;
+            DisplayName = displayName;
 
-            m_pList = new List<Mail_t_Mailbox>();
+            Members = new List<Mail_t_Mailbox>();
         }
 
 
@@ -44,20 +41,20 @@ namespace LumiSoft.Net.Mail
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder)
         {
             StringBuilder retVal = new StringBuilder();
-            if(string.IsNullOrEmpty(m_DisplayName)){
+            if(string.IsNullOrEmpty(DisplayName)){
                 retVal.Append(":");
             }
             else{
-                if(MIME_Encoding_EncodedWord.MustEncode(m_DisplayName)){
-                    retVal.Append(wordEncoder.Encode(m_DisplayName) + ":");
+                if(MIME_Encoding_EncodedWord.MustEncode(DisplayName)){
+                    retVal.Append(wordEncoder.Encode(DisplayName) + ":");
                 }
                 else{
-                    retVal.Append(TextUtils.QuoteString(m_DisplayName) + ":");
+                    retVal.Append(TextUtils.QuoteString(DisplayName) + ":");
                 }
             }
-            for(int i=0;i<m_pList.Count;i++){
-                retVal.Append(m_pList[i].ToString(wordEncoder));
-                if(i < (m_pList.Count - 1)){
+            for(int i=0;i<Members.Count;i++){
+                retVal.Append(Members[i].ToString(wordEncoder));
+                if(i < (Members.Count - 1)){
                     retVal.Append(",");
                 }
             }
@@ -74,21 +71,13 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets or sets diplay name. Value null means not specified.
         /// </summary>
-        public string DisplayName
-        {
-            get{ return m_DisplayName; }
-
-            set{ m_DisplayName = value; }
-        }
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// Gets groiup address members collection.
         /// </summary>
-        public List<Mail_t_Mailbox> Members
-        {
-            get{ return m_pList; }
-        }
+        public List<Mail_t_Mailbox> Members { get; }
 
-        #endregion
+#endregion
     }
 }

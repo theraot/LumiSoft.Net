@@ -11,7 +11,6 @@ namespace LumiSoft.Net.MIME
     /// </summary>
     public class MIME_Entity : IDisposable
     {
-        private bool              m_IsDisposed;
         private MIME_Entity       m_pParent;
         private MIME_h_Collection m_pHeader;
         private MIME_b            m_pBody;
@@ -34,10 +33,10 @@ namespace LumiSoft.Net.MIME
         public void Dispose()
         {
             lock(this){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
-                m_IsDisposed = true;
+                IsDisposed = true;
 
                 m_pHeader = null;
                 m_pParent = null;
@@ -248,10 +247,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets if this entity is modified since it has loaded.
@@ -260,7 +256,7 @@ namespace LumiSoft.Net.MIME
         public bool IsModified
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -275,7 +271,7 @@ namespace LumiSoft.Net.MIME
         public MIME_Entity Parent
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -290,7 +286,7 @@ namespace LumiSoft.Net.MIME
         public MIME_h_Collection Header
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -307,7 +303,7 @@ namespace LumiSoft.Net.MIME
         public string MimeVersion
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -321,7 +317,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -349,7 +345,7 @@ namespace LumiSoft.Net.MIME
         public string ContentID
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -363,7 +359,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -391,7 +387,7 @@ namespace LumiSoft.Net.MIME
         public string ContentDescription
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -405,7 +401,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -434,7 +430,7 @@ namespace LumiSoft.Net.MIME
         public string ContentTransferEncoding
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -448,7 +444,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -476,7 +472,7 @@ namespace LumiSoft.Net.MIME
         public MIME_h_ContentType ContentType
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -494,7 +490,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -521,7 +517,7 @@ namespace LumiSoft.Net.MIME
         public string ContentBase
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -535,7 +531,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -564,7 +560,7 @@ namespace LumiSoft.Net.MIME
         public string ContentLocation
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -578,7 +574,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -607,7 +603,7 @@ namespace LumiSoft.Net.MIME
         public string Contentfeatures
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -621,7 +617,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -651,7 +647,7 @@ namespace LumiSoft.Net.MIME
         public MIME_h_ContentDisposition ContentDisposition
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -669,7 +665,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -697,7 +693,7 @@ namespace LumiSoft.Net.MIME
         public string ContentLanguage
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -711,7 +707,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -739,7 +735,7 @@ namespace LumiSoft.Net.MIME
         public string ContentAlternative
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -753,7 +749,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -781,7 +777,7 @@ namespace LumiSoft.Net.MIME
         public string ContentMD5
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -795,7 +791,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -823,7 +819,7 @@ namespace LumiSoft.Net.MIME
         public string ContentDuration
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -837,7 +833,7 @@ namespace LumiSoft.Net.MIME
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 

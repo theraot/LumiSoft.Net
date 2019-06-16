@@ -7,10 +7,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_ListRights : EventArgs
     {
-        private IMAP_r_u_ListRights m_pListRightsResponse;
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private readonly string              m_Identifier;
 
         /// <summary>
         /// Default constructor.
@@ -31,8 +28,8 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
 
-            m_Folder     = folder;
-            m_Identifier = identifier;
+            Folder     = folder;
+            Identifier = identifier;
             m_pResponse  = response;
         }
 
@@ -42,12 +39,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets or sets LISTRIGHTS response.
         /// </summary>
-        public IMAP_r_u_ListRights ListRightsResponse
-        {
-            get{ return m_pListRightsResponse; }
-
-            set{ m_pListRightsResponse = value; }
-        }
+        public IMAP_r_u_ListRights ListRightsResponse { get; set; }
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -69,19 +61,13 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets ACL identifier (normally user or group name).
         /// </summary>
-        public string Identifier
-        {
-            get{ return m_Identifier; }
-        }
+        public string Identifier { get; }
 
-        #endregion
+#endregion
     }
 }

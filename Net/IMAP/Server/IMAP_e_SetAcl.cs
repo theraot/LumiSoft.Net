@@ -8,10 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_SetAcl : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private readonly string              m_Identifier;
-        private readonly IMAP_Flags_SetType  m_SetType    = IMAP_Flags_SetType.Replace;
-        private readonly string              m_Rights;
 
         /// <summary>
         /// Default constructor.
@@ -38,10 +34,10 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             m_pResponse  = response;
-            m_Folder     = folder;
-            m_Identifier = identifier;
-            m_SetType    = flagsSetType;
-            m_Rights     = rights;
+            Folder     = folder;
+            Identifier = identifier;
+            FlagsSetType    = flagsSetType;
+            Rights     = rights;
         }
 
 
@@ -67,35 +63,23 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets ACL identifier (normally user or group name).
         /// </summary>
-        public string Identifier
-        {
-            get{ return m_Identifier; }
-        }
+        public string Identifier { get; }
 
         /// <summary>
         /// Gets flags set type.
         /// </summary>
-        public IMAP_Flags_SetType FlagsSetType
-        {
-            get{ return m_SetType; }
-        }
+        public IMAP_Flags_SetType FlagsSetType { get; } = IMAP_Flags_SetType.Replace;
 
         /// <summary>
         /// Gets identifier rights.
         /// </summary>
-        public string Rights
-        {
-            get{ return m_Rights; }
-        }
+        public string Rights { get; }
 
-        #endregion
+#endregion
     }
 }

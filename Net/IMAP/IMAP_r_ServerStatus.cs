@@ -8,11 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_ServerStatus : IMAP_r
     {
-        private readonly string     m_CommandTag        = "";
-        private readonly string     m_ResponseCode      = "";
-        private readonly IMAP_t_orc m_pOptionalResponse;
-        private readonly string     m_ResponseText      = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -49,10 +44,10 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("The argument 'responseCode' value must be specified.","responseCode");
             }
 
-            m_CommandTag        = commandTag;
-            m_ResponseCode      = responseCode;
-            m_pOptionalResponse = optionalResponse;
-            m_ResponseText      = responseText;
+            CommandTag        = commandTag;
+            ResponseCode      = responseCode;
+            OptionalResponse = optionalResponse;
+            ResponseText      = responseText;
         }
 
         /// <summary>
@@ -64,8 +59,8 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal IMAP_r_ServerStatus(string responseCode,string responseText)
         {
-            m_ResponseCode = responseCode;
-            m_ResponseText = responseText;
+            ResponseCode = responseCode;
+            ResponseText = responseText;
         }
 
 
@@ -121,14 +116,14 @@ namespace LumiSoft.Net.IMAP
         public override string ToString()
         {
             StringBuilder retVal = new StringBuilder();
-            if(!string.IsNullOrEmpty(m_CommandTag)){
-                retVal.Append(m_CommandTag + " ");
+            if(!string.IsNullOrEmpty(CommandTag)){
+                retVal.Append(CommandTag + " ");
             }
-            retVal.Append(m_ResponseCode + " ");
-            if(m_pOptionalResponse != null){
-                retVal.Append("[" + m_pOptionalResponse.ToString() + "] ");
+            retVal.Append(ResponseCode + " ");
+            if(OptionalResponse != null){
+                retVal.Append("[" + OptionalResponse.ToString() + "] ");
             }
-            retVal.Append(m_ResponseText + "\r\n");
+            retVal.Append(ResponseText + "\r\n");
 
             return retVal.ToString();
         }
@@ -141,34 +136,22 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets command tag.
         /// </summary>
-        public string CommandTag
-        {
-            get{ return m_CommandTag; }
-        }
-                
+        public string CommandTag { get; } = "";
+
         /// <summary>
         /// Gets IMAP server status response code(OK,NO,BAD).
         /// </summary>
-        public string ResponseCode
-        {
-            get{ return m_ResponseCode; }
-        }
+        public string ResponseCode { get; } = "";
 
         /// <summary>
         /// Gets IMAP server otional response-code. Value null means no optional response.
         /// </summary>
-        public IMAP_t_orc OptionalResponse
-        {
-            get{ return m_pOptionalResponse; }
-        }
-                
+        public IMAP_t_orc OptionalResponse { get; }
+
         /// <summary>
         /// Gets response human readable text after response-code.
         /// </summary>
-        public string ResponseText
-        {
-            get{ return m_ResponseText; }
-        }
+        public string ResponseText { get; } = "";
 
         /// <summary>
         /// Gets if this response is error response.
@@ -176,10 +159,10 @@ namespace LumiSoft.Net.IMAP
         public bool IsError
         {
             get{ 
-                if(m_ResponseCode.Equals("NO",StringComparison.InvariantCultureIgnoreCase)){
+                if(ResponseCode.Equals("NO",StringComparison.InvariantCultureIgnoreCase)){
                     return true;
                 }
-                else if(m_ResponseCode.Equals("BAD",StringComparison.InvariantCultureIgnoreCase)){
+                else if(ResponseCode.Equals("BAD",StringComparison.InvariantCultureIgnoreCase)){
                     return true;
                 }
                 else{
@@ -193,7 +176,7 @@ namespace LumiSoft.Net.IMAP
         /// </summary>
         public bool IsContinue
         {
-            get{ return m_ResponseCode.Equals("+",StringComparison.InvariantCultureIgnoreCase); }
+            get{ return ResponseCode.Equals("+",StringComparison.InvariantCultureIgnoreCase); }
         }
 
         #endregion
@@ -210,11 +193,11 @@ namespace LumiSoft.Net.IMAP
         public string OptionalResponseCode
         {
             get{ 
-                if(m_pOptionalResponse == null){
+                if(OptionalResponse == null){
                     return null;
                 }
                 else{
-                    return m_pOptionalResponse.ToString().Split(' ')[0];
+                    return OptionalResponse.ToString().Split(' ')[0];
                 }
             }
         }
@@ -226,11 +209,11 @@ namespace LumiSoft.Net.IMAP
         public string OptionalResponseArgs
         {
             get{ 
-                if(m_pOptionalResponse == null){
+                if(OptionalResponse == null){
                     return null;
                 }
                 else{
-                    string[] code_args = m_pOptionalResponse.ToString().Split(new char[]{' '},2);
+                    string[] code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
 
                     return code_args.Length == 2 ? code_args[1] : "";
                 }

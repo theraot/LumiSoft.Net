@@ -7,8 +7,6 @@ namespace LumiSoft.Net.Log
     /// </summary>
     public class WriteLogEventArgs : EventArgs
     {
-        private readonly LogEntry m_pLogEntry;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.Log
                 throw new ArgumentNullException("logEntry");
             }
 
-            m_pLogEntry = logEntry;
+            LogEntry = logEntry;
         }
 
 
@@ -29,12 +27,9 @@ namespace LumiSoft.Net.Log
         /// <summary>
         /// Gets new log entry.
         /// </summary>
-        public LogEntry LogEntry
-        {
-            get{ return m_pLogEntry; }
-        }
+        public LogEntry LogEntry { get; }
 
-        #endregion
+#endregion
 
     }
 }

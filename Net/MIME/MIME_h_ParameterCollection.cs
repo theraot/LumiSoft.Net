@@ -17,7 +17,6 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public class _ParameterBuilder
         {
-            private readonly string                 m_Name;
             private readonly SortedList<int,string> m_pParts;
             private Encoding               m_pEncoding;
 
@@ -32,7 +31,7 @@ namespace LumiSoft.Net.MIME
                     throw new ArgumentNullException("name");
                 }
 
-                m_Name = name;
+                Name = name;
 
                 m_pParts = new SortedList<int,string>();
             }
@@ -77,10 +76,10 @@ namespace LumiSoft.Net.MIME
                 }
 
                 if(m_pEncoding != null){
-                    return new MIME_h_Parameter(m_Name,DecodeExtOctet(value.ToString(),m_pEncoding));
+                    return new MIME_h_Parameter(Name,DecodeExtOctet(value.ToString(),m_pEncoding));
                 }
                 else{
-                    return new MIME_h_Parameter(m_Name,value.ToString());
+                    return new MIME_h_Parameter(Name,value.ToString());
                 }
             }
 
@@ -92,18 +91,14 @@ namespace LumiSoft.Net.MIME
             /// <summary>
             /// Gets parameter name.
             /// </summary>
-            public string Name
-            {
-                get{ return m_Name ; }
-            }
+            public string Name { get; }
 
-            #endregion
+#endregion
         }
 
         #endregion
 
         private bool                                m_IsModified;
-        private readonly MIME_h                              m_pOwner;
         private readonly Dictionary<string,MIME_h_Parameter> m_pParameters;
 
         /// <summary>
@@ -117,7 +112,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("owner");
             }
 
-            m_pOwner = owner;
+            Owner = owner;
 
             m_pParameters = new Dictionary<string,MIME_h_Parameter>(StringComparer.CurrentCultureIgnoreCase);
         }
@@ -452,10 +447,7 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets owner MIME header field.
         /// </summary>
-        public MIME_h Owner
-        {
-            get{ return m_pOwner; }
-        }
+        public MIME_h Owner { get; }
 
         /// <summary>
         /// Gets number of items in the collection.

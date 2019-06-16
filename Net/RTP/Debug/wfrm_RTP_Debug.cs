@@ -19,9 +19,6 @@ namespace LumiSoft.Net.RTP.Debug
         /// </summary>
         private class ComboBoxItem
         {
-            private readonly string m_Text = "";
-            private readonly object m_pTag;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -29,8 +26,8 @@ namespace LumiSoft.Net.RTP.Debug
             /// <param name="tag">User data.</param>
             public ComboBoxItem(string text,object tag)
             {
-                m_Text = text;
-                m_pTag = tag;
+                Text = text;
+                Tag = tag;
             }
 
 
@@ -42,7 +39,7 @@ namespace LumiSoft.Net.RTP.Debug
             /// <returns>eturns ComboBox text.</returns>
             public override string ToString()
             {
-                return m_Text;
+                return Text;
             }
 
             #endregion
@@ -53,20 +50,14 @@ namespace LumiSoft.Net.RTP.Debug
             /// <summary>
             /// Gets text.
             /// </summary>
-            public string Text
-            {
-                get{ return m_Text; }
-            }
+            public string Text { get; } = "";
 
             /// <summary>
             /// Gets user data.
             /// </summary>
-            public object Tag
-            {
-                get{ return m_pTag; }
-            }
+            public object Tag { get; }
 
-            #endregion
+#endregion
         }
 
         #endregion
@@ -811,7 +802,6 @@ namespace LumiSoft.Net.RTP.Debug
         private ListView       m_pErrors;
 
         private bool                   m_IsDisposed;
-        private readonly RTP_MultimediaSession  m_pSession;
         private readonly Timer                  m_pTimer;
 
         /// <summary>
@@ -824,18 +814,18 @@ namespace LumiSoft.Net.RTP.Debug
                 throw new ArgumentNullException("session");
             }
 
-            m_pSession = session;
+            Session = session;
 
             InitUI();
 
             // Windows must be visible, otherwise we may get "window handle not created" if RTP session rises events before window gets visible.
             this.Visible = true;
 
-            m_pSession.Error += new EventHandler<LumiSoft.Net.ExceptionEventArgs>(m_pSession_Error);
-            m_pSession.SessionCreated += new EventHandler<LumiSoft.Net.EventArgs<RTP_Session>>(m_pSession_SessionCreated);
-            m_pSession.NewParticipant += new EventHandler<RTP_ParticipantEventArgs>(m_pSession_NewParticipant);
-            m_pSession.LocalParticipant.SourceAdded += new EventHandler<RTP_SourceEventArgs>(Participant_SourceAdded);
-            m_pSession.LocalParticipant.SourceRemoved += new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);
+            Session.Error += new EventHandler<LumiSoft.Net.ExceptionEventArgs>(m_pSession_Error);
+            Session.SessionCreated += new EventHandler<LumiSoft.Net.EventArgs<RTP_Session>>(m_pSession_SessionCreated);
+            Session.NewParticipant += new EventHandler<RTP_ParticipantEventArgs>(m_pSession_NewParticipant);
+            Session.LocalParticipant.SourceAdded += new EventHandler<RTP_SourceEventArgs>(Participant_SourceAdded);
+            Session.LocalParticipant.SourceRemoved += new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);
             //m_pSession.Disposed
 
             m_pTimer = new Timer();
@@ -843,7 +833,7 @@ namespace LumiSoft.Net.RTP.Debug
             m_pTimer.Tick += new EventHandler(m_pTimer_Tick);
             m_pTimer.Enabled = true;
 
-            foreach(RTP_Session s in m_pSession.Sessions){
+            foreach(RTP_Session s in Session.Sessions){
                 ComboBoxItem item = new ComboBoxItem("Session: " + s.GetHashCode(),new RTP_SessionStatistics(s));
                 m_pSessions.Items.Add(item);
             }
@@ -882,8 +872,8 @@ namespace LumiSoft.Net.RTP.Debug
             m_pParticipants.FullRowSelect = true;
             m_pParticipants.HideSelection = false;
             m_pParticipants.AfterSelect += new TreeViewEventHandler(m_pParticipants_AfterSelect);
-            TreeNode nodeParticipant = new TreeNode(m_pSession.LocalParticipant.CNAME);
-            nodeParticipant.Tag = new RTP_ParticipantInfo(m_pSession.LocalParticipant);
+            TreeNode nodeParticipant = new TreeNode(Session.LocalParticipant.CNAME);
+            nodeParticipant.Tag = new RTP_ParticipantInfo(Session.LocalParticipant);
             nodeParticipant.Nodes.Add("Sources");
             m_pParticipants.Nodes.Add(nodeParticipant);
             m_pParticipantsSplitter.Panel1.Controls.Add(m_pParticipants);
@@ -1185,7 +1175,7 @@ namespace LumiSoft.Net.RTP.Debug
             if(m_IsDisposed){
                 return;
             }
-            if(m_pSession.IsDisposed){
+            if(Session.IsDisposed){
                 this.Visible = false;
                 return;
             }
@@ -1202,11 +1192,11 @@ namespace LumiSoft.Net.RTP.Debug
         {
             m_IsDisposed = true;
 
-            m_pSession.Error -= new EventHandler<LumiSoft.Net.ExceptionEventArgs>(m_pSession_Error);
-            m_pSession.SessionCreated -= new EventHandler<LumiSoft.Net.EventArgs<RTP_Session>>(m_pSession_SessionCreated);
-            m_pSession.NewParticipant -= new EventHandler<RTP_ParticipantEventArgs>(m_pSession_NewParticipant);
-            m_pSession.LocalParticipant.SourceAdded -= new EventHandler<RTP_SourceEventArgs>(Participant_SourceAdded);
-            m_pSession.LocalParticipant.SourceRemoved -= new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);
+            Session.Error -= new EventHandler<LumiSoft.Net.ExceptionEventArgs>(m_pSession_Error);
+            Session.SessionCreated -= new EventHandler<LumiSoft.Net.EventArgs<RTP_Session>>(m_pSession_SessionCreated);
+            Session.NewParticipant -= new EventHandler<RTP_ParticipantEventArgs>(m_pSession_NewParticipant);
+            Session.LocalParticipant.SourceAdded -= new EventHandler<RTP_SourceEventArgs>(Participant_SourceAdded);
+            Session.LocalParticipant.SourceRemoved -= new EventHandler<RTP_SourceEventArgs>(Participant_SourceRemoved);
 
             m_pTimer.Dispose();
         }
@@ -1246,12 +1236,9 @@ namespace LumiSoft.Net.RTP.Debug
         /// <summary>
         /// Gets RTP session what UI debugs.
         /// </summary>
-        public RTP_MultimediaSession Session
-        {
-            get{ return m_pSession; }
-        }
+        public RTP_MultimediaSession Session { get; }
 
-        #endregion
+#endregion
 
     }
 }

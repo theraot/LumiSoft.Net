@@ -12,7 +12,6 @@ namespace LumiSoft.Net.FTP.Server
 	{
         private string    m_GreetingText     = "";
         private int       m_MaxBadCommands   = 30;
-        private IPAddress m_pPassivePublicIP;
         private int       m_PassiveStartPort = 20000;
 
 		/// <summary>
@@ -113,12 +112,7 @@ namespace LumiSoft.Net.FTP.Server
         /// This property is manly needed if FTP server is running behind NAT. 
         /// Value null means not spcified.
         /// </summary>
-        public IPAddress PassivePublicIP
-        {
-            get{ return m_pPassivePublicIP; }
-
-            set{ m_pPassivePublicIP = value; }
-        }
+        public IPAddress PassivePublicIP { get; set; }
 
         /// <summary>
         /// Gets or sets passive mode start port form which server starts using ports.

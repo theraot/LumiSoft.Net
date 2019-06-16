@@ -7,15 +7,13 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientException : Exception
     {
-        private readonly DNS_RCode m_RCode;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="rcode">DNS server returned error code.</param>
         public DNS_ClientException(DNS_RCode rcode) : base("Dns error: " + rcode + ".")
         {
-            m_RCode = rcode;
+            ErrorCode = rcode;
         }
 
 
@@ -24,12 +22,9 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// Gets DNS server returned error code.
         /// </summary>
-        public DNS_RCode ErrorCode
-        {
-            get{ return m_RCode; }
-        }
+        public DNS_RCode ErrorCode { get; }
 
-        #endregion
+#endregion
 
     }
 }

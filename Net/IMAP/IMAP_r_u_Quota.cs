@@ -9,9 +9,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Quota : IMAP_r_u
     {
-        private readonly string             m_QuotaRootName = "";
-        private readonly IMAP_Quota_Entry[] m_pEntries;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,8 +24,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("entries");
             }
 
-            m_QuotaRootName = quotaRootName;
-            m_pEntries      = entries;
+            QuotaRootName = quotaRootName;
+            Entries      = entries;
         }
 
 
@@ -96,12 +93,12 @@ namespace LumiSoft.Net.IMAP
             // Example:    S: * QUOTA "" (STORAGE 10 512)
 
             StringBuilder retVal = new StringBuilder();
-            retVal.Append("* QUOTA \"" + m_QuotaRootName + "\" (");
-            for(int i=0;i<m_pEntries.Length;i++){
+            retVal.Append("* QUOTA \"" + QuotaRootName + "\" (");
+            for(int i=0;i<Entries.Length;i++){
                 if(i > 0){
                     retVal.Append(" ");
                 }
-                retVal.Append(m_pEntries[i].ResourceName + " " + m_pEntries[i].CurrentUsage + " " + m_pEntries[i].MaxUsage);
+                retVal.Append(Entries[i].ResourceName + " " + Entries[i].CurrentUsage + " " + Entries[i].MaxUsage);
             }
             retVal.Append(")\r\n");
 
@@ -116,19 +113,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets quota root name.
         /// </summary>
-        public string QuotaRootName
-        {
-            get{ return m_QuotaRootName; }
-        }
+        public string QuotaRootName { get; } = "";
 
         /// <summary>
         /// Gets resource limit entries.
         /// </summary>
-        public IMAP_Quota_Entry[] Entries
-        {
-            get{ return m_pEntries; }
-        }
+        public IMAP_Quota_Entry[] Entries { get; }
 
-        #endregion
+#endregion
     }
 }

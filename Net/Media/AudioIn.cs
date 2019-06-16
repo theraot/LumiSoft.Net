@@ -140,7 +140,6 @@ namespace LumiSoft.Net.Media
             {
                 private GCHandle m_HeaderHandle;
                 private GCHandle m_DataHandle;
-                private readonly int      m_DataSize;
 
                 /// <summary>
                 /// Default constructor.
@@ -152,7 +151,7 @@ namespace LumiSoft.Net.Media
                 {
                     m_HeaderHandle = headerHandle;
                     m_DataHandle   = dataHandle;
-                    m_DataSize     = dataSize;
+                    DataSize     = dataSize;
                 }
 
                 #region method Dispose
@@ -206,12 +205,9 @@ namespace LumiSoft.Net.Media
                 /// <summary>
                 /// Gets wav header data size in bytes.
                 /// </summary>
-                public int DataSize
-                {
-                    get{ return m_DataSize; }
-                }
+                public int DataSize { get; }
 
-                #endregion
+#endregion
 
             }
 
@@ -505,7 +501,6 @@ namespace LumiSoft.Net.Media
 
             #endregion
 
-            private bool                         m_IsDisposed;
             private AudioInDevice                m_pInDevice;
             private readonly int                          m_SamplesPerSec  = 8000;
             private readonly int                          m_BitsPerSample  = 8;
@@ -590,10 +585,10 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Dispose()
             {
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
-                m_IsDisposed = true;
+                IsDisposed = true;
 
                 try{
                     // If recording, we need to reset wav device first.
@@ -674,7 +669,7 @@ namespace LumiSoft.Net.Media
                 // NOTE: MSDN warns, we may not call any wav related methods here.
                 // This will cause deadlock.
 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
 
@@ -693,7 +688,7 @@ namespace LumiSoft.Net.Media
                             // Free buffer and queue it for reuse.
                             ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){
                                 try{
-                                    if(m_IsDisposed){
+                                    if(IsDisposed){
                                         return;
                                     }
 
@@ -813,10 +808,7 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public bool IsDisposed
-            {
-                get{ return m_IsDisposed; }
-            }
+            public bool IsDisposed { get; private set; }
 
             /// <summary>
             /// Gets current input device.
@@ -825,7 +817,7 @@ namespace LumiSoft.Net.Media
             public AudioInDevice InputDevice
             {
                 get{
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
@@ -840,7 +832,7 @@ namespace LumiSoft.Net.Media
             public int SamplesPerSec
             {
                 get{                 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
@@ -855,7 +847,7 @@ namespace LumiSoft.Net.Media
             public int BitsPerSample
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
                 
@@ -870,7 +862,7 @@ namespace LumiSoft.Net.Media
             public int Channels
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
                 
@@ -885,7 +877,7 @@ namespace LumiSoft.Net.Media
             public int BufferSize
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
                 
@@ -900,7 +892,7 @@ namespace LumiSoft.Net.Media
             public int BlockSize
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
 
@@ -915,7 +907,7 @@ namespace LumiSoft.Net.Media
             public FifoBuffer ReadBuffer
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WavRecorder");
                     }
 

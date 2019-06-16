@@ -8,10 +8,7 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public class DNS_rr_HINFO : DNS_rr
 	{
-		private readonly string m_CPU = "";
-		private readonly string m_OS  = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -20,8 +17,8 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_HINFO(string name,string cpu,string os,int ttl) : base(name,DNS_QType.HINFO,ttl)
 		{
-			m_CPU = cpu;
-			m_OS  = os;
+			CPU = cpu;
+			OS  = os;
 		}
 
 
@@ -71,19 +68,13 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets host's CPU.
 		/// </summary>
-		public string CPU
-		{
-			get{ return m_CPU; }
-		}
+		public string CPU { get; } = "";
 
-		/// <summary>
+        /// <summary>
 		/// Gets host's OS.
 		/// </summary>
-		public string OS
-		{
-			get{ return m_OS; }
-		}
-        
-		#endregion
+		public string OS { get; } = "";
+
+#endregion
 	}
 }

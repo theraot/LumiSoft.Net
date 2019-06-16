@@ -9,16 +9,8 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_MediaDescription
     {
-        private string                    m_MediaType     = "";
-        private int                       m_Port;
         private int                       m_NumberOfPorts = 1;
         private string                    m_Protocol      = "";
-        private readonly List<string>              m_pMediaFormats;
-        private string                    m_Information;
-        private SDP_Connection            m_pConnection;
-        private string                    m_Bandwidth;
-        private readonly List<SDP_Attribute>       m_pAttributes;
-        private readonly Dictionary<string,object> m_pTags;
 
         /// <summary>
         /// Default constructor.
@@ -51,17 +43,17 @@ namespace LumiSoft.Net.SDP
                 throw new ArgumentException("Argument 'protocol' value msut be specified.");
             }
 
-            m_MediaType     = mediaType;
-            m_Port          = port;
+            MediaType     = mediaType;
+            Port          = port;
             m_NumberOfPorts = ports;
             m_Protocol      = protocol;
 
-            m_pMediaFormats = new List<string>();
-            m_pAttributes = new List<SDP_Attribute>();
-            m_pTags = new Dictionary<string,object>();
+            MediaFormats = new List<string>();
+            Attributes = new List<SDP_Attribute>();
+            Tags = new Dictionary<string,object>();
 
             if(mediaFormats != null){
-                m_pMediaFormats.AddRange(mediaFormats);
+                MediaFormats.AddRange(mediaFormats);
             }
         }
 
@@ -70,9 +62,9 @@ namespace LumiSoft.Net.SDP
         /// </summary>
         private SDP_MediaDescription()
         {
-            m_pMediaFormats = new List<string>();
-            m_pAttributes = new List<SDP_Attribute>();
-            m_pTags = new Dictionary<string,object>();
+            MediaFormats = new List<string>();
+            Attributes = new List<SDP_Attribute>();
+            Tags = new Dictionary<string,object>();
         }
 
 
@@ -96,7 +88,7 @@ namespace LumiSoft.Net.SDP
             if(word == null){
                 throw new Exception("SDP message \"m\" field <media> value is missing !");
             }
-            media.m_MediaType = word;
+            media.MediaType = word;
 
             //--- <port>/<number of ports> -------------------------------------------
             word = r.ReadWord();
@@ -105,11 +97,11 @@ namespace LumiSoft.Net.SDP
             }
             if(word.IndexOf('/') > -1){
                 string[] port_nPorts = word.Split('/');
-                media.m_Port = Convert.ToInt32(port_nPorts[0]);
+                media.Port = Convert.ToInt32(port_nPorts[0]);
                 media.m_NumberOfPorts = Convert.ToInt32(port_nPorts[1]);
             }
             else{
-                media.m_Port = Convert.ToInt32(word);
+                media.Port = Convert.ToInt32(word);
                 media.m_NumberOfPorts = 1;
             }
 
@@ -148,28 +140,28 @@ namespace LumiSoft.Net.SDP
             }
 
             // Remove all old stream mode attributes.
-            for(int i=0;i<m_pAttributes.Count;i++){
-                SDP_Attribute sdpAttribute = m_pAttributes[i];
+            for(int i=0;i<Attributes.Count;i++){
+                SDP_Attribute sdpAttribute = Attributes[i];
                 if(string.Equals(sdpAttribute.Name,"sendrecv",StringComparison.InvariantCultureIgnoreCase)){
-                    m_pAttributes.RemoveAt(i);
+                    Attributes.RemoveAt(i);
                     i--;
                 }
                 else if(string.Equals(sdpAttribute.Name,"sendonly",StringComparison.InvariantCultureIgnoreCase)){
-                    m_pAttributes.RemoveAt(i);
+                    Attributes.RemoveAt(i);
                     i--;
                 }
                 else if(string.Equals(sdpAttribute.Name,"recvonly",StringComparison.InvariantCultureIgnoreCase)){
-                    m_pAttributes.RemoveAt(i);
+                    Attributes.RemoveAt(i);
                     i--;
                 }
                 else if(string.Equals(sdpAttribute.Name,"inactive",StringComparison.InvariantCultureIgnoreCase)){
-                    m_pAttributes.RemoveAt(i);
+                    Attributes.RemoveAt(i);
                     i--;
                 }
             }
 
             if(streamMode != ""){
-                m_pAttributes.Add(new SDP_Attribute(streamMode,""));
+                Attributes.Add(new SDP_Attribute(streamMode,""));
             }
         }
 
@@ -206,16 +198,16 @@ namespace LumiSoft.Net.SDP
             }
             retVal.Append("\r\n");
             // i (media title)
-            if(!string.IsNullOrEmpty(m_Information)){
-                retVal.Append("i=" + m_Information + "\r\n");
+            if(!string.IsNullOrEmpty(Information)){
+                retVal.Append("i=" + Information + "\r\n");
             }
             // b (bandwidth information)
-            if(!string.IsNullOrEmpty(m_Bandwidth)){
-                retVal.Append("b=" + m_Bandwidth + "\r\n");
+            if(!string.IsNullOrEmpty(Bandwidth)){
+                retVal.Append("b=" + Bandwidth + "\r\n");
             }
             // c (connection information)
-            if(m_pConnection != null){
-                retVal.Append(this.m_pConnection.ToValue());
+            if(Connection != null){
+                retVal.Append(this.Connection.ToValue());
             }
             foreach(SDP_Attribute attribute in this.Attributes){
                 retVal.Append(attribute.ToValue());
@@ -233,20 +225,12 @@ namespace LumiSoft.Net.SDP
         /// Gets or sets meadia type. Currently defined media are "audio", "video", "text", 
         /// "application", and "message", although this list may be extended in the future.
         /// </summary>
-        public string MediaType
-        {
-            get{ return m_MediaType; }
-        }
+        public string MediaType { get; private set; } = "";
 
         /// <summary>
         /// Gets or sets the transport port to which the media stream is sent.
         /// </summary>
-        public int Port
-        {
-            get{ return m_Port; }
-
-            set{ m_Port = value; }
-        }
+        public int Port { get; set; }
 
         /// <summary>
         /// Gets or sets number of continuos media ports.
@@ -294,58 +278,34 @@ namespace LumiSoft.Net.SDP
         /// ; must reference a MIME type 
         /// </code>
         /// </remarks>
-        public List<string> MediaFormats
-        {
-            get{ return m_pMediaFormats; }
-        }
+        public List<string> MediaFormats { get; }
 
         /// <summary>
         /// Gets or sets media information. Value null means not specified.
         /// </summary>
-        public string Information
-        {
-            get{ return m_Information; }
-
-            set{ m_Information = value; }
-        }
+        public string Information { get; set; }
 
         /// <summary>
         /// Gets or sets per media connection data. Value null means not specified.
         /// </summary>
-        public SDP_Connection Connection
-        {
-            get{ return m_pConnection; }
-
-            set{ m_pConnection = value; }
-        }
+        public SDP_Connection Connection { get; set; }
 
         /// <summary>
         /// Gets or sets bandwidth data. Value null means not specified.
         /// </summary>
-        public string Bandwidth
-        {
-            get{ return m_Bandwidth; }
-
-            set{ m_Bandwidth = value; }
-        }
+        public string Bandwidth { get; set; }
 
         /// <summary>
         /// Gets media attributes collection.
         /// </summary>
-        public List<SDP_Attribute> Attributes
-        {
-            get{ return m_pAttributes; }
-        }
+        public List<SDP_Attribute> Attributes { get; }
 
         /// <summary>
         /// Gets user data items collection.
         /// </summary>
-        public Dictionary<string,object> Tags
-        {
-            get{ return m_pTags; }
-        }
+        public Dictionary<string,object> Tags { get; }
 
-        #endregion
+#endregion
 
     }
 }

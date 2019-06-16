@@ -7,11 +7,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_e_Authenticate : EventArgs
     {
-        private bool   m_IsAuthenticated;
-        private readonly string m_AuthorizationID = "";
-        private readonly string m_UserName        = "";
-        private readonly string m_Password        = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -29,9 +24,9 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentException("Argument 'userName' value must be specified.","userName");
             }
 
-            m_AuthorizationID = authorizationID;
-            m_UserName        = userName;
-            m_Password        = password;
+            AuthorizationID = authorizationID;
+            UserName        = userName;
+            Password        = password;
         }
 
 
@@ -40,37 +35,23 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets or sets if specified user is authenticated.
         /// </summary>
-        public bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
-
-            set{ m_IsAuthenticated = value; }
-        }
+        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Gets authorization ID.
         /// </summary>
-        public string AuthorizationID
-        {
-            get{ return m_AuthorizationID; }
-        }
+        public string AuthorizationID { get; } = "";
 
         /// <summary>
         /// Gets user name.
         /// </summary>
-        public string UserName
-        {
-            get{ return m_UserName; }
-        }
+        public string UserName { get; } = "";
 
         /// <summary>
         /// Gets password.
         /// </summary>
-        public string Password
-        {
-            get{ return m_Password; }
-        }
+        public string Password { get; } = "";
 
-        #endregion
+#endregion
     }
 }

@@ -12,8 +12,7 @@ namespace LumiSoft.Net.MIME
     public abstract class MIME_b_SinglepartBase : MIME_b
     {
         private bool   m_IsModified;
-        private readonly Stream m_pEncodedDataStream;
-                
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,7 +24,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("contentType");
             }
 
-            m_pEncodedDataStream = new MemoryStreamEx(32000);
+            EncodedStream = new MemoryStreamEx(32000);
         }
 
         /// <summary>
@@ -33,8 +32,8 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         ~MIME_b_SinglepartBase()
         {
-            if(m_pEncodedDataStream != null){
-                m_pEncodedDataStream.Close();
+            if(EncodedStream != null){
+                EncodedStream.Close();
             }
         }
         
@@ -107,9 +106,9 @@ namespace LumiSoft.Net.MIME
                 throw new InvalidOperationException("Body must be bounded to some entity first.");
             }
 
-            m_pEncodedDataStream.Position = 0;
+            EncodedStream.Position = 0;
 
-            return m_pEncodedDataStream;
+            return EncodedStream;
         }
 
         #endregion
@@ -145,8 +144,8 @@ namespace LumiSoft.Net.MIME
             }
             this.Entity.ContentTransferEncoding = contentTransferEncoding;
 
-            m_pEncodedDataStream.SetLength(0);
-            Net_Utils.StreamCopy(stream,m_pEncodedDataStream,32000);
+            EncodedStream.SetLength(0);
+            Net_Utils.StreamCopy(stream,EncodedStream,32000);
        
             m_IsModified = true;
         }
@@ -177,21 +176,21 @@ namespace LumiSoft.Net.MIME
                 transferEncoding = this.Entity.ContentTransferEncoding.ToLowerInvariant();
             }
 
-            m_pEncodedDataStream.Position = 0;            
+            EncodedStream.Position = 0;            
             if(transferEncoding == MIME_TransferEncodings.QuotedPrintable){                
-                return new QuotedPrintableStream(new SmartStream(m_pEncodedDataStream,false),FileAccess.Read);
+                return new QuotedPrintableStream(new SmartStream(EncodedStream,false),FileAccess.Read);
             }
             else if(transferEncoding == MIME_TransferEncodings.Base64){
-                return new Base64Stream(m_pEncodedDataStream,false,true,FileAccess.Read);
+                return new Base64Stream(EncodedStream,false,true,FileAccess.Read);
             }            
             else if(transferEncoding == MIME_TransferEncodings.Binary){
-                return new ReadWriteControlledStream(m_pEncodedDataStream,FileAccess.Read);
+                return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
             else if(transferEncoding == MIME_TransferEncodings.EightBit){
-                return new ReadWriteControlledStream(m_pEncodedDataStream,FileAccess.Read);
+                return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
             else if(transferEncoding == MIME_TransferEncodings.SevenBit){
-                return new ReadWriteControlledStream(m_pEncodedDataStream,FileAccess.Read);
+                return new ReadWriteControlledStream(EncodedStream,FileAccess.Read);
             }
             else{
                 throw new NotSupportedException("Not supported Content-Transfer-Encoding '" + this.Entity.ContentTransferEncoding + "'.");
@@ -290,7 +289,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public int EncodedDataSize
         {
-            get{ return (int)m_pEncodedDataStream.Length; }
+            get{ return (int)EncodedStream.Length; }
         }
 
         /// <summary>
@@ -328,11 +327,8 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets encoded data stream.
         /// </summary>
-        protected Stream EncodedStream
-        {
-            get{ return m_pEncodedDataStream; }
-        }
+        protected Stream EncodedStream { get; }
 
-        #endregion
+#endregion
     }
 }

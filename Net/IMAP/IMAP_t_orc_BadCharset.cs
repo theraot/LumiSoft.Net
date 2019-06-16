@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_BadCharset : IMAP_t_orc
     {
-        private readonly string[] m_pCharsets;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("charsets");
             }
 
-            m_pCharsets = charsets;
+            Charsets = charsets;
         }
 
 
@@ -57,7 +55,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "BADCHARSET " + Net_Utils.ArrayToString(m_pCharsets," ");
+            return "BADCHARSET " + Net_Utils.ArrayToString(Charsets," ");
         }
 
         #endregion
@@ -68,11 +66,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets list of supported charsets.
         /// </summary>
-        public string[] Charsets
-        {
-            get{ return m_pCharsets; }
-        }
+        public string[] Charsets { get; }
 
-        #endregion
+#endregion
     }
 }

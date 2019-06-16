@@ -11,8 +11,6 @@ namespace LumiSoft.Net.RTP
     /// </remarks>
     public class RTP_Source_Local : RTP_Source
     {
-        private RTP_SendStream m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -105,13 +103,13 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="InvalidOperationException">Is raised when this method is called more than 1 times(source already created).</exception>
         internal void CreateStream()
         {
-            if(m_pStream != null){
+            if(Stream != null){
                 throw new InvalidOperationException("Stream is already created.");
             }
 
-            m_pStream = new RTP_SendStream(this);
-            m_pStream.Disposed += new EventHandler(delegate(object s,EventArgs e){
-                m_pStream = null;
+            Stream = new RTP_SendStream(this);
+            Stream.Disposed += new EventHandler(delegate(object s,EventArgs e){
+                Stream = null;
                 Dispose();
             });
 
@@ -135,14 +133,14 @@ namespace LumiSoft.Net.RTP
             if(packet == null){
                 throw new ArgumentNullException("packet");
             }
-            if(m_pStream == null){
+            if(Stream == null){
                 throw new InvalidOperationException("RTP stream is not created by CreateStream method.");
             }
 
             SetLastRtpPacket(DateTime.Now);
             SetState(RTP_SourceState.Active);
                         
-            return this.Session.SendRtpPacket(m_pStream,packet);
+            return this.Session.SendRtpPacket(Stream,packet);
         }
 
         #endregion
@@ -176,10 +174,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets the stream we send. Value null means that source is passive and doesn't send any RTP data.
         /// </summary>
-        public RTP_SendStream Stream
-        {
-            get{ return m_pStream; }
-        }
+        public RTP_SendStream Stream { get; private set; }
 
 
         /// <summary>

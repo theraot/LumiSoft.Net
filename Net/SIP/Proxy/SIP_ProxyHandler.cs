@@ -7,8 +7,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_ProxyHandler
     {
-        private object m_pTag;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -122,14 +120,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets or stets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
+        public object Tag { get; set; }
 
-            set{ m_pTag = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

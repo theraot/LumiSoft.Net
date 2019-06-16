@@ -7,8 +7,6 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Cdup : EventArgs
     {
-        private FTP_t_ReplyLine[] m_pReplyLines;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -22,13 +20,8 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>
-        public FTP_t_ReplyLine[] Response
-        {
-            get{ return m_pReplyLines; }
+        public FTP_t_ReplyLine[] Response { get; set; }
 
-            set{ m_pReplyLines = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

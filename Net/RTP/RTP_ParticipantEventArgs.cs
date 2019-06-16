@@ -7,8 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_ParticipantEventArgs : EventArgs
     {
-        private readonly RTP_Participant_Remote m_pParticipant;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("participant");
             }
 
-            m_pParticipant = participant;
+            Participant = participant;
         }
 
 
@@ -29,12 +27,9 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets participant.
         /// </summary>
-        public RTP_Participant_Remote Participant
-        {
-            get{ return m_pParticipant; }
-        }
+        public RTP_Participant_Remote Participant { get; }
 
-        #endregion
+#endregion
 
     }
 }

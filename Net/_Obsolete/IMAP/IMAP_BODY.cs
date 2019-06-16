@@ -11,14 +11,12 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_BODY
     {
-        private IMAP_BODY_Entity m_pMainEntity;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public IMAP_BODY()
         {
-            m_pMainEntity = new IMAP_BODY_Entity();
+            MainEntity = new IMAP_BODY_Entity();
         }
 
 
@@ -339,8 +337,8 @@ namespace LumiSoft.Net.IMAP
         /// <param name="bodyStructureString">Body structure string</param>
         public void Parse(string bodyStructureString)
         {
-            m_pMainEntity = new IMAP_BODY_Entity();
-            m_pMainEntity.Parse(bodyStructureString);
+            MainEntity = new IMAP_BODY_Entity();
+            MainEntity.Parse(bodyStructureString);
         }
 
         #endregion
@@ -375,10 +373,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets main entity.
         /// </summary>
-        public IMAP_BODY_Entity MainEntity
-        {
-            get{ return m_pMainEntity; }
-        }
+        public IMAP_BODY_Entity MainEntity { get; private set; }
 
         /// <summary>
         /// Gets all entities contained in BODYSTRUCTURE, including child entities.
@@ -387,8 +382,8 @@ namespace LumiSoft.Net.IMAP
         {
             get{ 
                 List<IMAP_BODY_Entity> allEntities = new List<IMAP_BODY_Entity>();
-				allEntities.Add(m_pMainEntity);
-				GetEntities(m_pMainEntity.ChildEntities,allEntities);
+				allEntities.Add(MainEntity);
+				GetEntities(MainEntity.ChildEntities,allEntities);
 
 				return allEntities.ToArray();
             }

@@ -18,7 +18,6 @@ namespace LumiSoft.Net.Mail
     /// </example>
     public class Mail_t_MailboxList : IEnumerable
     {
-        private bool                 m_IsModified;
         private readonly List<Mail_t_Mailbox> m_pList;
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace LumiSoft.Net.Mail
             }
 
             m_pList.Insert(index,value);
-            m_IsModified = true;
+            IsModified = true;
         }
 
         #endregion
@@ -112,7 +111,7 @@ namespace LumiSoft.Net.Mail
             }
 
             m_pList.Add(value);
-            m_IsModified = true;
+            IsModified = true;
         }
 
         #endregion
@@ -143,7 +142,7 @@ namespace LumiSoft.Net.Mail
         public void Clear()
         {
             m_pList.Clear();
-            m_IsModified = true;
+            IsModified = true;
         }
 
         #endregion
@@ -192,7 +191,7 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         internal void AcceptChanges()
         {
-            m_IsModified = false;
+            IsModified = false;
         }
 
         #endregion
@@ -216,10 +215,7 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets if list has modified since it was loaded.
         /// </summary>
-        public bool IsModified
-        {            
-            get{ return m_IsModified; }
-        }
+        public bool IsModified { get; private set; }
 
         /// <summary>
         /// Gets number of items in the collection.

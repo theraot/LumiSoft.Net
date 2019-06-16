@@ -8,10 +8,6 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_GetFile : EventArgs
     {
-        private readonly string            m_FileName;
-        private FTP_t_ReplyLine[] m_pReplyLines;
-        private Stream            m_pFileStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,7 +23,7 @@ namespace LumiSoft.Net.FTP.Server
                 throw new ArgumentException("Argument 'file' name must be specified.","file");
             }
 
-            m_FileName = file;
+            FileName = file;
         }
 
 
@@ -36,31 +32,18 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// Gets or sets error response.
         /// </summary>
-        public FTP_t_ReplyLine[] Error
-        {
-            get{ return m_pReplyLines; }
-
-            set{ m_pReplyLines = value; }
-        }
+        public FTP_t_ReplyLine[] Error { get; set; }
 
         /// <summary>
         /// Gets file name with optional path.
         /// </summary>
-        public string FileName
-        {
-            get{ return m_FileName; }
-        }
+        public string FileName { get; }
 
         /// <summary>
         /// Gets or sets file stream.
         /// </summary>
-        public Stream FileStream
-        {
-            get{ return m_pFileStream; }
+        public Stream FileStream { get; set; }
 
-            set{ m_pFileStream = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

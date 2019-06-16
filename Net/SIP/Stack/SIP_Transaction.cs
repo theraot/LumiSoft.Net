@@ -9,18 +9,14 @@ namespace LumiSoft.Net.SIP.Stack
     /// This is base class for SIP client and server transaction.
     /// </summary>
     public abstract class SIP_Transaction : IDisposable
-    {        
-        private SIP_TransactionState m_State;
+    {
         private SIP_Stack            m_pStack;
         private SIP_Flow             m_pFlow;
         private SIP_Request          m_pRequest;
         private readonly string               m_Method      = "";
         private readonly string               m_ID          = "";
-        private readonly string               m_Key         = "";
         private readonly DateTime             m_CreateTime;
         private readonly List<SIP_Response>   m_pResponses;
-        private object               m_pTag;
-        private readonly object               m_pLock       = new object();
 
         /// <summary>
         /// Default constructor.
@@ -70,10 +66,10 @@ namespace LumiSoft.Net.SIP.Stack
                 if(request.RequestLine.Method == SIP_Methods.CANCEL){
                     key += "-CANCEL";
                 }
-                m_Key = key;
+                Key = key;
             }
             else{
-                m_Key = m_ID + "-" + request.RequestLine.Method;
+                Key = m_ID + "-" + request.RequestLine.Method;
             }  
         }
 
@@ -123,11 +119,11 @@ namespace LumiSoft.Net.SIP.Stack
                 this.Stack.Logger.AddText(this.ID,"Transaction [branch='" + this.ID + "';method='" + this.Method + "';IsServer=" + (this is SIP_ServerTransaction) + "] switched to '" + state.ToString() + "' state.");
             }
 
-            m_State = state;
+            State = state;
                     
             OnStateChanged();
                         
-            if(m_State == SIP_TransactionState.Terminated){
+            if(State == SIP_TransactionState.Terminated){
                 Dispose();
             }
         }
@@ -161,26 +157,20 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets an object that can be used to synchronize access to the dialog.
         /// </summary>
-        public object SyncRoot
-        {
-            get{ return m_pLock; }
-        }
+        public object SyncRoot { get; } = new object();
 
         /// <summary>
         /// Gets if transaction is disposed.
         /// </summary>
         public bool IsDisposed
         {
-            get{ return m_State == SIP_TransactionState.Disposed; }
+            get{ return State == SIP_TransactionState.Disposed; }
         }
 
         /// <summary>
         /// Gets current transaction state.
         /// </summary>
-        public SIP_TransactionState State
-        {
-            get{ return m_State; }
-        }
+        public SIP_TransactionState State { get; private set; }
 
         /// <summary>
         /// Gets owner SIP stack.
@@ -362,23 +352,15 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
-
-            set{ m_pTag = value; }
-        }
+        public object Tag { get; set; }
 
 
         /// <summary>
         /// Gets transaction indexing key.
         /// </summary>
-        internal string Key
-        {
-            get{ return m_Key; }
-        }
+        internal string Key { get; } = "";
 
-        #endregion
+#endregion
 
         #region Events Implementation
 

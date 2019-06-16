@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SIP.Proxy
     public class SIP_Registrar
     {
         private bool                       m_IsDisposed;
-        private SIP_Proxy                  m_pProxy;
         private SIP_Stack                  m_pStack;
         private SIP_RegistrationCollection m_pRegistrations;
         private Timer                      m_pTimer;
@@ -40,8 +39,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentNullException("proxy");
             }
 
-            m_pProxy = proxy;
-            m_pStack = m_pProxy.Stack;
+            Proxy = proxy;
+            m_pStack = Proxy.Stack;
 
             m_pRegistrations = new SIP_RegistrationCollection();
 
@@ -67,7 +66,7 @@ namespace LumiSoft.Net.SIP.Proxy
             this.AorUnregistered = null;
             this.AorUpdated      = null;
 
-            m_pProxy = null;
+            Proxy = null;
             m_pStack = null;
             m_pRegistrations = null;
             if(m_pTimer != null){
@@ -293,7 +292,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
             #region 3. Authenticate request
 
-            if(!m_pProxy.AuthenticateRequest(e,out userName)){
+            if(!Proxy.AuthenticateRequest(e,out userName)){
                 return;
             }
 
@@ -307,7 +306,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
             #region 5. Check if address of record exists
             
-            if(!m_pProxy.OnAddressExists(to.Address)){
+            if(!Proxy.OnAddressExists(to.Address)){
                 transaction.SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x404_Not_Found,request));
                 return;
             }
@@ -373,12 +372,12 @@ namespace LumiSoft.Net.SIP.Proxy
                         c.Expires = request.Expires;
                     }
                     if(c.Expires == -1){
-                        c.Expires = m_pProxy.Stack.MinimumExpireTime;
+                        c.Expires = Proxy.Stack.MinimumExpireTime;
                     }
                     // We must accept 0 values - means remove contact.
-                    if(c.Expires != 0 && c.Expires < m_pProxy.Stack.MinimumExpireTime){
+                    if(c.Expires != 0 && c.Expires < Proxy.Stack.MinimumExpireTime){
                         SIP_Response resp = m_pStack.CreateResponse(SIP_ResponseCodes.x423_Interval_Too_Brief,request);
-                        resp.MinExpires = m_pProxy.Stack.MinimumExpireTime;
+                        resp.MinExpires = Proxy.Stack.MinimumExpireTime;
                         transaction.SendResponse(resp);
                         return;
                     }
@@ -433,10 +432,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets owner proxy core.
         /// </summary>
-        public SIP_Proxy Proxy
-        {
-            get{ return m_pProxy; }
-        }
+        public SIP_Proxy Proxy { get; private set; }
 
         /// <summary>
         /// Gets current SIP registrations.

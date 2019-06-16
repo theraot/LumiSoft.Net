@@ -8,10 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_LSub : EventArgs
     {
-        private readonly string              m_FolderReferenceName;
-        private readonly string              m_FolderFilter;
-        private readonly List<IMAP_r_u_LSub> m_pFolders;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -19,10 +15,10 @@ namespace LumiSoft.Net.IMAP.Server
         /// <param name="folderFilter">Folder filter.</param>
         internal IMAP_e_LSub(string referenceName,string folderFilter)
         {
-            m_FolderReferenceName = referenceName;
-            m_FolderFilter        = folderFilter;
+            FolderReferenceName = referenceName;
+            FolderFilter        = folderFilter;
 
-            m_pFolders = new List<IMAP_r_u_LSub>();
+            Folders = new List<IMAP_r_u_LSub>();
         }
 
 
@@ -31,10 +27,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder reference name. Value null means not specified.
         /// </summary>
-        public string FolderReferenceName
-        {
-            get{ return m_FolderReferenceName; }
-        }
+        public string FolderReferenceName { get; }
 
         /// <summary>
         /// Gets folder filter.
@@ -46,19 +39,13 @@ namespace LumiSoft.Net.IMAP.Server
         /// is the last character of a mailbox name argument, matching levels
         /// of hierarchy are also returned.
         /// </remarks>
-        public string FolderFilter
-        {
-            get{ return m_FolderFilter; }
-        }
+        public string FolderFilter { get; }
 
         /// <summary>
         /// Gets IMAP folders collection.
         /// </summary>
-        public List<IMAP_r_u_LSub> Folders
-        {
-            get{ return m_pFolders; }
-        }
+        public List<IMAP_r_u_LSub> Folders { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -11,7 +11,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Response : SIP_Message
     {
-        private readonly SIP_Request m_pRequest;
         private double      m_SipVersion   = 2.0d;
         private int         m_StatusCode   = 100;
         private string      m_ReasonPhrase = "";
@@ -29,7 +28,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="request">Owner request.</param>
         internal SIP_Response(SIP_Request request)
         {
-            m_pRequest = request;
+            Request = request;
         }
 
 
@@ -219,10 +218,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets SIP request which response it is. This value is null if this is stateless response.
         /// </summary>
-        public SIP_Request Request
-        {
-            get{ return m_pRequest; }
-        }
+        public SIP_Request Request { get; }
 
         /// <summary>
         /// Gets or sets SIP version.

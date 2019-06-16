@@ -17,9 +17,6 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class RIFF_Chunk
         {
-            private uint   m_ChunkSize;
-            private string m_Format    = "";
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -41,8 +38,8 @@ namespace LumiSoft.Net.Media
                    throw new ArgumentNullException("reader");
                 }
 
-                m_ChunkSize = reader.ReadUInt32();
-                m_Format    = new string(reader.ReadChars(4)).Trim();
+                ChunkSize = reader.ReadUInt32();
+                Format    = new string(reader.ReadChars(4)).Trim();
             }
 
             #endregion
@@ -61,20 +58,14 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets chunk size.
             /// </summary>
-            public uint ChunkSize
-            {
-                get{ return m_ChunkSize; }
-            }
+            public uint ChunkSize { get; private set; }
 
             /// <summary>
             /// Gets format.
             /// </summary>
-            public string Format
-            {
-                get{ return m_Format; }
-            }
+            public string Format { get; private set; } = "";
 
-            #endregion
+#endregion
         }
 
         #endregion
@@ -86,14 +77,6 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class fmt_Chunk
         {
-            private uint m_ChunkSize;
-            private int  m_AudioFormat;
-            private int  m_NumberOfChannels;
-            private int  m_SampleRate;
-            private int  m_AvgBytesPerSec;
-            private int  m_BlockAlign;
-            private int  m_BitsPerSample;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -115,16 +98,16 @@ namespace LumiSoft.Net.Media
                    throw new ArgumentNullException("reader");
                 }
 
-                m_ChunkSize        = reader.ReadUInt32();
-                m_AudioFormat      = reader.ReadInt16();
-                m_NumberOfChannels = reader.ReadInt16();
-                m_SampleRate       = reader.ReadInt32();
-                m_AvgBytesPerSec   = reader.ReadInt32();
-                m_BlockAlign       = reader.ReadInt16();
-                m_BitsPerSample    = reader.ReadInt16();
+                ChunkSize        = reader.ReadUInt32();
+                AudioFormat      = reader.ReadInt16();
+                NumberOfChannels = reader.ReadInt16();
+                SampleRate       = reader.ReadInt32();
+                AvgBytesPerSec   = reader.ReadInt32();
+                BlockAlign       = reader.ReadInt16();
+                BitsPerSample    = reader.ReadInt16();
 
                 // Eat all bytes above 16 size.
-                for(int i=0;i<(m_ChunkSize - 16);i++){
+                for(int i=0;i<(ChunkSize - 16);i++){
                     reader.ReadByte();
                 }
             }
@@ -140,13 +123,13 @@ namespace LumiSoft.Net.Media
             public override string ToString()
             {
                 StringBuilder retVal = new StringBuilder();
-                retVal.AppendLine("ChunkSize: " + m_ChunkSize);
-                retVal.AppendLine("AudioFormat: " + m_AudioFormat);
-                retVal.AppendLine("Channels: " + m_NumberOfChannels);
-                retVal.AppendLine("SampleRate: " + m_SampleRate);
-                retVal.AppendLine("AvgBytesPerSec: " + m_AvgBytesPerSec);
-                retVal.AppendLine("BlockAlign: " + m_BlockAlign);
-                retVal.AppendLine("BitsPerSample: " + m_BitsPerSample);
+                retVal.AppendLine("ChunkSize: " + ChunkSize);
+                retVal.AppendLine("AudioFormat: " + AudioFormat);
+                retVal.AppendLine("Channels: " + NumberOfChannels);
+                retVal.AppendLine("SampleRate: " + SampleRate);
+                retVal.AppendLine("AvgBytesPerSec: " + AvgBytesPerSec);
+                retVal.AppendLine("BlockAlign: " + BlockAlign);
+                retVal.AppendLine("BitsPerSample: " + BitsPerSample);
 
                 return retVal.ToString();
             }
@@ -167,60 +150,39 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets chunk size.
             /// </summary>
-            public uint ChunkSize
-            {
-                get{ return m_ChunkSize; }
-            }
+            public uint ChunkSize { get; private set; }
 
             /// <summary>
             /// Gets auido format. Value 1 is PCM.
             /// </summary>
-            public int AudioFormat
-            {
-                get{ return m_AudioFormat; }
-            }
+            public int AudioFormat { get; private set; }
 
             /// <summary>
             /// Gets number of channels.
             /// </summary>
-            public int NumberOfChannels
-            {
-                get{ return m_NumberOfChannels; }
-            }
+            public int NumberOfChannels { get; private set; }
 
             /// <summary>
             /// Gets sample rate(Hz).
             /// </summary>
-            public int SampleRate
-            {
-                get{ return m_SampleRate; }
-            }
+            public int SampleRate { get; private set; }
 
             /// <summary>
             /// The average number of bytes per secondec at which the waveform data should be transferred.
             /// </summary>
-            public int AvgBytesPerSec
-            {
-                get{ return m_AvgBytesPerSec; }
-            }
+            public int AvgBytesPerSec { get; private set; }
 
             /// <summary>
             /// The block alignment (in bytes) of the waveform data.
             /// </summary>
-            public int BlockAlign
-            {
-                get{ return m_BlockAlign; }
-            }
+            public int BlockAlign { get; private set; }
 
             /// <summary>
             /// Gets bits per sample.
             /// </summary>
-            public int BitsPerSample
-            {
-                get{ return m_BitsPerSample; }
-            }
+            public int BitsPerSample { get; private set; }
 
-            #endregion
+#endregion
         }
 
         #endregion
@@ -232,8 +194,6 @@ namespace LumiSoft.Net.Media
         /// </summary>
         private class data_Chunk
         {
-            private uint m_ChunkSize;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -255,7 +215,7 @@ namespace LumiSoft.Net.Media
                    throw new ArgumentNullException("reader");
                 }
 
-                m_ChunkSize = reader.ReadUInt32();
+                ChunkSize = reader.ReadUInt32();
             }
 
             #endregion
@@ -274,12 +234,9 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets chunk size.
             /// </summary>
-            public uint ChunkSize
-            {
-                get{ return m_ChunkSize; }
-            }
+            public uint ChunkSize { get; private set; }
 
-            #endregion
+#endregion
         }
 
         #endregion

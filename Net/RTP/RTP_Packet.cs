@@ -12,13 +12,9 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Packet
     {
-        private int    m_Version        = 2;
-        private bool   m_IsMarker;
         private int    m_PayloadType;
-        private ushort m_SequenceNumber;
         private uint   m_Timestamp;
         private uint   m_SSRC;
-        private uint[] m_CSRC;
         private byte[] m_Data;
 
         /// <summary>
@@ -98,17 +94,17 @@ namespace LumiSoft.Net.RTP
             */
 
             int cc = 0;
-            if(m_CSRC != null){
-                cc = m_CSRC.Length;
+            if(CSRC != null){
+                cc = CSRC.Length;
             }
 
             // V P X CC
-            buffer[offset++] = (byte)(m_Version << 6 | 0 << 5 | cc & 0xF);
+            buffer[offset++] = (byte)(Version << 6 | 0 << 5 | cc & 0xF);
             // M PT
-            buffer[offset++] = (byte)(Convert.ToInt32(m_IsMarker) << 7 | m_PayloadType & 0x7F);
+            buffer[offset++] = (byte)(Convert.ToInt32(IsMarker) << 7 | m_PayloadType & 0x7F);
             // sequence number
-            buffer[offset++] = (byte)(m_SequenceNumber >> 8);
-            buffer[offset++] = (byte)(m_SequenceNumber & 0xFF);
+            buffer[offset++] = (byte)(SeqNo >> 8);
+            buffer[offset++] = (byte)(SeqNo & 0xFF);
             // timestamp
             buffer[offset++] = (byte)((m_Timestamp >> 24) & 0xFF);
             buffer[offset++] = (byte)((m_Timestamp >> 16) & 0xFF);
@@ -120,8 +116,8 @@ namespace LumiSoft.Net.RTP
             buffer[offset++] = (byte)((m_SSRC >>  8) & 0xFF);
             buffer[offset++] = (byte)(m_SSRC & 0xFF);
             // CSRCs
-            if(m_CSRC != null){
-                foreach(int csrc in m_CSRC){
+            if(CSRC != null){
+                foreach(int csrc in CSRC){
                     buffer[offset++] = (byte)((csrc >> 24) & 0xFF);
                     buffer[offset++] = (byte)((csrc >> 16) & 0xFF);
                     buffer[offset++] = (byte)((csrc >>  8) & 0xFF);
@@ -145,10 +141,10 @@ namespace LumiSoft.Net.RTP
         {
             StringBuilder retVal = new StringBuilder();
             retVal.Append("----- RTP Packet\r\n");
-            retVal.Append("Version: " + m_Version.ToString() + "\r\n");
-            retVal.Append("IsMaker: " + m_IsMarker.ToString() + "\r\n");
+            retVal.Append("Version: " + Version.ToString() + "\r\n");
+            retVal.Append("IsMaker: " + IsMarker.ToString() + "\r\n");
             retVal.Append("PayloadType: " + m_PayloadType.ToString() + "\r\n");
-            retVal.Append("SeqNo: " + m_SequenceNumber.ToString() + "\r\n");
+            retVal.Append("SeqNo: " + SeqNo.ToString() + "\r\n");
             retVal.Append("Timestamp: " + m_Timestamp.ToString() + "\r\n");
             retVal.Append("SSRC: " + m_SSRC.ToString() + "\r\n");
             retVal.Append("Data: " + m_Data.Length + " bytes.\r\n");
@@ -200,7 +196,7 @@ namespace LumiSoft.Net.RTP
             int offset = 0;
 
             // V
-            m_Version = buffer[offset] >> 6;
+            Version = buffer[offset] >> 6;
             // P
             bool isPadded  = Convert.ToBoolean((buffer[offset] >> 5) & 0x1);
             // X
@@ -208,19 +204,19 @@ namespace LumiSoft.Net.RTP
             // CC
             int csrcCount = buffer[offset++] & 0xF;
             // M
-            m_IsMarker = Convert.ToBoolean(buffer[offset] >> 7);
+            IsMarker = Convert.ToBoolean(buffer[offset] >> 7);
             // PT
             m_PayloadType = buffer[offset++] & 0x7F;
             // sequence number
-            m_SequenceNumber = (ushort)(buffer[offset++] << 8 | buffer[offset++]);
+            SeqNo = (ushort)(buffer[offset++] << 8 | buffer[offset++]);
             // timestamp
             m_Timestamp = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
             // SSRC
             m_SSRC = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
             // CSRC
-            m_CSRC = new uint[csrcCount];
+            CSRC = new uint[csrcCount];
             for(int i=0;i<csrcCount;i++){
-                m_CSRC[i] = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+                CSRC[i] = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
             }
             // X
             if(hasExtention){
@@ -244,10 +240,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTP version.
         /// </summary>
-        public int Version
-        {
-            get{ return m_Version; }
-        }
+        public int Version { get; private set; } = 2;
 
         /// <summary>
         /// Gets if packet is padded to some bytes boundary.
@@ -260,12 +253,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets marker bit. The usage of this bit depends on payload type.
         /// </summary>
-        public bool IsMarker
-        {
-            get{ return m_IsMarker; }
-
-            set{ m_IsMarker = value; }
-        }
+        public bool IsMarker { get; set; }
 
         /// <summary>
         /// Gets payload type.
@@ -288,13 +276,8 @@ namespace LumiSoft.Net.RTP
         /// Gets or sets RTP packet sequence number.
         /// </summary>
         /// <exception cref="ArgumentException">Is raised when invalid value is passed.</exception>
-        public ushort SeqNo
-        {
-            get{ return m_SequenceNumber; }
+        public ushort SeqNo { get; set; }
 
-            set{ m_SequenceNumber = value; }
-        }
-        
         /// <summary>
         /// Gets sets packet timestamp. 
         /// </summary>
@@ -333,12 +316,7 @@ namespace LumiSoft.Net.RTP
         /// Gets or sets the contributing sources for the payload contained in this packet.
         /// Value null means none.
         /// </summary>
-        public uint[] CSRC
-        {
-            get{ return m_CSRC; }
-
-            set{ m_CSRC = value; }
-        }
+        public uint[] CSRC { get; set; }
 
         /// <summary>
         /// Gets SSRC + CSRCs as joined array.
@@ -347,11 +325,11 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 uint[] retVal = new uint[1];
-                if(m_CSRC != null){
-                    retVal = new uint[1 + m_CSRC.Length];
+                if(CSRC != null){
+                    retVal = new uint[1 + CSRC.Length];
                 }
                 retVal[0] = m_SSRC;
-                Array.Copy(m_CSRC,retVal,m_CSRC.Length);
+                Array.Copy(CSRC,retVal,CSRC.Length);
 
                 return retVal; 
             }

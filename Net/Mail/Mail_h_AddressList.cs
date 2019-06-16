@@ -19,8 +19,6 @@ namespace LumiSoft.Net.Mail
     public class Mail_h_AddressList : MIME_h
     {
         private string             m_ParseValue;
-        private readonly string             m_Name;
-        private readonly Mail_t_AddressList m_pAddresses;
 
         /// <summary>
         /// Default constructor.
@@ -41,8 +39,8 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("values");
             }
 
-            m_Name       = fieldName;
-            m_pAddresses = values;
+            Name       = fieldName;
+            Addresses = values;
         }
 
 
@@ -80,7 +78,7 @@ namespace LumiSoft.Net.Mail
 
             Mail_h_AddressList retVal = new Mail_h_AddressList(name_value[0],Mail_t_AddressList.Parse(name_value[1].Trim()));
             retVal.m_ParseValue = value;
-            retVal.m_pAddresses.AcceptChanges();
+            retVal.Addresses.AcceptChanges();
 
             return retVal;
         }
@@ -102,21 +100,21 @@ namespace LumiSoft.Net.Mail
             if(reEncode || this.IsModified){
                 StringBuilder retVal = new StringBuilder();
                 retVal.Append(this.Name + ": ");
-                for(int i=0;i<m_pAddresses.Count;i++){
+                for(int i=0;i<Addresses.Count;i++){
                     if(i > 0){
                         retVal.Append("\t");
                     }
  
                     // Don't add ',' for last item.
-                    if(i == (m_pAddresses.Count - 1)){
-                        retVal.Append(m_pAddresses[i].ToString(wordEncoder) + "\r\n");
+                    if(i == (Addresses.Count - 1)){
+                        retVal.Append(Addresses[i].ToString(wordEncoder) + "\r\n");
                     }
                     else{
-                        retVal.Append(m_pAddresses[i].ToString(wordEncoder) + ",\r\n");
+                        retVal.Append(Addresses[i].ToString(wordEncoder) + ",\r\n");
                     }
                 }
                 // No items, we need to add ending CRLF.
-                if(m_pAddresses.Count == 0){
+                if(Addresses.Count == 0){
                     retVal.Append("\r\n");
                 }
 
@@ -139,25 +137,19 @@ namespace LumiSoft.Net.Mail
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
         public override bool IsModified
         {
-            get{ return m_pAddresses.IsModified; }
+            get{ return Addresses.IsModified; }
         }
 
         /// <summary>
         /// Gets header field name. For example "To".
         /// </summary>
-        public override string Name
-        {
-            get{ return m_Name; }
-        }
+        public override string Name { get; }
 
         /// <summary>
         /// Gets addresses collection.
         /// </summary>
-        public Mail_t_AddressList Addresses
-        {
-            get{ return m_pAddresses; }
-        }
+        public Mail_t_AddressList Addresses { get; }
 
-        #endregion
+#endregion
     }
 }

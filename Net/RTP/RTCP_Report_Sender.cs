@@ -7,11 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Report_Sender
     {
-        private readonly ulong m_NtpTimestamp;
-        private readonly uint  m_RtpTimestamp;
-        private readonly uint  m_SenderPacketCount;
-        private readonly uint  m_SenderOctetCount;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,10 +18,10 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("sr");
             }
 
-            m_NtpTimestamp      = sr.NtpTimestamp;
-            m_RtpTimestamp      = sr.RtpTimestamp;
-            m_SenderPacketCount = sr.SenderPacketCount;
-            m_SenderOctetCount  = sr.SenderOctetCount;
+            NtpTimestamp      = sr.NtpTimestamp;
+            RtpTimestamp      = sr.RtpTimestamp;
+            SenderPacketCount = sr.SenderPacketCount;
+            SenderOctetCount  = sr.SenderOctetCount;
         }
 
 
@@ -35,36 +30,24 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets the wallclock time (see Section 4) when this report was sent.
         /// </summary>
-        public ulong NtpTimestamp
-        {
-            get{ return m_NtpTimestamp; }
-        }
+        public ulong NtpTimestamp { get; }
 
         /// <summary>
         /// Gets RTP timestamp.
         /// </summary>
-        public uint RtpTimestamp
-        {
-            get{ return m_RtpTimestamp; }
-        }
+        public uint RtpTimestamp { get; }
 
         /// <summary>
         /// Gets how many packets sender has sent.
         /// </summary>
-        public uint SenderPacketCount
-        {
-            get{ return m_SenderPacketCount; }
-        }
+        public uint SenderPacketCount { get; }
 
         /// <summary>
         /// Gets how many bytes sender has sent.
         /// </summary>
-        public uint SenderOctetCount
-        {
-            get{ return m_SenderOctetCount; }
-        }
+        public uint SenderOctetCount { get; }
 
-        #endregion
+#endregion
 
     }
 }

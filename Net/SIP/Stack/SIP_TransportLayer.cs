@@ -24,7 +24,6 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         private class SIP_FlowManager : IDisposable
         {
-            private bool                        m_IsDisposed;
             private SIP_TransportLayer          m_pOwner;
             private Dictionary<string,SIP_Flow> m_pFlows;
             private TimerEx                     m_pTimeoutTimer;
@@ -60,10 +59,10 @@ namespace LumiSoft.Net.SIP.Stack
             public void Dispose()
             {
                 lock(m_pLock){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         return;
                     }
-                    m_IsDisposed = true;
+                    IsDisposed = true;
 
                     foreach(SIP_Flow flow in this.Flows){
                         flow.Dispose();
@@ -86,7 +85,7 @@ namespace LumiSoft.Net.SIP.Stack
             private void m_pTimeoutTimer_Elapsed(object sender,System.Timers.ElapsedEventArgs e)
             {
                 lock(m_pLock){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         return;
                     }
                 
@@ -218,11 +217,8 @@ namespace LumiSoft.Net.SIP.Stack
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public bool IsDisposed
-            {
-                get{ return m_IsDisposed; }
-            }
-                
+            public bool IsDisposed { get; private set; }
+
             /// <summary>
             /// Gets number of flows in the collection.
             /// </summary>
@@ -230,7 +226,7 @@ namespace LumiSoft.Net.SIP.Stack
             public int Count
             {
                 get{                
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -248,7 +244,7 @@ namespace LumiSoft.Net.SIP.Stack
             public SIP_Flow this[string flowID]
             {
                 get{
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
                     if(flowID == null){
@@ -286,7 +282,7 @@ namespace LumiSoft.Net.SIP.Stack
             internal SIP_TransportLayer TransportLayer
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -301,13 +297,9 @@ namespace LumiSoft.Net.SIP.Stack
         #endregion
 
         private bool                          m_IsDisposed;
-        private bool                          m_IsRunning;
-        private readonly SIP_Stack                     m_pStack;
         private IPBindInfo[]                  m_pBinds;
-        private UDP_Server                    m_pUdpServer;
         private TCP_Server<TCP_ServerSession> m_pTcpServer;
         private readonly SIP_FlowManager               m_pFlowManager;
-        private string                        m_StunServer;
         private readonly CircleCollection<IPAddress>   m_pLocalIPv4;
         private readonly CircleCollection<IPAddress>   m_pLocalIPv6;
         private Random                        m_pRandom;
@@ -323,11 +315,11 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("stack");
             }
 
-            m_pStack = stack;
+            Stack = stack;
           
-            m_pUdpServer = new UDP_Server();
-            m_pUdpServer.PacketReceived += new EventHandler<UDP_e_PacketReceived>(m_pUdpServer_PacketReceived);
-            m_pUdpServer.Error += new ErrorEventHandler(m_pUdpServer_Error);
+            UdpServer = new UDP_Server();
+            UdpServer.PacketReceived += new EventHandler<UDP_e_PacketReceived>(m_pUdpServer_PacketReceived);
+            UdpServer.Error += new ErrorEventHandler(m_pUdpServer_Error);
 
             m_pTcpServer = new TCP_Server<TCP_ServerSession>();
             m_pTcpServer.SessionCreated += new EventHandler<TCP_ServerSessionEventArgs<TCP_ServerSession>>(m_pTcpServer_SessionCreated);
@@ -356,15 +348,15 @@ namespace LumiSoft.Net.SIP.Stack
 
             Stop();
 
-            m_IsRunning  = false;
+            IsRunning  = false;
             m_pBinds    = null;
             m_pRandom   = null;
 
             m_pTcpServer.Dispose();
             m_pTcpServer = null;
 
-            m_pUdpServer.Dispose();
-            m_pUdpServer = null;
+            UdpServer.Dispose();
+            UdpServer = null;
         }
 
         #endregion
@@ -386,7 +378,7 @@ namespace LumiSoft.Net.SIP.Stack
                 flow.OnUdpPacketReceived(e);
             }
             catch(Exception x){
-                m_pStack.OnError(x);
+                Stack.OnError(x);
             }
         }
 
@@ -401,7 +393,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="e">Event data.</param>
         private void m_pUdpServer_Error(object sender,Error_EventArgs e)
         {
-            m_pStack.OnError(e.Exception);
+            Stack.OnError(e.Exception);
         }
 
         #endregion
@@ -430,13 +422,13 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         internal void Start()
         {
-            if(m_IsRunning){
+            if(IsRunning){
                 return;
             }
             // Set this flag before running thread, otherwise thead may exist before you set this flag.
-            m_IsRunning = true;
+            IsRunning = true;
                         
-            m_pUdpServer.Start();
+            UdpServer.Start();
             m_pTcpServer.Start();            
         }
                                 
@@ -449,12 +441,12 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         internal void Stop()
         {
-            if(!m_IsRunning){
+            if(!IsRunning){
                 return;
             }
-            m_IsRunning = false;
+            IsRunning = false;
 
-            m_pUdpServer.Stop();
+            UdpServer.Stop();
             m_pTcpServer.Stop();        
         }
 
@@ -521,8 +513,8 @@ namespace LumiSoft.Net.SIP.Stack
                         response = SIP_Response.Parse(message);
                     }
                     catch(Exception x){
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddText("Skipping message, parse error: " + x.ToString());
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText("Skipping message, parse error: " + x.ToString());
                         }
 
                         return;
@@ -532,8 +524,8 @@ namespace LumiSoft.Net.SIP.Stack
                         response.Validate();
                     }
                     catch(Exception x){
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddText("Response validation failed: " + x.ToString());
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText("Response validation failed: " + x.ToString());
                         }
 
                         return;
@@ -558,20 +550,20 @@ namespace LumiSoft.Net.SIP.Stack
                         forward them, while a UA will discard, for example).
                     */
                                         
-                    SIP_ClientTransaction transaction =  m_pStack.TransactionLayer.MatchClientTransaction(response);
+                    SIP_ClientTransaction transaction =  Stack.TransactionLayer.MatchClientTransaction(response);
                     // Allow client transaction to process response.
                     if(transaction != null){
                         transaction.ProcessResponse(flow,response);                        
                     }
                     else{
                         // Pass response to dialog.
-                        SIP_Dialog dialog = m_pStack.TransactionLayer.MatchDialog(response);
+                        SIP_Dialog dialog = Stack.TransactionLayer.MatchDialog(response);
                         if(dialog != null){
                             dialog.ProcessResponse(response);
                         }
                         // Pass response to core.
                         else{                    
-                            m_pStack.OnResponseReceived(new SIP_ResponseReceivedEventArgs(m_pStack,null,response));
+                            Stack.OnResponseReceived(new SIP_ResponseReceivedEventArgs(Stack,null,response));
                         }
                     }
                 }
@@ -591,8 +583,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     catch(Exception x){
                         // Log
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddText("Skipping message, parse error: " + x.Message);
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText("Skipping message, parse error: " + x.Message);
                         }
 
                         return;
@@ -602,12 +594,12 @@ namespace LumiSoft.Net.SIP.Stack
                         request.Validate();
                     }
                     catch(Exception x){
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddText("Request validation failed: " + x.ToString());
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText("Request validation failed: " + x.ToString());
                         }
 
                         // Bad request, send error to request maker.
-                        SendResponse(m_pStack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ". " + x.Message,request));
+                        SendResponse(Stack.CreateResponse(SIP_ResponseCodes.x400_Bad_Request + ". " + x.Message,request));
 
                         return;
                     }
@@ -615,10 +607,10 @@ namespace LumiSoft.Net.SIP.Stack
                     #endregion
 
                     // TODO: Is that needed, core can reject message as it would like.
-                    SIP_ValidateRequestEventArgs eArgs = m_pStack.OnValidateRequest(request,flow.RemoteEP);
+                    SIP_ValidateRequestEventArgs eArgs = Stack.OnValidateRequest(request,flow.RemoteEP);
                     // Request rejected, return response.
                     if(eArgs.ResponseCode != null){
-                        SendResponse(m_pStack.CreateResponse(eArgs.ResponseCode,request));
+                        SendResponse(Stack.CreateResponse(eArgs.ResponseCode,request));
 
                         return;
                     }
@@ -671,7 +663,7 @@ namespace LumiSoft.Net.SIP.Stack
                     }
 
                     bool processed = false;
-                    SIP_ServerTransaction transaction = m_pStack.TransactionLayer.MatchServerTransaction(request);
+                    SIP_ServerTransaction transaction = Stack.TransactionLayer.MatchServerTransaction(request);
                     // Pass request to matched server transaction.
                     if(transaction != null){
                         transaction.ProcessRequest(flow,request);
@@ -679,20 +671,20 @@ namespace LumiSoft.Net.SIP.Stack
                         processed = true;
                     }
                     else{
-                        SIP_Dialog dialog = m_pStack.TransactionLayer.MatchDialog(request);
+                        SIP_Dialog dialog = Stack.TransactionLayer.MatchDialog(request);
                         // Pass request to dialog.
                         if(dialog != null){
-                            processed = dialog.ProcessRequest(new SIP_RequestReceivedEventArgs(m_pStack,flow,request));
+                            processed = dialog.ProcessRequest(new SIP_RequestReceivedEventArgs(Stack,flow,request));
                         }
                     }
 
                     // Request not proecced by dialog or transaction, pass request to TU.
                     if(!processed){
                         // Log
-                        if(m_pStack.Logger != null){
+                        if(Stack.Logger != null){
                             byte[] requestData = request.ToByteData();
 
-                            m_pStack.Logger.AddRead(
+                            Stack.Logger.AddRead(
                                 Guid.NewGuid().ToString(),
                                 null,
                                 0,
@@ -705,7 +697,7 @@ namespace LumiSoft.Net.SIP.Stack
                             );
                         }
 
-                        m_pStack.OnRequestReceived(new SIP_RequestReceivedEventArgs(m_pStack,flow,request));
+                        Stack.OnRequestReceived(new SIP_RequestReceivedEventArgs(Stack,flow,request));
                     }
                 }
 
@@ -717,7 +709,7 @@ namespace LumiSoft.Net.SIP.Stack
                 string dummy = s.Message;
             }
             catch(Exception x){
-                m_pStack.OnError(x);
+                Stack.OnError(x);
             }
         }
 
@@ -747,7 +739,7 @@ namespace LumiSoft.Net.SIP.Stack
             if(localEP == null){
                 if(string.Equals(transport,SIP_Transport.UDP,StringComparison.InvariantCultureIgnoreCase)){
                     // Get load-balanched local endpoint.
-                    localEP = m_pUdpServer.GetLocalEndPoint(remoteEP);
+                    localEP = UdpServer.GetLocalEndPoint(remoteEP);
                 }
                 else if(string.Equals(transport,SIP_Transport.TCP,StringComparison.InvariantCultureIgnoreCase)){
                     // Get load-balanched local IP for TCP and create random port.
@@ -819,7 +811,7 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("request");
             }
 
-            SIP_Hop[] hops = m_pStack.GetHops((SIP_Uri)request.RequestLine.Uri,request.ToByteData().Length,false);
+            SIP_Hop[] hops = Stack.GetHops((SIP_Uri)request.RequestLine.Uri,request.ToByteData().Length,false);
             if(hops.Length == 0){
                 throw new SIP_TransportException("No target hops for URI '" + request.RequestLine.Uri.ToString() + "'.");
             }
@@ -947,10 +939,10 @@ namespace LumiSoft.Net.SIP.Stack
             flow.Send(request);
 
             // Log.
-            if(m_pStack.Logger != null){
+            if(Stack.Logger != null){
                 byte[] requestData = request.ToByteData();
 
-                m_pStack.Logger.AddWrite(
+                Stack.Logger.AddWrite(
                     Guid.NewGuid().ToString(),
                     null,
                     0,
@@ -1048,7 +1040,7 @@ namespace LumiSoft.Net.SIP.Stack
             if(m_IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
-            if(!m_IsRunning){
+            if(!IsRunning){
                 throw new InvalidOperationException("Stack has not been started.");
             }
             if(response == null){
@@ -1158,8 +1150,8 @@ namespace LumiSoft.Net.SIP.Stack
                     SIP_Flow flow = transaction.Flow;
                     flow.Send(response);
 
-                    if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddWrite(
+                    if(Stack.Logger != null){
+                            Stack.Logger.AddWrite(
                                 logID,
                                 null,
                                 0,
@@ -1216,8 +1208,8 @@ namespace LumiSoft.Net.SIP.Stack
                     if(flow != null){
                         flow.Send(response);
 
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddWrite(
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddWrite(
                                 logID,
                                 null,
                                 0,
@@ -1391,7 +1383,7 @@ namespace LumiSoft.Net.SIP.Stack
                     else if(via.ProtocolTransport == SIP_Transport.UDP){
                         srvQuery = "_sips._tcp." + via.SentBy.Host;
                     }
-                    DnsServerResponse dnsResponse = m_pStack.Dns.Query(srvQuery,DNS_QType.SRV);
+                    DnsServerResponse dnsResponse = Stack.Dns.Query(srvQuery,DNS_QType.SRV);
                     if(dnsResponse.ResponseCode != DNS_RCode.NO_ERROR){
                         throw new SIP_TransportException("Dns error: " + dnsResponse.ResponseCode.ToString());
                     }
@@ -1402,8 +1394,8 @@ namespace LumiSoft.Net.SIP.Stack
                         for(int i=0;i<srvRecords.Length;i++){
                             DNS_rr_SRV srv = srvRecords[i];
                             try{
-                                if(m_pStack.Logger != null){
-                                    m_pStack.Logger.AddText(logID,"Starts sending response to DNS SRV record '" + srv.Target + "'.");
+                                if(Stack.Logger != null){
+                                    Stack.Logger.AddText(logID,"Starts sending response to DNS SRV record '" + srv.Target + "'.");
                                 }
 
                                 SendResponseToHost(logID,transactionID,localEP,srv.Target,srv.Port,via.ProtocolTransport,response);
@@ -1411,16 +1403,16 @@ namespace LumiSoft.Net.SIP.Stack
                             catch{
                                 // Generate error, all SRV records has failed.
                                 if(i == (srvRecords.Length - 1)){
-                                    if(m_pStack.Logger != null){
-                                        m_pStack.Logger.AddText(logID,"Failed to send response to DNS SRV record '" + srv.Target + "'.");
+                                    if(Stack.Logger != null){
+                                        Stack.Logger.AddText(logID,"Failed to send response to DNS SRV record '" + srv.Target + "'.");
                                     }
 
                                     throw new SIP_TransportException("Host '" + via.SentBy.Host + "' is not accessible.");
                                 }
                                 // For loop will try next SRV record.
                                 else{
-                                    if(m_pStack.Logger != null){
-                                        m_pStack.Logger.AddText(logID,"Failed to send response to DNS SRV record '" + srv.Target + "', will try next.");
+                                    if(Stack.Logger != null){
+                                        Stack.Logger.AddText(logID,"Failed to send response to DNS SRV record '" + srv.Target + "', will try next.");
                                     }
                                 }
                             }
@@ -1428,8 +1420,8 @@ namespace LumiSoft.Net.SIP.Stack
                     }
                     // If no SRV, use A and AAAA records. (Thats not in 3263 5., but we need to todo it so.)
                     else{
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddText(logID,"No DNS SRV records found, starts sending to Via: sent-by host '" + via.SentBy.Host + "'.");
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddText(logID,"No DNS SRV records found, starts sending to Via: sent-by host '" + via.SentBy.Host + "'.");
                         }
 
                         SendResponseToHost(logID,transactionID,localEP,via.SentBy.Host,via.SentByPortWithDefault,via.ProtocolTransport,response);
@@ -1465,7 +1457,7 @@ namespace LumiSoft.Net.SIP.Stack
                     targets = new IPAddress[]{IPAddress.Parse(host)};
                 }
                 else{
-                    targets = m_pStack.Dns.GetHostAddresses(host);
+                    targets = Stack.Dns.GetHostAddresses(host);
                     if(targets.Length == 0){
                         throw new SIP_TransportException("Invalid Via: Sent-By host name '" + host + "' could not be resolved.");
                     }
@@ -1480,8 +1472,8 @@ namespace LumiSoft.Net.SIP.Stack
                         flow.Send(response);
                         // localEP = flow.LocalEP;
                        
-                        if(m_pStack.Logger != null){
-                            m_pStack.Logger.AddWrite(
+                        if(Stack.Logger != null){
+                            Stack.Logger.AddWrite(
                                 logID,
                                 null,
                                 0,
@@ -1500,16 +1492,16 @@ namespace LumiSoft.Net.SIP.Stack
                     catch{
                         // Generate error, all IP addresses has failed.
                         if(i == (targets.Length - 1)){
-                            if(m_pStack.Logger != null){
-                                m_pStack.Logger.AddText(logID,"Failed to send response to host '" + host + "' IP end point '" + remoteEP + "'.");
+                            if(Stack.Logger != null){
+                                Stack.Logger.AddText(logID,"Failed to send response to host '" + host + "' IP end point '" + remoteEP + "'.");
                             }
 
                             throw new SIP_TransportException("Host '" + host + ":" + port + "' is not accessible.");
                         }
                         // For loop will try next IP address.
                         else{
-                            if(m_pStack.Logger != null){
-                                m_pStack.Logger.AddText(logID,"Failed to send response to host '" + host + "' IP end point '" + remoteEP + "', will try next A record.");
+                            if(Stack.Logger != null){
+                                Stack.Logger.AddText(logID,"Failed to send response to host '" + host + "' IP end point '" + remoteEP + "', will try next A record.");
                             }
                         }
                     }
@@ -1674,18 +1666,12 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets if transport layer is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get{ return m_IsRunning; }
-        }
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Gets owner SIP stack.
         /// </summary>
-        public SIP_Stack Stack
-        {
-            get{ return m_pStack; }
-        }
+        public SIP_Stack Stack { get; }
 
         /// <summary>
         /// Gets or sets socket bind info. Use this property to specify on which protocol,IP,port server 
@@ -1729,7 +1715,7 @@ namespace LumiSoft.Net.SIP.Stack
                             tcpListeningPoints.Add(bindInfo);
                         }
                     }
-                    m_pUdpServer.Bindings = udpListeningPoints.ToArray();
+                    UdpServer.Bindings = udpListeningPoints.ToArray();
                     m_pTcpServer.Bindings = tcpListeningPoints.ToArray();
 
                     // Build possible local TCP/TLS IP addresses.
@@ -1757,24 +1743,14 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets UDP server.
         /// </summary>
-        internal UDP_Server UdpServer
-        {
-            get{ return m_pUdpServer; }
-        }
+        internal UDP_Server UdpServer { get; private set; }
 
         /// <summary>
         /// Gets or sets STUN server name or IP address. This value must be filled if SIP stack is running behind a NAT.
         /// </summary>
-        internal string StunServer
-        {
-            get{ return m_StunServer; }
+        internal string StunServer { get; set; }
 
-            set{
-                m_StunServer = value;
-            }
-        }
-
-        #endregion
+#endregion
 
     }
 }

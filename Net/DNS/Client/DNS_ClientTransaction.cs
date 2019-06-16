@@ -11,14 +11,8 @@ namespace LumiSoft.Net.DNS.Client
     public class DNS_ClientTransaction
     {
         private readonly object                     m_pLock         = new object();
-        private DNS_ClientTransactionState m_State         = DNS_ClientTransactionState.WaitingForStart;
-        private readonly DateTime                   m_CreateTime;
         private Dns_Client                 m_pOwner;
-        private readonly int                        m_ID            = 1;
-        private readonly string                     m_QName         = "";
-        private readonly DNS_QType                  m_QType         = 0;
         private TimerEx                    m_pTimeoutTimer;
-        private DnsServerResponse          m_pResponse;
         private int                        m_ResponseCount;
 
         /// <summary>
@@ -40,11 +34,11 @@ namespace LumiSoft.Net.DNS.Client
             }
 
             m_pOwner = owner;
-            m_ID     = id;
-            m_QName  = qname;
-            m_QType  = qtype;
+            ID     = id;
+            QName  = qname;
+            QType  = qtype;
                         
-            m_CreateTime    = DateTime.Now;
+            CreateTime    = DateTime.Now;
             m_pTimeoutTimer = new TimerEx(timeout);
             m_pTimeoutTimer.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimeoutTimer_Elapsed);
         }
@@ -68,7 +62,7 @@ namespace LumiSoft.Net.DNS.Client
 
                 m_pOwner = null;
 
-                m_pResponse = null;
+                Response = null;
 
                 this.StateChanged = null;
                 this.Timeout = null;
@@ -124,9 +118,9 @@ namespace LumiSoft.Net.DNS.Client
                 try{
                     // Use DNS cache if allowed.
 			        if(Dns_Client.UseDnsCache){ 
-	                    DnsServerResponse response = m_pOwner.Cache.GetFromCache(m_QName,(int)m_QType);
+	                    DnsServerResponse response = m_pOwner.Cache.GetFromCache(QName,(int)QType);
 				        if(response != null){
-					        m_pResponse = response;
+					        Response = response;
 
                             SetState(DNS_ClientTransactionState.Completed);
                             Dispose();
@@ -136,7 +130,7 @@ namespace LumiSoft.Net.DNS.Client
 			        }   
 
                     byte[] buffer = new byte[1400];
-                    int count = CreateQuery(buffer,m_ID,m_QName,m_QType,1);
+                    int count = CreateQuery(buffer,ID,QName,QType,1);
   
                     // Send parallel query to DNS server(s).
                     foreach(string server in Dns_Client.DnsServers){
@@ -178,7 +172,7 @@ namespace LumiSoft.Net.DNS.Client
                     m_ResponseCount++;
 
                     // Late arriving response or retransmitted response, just skip it.
-                    if(m_pResponse != null){
+                    if(Response != null){
                         return;
                     }
                     // If server refused to complete query and we more active queries to other servers, skip that response.
@@ -186,7 +180,7 @@ namespace LumiSoft.Net.DNS.Client
                         return;
                     }
 
-                    m_pResponse = response;
+                    Response = response;
 
                     SetState(DNS_ClientTransactionState.Completed);
                 } 
@@ -209,7 +203,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <param name="state">New transaction state.</param>
         private void SetState(DNS_ClientTransactionState state)
         {
-            m_State = state;
+            State = state;
 
             OnStateChanged();
         }
@@ -345,52 +339,34 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// Get DNS transaction state.
         /// </summary>
-        public DNS_ClientTransactionState State
-        {
-            get{ return m_State; }
-        }
+        public DNS_ClientTransactionState State { get; private set; } = DNS_ClientTransactionState.WaitingForStart;
 
         /// <summary>
         /// Gets transaction create time.
         /// </summary>
-        public DateTime CreateTime
-        {
-            get{ return m_CreateTime; }
-        }
+        public DateTime CreateTime { get; }
 
         /// <summary>
         /// Gets DNS transaction ID.
         /// </summary>
-        public int ID
-        {
-            get{ return m_ID; }
-        }
+        public int ID { get; } = 1;
 
         /// <summary>
         /// Gets QNAME value.
         /// </summary>
-        public string QName
-        {
-            get{ return m_QName; }
-        }
+        public string QName { get; } = "";
 
         /// <summary>
         /// Gets QTYPE value.
         /// </summary>
-        public DNS_QType QType
-        {
-            get{ return m_QType; }
-        }
+        public DNS_QType QType { get; } = 0;
 
         /// <summary>
         /// Gets DNS server response. Value null means no response received yet.
         /// </summary>
-        public DnsServerResponse Response
-        {
-            get{ return m_pResponse; }
-        }
+        public DnsServerResponse Response { get; private set; }
 
-        #endregion
+#endregion
 
         #region Events implementation
 

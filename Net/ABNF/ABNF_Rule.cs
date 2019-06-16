@@ -7,9 +7,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Rule
     {
-        private readonly string           m_Name;
-        private readonly ABNF_Alternation m_pElements;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -32,8 +29,8 @@ namespace LumiSoft.Net.ABNF
                 throw new ArgumentNullException("elements");
             }
 
-            m_Name      = name;
-            m_pElements = elements;
+            Name      = name;
+            Elements = elements;
         }
 
 
@@ -99,19 +96,13 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets rule name.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Gets rule elements.
         /// </summary>
-        public ABNF_Alternation Elements
-        {
-            get{ return m_pElements; }
-        }
+        public ABNF_Alternation Elements { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -11,7 +11,6 @@ namespace LumiSoft.Net
 	{
 		private readonly Stream m_StrmSource;
 		private string m_Encoding       = "";
-        private bool   m_CRLF_LinesOnly = true;
         private readonly int    m_ReadBufferSize = 1024;
         private readonly byte[] m_Buffer         = new byte[1024];
 
@@ -48,7 +47,7 @@ namespace LumiSoft.Net
 					return retVal;
 				}
                 // LF line found and only LF lines allowed
-                else if(!m_CRLF_LinesOnly && currByteInt == '\n'){
+                else if(!CRLF_LinesOnly && currByteInt == '\n'){
                     byte[] retVal = new byte[posInBuffer + 1];
                     Array.Copy(buffer,retVal,posInBuffer + 1);
                     retVal[posInBuffer] = (byte)prevByte;
@@ -127,14 +126,9 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets or sets if lines must be CRLF terminated or may be only LF terminated too.
         /// </summary>
-        public bool CRLF_LinesOnly
-        {
-            get{ return m_CRLF_LinesOnly; }
+        public bool CRLF_LinesOnly { get; set; } = true;
 
-            set{ m_CRLF_LinesOnly = value; }
-        }
-
-		#endregion
+#endregion
 
 	}
 }

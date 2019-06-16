@@ -10,15 +10,13 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages whose internal date (disregarding time and timezone) is within the specified date.</remarks>
     public class IMAP_Search_Key_On : IMAP_Search_Key
     {
-        private readonly DateTime m_Date;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">Date value.</param>
         public IMAP_Search_Key_On(DateTime value)
         {
-            m_Date = value;
+            Date = value;
         }
 
 
@@ -67,7 +65,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "ON " + m_Date.ToString("dd-MMM-yyyy");
+            return "ON " + Date.ToString("dd-MMM-yyyy");
         }
 
         #endregion
@@ -97,11 +95,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets date value.
         /// </summary>
-        public DateTime Date
-        {
-            get{ return m_Date; }
-        }
+        public DateTime Date { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -1071,19 +1071,13 @@ namespace LumiSoft.Net.SIP.Stack
         #region Properties implementation
                 
         // FIX ME:
-        int m_RSeq = -1;
 
         /// <summary>
         /// Gets or sets RSeq value. Value -1 means no reliable provisional response received.
         /// </summary>
-        internal int RSeq
-        {
-            get{ return m_RSeq; }
+        internal int RSeq { get; set; } = -1;
 
-            set{ m_RSeq = value; }
-        }
- 
-        #endregion
+#endregion
 
         #region Events implementation
 

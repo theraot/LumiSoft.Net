@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP.Client
     /// </summary>
     public class IMAP_ClientException : Exception
     {
-        private readonly IMAP_r_ServerStatus m_pResponse;
-        
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("response");
             }
 
-            m_pResponse = response;            
+            Response = response;            
         }
 
         /// <summary>
@@ -34,7 +32,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("responseLine");
             }
 
-            m_pResponse = IMAP_r_ServerStatus.Parse(responseLine);
+            Response = IMAP_r_ServerStatus.Parse(responseLine);
         }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("Argument 'responseText' value must be specified.","responseText");
             }
 
-            m_pResponse = IMAP_r_ServerStatus.Parse(responseCode + " " + responseText);
+            Response = IMAP_r_ServerStatus.Parse(responseCode + " " + responseText);
         }
 
 
@@ -68,17 +66,14 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets IMAP server response.
         /// </summary>
-        public IMAP_r_ServerStatus Response
-        {
-            get{ return m_pResponse; }
-        }
+        public IMAP_r_ServerStatus Response { get; }
 
         /// <summary>
         /// Gets IMAP server error status code.
         /// </summary>
         public string StatusCode
         {
-            get{ return m_pResponse.ResponseCode; }
+            get{ return Response.ResponseCode; }
         }
 
         /// <summary>
@@ -86,7 +81,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// </summary>
         public string ResponseText
         {
-            get{ return m_pResponse.ResponseText; }
+            get{ return Response.ResponseText; }
         }
 
         #endregion

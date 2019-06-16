@@ -8,9 +8,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Hop
     {
-        private readonly IPEndPoint m_pEndPoint;
-        private readonly string     m_Transport = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -30,8 +27,8 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentException("Argument 'transport' value must be specified.");
             }
 
-            m_pEndPoint = ep;
-            m_Transport = transport;
+            EndPoint = ep;
+            Transport = transport;
         }
 
         /// <summary>
@@ -57,8 +54,8 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentException("Argument 'transport' value must be specified.");
             }
 
-            m_pEndPoint = new IPEndPoint(ip,port);
-            m_Transport = transport;
+            EndPoint = new IPEndPoint(ip,port);
+            Transport = transport;
         }
 
 
@@ -67,17 +64,14 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets target IP end point.
         /// </summary>
-        public IPEndPoint EndPoint
-        {
-            get{ return m_pEndPoint; }
-        }
+        public IPEndPoint EndPoint { get; }
 
         /// <summary>
         /// Gets target IP address.
         /// </summary>
         public IPAddress IP
         {
-            get{ return m_pEndPoint.Address; }
+            get{ return EndPoint.Address; }
         }
 
         /// <summary>
@@ -85,18 +79,15 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public int Port
         {
-            get{ return m_pEndPoint.Port; }
+            get{ return EndPoint.Port; }
         }
 
         /// <summary>
         /// Gets target SIP transport.
         /// </summary>
-        public string Transport
-        {
-            get{ return m_Transport; }
-        }
+        public string Transport { get; } = "";
 
-        #endregion
+#endregion
 
     }
 }

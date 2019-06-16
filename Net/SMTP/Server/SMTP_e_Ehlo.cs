@@ -7,8 +7,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_Ehlo : EventArgs
     {
-        private readonly SMTP_Session m_pSession;
-        private readonly string       m_Domain   = "";
         private SMTP_Reply   m_pReply;
 
         /// <summary>
@@ -34,8 +32,8 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("reply");
             }
 
-            m_pSession = session;
-            m_Domain   = domain;
+            Session = session;
+            Domain   = domain;
             m_pReply   = reply;
         }
 
@@ -45,18 +43,12 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>
-        public SMTP_Session Session
-        {
-            get{ return m_pSession; }
-        }
+        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets connected client reported domain name.
         /// </summary>
-        public string Domain
-        {
-            get{ return m_Domain; }
-        }
+        public string Domain { get; } = "";
 
         /// <summary>
         /// Gets or sets SMTP server reply.

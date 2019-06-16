@@ -7,13 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Report_Receiver
     {
-        private readonly uint m_FractionLost;
-        private readonly uint  m_CumulativePacketsLost;
-        private readonly uint m_ExtHigestSeqNumber;
-        private readonly uint m_Jitter;
-        private readonly uint m_LastSR;
-        private readonly uint m_DelaySinceLastSR;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,12 +18,12 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("rr");
             }
 
-            m_FractionLost          = rr.FractionLost;
-            m_CumulativePacketsLost = rr.CumulativePacketsLost;
-            m_ExtHigestSeqNumber    = rr.ExtendedHighestSeqNo;
-            m_Jitter                = rr.Jitter;
-            m_LastSR                = rr.LastSR;
-            m_DelaySinceLastSR      = rr.DelaySinceLastSR;
+            FractionLost          = rr.FractionLost;
+            CumulativePacketsLost = rr.CumulativePacketsLost;
+            ExtendedSequenceNumber    = rr.ExtendedHighestSeqNo;
+            Jitter                = rr.Jitter;
+            LastSR                = rr.LastSR;
+            DelaySinceLastSR      = rr.DelaySinceLastSR;
         }
 
         #region Properties implementation
@@ -39,54 +32,36 @@ namespace LumiSoft.Net.RTP
         /// Gets the fraction of RTP data packets from source SSRC lost since the previous SR or 
         /// RR packet was sent.
         /// </summary>
-        public uint FractionLost
-        {
-            get{ return m_FractionLost; }
-        }
+        public uint FractionLost { get; }
 
         /// <summary>
         /// Gets total number of RTP data packets from source SSRC that have
         /// been lost since the beginning of reception.
         /// </summary>
-        public uint CumulativePacketsLost
-        {
-            get{ return m_CumulativePacketsLost; }
-        }
+        public uint CumulativePacketsLost { get; }
 
         /// <summary>
         /// Gets extended highest sequence number received.
         /// </summary>
-        public uint ExtendedSequenceNumber
-        {
-            get{ return m_ExtHigestSeqNumber; }
-        }
+        public uint ExtendedSequenceNumber { get; }
 
         /// <summary>
         /// Gets an estimate of the statistical variance of the RTP data packet
         /// interarrival time, measured in timestamp units and expressed as an
         /// unsigned integer.
         /// </summary>
-        public uint Jitter
-        {
-            get{ return m_Jitter; }
-        }
+        public uint Jitter { get; }
 
         /// <summary>
         /// Gets when last sender report(SR) was recieved.
         /// </summary>
-        public uint LastSR
-        {
-            get{ return m_LastSR; }
-        }
+        public uint LastSR { get; }
 
         /// <summary>
         /// Gets delay since last sender report(SR) was received.
         /// </summary>
-        public uint DelaySinceLastSR
-        {
-            get{ return m_DelaySinceLastSR; }
-        }
+        public uint DelaySinceLastSR { get; }
 
-        #endregion
+#endregion
     }
 }

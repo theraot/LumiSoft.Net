@@ -18,9 +18,6 @@ namespace LumiSoft.Net.Mail
     /// </example>
     public class Mail_t_Mailbox : Mail_t_Address
     {
-        private readonly string m_DisplayName;
-        private readonly string m_Address;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -33,8 +30,8 @@ namespace LumiSoft.Net.Mail
                 throw new ArgumentNullException("address");
             }
 
-            m_DisplayName = displayName;
-            m_Address     = address;
+            DisplayName = displayName;
+            Address     = address;
         }
 
         #region static method Parse
@@ -94,15 +91,15 @@ namespace LumiSoft.Net.Mail
         /// <returns>Returns address as string value.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder)
         {
-            if(string.IsNullOrEmpty(m_DisplayName)){
-                return m_Address;
+            if(string.IsNullOrEmpty(DisplayName)){
+                return Address;
             }
             else{
-                if(wordEncoder != null && MIME_Encoding_EncodedWord.MustEncode(m_DisplayName)){
-                    return wordEncoder.Encode(m_DisplayName) + " " + "<" + m_Address + ">";
+                if(wordEncoder != null && MIME_Encoding_EncodedWord.MustEncode(DisplayName)){
+                    return wordEncoder.Encode(DisplayName) + " " + "<" + Address + ">";
                 }
                 else{
-                    return TextUtils.QuoteString(m_DisplayName) + " " + "<" + m_Address + ">";
+                    return TextUtils.QuoteString(DisplayName) + " " + "<" + Address + ">";
                 }
             }
         }
@@ -115,18 +112,12 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets display name. Value null means not specified.
         /// </summary>
-        public string DisplayName
-        {
-            get{ return m_DisplayName; }
-        }
+        public string DisplayName { get; }
 
         /// <summary>
         /// Gets address.
         /// </summary>
-        public string Address
-        {
-            get{ return m_Address; }
-        }
+        public string Address { get; }
 
         /// <summary>
         /// Gets local-part of address.
@@ -134,7 +125,7 @@ namespace LumiSoft.Net.Mail
         public string LocalPart
         {
             get{ 
-                string[] localpart_domain = m_Address.Split('@');
+                string[] localpart_domain = Address.Split('@');
 
                 return localpart_domain[0]; 
             }
@@ -146,7 +137,7 @@ namespace LumiSoft.Net.Mail
         public string Domain
         {
             get{ 
-                string[] localpart_domain = m_Address.Split('@');
+                string[] localpart_domain = Address.Split('@');
 
                 if(localpart_domain.Length == 2){
                     return localpart_domain[1]; 

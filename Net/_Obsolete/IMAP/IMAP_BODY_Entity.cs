@@ -10,12 +10,7 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_BODY_Entity
     {
-        private readonly IMAP_BODY_Entity             m_pParentEntity      = null;
         private readonly List<IMAP_BODY_Entity>       m_pChildEntities;
-        private readonly MIME_h_ContentType           m_pContentType       = null;
-        private readonly string                       m_ContentID          = null;
-        private readonly string                       m_ContentDescription = null;
-        private readonly string                       m_ContentEncoding    = MIME_TransferEncodings.SevenBit;
         private readonly int                          m_ContentSize        = 0;
         private IMAP_Envelope                m_pEnvelope          = null;
         private int                          m_ContentLines       = 0;
@@ -152,10 +147,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets parent entity of this entity. If this entity is top level, then this property returns null.
         /// </summary>
-        public IMAP_BODY_Entity ParentEntity
-        {
-            get{ return m_pParentEntity; }
-        }
+        public IMAP_BODY_Entity ParentEntity { get; } = null;
 
         /// <summary>
         /// Gets child entities. This property is available only if ContentType = multipart/... .
@@ -174,34 +166,22 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets header field "<b>Content-Type:</b>" value.
         /// </summary>
-        public MIME_h_ContentType ContentType
-        {
-            get{ return m_pContentType; }
-        }
+        public MIME_h_ContentType ContentType { get; } = null;
 
         /// <summary>
         /// Gets header field "<b>Content-ID:</b>" value. Returns null if value isn't set.
         /// </summary>
-        public string ContentID
-        {
-            get{ return m_ContentID; }
-        }
+        public string ContentID { get; } = null;
 
         /// <summary>
         /// Gets header field "<b>Content-Description:</b>" value. Returns null if value isn't set.
         /// </summary>
-        public string ContentDescription
-        {
-            get{ return m_ContentDescription; }
-        }
+        public string ContentDescription { get; } = null;
 
         /// <summary>
         /// Gets header field "<b>Content-Transfer-Encoding:</b>" value.
         /// </summary>
-        public string ContentTransferEncoding
-        {
-            get{ return m_ContentEncoding; }
-        }
+        public string ContentTransferEncoding { get; } = MIME_TransferEncodings.SevenBit;
 
         /// <summary>
         /// Gets content encoded data size. NOTE: This property is available only for non-multipart contentype !

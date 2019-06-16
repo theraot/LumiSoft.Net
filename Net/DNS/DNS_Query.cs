@@ -7,10 +7,6 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public class DNS_Query
     {
-        private readonly DNS_QClass m_QClass = DNS_QClass.IN;
-        private readonly DNS_QType  m_QType  = DNS_QType.ANY;
-        private readonly string     m_QName  = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -34,9 +30,9 @@ namespace LumiSoft.Net.DNS
                 throw new ArgumentNullException("qname");
             }
 
-            m_QClass = qclass;
-            m_QType  = qtype;
-            m_QName  = qname;
+            QueryClass = qclass;
+            QueryType  = qtype;
+            QueryName  = qname;
         }
 
 
@@ -45,27 +41,18 @@ namespace LumiSoft.Net.DNS
         /// <summary>
         /// Gets DNS query class.
         /// </summary>
-        public DNS_QClass QueryClass
-        {
-            get{ return m_QClass; }
-        }
+        public DNS_QClass QueryClass { get; } = DNS_QClass.IN;
 
         /// <summary>
         /// Gets DNS query type.
         /// </summary>
-        public DNS_QType QueryType
-        {
-            get{ return m_QType; }
-        }
+        public DNS_QType QueryType { get; } = DNS_QType.ANY;
 
         /// <summary>
         /// Gets query text.
         /// </summary>
-        public string QueryName
-        {
-            get{ return m_QName; }
-        }
-                
-        #endregion
+        public string QueryName { get; } = "";
+
+#endregion
     }
 }

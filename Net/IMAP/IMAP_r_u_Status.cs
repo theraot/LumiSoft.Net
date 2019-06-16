@@ -8,13 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Status : IMAP_r_u
     {
-        private readonly string m_FolderName   = "";
-        private readonly int    m_MessageCount;
-        private readonly int    m_RecentCount;
-        private readonly long   m_UidNext;
-        private readonly long   m_FolderUid;
-        private readonly int    m_UnseenCount;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -35,12 +28,12 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'folder' value must be specified.","folder");
             }
 
-            m_FolderName   = folder;
-            m_MessageCount = messagesCount;
-            m_RecentCount  = recentCount;
-            m_UidNext      = uidNext;
-            m_FolderUid    = folderUid;
-            m_UnseenCount  = unseenCount;
+            FolderName   = folder;
+            MessagesCount = messagesCount;
+            RecentCount  = recentCount;
+            UidNext      = uidNext;
+            FolderUid    = folderUid;
+            UnseenCount  = unseenCount;
         }
 
 
@@ -129,39 +122,39 @@ namespace LumiSoft.Net.IMAP
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("* STATUS");
-            retVal.Append(" " + IMAP_Utils.EncodeMailbox(m_FolderName,encoding));
+            retVal.Append(" " + IMAP_Utils.EncodeMailbox(FolderName,encoding));
             retVal.Append(" (");
             bool firstItem = true;
-            if(m_MessageCount >= 0){ 
-                retVal.Append("MESSAGES " + m_MessageCount);   
+            if(MessagesCount >= 0){ 
+                retVal.Append("MESSAGES " + MessagesCount);   
                 firstItem = false;
             }
-            if(m_RecentCount >= 0){ 
+            if(RecentCount >= 0){ 
                 if(!firstItem){
                     retVal.Append(' ');
                 }
-                retVal.Append("RECENT " + m_RecentCount);  
+                retVal.Append("RECENT " + RecentCount);  
                 firstItem = false;
             }
-            if(m_UidNext >= 0){ 
+            if(UidNext >= 0){ 
                 if(!firstItem){
                     retVal.Append(' ');
                 }
-                retVal.Append("UIDNEXT " + m_UidNext);  
+                retVal.Append("UIDNEXT " + UidNext);  
                 firstItem = false;
             }
-            if(m_FolderUid >= 0){  
+            if(FolderUid >= 0){  
                 if(!firstItem){
                     retVal.Append(' ');
                 }
-                retVal.Append("UIDVALIDITY " + m_FolderUid); 
+                retVal.Append("UIDVALIDITY " + FolderUid); 
                 firstItem = false;
             }
-            if(m_UnseenCount >= 0){
+            if(UnseenCount >= 0){
                 if(!firstItem){
                     retVal.Append(' ');
                 }
-                retVal.Append("UNSEEN " + m_UnseenCount);   
+                retVal.Append("UNSEEN " + UnseenCount);   
                 firstItem = false;
             }
             retVal.Append(")\r\n");
@@ -177,51 +170,33 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets folder name.
         /// </summary>
-        public string FolderName
-        {
-            get{ return m_FolderName; }
-        }
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Gets messages count.
         /// </summary>
-        public int MessagesCount
-        {
-            get{ return m_MessageCount; }
-        }
+        public int MessagesCount { get; }
 
         /// <summary>
         /// Gets "recent" flag set messages count.
         /// </summary>
-        public int RecentCount
-        {
-            get{ return m_RecentCount;}
-        }
+        public int RecentCount { get; }
 
         /// <summary>
         /// Gets next message predictable UID value.
         /// </summary>
-        public long UidNext
-        {
-            get{ return m_UidNext; }
-        }
+        public long UidNext { get; }
 
         /// <summary>
         /// Gets folder UID value.
         /// </summary>
-        public long FolderUid
-        {
-            get{ return m_FolderUid; }
-        }
+        public long FolderUid { get; }
 
         /// <summary>
         /// Gets unseen messages count.
         /// </summary>
-        public int UnseenCount
-        {
-            get{ return m_UnseenCount; }
-        }
+        public int UnseenCount { get; }
 
-        #endregion
+#endregion
     }
 }

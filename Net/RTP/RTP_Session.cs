@@ -18,7 +18,6 @@ namespace LumiSoft.Net.RTP
     public class RTP_Session : IDisposable
     {
         private object                             m_pLock                      = new object();
-        private bool                               m_IsDisposed;
         private bool                               m_IsStarted;
         private RTP_MultimediaSession              m_pSession;
         private RTP_Address                        m_pLocalEP;
@@ -107,10 +106,10 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             foreach(UDP_DataReceiver receiver in m_pUdpDataReceivers){
                 receiver.Dispose();
@@ -160,7 +159,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Close(string closeReason)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -199,7 +198,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Start()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_IsStarted){
@@ -259,7 +258,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Stop()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -280,7 +279,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public RTP_SendStream CreateSendStream()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -309,7 +308,7 @@ namespace LumiSoft.Net.RTP
             if(target == null){
                 throw new ArgumentNullException("target");
             }
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_pLocalEP.Equals(target)){
@@ -340,7 +339,7 @@ namespace LumiSoft.Net.RTP
             if(target == null){
                 throw new ArgumentNullException("target");
             }
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -357,7 +356,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void RemoveTargets()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -419,7 +418,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>packet</b> is null reference.</exception>
         internal int SendRtcpPacket(RTCP_CompoundPacket packet)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(packet == null){
@@ -460,7 +459,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> or <b>packet</b> is null reference.</exception>
         internal int SendRtpPacket(RTP_SendStream stream,RTP_Packet packet)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(stream == null){
@@ -1333,10 +1332,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets owner RTP multimedia session.
@@ -1345,7 +1341,7 @@ namespace LumiSoft.Net.RTP
         public RTP_MultimediaSession Session
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1360,7 +1356,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Address LocalEP
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1375,7 +1371,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Clock RtpClock
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1390,7 +1386,7 @@ namespace LumiSoft.Net.RTP
         public RTP_StreamMode StreamMode
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1398,7 +1394,7 @@ namespace LumiSoft.Net.RTP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1414,7 +1410,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Address[] Targets
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1429,7 +1425,7 @@ namespace LumiSoft.Net.RTP
         public int MTU
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1444,7 +1440,7 @@ namespace LumiSoft.Net.RTP
         public int Payload
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1452,7 +1448,7 @@ namespace LumiSoft.Net.RTP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1472,7 +1468,7 @@ namespace LumiSoft.Net.RTP
         public int Bandwidth
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1480,7 +1476,7 @@ namespace LumiSoft.Net.RTP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(value < 8){
@@ -1498,7 +1494,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Source[] Members
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1518,7 +1514,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Source[] Senders
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1538,7 +1534,7 @@ namespace LumiSoft.Net.RTP
         public RTP_SendStream[] SendStreams
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1562,7 +1558,7 @@ namespace LumiSoft.Net.RTP
         public RTP_ReceiveStream[] ReceiveStreams
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1586,7 +1582,7 @@ namespace LumiSoft.Net.RTP
         public long RtpPacketsSent
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1601,7 +1597,7 @@ namespace LumiSoft.Net.RTP
         public long RtpBytesSent
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1616,7 +1612,7 @@ namespace LumiSoft.Net.RTP
         public long RtpPacketsReceived
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1631,7 +1627,7 @@ namespace LumiSoft.Net.RTP
         public long RtpBytesReceived
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1646,7 +1642,7 @@ namespace LumiSoft.Net.RTP
         public long RtpFailedTransmissions
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1661,7 +1657,7 @@ namespace LumiSoft.Net.RTP
         public long RtcpPacketsSent
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1676,7 +1672,7 @@ namespace LumiSoft.Net.RTP
         public long RtcpBytesSent
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1691,7 +1687,7 @@ namespace LumiSoft.Net.RTP
         public long RtcpPacketsReceived
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1706,7 +1702,7 @@ namespace LumiSoft.Net.RTP
         public long RtcpBytesReceived
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1721,7 +1717,7 @@ namespace LumiSoft.Net.RTP
         public long RtcpFailedTransmissions
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1736,7 +1732,7 @@ namespace LumiSoft.Net.RTP
         public int RtcpInterval
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1751,7 +1747,7 @@ namespace LumiSoft.Net.RTP
         public DateTime RtcpLastTransmission
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1766,7 +1762,7 @@ namespace LumiSoft.Net.RTP
         public long LocalCollisions
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1781,7 +1777,7 @@ namespace LumiSoft.Net.RTP
         public long RemoteCollisions
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1796,7 +1792,7 @@ namespace LumiSoft.Net.RTP
         public long LocalPacketsLooped
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1811,7 +1807,7 @@ namespace LumiSoft.Net.RTP
         public long RemotePacketsLooped
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1826,7 +1822,7 @@ namespace LumiSoft.Net.RTP
         public KeyValueCollection<int,Codec> Payloads
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

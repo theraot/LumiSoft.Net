@@ -10,8 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that do not match the specified search key.</remarks>
     public class IMAP_Search_Key_Not : IMAP_Search_Key
     {
-        private readonly IMAP_Search_Key m_pSearchKey;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,7 +21,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("key");
             }
 
-            m_pSearchKey = key;
+            SearchKey = key;
         }
 
 
@@ -61,7 +59,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "NOT " + m_pSearchKey.ToString();
+            return "NOT " + SearchKey.ToString();
         }
 
         #endregion
@@ -81,7 +79,7 @@ namespace LumiSoft.Net.IMAP
             }
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"NOT "));
-            m_pSearchKey.ToCmdParts(list);
+            SearchKey.ToCmdParts(list);
         }
 
         #endregion
@@ -92,11 +90,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets search KEY.
         /// </summary>
-        public IMAP_Search_Key SearchKey
-        {
-            get{ return m_pSearchKey; }
-        }
+        public IMAP_Search_Key SearchKey { get; }
 
-        #endregion
+#endregion
     }
 }

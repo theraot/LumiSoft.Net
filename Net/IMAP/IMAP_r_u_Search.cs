@@ -9,8 +9,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Search : IMAP_r_u
     {
-        private readonly int[] m_pValues;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +19,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("values");
             }
 
-            m_pValues = values;
+            Values = values;
         }
 
 
@@ -76,7 +74,7 @@ namespace LumiSoft.Net.IMAP
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("* SEARCH");
-            foreach(int i in m_pValues){
+            foreach(int i in Values){
                 retVal.Append(" " + i.ToString());
             }
             retVal.Append("\r\n");
@@ -92,11 +90,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets search matching messages seqNo/UID(Depeneds on UID SEARCH) list.
         /// </summary>
-        public int[] Values
-        {
-            get{ return m_pValues; }
-        }
+        public int[] Values { get; }
 
-        #endregion
+#endregion
     }
 }

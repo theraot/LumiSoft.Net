@@ -8,7 +8,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_MultimediaSession : IDisposable
     {
-        private bool                                      m_IsDisposed;
         private RTP_Participant_Local                     m_pLocalParticipant;
         private List<RTP_Session>                         m_pSessions;
         private Dictionary<string,RTP_Participant_Remote> m_pParticipants;
@@ -41,13 +40,13 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
             foreach(RTP_Session session in m_pSessions.ToArray()){
                 session.Dispose();
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             m_pLocalParticipant = null;
             m_pSessions         = null;
@@ -69,7 +68,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Close(string closeReason)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -90,7 +89,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Start()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -107,7 +106,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Stop()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -128,7 +127,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ArgumentNullException">Is raised when <b>localEP</b> or <b>clock</b> is null reference.</exception>
         public RTP_Session CreateSession(RTP_Address localEP,RTP_Clock clock)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(localEP == null){
@@ -192,10 +191,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets media sessions.
@@ -204,7 +200,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Session[] Sessions
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -219,7 +215,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Participant_Local LocalParticipant
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -234,7 +230,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Participant_Remote[] RemoteParticipants
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

@@ -35,7 +35,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Proxy : IDisposable
     {
-        private  bool                   m_IsDisposed;
         private  SIP_Stack              m_pStack;
         private  SIP_ProxyMode          m_ProxyMode      = SIP_ProxyMode.Registrar | SIP_ProxyMode.Statefull;
         private  SIP_ForkingMode        m_ForkingMode    = SIP_ForkingMode.Parallel;
@@ -74,10 +73,10 @@ namespace LumiSoft.Net.SIP.Proxy
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             if(m_pStack != null){
                 m_pStack.Dispose();
@@ -952,10 +951,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets owner SIP stack.
@@ -964,7 +960,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_Stack Stack
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -980,7 +976,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_ProxyMode ProxyMode
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -988,7 +984,7 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                                 
@@ -1008,7 +1004,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_ForkingMode ForkingMode
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1016,7 +1012,7 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             set{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1031,7 +1027,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_Registrar Registrar
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1046,7 +1042,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_B2BUA B2BUA
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1064,7 +1060,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public List<SIP_ProxyHandler> Handlers
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

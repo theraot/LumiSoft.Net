@@ -16,17 +16,14 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class NonceEntry
         {
-            private readonly string   m_Nonce = "";
-            private readonly DateTime m_CreateTime;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
             /// <param name="nonce"></param>
             public NonceEntry(string nonce)
             {
-                m_Nonce      = nonce;
-                m_CreateTime = DateTime.Now;
+                Nonce      = nonce;
+                CreateTime = DateTime.Now;
             }
 
 
@@ -35,20 +32,14 @@ namespace LumiSoft.Net.AUTH
             /// <summary>
             /// Gets nonce value.
             /// </summary>
-            public string Nonce
-            {
-                get{ return m_Nonce; }
-            }
+            public string Nonce { get; } = "";
 
             /// <summary>
             /// Gets time when this nonce entry was created.
             /// </summary>
-            public DateTime CreateTime
-            {
-                get{ return m_CreateTime; }
-            }
+            public DateTime CreateTime { get; }
 
-            #endregion
+#endregion
 
         }
 

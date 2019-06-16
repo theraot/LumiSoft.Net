@@ -10,8 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that contain the specified string in the message header SUBJECT field.</remarks>
     public class IMAP_Search_Key_Subject : IMAP_Search_Key
     {
-        private readonly string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,7 +21,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -65,7 +63,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "SUBJECT " + TextUtils.QuoteString(m_Value);
+            return "SUBJECT " + TextUtils.QuoteString(Value);
         }
 
         #endregion
@@ -85,7 +83,7 @@ namespace LumiSoft.Net.IMAP
             }
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"SUBJECT "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,m_Value));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
         }
 
         #endregion
@@ -96,11 +94,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets SUBJECT filter value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; } = "";
 
-        #endregion
+#endregion
     }
 }

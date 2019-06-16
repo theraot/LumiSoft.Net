@@ -9,9 +9,8 @@ namespace LumiSoft.Net.Mime
 	public class HeaderField
 	{
 		private string m_Name  = "";
-		private string m_Value = "";
 
-		/// <summary>
+        /// <summary>
 		/// Default construtor.
 		/// </summary>
 		public HeaderField()
@@ -77,22 +76,19 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		public string Value
 		{
-			get{ return MimeUtils.DecodeWords(m_Value); }
+			get{ return MimeUtils.DecodeWords(EncodedValue); }
 
 			set{ 
-                m_Value = Core.CanonicalEncode(value,"utf-8"); 
+                EncodedValue = Core.CanonicalEncode(value,"utf-8"); 
             }
 		}
 
         /// <summary>
         /// Gets header field encoded value.
         /// </summary>
-        internal string EncodedValue
-        {
-            get{ return m_Value; }
-        }
+        internal string EncodedValue { get; private set; } = "";
 
-		#endregion
+#endregion
 
 	}
 }

@@ -10,9 +10,6 @@ namespace LumiSoft.Net.IMAP.Client
     /// </remarks>
     internal class IMAP_Client_CmdPart
     {
-        private readonly IMAP_Client_CmdPart_Type m_Type  = IMAP_Client_CmdPart_Type.Constant;
-        private readonly string                   m_Value;
-        
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,8 +22,8 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("data");
             }
 
-            m_Type  = type;
-            m_Value = data;
+            Type  = type;
+            Value = data;
         }
 
 
@@ -35,19 +32,13 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets command part ype.
         /// </summary>
-        public IMAP_Client_CmdPart_Type Type
-        {
-            get{ return m_Type; }
-        }
+        public IMAP_Client_CmdPart_Type Type { get; } = IMAP_Client_CmdPart_Type.Constant;
 
         /// <summary>
         /// Gets command part string value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; }
 
-        #endregion
+#endregion
     }
 }

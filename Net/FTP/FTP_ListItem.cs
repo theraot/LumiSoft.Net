@@ -7,11 +7,6 @@ namespace LumiSoft.Net.FTP
     /// </summary>
     public class FTP_ListItem
     {
-        private readonly string   m_Name      = "";
-        private readonly long     m_Size;
-        private readonly DateTime m_Modified;
-        private readonly bool     m_IsDir;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -30,10 +25,10 @@ namespace LumiSoft.Net.FTP
                 throw new ArgumentException("Argument 'name' value must be specified.");
             }
 
-            m_Name     = name;
-            m_Size     = size;
-            m_Modified = modified;
-            m_IsDir    = isDir;
+            Name     = name;
+            Size     = size;
+            Modified = modified;
+            IsDir    = isDir;
         }
 
 
@@ -42,44 +37,32 @@ namespace LumiSoft.Net.FTP
         /// <summary>
         /// Gets if current item is directory.
         /// </summary>
-        public bool IsDir
-        {
-            get{ return m_IsDir; }
-        }
+        public bool IsDir { get; }
 
         /// <summary>
         /// Gets if current item is file.
         /// </summary>
         public bool IsFile
         {
-            get{ return !m_IsDir; }
+            get{ return !IsDir; }
         }
 
         /// <summary>
         /// Gets the name of the file or directory.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
         /// Gets file size in bytes.
         /// </summary>
-        public long Size
-        {
-            get{ return m_Size; }
-        }
+        public long Size { get; }
 
         /// <summary>
         /// Gets last time file or direcory was modified.
         /// </summary>
-        public DateTime Modified
-        {
-            get{ return m_Modified; }
-        }
+        public DateTime Modified { get; }
 
-        #endregion
+#endregion
 
     }
 }

@@ -23,7 +23,6 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_Flow : IDisposable
     {
         private readonly object       m_pLock           = new object();
-        private bool         m_IsDisposed;
         private readonly bool         m_IsServer;
         private readonly SIP_Stack    m_pStack;
         private TCP_Session  m_pTcpSession;
@@ -116,11 +115,11 @@ namespace LumiSoft.Net.SIP.Stack
         public void Dispose()
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }     
                 OnDisposing();
-                m_IsDisposed = true;
+                IsDisposed = true;
 
                 if(m_pTcpSession != null){
                     m_pTcpSession.Dispose();
@@ -148,7 +147,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void Send(SIP_Request request)
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(request == null){
@@ -168,7 +167,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void Send(SIP_Response response)
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(response == null){
@@ -191,7 +190,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void SendPing()
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -429,10 +428,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets if this flow is server flow or client flow.
@@ -441,7 +437,7 @@ namespace LumiSoft.Net.SIP.Stack
         public bool IsServer
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -456,7 +452,7 @@ namespace LumiSoft.Net.SIP.Stack
         public DateTime CreateTime
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -471,7 +467,7 @@ namespace LumiSoft.Net.SIP.Stack
         public string ID
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -486,7 +482,7 @@ namespace LumiSoft.Net.SIP.Stack
         public IPEndPoint LocalEP
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -500,7 +496,7 @@ namespace LumiSoft.Net.SIP.Stack
         public IPEndPoint LocalPublicEP
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -556,7 +552,7 @@ namespace LumiSoft.Net.SIP.Stack
         public IPEndPoint RemoteEP
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -571,7 +567,7 @@ namespace LumiSoft.Net.SIP.Stack
         public string Transport
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -586,7 +582,7 @@ namespace LumiSoft.Net.SIP.Stack
         public bool IsReliable
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -601,7 +597,7 @@ namespace LumiSoft.Net.SIP.Stack
         public bool IsSecure
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -621,7 +617,7 @@ namespace LumiSoft.Net.SIP.Stack
         public bool SendKeepAlives
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -629,7 +625,7 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -668,7 +664,7 @@ namespace LumiSoft.Net.SIP.Stack
         public DateTime LastActivity
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -688,7 +684,7 @@ namespace LumiSoft.Net.SIP.Stack
         public DateTime LastPing
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -705,7 +701,7 @@ namespace LumiSoft.Net.SIP.Stack
         public long BytesWritten
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

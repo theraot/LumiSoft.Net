@@ -9,7 +9,6 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_Queue : IDisposable
     {
-        private readonly string                 m_Name   = "";
         private readonly Queue<Relay_QueueItem> m_pQueue;
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace LumiSoft.Net.SMTP.Relay
                 throw new ArgumentException("Argument 'name' value may not be empty.");
             }
 
-            m_Name   = name;
+            Name   = name;
             m_pQueue = new Queue<Relay_QueueItem>();
         }
 
@@ -119,10 +118,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets queue name.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
         /// Gets number of queued items in queue.

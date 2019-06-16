@@ -8,10 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_ServerStatus : IMAP_r_u
     {
-        private readonly string     m_ResponseCode      = "";
-        private readonly IMAP_t_orc m_pOptionalResponse;
-        private readonly string     m_ResponseText      = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -40,9 +36,9 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("The argument 'responseCode' value must be specified.","responseCode");
             }
 
-            m_ResponseCode      = responseCode;
-            m_pOptionalResponse = optionalResponse;
-            m_ResponseText      = responseText;
+            ResponseCode      = responseCode;
+            OptionalResponse = optionalResponse;
+            ResponseText      = responseText;
         }
 
 
@@ -88,11 +84,11 @@ namespace LumiSoft.Net.IMAP
         public override string ToString()
         {
             StringBuilder retVal = new StringBuilder();
-            retVal.Append("* " + m_ResponseCode + " ");            
-            if(m_pOptionalResponse != null){
-                retVal.Append("[" + m_pOptionalResponse.ToString() + "] ");
+            retVal.Append("* " + ResponseCode + " ");            
+            if(OptionalResponse != null){
+                retVal.Append("[" + OptionalResponse.ToString() + "] ");
             }
-            retVal.Append(m_ResponseText + "\r\n");
+            retVal.Append(ResponseText + "\r\n");
 
             return retVal.ToString();
         }
@@ -105,33 +101,24 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets IMAP server status response code(OK,NO,BAD,PREAUTH,BYE).
         /// </summary>
-        public string ResponseCode
-        {
-            get{ return m_ResponseCode; }
-        }
+        public string ResponseCode { get; } = "";
 
         /// <summary>
         /// Gets IMAP server otional response-code. Value null means no optional response.
         /// </summary>
-        public IMAP_t_orc OptionalResponse
-        {
-            get{ return m_pOptionalResponse; }
-        }
-                
+        public IMAP_t_orc OptionalResponse { get; }
+
         /// <summary>
         /// Gets response human readable text after response-code.
         /// </summary>
-        public string ResponseText
-        {
-            get{ return m_ResponseText; }
-        }
+        public string ResponseText { get; } = "";
 
         /// <summary>
         /// Gets if this response is error response.
         /// </summary>
         public bool IsError
         {
-            get{ return !m_ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase); }
+            get{ return !ResponseCode.Equals("OK",StringComparison.InvariantCultureIgnoreCase); }
         }
 
         #endregion
@@ -148,11 +135,11 @@ namespace LumiSoft.Net.IMAP
         public string OptionalResponseCode
         {
             get{ 
-                if(m_pOptionalResponse == null){
+                if(OptionalResponse == null){
                     return null;
                 }
                 else{
-                    return m_pOptionalResponse.ToString().Split(' ')[0];
+                    return OptionalResponse.ToString().Split(' ')[0];
                 }
             }
         }
@@ -164,11 +151,11 @@ namespace LumiSoft.Net.IMAP
         public string OptionalResponseArgs
         {
             get{ 
-                if(m_pOptionalResponse == null){
+                if(OptionalResponse == null){
                     return null;
                 }
                 else{
-                    string[] code_args = m_pOptionalResponse.ToString().Split(new char[]{' '},2);
+                    string[] code_args = OptionalResponse.ToString().Split(new char[]{' '},2);
 
                     return code_args.Length == 2 ? code_args[1] : "";
                 }

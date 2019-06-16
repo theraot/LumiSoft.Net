@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Enable : IMAP_r_u
     {
-        private readonly string[] m_Capabilities;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +19,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("capabilities");
             }
 
-            m_Capabilities = capabilities;
+            Capabilities = capabilities;
         }
         
 
@@ -80,7 +78,7 @@ namespace LumiSoft.Net.IMAP
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("* ENABLED");
-            foreach(string capability in m_Capabilities){
+            foreach(string capability in Capabilities){
                 retVal.Append(" " + capability);
             }
             retVal.Append("\r\n");
@@ -96,11 +94,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets IMAP capabilities.
         /// </summary>
-        public string[] Capabilities
-        {
-            get{ return m_Capabilities; }
-        }
+        public string[] Capabilities { get; }
 
-        #endregion
+#endregion
     }
 }

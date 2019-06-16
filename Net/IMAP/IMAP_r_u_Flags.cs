@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Flags : IMAP_r_u
     {
-        private readonly string[] m_pFlags;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +19,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("flags");
             }
 
-            m_pFlags = flags;
+            Flags = flags;
         }
 
 
@@ -73,11 +71,11 @@ namespace LumiSoft.Net.IMAP
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("* FLAGS (");
-            for(int i=0;i<m_pFlags.Length;i++){
+            for(int i=0;i<Flags.Length;i++){
                 if(i > 0){
                     retVal.Append(" ");
                 }
-                retVal.Append(m_pFlags[i]);
+                retVal.Append(Flags[i]);
             }
             retVal.Append(")\r\n");
 
@@ -92,11 +90,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets mailbox supported flags.
         /// </summary>
-        public string[] Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public string[] Flags { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -7,14 +7,12 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public abstract class SIP_t_ValueWithParams : SIP_t_Value
     {
-        private readonly SIP_ParameterCollection m_pParameters;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SIP_t_ValueWithParams()
         {
-            m_pParameters = new SIP_ParameterCollection();
+            Parameters = new SIP_ParameterCollection();
         }
 
 
@@ -28,7 +26,7 @@ namespace LumiSoft.Net.SIP.Message
         protected void ParseParameters(StringReader reader)
         {
             // Remove all old parameters.
-            m_pParameters.Clear();
+            Parameters.Clear();
 
             // Parse parameters
             while(reader.Available > 0){
@@ -70,7 +68,7 @@ namespace LumiSoft.Net.SIP.Message
         protected string ParametersToString()
         {
             StringBuilder retVal = new StringBuilder();
-            foreach(SIP_Parameter parameter in m_pParameters){
+            foreach(SIP_Parameter parameter in Parameters){
                 if(!string.IsNullOrEmpty(parameter.Value)){
                     if(TextUtils.IsToken(parameter.Value)){
                         retVal.Append(";" + parameter.Name + "=" + parameter.Value);
@@ -95,12 +93,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets via parameters.
         /// </summary>
-        public SIP_ParameterCollection Parameters
-        {
-            get{ return m_pParameters; }
-        }
+        public SIP_ParameterCollection Parameters { get; }
 
-        #endregion
+#endregion
 
     }
 }

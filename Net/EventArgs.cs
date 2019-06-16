@@ -8,15 +8,13 @@ namespace LumiSoft.Net
     /// <typeparam name="T">Event data.</typeparam>
     public class EventArgs<T> : EventArgs
     {
-        private readonly T m_pValue;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">Event data.</param>
         public EventArgs(T value)
         {
-            m_pValue = value;
+            Value = value;
         }
 
 
@@ -25,12 +23,9 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets event data.
         /// </summary>
-        public T Value
-        {
-            get{ return m_pValue; }
-        }
+        public T Value { get; }
 
-        #endregion
+#endregion
 
     }
 }

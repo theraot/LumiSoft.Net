@@ -16,8 +16,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class AddressList : IEnumerable
 	{
-		private HeaderField   m_HeaderField;
-		private readonly List<Address> m_pAddresses;
+        private readonly List<Address> m_pAddresses;
 
 		/// <summary>
 		/// Default constructor.
@@ -198,8 +197,8 @@ namespace LumiSoft.Net.Mime
 		internal void OnCollectionChanged()
 		{
 			// AddressList is bounded to HeaderField, update header field value
-			if(m_HeaderField != null){
-				m_HeaderField.Value = this.ToAddressListString();
+			if(BoundedHeaderField != null){
+				BoundedHeaderField.Value = this.ToAddressListString();
 			}
 		}
 
@@ -266,14 +265,9 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Bound address-list to specified header field.
 		/// </summary>
-		internal HeaderField BoundedHeaderField
-		{
-			get{ return m_HeaderField; }
+		internal HeaderField BoundedHeaderField { get; set; }
 
-			set{m_HeaderField = value; }
-		}
-
-		#endregion
+#endregion
 
 	}
 }

@@ -10,7 +10,6 @@ namespace LumiSoft.Net.SIP.UA
     [Obsolete("Use SIP stack instead.")]
     public class SIP_UA : IDisposable
     {
-        private bool              m_IsDisposed;
         private SIP_Stack         m_pStack;
         private readonly List<SIP_UA_Call> m_pCalls;
         private readonly object            m_pLock      = new object();
@@ -34,7 +33,7 @@ namespace LumiSoft.Net.SIP.UA
         public void Dispose()
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
                                             
@@ -54,7 +53,7 @@ namespace LumiSoft.Net.SIP.UA
                     }
                 }
 
-                m_IsDisposed = true;
+                IsDisposed = true;
 
                 this.RequestReceived = null;
                 this.IncomingCall = null;
@@ -189,10 +188,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets SIP stack.
@@ -201,7 +197,7 @@ namespace LumiSoft.Net.SIP.UA
         public SIP_Stack Stack
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -216,7 +212,7 @@ namespace LumiSoft.Net.SIP.UA
         public SIP_UA_Call[] Calls
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

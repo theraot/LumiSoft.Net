@@ -8,8 +8,6 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_ResponseReceivedEventArgs : EventArgs
     {
         private readonly SIP_Stack             m_pStack;
-        private readonly SIP_Response          m_pResponse;
-        private readonly SIP_ClientTransaction m_pTransaction;
 
         /// <summary>
         /// Default constructor.
@@ -20,8 +18,8 @@ namespace LumiSoft.Net.SIP.Stack
         internal SIP_ResponseReceivedEventArgs(SIP_Stack stack,SIP_ClientTransaction transaction,SIP_Response response)
         {
             m_pStack       = stack;
-            m_pResponse    = response;
-            m_pTransaction = transaction;
+            Response    = response;
+            ClientTransaction = transaction;
         }
 
 
@@ -30,26 +28,20 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets response received by SIP stack.
         /// </summary>
-        public SIP_Response Response
-        {
-            get{ return m_pResponse; }
-        }
+        public SIP_Response Response { get; }
 
         /// <summary>
         /// Gets client transaction which response it is. This value is null if no matching client transaction.
         /// If this core is staless proxy then it's allowed, otherwise core MUST discard that response.
         /// </summary>
-        public SIP_ClientTransaction ClientTransaction
-        {
-            get{ return m_pTransaction; }
-        }
+        public SIP_ClientTransaction ClientTransaction { get; }
 
         /// <summary>
         /// Gets SIP dialog where Response belongs to. Returns null if Response doesn't belong any dialog.
         /// </summary>
         public SIP_Dialog Dialog
         {
-            get{ return m_pStack.TransactionLayer.MatchDialog(m_pResponse); }
+            get{ return m_pStack.TransactionLayer.MatchDialog(Response); }
         }
 
         /// <summary>
@@ -60,14 +52,14 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Dialog GetOrCreateDialog
         {
             get{
-                if(!SIP_Utils.MethodCanEstablishDialog(m_pTransaction.Method)){
-                    throw new InvalidOperationException("Request method '" + m_pTransaction.Method + "' can't establish dialog.");
+                if(!SIP_Utils.MethodCanEstablishDialog(ClientTransaction.Method)){
+                    throw new InvalidOperationException("Request method '" + ClientTransaction.Method + "' can't establish dialog.");
                 }
-                if(m_pResponse.To.Tag == null){
+                if(Response.To.Tag == null){
                     throw new InvalidOperationException("Request To-Tag is missing.");
                 }
  
-                return m_pStack.TransactionLayer.GetOrCreateDialog(m_pTransaction,m_pResponse); 
+                return m_pStack.TransactionLayer.GetOrCreateDialog(ClientTransaction,Response); 
             }
         }
 

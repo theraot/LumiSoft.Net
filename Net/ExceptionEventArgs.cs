@@ -7,8 +7,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class ExceptionEventArgs : EventArgs
     {
-        private readonly Exception m_pException;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("exception");
             }
 
-            m_pException = exception;
+            Exception = exception;
         }
 
 
@@ -29,12 +27,9 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets exception.
         /// </summary>
-        public Exception Exception
-        {
-            get{ return m_pException; }
-        }
+        public Exception Exception { get; }
 
-        #endregion
+#endregion
 
     }
 }

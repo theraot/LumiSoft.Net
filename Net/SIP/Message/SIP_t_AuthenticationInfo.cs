@@ -8,11 +8,7 @@ namespace LumiSoft.Net.SIP.Message
     /// According RFC 3261 authentication info can contain Digest authentication info only.
     /// </summary>
     public class SIP_t_AuthenticationInfo : SIP_t_Value
-    {  
-        private string m_NextNonce;
-        private string m_Qop;
-        private string m_ResponseAuth;
-        private string m_CNonce;
+    {
         private int    m_NonceCount   = -1;
       
         /// <summary>
@@ -110,32 +106,32 @@ namespace LumiSoft.Net.SIP.Message
 
             StringBuilder retVal = new StringBuilder();
 
-            if(m_NextNonce != null){
-                retVal.Append("nextnonce=" + m_NextNonce);
+            if(NextNonce != null){
+                retVal.Append("nextnonce=" + NextNonce);
             }
 
-            if(m_Qop != null){
+            if(Qop != null){
                 if(retVal.Length > 0){
                     retVal.Append(',');
                 }
 
-                retVal.Append("qop=" + m_Qop);
+                retVal.Append("qop=" + Qop);
             }
 
-            if(m_ResponseAuth != null){
+            if(ResponseAuth != null){
                 if(retVal.Length > 0){
                     retVal.Append(',');
                 }
 
-                retVal.Append("rspauth=" + TextUtils.QuoteString(m_ResponseAuth));
+                retVal.Append("rspauth=" + TextUtils.QuoteString(ResponseAuth));
             }
 
-            if(m_CNonce != null){
+            if(CNonce != null){
                 if(retVal.Length > 0){
                     retVal.Append(',');
                 }
 
-                retVal.Append("cnonce=" + m_CNonce);
+                retVal.Append("cnonce=" + CNonce);
             }
             
             if(m_NonceCount != -1){                
@@ -157,47 +153,23 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets or sets server next predicted nonce value. Value null means that value not specified.
         /// </summary>
-        public string NextNonce
-        {
-            get{ return m_NextNonce; }
-
-            set{ m_NextNonce = value; }
-        }
+        public string NextNonce { get; set; }
 
         /// <summary>
         /// Gets or sets QOP value. Value null means that value not specified.
         /// </summary>
-        public string Qop
-        {
-            get{ return m_Qop; }
-
-            set{ m_Qop = value; }
-        }
+        public string Qop { get; set; }
 
         /// <summary>
         /// Gets or sets rspauth value. Value null means that value not specified.
         /// This can be only HEX value.
         /// </summary>
-        public string ResponseAuth
-        {
-            get{ return m_ResponseAuth; }
-
-            set{
-                // TODO: Check that value is hex value
-
-                m_ResponseAuth = value; 
-            }
-        }
+        public string ResponseAuth { get; set; }
 
         /// <summary>
         /// Gets or sets cnonce value. Value null means that value not specified.
         /// </summary>
-        public string CNonce
-        {
-            get{ return m_CNonce; }
-
-            set{ m_CNonce = value; }
-        }
+        public string CNonce { get; set; }
 
         /// <summary>
         /// Gets or sets nonce count. Value -1 means that value not specified.

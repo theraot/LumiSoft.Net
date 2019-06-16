@@ -8,10 +8,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_ValidateRequestEventArgs : EventArgs
     {
-        private readonly SIP_Request m_pRequest;
-        private readonly IPEndPoint  m_pRemoteEndPoint;
-        private string      m_ResponseCode;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -19,8 +15,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="remoteEndpoint">IP end point what made request.</param>
         public SIP_ValidateRequestEventArgs(SIP_Request request,IPEndPoint remoteEndpoint)
         {
-            m_pRequest        = request;
-            m_pRemoteEndPoint = remoteEndpoint;
+            Request        = request;
+            RemoteEndPoint = remoteEndpoint;
         }
 
 
@@ -29,29 +25,18 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets incoming SIP request.
         /// </summary>
-        public SIP_Request Request
-        {
-            get{ return m_pRequest; }
-        }
+        public SIP_Request Request { get; }
 
         /// <summary>
         /// Gets IP end point what made request.
         /// </summary>
-        public IPEndPoint RemoteEndPoint
-        {
-            get{ return m_pRemoteEndPoint; }
-        }
+        public IPEndPoint RemoteEndPoint { get; }
 
         /// <summary>
         /// Gets or sets response code. Value null means SIP stack will handle it.
         /// </summary>
-        public string ResponseCode
-        {
-            get{ return m_ResponseCode; }
+        public string ResponseCode { get; set; }
 
-            set{ m_ResponseCode = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

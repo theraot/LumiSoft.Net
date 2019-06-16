@@ -10,8 +10,6 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
     public class DNS_rr_SPF : DNS_rr
     {
-        private readonly string m_Text = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -50,11 +48,8 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets text.
 		/// </summary>
-		public string Text
-		{
-			get{ return m_Text; }
-		}
+		public string Text { get; } = "";
 
-        #endregion
+#endregion
     }
 }

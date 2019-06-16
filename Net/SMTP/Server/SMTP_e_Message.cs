@@ -8,7 +8,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_Message : EventArgs
     {
-        private readonly SMTP_Session m_pSession;
         private Stream       m_pStream;
 
         /// <summary>
@@ -22,7 +21,7 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("session");
             }
 
-            m_pSession = session;
+            Session = session;
         }
 
 
@@ -31,10 +30,7 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>
-        public SMTP_Session Session
-        {
-            get{ return m_pSession; }
-        }
+        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets or stes stream where to store incoming message.

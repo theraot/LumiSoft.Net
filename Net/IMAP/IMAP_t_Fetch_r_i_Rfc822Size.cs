@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Rfc822Size : IMAP_t_Fetch_r_i
     {
-        private readonly int m_Size;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'size' value must be >= 0.","size");
             }
 
-            m_Size = size;
+            Size = size;
         }
 
 
@@ -29,11 +27,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message size in bytes.
         /// </summary>
-        public int Size
-        {
-            get{ return m_Size; }
-        }
+        public int Size { get; }
 
-        #endregion
+#endregion
     }
 }

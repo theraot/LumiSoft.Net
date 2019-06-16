@@ -8,8 +8,6 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public class DNS_rr_AAAA : DNS_rr
     {
-        private readonly IPAddress m_IP;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -18,7 +16,7 @@ namespace LumiSoft.Net.DNS
         /// <param name="ttl">Time to live in seconds.</param>
         public DNS_rr_AAAA(string name,IPAddress ip,int ttl) : base(name,DNS_QType.AAAA,ttl)
         {
-            m_IP = ip;
+            IP = ip;
         }
 
 
@@ -50,12 +48,9 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets host IP address.
 		/// </summary>
-		public IPAddress IP
-		{
-			get{ return m_IP; }
-		}
+		public IPAddress IP { get; }
 
-        #endregion
+#endregion
 
     }
 }

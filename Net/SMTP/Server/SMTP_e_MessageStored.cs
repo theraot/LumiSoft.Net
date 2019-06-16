@@ -8,8 +8,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_MessageStored : EventArgs
     {
-        private readonly SMTP_Session m_pSession;
-        private readonly Stream       m_pStream;
         private SMTP_Reply   m_pReply;
 
         /// <summary>
@@ -31,8 +29,8 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("reply");
             }
 
-            m_pSession = session;
-            m_pStream  = stream;
+            Session = session;
+            Stream  = stream;
             m_pReply   = reply;
         }
 
@@ -42,18 +40,12 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>
-        public SMTP_Session Session
-        {
-            get{ return m_pSession; }
-        }
+        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets message stream where message has stored.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
-        }
+        public Stream Stream { get; }
 
         /// <summary>
         /// Gets or sets SMTP server reply.

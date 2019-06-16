@@ -11,7 +11,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioIn_RTP : IDisposable
     {
-        private bool                       m_IsDisposed;
         private bool                       m_IsRunning;
         private AudioInDevice              m_pAudioInDevice;
         private readonly int                        m_AudioFrameSize = 20;
@@ -57,13 +56,13 @@ namespace LumiSoft.Net.Media
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
             Stop();
 
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             this.Error        = null;
             m_pAudioInDevice  = null;
@@ -201,10 +200,7 @@ namespace LumiSoft.Net.Media
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets if currently audio is sent.

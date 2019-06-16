@@ -10,9 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_PTR : DNS_rr
 	{
-		private readonly string m_DomainName = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_PTR(string name,string domainName,int ttl) : base(name,DNS_QType.PTR,ttl)
 		{
-			m_DomainName = domainName;
+			DomainName = domainName;
 		}
 
 
@@ -53,12 +51,9 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets domain name.
 		/// </summary>
-		public string DomainName
-		{
-			get{ return m_DomainName; }
-		}
+		public string DomainName { get; } = "";
 
-		#endregion
+#endregion
 
 	}
 }

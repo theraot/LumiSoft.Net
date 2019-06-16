@@ -5,15 +5,13 @@
     /// </summary>
     public class IMAP_t_Fetch_r_i_X_GM_THRID : IMAP_t_Fetch_r_i
     {
-        private readonly ulong m_ThreadID;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="threadID">Thread ID.</param>
         public IMAP_t_Fetch_r_i_X_GM_THRID(ulong threadID)
         {
-            m_ThreadID = threadID;
+            ThreadID = threadID;
         }
 
 
@@ -22,11 +20,8 @@
         /// <summary>
         /// Gets thread ID.
         /// </summary>
-        public ulong ThreadID
-        {
-            get{ return m_ThreadID; }
-        }
+        public ulong ThreadID { get; }
 
-        #endregion
+#endregion
     }
 }

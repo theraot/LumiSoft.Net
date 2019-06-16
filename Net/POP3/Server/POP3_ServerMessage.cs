@@ -7,12 +7,6 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_ServerMessage
     {
-        private int    m_SequenceNumber      = -1;
-        private readonly string m_UID                 = "";
-        private readonly int    m_Size;
-        private bool   m_IsMarkedForDeletion;
-        private object m_pTag;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -44,9 +38,9 @@ namespace LumiSoft.Net.POP3.Server
                 throw new ArgumentException("Argument 'size' value must be >= 0.");
             }
 
-            m_UID  = uid;
-            m_Size = size;
-            m_pTag = tag;
+            UID  = uid;
+            Size = size;
+            Tag = tag;
         }
 
 
@@ -58,7 +52,7 @@ namespace LumiSoft.Net.POP3.Server
         /// <param name="value">Value.</param>
         internal void SetIsMarkedForDeletion(bool value)
         {
-            m_IsMarkedForDeletion = value;
+            IsMarkedForDeletion = value;
         }
 
         #endregion
@@ -69,49 +63,30 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// Gets message UID. NOTE: Before accessing this property, check that server supports UIDL command.
         /// </summary>
-        public string UID
-        {
-            get{ return m_UID; }
-        }
+        public string UID { get; } = "";
 
         /// <summary>
         /// Gets message size in bytes.
         /// </summary>
-        public int Size
-        {
-            get{ return m_Size; }
-        }
+        public int Size { get; }
 
         /// <summary>
         /// Gets if message is marked for deletion.
         /// </summary>
-        public bool IsMarkedForDeletion
-        {
-            get{ return m_IsMarkedForDeletion; }
-        }
+        public bool IsMarkedForDeletion { get; private set; }
 
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
-
-            set{ m_pTag = value; }
-        }
+        public object Tag { get; set; }
 
 
         /// <summary>
         /// Gets message 1 based sequence number.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        internal int SequenceNumber
-        {
-            get{ return m_SequenceNumber; }
+        internal int SequenceNumber { get; set; } = -1;
 
-            set{ m_SequenceNumber = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

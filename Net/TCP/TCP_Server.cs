@@ -20,9 +20,6 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         private class ListeningPoint
         {
-            private readonly Socket     m_pSocket;
-            private readonly IPBindInfo m_pBindInfo;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -30,8 +27,8 @@ namespace LumiSoft.Net.TCP
             /// <param name="bind">Bind info what acceped socket.</param>
             public ListeningPoint(Socket socket,IPBindInfo bind)
             {
-                m_pSocket   = socket;
-                m_pBindInfo = bind;
+                Socket   = socket;
+                BindInfo = bind;
             }
 
 
@@ -40,20 +37,14 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Gets socket.
             /// </summary>
-            public Socket Socket
-            {
-                get{ return m_pSocket; }
-            }
+            public Socket Socket { get; }
 
             /// <summary>
             /// Gets bind info.
             /// </summary>
-            public IPBindInfo BindInfo
-            {
-                get{ return m_pBindInfo; }
-            }
+            public IPBindInfo BindInfo { get; }
 
-            #endregion
+#endregion
 
         }
 
@@ -71,7 +62,6 @@ namespace LumiSoft.Net.TCP
             private bool                      m_IsRunning;
             private Socket                    m_pSocket;
             private SocketAsyncEventArgs      m_pSocketArgs;
-            private Dictionary<string,object> m_pTags;
 
             /// <summary>
             /// Default constructor.
@@ -86,7 +76,7 @@ namespace LumiSoft.Net.TCP
 
                 m_pSocket = socket;
 
-                m_pTags = new Dictionary<string,object>();
+                Tags = new Dictionary<string,object>();
             }
 
             #region method Dispose
@@ -103,7 +93,7 @@ namespace LumiSoft.Net.TCP
 
                 m_pSocket     = null;
                 m_pSocketArgs = null;
-                m_pTags       = null;
+                Tags       = null;
 
                 this.ConnectionAccepted = null;
                 this.Error = null;
@@ -249,12 +239,9 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Gets user data items.
             /// </summary>
-            public Dictionary<string,object> Tags
-            {
-                get{ return m_pTags; }
-            }
+            public Dictionary<string,object> Tags { get; private set; }
 
-            #endregion
+#endregion
 
             #region Events handling
 
@@ -303,8 +290,6 @@ namespace LumiSoft.Net.TCP
 
         #endregion
 
-        private bool                                     m_IsDisposed;
-        private bool                                     m_IsRunning;
         private IPBindInfo[]                             m_pBindings            = new IPBindInfo[0];
         private long                                     m_MaxConnections;
         private long                                     m_MaxConnectionsPerIP; 
@@ -334,17 +319,17 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            if(m_IsRunning){
+            if(IsRunning){
                 try{
                     Stop();
                 }
                 catch{
                 }
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             // We must call disposed event before we release events.
             try{
@@ -411,13 +396,13 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public void Start()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("TCP_Server");
             }
-            if(m_IsRunning){
+            if(IsRunning){
                 return;
             }
-            m_IsRunning = true;
+            IsRunning = true;
 
             m_StartTime = DateTime.Now;
             m_ConnectionsProcessed = 0;
@@ -442,10 +427,10 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public void Stop()
         {
-            if(!m_IsRunning){
+            if(!IsRunning){
                 return;
             }
-            m_IsRunning = false;
+            IsRunning = false;
 
             // Dispose all old binds.
             foreach(ListeningPoint listeningPoint in m_pListeningPoints.ToArray()){
@@ -636,19 +621,13 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if server is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets if server is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get{ return m_IsRunning; }
-        }
-                
+        public bool IsRunning { get; private set; }
+
         /// <summary>
         /// Gets or sets TCP server IP bindings.
         /// </summary>
@@ -656,7 +635,7 @@ namespace LumiSoft.Net.TCP
         public IPBindInfo[] Bindings
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -664,7 +643,7 @@ namespace LumiSoft.Net.TCP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(value == null){
@@ -688,7 +667,7 @@ namespace LumiSoft.Net.TCP
                 if(changed){
                     m_pBindings = value;
 
-                    if(m_IsRunning){
+                    if(IsRunning){
                         StartListen();
                     }
                 }
@@ -702,7 +681,7 @@ namespace LumiSoft.Net.TCP
         public IPEndPoint[] LocalEndPoints
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -741,7 +720,7 @@ namespace LumiSoft.Net.TCP
         public long MaxConnections
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
                 
@@ -749,7 +728,7 @@ namespace LumiSoft.Net.TCP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
                 if(value < 0){
@@ -766,7 +745,7 @@ namespace LumiSoft.Net.TCP
         public long MaxConnectionsPerIP
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
                 
@@ -774,7 +753,7 @@ namespace LumiSoft.Net.TCP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
                 if(m_MaxConnectionsPerIP < 0){
@@ -794,7 +773,7 @@ namespace LumiSoft.Net.TCP
         public int SessionIdleTimeout
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
                 
@@ -802,7 +781,7 @@ namespace LumiSoft.Net.TCP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
                 if(value < 0){
@@ -819,7 +798,7 @@ namespace LumiSoft.Net.TCP
         public Logger Logger
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -827,7 +806,7 @@ namespace LumiSoft.Net.TCP
             }
 
             set{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -843,10 +822,10 @@ namespace LumiSoft.Net.TCP
         public DateTime StartTime
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
-                if(!m_IsRunning){
+                if(!IsRunning){
                     throw new InvalidOperationException("TCP server is not running.");
                 }
 
@@ -862,10 +841,10 @@ namespace LumiSoft.Net.TCP
         public long ConnectionsProcessed
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
-                if(!m_IsRunning){
+                if(!IsRunning){
                     throw new InvalidOperationException("TCP server is not running.");
                 }
 
@@ -881,10 +860,10 @@ namespace LumiSoft.Net.TCP
         public TCP_SessionCollection<TCP_ServerSession> Sessions
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Server");
                 }
-                if(!m_IsRunning){
+                if(!IsRunning){
                     throw new InvalidOperationException("TCP server is not running.");
                 }
 

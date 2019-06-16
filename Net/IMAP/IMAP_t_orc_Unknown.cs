@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Unknown : IMAP_t_orc
     {
-        private readonly string m_Value;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -52,7 +50,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return m_Value;
+            return Value;
         }
 
         #endregion
@@ -63,11 +61,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Optional response value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; }
 
-        #endregion
+#endregion
     }
 }

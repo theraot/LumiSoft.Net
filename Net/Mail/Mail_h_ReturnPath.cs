@@ -18,16 +18,13 @@ namespace LumiSoft.Net.Mail
     /// </example>
     public class Mail_h_ReturnPath : MIME_h
     {
-        private readonly bool   m_IsModified = false;
-        private string m_Address;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="address">Address. Value null means null-path.</param>
         public Mail_h_ReturnPath(string address)
         {
-            m_Address = address;
+            Address = address;
         }
 
 
@@ -57,10 +54,10 @@ namespace LumiSoft.Net.Mail
             r.ToFirstChar();
             // Return-Path missing <>, some server won't be honor RFC.
             if(!r.StartsWith("<")){
-                retVal.m_Address = r.ToEnd();
+                retVal.Address = r.ToEnd();
             }
             else{
-                retVal.m_Address = r.ReadParenthesized();
+                retVal.Address = r.ReadParenthesized();
             }
 
             return retVal;
@@ -80,11 +77,11 @@ namespace LumiSoft.Net.Mail
         /// <returns>Returns header field as string.</returns>
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
-            if(string.IsNullOrEmpty(m_Address)){
+            if(string.IsNullOrEmpty(Address)){
                 return "Return-Path: <>\r\n";
             }
             else{
-                return "Return-Path: <" + m_Address + ">\r\n";
+                return "Return-Path: <" + Address + ">\r\n";
             }
         }
 
@@ -98,10 +95,7 @@ namespace LumiSoft.Net.Mail
         /// </summary>
         /// <remarks>All new added header fields has <b>IsModified = true</b>.</remarks>
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
-        public override bool IsModified
-        {
-            get{ return m_IsModified; }
-        }
+        public override bool IsModified { get; } = false;
 
         /// <summary>
         /// Gets header field name. For example "Sender".
@@ -114,11 +108,8 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets mailbox address. Value null means null-path.
         /// </summary>
-        public string Address
-        {
-            get{ return m_Address; }
-        }
+        public string Address { get; private set; }
 
-        #endregion
+#endregion
     }
 }

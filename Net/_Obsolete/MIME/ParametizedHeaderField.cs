@@ -13,9 +13,8 @@ namespace LumiSoft.Net.Mime
 	public class ParametizedHeaderField
 	{
 		private readonly HeaderField                    m_pHeaderField;
-		private readonly HeaderFieldParameterCollection m_pParameters;
 
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="headerField">Source header field.</param>
@@ -23,7 +22,7 @@ namespace LumiSoft.Net.Mime
 		{
 			m_pHeaderField = headerField;
 
-			m_pParameters = new HeaderFieldParameterCollection(this);
+			Parameters = new HeaderFieldParameterCollection(this);
 		}
 
 		
@@ -114,12 +113,9 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Gets header field parameters.
 		/// </summary>
-		public HeaderFieldParameterCollection Parameters
-		{
-			get{ return m_pParameters; }
-		}
+		public HeaderFieldParameterCollection Parameters { get; }
 
-		#endregion
+#endregion
 
 	}
 }

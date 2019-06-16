@@ -9,20 +9,6 @@ namespace LumiSoft.Net.UPnP
     /// </summary>
     public class UPnP_Device
     {
-        private string m_BaseUrl          = "";
-        private string m_DeviceType       = "";
-        private string m_FriendlyName     = "";
-        private string m_Manufacturer     = "";
-        private string m_ManufacturerUrl  = "";
-        private string m_ModelDescription = "";
-        private string m_ModelName        = "";
-        private string m_ModelNumber      = "";
-        private string m_ModelUrl         = "";
-        private string m_SerialNumber     = "";
-        private string m_UDN              = "";
-        private string m_PresentationUrl  = "";
-        private string m_DeviceXml;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -45,24 +31,24 @@ namespace LumiSoft.Net.UPnP
 
             StringWriter xmlString = new StringWriter();
             xml.WriteTo(new XmlTextWriter(xmlString));
-            m_DeviceXml = xmlString.ToString();
+            DeviceXml = xmlString.ToString();
 
             // Set up namespace manager for XPath   
             XmlNamespaceManager ns = new XmlNamespaceManager(xml.NameTable);   
             ns.AddNamespace("n",xml.ChildNodes[1].NamespaceURI);
 
-            m_BaseUrl          = xml.SelectSingleNode("n:root/n:URLBase",ns).InnerText;
-            m_DeviceType       = xml.SelectSingleNode("n:root/n:device/n:deviceType",ns).InnerText;
-            m_FriendlyName     = xml.SelectSingleNode("n:root/n:device/n:friendlyName",ns).InnerText;
-            m_Manufacturer     = xml.SelectSingleNode("n:root/n:device/n:manufacturer",ns).InnerText;
-            m_ManufacturerUrl  = xml.SelectSingleNode("n:root/n:device/n:manufacturerURL",ns).InnerText;
-            m_ModelDescription = xml.SelectSingleNode("n:root/n:device/n:modelDescription",ns).InnerText;
-            m_ModelName        = xml.SelectSingleNode("n:root/n:device/n:modelName",ns).InnerText;
-            m_ModelNumber      = xml.SelectSingleNode("n:root/n:device/n:modelNumber",ns).InnerText;
-            m_ModelUrl         = xml.SelectSingleNode("n:root/n:device/n:modelURL",ns).InnerText;
-            m_SerialNumber     = xml.SelectSingleNode("n:root/n:device/n:serialNumber",ns).InnerText;
-            m_UDN              = xml.SelectSingleNode("n:root/n:device/n:UDN",ns).InnerText;
-            m_PresentationUrl  = xml.SelectSingleNode("n:root/n:device/n:presentationURL",ns).InnerText;
+            BaseUrl          = xml.SelectSingleNode("n:root/n:URLBase",ns).InnerText;
+            DeviceType       = xml.SelectSingleNode("n:root/n:device/n:deviceType",ns).InnerText;
+            FriendlyName     = xml.SelectSingleNode("n:root/n:device/n:friendlyName",ns).InnerText;
+            Manufacturer     = xml.SelectSingleNode("n:root/n:device/n:manufacturer",ns).InnerText;
+            ManufacturerUrl  = xml.SelectSingleNode("n:root/n:device/n:manufacturerURL",ns).InnerText;
+            ModelDescription = xml.SelectSingleNode("n:root/n:device/n:modelDescription",ns).InnerText;
+            ModelName        = xml.SelectSingleNode("n:root/n:device/n:modelName",ns).InnerText;
+            ModelNumber      = xml.SelectSingleNode("n:root/n:device/n:modelNumber",ns).InnerText;
+            ModelUrl         = xml.SelectSingleNode("n:root/n:device/n:modelURL",ns).InnerText;
+            SerialNumber     = xml.SelectSingleNode("n:root/n:device/n:serialNumber",ns).InnerText;
+            UDN              = xml.SelectSingleNode("n:root/n:device/n:UDN",ns).InnerText;
+            PresentationUrl  = xml.SelectSingleNode("n:root/n:device/n:presentationURL",ns).InnerText;
         }
 
         #endregion
@@ -73,90 +59,57 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         /// Gets device base URL.
         /// </summary>
-        public string BaseUrl
-        {
-            get{ return m_BaseUrl; }
-        }
+        public string BaseUrl { get; private set; } = "";
 
         /// <summary>
         /// Gets device type.
         /// </summary>
-        public string DeviceType
-        {
-            get{ return m_DeviceType; }
-        }
+        public string DeviceType { get; private set; } = "";
 
         /// <summary>
         /// Gets device short name.
         /// </summary>
-        public string FriendlyName
-        {
-            get{ return m_FriendlyName; }
-        }
+        public string FriendlyName { get; private set; } = "";
 
         /// <summary>
         /// Gets manufacturer's name.
         /// </summary>
-        public string Manufacturer
-        {
-            get{ return m_Manufacturer; }
-        }
+        public string Manufacturer { get; private set; } = "";
 
         /// <summary>
         /// Gets web site for Manufacturer.
         /// </summary>
-        public string ManufacturerUrl
-        {
-            get{ return m_ManufacturerUrl; }
-        }
+        public string ManufacturerUrl { get; private set; } = "";
 
         /// <summary>
         /// Gets device long description.
         /// </summary>
-        public string ModelDescription
-        {
-            get{ return m_ModelDescription; }
-        }
+        public string ModelDescription { get; private set; } = "";
 
         /// <summary>
         /// Gets model name.
         /// </summary>
-        public string ModelName
-        {
-            get{ return m_ModelName; }
-        }
+        public string ModelName { get; private set; } = "";
 
         /// <summary>
         /// Gets model number.
         /// </summary>
-        public string ModelNumber
-        {
-            get{ return m_ModelNumber; }
-        }
+        public string ModelNumber { get; private set; } = "";
 
         /// <summary>
         /// Gets web site for model.
         /// </summary>
-        public string ModelUrl
-        {
-            get{ return m_ModelUrl; }
-        }
+        public string ModelUrl { get; private set; } = "";
 
         /// <summary>
         /// Gets serial number.
         /// </summary>
-        public string SerialNumber
-        {
-            get{ return m_SerialNumber; }
-        }
+        public string SerialNumber { get; private set; } = "";
 
         /// <summary>
         /// Gets unique device name.
         /// </summary>
-        public string UDN
-        {
-            get{ return m_UDN; }
-        }
+        public string UDN { get; private set; } = "";
 
         // iconList
         // serviceList
@@ -165,19 +118,13 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         /// Gets device UI url.
         /// </summary>
-        public string PresentationUrl
-        {
-            get{ return m_PresentationUrl; }
-        }
+        public string PresentationUrl { get; private set; } = "";
 
         /// <summary>
         /// Gets UPnP device XML description.
         /// </summary>
-        public string DeviceXml
-        {
-            get{ return m_DeviceXml; }
-        }
+        public string DeviceXml { get; private set; }
 
-        #endregion
+#endregion
     }
 }

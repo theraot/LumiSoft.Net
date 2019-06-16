@@ -17,16 +17,14 @@ namespace LumiSoft.Net.SIP.Message
     public class SIP_t_AcceptRange : SIP_t_Value
     {
         private string                  m_MediaType        = "";
-        private readonly SIP_ParameterCollection m_pMediaParameters;
-        private readonly SIP_ParameterCollection m_pParameters;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SIP_t_AcceptRange()
         {
-            m_pMediaParameters = new SIP_ParameterCollection();
-            m_pParameters      = new SIP_ParameterCollection();
+            MediaParameters = new SIP_ParameterCollection();
+            Parameters      = new SIP_ParameterCollection();
         }
 
 
@@ -132,7 +130,7 @@ namespace LumiSoft.Net.SIP.Message
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append(m_MediaType);
-            foreach(SIP_Parameter parameter in m_pMediaParameters){
+            foreach(SIP_Parameter parameter in MediaParameters){
                 if(parameter.Value != null){
                     retVal.Append(";" + parameter.Name + "=" + parameter.Value);
                 }
@@ -140,7 +138,7 @@ namespace LumiSoft.Net.SIP.Message
                     retVal.Append(";" + parameter.Name);
                 }
             }
-            foreach(SIP_Parameter parameter in m_pParameters){
+            foreach(SIP_Parameter parameter in Parameters){
                 if(parameter.Value != null){
                     retVal.Append(";" + parameter.Name + "=" + parameter.Value);
                 }
@@ -181,18 +179,12 @@ namespace LumiSoft.Net.SIP.Message
         /// Gets media parameters collection.
         /// </summary>
         /// <returns></returns>
-        public SIP_ParameterCollection MediaParameters
-        {
-            get{ return m_pMediaParameters; }
-        }
+        public SIP_ParameterCollection MediaParameters { get; }
 
         /// <summary>
         /// Gets accept value parameters.
         /// </summary>
-        public SIP_ParameterCollection Parameters
-        {
-            get{ return m_pParameters; }
-        }
+        public SIP_ParameterCollection Parameters { get; }
 
         /// <summary>
         /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 

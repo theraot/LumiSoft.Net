@@ -7,10 +7,6 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_Authenticate : EventArgs
     {
-        private bool   m_IsAuthenticated;
-        private readonly string m_User            = "";
-        private readonly string m_Password        = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,8 +22,8 @@ namespace LumiSoft.Net.POP3.Server
                 throw new ArgumentNullException("password");
             }
 
-            m_User     = user;
-            m_Password = password;
+            User     = user;
+            Password = password;
         }
 
 
@@ -36,29 +32,18 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// Gets or sets if session is authenticated.
         /// </summary>
-        public bool IsAuthenticated
-        {
-            get{ return m_IsAuthenticated; }
-
-            set{ m_IsAuthenticated = value; }
-        }
+        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Gets user name.
         /// </summary>
-        public string User
-        {
-            get{ return m_User; }
-        }
+        public string User { get; } = "";
 
         /// <summary>
         /// Gets password.
         /// </summary>
-        public string Password
-        {
-            get{ return m_Password; }
-        }
+        public string Password { get; } = "";
 
-        #endregion
+#endregion
     }
 }

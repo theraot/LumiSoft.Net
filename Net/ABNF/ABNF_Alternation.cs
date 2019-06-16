@@ -8,14 +8,12 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Alternation
     {
-        private readonly List<ABNF_Concatenation> m_pItems;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public ABNF_Alternation()
         {
-            m_pItems = new List<ABNF_Concatenation>();
+            Items = new List<ABNF_Concatenation>();
         }
 
 
@@ -37,7 +35,7 @@ namespace LumiSoft.Net.ABNF
             while(true){
                 ABNF_Concatenation item = ABNF_Concatenation.Parse(reader);
                 if(item != null){
-                    retVal.m_pItems.Add(item);
+                    retVal.Items.Add(item);
                 }
 
                 // We reached end of string.
@@ -63,11 +61,8 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets alternation items.
         /// </summary>
-        public List<ABNF_Concatenation> Items
-        {
-            get{ return m_pItems; }
-        }
+        public List<ABNF_Concatenation> Items { get; }
 
-        #endregion
+#endregion
     }
 }

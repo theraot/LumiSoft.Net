@@ -8,16 +8,6 @@ namespace LumiSoft.Net.IMAP.Client
     /// </summary>
     public class IMAP_Client_SelectedFolder
     {
-        private readonly string   m_Name                = "";
-        private long     m_UidValidity         = -1;
-        private string[] m_pFlags              = new string[0];
-        private string[] m_pPermanentFlags     = new string[0];
-        private bool     m_IsReadOnly;
-        private long     m_UidNext             = -1;
-        private int      m_FirstUnseen         = -1;
-        private int      m_MessagesCount;
-        private int      m_RecentMessagesCount;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -33,7 +23,7 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentException("The argument 'name' value must be specified.","name");
             }
 
-            m_Name = name;
+            Name = name;
         }
 
 
@@ -70,7 +60,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetUidValidity(long value)
         {
-            m_UidValidity = value;
+            UidValidity = value;
         }
 
         #endregion
@@ -83,7 +73,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetFlags(string[] value)
         {
-            m_pFlags = value;
+            Flags = value;
         }
 
         #endregion
@@ -96,7 +86,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetPermanentFlags(string[] value)
         {
-            m_pPermanentFlags = value;
+            PermanentFlags = value;
         }
 
         #endregion
@@ -109,7 +99,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetReadOnly(bool value)
         {
-            m_IsReadOnly = value;
+            IsReadOnly = value;
         }
 
         #endregion
@@ -122,7 +112,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetUidNext(long value)
         {
-            m_UidNext = value;
+            UidNext = value;
         }
 
         #endregion
@@ -135,7 +125,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetFirstUnseen(int value)
         {
-            m_FirstUnseen = value;
+            FirstUnseen = value;
         }
 
         #endregion
@@ -148,7 +138,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetMessagesCount(int value)
         {
-            m_MessagesCount = value;
+            MessagesCount = value;
         }
 
         #endregion
@@ -161,7 +151,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="value">Value to set.</param>
         internal void SetRecentMessagesCount(int value)
         {
-            m_RecentMessagesCount = value;
+            RecentMessagesCount = value;
         }
 
         #endregion
@@ -199,75 +189,48 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets selected folder name(path included).
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
         /// Gets folder UID value. Value null means IMAP server doesn't support <b>UIDVALIDITY</b> feature.
         /// </summary>
-        public long UidValidity
-        {
-            get{ return m_UidValidity; }
-        }
+        public long UidValidity { get; private set; } = -1;
 
         /// <summary>
         /// Gets flags what folder supports.
         /// </summary>
-        public string[] Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public string[] Flags { get; private set; } = new string[0];
 
         /// <summary>
         /// Gets permanent flags what folder can store.
         /// </summary>
-        public string[] PermanentFlags
-        {
-            get{ return m_pPermanentFlags; }
-        }
+        public string[] PermanentFlags { get; private set; } = new string[0];
 
         /// <summary>
         /// Gets if folder is read-only or read-write.
         /// </summary>
-        public bool IsReadOnly
-        {
-            get{ return m_IsReadOnly; }
-        }
+        public bool IsReadOnly { get; private set; }
 
         /// <summary>
         /// Gets next predicted message UID. Value -1 means that IMAP server doesn't support it.
         /// </summary>
-        public long UidNext
-        {
-            get{ return m_UidNext; }
-        }
+        public long UidNext { get; private set; } = -1;
 
         /// <summary>
         /// Gets first unseen message sequence number. Value -1 means no unseen message.
         /// </summary>
-        public int FirstUnseen
-        {
-            get{ return m_FirstUnseen; }
-        }
+        public int FirstUnseen { get; private set; } = -1;
 
         /// <summary>
         /// Gets number of messages in this folder.
         /// </summary>
-        public int MessagesCount
-        {
-            get{ return m_MessagesCount; }
-        }
+        public int MessagesCount { get; private set; }
 
         /// <summary>
         /// Gets number of recent messages in this folder.
         /// </summary>
-        public int RecentMessagesCount
-        {
-            get{ return m_RecentMessagesCount; }
-        }
+        public int RecentMessagesCount { get; private set; }
 
-        #endregion
+#endregion
     }
 }

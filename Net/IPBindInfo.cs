@@ -9,13 +9,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class IPBindInfo
     {
-        private readonly string           m_HostName     = "";
-        private readonly BindInfoProtocol m_Protocol     = BindInfoProtocol.TCP;  
-        private readonly IPEndPoint       m_pEndPoint;
-        private readonly SslMode          m_SslMode      = SslMode.None;
-        private readonly X509Certificate2 m_pCertificate;
-        private object           m_Tag;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -30,9 +23,9 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ip");
             }
 
-            m_HostName  = hostName;
-            m_Protocol  = protocol;
-            m_pEndPoint = new IPEndPoint(ip,port);
+            HostName  = hostName;
+            Protocol  = protocol;
+            EndPoint = new IPEndPoint(ip,port);
         }
 
         /// <summary>
@@ -65,11 +58,11 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ip");
             }
             
-            m_HostName     = hostName;
-            m_Protocol     = protocol;
-            m_pEndPoint    = new IPEndPoint(ip,port);
-            m_SslMode      = sslMode;
-            m_pCertificate = sslCertificate;
+            HostName     = hostName;
+            Protocol     = protocol;
+            EndPoint    = new IPEndPoint(ip,port);
+            SslMode      = sslMode;
+            SSL_Certificate = sslCertificate;
             if((sslMode == SslMode.SSL || sslMode == SslMode.TLS) && sslCertificate == null){
                 throw new ArgumentException("SSL requested, but argument 'sslCertificate' is not provided.");
             }
@@ -93,19 +86,19 @@ namespace LumiSoft.Net
             }
 
             IPBindInfo bInfo = (IPBindInfo)obj;
-            if(bInfo.HostName != m_HostName){
+            if(bInfo.HostName != HostName){
                 return false;
             }
-            if(bInfo.Protocol != m_Protocol){
+            if(bInfo.Protocol != Protocol){
                 return false;
             }
-            if(!bInfo.EndPoint.Equals(m_pEndPoint)){
+            if(!bInfo.EndPoint.Equals(EndPoint)){
                 return false;
             }
-            if(bInfo.SslMode != m_SslMode){
+            if(bInfo.SslMode != SslMode){
                 return false;
             }
-            if(!X509Certificate.Equals(bInfo.Certificate,m_pCertificate)){
+            if(!X509Certificate.Equals(bInfo.Certificate,SSL_Certificate)){
                 return false;
             }
 
@@ -133,33 +126,24 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets host name.
         /// </summary>
-        public string HostName
-        {
-            get{ return m_HostName; }
-        }
+        public string HostName { get; } = "";
 
         /// <summary>
         /// Gets protocol.
         /// </summary>
-        public BindInfoProtocol Protocol
-        {
-            get{ return m_Protocol; }
-        }
+        public BindInfoProtocol Protocol { get; } = BindInfoProtocol.TCP;
 
         /// <summary>
         /// Gets IP end point.
         /// </summary>
-        public IPEndPoint EndPoint
-        {
-            get{ return m_pEndPoint; }
-        }
+        public IPEndPoint EndPoint { get; }
 
         /// <summary>
         /// Gets IP address.
         /// </summary>
         public IPAddress IP
         {
-            get{ return m_pEndPoint.Address; }
+            get{ return EndPoint.Address; }
         }
 
         /// <summary>
@@ -167,46 +151,35 @@ namespace LumiSoft.Net
         /// </summary>
         public int Port
         {
-            get{ return m_pEndPoint.Port; }
+            get{ return EndPoint.Port; }
         }
 
         /// <summary>
         /// Gets SSL mode.
         /// </summary>
-        public SslMode SslMode
-        {
-            get{ return m_SslMode; }
-        }
+        public SslMode SslMode { get; } = SslMode.None;
 
         /// <summary>
         /// Gets SSL certificate.
         /// </summary>
         [Obsolete("Use property Certificate instead.")]
-        public X509Certificate2 SSL_Certificate
-        {
-            get{ return m_pCertificate; }
-        }
+        public X509Certificate2 SSL_Certificate { get; }
 
         /// <summary>
         /// Gets SSL certificate.
         /// </summary>
         public X509Certificate2 Certificate
         {
-            get{ return m_pCertificate; }
+            get{ return SSL_Certificate; }
         }
 
 
         /// <summary>
         /// Gets or sets user data. This is used internally don't use it !!!.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_Tag; }
+        public object Tag { get; set; }
 
-            set{ m_Tag = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

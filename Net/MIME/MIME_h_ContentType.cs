@@ -54,9 +54,6 @@ namespace LumiSoft.Net.MIME
     {
         private bool                       m_IsModified;
         private string                     m_ParseValue;
-        private string                     m_Type        = "";
-        private string                     m_SubType     = "";
-        private readonly MIME_h_ParameterCollection m_pParameters;
 
         /// <summary>
         /// Default constructor.
@@ -78,14 +75,14 @@ namespace LumiSoft.Net.MIME
                     throw new ArgumentException("Invalid argument 'mediaType' value '" + mediaType + "', value must be token.");
                 }
 
-                m_Type    = type_subtype[0];
-                m_SubType = type_subtype[1];
+                Type    = type_subtype[0];
+                SubType = type_subtype[1];
             }
             else{
                 throw new ArgumentException("Invalid argument 'mediaType' value '" + mediaType + "'.");
             }
 
-            m_pParameters = new MIME_h_ParameterCollection(this);
+            Parameters = new MIME_h_ParameterCollection(this);
             m_IsModified  = true;
         }
 
@@ -94,7 +91,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         private MIME_h_ContentType()
         {
-            m_pParameters = new MIME_h_ParameterCollection(this);
+            Parameters = new MIME_h_ParameterCollection(this);
         }
 
 
@@ -128,7 +125,7 @@ namespace LumiSoft.Net.MIME
             if(type == null){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
-            retVal.m_Type = type;
+            retVal.Type = type;
 
             if(r.Char(false) != '/'){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
@@ -138,10 +135,10 @@ namespace LumiSoft.Net.MIME
             if(subtype == null){
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
-            retVal.m_SubType = subtype;
+            retVal.SubType = subtype;
 
             if(r.Available > 0){
-                retVal.m_pParameters.Parse(r);
+                retVal.Parameters.Parse(r);
             }
 
             retVal.m_ParseValue = value;
@@ -169,8 +166,8 @@ namespace LumiSoft.Net.MIME
             }
             else{
                 StringBuilder retVal = new StringBuilder();
-                retVal.Append("Content-Type: " + m_Type + "/" + m_SubType);
-                retVal.Append(m_pParameters.ToString(parmetersCharset));
+                retVal.Append("Content-Type: " + Type + "/" + SubType);
+                retVal.Append(Parameters.ToString(parmetersCharset));
                 retVal.Append("\r\n");
 
                 return retVal.ToString();
@@ -189,7 +186,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
         public override bool IsModified
         {
-            get{ return m_IsModified || m_pParameters.IsModified; }
+            get{ return m_IsModified || Parameters.IsModified; }
         }
 
         /// <summary>
@@ -204,19 +201,13 @@ namespace LumiSoft.Net.MIME
         /// Gets media type. For example: application,image,text, ... .
         /// </summary>
         /// <remarks>The official list of reggistered types are http://www.iana.org/assignments/media-types .</remarks>
-        public string Type
-        {
-            get{ return m_Type; }
-        }
+        public string Type { get; private set; } = "";
 
         /// <summary>
         /// Gets media sub-type. For example for text/plain, sub-type is 'plain'.
         /// </summary>
         /// <remarks>The official list of reggistered types are http://www.iana.org/assignments/media-types .</remarks>
-        public string SubType
-        {
-            get{ return m_SubType; }
-        }
+        public string SubType { get; private set; } = "";
 
         /// <summary>
         /// Gets media type with subtype as Type/SubType. Well known value are in <see cref="MIME_MediaTypes">MIME_MediaTypes</see>. For example: text/plain.
@@ -224,7 +215,7 @@ namespace LumiSoft.Net.MIME
         [Obsolete("Mispelled 'TypeWithSubype', use TypeWithSubtype instead !")]
         public string TypeWithSubype
         {
-            get{ return m_Type + "/" + m_SubType; }
+            get{ return Type + "/" + SubType; }
         }
 
         /// <summary>
@@ -232,25 +223,22 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string TypeWithSubtype
         {
-            get{ return m_Type + "/" + m_SubType; }
+            get{ return Type + "/" + SubType; }
         }
 
         /// <summary>
         /// Gets Content-Type parameters collection.
         /// </summary>
-        public MIME_h_ParameterCollection Parameters
-        {
-            get{ return m_pParameters; }
-        }
+        public MIME_h_ParameterCollection Parameters { get; }
 
         /// <summary>
         /// Gets or sets Content-Type <b>name</b> parameter value. Value null means not specified.
         /// </summary>
         public string Param_Name
         {
-            get{ return m_pParameters["name"]; }
+            get{ return Parameters["name"]; }
 
-            set{ m_pParameters["name"] = value; }
+            set{ Parameters["name"] = value; }
         }
         
         /// <summary>
@@ -258,9 +246,9 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Param_Charset
         {
-            get{ return m_pParameters["charset"]; }
+            get{ return Parameters["charset"]; }
 
-            set{ m_pParameters["charset"] = value; }
+            set{ Parameters["charset"] = value; }
         }
 
         /// <summary>
@@ -268,9 +256,9 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public string Param_Boundary
         {
-            get{ return m_pParameters["boundary"]; }
+            get{ return Parameters["boundary"]; }
 
-            set{ m_pParameters["boundary"] = value; }
+            set{ Parameters["boundary"] = value; }
         }
 
         #endregion

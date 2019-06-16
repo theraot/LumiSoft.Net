@@ -8,9 +8,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class HostEndPoint
     {
-        private readonly string m_Host = "";
-        private readonly int    m_Port;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,8 +24,8 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Argument 'host' value must be specified.");
             }
 
-            m_Host = host;
-            m_Port = port;
+            Host = host;
+            Port = port;
         }
 
         /// <summary>
@@ -42,8 +39,8 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("endPoint");
             }
 
-            m_Host = endPoint.Address.ToString();
-            m_Port = endPoint.Port;
+            Host = endPoint.Address.ToString();
+            Port = endPoint.Port;
         }
 
 
@@ -106,11 +103,11 @@ namespace LumiSoft.Net
         /// <returns>Returns HostEndPoint as string.</returns>
         public override string ToString()
         {
-            if(m_Port == -1){
-                return m_Host;
+            if(Port == -1){
+                return Host;
             }
             else{
-                return m_Host + ":" + m_Port.ToString();
+                return Host + ":" + Port.ToString();
             }
         }
 
@@ -124,26 +121,20 @@ namespace LumiSoft.Net
         /// </summary>
         public bool IsIPAddress
         {
-            get{ return Net_Utils.IsIPAddress(m_Host); }
+            get{ return Net_Utils.IsIPAddress(Host); }
         }
 
         /// <summary>
         /// Gets host name or IP address.
         /// </summary>
-        public string Host
-        {
-            get{ return m_Host; }
-        }
+        public string Host { get; } = "";
 
         /// <summary>
         /// Gets the port number of the endpoint. Value -1 means port not specified.
         /// </summary>
-        public int Port
-        {
-            get{ return m_Port; }
-        }
+        public int Port { get; }
 
-        #endregion
+#endregion
 
     }
 }

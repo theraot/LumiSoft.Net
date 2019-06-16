@@ -8,15 +8,6 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_DigestMD5_Challenge
     {
-        private string[] m_Realm;
-        private string   m_Nonce;
-        private string[] m_QopOptions;
-        private bool     m_Stale;
-        private int      m_Maxbuf;
-        private string   m_Charset;
-        private string   m_Algorithm;
-        private string   m_CipherOpts;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -37,12 +28,12 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentNullException("qopOptions");
             }
 
-            m_Realm      = realm;
-            m_Nonce      = nonce;
-            m_QopOptions = qopOptions;
-            m_Stale      = stale;
-            m_Charset    = "utf-8";
-            m_Algorithm  = "md5-sess";
+            Realm      = realm;
+            Nonce      = nonce;
+            QopOptions = qopOptions;
+            Stale      = stale;
+            Charset    = "utf-8";
+            Algorithm  = "md5-sess";
         }
 
         /// <summary>
@@ -77,28 +68,28 @@ namespace LumiSoft.Net.AUTH
 
                 if(name_value.Length == 2){
                     if(name.ToLower() == "realm"){
-                        retVal.m_Realm = TextUtils.UnQuoteString(name_value[1]).Split(',');
+                        retVal.Realm = TextUtils.UnQuoteString(name_value[1]).Split(',');
                     }
                     else if(name.ToLower() == "nonce"){
-                        retVal.m_Nonce = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Nonce = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "qop"){
-                        retVal.m_QopOptions = TextUtils.UnQuoteString(name_value[1]).Split(',');
+                        retVal.QopOptions = TextUtils.UnQuoteString(name_value[1]).Split(',');
                     }
                     else if(name.ToLower() == "stale"){
-                        retVal.m_Stale = Convert.ToBoolean(TextUtils.UnQuoteString(name_value[1]));
+                        retVal.Stale = Convert.ToBoolean(TextUtils.UnQuoteString(name_value[1]));
                     }
                     else if(name.ToLower() == "maxbuf"){
-                        retVal.m_Maxbuf = Convert.ToInt32(TextUtils.UnQuoteString(name_value[1]));
+                        retVal.Maxbuf = Convert.ToInt32(TextUtils.UnQuoteString(name_value[1]));
                     }
                     else if(name.ToLower() == "charset"){
-                        retVal.m_Charset = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Charset = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "algorithm"){
-                        retVal.m_Algorithm = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Algorithm = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "cipher-opts"){
-                        retVal.m_CipherOpts = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.CipherOpts = TextUtils.UnQuoteString(name_value[1]);
                     }
                     //else if(name.ToLower() == "auth-param"){
                     //    retVal.m_AuthParam = TextUtils.UnQuoteString(name_value[1]);
@@ -190,67 +181,43 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets realm value. For more info see RFC 2831.
         /// </summary>
-        public string[] Realm
-        {
-            get{ return m_Realm; }
-        }
+        public string[] Realm { get; private set; }
 
         /// <summary>
         /// Gets nonce value. For more info see RFC 2831.
         /// </summary>
-        public string Nonce
-        {
-            get{ return m_Nonce; }
-        }
+        public string Nonce { get; private set; }
 
         /// <summary>
         /// Gets qop-options value. For more info see RFC 2831.
         /// </summary>
-        public string[] QopOptions
-        {
-            get{ return m_QopOptions; }
-        }
+        public string[] QopOptions { get; private set; }
 
         /// <summary>
         /// Gets if stale value. For more info see RFC 2831.
         /// </summary>
-        public bool Stale
-        {
-            get{ return m_Stale; }
-        }
+        public bool Stale { get; private set; }
 
         /// <summary>
         /// Gets maxbuf value. For more info see RFC 2831.
         /// </summary>
-        public int Maxbuf
-        {
-            get{ return m_Maxbuf; }
-        }
+        public int Maxbuf { get; private set; }
 
         /// <summary>
         /// Gets charset value. For more info see RFC 2831.
         /// </summary>
-        public string Charset
-        {
-            get{ return m_Charset; }
-        }
+        public string Charset { get; private set; }
 
         /// <summary>
         /// Gets algorithm value. For more info see RFC 2831.
         /// </summary>
-        public string Algorithm
-        {
-            get{ return m_Algorithm; }
-        }
+        public string Algorithm { get; private set; }
 
         /// <summary>
         /// Gets cipher-opts value. For more info see RFC 2831.
         /// </summary>
-        public string CipherOpts
-        {
-            get{ return m_CipherOpts; }
-        }
+        public string CipherOpts { get; private set; }
 
-        #endregion
+#endregion
     }
 }

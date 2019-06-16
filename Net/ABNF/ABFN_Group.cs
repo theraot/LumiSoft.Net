@@ -7,8 +7,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABFN_Group : ABNF_Element
     {
-        private ABNF_Alternation m_pAlternation;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -46,7 +44,7 @@ namespace LumiSoft.Net.ABNF
                 throw new ParseException("Invalid ABNF 'group' value '" + reader.ReadToEnd() + "'.");
             }
          
-            retVal.m_pAlternation = ABNF_Alternation.Parse(reader);
+            retVal.Alternation = ABNF_Alternation.Parse(reader);
 
             // We don't have closing ")".
             if(reader.Peek() != ')'){
@@ -65,11 +63,8 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets option alternation elements.
         /// </summary>
-        public ABNF_Alternation Alternation
-        {
-            get{ return m_pAlternation; }
-        }
+        public ABNF_Alternation Alternation { get; private set; }
 
-        #endregion
+#endregion
     }
 }

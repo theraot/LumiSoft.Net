@@ -8,13 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_MessageInfo
     {
-        private readonly string   m_ID;
-        private readonly long     m_UID;
-        private string[] m_pFlags;
-        private readonly int      m_Size;
-        private readonly DateTime m_InternalDate;
-        private int      m_SeqNo  = 1;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -40,11 +33,11 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("flags");
             }
 
-            m_ID           = id;
-            m_UID          = uid;
-            m_pFlags       = flags;
-            m_Size         = size;
-            m_InternalDate = internalDate;
+            ID           = id;
+            UID          = uid;
+            Flags       = flags;
+            Size         = size;
+            InternalDate = internalDate;
         }
 
 
@@ -61,7 +54,7 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("flag");
             }
 
-            foreach(string f in m_pFlags){
+            foreach(string f in Flags){
                 if(string.Equals(f,flag,StringComparison.InvariantCultureIgnoreCase)){
                     return true;
                 }
@@ -83,12 +76,12 @@ namespace LumiSoft.Net.IMAP.Server
         {
             StringBuilder retVal = new StringBuilder();
             retVal.Append("(");
-            for(int i=0;i<m_pFlags.Length;i++){
+            for(int i=0;i<Flags.Length;i++){
                 if(i > 0){
                     retVal.Append(" ");
                 }
 
-                retVal.Append("\\" + m_pFlags[i]);
+                retVal.Append("\\" + Flags[i]);
             }
             retVal.Append(")");
 
@@ -112,13 +105,13 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             if(setType == IMAP_Flags_SetType.Add){
-                m_pFlags = IMAP_Utils.MessageFlagsAdd(m_pFlags,flags);
+                Flags = IMAP_Utils.MessageFlagsAdd(Flags,flags);
             }
             else if(setType == IMAP_Flags_SetType.Remove){
-                m_pFlags = IMAP_Utils.MessageFlagsRemove(m_pFlags,flags);
+                Flags = IMAP_Utils.MessageFlagsRemove(Flags,flags);
             }
             else{
-                m_pFlags = flags;
+                Flags = flags;
             }
         }
 
@@ -130,54 +123,34 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets message ID value.
         /// </summary>
-        public string ID
-        {
-            get{ return m_ID; }
-        }
+        public string ID { get; }
 
         /// <summary>
         /// Gets message IMAP UID value.
         /// </summary>
-        public long UID
-        {
-            get{ return m_UID; }
-        }
+        public long UID { get; }
 
         /// <summary>
         /// Gets message flags.
         /// </summary>
-        public string[] Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public string[] Flags { get; private set; }
 
         /// <summary>
         /// Gets message size in bytes.
         /// </summary>
-        public int Size
-        {
-            get{ return m_Size; }
-        }
+        public int Size { get; }
 
         /// <summary>
         /// Gets message IMAP internal date.
         /// </summary>
-        public DateTime InternalDate
-        {
-            get{ return m_InternalDate; }
-        }
+        public DateTime InternalDate { get; }
 
 
         /// <summary>
         /// Gets or sets message one-based sequnece number.
         /// </summary>
-        internal int SeqNo
-        {
-            get{ return m_SeqNo; }
+        internal int SeqNo { get; set; } = 1;
 
-            set{ m_SeqNo = value; }
-        }
-        
-        #endregion
+#endregion
     }
 }

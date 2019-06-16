@@ -7,9 +7,6 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_SessionCompletedEventArgs
     {
-        private readonly Relay_Session m_pSession;
-        private readonly Exception     m_pException;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -22,8 +19,8 @@ namespace LumiSoft.Net.SMTP.Relay
                 throw new ArgumentNullException("session");
             }
 
-            m_pSession   = session;
-            m_pException = exception;
+            Session   = session;
+            Exception = exception;
         }
 
 
@@ -32,20 +29,14 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets relay session what completed processing.
         /// </summary>
-        public Relay_Session Session
-        {
-            get{ return m_pSession; }
-        }
+        public Relay_Session Session { get; }
 
         /// <summary>
         /// Gets Exception what happened or null if relay completed successfully.
         /// </summary>
-        public Exception Exception
-        {
-            get{ return m_pException; }
-        }
+        public Exception Exception { get; }
 
-        #endregion
+#endregion
 
     }
 }

@@ -10,9 +10,6 @@ namespace LumiSoft.Net.UPnP
     /// </summary>
     public class UPnP_Exception : Exception
     {
-        private readonly int    m_ErrorCode;
-        private readonly string m_ErrorText = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,8 +17,8 @@ namespace LumiSoft.Net.UPnP
         /// <param name="errorText">UPnP error text.</param>
         public UPnP_Exception(int errorCode,string errorText) : base("UPnP error: " + errorCode + " " + errorText + ".")
         {
-            m_ErrorCode = errorCode;
-            m_ErrorText = errorText;
+            ErrorCode = errorCode;
+            ErrorText = errorText;
         }
 
         #region static method Parse
@@ -90,19 +87,13 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         /// Gets UPnP error code.
         /// </summary>
-        public int ErrorCode
-        {
-            get{ return m_ErrorCode; }
-        }
+        public int ErrorCode { get; }
 
         /// <summary>
         /// Gets UPnP error text.
         /// </summary>
-        public string ErrorText
-        {
-            get{ return m_ErrorText; }
-        }
+        public string ErrorText { get; } = "";
 
-        #endregion
+#endregion
     }
 }

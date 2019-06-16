@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP.Client
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Client_FetchHandler
     {
-        private int m_CurrentSeqNo = -1;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,7 +24,7 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="seqNo">Message sequnece number.</param>
         internal void SetCurrentSeqNo(int seqNo)
         {
-            m_CurrentSeqNo = seqNo;
+            CurrentSeqNo = seqNo;
         }
 
         #endregion
@@ -37,12 +35,9 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets current message sequence number. Value -1 means no current message.
         /// </summary>
-        public int CurrentSeqNo
-        {
-            get{ return m_CurrentSeqNo; }
-        }
+        public int CurrentSeqNo { get; private set; } = -1;
 
-        #endregion
+#endregion
 
         #region Events implementation
 

@@ -7,21 +7,13 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Packet_ReportBlock
     {
-        private uint m_SSRC;
-        private uint m_FractionLost;
-        private uint m_CumulativePacketsLost;
-        private uint m_ExtHighestSeqNumber;
-        private uint m_Jitter;
-        private uint m_LastSR;
-        private uint m_DelaySinceLastSR;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="ssrc">Source ID.</param>
         internal RTCP_Packet_ReportBlock(uint ssrc)
         {
-            m_SSRC = ssrc;
+            SSRC = ssrc;
         }
 
         /// <summary>
@@ -66,13 +58,13 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'offset' value must be >= 0.");
             }
 
-            m_SSRC                  = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_FractionLost          = buffer[offset++];
-            m_CumulativePacketsLost = (uint)(buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_ExtHighestSeqNumber   = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_Jitter                = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_LastSR                = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_DelaySinceLastSR      = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            SSRC                  = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            FractionLost          = buffer[offset++];
+            CumulativePacketsLost = (uint)(buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            ExtendedHighestSeqNo   = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            Jitter                = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            LastSR                = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            DelaySinceLastSR      = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
         }
 
         #endregion
@@ -115,36 +107,36 @@ namespace LumiSoft.Net.RTP
             }
 
             // SSRC
-            buffer[offset++] = (byte)((m_SSRC >> 24) | 0xFF);
-            buffer[offset++] = (byte)((m_SSRC >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_SSRC >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_SSRC)       | 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 24) | 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 16) | 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((SSRC)       | 0xFF);
             // fraction lost
-            buffer[offset++] = (byte)m_FractionLost;
+            buffer[offset++] = (byte)FractionLost;
             // cumulative packets lost
-            buffer[offset++] = (byte)((m_CumulativePacketsLost >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_CumulativePacketsLost >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_CumulativePacketsLost)       | 0xFF);
+            buffer[offset++] = (byte)((CumulativePacketsLost >> 16) | 0xFF);
+            buffer[offset++] = (byte)((CumulativePacketsLost >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((CumulativePacketsLost)       | 0xFF);
             // extended highest sequence number
-            buffer[offset++] = (byte)((m_ExtHighestSeqNumber >> 24) | 0xFF);
-            buffer[offset++] = (byte)((m_ExtHighestSeqNumber >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_ExtHighestSeqNumber >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_ExtHighestSeqNumber)       | 0xFF);
+            buffer[offset++] = (byte)((ExtendedHighestSeqNo >> 24) | 0xFF);
+            buffer[offset++] = (byte)((ExtendedHighestSeqNo >> 16) | 0xFF);
+            buffer[offset++] = (byte)((ExtendedHighestSeqNo >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((ExtendedHighestSeqNo)       | 0xFF);
             // jitter
-            buffer[offset++] = (byte)((m_Jitter >> 24) | 0xFF);
-            buffer[offset++] = (byte)((m_Jitter >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_Jitter >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_Jitter)       | 0xFF);
+            buffer[offset++] = (byte)((Jitter >> 24) | 0xFF);
+            buffer[offset++] = (byte)((Jitter >> 16) | 0xFF);
+            buffer[offset++] = (byte)((Jitter >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((Jitter)       | 0xFF);
             // last SR
-            buffer[offset++] = (byte)((m_LastSR >> 24) | 0xFF);
-            buffer[offset++] = (byte)((m_LastSR >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_LastSR >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_LastSR)       | 0xFF);
+            buffer[offset++] = (byte)((LastSR >> 24) | 0xFF);
+            buffer[offset++] = (byte)((LastSR >> 16) | 0xFF);
+            buffer[offset++] = (byte)((LastSR >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((LastSR)       | 0xFF);
             // delay since last SR
-            buffer[offset++] = (byte)((m_DelaySinceLastSR >> 24) | 0xFF);
-            buffer[offset++] = (byte)((m_DelaySinceLastSR >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_DelaySinceLastSR >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_DelaySinceLastSR)       | 0xFF);
+            buffer[offset++] = (byte)((DelaySinceLastSR >> 24) | 0xFF);
+            buffer[offset++] = (byte)((DelaySinceLastSR >> 16) | 0xFF);
+            buffer[offset++] = (byte)((DelaySinceLastSR >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((DelaySinceLastSR)       | 0xFF);
         }
 
         #endregion
@@ -155,78 +147,45 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets the SSRC identifier of the source to which the information in this reception report block pertains.
         /// </summary>
-        public uint SSRC
-        {
-            get{ return m_SSRC; }
-        }
+        public uint SSRC { get; private set; }
 
         /// <summary>
         /// Gets or sets the fraction of RTP data packets from source SSRC lost since the previous SR or 
         /// RR packet was sent.
         /// </summary>
-        public uint FractionLost
-        {
-            get{ return m_FractionLost; }
-
-            set{ m_FractionLost = value; }
-        }
+        public uint FractionLost { get; set; }
 
         /// <summary>
         /// Gets or sets total number of RTP data packets from source SSRC that have
         /// been lost since the beginning of reception.
         /// </summary>
-        public uint CumulativePacketsLost
-        {
-            get{ return m_CumulativePacketsLost; }
-
-            set{ m_CumulativePacketsLost = value; }
-        }
+        public uint CumulativePacketsLost { get; set; }
 
         /// <summary>
         /// Gets or sets extended highest sequence number received.
         /// </summary>
-        public uint ExtendedHighestSeqNo
-        {
-            get{ return m_ExtHighestSeqNumber; }
-
-            set{ m_ExtHighestSeqNumber = value; }
-        }
+        public uint ExtendedHighestSeqNo { get; set; }
 
         /// <summary>
         /// Gets or sets an estimate of the statistical variance of the RTP data packet
         /// interarrival time, measured in timestamp units and expressed as an unsigned integer.
         /// </summary>
-        public uint Jitter
-        {
-            get{ return m_Jitter; }
-
-            set{ m_Jitter = value; }
-        }
+        public uint Jitter { get; set; }
 
         /// <summary>
         /// Gets or sets The middle 32 bits out of 64 in the NTP timestamp (as explained in Section 4) received as part of 
         /// the most recent RTCP sender report (SR) packet from source SSRC_n. If no SR has been received yet, the field is set to zero.
         /// </summary>
-        public uint LastSR
-        {
-            get{ return m_LastSR; }
-
-            set{ m_LastSR = value; }
-        }
+        public uint LastSR { get; set; }
 
         /// <summary>
         /// Gets or sets the delay, expressed in units of 1/65536 seconds, between receiving the last SR packet from 
         /// source SSRC_n and sending this reception report block.  If no SR packet has been received yet from SSRC_n, 
         /// the DLSR field is set to zero.
         /// </summary>
-        public uint DelaySinceLastSR
-        {
-            get{ return m_DelaySinceLastSR; }
+        public uint DelaySinceLastSR { get; set; }
 
-            set{ m_DelaySinceLastSR = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

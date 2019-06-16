@@ -10,7 +10,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_Server : TCP_Server<SMTP_Session>
     {
-        private readonly List<string> m_pServiceExtentions;
         private string       m_GreetingText       = "";
         private int          m_MaxBadCommands     = 30;
         private int          m_MaxTransactions    = 10;
@@ -22,13 +21,13 @@ namespace LumiSoft.Net.SMTP.Server
         /// </summary>
         public SMTP_Server()
         {
-            m_pServiceExtentions = new List<string>();
-            m_pServiceExtentions.Add(SMTP_ServiceExtensions.PIPELINING);
-            m_pServiceExtentions.Add(SMTP_ServiceExtensions.SIZE);
-            m_pServiceExtentions.Add(SMTP_ServiceExtensions.STARTTLS);
-            m_pServiceExtentions.Add(SMTP_ServiceExtensions._8BITMIME);
-            m_pServiceExtentions.Add(SMTP_ServiceExtensions.BINARYMIME);
-            m_pServiceExtentions.Add(SMTP_ServiceExtensions.CHUNKING);
+            Extentions = new List<string>();
+            Extentions.Add(SMTP_ServiceExtensions.PIPELINING);
+            Extentions.Add(SMTP_ServiceExtensions.SIZE);
+            Extentions.Add(SMTP_ServiceExtensions.STARTTLS);
+            Extentions.Add(SMTP_ServiceExtensions._8BITMIME);
+            Extentions.Add(SMTP_ServiceExtensions.BINARYMIME);
+            Extentions.Add(SMTP_ServiceExtensions.CHUNKING);
         }
 
         // TODO:
@@ -84,7 +83,7 @@ namespace LumiSoft.Net.SMTP.Server
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
  
-                return m_pServiceExtentions.ToArray(); 
+                return Extentions.ToArray(); 
             }
 
             set{
@@ -92,29 +91,29 @@ namespace LumiSoft.Net.SMTP.Server
                     throw new ArgumentNullException("ServiceExtentions");
                 }
 
-                m_pServiceExtentions.Clear();
+                Extentions.Clear();
 
                 foreach(string extention in value){
                     if(extention.ToUpper() == SMTP_ServiceExtensions.PIPELINING){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions.PIPELINING);
+                        Extentions.Add(SMTP_ServiceExtensions.PIPELINING);
                     }
                     else if(extention.ToUpper() == SMTP_ServiceExtensions.SIZE){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions.SIZE);
+                        Extentions.Add(SMTP_ServiceExtensions.SIZE);
                     }
                     else if(extention.ToUpper() == SMTP_ServiceExtensions.STARTTLS){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions.STARTTLS);
+                        Extentions.Add(SMTP_ServiceExtensions.STARTTLS);
                     }
                     else if(extention.ToUpper() == SMTP_ServiceExtensions._8BITMIME){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions._8BITMIME);
+                        Extentions.Add(SMTP_ServiceExtensions._8BITMIME);
                     }
                     else if(extention.ToUpper() == SMTP_ServiceExtensions.BINARYMIME){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions.BINARYMIME);
+                        Extentions.Add(SMTP_ServiceExtensions.BINARYMIME);
                     }
                     else if(extention.ToUpper() == SMTP_ServiceExtensions.CHUNKING){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions.CHUNKING);
+                        Extentions.Add(SMTP_ServiceExtensions.CHUNKING);
                     }
                     else if(extention.ToUpper() == SMTP_ServiceExtensions.DSN){
-                        m_pServiceExtentions.Add(SMTP_ServiceExtensions.DSN);
+                        Extentions.Add(SMTP_ServiceExtensions.DSN);
                     }
                 }
             }
@@ -256,12 +255,9 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets SMTP service extentions list.
         /// </summary>
-        internal List<string> Extentions
-        {
-            get{ return m_pServiceExtentions; }
-        }
+        internal List<string> Extentions { get; }
 
-        #endregion
+#endregion
 
         #region Events implementation
                 

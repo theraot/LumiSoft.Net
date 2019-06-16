@@ -10,7 +10,6 @@ namespace LumiSoft.Net.AUTH
     {
         private bool   m_IsCompleted;
         private bool   m_IsAuthenticated;
-        private readonly bool   m_RequireSSL;
         private string m_Realm           = "";
         private readonly string m_Nonce           = "";
         private string m_UserName        = "";
@@ -22,7 +21,7 @@ namespace LumiSoft.Net.AUTH
         /// <param name="requireSSL">Specifies if this mechanism is available to SSL connections only.</param>
         public AUTH_SASL_ServerMechanism_DigestMd5(bool requireSSL)
         {
-            m_RequireSSL = requireSSL;
+            RequireSSL = requireSSL;
 
             m_Nonce = Auth_HttpDigest.CreateNonce();
         }
@@ -146,10 +145,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if specified SASL mechanism is available only to SSL connection.
         /// </summary>
-        public override bool RequireSSL
-        {
-            get{ return m_RequireSSL; }
-        }
+        public override bool RequireSSL { get; }
 
         /// <summary>
         /// Gets or sets realm value.

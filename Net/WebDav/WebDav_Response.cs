@@ -9,7 +9,6 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_Response
     {
-        private string                m_HRef;
         private readonly List<WebDav_PropStat> m_pPropStats;
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace LumiSoft.Net.WebDav
 
             foreach(XmlNode node in reponseNode.ChildNodes){
                 if(string.Equals(node.LocalName,"href",StringComparison.InvariantCultureIgnoreCase)){
-                    retVal.m_HRef = node.ChildNodes[0].Value;
+                    retVal.HRef = node.ChildNodes[0].Value;
                 }
                 else if(string.Equals(node.LocalName,"propstat",StringComparison.InvariantCultureIgnoreCase)){
                     retVal.m_pPropStats.Add(WebDav_PropStat.Parse(node));
@@ -63,10 +62,7 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets response href.
         /// </summary>
-        public string HRef
-        {
-            get{ return m_HRef; }
-        }
+        public string HRef { get; private set; }
 
         /// <summary>
         /// Gets 'propstat' elements.

@@ -5,7 +5,6 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class PhoneNumber
     {
-        private readonly Item                 m_pItem;
         private PhoneNumberType_enum m_Type   = PhoneNumberType_enum.Voice;
         private string               m_Number = "";
                 
@@ -17,7 +16,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="number">Phone number.</param>
         internal PhoneNumber(Item item,PhoneNumberType_enum type,string number)
         {
-            m_pItem  = item;
+            Item  = item;
             m_Type   = type;
             m_Number = number;
         }
@@ -30,8 +29,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         private void Changed()
         {
-            m_pItem.ParametersString = PhoneTypeToString(m_Type);
-            m_pItem.Value            = m_Number;
+            Item.ParametersString = PhoneTypeToString(m_Type);
+            Item.Value            = m_Number;
         }
 
         #endregion
@@ -161,10 +160,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets underlaying vCrad item.
         /// </summary>
-        public Item Item
-        {
-            get{ return m_pItem; }
-        }
+        public Item Item { get; }
 
         /// <summary>
         /// Gets or sets phone number type. Note: This property can be flagged value !

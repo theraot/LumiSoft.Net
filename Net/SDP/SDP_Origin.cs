@@ -7,13 +7,6 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Origin
     {
-        private readonly string m_UserName;
-        private readonly long   m_SessionID;
-        private long   m_SessionVersion;
-        private readonly string m_NetType;
-        private readonly string m_AddressType;
-        private readonly string m_UnicastAddress;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -52,12 +45,12 @@ namespace LumiSoft.Net.SDP
                 throw new ArgumentException("Argument 'unicastAddress' value must be specified.");
             }
 
-            m_UserName       = userName;
-            m_SessionID      = sessionID;
-            m_SessionVersion = sessionVersion;
-            m_NetType        = netType;
-            m_AddressType    = addressType;
-            m_UnicastAddress = unicastAddress;
+            UserName       = userName;
+            SessionID      = sessionID;
+            SessionVersion = sessionVersion;
+            NetType        = netType;
+            AddressType    = addressType;
+            UnicastAddress = unicastAddress;
         }
 
 
@@ -111,7 +104,7 @@ namespace LumiSoft.Net.SDP
         /// <returns>Returns origin as SDP string.</returns>
         public override string ToString()
         {
-            return "o=" + m_UserName + " " + m_SessionID +  " " + m_SessionVersion + " " + m_NetType + " " + m_AddressType + " " + m_UnicastAddress + "\r\n";
+            return "o=" + UserName + " " + SessionID +  " " + SessionVersion + " " + NetType + " " + AddressType + " " + UnicastAddress + "\r\n";
         }
 
         #endregion
@@ -122,55 +115,35 @@ namespace LumiSoft.Net.SDP
         /// <summary>
         /// Gets user name.
         /// </summary>
-        public string UserName
-        {
-            get{ return m_UserName; }
-        }
+        public string UserName { get; }
 
         /// <summary>
         /// Gets session ID.
         /// </summary>
-        public long SessionID
-        {
-            get{ return m_SessionID; }
-        }
+        public long SessionID { get; }
 
         /// <summary>
         /// Gets session version.
         /// </summary>
         /// <remarks>This value should be increased each time when session data has modified.</remarks>
-        public long SessionVersion
-        {
-            get{ return m_SessionVersion; }
-
-            set{ m_SessionVersion = value; }
-        }
+        public long SessionVersion { get; set; }
 
         /// <summary>
         /// Gets network type. Currently "IN" is only defined value.
         /// </summary>
-        public string NetType
-        {
-            get{ return m_NetType; }
-        }
+        public string NetType { get; }
 
         /// <summary>
         /// Gets address type. Currently "IP4" and "IP6" are only defined values.
         /// </summary>
-        public string AddressType
-        {
-            get{ return m_AddressType; }
-        }
+        public string AddressType { get; }
 
         /// <summary>
         /// Gets address(DNS host name or IP address). 
         /// </summary>
-        public string UnicastAddress
-        {
-            get{ return m_UnicastAddress; }
-        }
+        public string UnicastAddress { get; }
 
-        #endregion
+#endregion
 
     }
 }

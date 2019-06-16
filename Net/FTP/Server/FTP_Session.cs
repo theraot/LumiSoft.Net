@@ -68,7 +68,7 @@ namespace LumiSoft.Net.FTP.Server
                     m_pSession.m_pPassiveSocket.Close();
                     m_pSession.m_pPassiveSocket = null;
                 }                
-                m_pSession.m_PassiveMode = false;
+                m_pSession.PassiveMode = false;
 
                 m_pSession = null;
                 if(m_pStream != null){
@@ -230,7 +230,6 @@ namespace LumiSoft.Net.FTP.Server
 		private string                                       m_CurrentDir       = "/";
 		private string                                       m_RenameFrom       = "";
         private DataConnection                               m_pDataConnection;
-		private bool                                         m_PassiveMode;
         private Socket                                       m_pPassiveSocket;
 		private IPEndPoint                                   m_pDataConEndPoint;
 
@@ -1476,7 +1475,7 @@ namespace LumiSoft.Net.FTP.Server
             else{
                 WriteLine("227 Entering Passive Mode (" + this.LocalEndPoint.Address.ToString().Replace(".",",") + "," + (port >> 8) + "," + (port & 255)  + ").");
             }
-			m_PassiveMode = true;
+			PassiveMode = true;
 		}
 
 		#endregion
@@ -1839,12 +1838,9 @@ namespace LumiSoft.Net.FTP.Server
 		/// <summary>
 		/// Gets if sessions is in passive mode.
 		/// </summary>
-		public bool PassiveMode
-		{
-			get{ return m_PassiveMode; }
-		}
+		public bool PassiveMode { get; private set; }
 
-		#endregion
+#endregion
 
         #region Events implementation
 

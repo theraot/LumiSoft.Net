@@ -8,16 +8,13 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public abstract class Address
 	{
-		private readonly bool   m_GroupAddress;
-		private object m_pOwner;
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="groupAddress">Spcified is address is group or mailbox address.</param>
 		public Address(bool groupAddress)
 		{
-			m_GroupAddress = groupAddress;
+			IsGroupAddress = groupAddress;
 		}
 
 
@@ -26,23 +23,15 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Gets if address is group address or mailbox address.
 		/// </summary>
-		public bool IsGroupAddress
-		{
-			get{ return m_GroupAddress; }
-		}
+		public bool IsGroupAddress { get; }
 
 
-		/// <summary>
+        /// <summary>
 		/// Gets or sets owner of this address.
 		/// </summary>
-		internal object Owner
-		{
-			get{ return m_pOwner; }
+		internal object Owner { get; set; }
 
-			set{ m_pOwner = value; }
-		}
-
-		#endregion
+#endregion
 
 	}
 }

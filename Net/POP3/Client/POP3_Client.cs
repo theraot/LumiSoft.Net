@@ -162,7 +162,6 @@ namespace LumiSoft.Net.POP3.Client
         public class CapaAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock          = new object();
-            private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -183,7 +182,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -273,7 +272,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -288,14 +287,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -447,10 +446,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -460,10 +456,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -583,7 +579,6 @@ namespace LumiSoft.Net.POP3.Client
         public class StlsAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object                              m_pLock         = new object();
-            private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException;
             private POP3_Client                         m_pPop3Client;
             private bool                                m_RiseCompleted;
@@ -605,7 +600,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -675,7 +670,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -690,14 +685,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -826,10 +821,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -839,10 +831,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -973,7 +965,6 @@ namespace LumiSoft.Net.POP3.Client
         public class LoginAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -1010,7 +1001,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -1062,7 +1053,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -1077,14 +1068,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -1285,10 +1276,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -1298,10 +1286,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -1423,7 +1411,6 @@ namespace LumiSoft.Net.POP3.Client
         public class AuthAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object           m_pLock         = new object();
-            private AsyncOP_State    m_State         = AsyncOP_State.WaitingForStart;
             private Exception        m_pException;
             private POP3_Client      m_pPop3Client;
             private readonly AUTH_SASL_Client m_pSASL;
@@ -1450,7 +1437,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -1528,7 +1515,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -1543,14 +1530,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -1690,10 +1677,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -1703,10 +1687,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -1824,7 +1808,6 @@ namespace LumiSoft.Net.POP3.Client
         public class NoopAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -1843,7 +1826,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -1913,7 +1896,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -1928,14 +1911,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -2020,10 +2003,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -2033,10 +2013,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -2154,7 +2134,6 @@ namespace LumiSoft.Net.POP3.Client
         public class RsetAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -2173,7 +2152,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -2244,7 +2223,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -2259,14 +2238,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -2355,10 +2334,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -2368,10 +2344,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -2450,7 +2426,6 @@ namespace LumiSoft.Net.POP3.Client
         private class FillMessagesAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -2469,7 +2444,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -2522,7 +2497,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -2537,14 +2512,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -2641,10 +2616,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -2654,10 +2626,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -2732,7 +2704,6 @@ namespace LumiSoft.Net.POP3.Client
         private class ListAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock          = new object();
-            private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -2753,7 +2724,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -2869,7 +2840,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -2884,14 +2855,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -3043,10 +3014,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -3056,10 +3024,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -3075,10 +3043,10 @@ namespace LumiSoft.Net.POP3.Client
             public string[] ResponseLines
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -3153,7 +3121,6 @@ namespace LumiSoft.Net.POP3.Client
         private class UidlAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock          = new object();
-            private AsyncOP_State m_State          = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private POP3_Client   m_pPop3Client;
             private bool          m_RiseCompleted;
@@ -3174,7 +3141,7 @@ namespace LumiSoft.Net.POP3.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -3288,7 +3255,7 @@ namespace LumiSoft.Net.POP3.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -3303,14 +3270,14 @@ namespace LumiSoft.Net.POP3.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -3462,10 +3429,7 @@ namespace LumiSoft.Net.POP3.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -3475,10 +3439,10 @@ namespace LumiSoft.Net.POP3.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -3494,10 +3458,10 @@ namespace LumiSoft.Net.POP3.Client
             public string[] ResponseLines
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 

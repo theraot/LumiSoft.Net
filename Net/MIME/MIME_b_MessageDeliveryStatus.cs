@@ -37,16 +37,13 @@ namespace LumiSoft.Net.MIME
     /// </remarks>
     public class MIME_b_MessageDeliveryStatus : MIME_b
     {
-        private readonly MIME_h_Collection       m_pMessageFields;
-        private readonly List<MIME_h_Collection> m_pRecipientBlocks;
-        
         /// <summary>
         /// Default constructor.
         /// </summary>
         public MIME_b_MessageDeliveryStatus() : base(new MIME_h_ContentType("message/delivery-status"))
         {
-            m_pMessageFields   = new MIME_h_Collection(new MIME_h_Provider());
-            m_pRecipientBlocks = new List<MIME_h_Collection>();
+            MessageFields   = new MIME_h_Collection(new MIME_h_Provider());
+            RecipientBlocks = new List<MIME_h_Collection>();
         }
 
 
@@ -83,13 +80,13 @@ namespace LumiSoft.Net.MIME
 
             MIME_b_MessageDeliveryStatus retVal = new MIME_b_MessageDeliveryStatus();
             //Pare per-message fields.
-            retVal.m_pMessageFields.Parse(parseStream);
+            retVal.MessageFields.Parse(parseStream);
 
             // Parse per-recipient fields.
             while(parseStream.Position - parseStream.BytesInReadBuffer < parseStream.Length){
                 MIME_h_Collection recipientFields = new MIME_h_Collection(new MIME_h_Provider());
                 recipientFields.Parse(parseStream);
-                retVal.m_pRecipientBlocks.Add(recipientFields);                
+                retVal.RecipientBlocks.Add(recipientFields);                
             }                     
 
             return retVal;
@@ -115,9 +112,9 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("stream");
             }
             
-            m_pMessageFields.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
+            MessageFields.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
             stream.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
-            foreach(MIME_h_Collection recipientBlock in m_pRecipientBlocks){
+            foreach(MIME_h_Collection recipientBlock in RecipientBlocks){
                 recipientBlock.ToStream(stream,headerWordEncoder,headerParmetersCharset,headerReencode);
                 stream.Write(new byte[]{(byte)'\r',(byte)'\n'},0,2);
             }
@@ -134,10 +131,10 @@ namespace LumiSoft.Net.MIME
         public override bool IsModified
         {
             get{ 
-                if(m_pMessageFields.IsModified){
+                if(MessageFields.IsModified){
                     return true;
                 }
-                foreach(MIME_h_Collection recipientBlock in m_pRecipientBlocks){
+                foreach(MIME_h_Collection recipientBlock in RecipientBlocks){
                     if(recipientBlock.IsModified){
                         return true;
                     }
@@ -151,20 +148,14 @@ namespace LumiSoft.Net.MIME
         /// Gets per-message fields collection.
         /// </summary>
         /// <exception cref="InvalidOperationException">Is raised when this method is accessed and this body is not bounded to any entity.</exception>
-        public MIME_h_Collection MessageFields
-        {
-            get{ return m_pMessageFields; }
-        }
-        
+        public MIME_h_Collection MessageFields { get; }
+
         /// <summary>
         /// Gets reciepent report blocks collection.
         /// </summary>
         /// <remarks>Each block contains per-recipient-fields.</remarks>
-        public List<MIME_h_Collection> RecipientBlocks
-        {
-            get{ return m_pRecipientBlocks; }
-        }
+        public List<MIME_h_Collection> RecipientBlocks { get; }
 
-        #endregion
+#endregion
     }
 }

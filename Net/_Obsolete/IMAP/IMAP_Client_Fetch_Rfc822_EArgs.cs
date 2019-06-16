@@ -9,8 +9,6 @@ namespace LumiSoft.Net.IMAP.Client
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Client_Fetch_Rfc822_EArgs : EventArgs
     {
-        private Stream m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -24,14 +22,9 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets or sets stream where RFC822 message is stored.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
+        public Stream Stream { get; set; }
 
-            set{ m_pStream = value; }
-        }
-
-        #endregion
+#endregion
 
         #region Events implementation
 

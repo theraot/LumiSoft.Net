@@ -417,13 +417,9 @@ namespace LumiSoft.Net.Media
         private class BufferItem
         {
             private readonly IntPtr            m_WavDevHandle = IntPtr.Zero;
-            private readonly WAVEHDR           m_Header;
-            private readonly byte[]            m_pBuffer;
             private GCHandle          m_ThisHandle;
             private GCHandle          m_HeaderHandle;
             private GCHandle          m_DataHandle;
-            private readonly int               m_DataSize = 0;  
-            private EventArgs<byte[]> m_pEventArgs;
 
             /// <summary>
             /// Default constructor.
@@ -436,22 +432,22 @@ namespace LumiSoft.Net.Media
 
                 m_ThisHandle = GCHandle.Alloc(this);
 
-                m_pBuffer = new byte[dataSize];
-                m_DataHandle = GCHandle.Alloc(m_pBuffer,GCHandleType.Pinned);
+                Data = new byte[dataSize];
+                m_DataHandle = GCHandle.Alloc(Data,GCHandleType.Pinned);
 
-                m_Header = new WAVEHDR();
-                m_Header.lpData          = m_DataHandle.AddrOfPinnedObject();
-                m_Header.dwBufferLength  = (uint)dataSize;
-                m_Header.dwBytesRecorded = 0;
-                m_Header.dwUser          = (IntPtr)m_ThisHandle;
-                m_Header.dwFlags         = 0;
-                m_Header.dwLoops         = 0;
-                m_Header.lpNext          = IntPtr.Zero;
-                m_Header.reserved        = 0;
+                Header = new WAVEHDR();
+                Header.lpData          = m_DataHandle.AddrOfPinnedObject();
+                Header.dwBufferLength  = (uint)dataSize;
+                Header.dwBytesRecorded = 0;
+                Header.dwUser          = (IntPtr)m_ThisHandle;
+                Header.dwFlags         = 0;
+                Header.dwLoops         = 0;
+                Header.lpNext          = IntPtr.Zero;
+                Header.reserved        = 0;
 
-                m_HeaderHandle = GCHandle.Alloc(m_Header,GCHandleType.Pinned);
+                m_HeaderHandle = GCHandle.Alloc(Header,GCHandleType.Pinned);
 
-                m_pEventArgs = new EventArgs<byte[]>(m_pBuffer);
+                EventArgs = new EventArgs<byte[]>(Data);
             }
 
             #region method Dispose
@@ -461,13 +457,13 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Dispose()
             {
-                waveInUnprepareHeader(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_Header));
+                waveInUnprepareHeader(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(Header));
 
                 m_ThisHandle.Free();
                 m_HeaderHandle.Free();
                 m_DataHandle.Free();
 
-                m_pEventArgs = null;
+                EventArgs = null;
             }
 
             #endregion
@@ -481,21 +477,21 @@ namespace LumiSoft.Net.Media
             /// <param name="unprepare">If true unprepares old header before adding to recording queue.</param>
             internal void Queue(bool unprepare)
             {   
-                m_Header.dwFlags = 0;
+                Header.dwFlags = 0;
           
                 int result = 0;        
                 if(unprepare){
-                    result = waveInUnprepareHeader(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_Header));
+                    result = waveInUnprepareHeader(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(Header));
                     if(result != MMSYSERR.NOERROR){
                         throw new Exception("Error unpreparing wave in buffer, error: " + result + ".");
                     }
                 }
-                result = waveInPrepareHeader(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_Header));
+                result = waveInPrepareHeader(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(Header));
                 if(result != MMSYSERR.NOERROR){
                     throw new Exception("Error preparing wave in buffer, error: " + result + ".");
                 }
                 else{  
-                    result = waveInAddBuffer(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(m_Header));
+                    result = waveInAddBuffer(m_WavDevHandle,m_HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(Header));
                     if(result != MMSYSERR.NOERROR){
                         throw new Exception("Error adding wave in buffer, error: " + result + ".");
                     }
@@ -510,11 +506,8 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets wave header.
             /// </summary>
-            public WAVEHDR Header
-            {
-                get{ return m_Header; }
-            }
-                 
+            public WAVEHDR Header { get; }
+
             /// <summary>
             /// Gets header handle.
             /// </summary>
@@ -526,33 +519,23 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets wav header data.
             /// </summary>
-            public byte[] Data
-            {
-                get{ return m_pBuffer; }
-            }
+            public byte[] Data { get; }
 
             /// <summary>
             /// Gets wav header data size in bytes.
             /// </summary>
-            public int DataSize
-            {
-                get{ return m_DataSize; }
-            }
+            public int DataSize { get; } = 0;
 
             /// <summary>
             /// Gets event args.
             /// </summary>
-            public EventArgs<byte[]> EventArgs
-            {
-                get{ return m_pEventArgs; }
-            }
+            public EventArgs<byte[]> EventArgs { get; private set; }
 
-            #endregion
+#endregion
         }
 
         #endregion
 
-        private bool                         m_IsDisposed;
         private AudioInDevice                m_pInDevice;
         private readonly int                          m_SamplesPerSec = 8000;
         private readonly int                          m_BitsPerSample = 8;
@@ -634,10 +617,10 @@ namespace LumiSoft.Net.Media
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             try{
                 // If recording, we need to reset wav device first.
@@ -719,7 +702,7 @@ namespace LumiSoft.Net.Media
             // NOTE: MSDN warns, we may not call any wave related methods here.
             // This may cause deadlock. But MSDN examples do it, probably we can do it too.
 
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -728,7 +711,7 @@ namespace LumiSoft.Net.Media
                     // Free buffer and queue it for reuse.
                     //ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state){
                     try{
-                        if(m_IsDisposed){
+                        if(IsDisposed){
                             return;
                         }
 
@@ -794,10 +777,7 @@ namespace LumiSoft.Net.Media
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets current input device.
@@ -806,7 +786,7 @@ namespace LumiSoft.Net.Media
         public AudioInDevice InputDevice
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WavRecorder");
                 }
 
@@ -821,7 +801,7 @@ namespace LumiSoft.Net.Media
         public int SamplesPerSec
         {
             get{                 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WavRecorder");
                 }
 
@@ -836,7 +816,7 @@ namespace LumiSoft.Net.Media
         public int BitsPerSample
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WavRecorder");
                 }
                 
@@ -851,7 +831,7 @@ namespace LumiSoft.Net.Media
         public int Channels
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WavRecorder");
                 }
                 
@@ -866,7 +846,7 @@ namespace LumiSoft.Net.Media
         public int BufferSize
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WavRecorder");
                 }
                 
@@ -881,7 +861,7 @@ namespace LumiSoft.Net.Media
         public int BlockSize
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WavRecorder");
                 }
 

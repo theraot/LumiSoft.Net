@@ -9,10 +9,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Folder : EventArgs
     {
-        private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_CmdTag;
-        private readonly string              m_Folder    = "";
-
         /// <summary>
         /// Defaultc constructor.
         /// </summary>
@@ -36,9 +32,9 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
          
-            m_pResponse = response;
-            m_CmdTag    = cmdTag;
-            m_Folder    = folder;
+            Response = response;
+            CmdTag    = cmdTag;
+            Folder    = folder;
         }
 
 
@@ -47,29 +43,18 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
         /// </summary>
-        public IMAP_r_ServerStatus Response
-        {
-            get{ return m_pResponse; }
-
-            set{ m_pResponse = value; }
-        }
+        public IMAP_r_ServerStatus Response { get; set; }
 
         /// <summary>
         /// Gets IMAP command tag value.
         /// </summary>
-        public string CmdTag
-        {
-            get{ return m_CmdTag; }
-        }
+        public string CmdTag { get; }
 
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; } = "";
 
-        #endregion
+#endregion
     }
 }

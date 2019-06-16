@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Parse : IMAP_t_orc
     {
-        private readonly string m_ErrorText;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("text");
             }
 
-            m_ErrorText = text;
+            ErrorText = text;
         }
 
 
@@ -57,7 +55,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "PARSE " + m_ErrorText;
+            return "PARSE " + ErrorText;
         }
 
         #endregion
@@ -68,11 +66,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets parse error text.
         /// </summary>
-        public string ErrorText
-        {
-            get{ return m_ErrorText; }
-        }
+        public string ErrorText { get; }
 
-        #endregion
+#endregion
     }
 }

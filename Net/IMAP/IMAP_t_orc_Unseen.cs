@@ -7,15 +7,13 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Unseen : IMAP_t_orc
     {
-        private readonly int m_FirstUnseen;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="firstUnseen">First unseen message sequence number.</param>
         public IMAP_t_orc_Unseen(int firstUnseen)
         {
-            m_FirstUnseen = firstUnseen;
+            SeqNo = firstUnseen;
         }
 
 
@@ -55,7 +53,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "UNSEEN " + m_FirstUnseen;
+            return "UNSEEN " + SeqNo;
         }
 
         #endregion
@@ -66,11 +64,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets first unseen message sequence number.
         /// </summary>
-        public int SeqNo
-        {
-            get{ return m_FirstUnseen; }
-        }
+        public int SeqNo { get; }
 
-        #endregion
+#endregion
     }
 }

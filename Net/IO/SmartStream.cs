@@ -25,7 +25,6 @@ namespace LumiSoft.Net.IO
             private bool               m_IsCompletedSync;
             private SmartStream        m_pOwner;
             private byte[]             m_pBuffer;
-            private readonly SizeExceededAction m_ExceededAction  = SizeExceededAction.JunkAndThrowException;
             private readonly bool               m_CRLFLinesOnly   = true;
             private int                m_BytesInBuffer;
             private int                m_LastByte        = -1;
@@ -44,7 +43,7 @@ namespace LumiSoft.Net.IO
                 }
 
                 m_pBuffer        = buffer;
-                m_ExceededAction = exceededAction;
+                SizeExceededAction = exceededAction;
             }
 
             /// <summary>
@@ -171,7 +170,7 @@ namespace LumiSoft.Net.IO
                                 m_pException = new LineSizeExceededException();
                             }
 
-                            if(m_ExceededAction == SizeExceededAction.ThrowException){                                
+                            if(SizeExceededAction == SizeExceededAction.ThrowException){                                
                                 return true;
                             }
                         }
@@ -262,10 +261,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets line size exceeded action.
             /// </summary>
-            public SizeExceededAction SizeExceededAction
-            {
-                get{ return m_ExceededAction; }
-            }
+            public SizeExceededAction SizeExceededAction { get; } = SizeExceededAction.JunkAndThrowException;
 
             /// <summary>
             /// Gets line buffer.
@@ -1597,7 +1593,6 @@ namespace LumiSoft.Net.IO
         public class WriteStreamAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private bool          m_RiseCompleted;
             private SmartStream   m_pOwner;
@@ -1630,7 +1625,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -1671,7 +1666,7 @@ namespace LumiSoft.Net.IO
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -1686,14 +1681,14 @@ namespace LumiSoft.Net.IO
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -1823,10 +1818,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -1836,10 +1828,10 @@ namespace LumiSoft.Net.IO
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -1855,10 +1847,10 @@ namespace LumiSoft.Net.IO
             public long BytesWritten
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -1972,7 +1964,6 @@ namespace LumiSoft.Net.IO
         public class WritePeriodTerminatedAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object          m_pLock         = new object();
-            private AsyncOP_State   m_State         = AsyncOP_State.WaitingForStart;
             private Exception       m_pException;
             private SmartStream     m_pStream;
             private SmartStream     m_pOwner;
@@ -2002,7 +1993,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -2057,7 +2048,7 @@ namespace LumiSoft.Net.IO
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -2072,14 +2063,14 @@ namespace LumiSoft.Net.IO
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -2204,10 +2195,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -2217,10 +2205,10 @@ namespace LumiSoft.Net.IO
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -2236,10 +2224,10 @@ namespace LumiSoft.Net.IO
             public int BytesWritten
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -2872,18 +2860,11 @@ namespace LumiSoft.Net.IO
         private class ReadLineAsyncOperation : IAsyncResult
         {
             private readonly SmartStream        m_pOwner;
-            private readonly byte[]             m_pBuffer;
             private int                m_OffsetInBuffer;
             private readonly int                m_MaxCount;
             private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
             private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly object             m_pAsyncState;
             private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted;
-            private bool               m_IsEndCalled;
-            private int                m_BytesReaded;
-            private int                m_BytesStored;
             private Exception          m_pException;
 
             /// <summary>
@@ -2920,12 +2901,12 @@ namespace LumiSoft.Net.IO
                 }
 
                 m_pOwner             = owner;
-                m_pBuffer            = buffer;
+                Buffer            = buffer;
                 m_OffsetInBuffer     = offset;
                 m_MaxCount           = maxCount;
                 m_SizeExceededAction = exceededAction;
                 m_pAsyncCallback     = callback;
-                m_pAsyncState        = asyncState;
+                AsyncState        = asyncState;
 
                 m_pAsyncWaitHandle = new AutoResetEvent(false);
 
@@ -2983,7 +2964,7 @@ namespace LumiSoft.Net.IO
                         }
 
                         byte b = m_pOwner.m_pReadBuffer[m_pOwner.m_ReadBufferOffset++];
-                        m_BytesReaded++;
+                        BytesReaded++;
 
                         // We have LF line.
                         if(b == '\n'){
@@ -2993,7 +2974,7 @@ namespace LumiSoft.Net.IO
                         else if(b == '\r' && m_pOwner.Peek() == '\n'){
                             // Consume LF char.
                             m_pOwner.ReadByte();
-                            m_BytesReaded++;
+                            BytesReaded++;
 
                             break;
                         }
@@ -3004,7 +2985,7 @@ namespace LumiSoft.Net.IO
                         // We have normal line data char.
                         else{
                             // Line buffer full.
-                            if(m_BytesStored >= m_MaxCount){
+                            if(BytesStored >= m_MaxCount){
                                 if(m_SizeExceededAction == SizeExceededAction.ThrowException){
                                     throw new LineSizeExceededException();
                                 }
@@ -3013,8 +2994,8 @@ namespace LumiSoft.Net.IO
                                 }
                             }
                             else{
-                                m_pBuffer[m_OffsetInBuffer++] = b;
-                                m_BytesStored++;
+                                Buffer[m_OffsetInBuffer++] = b;
+                                BytesStored++;
                             }
                         }
                     }
@@ -3035,7 +3016,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void Completed()
             {
-                m_IsCompleted = true;
+                IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
                 if(m_pAsyncCallback != null){
                     m_pAsyncCallback(this);
@@ -3050,10 +3031,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
-            public object AsyncState
-            {
-                get{ return m_pAsyncState; }
-            }
+            public object AsyncState { get; }
 
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
@@ -3066,55 +3044,35 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
             /// </summary>
-            public bool CompletedSynchronously
-            {
-                get{ return m_CompletedSynchronously; }
-            }
+            public bool CompletedSynchronously { get; } = false;
 
             /// <summary>
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
-            public bool IsCompleted
-            {
-                get{ return m_IsCompleted; }
-            }
+            public bool IsCompleted { get; private set; }
 
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
             /// </summary>
-            internal bool IsEndCalled
-            {
-                get{ return m_IsEndCalled; }
-
-                set{ m_IsEndCalled = value; }
-            }
+            internal bool IsEndCalled { get; set; }
 
             /// <summary>
             /// Gets store buffer.
             /// </summary>
-            internal byte[] Buffer
-            {
-                get{ return m_pBuffer; }
-            }
+            internal byte[] Buffer { get; }
 
             /// <summary>
             /// Gets number of bytes readed from source stream.
             /// </summary>
-            internal int BytesReaded
-            {
-                get{ return m_BytesReaded; }
-            }
+            internal int BytesReaded { get; private set; }
 
             /// <summary>
             /// Gets number of bytes stored in to <b>Buffer</b>.
             /// </summary>
-            internal int BytesStored
-            {
-                get{ return m_BytesStored; }
-            }
+            internal int BytesStored { get; private set; }
 
-            #endregion
+#endregion
         }
 
         #endregion
@@ -3127,20 +3085,13 @@ namespace LumiSoft.Net.IO
         private class ReadToTerminatorAsyncOperation : IAsyncResult
         {
             private readonly SmartStream        m_pOwner;
-            private readonly string             m_Terminator             = "";
             private readonly byte[]             m_pTerminatorBytes;
             private readonly Stream             m_pStoreStream;
             private readonly long               m_MaxCount;            
             private readonly SizeExceededAction m_SizeExceededAction     = SizeExceededAction.JunkAndThrowException;
             private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly object             m_pAsyncState;
             private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted;
-            private bool               m_IsEndCalled;
             private readonly byte[]             m_pLineBuffer;
-            private long               m_BytesStored;
-            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -3169,13 +3120,13 @@ namespace LumiSoft.Net.IO
                 }
 
                 m_pOwner             = owner;
-                m_Terminator         = terminator;
+                Terminator         = terminator;
                 m_pTerminatorBytes   = Encoding.ASCII.GetBytes(terminator);
                 m_pStoreStream       = storeStream;
                 m_MaxCount           = maxCount;
                 m_SizeExceededAction = exceededAction;
                 m_pAsyncCallback     = callback;
-                m_pAsyncState        = asyncState;
+                AsyncState        = asyncState;
 
                 m_pAsyncWaitHandle = new AutoResetEvent(false);
 
@@ -3207,7 +3158,7 @@ namespace LumiSoft.Net.IO
                         if(m_SizeExceededAction == SizeExceededAction.ThrowException){
                             throw lx;
                         }
-                        m_pException = new LineSizeExceededException();
+                        Exception = new LineSizeExceededException();
                         storedCount = 32000 - 2;
                     }
 
@@ -3222,13 +3173,13 @@ namespace LumiSoft.Net.IO
                     }
                     else{
                         // We have exceeded maximum allowed data count.
-                        if(m_MaxCount > 0 && (m_BytesStored + storedCount + 2) > m_MaxCount){
+                        if(m_MaxCount > 0 && (BytesStored + storedCount + 2) > m_MaxCount){
                             if(m_SizeExceededAction == SizeExceededAction.ThrowException){
                                 throw new DataSizeExceededException();
                             }
                             // Just skip storing.
                             else{
-                                m_pException = new DataSizeExceededException();
+                                Exception = new DataSizeExceededException();
                             }
                         }
                         else{
@@ -3236,7 +3187,7 @@ namespace LumiSoft.Net.IO
                             m_pLineBuffer[storedCount++] = (byte)'\r';
                             m_pLineBuffer[storedCount++] = (byte)'\n';
                             m_pStoreStream.Write(m_pLineBuffer,0,storedCount);
-                            m_BytesStored += storedCount;                           
+                            BytesStored += storedCount;                           
                         }
 
                         // Strart reading new line.
@@ -3246,7 +3197,7 @@ namespace LumiSoft.Net.IO
                     }
                 }
                 catch(Exception x){
-                    m_pException = x;
+                    Exception = x;
                     Completed();                
                 }
             }
@@ -3260,7 +3211,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void Completed()
             {
-                m_IsCompleted = true;
+                IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
                 if(m_pAsyncCallback != null){
                     m_pAsyncCallback(this);
@@ -3275,18 +3226,12 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets terminator.
             /// </summary>
-            public string Terminator
-            {
-                get{ return m_Terminator; }
-            }
+            public string Terminator { get; } = "";
 
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
-            public object AsyncState
-            {
-                get{ return m_pAsyncState; }
-            }
+            public object AsyncState { get; }
 
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
@@ -3299,47 +3244,30 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
             /// </summary>
-            public bool CompletedSynchronously
-            {
-                get{ return m_CompletedSynchronously; }
-            }
+            public bool CompletedSynchronously { get; } = false;
 
             /// <summary>
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
-            public bool IsCompleted
-            {
-                get{ return m_IsCompleted; }
-            }
+            public bool IsCompleted { get; private set; }
 
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
             /// </summary>
-            internal bool IsEndCalled
-            {
-                get{ return m_IsEndCalled; }
-
-                set{ m_IsEndCalled = value; }
-            }
+            internal bool IsEndCalled { get; set; }
 
             /// <summary>
             /// Gets number of bytes stored in to <b>storeStream</b>.
             /// </summary>
-            internal long BytesStored
-            {
-                get{ return m_BytesStored; }
-            }
+            internal long BytesStored { get; private set; }
 
             /// <summary>
             /// Gets exception happened on asynchronous operation. Returns null if operation was successfull.
             /// </summary>
-            internal Exception Exception
-            {
-                get{ return m_pException; }
-            }
+            internal Exception Exception { get; private set; }
 
-            #endregion
+#endregion
 
         }
 
@@ -3356,13 +3284,7 @@ namespace LumiSoft.Net.IO
             private readonly Stream             m_pStoreStream;
             private readonly long               m_Count;
             private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly object             m_pAsyncState;
             private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted;
-            private bool               m_IsEndCalled;
-            private long               m_BytesStored;
-            private Exception          m_pException;
 
             /// <summary>
             /// Default constructor.
@@ -3390,7 +3312,7 @@ namespace LumiSoft.Net.IO
                 m_pStoreStream       = storeStream;
                 m_Count              = count;
                 m_pAsyncCallback     = callback;
-                m_pAsyncState        = asyncState;
+                AsyncState        = asyncState;
 
                 m_pAsyncWaitHandle = new AutoResetEvent(false);
 
@@ -3412,12 +3334,12 @@ namespace LumiSoft.Net.IO
             private void Buffering_Completed(Exception x)
             {
                 if(x != null){
-                    m_pException = x;
+                    Exception = x;
                     Completed();
                 }
                 // We reached end of stream, no more data.
                 else if(m_pOwner.BytesInReadBuffer == 0){
-                    m_pException = new IncompleteDataException();
+                    Exception = new IncompleteDataException();
                     Completed();
                 }
                 // Continue line reading.
@@ -3452,20 +3374,20 @@ namespace LumiSoft.Net.IO
                             }
                         }
                     
-                        int countToRead = (int)Math.Min(m_Count - m_BytesStored,m_pOwner.BytesInReadBuffer);                
+                        int countToRead = (int)Math.Min(m_Count - BytesStored,m_pOwner.BytesInReadBuffer);                
                         m_pStoreStream.Write(m_pOwner.m_pReadBuffer,m_pOwner.m_ReadBufferOffset,countToRead);
-                        m_BytesStored += countToRead;
+                        BytesStored += countToRead;
                         m_pOwner.m_ReadBufferOffset += countToRead;
    
                         // We have readed all data.
-                        if(m_Count == m_BytesStored){
+                        if(m_Count == BytesStored){
                             Completed();
                             return;
                         }
                     }
                 }
                 catch(Exception x){
-                    m_pException = x;
+                    Exception = x;
                     Completed();
                 }
             }
@@ -3479,7 +3401,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void Completed()
             {
-                m_IsCompleted = true;
+                IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
                 if(m_pAsyncCallback != null){
                     m_pAsyncCallback(this);
@@ -3494,10 +3416,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
-            public object AsyncState
-            {
-                get{ return m_pAsyncState; }
-            }
+            public object AsyncState { get; }
 
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
@@ -3510,47 +3429,30 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
             /// </summary>
-            public bool CompletedSynchronously
-            {
-                get{ return m_CompletedSynchronously; }
-            }
+            public bool CompletedSynchronously { get; } = false;
 
             /// <summary>
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
-            public bool IsCompleted
-            {
-                get{ return m_IsCompleted; }
-            }
+            public bool IsCompleted { get; private set; }
 
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
             /// </summary>
-            internal bool IsEndCalled
-            {
-                get{ return m_IsEndCalled; }
-
-                set{ m_IsEndCalled = value; }
-            }
+            internal bool IsEndCalled { get; set; }
 
             /// <summary>
             /// Gets number of bytes stored in to <b>storeStream</b>.
             /// </summary>
-            internal long BytesStored
-            {
-                get{ return m_BytesStored; }
-            }
+            internal long BytesStored { get; private set; }
 
             /// <summary>
             /// Gets exception happened on asynchronous operation. Returns null if operation was successfull.
             /// </summary>
-            internal Exception Exception
-            {
-                get{ return m_pException; }
-            }
+            internal Exception Exception { get; private set; }
 
-            #endregion
+#endregion
 
         }
 
@@ -3564,16 +3466,10 @@ namespace LumiSoft.Net.IO
         private class ReadAsyncOperation : IAsyncResult
         {
             private readonly SmartStream        m_pOwner;
-            private readonly byte[]             m_pBuffer;
             private readonly int                m_OffsetInBuffer;
             private readonly int                m_MaxSize;
             private readonly AsyncCallback      m_pAsyncCallback;
-            private readonly object             m_pAsyncState;
             private readonly AutoResetEvent     m_pAsyncWaitHandle;
-            private readonly bool               m_CompletedSynchronously = false;
-            private bool               m_IsCompleted;
-            private bool               m_IsEndCalled;
-            private int                m_BytesStored;
             private Exception          m_pException;
 
             /// <summary>
@@ -3607,11 +3503,11 @@ namespace LumiSoft.Net.IO
                 }
 
                 m_pOwner             = owner;
-                m_pBuffer            = buffer;
+                Buffer            = buffer;
                 m_OffsetInBuffer     = offset;
                 m_MaxSize            = maxSize;
                 m_pAsyncCallback     = callback;
-                m_pAsyncState        = asyncState;
+                AsyncState        = asyncState;
 
                 m_pAsyncWaitHandle = new AutoResetEvent(false);
 
@@ -3668,10 +3564,10 @@ namespace LumiSoft.Net.IO
                     }
 
                     int readedCount = Math.Min(m_MaxSize,m_pOwner.BytesInReadBuffer);
-                    Array.Copy(m_pOwner.m_pReadBuffer,m_pOwner.m_ReadBufferOffset,m_pBuffer,m_OffsetInBuffer,readedCount);
+                    Array.Copy(m_pOwner.m_pReadBuffer,m_pOwner.m_ReadBufferOffset,Buffer,m_OffsetInBuffer,readedCount);
                     m_pOwner.m_ReadBufferOffset += readedCount;
                     m_pOwner.m_LastActivity = DateTime.Now;
-                    m_BytesStored += readedCount;
+                    BytesStored += readedCount;
 
                     Completed();
                 }
@@ -3690,7 +3586,7 @@ namespace LumiSoft.Net.IO
             /// </summary>
             private void Completed()
             {
-                m_IsCompleted = true;
+                IsCompleted = true;
                 m_pAsyncWaitHandle.Set();
                 if(m_pAsyncCallback != null){
                     m_pAsyncCallback(this);
@@ -3705,10 +3601,7 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
             /// </summary>
-            public object AsyncState
-            {
-                get{ return m_pAsyncState; }
-            }
+            public object AsyncState { get; }
 
             /// <summary>
             /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
@@ -3721,47 +3614,30 @@ namespace LumiSoft.Net.IO
             /// <summary>
             /// Gets an indication of whether the asynchronous operation completed synchronously.
             /// </summary>
-            public bool CompletedSynchronously
-            {
-                get{ return m_CompletedSynchronously; }
-            }
+            public bool CompletedSynchronously { get; } = false;
 
             /// <summary>
             /// Gets an indication whether the asynchronous operation has completed.
             /// </summary>
-            public bool IsCompleted
-            {
-                get{ return m_IsCompleted; }
-            }
+            public bool IsCompleted { get; private set; }
 
 
             /// <summary>
             /// Gets or sets if <b>EndReadLine</b> method is called for this asynchronous operation.
             /// </summary>
-            internal bool IsEndCalled
-            {
-                get{ return m_IsEndCalled; }
-
-                set{ m_IsEndCalled = value; }
-            }
+            internal bool IsEndCalled { get; set; }
 
             /// <summary>
             /// Gets store buffer.
             /// </summary>
-            internal byte[] Buffer
-            {
-                get{ return m_pBuffer; }
-            }
+            internal byte[] Buffer { get; }
 
             /// <summary>
             /// Gets number of bytes stored in to <b>Buffer</b>.
             /// </summary>
-            internal int BytesStored
-            {
-                get{ return m_BytesStored; }
-            }
+            internal int BytesStored { get; private set; }
 
-            #endregion
+#endregion
         }
 
         #endregion

@@ -9,10 +9,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Namespace : IMAP_r_u
     {
-        private readonly IMAP_Namespace_Entry[] m_pPersonalNamespaces;
-        private readonly IMAP_Namespace_Entry[] m_pOtherUsersNamespaces;
-        private readonly IMAP_Namespace_Entry[] m_pSharedNamespaces;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,9 +22,9 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("personalNamespaces");
             }
 
-            m_pPersonalNamespaces   = personalNamespaces;
-            m_pOtherUsersNamespaces = otherUsersNamespaces;
-            m_pSharedNamespaces     = sharedNamespaces;
+            PersonalNamespaces   = personalNamespaces;
+            OtherUsersNamespaces = otherUsersNamespaces;
+            SharedNamespaces     = sharedNamespaces;
         }
 
 
@@ -140,13 +136,13 @@ namespace LumiSoft.Net.IMAP
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("* NAMESPACE ");
-            if(m_pPersonalNamespaces != null && m_pPersonalNamespaces.Length > 0){
+            if(PersonalNamespaces != null && PersonalNamespaces.Length > 0){
                 retVal.Append("(");
-                for(int i=0;i<m_pPersonalNamespaces.Length;i++){
+                for(int i=0;i<PersonalNamespaces.Length;i++){
                     if(i > 0){
                         retVal.Append(" ");
                     }
-                    retVal.Append("(\"" + m_pPersonalNamespaces[i].NamespaceName + "\" \"" + m_pPersonalNamespaces[i].HierarchyDelimiter + "\")");
+                    retVal.Append("(\"" + PersonalNamespaces[i].NamespaceName + "\" \"" + PersonalNamespaces[i].HierarchyDelimiter + "\")");
                 }
                 retVal.Append(")");
             }
@@ -154,13 +150,13 @@ namespace LumiSoft.Net.IMAP
                 retVal.Append("NIL");
             }
             retVal.Append(" ");
-            if(m_pOtherUsersNamespaces != null && m_pOtherUsersNamespaces.Length > 0){
+            if(OtherUsersNamespaces != null && OtherUsersNamespaces.Length > 0){
                 retVal.Append("(");
-                for(int i=0;i<m_pOtherUsersNamespaces.Length;i++){
+                for(int i=0;i<OtherUsersNamespaces.Length;i++){
                     if(i > 0){
                         retVal.Append(" ");
                     }
-                    retVal.Append("(\"" + m_pOtherUsersNamespaces[i].NamespaceName + "\" \"" + m_pOtherUsersNamespaces[i].HierarchyDelimiter + "\")");
+                    retVal.Append("(\"" + OtherUsersNamespaces[i].NamespaceName + "\" \"" + OtherUsersNamespaces[i].HierarchyDelimiter + "\")");
                 }
                 retVal.Append(")");
             }
@@ -168,13 +164,13 @@ namespace LumiSoft.Net.IMAP
                 retVal.Append("NIL");
             }
             retVal.Append(" ");
-            if(m_pSharedNamespaces != null && m_pSharedNamespaces.Length > 0){
+            if(SharedNamespaces != null && SharedNamespaces.Length > 0){
                 retVal.Append("(");
-                for(int i=0;i<m_pSharedNamespaces.Length;i++){
+                for(int i=0;i<SharedNamespaces.Length;i++){
                     if(i > 0){
                         retVal.Append(" ");
                     }
-                    retVal.Append("(\"" + m_pSharedNamespaces[i].NamespaceName + "\" \"" + m_pSharedNamespaces[i].HierarchyDelimiter + "\")");
+                    retVal.Append("(\"" + SharedNamespaces[i].NamespaceName + "\" \"" + SharedNamespaces[i].HierarchyDelimiter + "\")");
                 }
                 retVal.Append(")");
             }
@@ -195,27 +191,18 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets personal namespaces. Value null means not specified.
         /// </summary>
-        public IMAP_Namespace_Entry[] PersonalNamespaces
-        {
-            get{ return m_pPersonalNamespaces; }
-        }
+        public IMAP_Namespace_Entry[] PersonalNamespaces { get; }
 
         /// <summary>
         /// Gets other users namespaces. Value null means not specified.
         /// </summary>
-        public IMAP_Namespace_Entry[] OtherUsersNamespaces
-        {
-            get{ return m_pOtherUsersNamespaces; }
-        }
+        public IMAP_Namespace_Entry[] OtherUsersNamespaces { get; }
 
         /// <summary>
         /// Gets shared namespaces. Value null means not specified.
         /// </summary>
-        public IMAP_Namespace_Entry[] SharedNamespaces
-        {
-            get{ return m_pSharedNamespaces; }
-        }
+        public IMAP_Namespace_Entry[] SharedNamespaces { get; }
 
-        #endregion
+#endregion
     }
 }

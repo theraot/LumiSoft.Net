@@ -14,7 +14,6 @@ namespace LumiSoft.Net.MIME
     public class MIME_h_Collection : IEnumerable
     {
         private bool            m_IsModified;
-        private readonly MIME_h_Provider m_pProvider;
         private readonly List<MIME_h>    m_pFields;
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("provider");
             }
 
-            m_pProvider = provider;
+            FieldsProvider = provider;
 
             m_pFields = new List<MIME_h>();
         }
@@ -72,7 +71,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("field");
             }
    
-            MIME_h h = m_pProvider.Parse(field);
+            MIME_h h = FieldsProvider.Parse(field);
             m_pFields.Add(h);
             m_IsModified = true;
 
@@ -563,11 +562,8 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets header fields provider.
         /// </summary>
-        public MIME_h_Provider FieldsProvider
-        {
-            get{ return m_pProvider; }
-        }
+        public MIME_h_Provider FieldsProvider { get; }
 
-        #endregion
+#endregion
     }
 }

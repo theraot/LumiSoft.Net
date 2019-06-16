@@ -7,15 +7,13 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Started : EventArgs
     {
-        private string m_Response;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="response">POP3 server response.</param>
         internal FTP_e_Started(string response)
         {
-            m_Response = response;
+            Response = response;
         }
 
 
@@ -25,13 +23,8 @@ namespace LumiSoft.Net.FTP.Server
         /// Gets or sets FTP server response.
         /// </summary>
         /// <remarks>Response also MUST contain response code(220 / 500). For example: "500 Session rejected."</remarks>
-        public string Response
-        {
-            get{ return m_Response; }
+        public string Response { get; set; }
 
-            set{ m_Response = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

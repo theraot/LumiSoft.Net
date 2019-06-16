@@ -8,14 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Select : EventArgs
     {
-        private readonly string              m_CmdTag;
-        private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private bool                m_IsReadOnly;
-        private int                 m_FolderUID;
-        private readonly List<string>        m_pFlags;
-        private readonly List<string>        m_pPermanentFlags;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -31,15 +23,15 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("folder");
             }
 
-            m_CmdTag = cmdTag;
-            m_Folder = folder;
+            CmdTag = cmdTag;
+            Folder = folder;
 
-            m_pFlags = new List<string>();
-            m_pPermanentFlags = new List<string>();
+            Flags = new List<string>();
+            PermanentFlags = new List<string>();
 
             // Add default falgs.
-            m_pFlags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
-            m_pPermanentFlags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
+            Flags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
+            PermanentFlags.AddRange(new string[]{"\\Answered","\\Flagged","\\Deleted","\\Seen","\\Draft"});
         }
 
 
@@ -48,65 +40,38 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets command tag.
         /// </summary>
-        public string CmdTag
-        {
-            get{ return m_CmdTag; }
-        }
+        public string CmdTag { get; }
 
         /// <summary>
         /// Gets or sets IMAP server error response to this operation. Value means no error.
         /// </summary>
-        public IMAP_r_ServerStatus ErrorResponse
-        {
-            get{ return m_pResponse; }
-
-            set{ m_pResponse = value; }
-        }
+        public IMAP_r_ServerStatus ErrorResponse { get; set; }
 
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets or sets if specified folder is read-only.
         /// </summary>
-        public bool IsReadOnly
-        {
-            get{ return m_IsReadOnly; }
-
-            set{ m_IsReadOnly = value; }
-        }
+        public bool IsReadOnly { get; set; }
 
         /// <summary>
         /// Gets or sets folder UID value. Value 0 means not specified.
         /// </summary>
-        public int FolderUID
-        {
-            get{ return m_FolderUID; }
-
-            set{ m_FolderUID = value; }
-        }
+        public int FolderUID { get; set; }
 
         /// <summary>
         /// Gets folder supported flags collection.
         /// </summary>
-        public List<string> Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public List<string> Flags { get; }
 
         /// <summary>
         /// Gets folder supported permanent flags collection.
         /// </summary>
-        public List<string> PermanentFlags
-        {
-            get{ return m_pPermanentFlags; }
-        }
+        public List<string> PermanentFlags { get; }
 
-        #endregion
+#endregion
     }
 }

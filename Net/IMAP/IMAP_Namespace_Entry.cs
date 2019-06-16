@@ -7,9 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Namespace_Entry
     {
-        private readonly string m_NamespaceName = "";
-        private readonly char   m_Delimiter     = '/'; 
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,7 +20,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("name");
             }
 
-            m_NamespaceName = name;
+            NamespaceName = name;
         }
 
 
@@ -32,19 +29,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets namespace name.
         /// </summary>
-        public string NamespaceName
-        {
-            get{ return m_NamespaceName; }
-        }
+        public string NamespaceName { get; } = "";
 
         /// <summary>
         /// Gets namespace hierarchy delimiter char.
         /// </summary>
-        public char HierarchyDelimiter
-        {
-            get{ return m_Delimiter; }
-        }
+        public char HierarchyDelimiter { get; } = '/';
 
-        #endregion
+#endregion
     }
 }

@@ -7,9 +7,6 @@ namespace LumiSoft.Net.STUN.Client
     /// </summary>
     public class STUN_Result
     {
-        private readonly STUN_NetType m_NetType         = STUN_NetType.OpenInternet;
-        private readonly IPEndPoint   m_pPublicEndPoint;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -17,8 +14,8 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="publicEndPoint">Public IP end point.</param>
         public STUN_Result(STUN_NetType netType,IPEndPoint publicEndPoint)
         {            
-            m_NetType = netType;
-            m_pPublicEndPoint = publicEndPoint;
+            NetType = netType;
+            PublicEndPoint = publicEndPoint;
         }
 
 
@@ -27,20 +24,14 @@ namespace LumiSoft.Net.STUN.Client
         /// <summary>
         /// Gets UDP network type.
         /// </summary>
-        public STUN_NetType NetType
-        {
-            get{ return m_NetType; }
-        }
+        public STUN_NetType NetType { get; } = STUN_NetType.OpenInternet;
 
         /// <summary>
         /// Gets public IP end point. This value is null if failed to get network type.
         /// </summary>
-        public IPEndPoint PublicEndPoint
-        {
-            get{ return m_pPublicEndPoint; }
-        }
+        public IPEndPoint PublicEndPoint { get; }
 
-        #endregion
+#endregion
 
     }
 }

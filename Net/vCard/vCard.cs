@@ -11,7 +11,6 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class vCard
     {
-        private readonly ItemCollection            m_pItems;
         private DeliveryAddressCollection m_pAddresses;
         private PhoneNumberCollection     m_pPhoneNumbers;
         private EmailAddressCollection    m_pEmailAddresses;
@@ -21,7 +20,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         public vCard()
         {
-            m_pItems          = new ItemCollection();
+            Items          = new ItemCollection();
             this.Version      = "3.0";
             this.UID          = Guid.NewGuid().ToString();
         }
@@ -73,7 +72,7 @@ namespace LumiSoft.Net.Mime.vCard
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("BEGIN:VCARD\r\n");
-            foreach(Item item in m_pItems){
+            foreach(Item item in Items){
                 retVal.Append(item.ToItemString() + "\r\n");
             }
             retVal.Append("END:VCARD\r\n");
@@ -158,7 +157,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="fileStrings">List of strings that contains vCard.</param>
         public void ParseStrings(List<string> fileStrings)
         {
-            m_pItems.Clear();
+            Items.Clear();
             m_pPhoneNumbers = null;
             m_pEmailAddresses = null;
 
@@ -193,7 +192,7 @@ namespace LumiSoft.Net.Mime.vCard
                 if(name_value.Length == 2){
                     value = name_value[1];
                 }
-                m_pItems.Add(name,parameters,value);
+                Items.Add(name,parameters,value);
             }
         }
 
@@ -205,10 +204,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets reference to vCard items.
         /// </summary>
-        public ItemCollection Items
-        {
-            get{ return m_pItems; }
-        }
+        public ItemCollection Items { get; }
 
         /// <summary>
         /// Gets or sets vCard version. Returns null if VERSION: item doesn't exist.
@@ -216,7 +212,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string Version
         {
             get{ 
-                Item item = m_pItems.GetFirst("VERSION");
+                Item item = Items.GetFirst("VERSION");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -225,7 +221,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("VERSION",value); }
+            set{ Items.SetDecodedValue("VERSION",value); }
         }
 
         /// <summary>
@@ -234,7 +230,7 @@ namespace LumiSoft.Net.Mime.vCard
         public Name Name
         {
             get{ 
-                Item item = m_pItems.GetFirst("N");
+                Item item = Items.GetFirst("N");
                 if(item != null){
                     return Name.Parse(item);
                 }
@@ -245,10 +241,10 @@ namespace LumiSoft.Net.Mime.vCard
 
             set{
                 if(value != null){
-                    m_pItems.SetDecodedValue("N",value.ToValueString());
+                    Items.SetDecodedValue("N",value.ToValueString());
                 }
                 else{
-                    m_pItems.SetDecodedValue("N",null);
+                    Items.SetDecodedValue("N",null);
                 }
             }
         }
@@ -259,7 +255,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string FormattedName
         {
             get{ 
-                Item item = m_pItems.GetFirst("FN");
+                Item item = Items.GetFirst("FN");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -268,7 +264,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("FN",value); }
+            set{ Items.SetDecodedValue("FN",value); }
         }
 
         /// <summary>
@@ -277,7 +273,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string NickName
         {
             get{ 
-                Item item = m_pItems.GetFirst("NICKNAME");
+                Item item = Items.GetFirst("NICKNAME");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -286,7 +282,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("NICKNAME",value); }
+            set{ Items.SetDecodedValue("NICKNAME",value); }
         }
 
         /// <summary>
@@ -295,7 +291,7 @@ namespace LumiSoft.Net.Mime.vCard
         public Image Photo
         {
             get{ 
-                Item item = m_pItems.GetFirst("PHOTO");
+                Item item = Items.GetFirst("PHOTO");
                 if(item != null){                    
                     return Image.FromStream(new MemoryStream(System.Text.Encoding.Default.GetBytes(item.DecodedValue)));
                 }
@@ -309,10 +305,10 @@ namespace LumiSoft.Net.Mime.vCard
                     MemoryStream ms = new MemoryStream();
                     value.Save(ms,System.Drawing.Imaging.ImageFormat.Jpeg);
                                         
-                    m_pItems.SetValue("PHOTO","ENCODING=b;TYPE=JPEG",Convert.ToBase64String(ms.ToArray()));
+                    Items.SetValue("PHOTO","ENCODING=b;TYPE=JPEG",Convert.ToBase64String(ms.ToArray()));
                 }
                 else{
-                    m_pItems.SetValue("PHOTO",null);
+                    Items.SetValue("PHOTO",null);
                 }
             }
         }
@@ -323,7 +319,7 @@ namespace LumiSoft.Net.Mime.vCard
         public DateTime BirthDate
         {
             get{ 
-                Item item = m_pItems.GetFirst("BDAY");
+                Item item = Items.GetFirst("BDAY");
                 if(item != null){
                     string date = item.DecodedValue.Replace("-","");
                     string[] dateFormats = new string[]{
@@ -339,10 +335,10 @@ namespace LumiSoft.Net.Mime.vCard
 
             set{ 
                 if(value != DateTime.MinValue){
-                    m_pItems.SetValue("BDAY",value.ToString("yyyyMMdd")); 
+                    Items.SetValue("BDAY",value.ToString("yyyyMMdd")); 
                 }
                 else{
-                    m_pItems.SetValue("BDAY",null);
+                    Items.SetValue("BDAY",null);
                 }
             }
         }
@@ -398,7 +394,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string Title
         {
             get{ 
-                Item item = m_pItems.GetFirst("TITLE");
+                Item item = Items.GetFirst("TITLE");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -407,7 +403,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("TITLE",value); }
+            set{ Items.SetDecodedValue("TITLE",value); }
         }
 
         /// <summary>
@@ -416,7 +412,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string Role
         {
             get{ 
-                Item item = m_pItems.GetFirst("ROLE");
+                Item item = Items.GetFirst("ROLE");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -425,7 +421,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("ROLE",value); }
+            set{ Items.SetDecodedValue("ROLE",value); }
         }
 
         /// <summary>
@@ -434,7 +430,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string Organization
         {
             get{ 
-                Item item = m_pItems.GetFirst("ORG");
+                Item item = Items.GetFirst("ORG");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -443,7 +439,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("ORG",value); }
+            set{ Items.SetDecodedValue("ORG",value); }
         }
 
         /// <summary>
@@ -452,7 +448,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string NoteText
         {
             get{ 
-                Item item = m_pItems.GetFirst("NOTE");
+                Item item = Items.GetFirst("NOTE");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -461,7 +457,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("NOTE",value); }
+            set{ Items.SetDecodedValue("NOTE",value); }
         }
 
         /// <summary>
@@ -470,7 +466,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string UID
         {
             get{ 
-                Item item = m_pItems.GetFirst("UID");
+                Item item = Items.GetFirst("UID");
                 if(item != null){
                     return item.DecodedValue;
                 }
@@ -479,7 +475,7 @@ namespace LumiSoft.Net.Mime.vCard
                 }
             }
 
-            set{ m_pItems.SetDecodedValue("UID",value); }
+            set{ Items.SetDecodedValue("UID",value); }
         }
 
         /// <summary>
@@ -488,7 +484,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string HomeURL
         {
             get{ 
-                Item[] items = m_pItems.Get("URL");
+                Item[] items = Items.Get("URL");
                 foreach(Item item in items){
                     if(item.ParametersString == "" || item.ParametersString.ToUpper().IndexOf("HOME") > -1){
                         return item.DecodedValue;
@@ -499,14 +495,14 @@ namespace LumiSoft.Net.Mime.vCard
             }
 
             set{
-                Item[] items = m_pItems.Get("URL");
+                Item[] items = Items.Get("URL");
                 foreach(Item item in items){
                     if(item.ParametersString.ToUpper().IndexOf("HOME") > -1){
                         if(value != null){
                             item.Value = value;
                         }
                         else{
-                            m_pItems.Remove(item);
+                            Items.Remove(item);
                         }
                         return;
                     }
@@ -514,7 +510,7 @@ namespace LumiSoft.Net.Mime.vCard
 
                 if(value != null){
                     // If we reach here, URL;Work  doesn't exist, add it.
-                    m_pItems.Add("URL","HOME",value);
+                    Items.Add("URL","HOME",value);
                 }
             }
         }
@@ -525,7 +521,7 @@ namespace LumiSoft.Net.Mime.vCard
         public string WorkURL
         {
             get{ 
-                Item[] items = m_pItems.Get("URL");
+                Item[] items = Items.Get("URL");
                 foreach(Item item in items){
                     if(item.ParametersString.ToUpper().IndexOf("WORK") > -1){
                         return item.DecodedValue;
@@ -536,14 +532,14 @@ namespace LumiSoft.Net.Mime.vCard
             }
 
             set{ 
-                Item[] items = m_pItems.Get("URL");
+                Item[] items = Items.Get("URL");
                 foreach(Item item in items){
                     if(item.ParametersString.ToUpper().IndexOf("WORK") > -1){
                         if(value != null){
                             item.Value = value;
                         }
                         else{
-                            m_pItems.Remove(item);
+                            Items.Remove(item);
                         }
                         return;
                     }
@@ -551,7 +547,7 @@ namespace LumiSoft.Net.Mime.vCard
 
                 if(value != null){
                     // If we reach here, URL;Work  doesn't exist, add it.
-                    m_pItems.Add("URL","WORK",value);
+                    Items.Add("URL","WORK",value);
                 }
             }
         }

@@ -11,10 +11,6 @@ namespace LumiSoft.Net.SIP.Proxy
     public class SIP_B2BUA_Call
     {        
         private readonly SIP_B2BUA  m_pOwner;
-        private readonly DateTime   m_StartTime;
-        private SIP_Dialog m_pCaller;
-        private SIP_Dialog m_pCallee;
-        private readonly string     m_CallID       = "";
         private bool       m_IsTerminated;
 
         /// <summary>
@@ -26,10 +22,10 @@ namespace LumiSoft.Net.SIP.Proxy
         internal SIP_B2BUA_Call(SIP_B2BUA owner,SIP_Dialog caller,SIP_Dialog callee)
         {
             m_pOwner    = owner;
-            m_pCaller   = caller;
-            m_pCallee   = callee;
-            m_StartTime = DateTime.Now;
-            m_CallID    = Guid.NewGuid().ToString().Replace("-","");
+            CallerDialog   = caller;
+            CalleeDialog   = callee;
+            StartTime = DateTime.Now;
+            CallID    = Guid.NewGuid().ToString().Replace("-","");
 
             //m_pCaller.RequestReceived += new SIP_RequestReceivedEventHandler(m_pCaller_RequestReceived);
             //m_pCaller.Terminated += new EventHandler(m_pCaller_Terminated);
@@ -189,15 +185,15 @@ namespace LumiSoft.Net.SIP.Proxy
    
             m_pOwner.RemoveCall(this);
 
-            if(m_pCaller != null){
+            if(CallerDialog != null){
                 //m_pCaller.Terminate();
-                m_pCaller.Dispose();
-                m_pCaller = null;
+                CallerDialog.Dispose();
+                CallerDialog = null;
             }
-            if(m_pCallee != null){
+            if(CalleeDialog != null){
                 //m_pCallee.Terminate();
-                m_pCallee.Dispose();
-                m_pCallee = null;
+                CalleeDialog.Dispose();
+                CalleeDialog = null;
             }
 
             m_pOwner.OnCallTerminated(this);
@@ -253,35 +249,23 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets call start time.
         /// </summary>
-        public DateTime StartTime
-        {
-            get{ return m_StartTime; }
-        }
+        public DateTime StartTime { get; }
 
         /// <summary>
         /// Gets current call ID.
         /// </summary>
-        public string CallID
-        {
-            get{ return m_CallID; }
-        }
+        public string CallID { get; } = "";
 
         /// <summary>
         /// Gets caller SIP dialog.
         /// </summary>
-        public SIP_Dialog CallerDialog
-        {
-            get{ return m_pCaller; }
-        }
+        public SIP_Dialog CallerDialog { get; private set; }
 
         /// <summary>
         /// Gets callee SIP dialog.
         /// </summary>
-        public SIP_Dialog CalleeDialog
-        {
-            get{ return m_pCallee; }
-        }
-        
+        public SIP_Dialog CalleeDialog { get; private set; }
+
         /// <summary>
         /// Gets if call has timed out and needs to be terminated.
         /// </summary>

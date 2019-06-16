@@ -10,7 +10,6 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class MailboxAddressCollection : IEnumerable
 	{
-		private Address	             m_pOwner;
         private readonly List<MailboxAddress> m_pMailboxes;
 
 		/// <summary>
@@ -148,9 +147,9 @@ namespace LumiSoft.Net.Mime
 		/// </summary>
 		internal void OnCollectionChanged()
 		{
-			if(m_pOwner != null){
-				if(m_pOwner is GroupAddress){
-					((GroupAddress)m_pOwner).OnChanged();
+			if(Owner != null){
+				if(Owner is GroupAddress){
+					((GroupAddress)Owner).OnChanged();
 				}				
 			}
 		}
@@ -193,14 +192,9 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Gets or sets owner of this collection.
 		/// </summary>
-		internal Address Owner
-		{
-			get{ return m_pOwner; }
+		internal Address Owner { get; set; }
 
-			set{ m_pOwner = value; }
-		}
-
-		#endregion
+#endregion
 
 	}
 }

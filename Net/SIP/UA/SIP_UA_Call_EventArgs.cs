@@ -8,8 +8,6 @@ namespace LumiSoft.Net.SIP.UA
     [Obsolete("Use SIP stack instead.")]
     public class SIP_UA_Call_EventArgs : EventArgs
     {
-        private readonly SIP_UA_Call m_pCall;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +19,7 @@ namespace LumiSoft.Net.SIP.UA
                 throw new ArgumentNullException("call");
             }
 
-            m_pCall = call;
+            Call = call;
         }
 
 
@@ -30,12 +28,9 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Gets call.
         /// </summary>
-        public SIP_UA_Call Call
-        {
-            get{ return m_pCall; }
-        }
+        public SIP_UA_Call Call { get; }
 
-        #endregion
+#endregion
 
     }
 }

@@ -19,10 +19,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// This class provides data for <b cref="IMAP_e_Fetch.NewMessageData">IMAP_Session.NewMessageData</b> event.
         /// </summary>
         internal class e_NewMessageData : EventArgs
-        {            
-            private readonly IMAP_MessageInfo m_pMsgInfo;
-            private readonly Mail_Message     m_pMsgData;
-
+        {
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -35,8 +32,8 @@ namespace LumiSoft.Net.IMAP.Server
                     throw new ArgumentNullException("msgInfo");
                 }
 
-                m_pMsgInfo = msgInfo;
-                m_pMsgData = msgData;
+                MessageInfo = msgInfo;
+                MessageData = msgData;
             }
 
 
@@ -45,27 +42,19 @@ namespace LumiSoft.Net.IMAP.Server
             /// <summary>
             /// Gets message info.
             /// </summary>
-            public IMAP_MessageInfo MessageInfo
-            {
-                get{ return m_pMsgInfo; }
-            }
+            public IMAP_MessageInfo MessageInfo { get; }
 
             /// <summary>
             /// Gets message data stream.
             /// </summary>
-            public Mail_Message MessageData
-            {
-                get{ return m_pMsgData; }
-            }
+            public Mail_Message MessageData { get; }
 
-            #endregion
+#endregion
         }
 
         #endregion
 
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly IMAP_MessageInfo[]  m_pMessagesInfo;
-        private readonly IMAP_Fetch_DataType m_FetchDataType = IMAP_Fetch_DataType.FullMessage;
 
         /// <summary>
         /// Default constructor.
@@ -83,8 +72,8 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
 
-            m_pMessagesInfo = messagesInfo;
-            m_FetchDataType = fetchDataType;
+            MessagesInfo = messagesInfo;
+            FetchDataType = fetchDataType;
             m_pResponse     = response;
         }
 
@@ -143,20 +132,14 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets messages info.
         /// </summary>
-        public IMAP_MessageInfo[] MessagesInfo
-        {
-            get{ return m_pMessagesInfo; }
-        }
+        public IMAP_MessageInfo[] MessagesInfo { get; }
 
         /// <summary>
         /// Gets fetch data type(Specifies what data AddData method expects).
         /// </summary>
-        public IMAP_Fetch_DataType FetchDataType
-        {
-            get{ return m_FetchDataType; }
-        }
+        public IMAP_Fetch_DataType FetchDataType { get; } = IMAP_Fetch_DataType.FullMessage;
 
-        #endregion
+#endregion
 
         #region Events implementation
 

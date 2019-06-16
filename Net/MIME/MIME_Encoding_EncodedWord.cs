@@ -12,7 +12,6 @@ namespace LumiSoft.Net.MIME
     {
         private readonly MIME_EncodedWordEncoding m_Encoding;
         private readonly Encoding                 m_pCharset;
-        private bool                     m_Split    = true;
 
         private static readonly Regex encodedword_regex = new Regex(@"=\?(((?<charset>.*?)\*.*?)|(?<charset>.*?))\?(?<encoding>[qQbB])\?(?<value>.*?)\?=(?<whitespaces>\s*)",RegexOptions.IgnoreCase);
 
@@ -43,7 +42,7 @@ namespace LumiSoft.Net.MIME
         public string Encode(string text)
         {            
             if(MustEncode(text)){
-                return EncodeS(m_Encoding,m_pCharset,m_Split,text);
+                return EncodeS(m_Encoding,m_pCharset,Split,text);
             }
             else{
                 return text;
@@ -292,14 +291,9 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets or sets if long words(over 75 char) are splitted.
         /// </summary>
-        public bool Split
-        {
-            get{ return m_Split; }
+        public bool Split { get; set; } = true;
 
-            set{ m_Split = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

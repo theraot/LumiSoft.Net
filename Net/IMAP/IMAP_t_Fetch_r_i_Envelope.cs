@@ -12,17 +12,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Envelope : IMAP_t_Fetch_r_i
     {
-        private readonly DateTime         m_Date      = DateTime.MinValue;
-        private readonly string           m_Subject;
-        private readonly Mail_t_Address[] m_pFrom;
-        private readonly Mail_t_Address[] m_pSender;
-        private readonly Mail_t_Address[] m_pReplyTo;
-        private readonly Mail_t_Address[] m_pTo;
-        private readonly Mail_t_Address[] m_pCc;
-        private readonly Mail_t_Address[] m_pBcc;
-        private readonly string           m_InReplyTo;
-        private readonly string           m_MessageID;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -38,16 +27,16 @@ namespace LumiSoft.Net.IMAP
         /// <param name="messageID">Message <b>Message-ID</b> header value.</param>
         public IMAP_t_Fetch_r_i_Envelope(DateTime date,string subject,Mail_t_Address[] from,Mail_t_Address[] sender,Mail_t_Address[] replyTo,Mail_t_Address[] to,Mail_t_Address[] cc,Mail_t_Address[] bcc,string inReplyTo,string messageID)
         {
-            m_Date      = date;
-            m_Subject   = subject;
-            m_pFrom     = from;
-            m_pSender   = sender;
-            m_pReplyTo  = replyTo;
-            m_pTo       = to;
-            m_pCc       = cc;
-            m_pBcc      = bcc;
-            m_InReplyTo = inReplyTo;
-            m_MessageID = messageID;
+            Date      = date;
+            Subject   = subject;
+            From     = from;
+            Sender   = sender;
+            ReplyTo  = replyTo;
+            To       = to;
+            Cc       = cc;
+            Bcc      = bcc;
+            InReplyTo = inReplyTo;
+            MessageID = messageID;
         }
 
 
@@ -547,83 +536,53 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message <b>Date</b> header field value. Value DateTime.Min means no <b>Date</b> header field.
         /// </summary>
-        public DateTime Date
-        {
-            get{ return m_Date; }
-        }
+        public DateTime Date { get; } = DateTime.MinValue;
 
         /// <summary>
         /// Gets message <b>Subject</b> header field value. Value null means no <b>Subject</b> header field.
         /// </summary>
-        public string Subject
-        {
-            get{ return m_Subject; }
-        }
+        public string Subject { get; }
 
         /// <summary>
         /// Gets message <b>From</b> header field value. Value null means no <b>From</b> header field.
         /// </summary>
-        public Mail_t_Address[] From
-        {
-            get{ return m_pFrom; }
-        }
+        public Mail_t_Address[] From { get; }
 
         /// <summary>
         /// Gets message <b>Sender</b> header field value. Value null means no <b>Sender</b> header field.
         /// </summary>
-        public Mail_t_Address[] Sender
-        {
-            get{ return m_pSender; }
-        }
+        public Mail_t_Address[] Sender { get; }
 
         /// <summary>
         /// Gets message <b>Reply-To</b> header field value. Value null means no <b>Reply-To</b> header field.
         /// </summary>
-        public Mail_t_Address[] ReplyTo
-        {
-            get{ return m_pReplyTo; }
-        }
+        public Mail_t_Address[] ReplyTo { get; }
 
         /// <summary>
         /// Gets message <b>To</b> header field value. Value null means no <b>To</b> header field.
         /// </summary>
-        public Mail_t_Address[] To
-        {
-            get{ return m_pTo; }
-        }
+        public Mail_t_Address[] To { get; }
 
         /// <summary>
         /// Gets message <b>Cc</b> header field value. Value null means no <b>Cc</b> header field.
         /// </summary>
-        public Mail_t_Address[] Cc
-        {
-            get{ return m_pCc; }
-        }
+        public Mail_t_Address[] Cc { get; }
 
         /// <summary>
         /// Gets message <b>Bcc</b> header field value. Value null means no <b>Bcc</b> header field.
         /// </summary>
-        public Mail_t_Address[] Bcc
-        {
-            get{ return m_pBcc; }
-        }
-        
+        public Mail_t_Address[] Bcc { get; }
+
         /// <summary>
         /// Gets message <b>In-Reply-To</b> header field value. Value null means no <b>In-Reply-To</b> header field.
         /// </summary>
-        public string InReplyTo
-        {
-            get{ return m_InReplyTo; }
-        }
-        
+        public string InReplyTo { get; }
+
         /// <summary>
         /// Gets message <b>Message-ID</b> header field value. Value null means no <b>Message-ID</b> header field.
         /// </summary>
-        public string MessageID
-        {
-            get{ return m_MessageID; }
-        }
+        public string MessageID { get; }
 
-        #endregion
+#endregion
     }
 }

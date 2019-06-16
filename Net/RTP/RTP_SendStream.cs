@@ -7,7 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_SendStream
     {
-        private bool             m_IsDisposed;
         private RTP_Source_Local m_pSource;
         private int              m_SeqNoWrapCount;
         private int              m_SeqNo;
@@ -16,7 +15,6 @@ namespace LumiSoft.Net.RTP
         private long             m_RtpPacketsSent;
         private long             m_RtpBytesSent;
         private long             m_RtpDataBytesSent;
-        private int              m_RtcpCyclesSinceWeSent  = 9999;
 
         /// <summary>
         /// Default constructor.
@@ -45,10 +43,10 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         private void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             m_pSource = null;
                         
@@ -79,7 +77,7 @@ namespace LumiSoft.Net.RTP
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Close(string closeReason)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             
@@ -103,7 +101,7 @@ namespace LumiSoft.Net.RTP
         /// <remarks>Properties <b>packet.SSRC</b>,<b>packet.SeqNo</b>,<b>packet.PayloadType</b> filled by this method automatically.</remarks>
         public void Send(RTP_Packet packet)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(packet == null){
@@ -127,7 +125,7 @@ namespace LumiSoft.Net.RTP
             m_RtpDataBytesSent += packet.Data.Length;
             m_LastPacketTime = DateTime.Now;
             m_LastPacketRtpTimestamp = packet.Timestamp;
-            m_RtcpCyclesSinceWeSent = 0;
+            RtcpCyclesSinceWeSent = 0;
         }
 
         #endregion
@@ -140,7 +138,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal void RtcpCycle()
         {
-            m_RtcpCyclesSinceWeSent++;
+            RtcpCyclesSinceWeSent++;
         }
 
         #endregion
@@ -171,10 +169,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets stream owner RTP session.
@@ -183,7 +178,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Session Session
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -198,7 +193,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Source Source
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -213,7 +208,7 @@ namespace LumiSoft.Net.RTP
         public int SeqNoWrapCount
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -228,7 +223,7 @@ namespace LumiSoft.Net.RTP
         public int SeqNo
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -243,7 +238,7 @@ namespace LumiSoft.Net.RTP
         public DateTime LastPacketTime
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -258,7 +253,7 @@ namespace LumiSoft.Net.RTP
         public uint LastPacketRtpTimestamp
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -273,7 +268,7 @@ namespace LumiSoft.Net.RTP
         public long RtpPacketsSent
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -288,7 +283,7 @@ namespace LumiSoft.Net.RTP
         public long RtpBytesSent
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -303,7 +298,7 @@ namespace LumiSoft.Net.RTP
         public long RtpDataBytesSent
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -315,12 +310,9 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets how many RTCP cycles has passed since we sent data.
         /// </summary>
-        internal int RtcpCyclesSinceWeSent
-        {
-            get{ return m_RtcpCyclesSinceWeSent; }
-        }
+        internal int RtcpCyclesSinceWeSent { get; private set; } = 9999;
 
-        #endregion
+#endregion
 
         #region Events implementation
 

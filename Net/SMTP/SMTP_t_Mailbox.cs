@@ -18,9 +18,6 @@ namespace LumiSoft.Net.SMTP
     /// </example>
     public class SMTP_t_Mailbox
     {
-        private readonly string m_LocalPart;
-        private readonly string m_Domain;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -36,8 +33,8 @@ namespace LumiSoft.Net.SMTP
                 throw new ArgumentNullException("domain");
             }
 
-            m_LocalPart = localPart;
-            m_Domain    = domain;
+            LocalPart = localPart;
+            Domain    = domain;
         }
 
 
@@ -86,11 +83,11 @@ namespace LumiSoft.Net.SMTP
         /// <returns>Returns mailbox as string.</returns>
         public override string ToString()
         {
-            if(MIME_Reader.IsDotAtom(m_LocalPart)){
-                return m_LocalPart + "@" + (Net_Utils.IsIPAddress(m_Domain) ? "[" + m_Domain + "]" : m_Domain);
+            if(MIME_Reader.IsDotAtom(LocalPart)){
+                return LocalPart + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
             }
             else{
-                return TextUtils.QuoteString(m_LocalPart) + "@" + (Net_Utils.IsIPAddress(m_Domain) ? "[" + m_Domain + "]" : m_Domain);
+                return TextUtils.QuoteString(LocalPart) + "@" + (Net_Utils.IsIPAddress(Domain) ? "[" + Domain + "]" : Domain);
             }
         }
 
@@ -103,20 +100,14 @@ namespace LumiSoft.Net.SMTP
         /// Gets local-part of mailbox.
         /// </summary>
         /// <remarks>If local-part is <b>Quoted-string</b>, quotes will not returned.</remarks>
-        public string LocalPart
-        {
-            get{ return m_LocalPart; }
-        }
+        public string LocalPart { get; }
 
         /// <summary>
         /// Gets domain of mailbox.
         /// </summary>
         /// <remarks>If domain is <b>address-literal</b>, surrounding bracets will be removed.</remarks>
-        public string Domain
-        {
-            get{ return m_Domain; }
-        }
+        public string Domain { get; }
 
-        #endregion
+#endregion
     }
 }

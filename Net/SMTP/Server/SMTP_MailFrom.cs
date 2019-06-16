@@ -7,12 +7,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_MailFrom
     {
-        private readonly string       m_Mailbox = "";
-        private readonly int          m_Size    = -1;
-        private readonly string       m_Body;
-        private readonly SMTP_DSN_Ret m_RET     = SMTP_DSN_Ret.NotSpecified;
-        private readonly string       m_ENVID;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,11 +22,11 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("mailbox");
             }
 
-            m_Mailbox = mailbox;
-            m_Size    = size;
-            m_Body    = body;
-            m_RET     = ret;
-            m_ENVID   = envid;
+            Mailbox = mailbox;
+            Size    = size;
+            Body    = body;
+            RET     = ret;
+            ENVID   = envid;
         }
 
 
@@ -42,48 +36,33 @@ namespace LumiSoft.Net.SMTP.Server
         /// Gets SMTP "mailbox" value. Actually this is just email address.
         /// This value can be "" if "null reverse-path".
         /// </summary>
-        public string Mailbox
-        {
-            get{ return m_Mailbox; }
-        }
+        public string Mailbox { get; } = "";
 
         /// <summary>
         /// Gets MAIL FROM: SIZE parameter value. Value -1 means not specified.
         /// Defined in RFC 1870.
         /// </summary>
-        public int Size
-        {
-            get{ return m_Size; }
-        }
+        public int Size { get; } = -1;
 
         /// <summary>
         /// Gets MAIL FROM: BODY parameter value. Value null means not specified.
         /// Defined in RFC 1652.
         /// </summary>
-        public string Body
-        {
-            get{ return m_Body; }
-        }
+        public string Body { get; }
 
         /// <summary>
         /// Gets DSN RET parameter value. Value null means not specified.
         /// RET specifies whether message or headers should be included in any failed DSN issued for message transmission.
         /// Defined in RFC 1891.
         /// </summary>
-        public SMTP_DSN_Ret RET
-        {
-            get{ return m_RET; }
-        }
+        public SMTP_DSN_Ret RET { get; } = SMTP_DSN_Ret.NotSpecified;
 
         /// <summary>
         /// Gets DSN ENVID parameter value. Value null means not specified.
         /// Defined in RFC 1891.
         /// </summary>
-        public string ENVID
-        {
-            get{ return m_ENVID; }
-        }
+        public string ENVID { get; }
 
-        #endregion
+#endregion
     }
 }

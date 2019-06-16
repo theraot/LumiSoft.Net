@@ -7,15 +7,13 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_Started : EventArgs
     {
-        private string m_Response;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="response">POP3 server response.</param>
         internal POP3_e_Started(string response)
         {
-            m_Response = response;
+            Response = response;
         }
 
 
@@ -25,13 +23,8 @@ namespace LumiSoft.Net.POP3.Server
         /// Gets or sets POP3 server response.
         /// </summary>
         /// <remarks>Response also MUST contain response code(+OK / -ERR). For example: "-ERR Session rejected."</remarks>
-        public string Response
-        {
-            get{ return m_Response; }
+        public string Response { get; set; }
 
-            set{ m_Response = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

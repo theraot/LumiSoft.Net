@@ -19,14 +19,12 @@ namespace LumiSoft.Net.SIP.Message
     /// </remarks>
     public class SIP_t_ContactParam : SIP_t_ValueWithParams
     {
-        private SIP_t_NameAddress m_pAddress;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SIP_t_ContactParam()
         {
-            m_pAddress = new SIP_t_NameAddress();
+            Address = new SIP_t_NameAddress();
         }
 
 
@@ -85,7 +83,7 @@ namespace LumiSoft.Net.SIP.Message
             // Parse address
             SIP_t_NameAddress address = new SIP_t_NameAddress();
             address.Parse(reader);
-            m_pAddress = address;
+            Address = address;
 
             // Parse parameters
             ParseParameters(reader);
@@ -119,7 +117,7 @@ namespace LumiSoft.Net.SIP.Message
             StringBuilder retVal = new StringBuilder();
             
             // Add address
-            retVal.Append(m_pAddress.ToStringValue());
+            retVal.Append(Address.ToStringValue());
 
             // Add parameters
             retVal.Append(ParametersToString());
@@ -138,7 +136,7 @@ namespace LumiSoft.Net.SIP.Message
         public bool IsStarContact
         {
             get{
-                if(m_pAddress.Uri.Value.StartsWith("*")){
+                if(Address.Uri.Value.StartsWith("*")){
                     return true;
                 }
                 else{
@@ -150,10 +148,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets contact address.
         /// </summary>
-        public SIP_t_NameAddress Address
-        {
-            get{ return m_pAddress; }
-        }
+        public SIP_t_NameAddress Address { get; private set; }
 
         /// <summary>
         /// Gets or sets qvalue parameter. Targets are processed from highest qvalue to lowest. 

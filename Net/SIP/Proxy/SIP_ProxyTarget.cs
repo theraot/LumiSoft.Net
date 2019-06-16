@@ -9,9 +9,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_ProxyTarget
     {
-        private readonly SIP_Uri  m_pTargetUri;
-        private readonly SIP_Flow m_pFlow;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -33,8 +30,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentNullException("targetUri");
             }
 
-            m_pTargetUri = targetUri;
-            m_pFlow      = flow;
+            TargetUri = targetUri;
+            Flow      = flow;
         }
 
 
@@ -43,20 +40,14 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets target URI.
         /// </summary>
-        public SIP_Uri TargetUri
-        {
-            get{ return m_pTargetUri; }
-        }
+        public SIP_Uri TargetUri { get; }
 
         /// <summary>
         /// Gets data flow. Value null means that new flow must created.
         /// </summary>
-        public SIP_Flow Flow
-        {
-            get{ return m_pFlow; }
-        }
+        public SIP_Flow Flow { get; }
 
-        #endregion
+#endregion
 
     }
 }

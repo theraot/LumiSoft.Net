@@ -17,7 +17,6 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_Client : TCP_Session
     {
-        private bool                                m_IsDisposed;
         private bool                                m_IsConnected;
         private string                              m_ID                   = "";
         private DateTime                            m_ConnectTime;
@@ -25,9 +24,6 @@ namespace LumiSoft.Net.TCP
         private IPEndPoint                          m_pRemoteEP;
         private bool                                m_IsSecure;
         private SmartStream                         m_pTcpStream;
-        private Logger                              m_pLogger;
-        private RemoteCertificateValidationCallback m_pCertificateCallback;
-        private int                                 m_Timeout              = 61000;
 
         /// <summary>
         /// Default constructor.
@@ -44,7 +40,7 @@ namespace LumiSoft.Net.TCP
         public override void Dispose()
         {
             lock(this){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
                 try{
@@ -52,7 +48,7 @@ namespace LumiSoft.Net.TCP
                 }
                 catch{
                 }
-                m_IsDisposed = true;
+                IsDisposed = true;
             }
         }
 
@@ -87,7 +83,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public void Connect(string host,int port,bool ssl)
         {            
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("TCP_Client");
             }
             if(m_IsConnected){
@@ -158,7 +154,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ArgumentNullException">Is raised when <b>remoteEP</b> is null reference.</exception>
         public void Connect(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl,RemoteCertificateValidationCallback certCallback)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_IsConnected){
@@ -197,7 +193,6 @@ namespace LumiSoft.Net.TCP
         public class ConnectAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object                              m_pLock         = new object();
-            private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException;
             private IPEndPoint                          m_pLocalEP;
             private IPEndPoint                          m_pRemoteEP;
@@ -235,7 +230,7 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -277,13 +272,13 @@ namespace LumiSoft.Net.TCP
                     // Create socket.
                     if(m_pRemoteEP.AddressFamily == AddressFamily.InterNetwork){
                         m_pSocket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
-                        m_pSocket.ReceiveTimeout = m_pTcpClient.m_Timeout;
-                        m_pSocket.SendTimeout = m_pTcpClient.m_Timeout;
+                        m_pSocket.ReceiveTimeout = m_pTcpClient.Timeout;
+                        m_pSocket.SendTimeout = m_pTcpClient.Timeout;
                     }
                     else if(m_pRemoteEP.AddressFamily == AddressFamily.InterNetworkV6){
                         m_pSocket = new Socket(AddressFamily.InterNetworkV6,SocketType.Stream,ProtocolType.Tcp);
-                        m_pSocket.ReceiveTimeout = m_pTcpClient.m_Timeout;
-                        m_pSocket.SendTimeout = m_pTcpClient.m_Timeout;
+                        m_pSocket.ReceiveTimeout = m_pTcpClient.Timeout;
+                        m_pSocket.SendTimeout = m_pTcpClient.Timeout;
                     }
                     // Bind socket to the specified end point.
                     if(m_pLocalEP != null){
@@ -309,7 +304,7 @@ namespace LumiSoft.Net.TCP
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -324,14 +319,14 @@ namespace LumiSoft.Net.TCP
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -491,10 +486,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -504,10 +496,10 @@ namespace LumiSoft.Net.TCP
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -523,10 +515,10 @@ namespace LumiSoft.Net.TCP
             public Socket Socket
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Socket' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -545,10 +537,10 @@ namespace LumiSoft.Net.TCP
             public Stream Stream
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Stream' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -597,7 +589,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool ConnectAsync(ConnectAsyncOP op)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(op == null){
@@ -621,7 +613,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
         public override void Disconnect()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("TCP_Client");
             }
             if(!m_IsConnected){
@@ -657,7 +649,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected.</exception>
         public IAsyncResult BeginDisconnect(AsyncCallback callback,object state)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(!m_IsConnected){
@@ -685,7 +677,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="InvalidOperationException">Is raised when <b>EndDisconnect</b> was previously called for the asynchronous connection.</exception>
         public void EndDisconnect(IAsyncResult asyncResult)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(asyncResult == null){
@@ -721,7 +713,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="InvalidOperationException">Is raised when TCP client is not connected or is already secure.</exception>
         protected void SwitchToSecure()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("TCP_Client");
             }
             if(!m_IsConnected){
@@ -751,8 +743,8 @@ namespace LumiSoft.Net.TCP
         private bool RemoteCertificateValidationCallback(object sender,X509Certificate certificate,X509Chain chain,SslPolicyErrors sslPolicyErrors)
         {
             // User will handle it.
-            if(m_pCertificateCallback != null){
-                return m_pCertificateCallback(sender,certificate,chain,sslPolicyErrors);
+            if(ValidateCertificateCallback != null){
+                return ValidateCertificateCallback(sender,certificate,chain,sslPolicyErrors);
             }
             else{
                 if(sslPolicyErrors == SslPolicyErrors.None || ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) > 0)){
@@ -779,7 +771,6 @@ namespace LumiSoft.Net.TCP
         {
             private readonly object                              m_pLock         = new object();
             private bool                                m_RiseCompleted;
-            private AsyncOP_State                       m_State         = AsyncOP_State.WaitingForStart;
             private Exception                           m_pException;
             private RemoteCertificateValidationCallback m_pCertCallback;
             private TCP_Client                          m_pTcpClient;
@@ -801,7 +792,7 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -848,7 +839,7 @@ namespace LumiSoft.Net.TCP
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -863,14 +854,14 @@ namespace LumiSoft.Net.TCP
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -939,10 +930,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -952,10 +940,10 @@ namespace LumiSoft.Net.TCP
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -1114,8 +1102,8 @@ namespace LumiSoft.Net.TCP
         internal protected void LogAddRead(long size,string text)
         {
             try{
-                if(m_pLogger != null){
-                    m_pLogger.AddRead(
+                if(Logger != null){
+                    Logger.AddRead(
                         this.ID,
                         this.AuthenticatedUserIdentity,
                         size,
@@ -1142,8 +1130,8 @@ namespace LumiSoft.Net.TCP
         internal protected void LogAddWrite(long size,string text)
         {
             try{
-                if(m_pLogger != null){
-                    m_pLogger.AddWrite(
+                if(Logger != null){
+                    Logger.AddWrite(
                         this.ID,
                         this.AuthenticatedUserIdentity,
                         size,
@@ -1169,8 +1157,8 @@ namespace LumiSoft.Net.TCP
         internal protected void LogAddText(string text)
         {
             try{
-                if(m_pLogger != null){
-                    m_pLogger.AddText(
+                if(Logger != null){
+                    Logger.AddText(
                         this.IsConnected ? this.ID : "",
                         this.IsConnected ? this.AuthenticatedUserIdentity : null,
                         text,                        
@@ -1196,8 +1184,8 @@ namespace LumiSoft.Net.TCP
         internal protected void LogAddException(string text,Exception x)
         {
             try{
-                if(m_pLogger != null){
-                    m_pLogger.AddException(
+                if(Logger != null){
+                    Logger.AddException(
                         this.IsConnected ? this.ID : "",
                         this.IsConnected ? this.AuthenticatedUserIdentity : null,
                         text,                        
@@ -1220,20 +1208,12 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets or sets TCP client logger. Value null means no logging.
         /// </summary>
-        public Logger Logger
-        {
-            get{ return m_pLogger; }
-
-            set{ m_pLogger = value; }
-        }
+        public Logger Logger { get; set; }
 
 
         /// <summary>
@@ -1252,7 +1232,7 @@ namespace LumiSoft.Net.TCP
         public override string ID
         {
             get{                
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1271,7 +1251,7 @@ namespace LumiSoft.Net.TCP
         public override DateTime ConnectTime
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1290,7 +1270,7 @@ namespace LumiSoft.Net.TCP
         public override DateTime LastActivity
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1309,7 +1289,7 @@ namespace LumiSoft.Net.TCP
         public override IPEndPoint LocalEndPoint
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1328,7 +1308,7 @@ namespace LumiSoft.Net.TCP
         public override IPEndPoint RemoteEndPoint
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1347,7 +1327,7 @@ namespace LumiSoft.Net.TCP
         public override bool IsSecureConnection
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1366,7 +1346,7 @@ namespace LumiSoft.Net.TCP
         public override SmartStream TcpStream
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_Client");
                 }
                 if(!m_IsConnected){
@@ -1381,25 +1361,15 @@ namespace LumiSoft.Net.TCP
         /// Gets or stes remote callback which is called when remote server certificate needs to be validated.
         /// Value null means not sepcified.
         /// </summary>
-        public RemoteCertificateValidationCallback ValidateCertificateCallback
-        {
-            get{ return m_pCertificateCallback; }
-
-            set{ m_pCertificateCallback = value; }
-        }
+        public RemoteCertificateValidationCallback ValidateCertificateCallback { get; set; }
 
         /// <summary>
         /// Gets or sets default TCP read/write timeout.
         /// </summary>
         /// <remarks>This timeout applies only synchronous TCP read/write operations.</remarks>
-        public int Timeout
-        {
-            get{ return m_Timeout; }
+        public int Timeout { get; set; } = 61000;
 
-            set{ m_Timeout = value; }
-        }
-
-        #endregion
+#endregion
 
 
         // OBSOLETE
@@ -1454,7 +1424,7 @@ namespace LumiSoft.Net.TCP
         [Obsolete("Use method ConnectAsync instead.")]
         public IAsyncResult BeginConnect(string host,int port,bool ssl,AsyncCallback callback,object state)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_IsConnected){
@@ -1508,7 +1478,7 @@ namespace LumiSoft.Net.TCP
         [Obsolete("Use method ConnectAsync instead.")]
         public IAsyncResult BeginConnect(IPEndPoint localEP,IPEndPoint remoteEP,bool ssl,AsyncCallback callback,object state)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_IsConnected){
@@ -1540,7 +1510,7 @@ namespace LumiSoft.Net.TCP
         [Obsolete("Use method ConnectAsync instead.")]
         public void EndConnect(IAsyncResult asyncResult)
         {   
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(asyncResult == null){
@@ -1580,7 +1550,7 @@ namespace LumiSoft.Net.TCP
         protected void OnError(Exception x)
         {
             try{
-                if(m_pLogger != null){
+                if(Logger != null){
                     //m_pLogger.AddException(x);
                 }
             }

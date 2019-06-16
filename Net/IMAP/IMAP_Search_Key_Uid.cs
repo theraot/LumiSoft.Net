@@ -11,8 +11,6 @@ namespace LumiSoft.Net.IMAP
     /// unique identifier set.  Sequence set ranges are permitted.</remarks>
     public class IMAP_Search_Key_Uid : IMAP_Search_Key
     {
-        private readonly IMAP_t_SeqSet m_pSeqSet;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -24,7 +22,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("seqSet");
             }
 
-            m_pSeqSet = seqSet;
+            Value = seqSet;
         }
 
 
@@ -72,7 +70,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "UID " + m_pSeqSet.ToString();
+            return "UID " + Value.ToString();
         }
 
         #endregion
@@ -102,12 +100,9 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets sequence-set value.
         /// </summary>
-        public IMAP_t_SeqSet Value
-        {
-            get{ return m_pSeqSet; }
-        }
+        public IMAP_t_SeqSet Value { get; }
 
-        #endregion
+#endregion
 
 
         //--- OBSOLETE -----
@@ -124,7 +119,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("seqSet");
             }
 
-            m_pSeqSet = IMAP_t_SeqSet.Parse(seqSet.ToSequenceSetString());
+            Value = IMAP_t_SeqSet.Parse(seqSet.ToSequenceSetString());
         }
     }
 }

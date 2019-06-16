@@ -8,14 +8,12 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_CompoundPacket
     {
-        private readonly List<RTCP_Packet> m_pPackets;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal RTCP_CompoundPacket()
         {
-            m_pPackets = new List<RTCP_Packet>();
+            Packets = new List<RTCP_Packet>();
         }
 
 
@@ -62,7 +60,7 @@ namespace LumiSoft.Net.RTP
             while(offset < count){
                 RTCP_Packet p = RTCP_Packet.Parse(buffer,ref offset,true);
                 if(p != null){
-                    packet.m_pPackets.Add(p);
+                    packet.Packets.Add(p);
                 }
             }
 
@@ -102,7 +100,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'offset' value must be >= 0.");
             }
                  
-            foreach(RTCP_Packet packet in m_pPackets){                
+            foreach(RTCP_Packet packet in Packets){                
                 packet.ToByte(buffer,ref offset);
             }   
         }
@@ -134,23 +132,23 @@ namespace LumiSoft.Net.RTP
                    is a fairly strong check.
             */
                         
-            if(m_pPackets.Count == 0){
+            if(Packets.Count == 0){
                 throw new ArgumentException("No RTCP packets.");
             }
 
             // Check version and padding.
-            for(int i=0;i<m_pPackets.Count;i++){
-                RTCP_Packet packet = m_pPackets[i];
+            for(int i=0;i<Packets.Count;i++){
+                RTCP_Packet packet = Packets[i];
                 if(packet.Version != 2){
                     throw new ArgumentException("RTP version field must equal 2.");
                 }
-                if(i < (m_pPackets.Count - 1) && packet.IsPadded){
+                if(i < (Packets.Count - 1) && packet.IsPadded){
                     throw new ArgumentException("Only the last packet in RTCP compound packet may be padded.");
                 }
             }
 
             // The first RTCP packet in a compound packet must be equal to SR or RR.
-            if(m_pPackets[0].Type != RTCP_PacketType.SR || m_pPackets[0].Type != RTCP_PacketType.RR){
+            if(Packets[0].Type != RTCP_PacketType.SR || Packets[0].Type != RTCP_PacketType.RR){
                 throw new ArgumentException("The first RTCP packet in a compound packet must be equal to SR or RR.");
             }          
         }
@@ -163,10 +161,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets compound packets.
         /// </summary>
-        public List<RTCP_Packet> Packets
-        {
-            get{ return m_pPackets; }
-        }
+        public List<RTCP_Packet> Packets { get; }
 
 
         /// <summary>
@@ -176,7 +171,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 int size = 0;
-                foreach(RTCP_Packet packet in m_pPackets){
+                foreach(RTCP_Packet packet in Packets){
                     size += packet.Size;
                 }
 

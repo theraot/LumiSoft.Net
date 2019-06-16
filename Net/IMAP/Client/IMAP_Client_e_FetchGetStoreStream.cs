@@ -8,10 +8,6 @@ namespace LumiSoft.Net.IMAP.Client
     /// </summary>
     public class IMAP_Client_e_FetchGetStoreStream : EventArgs
     {
-        private readonly IMAP_r_u_Fetch   m_pFetchResponse;
-        private readonly IMAP_t_Fetch_r_i m_pDataItem;
-        private Stream           m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,8 +23,8 @@ namespace LumiSoft.Net.IMAP.Client
                 throw new ArgumentNullException("dataItem");
             }
 
-            m_pFetchResponse = fetch;
-            m_pDataItem      = dataItem;
+            FetchResponse = fetch;
+            DataItem      = dataItem;
         }
 
 
@@ -37,29 +33,18 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets related FETCH response.
         /// </summary>
-        public IMAP_r_u_Fetch FetchResponse
-        {
-            get{ return m_pFetchResponse; }
-        }
+        public IMAP_r_u_Fetch FetchResponse { get; }
 
         /// <summary>
         /// Gets FETCH data-item which stream to get.
         /// </summary>
-        public IMAP_t_Fetch_r_i DataItem
-        {
-            get{ return m_pDataItem; }
-        }
+        public IMAP_t_Fetch_r_i DataItem { get; }
 
         /// <summary>
         /// Gets stream where to store data-item data.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
+        public Stream Stream { get; set; }
 
-            set{ m_pStream = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

@@ -8,9 +8,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_GetQuota : EventArgs
     {
-        private readonly List<IMAP_r_u_Quota> m_pQuotaResponses;
         private IMAP_r_ServerStatus  m_pResponse;
-        private readonly string               m_QuotaRoot;
 
         /// <summary>
         /// Default constructor.
@@ -24,10 +22,10 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("quotaRoot");
             }
 
-            m_QuotaRoot = quotaRoot;
+            QuotaRoot = quotaRoot;
             m_pResponse = response;
 
-            m_pQuotaResponses = new List<IMAP_r_u_Quota>();
+            QuotaResponses = new List<IMAP_r_u_Quota>();
         }
 
 
@@ -36,10 +34,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets QUOTA responses collection.
         /// </summary>
-        public List<IMAP_r_u_Quota> QuotaResponses
-        {
-            get{ return m_pQuotaResponses; }
-        }
+        public List<IMAP_r_u_Quota> QuotaResponses { get; }
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -61,11 +56,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets quopta root name.
         /// </summary>
-        public string QuotaRoot
-        {
-            get{ return m_QuotaRoot; }
-        }
+        public string QuotaRoot { get; }
 
-        #endregion
+#endregion
     }
 }

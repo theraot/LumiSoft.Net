@@ -8,8 +8,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTCP_Packet_SDES_Chunk
     {
-        private uint   m_Source;
-        private string m_CName;
         private string m_Name;
         private string m_Email;
         private string m_Phone;
@@ -32,8 +30,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'cname' value may not be null or empty.");
             }
 
-            m_Source = source;
-            m_CName  = cname;
+            Source = source;
+            CName  = cname;
         }
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace LumiSoft.Net.RTP
             int startOffset = offset;
                         
             // Read SSRC/CSRC
-            m_Source = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            Source = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
 
             // Read SDES items while reach end of buffer or we get chunk terminator(\0).
             while(offset < buffer.Length && buffer[offset] != 0){
@@ -85,7 +83,7 @@ namespace LumiSoft.Net.RTP
 
                 // CNAME
                 if(type == 1){
-                    m_CName = Encoding.UTF8.GetString(buffer,offset,length);
+                    CName = Encoding.UTF8.GetString(buffer,offset,length);
                 }
                 // NAME
                 else if(type == 2){
@@ -148,14 +146,14 @@ namespace LumiSoft.Net.RTP
             int startOffset = offset;
 
             // SSRC/SDES
-            buffer[offset++] = (byte)((m_Source >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_Source >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_Source >>  8) & 0xFF);
-            buffer[offset++] = (byte)((m_Source)       & 0xFF);
+            buffer[offset++] = (byte)((Source >> 24) & 0xFF);
+            buffer[offset++] = (byte)((Source >> 16) & 0xFF);
+            buffer[offset++] = (byte)((Source >>  8) & 0xFF);
+            buffer[offset++] = (byte)((Source)       & 0xFF);
 
             //--- SDES items -----------------------------------
-            if(!string.IsNullOrEmpty(m_CName)){
-                byte[] b = Encoding.UTF8.GetBytes(m_CName);
+            if(!string.IsNullOrEmpty(CName)){
+                byte[] b = Encoding.UTF8.GetBytes(CName);
                 buffer[offset++] = 1;
                 buffer[offset++] = (byte)b.Length;
                 Array.Copy(b,0,buffer,offset,b.Length);
@@ -220,18 +218,12 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets SSRC or CSRC identifier.
         /// </summary>
-        public uint Source
-        {
-            get{ return m_Source; }
-        }
+        public uint Source { get; private set; }
 
         /// <summary>
         /// Gets Canonical End-Point Identifier.
         /// </summary>
-        public string CName
-        {
-            get{ return m_CName; }
-        }
+        public string CName { get; private set; }
 
         /// <summary>
         /// Gets or sets the real name, eg. "John Doe". Value null means not specified.
@@ -345,9 +337,9 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 int size = 4;
-                if(!string.IsNullOrEmpty(m_CName)){
+                if(!string.IsNullOrEmpty(CName)){
                     size += 2;
-                    size += Encoding.UTF8.GetByteCount(m_CName);
+                    size += Encoding.UTF8.GetByteCount(CName);
                 }
                 if(!string.IsNullOrEmpty(m_Name)){
                     size += 2;

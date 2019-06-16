@@ -10,8 +10,6 @@ namespace LumiSoft.Net.WebDav.Client
     /// </summary>
     public class WebDav_Client
     {
-        private NetworkCredential m_pCredentials;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -56,7 +54,7 @@ namespace LumiSoft.Net.WebDav.Client
             request.Method = "PROPFIND";
             request.ContentType = "application/xml";
             request.ContentLength = requestContent.Length;
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
             if(depth > -1){
                 request.Headers.Add("Depth: " + depth);
             }
@@ -90,7 +88,7 @@ namespace LumiSoft.Net.WebDav.Client
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = "MKCOL";
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         }
@@ -114,7 +112,7 @@ namespace LumiSoft.Net.WebDav.Client
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = "GET";
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             contentSize = response.ContentLength;
@@ -155,7 +153,7 @@ namespace LumiSoft.Net.WebDav.Client
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = "DELETE";
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
 
             request.GetResponse();
         }
@@ -185,7 +183,7 @@ namespace LumiSoft.Net.WebDav.Client
             try{
                 HttpWebRequest dummy  = (HttpWebRequest)HttpWebRequest.Create(targetUri);
 			    // Set the username and the password.
-			    dummy.Credentials = m_pCredentials;
+			    dummy.Credentials = Credentials;
 			    dummy.PreAuthenticate = true;
 			    dummy.Method = "HEAD";
 			    ((HttpWebResponse)dummy.GetResponse()).Close(); 
@@ -196,7 +194,7 @@ namespace LumiSoft.Net.WebDav.Client
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(targetUri);
             request.Method = "PUT";
             request.ContentType = "application/octet-stream";
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
             request.PreAuthenticate = true;
             request.AllowWriteStreamBuffering = false;
             if(stream.CanSeek){                
@@ -239,7 +237,7 @@ namespace LumiSoft.Net.WebDav.Client
             if(depth > -1){
                 request.Headers.Add("Depth: " + depth);
             }
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
 
             request.GetResponse();
         }
@@ -273,7 +271,7 @@ namespace LumiSoft.Net.WebDav.Client
             if(depth > -1){
                 request.Headers.Add("Depth: " + depth);
             }
-            request.Credentials = m_pCredentials;
+            request.Credentials = Credentials;
 
             request.GetResponse();
         }
@@ -302,14 +300,9 @@ namespace LumiSoft.Net.WebDav.Client
         /// <summary>
         /// Gets or sets credentials.
         /// </summary>
-        public NetworkCredential Credentials
-        {
-            get{ return m_pCredentials; }
+        public NetworkCredential Credentials { get; set; }
 
-            set{ m_pCredentials = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

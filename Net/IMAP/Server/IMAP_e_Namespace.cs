@@ -7,7 +7,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Namespace : EventArgs
     {
-        private IMAP_r_u_Namespace  m_pNamespaceResponse;
         private IMAP_r_ServerStatus m_pResponse;
 
         /// <summary>
@@ -30,12 +29,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets or sets IMAP server NAMESPACE response.
         /// </summary>
-        public IMAP_r_u_Namespace NamespaceResponse
-        {
-            get{ return m_pNamespaceResponse; }
-
-            set{ m_pNamespaceResponse = value; }
-        }
+        public IMAP_r_u_Namespace NamespaceResponse { get; set; }
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.

@@ -7,15 +7,13 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_UidNext : IMAP_t_orc
     {
-        private readonly int m_UidNext;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="uidNext">Next UID value.</param>
         public IMAP_t_orc_UidNext(int uidNext)
         {
-            m_UidNext = uidNext;
+            UidNext = uidNext;
         }
 
 
@@ -55,7 +53,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "UIDNEXT " + m_UidNext;
+            return "UIDNEXT " + UidNext;
         }
 
         #endregion
@@ -66,11 +64,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets next message predicted UID value.
         /// </summary>
-        public int UidNext
-        {
-            get{ return m_UidNext; }
-        }
+        public int UidNext { get; }
 
-        #endregion
+#endregion
     }
 }

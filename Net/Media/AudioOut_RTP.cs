@@ -11,7 +11,6 @@ namespace LumiSoft.Net.Media
     /// </summary>
     public class AudioOut_RTP : IDisposable
     {
-        private readonly bool                       m_IsDisposed      = false;
         private bool                       m_IsRunning;
         private AudioOutDevice             m_pAudioOutDevice;
         private RTP_ReceiveStream          m_pRTP_Stream;
@@ -50,7 +49,7 @@ namespace LumiSoft.Net.Media
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -77,7 +76,7 @@ namespace LumiSoft.Net.Media
         /// <param name="e">Event data.</param>
         private void m_pRTP_Stream_PacketReceived(object sender,RTP_PacketEventArgs e)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
 
@@ -172,10 +171,7 @@ namespace LumiSoft.Net.Media
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; } = false;
 
         /// <summary>
         /// Gets if audio player is running.

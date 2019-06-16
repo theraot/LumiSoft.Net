@@ -7,9 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Acl_Entry
     {
-        private readonly string m_Identifier = "";
-        private readonly string m_Rights     = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -29,8 +26,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("rights");
             }
 
-            m_Identifier = identifier;
-            m_Rights     = rights;
+            Identifier = identifier;
+            Rights     = rights;
         }
 
 
@@ -39,19 +36,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets ACL identifier. Normally this is user or group name.
         /// </summary>
-        public string Identifier
-        {
-            get{ return m_Identifier; }
-        }
+        public string Identifier { get; } = "";
 
         /// <summary>
         /// Gets rights.
         /// </summary>
-        public string Rights
-        {
-            get{ return m_Rights; }
-        }
+        public string Rights { get; } = "";
 
-        #endregion
+#endregion
     }
 }

@@ -13,19 +13,15 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class MimeEntity
 	{
-		private readonly HeaderFieldCollection m_pHeader;
-		private readonly MimeEntity            m_pParentEntity     = null;
-		private readonly MimeEntityCollection  m_pChildEntities;
-		private byte[]                m_EncodedData;
-		private readonly Hashtable             m_pHeaderFieldCache;
+        private readonly Hashtable             m_pHeaderFieldCache;
 
 		/// <summary>
 		/// Default constructor.
 		/// </summary>
 		public MimeEntity()
 		{
-			m_pHeader = new HeaderFieldCollection();
-			m_pChildEntities = new MimeEntityCollection(this);
+			Header = new HeaderFieldCollection();
+			ChildEntities = new MimeEntityCollection(this);
 			m_pHeaderFieldCache = new Hashtable();            
 		}
 
@@ -41,11 +37,11 @@ namespace LumiSoft.Net.Mime
 		internal bool Parse(SmartStream stream,string toBoundary)
 		{
 			// Clear header fields
-			m_pHeader.Clear();
+			Header.Clear();
 			m_pHeaderFieldCache.Clear();
 
 			// Parse header
-			m_pHeader.Parse(stream);
+			Header.Parse(stream);
 
 			// Parse entity and child entities if any (Conent-Type: multipart/xxx...)
             
@@ -152,7 +148,7 @@ namespace LumiSoft.Net.Mime
                         // if we reach EOS, consider boundary closed.
                         if(readLineOP.BytesInBuffer == 0){
                             // Just return data what was readed.
-                            m_EncodedData = entityData.ToArray();
+                            DataEncoded = entityData.ToArray();
                             return false;
                         }
                         // We readed a line.
@@ -162,12 +158,12 @@ namespace LumiSoft.Net.Mime
                                 string lineString = readLineOP.LineUtf8;
                                 // We have boundary end tag, no more boundaries.
                                 if(lineString == "--" + toBoundary + "--"){
-                                    m_EncodedData = entityData.ToArray();
+                                    DataEncoded = entityData.ToArray();
                                     return false;
                                 }
                                 // We have new boundary start.
                                 else if(lineString == "--" + toBoundary){
-                                    m_EncodedData = entityData.ToArray();
+                                    DataEncoded = entityData.ToArray();
                                     return true;
                                 }
                                 else{
@@ -184,7 +180,7 @@ namespace LumiSoft.Net.Mime
 				else{
                     MemoryStream ms = new MemoryStream();
                     stream.ReadAll(ms);
-                    m_EncodedData = ms.ToArray();
+                    DataEncoded = ms.ToArray();
 				}
 			}
 			
@@ -387,44 +383,35 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Gets message header.
 		/// </summary>
-		public HeaderFieldCollection Header
-		{
-			get{ return m_pHeader; }
-		}
+		public HeaderFieldCollection Header { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets header as RFC 2822 message headers.
 		/// </summary>
 		public string HeaderString
 		{			
-			get{ return m_pHeader.ToHeaderString("utf-8"); }
+			get{ return Header.ToHeaderString("utf-8"); }
 		}
 
 		/// <summary>
 		/// Gets parent entity of this entity. If this entity is top level, then this property returns null.
 		/// </summary>
-		public MimeEntity ParentEntity
-		{
-			get{ return m_pParentEntity; }
-		}
+		public MimeEntity ParentEntity { get; } = null;
 
-		/// <summary>
+        /// <summary>
 		/// Gets child entities. This property is available only if ContentType = multipart/... .
 		/// </summary>
-		public MimeEntityCollection ChildEntities
-		{
-			get{ return m_pChildEntities; }
-		}
+		public MimeEntityCollection ChildEntities { get; }
 
 
-		/// <summary>
+        /// <summary>
 		/// Gets or sets header field "<b>Mime-Version:</b>" value. Returns null if value isn't set.
 		/// </summary>
 		public string MimeVersion
 		{
 			get{
-				if(m_pHeader.Contains("Mime-Version:")){
-					return m_pHeader.GetFirst("Mime-Version:").Value;
+				if(Header.Contains("Mime-Version:")){
+					return Header.GetFirst("Mime-Version:").Value;
 				}
 				else{
 					return null;
@@ -432,11 +419,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Mime-Version:")){
-					m_pHeader.GetFirst("Mime-Version:").Value = value;
+				if(Header.Contains("Mime-Version:")){
+					Header.GetFirst("Mime-Version:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Mime-Version:",value);
+					Header.Add("Mime-Version:",value);
 				}
 			}
 		}
@@ -448,8 +435,8 @@ namespace LumiSoft.Net.Mime
         public string ContentClass
         {
             get{
-                if(m_pHeader.Contains("Content-Class:")){
-                    return m_pHeader.GetFirst("Content-Class:").Value;
+                if(Header.Contains("Content-Class:")){
+                    return Header.GetFirst("Content-Class:").Value;
                 }
                 else{
                     return null;
@@ -457,11 +444,11 @@ namespace LumiSoft.Net.Mime
             }
 
             set{
-                if(m_pHeader.Contains("Content-Class:")){
-                    m_pHeader.GetFirst("Content-Class:").Value = value;
+                if(Header.Contains("Content-Class:")){
+                    Header.GetFirst("Content-Class:").Value = value;
                 }
                 else{
-                    m_pHeader.Add("Content-Class:", value);
+                    Header.Add("Content-Class:", value);
                 }
             }
         }
@@ -476,8 +463,8 @@ namespace LumiSoft.Net.Mime
 		public MediaType_enum ContentType
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Type:")){  
-					string contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:")).Value;
+				if(Header.Contains("Content-Type:")){  
+					string contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:")).Value;
 					return MimeUtils.ParseMediaType(contentType);
 				}
 				else{
@@ -585,11 +572,11 @@ namespace LumiSoft.Net.Mime
 					throw new Exception("Invalid flags combination of MediaType_enum was specified !");
 				}
 
-				if(m_pHeader.Contains("Content-Type:")){
-					m_pHeader.GetFirst("Content-Type:").Value = contentType;
+				if(Header.Contains("Content-Type:")){
+					Header.GetFirst("Content-Type:").Value = contentType;
 				}
 				else{
-					m_pHeader.Add("Content-Type:",contentType);
+					Header.Add("Content-Type:",contentType);
 				}
 			}
 		}
@@ -606,8 +593,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentTypeString
 		{
 			get{
-				if(m_pHeader.Contains("Content-Type:")){
-					return m_pHeader.GetFirst("Content-Type:").Value;
+				if(Header.Contains("Content-Type:")){
+					return Header.GetFirst("Content-Type:").Value;
 				}
 				else{
 					return null;
@@ -618,11 +605,11 @@ namespace LumiSoft.Net.Mime
 				if(this.DataEncoded != null){
 					throw new Exception("ContentType can't be changed while there is data specified, set data to null before !");
 				}
-				if(m_pHeader.Contains("Content-Type:")){
-					m_pHeader.GetFirst("Content-Type:").Value = value;
+				if(Header.Contains("Content-Type:")){
+					Header.GetFirst("Content-Type:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Content-Type:",value);
+					Header.Add("Content-Type:",value);
 				}
 			}
 		}
@@ -635,8 +622,8 @@ namespace LumiSoft.Net.Mime
 		public ContentTransferEncoding_enum ContentTransferEncoding
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Transfer-Encoding:")){
-					return MimeUtils.ParseContentTransferEncoding(m_pHeader.GetFirst("Content-Transfer-Encoding:").Value);
+				if(Header.Contains("Content-Transfer-Encoding:")){
+					return MimeUtils.ParseContentTransferEncoding(Header.GetFirst("Content-Transfer-Encoding:").Value);
 				}
 				else{
 					return ContentTransferEncoding_enum.NotSpecified;
@@ -663,11 +650,11 @@ namespace LumiSoft.Net.Mime
 					this.DataEncoded = EncodeData(this.Data,value);
 				}
 
-				if(m_pHeader.Contains("Content-Transfer-Encoding:")){
-					m_pHeader.GetFirst("Content-Transfer-Encoding:").Value = encoding;
+				if(Header.Contains("Content-Transfer-Encoding:")){
+					Header.GetFirst("Content-Transfer-Encoding:").Value = encoding;
 				}
 				else{
-					m_pHeader.Add("Content-Transfer-Encoding:",encoding);
+					Header.Add("Content-Transfer-Encoding:",encoding);
 				}
 			}
 		}
@@ -678,8 +665,8 @@ namespace LumiSoft.Net.Mime
 		public ContentDisposition_enum ContentDisposition
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Disposition:")){
-					return MimeUtils.ParseContentDisposition(m_pHeader.GetFirst("Content-Disposition:").Value);
+				if(Header.Contains("Content-Disposition:")){
+					return MimeUtils.ParseContentDisposition(Header.GetFirst("Content-Disposition:").Value);
 				}
 				else{
 					return ContentDisposition_enum.NotSpecified;
@@ -693,18 +680,18 @@ namespace LumiSoft.Net.Mime
 
 				// Just remove Content-Disposition: header field if exists
 				if(value == ContentDisposition_enum.NotSpecified){
-					HeaderField disposition = m_pHeader.GetFirst("Content-Disposition:");
+					HeaderField disposition = Header.GetFirst("Content-Disposition:");
 					if(disposition != null){
-						m_pHeader.Remove(disposition);
+						Header.Remove(disposition);
 					}
 				}
 				else{
 					string disposition = MimeUtils.ContentDispositionToString(value);
-					if(m_pHeader.Contains("Content-Disposition:")){
-						m_pHeader.GetFirst("Content-Disposition:").Value = disposition;
+					if(Header.Contains("Content-Disposition:")){
+						Header.GetFirst("Content-Disposition:").Value = disposition;
 					}
 					else{
-						m_pHeader.Add("Content-Disposition:",disposition);
+						Header.Add("Content-Disposition:",disposition);
 					}
 				}
 			}
@@ -716,8 +703,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentDescription
 		{
 			get{
-				if(m_pHeader.Contains("Content-Description:")){
-					return m_pHeader.GetFirst("Content-Description:").Value;
+				if(Header.Contains("Content-Description:")){
+					return Header.GetFirst("Content-Description:").Value;
 				}
 				else{
 					return null;
@@ -725,11 +712,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Content-Description:")){
-					m_pHeader.GetFirst("Content-Description:").Value = value;
+				if(Header.Contains("Content-Description:")){
+					Header.GetFirst("Content-Description:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Content-Description:",value);
+					Header.Add("Content-Description:",value);
 				}
 			}
 		}
@@ -740,8 +727,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentID
 		{
 			get{
-				if(m_pHeader.Contains("Content-ID:")){
-					return m_pHeader.GetFirst("Content-ID:").Value;
+				if(Header.Contains("Content-ID:")){
+					return Header.GetFirst("Content-ID:").Value;
 				}
 				else{
 					return null;
@@ -749,11 +736,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Content-ID:")){
-					m_pHeader.GetFirst("Content-ID:").Value = value;
+				if(Header.Contains("Content-ID:")){
+					Header.GetFirst("Content-ID:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Content-ID:",value);
+					Header.Add("Content-ID:",value);
 				}
 			}
 		}
@@ -769,8 +756,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentType_Name
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Type:")){
-					ParametizedHeaderField contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:"));
+				if(Header.Contains("Content-Type:")){
+					ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
 					if(contentType.Parameters.Contains("name")){
 						return contentType.Parameters["name"];
 					}
@@ -784,14 +771,14 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{
-				if(!m_pHeader.Contains("Content-Type:")){
+				if(!Header.Contains("Content-Type:")){
 					throw new Exception("Please specify Content-Type first !");
 				}
 				if((this.ContentType & MediaType_enum.Application) == 0){
 					throw new Exception("Parameter name is available only for ContentType application/xxx !");
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:"));
+				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
 				if(contentType.Parameters.Contains("name")){
 					contentType.Parameters["name"] = value;
 				}
@@ -810,8 +797,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentType_CharSet
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Type:")){
-					ParametizedHeaderField contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:"));
+				if(Header.Contains("Content-Type:")){
+					ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
 					if(contentType.Parameters.Contains("charset")){
 						return contentType.Parameters["charset"];
 					}
@@ -825,7 +812,7 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{
-				if(!m_pHeader.Contains("Content-Type:")){
+				if(!Header.Contains("Content-Type:")){
 					throw new Exception("Please specify Content-Type first !");
 				}
 				if((this.ContentType & MediaType_enum.Text) == 0){
@@ -853,7 +840,7 @@ namespace LumiSoft.Net.Mime
 					}
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:"));
+				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
 				if(contentType.Parameters.Contains("charset")){
 					contentType.Parameters["charset"] = value;
 				}
@@ -871,8 +858,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentType_Boundary
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Type:")){
-					ParametizedHeaderField contentDisposition = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:"));
+				if(Header.Contains("Content-Type:")){
+					ParametizedHeaderField contentDisposition = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
 					if(contentDisposition.Parameters.Contains("boundary")){
 						return contentDisposition.Parameters["boundary"];
 					}
@@ -886,14 +873,14 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{
-				if(!m_pHeader.Contains("Content-Type:")){
+				if(!Header.Contains("Content-Type:")){
 					throw new Exception("Please specify Content-Type first !");
 				}
 				if((this.ContentType & MediaType_enum.Multipart) == 0){
 					throw new Exception("Parameter boundary is available only for ContentType multipart/xxx !");
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Type:"));
+				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Type:"));
 				if(contentType.Parameters.Contains("boundary")){
 					contentType.Parameters["boundary"] = value;
 				}
@@ -911,8 +898,8 @@ namespace LumiSoft.Net.Mime
 		public string ContentDisposition_FileName
 		{
 			get{ 
-				if(m_pHeader.Contains("Content-Disposition:")){
-					ParametizedHeaderField contentDisposition = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Disposition:"));
+				if(Header.Contains("Content-Disposition:")){
+					ParametizedHeaderField contentDisposition = new ParametizedHeaderField(Header.GetFirst("Content-Disposition:"));
 					if(contentDisposition.Parameters.Contains("filename")){
 						return MimeUtils.DecodeWords(contentDisposition.Parameters["filename"]);
 					}
@@ -926,11 +913,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{
-				if(!m_pHeader.Contains("Content-Disposition:")){
+				if(!Header.Contains("Content-Disposition:")){
 					throw new Exception("Please specify Content-Disposition first !");
 				}
 
-				ParametizedHeaderField contentType = new ParametizedHeaderField(m_pHeader.GetFirst("Content-Disposition:"));
+				ParametizedHeaderField contentType = new ParametizedHeaderField(Header.GetFirst("Content-Disposition:"));
 				if(contentType.Parameters.Contains("filename")){
 					contentType.Parameters["filename"] = MimeUtils.EncodeWord(value);
 				}
@@ -946,9 +933,9 @@ namespace LumiSoft.Net.Mime
 		public DateTime Date
 		{
 			get{ 
-				if(m_pHeader.Contains("Date:")){
+				if(Header.Contains("Date:")){
 					try{
-						return LumiSoft.Net.MIME.MIME_Utils.ParseRfc2822DateTime(m_pHeader.GetFirst("Date:").Value);
+						return LumiSoft.Net.MIME.MIME_Utils.ParseRfc2822DateTime(Header.GetFirst("Date:").Value);
 					}
 					catch{
 						return DateTime.MinValue;
@@ -960,11 +947,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Date:")){
-					m_pHeader.GetFirst("Date:").Value = LumiSoft.Net.MIME.MIME_Utils.DateTimeToRfc2822(value);
+				if(Header.Contains("Date:")){
+					Header.GetFirst("Date:").Value = LumiSoft.Net.MIME.MIME_Utils.DateTimeToRfc2822(value);
 				}
 				else{
-					m_pHeader.Add("Date:",MimeUtils.DateTimeToRfc2822(value));
+					Header.Add("Date:",MimeUtils.DateTimeToRfc2822(value));
 				}
 			}
 		}
@@ -976,8 +963,8 @@ namespace LumiSoft.Net.Mime
 		public string MessageID
 		{
 			get{
-				if(m_pHeader.Contains("Message-ID:")){
-					return m_pHeader.GetFirst("Message-ID:").Value;
+				if(Header.Contains("Message-ID:")){
+					return Header.GetFirst("Message-ID:").Value;
 				}
 				else{
 					return null;
@@ -985,11 +972,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Message-ID:")){
-					m_pHeader.GetFirst("Message-ID:").Value = value;
+				if(Header.Contains("Message-ID:")){
+					Header.GetFirst("Message-ID:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Message-ID:",value);
+					Header.Add("Message-ID:",value);
 				}
 			}
 		}
@@ -1000,7 +987,7 @@ namespace LumiSoft.Net.Mime
 		public AddressList To
 		{
 			get{ 
-				if(m_pHeader.Contains("To:")){
+				if(Header.Contains("To:")){
 					// There is already cached version, return it
 					if(m_pHeaderFieldCache.Contains("To:")){
 						return (AddressList)m_pHeaderFieldCache["To:"];
@@ -1008,7 +995,7 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 					else{
 						// Create and bound address-list to existing header field
-						HeaderField field = m_pHeader.GetFirst("To:");
+						HeaderField field = Header.GetFirst("To:");
 						AddressList list = new AddressList();
 						list.Parse(field.EncodedValue);
 						list.BoundedHeaderField = field;
@@ -1027,7 +1014,7 @@ namespace LumiSoft.Net.Mime
 			set{
 				// Just remove header field
 				if(value == null){
-					m_pHeader.Remove(m_pHeader.GetFirst("To:"));
+					Header.Remove(Header.GetFirst("To:"));
 					return;
 				}
 
@@ -1037,10 +1024,10 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField to = m_pHeader.GetFirst("To:");
+				HeaderField to = Header.GetFirst("To:");
 				if(to == null){
 					to = new HeaderField("To:",value.ToAddressListString());
-					m_pHeader.Add(to);
+					Header.Add(to);
 				}
                 else{
                     to.Value = value.ToAddressListString();
@@ -1057,7 +1044,7 @@ namespace LumiSoft.Net.Mime
 		public AddressList Cc
 		{
 			get{
-				if(m_pHeader.Contains("Cc:")){
+				if(Header.Contains("Cc:")){
 					// There is already cached version, return it
 					if(m_pHeaderFieldCache.Contains("Cc:")){
 						return (AddressList)m_pHeaderFieldCache["Cc:"];
@@ -1065,7 +1052,7 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 					else{
 						// Create and bound address-list to existing header field
-						HeaderField field = m_pHeader.GetFirst("Cc:");
+						HeaderField field = Header.GetFirst("Cc:");
 						AddressList list = new AddressList();
 						list.Parse(field.EncodedValue);
 						list.BoundedHeaderField = field;
@@ -1084,7 +1071,7 @@ namespace LumiSoft.Net.Mime
 			set{
 				// Just remove header field
 				if(value == null){
-					m_pHeader.Remove(m_pHeader.GetFirst("Cc:"));
+					Header.Remove(Header.GetFirst("Cc:"));
 					return;
 				}
 
@@ -1094,10 +1081,10 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField cc = m_pHeader.GetFirst("Cc:");
+				HeaderField cc = Header.GetFirst("Cc:");
 				if(cc == null){
 					cc = new HeaderField("Cc:",value.ToAddressListString());
-					m_pHeader.Add(cc);
+					Header.Add(cc);
 				}
                 else{
                     cc.Value = value.ToAddressListString();
@@ -1114,7 +1101,7 @@ namespace LumiSoft.Net.Mime
 		public AddressList Bcc
 		{
 			get{ 
-				if(m_pHeader.Contains("Bcc:")){
+				if(Header.Contains("Bcc:")){
 					// There is already cached version, return it
 					if(m_pHeaderFieldCache.Contains("Bcc:")){
 						return (AddressList)m_pHeaderFieldCache["Bcc:"];
@@ -1122,7 +1109,7 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 					else{
 						// Create and bound address-list to existing header field
-						HeaderField field = m_pHeader.GetFirst("Bcc:");
+						HeaderField field = Header.GetFirst("Bcc:");
 						AddressList list = new AddressList();
 						list.Parse(field.EncodedValue);
 						list.BoundedHeaderField = field;
@@ -1141,7 +1128,7 @@ namespace LumiSoft.Net.Mime
 			set{
 				// Just remove header field
 				if(value == null){
-					m_pHeader.Remove(m_pHeader.GetFirst("Bcc:"));
+					Header.Remove(Header.GetFirst("Bcc:"));
 					return;
 				}
 
@@ -1151,10 +1138,10 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField bcc = m_pHeader.GetFirst("Bcc:");
+				HeaderField bcc = Header.GetFirst("Bcc:");
 				if(bcc == null){
 					bcc = new HeaderField("Bcc:",value.ToAddressListString());
-					m_pHeader.Add(bcc);
+					Header.Add(bcc);
 				}
                 else{
                     bcc.Value = value.ToAddressListString();
@@ -1171,7 +1158,7 @@ namespace LumiSoft.Net.Mime
 		public AddressList From
 		{
 			get{  
-				if(m_pHeader.Contains("From:")){
+				if(Header.Contains("From:")){
 					// There is already cached version, return it
 					if(m_pHeaderFieldCache.Contains("From:")){
 						return (AddressList)m_pHeaderFieldCache["From:"];
@@ -1179,7 +1166,7 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 					else{
 						// Create and bound address-list to existing header field
-						HeaderField field = m_pHeader.GetFirst("From:");
+						HeaderField field = Header.GetFirst("From:");
 						AddressList list = new AddressList();
 						list.Parse(field.EncodedValue);                        
 						list.BoundedHeaderField = field;
@@ -1197,8 +1184,8 @@ namespace LumiSoft.Net.Mime
 
 			set{
 				// Just remove header field
-				if(value == null && m_pHeader.Contains("From:")){
-					m_pHeader.Remove(m_pHeader.GetFirst("From:"));
+				if(value == null && Header.Contains("From:")){
+					Header.Remove(Header.GetFirst("From:"));
 					return;
 				}
 
@@ -1208,10 +1195,10 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField from = m_pHeader.GetFirst("From:");
+				HeaderField from = Header.GetFirst("From:");
 				if(from == null){
 					from = new HeaderField("From:",value.ToAddressListString());
-					m_pHeader.Add(from);
+					Header.Add(from);
 				}
                 else{
                     from.Value = value.ToAddressListString();
@@ -1228,8 +1215,8 @@ namespace LumiSoft.Net.Mime
 		public MailboxAddress Sender
 		{
 			get{  
-				if(m_pHeader.Contains("Sender:")){
-					return MailboxAddress.Parse(m_pHeader.GetFirst("Sender:").EncodedValue);
+				if(Header.Contains("Sender:")){
+					return MailboxAddress.Parse(Header.GetFirst("Sender:").EncodedValue);
 				}
 				else{
 					return null;
@@ -1237,11 +1224,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Sender:")){
-					m_pHeader.GetFirst("Sender:").Value = value.ToMailboxAddressString();
+				if(Header.Contains("Sender:")){
+					Header.GetFirst("Sender:").Value = value.ToMailboxAddressString();
 				}
 				else{
-					m_pHeader.Add("Sender:",value.ToMailboxAddressString());
+					Header.Add("Sender:",value.ToMailboxAddressString());
 				}
 			}
 		}
@@ -1252,7 +1239,7 @@ namespace LumiSoft.Net.Mime
 		public AddressList ReplyTo
 		{
 			get{ 
-				if(m_pHeader.Contains("Reply-To:")){
+				if(Header.Contains("Reply-To:")){
 					// There is already cached version, return it
 					if(m_pHeaderFieldCache.Contains("Reply-To:")){
 						return (AddressList)m_pHeaderFieldCache["Reply-To:"];
@@ -1260,7 +1247,7 @@ namespace LumiSoft.Net.Mime
 					// These isn't cached version, we need to create it
 					else{
 						// Create and bound address-list to existing header field
-						HeaderField field = m_pHeader.GetFirst("Reply-To:");
+						HeaderField field = Header.GetFirst("Reply-To:");
 						AddressList list = new AddressList();
 						list.Parse(field.Value);
 						list.BoundedHeaderField = field;
@@ -1278,8 +1265,8 @@ namespace LumiSoft.Net.Mime
 
 			set{
 				// Just remove header field
-				if(value == null && m_pHeader.Contains("Reply-To:")){
-					m_pHeader.Remove(m_pHeader.GetFirst("Reply-To:"));
+				if(value == null && Header.Contains("Reply-To:")){
+					Header.Remove(Header.GetFirst("Reply-To:"));
 					return;
 				}
 
@@ -1289,10 +1276,10 @@ namespace LumiSoft.Net.Mime
 				}
 
 				// Bound address-list to To: header field. If header field doesn't exist, add it.
-				HeaderField replyTo = m_pHeader.GetFirst("Reply-To:");
+				HeaderField replyTo = Header.GetFirst("Reply-To:");
 				if(replyTo == null){
 					replyTo = new HeaderField("Reply-To:",value.ToAddressListString());
-					m_pHeader.Add(replyTo);
+					Header.Add(replyTo);
 				}
                 else{
                     replyTo.Value = value.ToAddressListString();
@@ -1309,8 +1296,8 @@ namespace LumiSoft.Net.Mime
 		public string InReplyTo
 		{
 			get{ 
-				if(m_pHeader.Contains("In-Reply-To:")){
-					return m_pHeader.GetFirst("In-Reply-To:").Value;
+				if(Header.Contains("In-Reply-To:")){
+					return Header.GetFirst("In-Reply-To:").Value;
 				}
 				else{
 					return null;
@@ -1318,11 +1305,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("In-Reply-To:")){
-					m_pHeader.GetFirst("In-Reply-To:").Value = value;
+				if(Header.Contains("In-Reply-To:")){
+					Header.GetFirst("In-Reply-To:").Value = value;
 				}
 				else{
-					m_pHeader.Add("In-Reply-To:",value);
+					Header.Add("In-Reply-To:",value);
 				}
 			}
 		}
@@ -1333,8 +1320,8 @@ namespace LumiSoft.Net.Mime
 		public string DSN
 		{
 			get{ 
-				if(m_pHeader.Contains("Disposition-Notification-To:")){
-					return m_pHeader.GetFirst("Disposition-Notification-To:").Value;
+				if(Header.Contains("Disposition-Notification-To:")){
+					return Header.GetFirst("Disposition-Notification-To:").Value;
 				}
 				else{
 					return null;
@@ -1342,11 +1329,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Disposition-Notification-To:")){
-					m_pHeader.GetFirst("Disposition-Notification-To:").Value = value;
+				if(Header.Contains("Disposition-Notification-To:")){
+					Header.GetFirst("Disposition-Notification-To:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Disposition-Notification-To:",value);
+					Header.Add("Disposition-Notification-To:",value);
 				}
 			}
 		}
@@ -1357,8 +1344,8 @@ namespace LumiSoft.Net.Mime
 		public string Subject
 		{
 			get{ 
-				if(m_pHeader.Contains("Subject:")){
-					return m_pHeader.GetFirst("Subject:").Value;
+				if(Header.Contains("Subject:")){
+					return Header.GetFirst("Subject:").Value;
 				}
 				else{
 					return null;
@@ -1366,11 +1353,11 @@ namespace LumiSoft.Net.Mime
 			}
 
 			set{ 
-				if(m_pHeader.Contains("Subject:")){
-					m_pHeader.GetFirst("Subject:").Value = value;
+				if(Header.Contains("Subject:")){
+					Header.GetFirst("Subject:").Value = value;
 				}
 				else{
-					m_pHeader.Add("Subject:",value);
+					Header.Add("Subject:",value);
 				}
 			}
 		}
@@ -1462,14 +1449,9 @@ namespace LumiSoft.Net.Mime
 		/// Set this value only if you need custom Content-Transfer-Encoding: what current Mime class won't support, other wise set data through this.Data property. 
 		/// Note: This property can be set only if Content-Type: isn't multipart.
 		/// </summary>
-		public byte[] DataEncoded
-		{
-			get{ return m_EncodedData; }
+		public byte[] DataEncoded { get; set; }
 
-			set{ m_EncodedData = value; }
-		}
-				
-		#endregion
+#endregion
 
 	}
 }

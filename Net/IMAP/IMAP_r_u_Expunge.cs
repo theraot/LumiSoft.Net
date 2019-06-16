@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Expunge : IMAP_r_u
     {
-        private readonly int m_SeqNo = 1;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Arguments 'seqNo' value must be >= 1.","seqNo");
             }
 
-            m_SeqNo = seqNo;
+            SeqNo = seqNo;
         }
 
 
@@ -96,7 +94,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * 44 EXPUNGE
 
-            return "* " + m_SeqNo.ToString() + " EXPUNGE\r\n";
+            return "* " + SeqNo.ToString() + " EXPUNGE\r\n";
         }
 
         #endregion
@@ -107,11 +105,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message sequence number.
         /// </summary>
-        public int SeqNo
-        {
-            get{ return m_SeqNo; }
-        }
+        public int SeqNo { get; } = 1;
 
-        #endregion
+#endregion
     }
 }

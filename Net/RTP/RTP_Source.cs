@@ -11,8 +11,7 @@ namespace LumiSoft.Net.RTP
     /// Source can be local(we send RTP and/or RTCP remote party) or remote(remote party sends RTP and/or RTCP to us).
     /// </remarks>
     public abstract class RTP_Source
-    {        
-        private RTP_SourceState      m_State          = RTP_SourceState.Passive;
+    {
         private RTP_Session          m_pSession;
         private uint                 m_SSRC;
         private IPEndPoint           m_pRtcpEP;
@@ -22,7 +21,6 @@ namespace LumiSoft.Net.RTP
         private DateTime             m_LastActivity   = DateTime.Now;
         private readonly DateTime             m_LastRRTime     = DateTime.MinValue;
         private string               m_CloseReason;
-        private object               m_pTag;
 
         /// <summary>
         /// Default constructor.
@@ -47,7 +45,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal virtual void Dispose()
         {   
-            if(m_State == RTP_SourceState.Disposed){
+            if(State == RTP_SourceState.Disposed){
                 return;
             }
             OnDisposing();
@@ -193,12 +191,12 @@ namespace LumiSoft.Net.RTP
         /// <param name="state">New source state.</param>
         protected void SetState(RTP_SourceState state)
         {
-            if(m_State == RTP_SourceState.Disposed){
+            if(State == RTP_SourceState.Disposed){
                 return;
             }
 
-            if(m_State != state){
-                m_State = state;
+            if(State != state){
+                State = state;
 
                 OnStateChaged();
             }
@@ -212,10 +210,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets source state.
         /// </summary>
-        public RTP_SourceState State
-        {
-            get{ return m_State; }
-        }
+        public RTP_SourceState State { get; private set; } = RTP_SourceState.Passive;
 
         /// <summary>
         /// Gets owner RTP session.
@@ -224,7 +219,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Session Session
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -239,7 +234,7 @@ namespace LumiSoft.Net.RTP
         public uint SSRC
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -254,7 +249,7 @@ namespace LumiSoft.Net.RTP
         public IPEndPoint RtcpEP
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -269,7 +264,7 @@ namespace LumiSoft.Net.RTP
         public IPEndPoint RtpEP
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -293,7 +288,7 @@ namespace LumiSoft.Net.RTP
         public DateTime LastActivity
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -308,7 +303,7 @@ namespace LumiSoft.Net.RTP
         public DateTime LastRtcpPacket
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -323,7 +318,7 @@ namespace LumiSoft.Net.RTP
         public DateTime LastRtpPacket
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -338,7 +333,7 @@ namespace LumiSoft.Net.RTP
         public DateTime LastRRTime
         {
             get{
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -353,7 +348,7 @@ namespace LumiSoft.Net.RTP
         public string CloseReason
         {
             get{ 
-                if(m_State == RTP_SourceState.Disposed){
+                if(State == RTP_SourceState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -364,12 +359,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
-
-            set{ m_pTag = value; }
-        }
+        public object Tag { get; set; }
 
 
         /// <summary>

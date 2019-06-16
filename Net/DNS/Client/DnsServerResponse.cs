@@ -9,18 +9,15 @@ namespace LumiSoft.Net.DNS.Client
     [Serializable]
 	public class DnsServerResponse
 	{
-		private readonly bool         m_Success             = true;
-        private readonly int          m_ID;
-		private readonly DNS_RCode    m_RCODE               = DNS_RCode.NO_ERROR;
-		private readonly List<DNS_rr> m_pAnswers;
+        private readonly List<DNS_rr> m_pAnswers;
 		private readonly List<DNS_rr> m_pAuthoritiveAnswers;
 		private readonly List<DNS_rr> m_pAdditionalAnswers;
 		
 		internal DnsServerResponse(bool connectionOk,int id,DNS_RCode rcode,List<DNS_rr> answers,List<DNS_rr> authoritiveAnswers,List<DNS_rr> additionalAnswers)
 		{
-			m_Success             = connectionOk;
-            m_ID                  = id;
-			m_RCODE               = rcode;	
+			ConnectionOk             = connectionOk;
+            ID                  = id;
+			ResponseCode               = rcode;	
 			m_pAnswers            = answers;
 			m_pAuthoritiveAnswers = authoritiveAnswers;
 			m_pAdditionalAnswers  = additionalAnswers;
@@ -300,29 +297,20 @@ namespace LumiSoft.Net.DNS.Client
 		/// <summary>
 		/// Gets if connection to dns server was successful.
 		/// </summary>
-		public bool ConnectionOk
-		{
-			get{ return m_Success; }
-		}
+		public bool ConnectionOk { get; } = true;
 
         /// <summary>
         /// Gets DNS transaction ID.
         /// </summary>
-        public int ID
-        {
-            get{ return m_ID; }
-        }
+        public int ID { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets dns server response code.
 		/// </summary>
-		public DNS_RCode ResponseCode
-		{
-			get{ return m_RCODE; }
-		}
+		public DNS_RCode ResponseCode { get; } = DNS_RCode.NO_ERROR;
 
-		
-		/// <summary>
+
+        /// <summary>
 		/// Gets all resource records returned by server (answer records section + authority records section + additional records section). 
 		/// NOTE: Before using this property ensure that ConnectionOk=true and ResponseCode=RCODE.NO_ERROR.
 		/// </summary>

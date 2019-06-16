@@ -9,9 +9,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_A : DNS_rr
 	{
-		private readonly IPAddress m_IP;
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -19,7 +17,7 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_A(string name,IPAddress ip,int ttl) : base(name,DNS_QType.A,ttl)
 		{
-			m_IP = ip;
+			IP = ip;
 		}
 
 
@@ -52,12 +50,9 @@ namespace LumiSoft.Net.DNS
 		/// <summary>
 		/// Gets host IP address.
 		/// </summary>
-		public IPAddress IP
-		{
-			get{ return m_IP; }
-		}
+		public IPAddress IP { get; }
 
-		#endregion
+#endregion
 
 	}
 }

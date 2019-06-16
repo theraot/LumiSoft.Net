@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Expunge : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private readonly IMAP_MessageInfo    m_pMsgInfo;
 
         /// <summary>
         /// Default constructor.
@@ -31,8 +29,8 @@ namespace LumiSoft.Net.IMAP.Server
             }
             
             m_pResponse = response;
-            m_Folder    = folder;
-            m_pMsgInfo  = msgInfo;
+            Folder    = folder;
+            MessageInfo  = msgInfo;
         }
 
 
@@ -58,19 +56,13 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets message info.
         /// </summary>
-        public IMAP_MessageInfo MessageInfo
-        {
-            get{ return m_pMsgInfo; }
-        }
+        public IMAP_MessageInfo MessageInfo { get; }
 
-        #endregion
+#endregion
     }
 }

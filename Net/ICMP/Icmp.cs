@@ -33,11 +33,9 @@ namespace LumiSoft.Net.ICMP
 	/// </summary>
 	public class EchoMessage
 	{
-		private readonly IPAddress m_pIP;
-		private readonly int       m_TTL;
-		private readonly int       m_Time;
-		
-		/// <summary>
+        private readonly int       m_TTL;
+
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="ip">IP address what sent echo message.</param>
@@ -45,9 +43,9 @@ namespace LumiSoft.Net.ICMP
 		/// <param name="time">Time what elapsed before getting echo response.</param>
 		internal EchoMessage(IPAddress ip,int ttl,int time)
 		{
-			m_pIP  = ip;
+			IPAddress  = ip;
 			m_TTL  = ttl;
-			m_Time = time;
+			ReplyTime = time;
 		}
 
 		/// <summary>
@@ -57,7 +55,7 @@ namespace LumiSoft.Net.ICMP
         [Obsolete("Will be removed !")]
 		public string ToStringEx()
 		{
-			return "TTL=" + m_TTL + "\tTime=" + m_Time + "ms" + "\tIP=" + m_pIP;
+			return "TTL=" + m_TTL + "\tTime=" + ReplyTime + "ms" + "\tIP=" + IPAddress;
 		}
 
 		/// <summary>
@@ -82,10 +80,7 @@ namespace LumiSoft.Net.ICMP
         /// <summary>
         /// Gets IP address what sent echo message.
         /// </summary>
-        public IPAddress IPAddress
-        {
-            get{ return m_pIP; }
-        }
+        public IPAddress IPAddress { get; }
         /*
         /// <summary>
         /// Gets time to live in milli seconds.
@@ -98,12 +93,9 @@ namespace LumiSoft.Net.ICMP
         /// <summary>
         /// Gets time in milliseconds what toke to get reply.
         /// </summary>
-        public int ReplyTime
-        {
-            get{ return m_Time; }
-        }
+        public int ReplyTime { get; }
 
-        #endregion
+#endregion
     }
 
     #endregion

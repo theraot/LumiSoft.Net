@@ -15,9 +15,6 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         private class CacheEntry
         {
-            private readonly DnsServerResponse m_pResponse;
-            private readonly DateTime          m_Expires;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -30,8 +27,8 @@ namespace LumiSoft.Net.DNS.Client
                     throw new ArgumentNullException("response");
                 }
 
-                m_pResponse = response;
-                m_Expires   = expires;
+                Response = response;
+                Expires   = expires;
             }
 
 
@@ -40,27 +37,19 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Gets DNS server response.
             /// </summary>
-            public DnsServerResponse Response
-            {
-                get{ return m_pResponse; }
-            }
+            public DnsServerResponse Response { get; }
 
             /// <summary>
             /// Gets time when cache entry expires.
             /// </summary>
-            public DateTime Expires
-            {
-                get{ return m_Expires; }
-            }
+            public DateTime Expires { get; }
 
-            #endregion
+#endregion
         }
 
         #endregion
 
         private Dictionary<string,CacheEntry> m_pCache;
-        private int                           m_MaxCacheTtl         = 86400;
-        private int                           m_MaxNegativeCacheTtl = 900;
         private TimerEx                       m_pTimerTimeout;
 
         /// <summary>
@@ -188,7 +177,7 @@ namespace LumiSoft.Net.DNS.Client
 			    }
 
                 if(response.ResponseCode == DNS_RCode.NO_ERROR){
-                    int ttl = m_MaxCacheTtl;
+                    int ttl = MaxCacheTtl;
                     // Search smallest DNS record TTL and use it.
                     foreach(DNS_rr rr in response.AllAnswers){
                         if(rr.TTL < ttl){
@@ -199,7 +188,7 @@ namespace LumiSoft.Net.DNS.Client
                     m_pCache.Add(qname + qtype,new CacheEntry(response,DateTime.Now.AddSeconds(ttl)));
                 }
                 else{
-                    m_pCache.Add(qname + qtype,new CacheEntry(response,DateTime.Now.AddSeconds(m_MaxNegativeCacheTtl)));
+                    m_pCache.Add(qname + qtype,new CacheEntry(response,DateTime.Now.AddSeconds(MaxNegativeCacheTtl)));
                 }
 			}
 		}
@@ -226,22 +215,12 @@ namespace LumiSoft.Net.DNS.Client
         /// <summary>
         /// Gets or sets maximum number of seconds to cache positive DNS responses.
         /// </summary>
-        public int MaxCacheTtl
-        {
-            get{ return m_MaxCacheTtl; }
-
-            set{ m_MaxCacheTtl = value; }
-        }
+        public int MaxCacheTtl { get; set; } = 86400;
 
         /// <summary>
         /// Gets or sets maximum number of seconds to cache negative DNS responses.
         /// </summary>
-        public int MaxNegativeCacheTtl
-        {
-            get{ return m_MaxNegativeCacheTtl; }
-
-            set{ m_MaxNegativeCacheTtl = value; }
-        }
+        public int MaxNegativeCacheTtl { get; set; } = 900;
 
         /// <summary>
         /// Gets number of DNS queries cached.

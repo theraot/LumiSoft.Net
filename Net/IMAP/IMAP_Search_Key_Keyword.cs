@@ -10,8 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages with the specified keyword flag set.</remarks>
     public class IMAP_Search_Key_Keyword : IMAP_Search_Key
     {
-        private readonly string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,7 +21,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -65,7 +63,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "KEYWORD " + m_Value;
+            return "KEYWORD " + Value;
         }
 
         #endregion
@@ -95,11 +93,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets keyword value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; } = "";
 
-        #endregion
+#endregion
     }
 }

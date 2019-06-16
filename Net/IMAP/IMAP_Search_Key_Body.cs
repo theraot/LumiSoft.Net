@@ -12,8 +12,6 @@ namespace LumiSoft.Net.IMAP
     /// </remarks>
     public class IMAP_Search_Key_Body : IMAP_Search_Key
     {
-        private readonly string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,7 +23,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -67,7 +65,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "BODY " + TextUtils.QuoteString(m_Value);
+            return "BODY " + TextUtils.QuoteString(Value);
         }
 
         #endregion
@@ -87,7 +85,7 @@ namespace LumiSoft.Net.IMAP
             }
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"BODY "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,m_Value));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
         }
 
         #endregion
@@ -98,11 +96,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets BODY filter value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; } = "";
 
-        #endregion
+#endregion
     }
 }

@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Capability : IMAP_t_orc
     {
-        private readonly string[] m_pCapabilities;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("capabilities");
             }
 
-            m_pCapabilities = capabilities;
+            Capabilities = capabilities;
         }
 
 
@@ -60,7 +58,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "CAPABILITY (" + Net_Utils.ArrayToString(m_pCapabilities," ") + ")";
+            return "CAPABILITY (" + Net_Utils.ArrayToString(Capabilities," ") + ")";
         }
 
         #endregion
@@ -71,11 +69,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets list of supported capabilities.
         /// </summary>
-        public string[] Capabilities
-        {
-            get{ return m_pCapabilities; }
-        }
+        public string[] Capabilities { get; }
 
-        #endregion
+#endregion
     }
 }

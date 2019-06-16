@@ -7,9 +7,6 @@ namespace LumiSoft.Net.FTP.Client
     /// </summary>
     public class FTP_ClientException : Exception
     {
-        private readonly int    m_StatusCode   = 500;
-        private readonly string m_ResponseText = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,12 +20,12 @@ namespace LumiSoft.Net.FTP.Client
 
             string[] code_text = responseLine.Split(new char[]{' '},2);
             try{
-                m_StatusCode = Convert.ToInt32(code_text[0]);
+                StatusCode = Convert.ToInt32(code_text[0]);
             }
             catch{
             }
             if(code_text.Length == 2){
-                m_ResponseText =  code_text[1];                
+                ResponseText =  code_text[1];                
             }
         }
 
@@ -38,18 +35,12 @@ namespace LumiSoft.Net.FTP.Client
         /// <summary>
         /// Gets FTP status code.
         /// </summary>
-        public int StatusCode
-        {
-            get{ return m_StatusCode; }
-        }
+        public int StatusCode { get; } = 500;
 
         /// <summary>
         /// Gets FTP server response text after status code.
         /// </summary>
-        public string ResponseText
-        {
-            get{ return m_ResponseText; }
-        }
+        public string ResponseText { get; } = "";
 
         /// <summary>
         /// Gets if it is permanent FTP(5xx) error.
@@ -57,7 +48,7 @@ namespace LumiSoft.Net.FTP.Client
         public bool IsPermanentError
         {
             get{
-                if(m_StatusCode >= 500 && m_StatusCode <= 599){
+                if(StatusCode >= 500 && StatusCode <= 599){
                     return true;
                 }
                 else{

@@ -8,14 +8,12 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABFN
     {
-        private readonly List<ABNF_Rule> m_pRules;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public ABFN()
         {
-            m_pRules = new List<ABNF_Rule>();
+            Rules = new List<ABNF_Rule>();
 
             Init();
         }
@@ -110,12 +108,9 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets ABNF rules collection.
         /// </summary>
-        public List<ABNF_Rule> Rules
-        {
-            get{ return m_pRules; }
-        }
+        public List<ABNF_Rule> Rules { get; }
 
-        #endregion
+#endregion
 
     }
 }

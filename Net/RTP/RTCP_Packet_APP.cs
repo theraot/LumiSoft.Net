@@ -8,18 +8,14 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_APP : RTCP_Packet
     {
         private int    m_Version = 2;
-        private int    m_SubType;
-        private uint   m_Source;
-        private string m_Name    = "";
-        private byte[] m_Data;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal RTCP_Packet_APP()
         {
-            m_Name = "xxxx";
-            m_Data = new byte[0];
+            Name = "xxxx";
+            Data = new byte[0];
         }
 
 
@@ -64,11 +60,11 @@ namespace LumiSoft.Net.RTP
                 this.PaddBytesCount = buffer[offset + length];
             }
 
-            m_SubType = subType;
-            m_Source  = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_Name    = ((char)buffer[offset++]).ToString() + ((char)buffer[offset++]).ToString() + ((char)buffer[offset++]).ToString() + ((char)buffer[offset++]).ToString();
-            m_Data    = new byte[length - 8];
-            Array.Copy(buffer,offset,m_Data,0,m_Data.Length);
+            SubType = subType;
+            Source  = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            Name    = ((char)buffer[offset++]).ToString() + ((char)buffer[offset++]).ToString() + ((char)buffer[offset++]).ToString() + ((char)buffer[offset++]).ToString();
+            Data    = new byte[length - 8];
+            Array.Copy(buffer,offset,Data,0,Data.Length);
         }
 
         #endregion
@@ -105,28 +101,28 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'offset' value must be >= 0.");
             }
 
-            int length = 8 + m_Data.Length;
+            int length = 8 + Data.Length;
 
             // V P subtype
-            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | m_SubType & 0x1F);
+            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | SubType & 0x1F);
             // PT=APP=204
             buffer[offset++] = 204;
             // length
             buffer[offset++] = (byte)((length >> 8) | 0xFF);
             buffer[offset++] = (byte)((length)      | 0xFF);
             // SSRC/CSRC            
-            buffer[offset++] = (byte)((m_Source >> 24) | 0xFF);
-            buffer[offset++] = (byte)((m_Source >> 16) | 0xFF);
-            buffer[offset++] = (byte)((m_Source >> 8)  | 0xFF);
-            buffer[offset++] = (byte)((m_Source)       | 0xFF);
+            buffer[offset++] = (byte)((Source >> 24) | 0xFF);
+            buffer[offset++] = (byte)((Source >> 16) | 0xFF);
+            buffer[offset++] = (byte)((Source >> 8)  | 0xFF);
+            buffer[offset++] = (byte)((Source)       | 0xFF);
             // name          
-            buffer[offset++] = (byte)m_Name[0];
-            buffer[offset++] = (byte)m_Name[1];
-            buffer[offset++] = (byte)m_Name[2];
-            buffer[offset++] = (byte)m_Name[2];
+            buffer[offset++] = (byte)Name[0];
+            buffer[offset++] = (byte)Name[1];
+            buffer[offset++] = (byte)Name[2];
+            buffer[offset++] = (byte)Name[2];
             // application-dependent data
-            Array.Copy(m_Data,0,buffer,offset,m_Data.Length);
-            offset += m_Data.Length;
+            Array.Copy(Data,0,buffer,offset,Data.Length);
+            offset += Data.Length;
         }
 
         #endregion
@@ -153,43 +149,29 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets subtype value.
         /// </summary>
-        public int SubType
-        {
-            get{ return m_SubType; }
-        }
+        public int SubType { get; private set; }
 
         /// <summary>
         /// Gets sender synchronization(SSRC) or contributing(CSRC) source identifier.
         /// </summary>
-        public uint Source
-        {
-            get{ return m_Source; }
-
-            set{ m_Source = value; }
-        }
+        public uint Source { get; set; }
 
         /// <summary>
         /// Gets 4 ASCII char packet name.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; private set; } = "";
 
         /// <summary>
         /// Gets application-dependent data.
         /// </summary>
-        public byte[] Data
-        {
-            get{ return m_Data; }
-        }
+        public byte[] Data { get; private set; }
 
         /// <summary>
         /// Gets number of bytes needed for this packet.
         /// </summary>
         public override int Size
         {
-            get{ return 12 + m_Data.Length; }
+            get{ return 12 + Data.Length; }
         }
 
         #endregion

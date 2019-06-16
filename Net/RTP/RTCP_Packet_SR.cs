@@ -9,12 +9,6 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_SR : RTCP_Packet
     {
         private int                           m_Version           = 2;
-        private uint                          m_SSRC;
-        private ulong                         m_NtpTimestamp;
-        private uint                          m_RtpTimestamp;
-        private uint                          m_SenderPacketCount;
-        private uint                          m_SenderOctetCount;
-        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks;
 
         /// <summary>
         /// Default constructor.
@@ -22,9 +16,9 @@ namespace LumiSoft.Net.RTP
         /// <param name="ssrc">Source(sender) ID.</param>
         internal RTCP_Packet_SR(uint ssrc)
         {
-            m_SSRC = ssrc;
+            SSRC = ssrc;
 
-            m_pReportBlocks = new List<RTCP_Packet_ReportBlock>();
+            ReportBlocks = new List<RTCP_Packet_ReportBlock>();
         }
 
         /// <summary>
@@ -32,7 +26,7 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal RTCP_Packet_SR()
         {
-            m_pReportBlocks = new List<RTCP_Packet_ReportBlock>();
+            ReportBlocks = new List<RTCP_Packet_ReportBlock>();
         }
 
 
@@ -101,16 +95,16 @@ namespace LumiSoft.Net.RTP
                 this.PaddBytesCount = buffer[offset + length];
             }
 
-            m_SSRC              = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_NtpTimestamp      = (ulong)(buffer[offset++] << 56 | buffer[offset++] << 48 | buffer[offset++] << 40 |buffer[offset++] << 32 | buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_RtpTimestamp      = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_SenderPacketCount = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
-            m_SenderOctetCount  = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            SSRC              = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            NtpTimestamp      = (ulong)(buffer[offset++] << 56 | buffer[offset++] << 48 | buffer[offset++] << 40 |buffer[offset++] << 32 | buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            RtpTimestamp      = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            SenderPacketCount = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            SenderOctetCount  = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
 
             for(int i=0;i<reportBlockCount;i++){
                 RTCP_Packet_ReportBlock reportBlock = new RTCP_Packet_ReportBlock();
                 reportBlock.Parse(buffer,offset);
-                m_pReportBlocks.Add(reportBlock);
+                ReportBlocks.Add(reportBlock);
                 offset += 24;
             }
         }
@@ -174,46 +168,46 @@ namespace LumiSoft.Net.RTP
             }
 
             // NOTE: Size in 32-bit boundary, header not included.
-            int length = (24 + (m_pReportBlocks.Count * 24)) / 4;
+            int length = (24 + (ReportBlocks.Count * 24)) / 4;
 
             // V P RC
-            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | (m_pReportBlocks.Count & 0x1F));
+            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | (ReportBlocks.Count & 0x1F));
             // PT=SR=200
             buffer[offset++] = 200;
             // length
             buffer[offset++] = (byte)((length >> 8) & 0xFF);
             buffer[offset++] = (byte)((length)      & 0xFF);
             // SSRC
-            buffer[offset++] = (byte)((m_SSRC >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_SSRC >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_SSRC >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((m_SSRC)       & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 24) & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 16) & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 8)  & 0xFF);
+            buffer[offset++] = (byte)((SSRC)       & 0xFF);
             // NTP timestamp
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 56) & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 48) & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 40) & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 32) & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((m_NtpTimestamp)       & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 56) & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 48) & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 40) & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 32) & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 24) & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 16) & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp >> 8)  & 0xFF);
+            buffer[offset++] = (byte)((NtpTimestamp)       & 0xFF);
             // RTP timestamp
-            buffer[offset++] = (byte)((m_RtpTimestamp >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_RtpTimestamp >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_RtpTimestamp >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((m_RtpTimestamp)       & 0xFF);
+            buffer[offset++] = (byte)((RtpTimestamp >> 24) & 0xFF);
+            buffer[offset++] = (byte)((RtpTimestamp >> 16) & 0xFF);
+            buffer[offset++] = (byte)((RtpTimestamp >> 8)  & 0xFF);
+            buffer[offset++] = (byte)((RtpTimestamp)       & 0xFF);
             // sender's packet count
-            buffer[offset++] = (byte)((m_SenderPacketCount >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_SenderPacketCount >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_SenderPacketCount >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((m_SenderPacketCount)       & 0xFF);
+            buffer[offset++] = (byte)((SenderPacketCount >> 24) & 0xFF);
+            buffer[offset++] = (byte)((SenderPacketCount >> 16) & 0xFF);
+            buffer[offset++] = (byte)((SenderPacketCount >> 8)  & 0xFF);
+            buffer[offset++] = (byte)((SenderPacketCount)       & 0xFF);
             // sender's octet count
-            buffer[offset++] = (byte)((m_SenderOctetCount >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_SenderOctetCount >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_SenderOctetCount >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((m_SenderOctetCount)       & 0xFF);
+            buffer[offset++] = (byte)((SenderOctetCount >> 24) & 0xFF);
+            buffer[offset++] = (byte)((SenderOctetCount >> 16) & 0xFF);
+            buffer[offset++] = (byte)((SenderOctetCount >> 8)  & 0xFF);
+            buffer[offset++] = (byte)((SenderOctetCount)       & 0xFF);
             // Report blocks
-            foreach(RTCP_Packet_ReportBlock block in m_pReportBlocks){
+            foreach(RTCP_Packet_ReportBlock block in ReportBlocks){
                 block.ToByte(buffer,ref offset);
             }
         }
@@ -242,65 +236,39 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets sender synchronization source identifier.
         /// </summary>
-        public uint SSRC
-        {
-            get{ return m_SSRC; }
-        }
+        public uint SSRC { get; private set; }
 
         /// <summary>
         /// Gets or sets the wallclock time (see Section 4) when this report was sent.
         /// </summary>
-        public ulong NtpTimestamp
-        {
-            get{ return m_NtpTimestamp; }
-
-            set{ m_NtpTimestamp = value; }
-        }
+        public ulong NtpTimestamp { get; set; }
 
         /// <summary>
         /// Gets RTP timestamp.
         /// </summary>
-        public uint RtpTimestamp
-        {
-            get{ return m_RtpTimestamp; }
-
-            set{ m_RtpTimestamp = value; }
-        }
+        public uint RtpTimestamp { get; set; }
 
         /// <summary>
         /// Gets how many packets sender has sent.
         /// </summary>
-        public uint SenderPacketCount
-        {
-            get{ return m_SenderPacketCount; }
-
-            set{ m_SenderPacketCount = value; }
-        }
+        public uint SenderPacketCount { get; set; }
 
         /// <summary>
         /// Gets how many bytes sender has sent.
         /// </summary>
-        public uint SenderOctetCount
-        {
-            get{ return m_SenderOctetCount; }
-
-            set{ m_SenderOctetCount = value; }
-        }
+        public uint SenderOctetCount { get; set; }
 
         /// <summary>
         /// Gets reports blocks.
         /// </summary>
-        public List<RTCP_Packet_ReportBlock> ReportBlocks
-        {
-            get{ return m_pReportBlocks; }
-        }
+        public List<RTCP_Packet_ReportBlock> ReportBlocks { get; }
 
         /// <summary>
         /// Gets number of bytes needed for this packet.
         /// </summary>
         public override int Size
         {
-            get{ return 28 + (24 * m_pReportBlocks.Count); }
+            get{ return 28 + (24 * ReportBlocks.Count); }
         }
 
         #endregion

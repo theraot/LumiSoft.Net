@@ -39,8 +39,7 @@ namespace LumiSoft.Net.SIP.Stack
         private Queue<SIP_Hop>          m_pHops;
         private SIP_ClientTransaction   m_pTransaction;
         private SIP_Flow                m_pFlow;
-        private object                  m_pTag;
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -702,14 +701,9 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
+        public object Tag { get; set; }
 
-            set{ m_pTag = value; }
-        }
-
-        #endregion
+#endregion
 
         #region Events implementation
 

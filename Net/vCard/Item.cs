@@ -10,10 +10,6 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class Item
     {
-        private readonly string m_Name       = "";
-        private string m_Parameters = "";
-        private string m_Value      = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -22,9 +18,9 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="value">Item encoded value value.</param>
         internal Item(string name,string parameters,string value)
         {
-            m_Name       = name;
-            m_Parameters = parameters;
-            m_Value      = value;
+            Name       = name;
+            ParametersString = parameters;
+            Value      = value;
         }
 
 
@@ -51,7 +47,7 @@ namespace LumiSoft.Net.Mime.vCard
             if(NeedEncode(value)){
                 // Remove encoding and charset parameters
                 string newParmString = "";
-                string[] parameters = m_Parameters.ToLower().Split(';');
+                string[] parameters = ParametersString.ToLower().Split(';');
                 foreach(string parameter in parameters){
                     string[] name_value = parameter.Split('=');
                     if(name_value[0] == "encoding" || name_value[0] == "charset"){                        
@@ -82,11 +78,11 @@ namespace LumiSoft.Net.Mime.vCard
         /// <returns></returns>
         internal string ToItemString()
         {
-            if(m_Parameters.Length > 0){
-                return m_Name + ";" + m_Parameters + ":" + FoldData(m_Value);
+            if(ParametersString.Length > 0){
+                return Name + ";" + ParametersString + ":" + FoldData(Value);
             }
             else{
-                return m_Name + ":" + FoldData(m_Value);
+                return Name + ":" + FoldData(Value);
             }
         }
 
@@ -182,32 +178,19 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gest item name.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
         /// Gets or sets item parameters.
         /// </summary>
-        public string ParametersString
-        {
-            get{ return m_Parameters; }
-
-            set{ m_Parameters = value; }
-        }
+        public string ParametersString { get; set; } = "";
 
         /// <summary>
         /// Gets or sets item encoded value. NOTE: If you set this property value, you must encode data 
         /// by yourself and also set right ENCODING=encoding; and CHARSET=charset; prameter in item.ParametersString !!!
         /// Normally use method item.SetDecodedStringValue method instead, this does all you need.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-
-            set{ m_Value = value; }
-        }
+        public string Value { get; set; } = "";
 
         /// <summary>
         /// Gets item decoded value. If param string specifies Encoding and/or Charset, 
@@ -223,10 +206,10 @@ namespace LumiSoft.Net.Mime.vCard
             */
 
             get{ 
-                string data     = m_Value;
+                string data     = Value;
                 string encoding = null;
                 string charset  = null;
-                string[] parameters = m_Parameters.ToLower().Split(';');
+                string[] parameters = ParametersString.ToLower().Split(';');
                 foreach(string parameter in parameters){
                     string[] name_value = parameter.Split('=');
                     if(name_value[0] == "encoding" && name_value.Length > 1){

@@ -69,9 +69,6 @@ namespace LumiSoft.Net.Media.Codec.Audio
 
         #endregion
 
-        private readonly AudioFormat m_pAudioFormat           = new AudioFormat(8000,16,1);
-        private readonly AudioFormat m_pCompressedAudioFormat = new AudioFormat(8000,8,1);
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -204,20 +201,14 @@ namespace LumiSoft.Net.Media.Codec.Audio
         /// <summary>
         /// Gets uncompressed audio format info.
         /// </summary>
-        public override AudioFormat AudioFormat
-        {
-            get{ return m_pAudioFormat; }
-        }
+        public override AudioFormat AudioFormat { get; } = new AudioFormat(8000,16,1);
 
         /// <summary>
         /// Gets compressed audio format info.
         /// </summary>
-        public override AudioFormat CompressedAudioFormat
-        {
-            get{ return m_pCompressedAudioFormat; }
-        }
+        public override AudioFormat CompressedAudioFormat { get; } = new AudioFormat(8000,8,1);
 
-        #endregion
+#endregion
 
     }
 }

@@ -10,15 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_SOA : DNS_rr
 	{
-		private readonly string m_NameServer = "";
-		private readonly string m_AdminEmail = "";
-		private readonly long   m_Serial;
-		private readonly long   m_Refresh;
-		private readonly long   m_Retry;
-		private readonly long   m_Expire;
-		private readonly long   m_Minimum;
-		
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -32,13 +24,13 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_SOA(string name,string nameServer,string adminEmail,long serial,long refresh,long retry,long expire,long minimum,int ttl) : base(name,DNS_QType.SOA,ttl)
 		{
-			m_NameServer = nameServer;
-			m_AdminEmail = adminEmail;
-			m_Serial     = serial;
-			m_Refresh    = refresh;
-			m_Retry      = retry;
-			m_Expire     = expire;
-			m_Minimum    = minimum;
+			NameServer = nameServer;
+			AdminEmail = adminEmail;
+			Serial     = serial;
+			Refresh    = refresh;
+			Retry      = retry;
+			Expire     = expire;
+			Minimum    = minimum;
 		}
 
 
@@ -149,60 +141,39 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets name server.
 		/// </summary>
-		public string NameServer
-		{
-			get{ return m_NameServer; }
-		}
+		public string NameServer { get; } = "";
 
-		/// <summary>
+        /// <summary>
 		/// Gets zone administrator email.
 		/// </summary>
-		public string AdminEmail
-		{
-			get{ return m_AdminEmail; }
-		}
+		public string AdminEmail { get; } = "";
 
-		/// <summary>
+        /// <summary>
 		/// Gets version number of the original copy of the zone.
 		/// </summary>
-		public long Serial
-		{
-			get{ return m_Serial; }
-		}
+		public long Serial { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets time interval(in seconds) before the zone should be refreshed.
 		/// </summary>
-		public long Refresh
-		{
-			get{ return m_Refresh; }
-		}
+		public long Refresh { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets time interval(in seconds) that should elapse before a failed refresh should be retried.
 		/// </summary>
-		public long Retry
-		{
-			get{ return m_Retry; }
-		}
+		public long Retry { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets time value(in seconds) that specifies the upper limit on the time interval that can elapse before the zone is no longer authoritative.
 		/// </summary>
-		public long Expire
-		{
-			get{ return m_Expire; }
-		}
+		public long Expire { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets minimum TTL(in seconds) field that should be exported with any RR from this zone. 
 		/// </summary>
-		public long Minimum
-		{
-			get{ return m_Minimum; }
-		}
+		public long Minimum { get; }
 
-		#endregion
+#endregion
 
 	}
 }

@@ -11,9 +11,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_Registration
     {
-        private readonly DateTime                      m_CreateTime;
-        private readonly string                        m_UserName  = "";
-        private readonly string                        m_AOR       = "";
         private readonly List<SIP_RegistrationBinding> m_pBindings;
         private readonly object                        m_pLock     = new object();
 
@@ -35,10 +32,10 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentException("Argument 'aor' value must be specified.");
             }
 
-            m_UserName = userName;
-            m_AOR      = aor;
+            UserName = userName;
+            AOR      = aor;
 
-            m_CreateTime = DateTime.Now;
+            CreateTime = DateTime.Now;
             m_pBindings  = new List<SIP_RegistrationBinding>();
         }
 
@@ -175,26 +172,17 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets time when this registration entry was created.
         /// </summary>
-        public DateTime CreateTime
-        {
-            get{ return m_CreateTime; }
-        }
+        public DateTime CreateTime { get; }
 
         /// <summary>
         /// Gets user name who owns this registration.
         /// </summary>
-        public string UserName
-        {
-            get{ return m_UserName; }
-        }
-        
+        public string UserName { get; } = "";
+
         /// <summary>
         /// Gets registration address of record.
         /// </summary>
-        public string AOR
-        {
-            get{ return m_AOR; }
-        }
+        public string AOR { get; } = "";
 
         /// <summary>
         /// Gets this registration priority ordered bindings.

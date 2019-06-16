@@ -8,10 +8,6 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_GetDirListing : EventArgs
     {
-        private readonly string             m_Path;
-        private readonly List<FTP_ListItem> m_pItems;
-        private FTP_t_ReplyLine[]  m_pReplyLines;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,9 +19,9 @@ namespace LumiSoft.Net.FTP.Server
                 throw new ArgumentNullException("path");
             }
 
-            m_Path = path;
+            Path = path;
 
-            m_pItems = new List<FTP_ListItem>();
+            Items = new List<FTP_ListItem>();
         }
 
 
@@ -34,29 +30,18 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// Gets or sets error response.
         /// </summary>
-        public FTP_t_ReplyLine[] Error
-        {
-            get{ return m_pReplyLines; }
-
-            set{ m_pReplyLines = value; }
-        }
+        public FTP_t_ReplyLine[] Error { get; set; }
 
         /// <summary>
         /// Gets path which list items to get.
         /// </summary>
-        public string Path
-        {
-            get{ return m_Path; }
-        }
+        public string Path { get; }
 
         /// <summary>
         /// Gets directory list items.
         /// </summary>
-        public List<FTP_ListItem> Items
-        {
-            get{ return m_pItems; }
-        }
+        public List<FTP_ListItem> Items { get; }
 
-        #endregion
+#endregion
     }
 }

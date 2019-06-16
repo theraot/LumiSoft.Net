@@ -9,18 +9,7 @@ namespace LumiSoft.Net.AUTH
     public class AUTH_SASL_DigestMD5_Response
     {
         private readonly AUTH_SASL_DigestMD5_Challenge m_pChallenge;
-        private string                        m_UserName;
         private string                        m_Password;
-        private string                        m_Realm;
-        private string                        m_Nonce;
-        private string                        m_Cnonce;
-        private int                           m_NonceCount;
-        private string                        m_Qop;
-        private string                        m_DigestUri;
-        private string                        m_Response;
-        private string                        m_Charset;
-        private string                        m_Cipher;
-        private string                        m_Authzid;
 
         /// <summary>
         /// Default constructor.
@@ -59,16 +48,16 @@ namespace LumiSoft.Net.AUTH
             }
 
             m_pChallenge = challenge;
-            m_Realm      = realm;
-            m_UserName   = userName;
+            Realm      = realm;
+            UserName   = userName;
             m_Password   = password;
-            m_Nonce      = m_pChallenge.Nonce;
-            m_Cnonce     = cnonce;
-            m_NonceCount = nonceCount;
-            m_Qop        = qop;
-            m_DigestUri  = digestUri;                        
-            m_Response   = CalculateResponse(userName,password);
-            m_Charset    = challenge.Charset;
+            Nonce      = m_pChallenge.Nonce;
+            Cnonce     = cnonce;
+            NonceCount = nonceCount;
+            Qop        = qop;
+            DigestUri  = digestUri;                        
+            Response   = CalculateResponse(userName,password);
+            Charset    = challenge.Charset;
         }
 
         /// <summary>
@@ -130,7 +119,7 @@ namespace LumiSoft.Net.AUTH
             AUTH_SASL_DigestMD5_Response retVal = new AUTH_SASL_DigestMD5_Response();
 
             // Set default values.
-            retVal.m_Realm = "";
+            retVal.Realm = "";
 
             string[] parameters = TextUtils.SplitQuotedString(digestResponse,',');
             foreach(string parameter in parameters){
@@ -139,37 +128,37 @@ namespace LumiSoft.Net.AUTH
 
                 if(name_value.Length == 2){
                     if(name.ToLower() == "username"){
-                        retVal.m_UserName = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.UserName = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "realm"){
-                        retVal.m_Realm = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Realm = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "nonce"){            
-                        retVal.m_Nonce = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Nonce = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "cnonce"){
-                        retVal.m_Cnonce = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Cnonce = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "nc"){
-                        retVal.m_NonceCount = Int32.Parse(TextUtils.UnQuoteString(name_value[1]),System.Globalization.NumberStyles.HexNumber);
+                        retVal.NonceCount = Int32.Parse(TextUtils.UnQuoteString(name_value[1]),System.Globalization.NumberStyles.HexNumber);
                     }
                     else if(name.ToLower() == "qop"){
-                        retVal.m_Qop = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Qop = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "digest-uri"){
-                        retVal.m_DigestUri = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.DigestUri = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "response"){
-                        retVal.m_Response = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Response = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "charset"){
-                        retVal.m_Charset = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Charset = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "cipher"){
-                        retVal.m_Cipher = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Cipher = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if(name.ToLower() == "authzid"){
-                        retVal.m_Authzid = TextUtils.UnQuoteString(name_value[1]);
+                        retVal.Authzid = TextUtils.UnQuoteString(name_value[1]);
                     }
                 }
             }
@@ -343,7 +332,7 @@ namespace LumiSoft.Net.AUTH
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return "rspauth=" + hex(kd(hex(h(a1(userName,password))),m_Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2))));
+                return "rspauth=" + hex(kd(hex(h(a1(userName,password))),Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2))));
             }
             else{
                 throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
@@ -430,7 +419,7 @@ namespace LumiSoft.Net.AUTH
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return hex(kd(hex(h(a1(userName,password))),m_Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2()))));
+                return hex(kd(hex(h(a1(userName,password))),Nonce + ":" + this.NonceCount.ToString("x8") + ":" + this.Cnonce + ":" + this.Qop + ":" + hex(h(a2()))));
             }
             else{
                 throw new ArgumentException("Invalid 'qop' value '" + this.Qop + "'.");
@@ -465,7 +454,7 @@ namespace LumiSoft.Net.AUTH
   
             if(string.IsNullOrEmpty(this.Authzid)){
                 byte[] user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
-                byte[] nonce_cnonce   = Encoding.UTF8.GetBytes(":" + m_Nonce + ":" + this.Cnonce);
+                byte[] nonce_cnonce   = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce);
 
                 byte[] retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
                 Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
@@ -475,7 +464,7 @@ namespace LumiSoft.Net.AUTH
             }
             else{
                 byte[] user_realm_pwd       = h(Encoding.UTF8.GetBytes(userName + ":" + this.Realm + ":" + password));
-                byte[] nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + m_Nonce + ":" + this.Cnonce + ":" + this.Authzid);
+                byte[] nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + this.Cnonce + ":" + this.Authzid);
 
                 byte[] retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
                 Array.Copy(user_realm_pwd,0,retVal,0,user_realm_pwd.Length);
@@ -573,91 +562,58 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user name.
         /// </summary>
-        public string UserName
-        {
-            get{ return m_UserName; }
-        }
+        public string UserName { get; private set; }
 
         /// <summary>
         /// Gets realm(domain) name.
         /// </summary>
-        public string Realm
-        {
-            get{ return m_Realm; }
-        }
+        public string Realm { get; private set; }
 
         /// <summary>
         /// Gets nonce value.
         /// </summary>
-        public string Nonce
-        {
-            get{ return m_Nonce; }
-        }
+        public string Nonce { get; private set; }
 
         /// <summary>
         /// Gets cnonce value.
         /// </summary>
-        public string Cnonce
-        {
-            get{ return m_Cnonce; }
-        }
+        public string Cnonce { get; private set; }
 
         /// <summary>
         /// Gets nonce count.
         /// </summary>
-        public int NonceCount
-        {
-            get{ return m_NonceCount; }
-        }
+        public int NonceCount { get; private set; }
 
         /// <summary>
         /// Gets "quality of protection" value.
         /// </summary>
-        public string Qop
-        {
-            get{ return m_Qop; }
-        }
+        public string Qop { get; private set; }
 
         /// <summary>
         /// Gets digest URI value.
         /// </summary>
-        public string DigestUri
-        {
-            get{ return m_DigestUri; }
-        }
+        public string DigestUri { get; private set; }
 
         /// <summary>
         /// Gets response value.
         /// </summary>
-        public string Response
-        {
-            get{ return m_Response; }
-        }
+        public string Response { get; private set; }
 
         /// <summary>
         /// Gets charset value.
         /// </summary>
-        public string Charset
-        {
-            get{ return m_Charset; }
-        }
+        public string Charset { get; private set; }
 
         /// <summary>
         /// Gets cipher value.
         /// </summary>
-        public string Cipher
-        {
-            get{ return m_Cipher; }
-        }
+        public string Cipher { get; private set; }
 
         /// <summary>
         /// Gets authorization ID.
         /// </summary>
-        public string Authzid
-        {
-            get{ return m_Authzid; }
-        }
+        public string Authzid { get; private set; }
 
-        #endregion
+#endregion
     }
 }

@@ -13,36 +13,27 @@ namespace LumiSoft.Net.DNS.Client
     [Serializable]
 	internal struct DnsCacheEntry
 	{
-		private readonly DnsServerResponse m_pResponse;
-		private readonly DateTime          m_Time;
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="answers">Dns answers.</param>
 		/// <param name="addTime">Entry add time.</param>
 		public DnsCacheEntry(DnsServerResponse answers,DateTime addTime)
 		{
-			m_pResponse = answers;
-			m_Time      = addTime;
+			Answers = answers;
+			Time      = addTime;
 		}
 
 		/// <summary>
 		/// Gets dns answers.
 		/// </summary>
-		public DnsServerResponse Answers
-		{
-			get{ return m_pResponse; }
-		}
+		public DnsServerResponse Answers { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets entry add time.
 		/// </summary>
-		public DateTime Time
-		{
-			get{ return m_Time; }
-		}
-	}
+		public DateTime Time { get; }
+    }
 
 	#endregion
 
@@ -53,9 +44,8 @@ namespace LumiSoft.Net.DNS.Client
 	public class DnsCache
 	{
 		private static Hashtable m_pCache;
-		private static long      m_CacheTime = 10000;
 
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		static DnsCache()
@@ -79,7 +69,7 @@ namespace LumiSoft.Net.DNS.Client
 					DnsCacheEntry entry = (DnsCacheEntry)m_pCache[qname + qtype];
 
 					// If cache object isn't expired
-					if(entry.Time.AddSeconds(m_CacheTime) > DateTime.Now){
+					if(entry.Time.AddSeconds(CacheTime) > DateTime.Now){
 						return entry.Answers;
 					}
 				}
@@ -180,14 +170,9 @@ namespace LumiSoft.Net.DNS.Client
 		/// <summary>
 		/// Gets or sets how long(seconds) to cache dns query.
 		/// </summary>
-		public static long CacheTime
-		{
-			get{ return m_CacheTime; }
+		public static long CacheTime { get; set; } = 10000;
 
-			set{ m_CacheTime = value; }
-		}
-
-		#endregion
+#endregion
 
 	}
 }

@@ -24,8 +24,6 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_Server : IDisposable
     {
-        private bool                                 m_IsDisposed;
-        private bool                                 m_IsRunning;
         private IPBindInfo[]                         m_pBindings             = new IPBindInfo[0];
         private bool                                 m_HasBindingsChanged;
         private Relay_Mode                           m_RelayMode             = Relay_Mode.Dns;
@@ -41,7 +39,6 @@ namespace LumiSoft.Net.SMTP.Relay
         private Dictionary<IPAddress,long>           m_pConnectionsPerIP;
         private int                                  m_SessionIdleTimeout    = 30;
         private TimerEx                              m_pTimerTimeout;
-        private Logger                               m_pLogger;
 
         /// <summary>
         /// Default constructor.
@@ -60,17 +57,17 @@ namespace LumiSoft.Net.SMTP.Relay
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
             try{
-                if(m_IsRunning){
+                if(IsRunning){
                     Stop();
                 }
             }
             catch{
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             // Release events.
             this.Error = null;
@@ -126,13 +123,13 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public virtual void Start()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
-            if(m_IsRunning){
+            if(IsRunning){
                 return;
             }
-            m_IsRunning = true;
+            IsRunning = true;
 
             m_pLocalEndPointIPv4 = new CircleCollection<IPBindInfo>();
             m_pLocalEndPointIPv6 = new CircleCollection<IPBindInfo>();
@@ -157,13 +154,13 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public virtual void Stop()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
-            if(!m_IsRunning){
+            if(!IsRunning){
                 return;
             }
-            m_IsRunning = false;
+            IsRunning = false;
 
             // TODO: We need to send notify to all not processed messages, then they can be Disposed as needed.
                         
@@ -187,7 +184,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// </summary>
         private void Run()
         {
-            while(m_IsRunning){
+            while(IsRunning){
                 try{
                     // Bind info has changed, create new local end points.
                     if(m_HasBindingsChanged){
@@ -436,18 +433,12 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets if server is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets if server is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get{ return m_IsRunning; }
-        }
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Gets or sets relay server IP bindings.
@@ -456,7 +447,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public IPBindInfo[] Bindings
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -464,7 +455,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(value == null){
@@ -499,7 +490,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public Relay_Mode RelayMode
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -507,7 +498,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -522,7 +513,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public List<Relay_Queue> Queues
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -537,7 +528,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public BalanceMode SmartHostsBalanceMode
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -545,7 +536,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -561,7 +552,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public Relay_SmartHost[] SmartHosts
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -569,7 +560,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(value == null){
@@ -588,7 +579,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public long MaxConnections
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -596,7 +587,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(value < 0){
@@ -614,7 +605,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public long MaxConnectionsPerIP
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -622,7 +613,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(m_MaxConnectionsPerIP < 0){
@@ -641,14 +632,14 @@ namespace LumiSoft.Net.SMTP.Relay
         public int SessionIdleTimeout
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
                 return m_SessionIdleTimeout;
             }
 
-            set{if(m_IsDisposed){
+            set{if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(m_SessionIdleTimeout < 0){
@@ -667,10 +658,10 @@ namespace LumiSoft.Net.SMTP.Relay
         public TCP_SessionCollection<Relay_Session> Sessions
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(!m_IsRunning){
+                if(!IsRunning){
                     throw new InvalidOperationException("Relay server not running.");
                 }
 
@@ -681,12 +672,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets or sets relay logger. Value null means no logging.
         /// </summary>
-        public Logger Logger
-        {
-            get{ return m_pLogger; }
-
-            set{ m_pLogger = value; }
-        }
+        public Logger Logger { get; set; }
 
         /// <summary>
         /// Gets or stes DNS client.
@@ -696,7 +682,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public Dns_Client DnsClient
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -704,7 +690,7 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(value == null){

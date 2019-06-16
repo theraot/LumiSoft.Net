@@ -8,8 +8,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_t_AddressParam : SIP_t_ValueWithParams
     {
-        private SIP_t_NameAddress m_pAddress;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -59,7 +57,7 @@ namespace LumiSoft.Net.SIP.Message
             // Parse address
             SIP_t_NameAddress address = new SIP_t_NameAddress();
             address.Parse(reader);
-            m_pAddress = address;
+            Address = address;
 
             // Parse parameters.
             ParseParameters(reader);
@@ -78,7 +76,7 @@ namespace LumiSoft.Net.SIP.Message
             StringBuilder retVal = new StringBuilder();
             
             // Add address
-            retVal.Append(m_pAddress.ToStringValue());
+            retVal.Append(Address.ToStringValue());
 
             // Add parameters
             foreach(SIP_Parameter parameter in this.Parameters){
@@ -101,12 +99,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets address.
         /// </summary>
-        public SIP_t_NameAddress Address
-        {
-            get{ return m_pAddress; }
-        }
+        public SIP_t_NameAddress Address { get; private set; }
 
-        #endregion
+#endregion
 
     }
 }

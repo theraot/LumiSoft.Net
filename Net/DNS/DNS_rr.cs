@@ -5,11 +5,7 @@ namespace LumiSoft.Net.DNS
     /// </summary>
     public abstract class DNS_rr
 	{
-        private readonly string    m_Name = "";
-		private readonly DNS_QType m_Type = DNS_QType.A;
-		private readonly int       m_TTL  = -1;
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -17,9 +13,9 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL (time to live) value in seconds.</param>
 		public DNS_rr(string name,DNS_QType recordType,int ttl)
 		{
-            m_Name = name;
-			m_Type = recordType;
-			m_TTL  = ttl;
+            Name = name;
+			RecordType = recordType;
+			TTL  = ttl;
         }
 
 
@@ -28,27 +24,18 @@ namespace LumiSoft.Net.DNS
         /// <summary>
         /// Gets DNS domain name that owns a resource record.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
 		/// Gets record type (A,MX,...).
 		/// </summary>
-		public DNS_QType RecordType
-		{
-			get{ return m_Type; }
-		}
+		public DNS_QType RecordType { get; } = DNS_QType.A;
 
-		/// <summary>
+        /// <summary>
 		/// Gets TTL (time to live) value in seconds.
 		/// </summary>
-		public int TTL
-		{
-			get{ return m_TTL; }
-		}
+		public int TTL { get; } = -1;
 
-		#endregion
+#endregion
 	}
 }

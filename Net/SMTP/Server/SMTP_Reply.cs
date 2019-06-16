@@ -8,9 +8,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_Reply
     {
-        private readonly int      m_ReplyCode;
-        private readonly string[] m_pReplyLines;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -44,8 +41,8 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentException("Argument 'replyLines' must conatin at least one line.","replyLines");
             }
 
-            m_ReplyCode   = replyCode;
-            m_pReplyLines = replyLines;
+            ReplyCode   = replyCode;
+            ReplyLines = replyLines;
         }
 
 
@@ -58,13 +55,13 @@ namespace LumiSoft.Net.SMTP.Server
         public override string ToString()
         {
             StringBuilder retVal = new StringBuilder();
-            for(int i=0;i<m_pReplyLines.Length;i++){
+            for(int i=0;i<ReplyLines.Length;i++){
                 // Last line.
-                if(i == (m_pReplyLines.Length - 1)){
-                    retVal.Append(m_ReplyCode + " " + m_pReplyLines[i] + "\r\n");
+                if(i == (ReplyLines.Length - 1)){
+                    retVal.Append(ReplyCode + " " + ReplyLines[i] + "\r\n");
                 }
                 else{
-                    retVal.Append(m_ReplyCode + "-" + m_pReplyLines[i] + "\r\n");
+                    retVal.Append(ReplyCode + "-" + ReplyLines[i] + "\r\n");
                 }
             }
 
@@ -79,19 +76,13 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets SMTP server reply code.
         /// </summary>
-        public int ReplyCode
-        {
-            get{ return m_ReplyCode; }
-        }
+        public int ReplyCode { get; }
 
         /// <summary>
         /// Gets SMTP server reply lines.
         /// </summary>
-        public string[] ReplyLines
-        {
-            get{ return m_pReplyLines; }
-        }
+        public string[] ReplyLines { get; }
 
-        #endregion
+#endregion
     }
 }

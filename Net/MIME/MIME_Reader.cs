@@ -10,9 +10,8 @@ namespace LumiSoft.Net.MIME
     public class MIME_Reader
     {
         private readonly string m_Source = "";
-        private int    m_Offset;
 
-        #region constants
+#region constants
 
         private static readonly char[] atextChars = new char[]{'!','#','$','%','&','\'','*','+','-','/','=','?','^','_','`','{','|','}','~'};
 
@@ -279,11 +278,11 @@ namespace LumiSoft.Net.MIME
 
             StringBuilder retVal = new StringBuilder();
             while(true){
-                Match match = encodedword_regex.Match(m_Source,m_Offset);
-                if(match.Success && match.Index == m_Offset){
-                    string encodedWord = m_Source.Substring(m_Offset,match.Length);
+                Match match = encodedword_regex.Match(m_Source,Position);
+                if(match.Success && match.Index == Position){
+                    string encodedWord = m_Source.Substring(Position,match.Length);
                     // Move index over encoded-word.
-                    m_Offset += match.Length;
+                    Position += match.Length;
 
                     try{
                         if(string.Equals(match.Groups["encoding"].Value,"Q",StringComparison.InvariantCultureIgnoreCase)){
@@ -307,8 +306,8 @@ namespace LumiSoft.Net.MIME
                 }
 
                 // We have continuos encoded-word.
-                match = encodedword_regex.Match(m_Source,m_Offset);
-                if(match.Success && match.Index == m_Offset){
+                match = encodedword_regex.Match(m_Source,Position);
+                if(match.Success && match.Index == Position){
                     ToFirstChar();
                 }
                 // encoded-word does not continue.
@@ -488,18 +487,18 @@ namespace LumiSoft.Net.MIME
             StringBuilder retVal = new StringBuilder();
             while(true){
                 int peekChar = -1;
-                if(m_Offset > m_Source.Length - 1){
+                if(Position > m_Source.Length - 1){
                     peekChar = -1;
                 }
                 else{
-                    peekChar = m_Source[m_Offset];
+                    peekChar = m_Source[Position];
                 }
                 // We reached end of string.
                 if(peekChar == -1){
                     break;
                 }
                 else if(peekChar == ' ' || peekChar == '\t' || peekChar == '\r' || peekChar == '\n'){
-                    retVal.Append(m_Source[m_Offset++]);
+                    retVal.Append(m_Source[Position++]);
                 }
                 else{
                     break;
@@ -524,11 +523,11 @@ namespace LumiSoft.Net.MIME
                 ToFirstChar();
             }
 
-            if(m_Offset > m_Source.Length - 1){
+            if(Position > m_Source.Length - 1){
                 return -1;
             }
             else{
-                return m_Source[m_Offset++];
+                return m_Source[Position++];
             }
         }
 
@@ -547,11 +546,11 @@ namespace LumiSoft.Net.MIME
                 ToFirstChar();
             }
 
-            if(m_Offset > m_Source.Length - 1){
+            if(Position > m_Source.Length - 1){
                 return -1;
             }
             else{
-                return m_Source[m_Offset];
+                return m_Source[Position];
             }
         }
 
@@ -571,7 +570,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentNullException("value");
             }
 
-            return m_Source.Substring(m_Offset).StartsWith(value,StringComparison.InvariantCultureIgnoreCase);
+            return m_Source.Substring(Position).StartsWith(value,StringComparison.InvariantCultureIgnoreCase);
         }
 
         #endregion
@@ -584,12 +583,12 @@ namespace LumiSoft.Net.MIME
         /// <returns>Retruns readed data. Returns null if end of string is reached.</returns>
         public string ToEnd()
         {
-            if(m_Offset >= m_Source.Length){
+            if(Position >= m_Source.Length){
                 return null;
             }
 
-            string retVal = m_Source.Substring(m_Offset);
-            m_Offset = m_Source.Length;
+            string retVal = m_Source.Substring(Position);
+            Position = m_Source.Length;
 
             return retVal;
         }
@@ -791,31 +790,31 @@ namespace LumiSoft.Net.MIME
 			char startingChar = ' ';
 			char closingChar  = ' ';
 
-			if(m_Source[m_Offset] == '{'){
+			if(m_Source[Position] == '{'){
 				startingChar = '{';
 				closingChar = '}';
 			}
-			else if(m_Source[m_Offset] == '('){
+			else if(m_Source[Position] == '('){
 				startingChar = '(';
 				closingChar = ')';
 			}			
-			else if(m_Source[m_Offset] == '['){
+			else if(m_Source[Position] == '['){
 				startingChar = '[';
 				closingChar = ']';
 			}						
-			else if(m_Source[m_Offset] == '<'){
+			else if(m_Source[Position] == '<'){
 				startingChar = '<';
 				closingChar = '>';
 			}
 			else{
-				throw new Exception("No parenthesized value '" + m_Source.Substring(m_Offset) + "' !");
+				throw new Exception("No parenthesized value '" + m_Source.Substring(Position) + "' !");
 			}
-            m_Offset++;
+            Position++;
 
 			bool inQuotedString            = false; // Holds flag if position is quoted string or not
 			char lastChar                  = (char)0;
 			int  nestedStartingCharCounter = 0;
-			for(int i=m_Offset;i<m_Source.Length;i++){
+			for(int i=Position;i<m_Source.Length;i++){
 				// Skip escaped(\) "
 				if(lastChar != '\\' && m_Source[i] == '\"'){
 					// Start/end quoted string area
@@ -831,8 +830,8 @@ namespace LumiSoft.Net.MIME
 					else if(m_Source[i] == closingChar){
 						// There isn't nested parenthesis closing chars left, this is closing char what we want.
 						if(nestedStartingCharCounter == 0){
-                            string retVal = m_Source.Substring(m_Offset,i - m_Offset);
-                            m_Offset = i + 1;
+                            string retVal = m_Source.Substring(Position,i - Position);
+                            Position = i + 1;
 
 				            return retVal;
 						}
@@ -846,7 +845,7 @@ namespace LumiSoft.Net.MIME
 				lastChar = m_Source[i];
 			}
 
-			throw new ArgumentException("There is no closing parenthesize for '" + m_Source.Substring(m_Offset) + "' !");
+			throw new ArgumentException("There is no closing parenthesize for '" + m_Source.Substring(Position) + "' !");
 		}
 
 		#endregion
@@ -876,7 +875,7 @@ namespace LumiSoft.Net.MIME
 			bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
 			char          lastChar           = (char)0;
 
-			for(int i=m_Offset;i<m_Source.Length;i++){
+			for(int i=Position;i<m_Source.Length;i++){
 				char c = (char)Peek(false);
 
 				// Skip escaped(\) "
@@ -900,7 +899,7 @@ namespace LumiSoft.Net.MIME
 				}
 				else{
 					currentSplitBuffer.Append(c);
-                    m_Offset++;
+                    Position++;
 				}
 
 				lastChar = c;
@@ -920,18 +919,15 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         public int Available
         {
-            get{ return m_Source.Length - m_Offset; }
+            get{ return m_Source.Length - Position; }
         }
 
         /// <summary>
         /// Gets position in string.
         /// </summary>
-        public int Position
-        {
-            get{ return m_Offset; }
-        }
+        public int Position { get; private set; }
 
-        #endregion
+#endregion
 
     }
 }

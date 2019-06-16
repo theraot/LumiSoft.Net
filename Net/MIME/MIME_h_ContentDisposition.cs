@@ -43,8 +43,6 @@ namespace LumiSoft.Net.MIME
     {
         private readonly bool                       m_IsModified;
         private string                     m_ParseValue;
-        private string                     m_DispositionType = "";
-        private readonly MIME_h_ParameterCollection m_pParameters;
 
         /// <summary>
         /// Default constructor.
@@ -61,9 +59,9 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentException("Argument 'dispositionType' value must be specified.");
             }
 
-            m_DispositionType = dispositionType;
+            DispositionType = dispositionType;
 
-            m_pParameters = new MIME_h_ParameterCollection(this);
+            Parameters = new MIME_h_ParameterCollection(this);
             m_IsModified  = true;
         }
 
@@ -72,7 +70,7 @@ namespace LumiSoft.Net.MIME
         /// </summary>
         private MIME_h_ContentDisposition()
         {
-            m_pParameters = new MIME_h_ParameterCollection(this);
+            Parameters = new MIME_h_ParameterCollection(this);
         }
 
 
@@ -106,9 +104,9 @@ namespace LumiSoft.Net.MIME
             if(type == null){
                 throw new ParseException("Invalid Content-Disposition: header field value '" + value + "'.");
             }
-            retVal.m_DispositionType = type.Trim();
+            retVal.DispositionType = type.Trim();
 
-            retVal.m_pParameters.Parse(r);
+            retVal.Parameters.Parse(r);
 
             retVal.m_ParseValue = value;
 
@@ -130,7 +128,7 @@ namespace LumiSoft.Net.MIME
         public override string ToString(MIME_Encoding_EncodedWord wordEncoder,Encoding parmetersCharset,bool reEncode)
         {
             if(reEncode || this.IsModified){
-                return "Content-Disposition: " + m_DispositionType + m_pParameters.ToString(parmetersCharset) + "\r\n";
+                return "Content-Disposition: " + DispositionType + Parameters.ToString(parmetersCharset) + "\r\n";
             }
             else{
                 return m_ParseValue;
@@ -149,7 +147,7 @@ namespace LumiSoft.Net.MIME
         /// <exception cref="ObjectDisposedException">Is riased when this class is disposed and this property is accessed.</exception>
         public override bool IsModified
         {
-            get{ return m_IsModified || m_pParameters.IsModified; }
+            get{ return m_IsModified || Parameters.IsModified; }
         }
 
         /// <summary>
@@ -163,18 +161,12 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets the disposition-type. Known values are in <see cref="MIME_DispositionTypes">MIME_DispositionTypes</see>.
         /// </summary>
-        public string DispositionType
-        {
-            get{ return m_DispositionType; }
-        }
+        public string DispositionType { get; private set; } = "";
 
         /// <summary>
         /// Gets Content-Type parameters collection.
         /// </summary>
-        public MIME_h_ParameterCollection Parameters
-        {
-            get{ return m_pParameters; }
-        }
+        public MIME_h_ParameterCollection Parameters { get; }
 
         /// <summary>
         /// Gets or sets the suggested file name. Value null means not specified. Defined in RFC 2183 2.3.
@@ -183,7 +175,7 @@ namespace LumiSoft.Net.MIME
         {
             get{ return this.Parameters["filename"]; }
 
-            set{ m_pParameters["filename"] = value; }
+            set{ Parameters["filename"] = value; }
         }
 
         /// <summary>

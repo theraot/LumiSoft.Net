@@ -8,10 +8,6 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_GetMessageStream : EventArgs
     {
-        private readonly POP3_ServerMessage m_pMessage;
-        private bool               m_CloseStream = true;
-        private Stream             m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,7 +19,7 @@ namespace LumiSoft.Net.POP3.Server
                 throw new ArgumentNullException("message");
             }
 
-            m_pMessage  = message;
+            Message  = message;
         }
 
 
@@ -32,32 +28,19 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// Gets message info.
         /// </summary>
-        public POP3_ServerMessage Message
-        {
-            get{ return m_pMessage; }
-        }
+        public POP3_ServerMessage Message { get; }
 
         /// <summary>
         /// Gets or sets if message stream is closed after message sending has completed.
         /// </summary>
-        public bool CloseMessageStream
-        {
-            get{ return m_CloseStream; }
-
-            set{ m_CloseStream = value; }
-        }
+        public bool CloseMessageStream { get; set; } = true;
 
         /// <summary>
         /// Gets or sets message stream.
         /// </summary>
         /// <remarks>POP3 server starts reading message from stream current position and reads while end of stream reached.</remarks>
-        public Stream MessageStream
-        {
-            get{ return m_pStream; }
+        public Stream MessageStream { get; set; }
 
-            set{ m_pStream = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

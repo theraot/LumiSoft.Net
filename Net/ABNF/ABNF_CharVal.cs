@@ -8,8 +8,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_CharVal : ABNF_Element
     {
-        private readonly string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,7 +23,7 @@ namespace LumiSoft.Net.ABNF
                 //throw new ArgumentException("Invalid argument 'value' value. Value must be: 'DQUOTE *(%x20-21 / %x23-7E) DQUOTE'.");
             }
             
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -127,11 +125,8 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; } = "";
 
-        #endregion
+#endregion
     }
 }

@@ -7,10 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Quota_Entry
     {
-        private readonly string m_ResourceName = "";
-        private readonly long   m_CurrentUsage;
-        private readonly long   m_MaxUsage;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,9 +24,9 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'resourceName' value must be specified.","resourceName");
             }
 
-            m_ResourceName = resourceName;
-            m_CurrentUsage = currentUsage;
-            m_MaxUsage     = maxUsage;
+            ResourceName = resourceName;
+            CurrentUsage = currentUsage;
+            MaxUsage     = maxUsage;
         }
 
 
@@ -39,27 +35,18 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets resource limit name.
         /// </summary>
-        public string ResourceName
-        {
-            get{ return m_ResourceName;}
-        }
+        public string ResourceName { get; } = "";
 
         /// <summary>
         /// Gets current resource usage.
         /// </summary>
-        public long CurrentUsage
-        {
-            get{ return m_CurrentUsage; }
-        }
+        public long CurrentUsage { get; }
 
         /// <summary>
         /// Gets maximum allowed resource usage.
         /// </summary>
-        public long MaxUsage
-        {
-            get{ return m_MaxUsage; }
-        }
+        public long MaxUsage { get; }
 
-        #endregion
+#endregion
     }
 }

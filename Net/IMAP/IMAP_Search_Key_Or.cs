@@ -10,9 +10,6 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages that match either search key.</remarks>
     public class IMAP_Search_Key_Or : IMAP_Search_Key
     {
-        private readonly IMAP_Search_Key m_pSearchKey1;
-        private readonly IMAP_Search_Key m_pSearchKey2;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,8 +25,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("key2");
             }
 
-            m_pSearchKey1 = key1;
-            m_pSearchKey2 = key2;
+            SearchKey1 = key1;
+            SearchKey2 = key2;
         }
 
 
@@ -67,7 +64,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "OR " + m_pSearchKey1.ToString() + " " + m_pSearchKey2.ToString();
+            return "OR " + SearchKey1.ToString() + " " + SearchKey2.ToString();
         }
 
         #endregion
@@ -87,9 +84,9 @@ namespace LumiSoft.Net.IMAP
             }
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"OR "));
-            m_pSearchKey1.ToCmdParts(list);
+            SearchKey1.ToCmdParts(list);
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant," "));
-            m_pSearchKey2.ToCmdParts(list);
+            SearchKey2.ToCmdParts(list);
         }
 
         #endregion
@@ -100,19 +97,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets search-key1.
         /// </summary>
-        public IMAP_Search_Key SearchKey1
-        {
-            get{ return m_pSearchKey1; }
-        }
+        public IMAP_Search_Key SearchKey1 { get; }
 
         /// <summary>
         /// Gets search-key2.
         /// </summary>
-        public IMAP_Search_Key SearchKey2
-        {
-            get{ return m_pSearchKey2; }
-        }
+        public IMAP_Search_Key SearchKey2 { get; }
 
-        #endregion
+#endregion
     }
 }

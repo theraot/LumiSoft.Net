@@ -7,8 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_SourceEventArgs : EventArgs
     {
-        private readonly RTP_Source m_pSource;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("source");
             }
 
-            m_pSource = source;
+            Source = source;
         }
 
 
@@ -29,12 +27,9 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTP source.
         /// </summary>
-        public RTP_Source Source
-        {
-            get{ return m_pSource; }
-        }
+        public RTP_Source Source { get; }
 
-        #endregion
+#endregion
 
     }
 }

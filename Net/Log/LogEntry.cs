@@ -9,17 +9,6 @@ namespace LumiSoft.Net.Log
     /// </summary>
     public class LogEntry
     {
-        private readonly LogEntryType    m_Type          = LogEntryType.Text;
-        private readonly string          m_ID            = "";
-        private readonly DateTime        m_Time;
-        private readonly GenericIdentity m_pUserIdentity;
-        private readonly long            m_Size;
-        private readonly string          m_Text          = "";
-        private readonly Exception       m_pException;
-        private readonly IPEndPoint      m_pLocalEP;
-        private readonly IPEndPoint      m_pRemoteEP;
-        private readonly byte[]          m_pData;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -29,12 +18,12 @@ namespace LumiSoft.Net.Log
         /// <param name="text">Description text.</param>
         public LogEntry(LogEntryType type,string id,long size,string text)
         {
-            m_Type = type;
-            m_ID   = id;
-            m_Size = size;
-            m_Text = text;
+            EntryType = type;
+            ID   = id;
+            Size = size;
+            Text = text;
 
-            m_Time = DateTime.Now;
+            Time = DateTime.Now;
         }
 
         /// <summary>
@@ -50,16 +39,16 @@ namespace LumiSoft.Net.Log
         /// <param name="data">Log data.</param>
         public LogEntry(LogEntryType type,string id,GenericIdentity userIdentity,long size,string text,IPEndPoint localEP,IPEndPoint remoteEP,byte[] data)
         {   
-            m_Type          = type;
-            m_ID            = id;
-            m_pUserIdentity = userIdentity;
-            m_Size          = size;
-            m_Text          = text;
-            m_pLocalEP      = localEP;
-            m_pRemoteEP     = remoteEP;
-            m_pData         = data;
+            EntryType          = type;
+            ID            = id;
+            UserIdentity = userIdentity;
+            Size          = size;
+            Text          = text;
+            LocalEndPoint      = localEP;
+            RemoteEndPoint     = remoteEP;
+            Data         = data;
                         
-            m_Time = DateTime.Now;
+            Time = DateTime.Now;
         }
 
         /// <summary>
@@ -75,16 +64,16 @@ namespace LumiSoft.Net.Log
         /// <param name="exception">Exception happened. Can be null.</param>
         public LogEntry(LogEntryType type,string id,GenericIdentity userIdentity,long size,string text,IPEndPoint localEP,IPEndPoint remoteEP,Exception exception)
         {   
-            m_Type          = type;
-            m_ID            = id;
-            m_pUserIdentity = userIdentity;
-            m_Size          = size;
-            m_Text          = text;
-            m_pLocalEP      = localEP;
-            m_pRemoteEP     = remoteEP;
-            m_pException    = exception;
+            EntryType          = type;
+            ID            = id;
+            UserIdentity = userIdentity;
+            Size          = size;
+            Text          = text;
+            LocalEndPoint      = localEP;
+            RemoteEndPoint     = remoteEP;
+            Exception    = exception;
                         
-            m_Time = DateTime.Now;
+            Time = DateTime.Now;
         }
 
 
@@ -93,84 +82,54 @@ namespace LumiSoft.Net.Log
         /// <summary>
         /// Gets log entry type.
         /// </summary>
-        public LogEntryType EntryType
-        {
-            get{ return m_Type; }
-        }
+        public LogEntryType EntryType { get; } = LogEntryType.Text;
 
         /// <summary>
         /// Gets log entry ID.
         /// </summary>
-        public string ID
-        {
-            get{ return m_ID; }
-        }
+        public string ID { get; } = "";
 
         /// <summary>
         /// Gets time when log entry was created.
         /// </summary>
-        public DateTime Time
-        {
-            get{ return m_Time; }
-        }
+        public DateTime Time { get; }
 
         /// <summary>
         /// Gets log entry related user identity.
         /// </summary>
-        public GenericIdentity UserIdentity
-        {
-            get{ return m_pUserIdentity; }
-        }
+        public GenericIdentity UserIdentity { get; }
 
         /// <summary>
         /// Gets how much data was readed or written, depends on <b>LogEntryType</b>.
         /// </summary>
-        public long Size
-        {
-            get{ return m_Size; }
-        }
+        public long Size { get; }
 
         /// <summary>
         /// Gets describing text.
         /// </summary>
-        public string Text
-        {
-            get{ return m_Text; }
-        }
+        public string Text { get; } = "";
 
         /// <summary>
         /// Gets exception happened. This property is available only if LogEntryType.Exception.
         /// </summary>
-        public Exception Exception
-        {
-            get{ return m_pException; }
-        }
+        public Exception Exception { get; }
 
         /// <summary>
         /// Gets local IP end point. Value null means no local end point.
         /// </summary>
-        public IPEndPoint LocalEndPoint
-        {
-            get{ return m_pLocalEP; }
-        }
+        public IPEndPoint LocalEndPoint { get; }
 
         /// <summary>
         /// Gets remote IP end point. Value null means no remote end point.
         /// </summary>
-        public IPEndPoint RemoteEndPoint
-        {
-            get{ return m_pRemoteEP; }
-        }
+        public IPEndPoint RemoteEndPoint { get; }
 
         /// <summary>
         /// Gest log data. Value null means no log data.
         /// </summary>
-        public byte[] Data
-        {
-            get{ return m_pData; }
-        }
+        public byte[] Data { get; }
 
-        #endregion
+#endregion
 
     }
 }

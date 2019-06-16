@@ -9,9 +9,6 @@ namespace LumiSoft.Net.MIME
     public class MIME_h_Unparsed : MIME_h
     {
         private readonly string    m_ParseValue;
-        private readonly string    m_Name;
-        private readonly string    m_Value;
-        private readonly Exception m_pException;
 
         /// <summary>
         /// Default constructor.
@@ -31,10 +28,10 @@ namespace LumiSoft.Net.MIME
                 throw new ParseException("Invalid Content-Type: header field value '" + value + "'.");
             }
 
-            m_Name       = name_value[0];
-            m_Value      = name_value[1].Trim();
+            Name       = name_value[0];
+            Value      = name_value[1].Trim();
             m_ParseValue = value;
-            m_pException = exception;
+            Exception = exception;
         }
 
 
@@ -86,27 +83,18 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets header field name.
         /// </summary>
-        public override string Name
-        {
-            get { return m_Name; }
-        }
+        public override string Name { get; }
 
         /// <summary>
         /// Gets header field value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; }
 
         /// <summary>
         /// Gets error happened during parse.
         /// </summary>
-        public Exception Exception
-        {
-            get{ return m_pException; }
-        }
+        public Exception Exception { get; }
 
-        #endregion
+#endregion
     }
 }

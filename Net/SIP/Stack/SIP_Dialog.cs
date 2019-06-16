@@ -9,8 +9,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Dialog
     {
-        private readonly object                 m_pLock            = new object();
-        private SIP_DialogState        m_State            = SIP_DialogState.Early;
         private SIP_Stack              m_pStack;
         private readonly DateTime               m_CreateTime;
         private string                 m_CallID           = "";
@@ -200,7 +198,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public virtual void Dispose()
         {
-            lock(m_pLock){
+            lock(SyncRoot){
                 if(this.State == SIP_DialogState.Disposed){
                     return;
                 }
@@ -232,7 +230,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ObjectDisposedException">Is raised when this class is Disposed and this method is accessed.</exception>
         public void Terminate()
         {
-            lock(m_pLock){
+            lock(SyncRoot){
                 if(this.State == SIP_DialogState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
@@ -355,7 +353,7 @@ namespace LumiSoft.Net.SIP.Stack
                 The rest of the request is formed as described in Section 8.1.1.
             */
 
-            lock(m_pLock){
+            lock(SyncRoot){
                 SIP_Request request = m_pStack.CreateRequest(method,new SIP_t_NameAddress("",m_pRemoteUri),new SIP_t_NameAddress("",m_pLocalUri));
                 request.Route.RemoveAll();
                 if(m_pRouteSet.Length == 0){
@@ -403,7 +401,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ArgumentNullException">Is raised when <b>request</b> is null.</exception>
         public SIP_RequestSender CreateRequestSender(SIP_Request request)
         {
-            lock(m_pLock){
+            lock(SyncRoot){
                 if(this.State == SIP_DialogState.Terminated){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
@@ -469,13 +467,13 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="raiseEvent">If true, StateChanged event is raised after state change.</param>
         protected void SetState(SIP_DialogState state,bool raiseEvent)
         {
-            m_State = state;
+            State = state;
 
             if(raiseEvent){
                 OnStateChanged();
             }
             
-            if(m_State == SIP_DialogState.Terminated){
+            if(State == SIP_DialogState.Terminated){
                 Dispose();
             }
         }
@@ -592,18 +590,12 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets an object that can be used to synchronize access to the dialog.
         /// </summary>
-        public object SyncRoot
-        {
-            get{ return m_pLock; }
-        }
+        public object SyncRoot { get; } = new object();
 
         /// <summary>
         /// Gets dialog state.
         /// </summary>
-        public SIP_DialogState State
-        {
-            get{ return m_State; }
-        }
+        public SIP_DialogState State { get; private set; } = SIP_DialogState.Early;
 
         /// <summary>
         /// Gets owner stack.

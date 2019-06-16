@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Bye : IMAP_r_u
     {
-        private readonly string m_Text;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +19,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("text");
             }
 
-            m_Text = text;
+            Text = text;
         }
         
 
@@ -97,7 +95,7 @@ namespace LumiSoft.Net.IMAP
             // Example:  S: * BYE Autologout; idle for too long
 
             StringBuilder retVal = new StringBuilder();
-            retVal.Append("* BYE " + m_Text + "\r\n");
+            retVal.Append("* BYE " + Text + "\r\n");
 
             return retVal.ToString();
         }
@@ -110,11 +108,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets BYE reason text.
         /// </summary>
-        public string Text
-        {
-            get{ return m_Text; }
-        }
+        public string Text { get; }
 
-        #endregion
+#endregion
     }
 }

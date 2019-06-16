@@ -22,14 +22,11 @@ namespace LumiSoft.Net.SIP.Proxy
         private class TargetHandler : IDisposable
         {
             private readonly object                m_pLock               = new object();
-            private bool                  m_IsDisposed;
             private bool                  m_IsStarted;
             private SIP_ProxyContext      m_pOwner;
             private SIP_Request           m_pRequest;
             private readonly SIP_Flow              m_pFlow;
             private SIP_Uri               m_pTargetUri;
-            private readonly bool                  m_AddRecordRoute      = true;
-            private readonly bool                  m_IsRecursed;
             private Queue<SIP_Hop>        m_pHops;
             private SIP_ClientTransaction m_pTransaction;
             private TimerEx               m_pTimerC;
@@ -57,8 +54,8 @@ namespace LumiSoft.Net.SIP.Proxy
                 m_pOwner         = owner; 
                 m_pFlow          = flow;
                 m_pTargetUri     = targetUri;
-                m_AddRecordRoute = addRecordRoute;
-                m_IsRecursed     = isRecursed;
+                IsRecordingRoute = addRecordRoute;
+                IsRecursed     = isRecursed;
                                 
                 m_pHops = new Queue<SIP_Hop>();  
             }
@@ -71,10 +68,10 @@ namespace LumiSoft.Net.SIP.Proxy
             public void Dispose()
             {
                 lock(m_pLock){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         return;
                     }
-                    m_IsDisposed = true;
+                    IsDisposed = true;
 
                     m_pOwner.TargetHandler_Disposed(this);
 
@@ -249,7 +246,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 */
                 
                 // NOTE: ACK don't add Record-route header.
-                if(m_pHops.Count > 0 && m_AddRecordRoute && m_pRequest.RequestLine.Method != SIP_Methods.ACK){
+                if(m_pHops.Count > 0 && IsRecordingRoute && m_pRequest.RequestLine.Method != SIP_Methods.ACK){
                     string recordRoute = m_pOwner.Proxy.Stack.TransportLayer.GetRecordRoute(m_pHops.Peek().Transport);
                     if(recordRoute != null){
                         m_pRequest.RecordRoute.Add(recordRoute);
@@ -457,7 +454,7 @@ namespace LumiSoft.Net.SIP.Proxy
             private void m_pTransaction_Disposed(object sender,EventArgs e)
             {
                 lock(m_pLock){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         return;
                     }
 
@@ -507,7 +504,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public void Start()
             {
                 lock(m_pLock){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
                     if(m_IsStarted){
@@ -545,7 +542,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public void Cancel()
             {
                 lock(m_pLock){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -607,7 +604,7 @@ namespace LumiSoft.Net.SIP.Proxy
                               sender-flow = from-tag ":" flowID
                               target-flow = flowID                        
                 */
-                if(m_AddRecordRoute && request.From.Tag != null && request.RecordRoute.GetAllValues().Length > 0){
+                if(IsRecordingRoute && request.From.Tag != null && request.RecordRoute.GetAllValues().Length > 0){
                     string flowInfo = request.From.Tag + ":" + m_pOwner.ServerTransaction.Flow.ID + "/" + flow.ID;
                     ((SIP_Uri)request.RecordRoute.GetTopMostValue().Address.Uri).Parameters.Add("flowInfo",flowInfo);
                 }
@@ -694,10 +691,7 @@ namespace LumiSoft.Net.SIP.Proxy
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public bool IsDisposed
-            {
-                get{ return m_IsDisposed; }
-            }
+            public bool IsDisposed { get; private set; }
 
             /// <summary>
             /// Gets if this target processing has been started.
@@ -706,7 +700,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public bool IsStarted
             {
                 get{ 
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -720,7 +714,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public bool IsCompleted
             {
                 get{
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -735,7 +729,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public SIP_Request Request
             {
                 get{  
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -750,7 +744,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public SIP_Uri TargetUri
             {
                 get{  
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -761,18 +755,12 @@ namespace LumiSoft.Net.SIP.Proxy
             /// <summary>
             /// Gets if this target is recording routing(By adding Record-Route header field to forwarded requests).
             /// </summary>
-            public bool IsRecordingRoute
-            {
-                get{ return m_AddRecordRoute; }
-            }
+            public bool IsRecordingRoute { get; } = true;
 
             /// <summary>
             /// Gets if this target is redirected by proxy context.
             /// </summary>
-            public bool IsRecursed
-            {
-                get{ return m_IsRecursed; }
-            }
+            public bool IsRecursed { get; }
 
             /// <summary>
             /// Gets if this handler has received any response from target.
@@ -781,7 +769,7 @@ namespace LumiSoft.Net.SIP.Proxy
             public bool HasReceivedResponse
             {
                 get{
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -794,8 +782,7 @@ namespace LumiSoft.Net.SIP.Proxy
         }
 
         #endregion
-        
-        private bool                        m_IsDisposed;
+
         private bool                        m_IsStarted;
         private SIP_Proxy                   m_pProxy;
         private SIP_ServerTransaction       m_pServerTransaction;
@@ -908,10 +895,10 @@ namespace LumiSoft.Net.SIP.Proxy
         public void Dispose()
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
-                m_IsDisposed = true;
+                IsDisposed = true;
 
                 m_pProxy.Stack.Logger.AddText("ProxyContext(id='" + m_ID + "') disposed.");
 
@@ -997,7 +984,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public void Start()
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(m_IsStarted){
@@ -1015,7 +1002,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 // Use all destinations at same time.
                 else if(m_ForkingMode == SIP_ForkingMode.Parallel){
                     // NOTE: If target count == 1 and transport exception, target may Dispose proxy context., so we need to handle it.
-                    while(!m_IsDisposed && m_pTargets.Count > 0){
+                    while(!IsDisposed && m_pTargets.Count > 0){
                         TargetHandler handler = m_pTargets.Dequeue();
                         m_pTargetsHandlers.Add(handler);
                         handler.Start();
@@ -1043,7 +1030,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public void Cancel()
         {
             lock(m_pLock){
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 if(!m_IsStarted){
@@ -1540,10 +1527,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets owner SIP proxy server.
@@ -1552,7 +1536,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_Proxy Proxy
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1567,7 +1551,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public string ID
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1582,7 +1566,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public DateTime CreateTime
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1597,7 +1581,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_ForkingMode ForkingMode
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1613,7 +1597,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public bool NoCancel
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1629,7 +1613,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public bool Recurse
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1644,7 +1628,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_ServerTransaction ServerTransaction
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1659,7 +1643,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_Request Request
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SIP_ProxyContext");
                 }
 
@@ -1674,7 +1658,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public SIP_Response[] Responses
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1689,7 +1673,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public List<NetworkCredential> Credentials
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

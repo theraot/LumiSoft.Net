@@ -13,20 +13,12 @@ namespace LumiSoft.Net.SIP.UA
     [Obsolete("Use SIP stack instead.")]
     public class SIP_UA_Call : IDisposable
     {
-        private SIP_UA_CallState          m_State                     = SIP_UA_CallState.WaitingForStart;
         private readonly SIP_UA                    m_pUA;
         private readonly SIP_Request               m_pInvite;
-        private SDP_Message               m_pLocalSDP;
-        private SDP_Message               m_pRemoteSDP;
-        private DateTime                  m_StartTime;
         private readonly List<SIP_Dialog_Invite>   m_pEarlyDialogs;
         private SIP_Dialog                m_pDialog;
-        private readonly bool                      m_IsRedirected              = false;
         private SIP_RequestSender         m_pInitialInviteSender;
         private readonly SIP_ServerTransaction     m_pInitialInviteTransaction;
-        private readonly AbsoluteUri               m_pLocalUri;
-        private readonly AbsoluteUri               m_pRemoteUri;
-        private readonly Dictionary<string,object> m_pTags;
         private readonly object                    m_pLock                     = "";
 
         /// <summary>
@@ -50,13 +42,13 @@ namespace LumiSoft.Net.SIP.UA
 
             m_pUA        = ua;
             m_pInvite    = invite;
-            m_pLocalUri  = invite.From.Address.Uri;
-            m_pRemoteUri = invite.To.Address.Uri;
+            LocalUri  = invite.From.Address.Uri;
+            RemoteUri = invite.To.Address.Uri;
 
-            m_State = SIP_UA_CallState.WaitingForStart;
+            State = SIP_UA_CallState.WaitingForStart;
 
             m_pEarlyDialogs = new List<SIP_Dialog_Invite>();
-            m_pTags = new Dictionary<string,object>();
+            Tag = new Dictionary<string,object>();
         }
 
         /// <summary>
@@ -76,8 +68,8 @@ namespace LumiSoft.Net.SIP.UA
 
             m_pUA = ua;
             m_pInitialInviteTransaction = invite;
-            m_pLocalUri  = invite.Request.To.Address.Uri;
-            m_pRemoteUri = invite.Request.From.Address.Uri;
+            LocalUri  = invite.Request.To.Address.Uri;
+            RemoteUri = invite.Request.From.Address.Uri;
             m_pInitialInviteTransaction.Canceled += new EventHandler(delegate(object sender,EventArgs e){
                 // If transaction canceled, terminate call.
                 SetState(SIP_UA_CallState.Terminated);
@@ -86,12 +78,12 @@ namespace LumiSoft.Net.SIP.UA
             // Parse SDP if INVITE contains SDP.
             // RFC 3261 13.2.1. INVITE may be offerless, we must thne send offer and remote party sends sdp in ACK.
             if(invite.Request.ContentType != null && invite.Request.ContentType.ToLower().IndexOf("application/sdp") > -1){
-                m_pRemoteSDP = SDP_Message.Parse(Encoding.UTF8.GetString(invite.Request.Data));
+                RemoteSDP = SDP_Message.Parse(Encoding.UTF8.GetString(invite.Request.Data));
             }
 
-            m_pTags = new Dictionary<string,object>();
+            Tag = new Dictionary<string,object>();
 
-            m_State = SIP_UA_CallState.WaitingToAccept;
+            State = SIP_UA_CallState.WaitingToAccept;
         }
         
         #region method Dispose
@@ -102,7 +94,7 @@ namespace LumiSoft.Net.SIP.UA
         public void Dispose()
         {
             lock(m_pLock){
-                if(m_State == SIP_UA_CallState.Disposed){
+                if(State == SIP_UA_CallState.Disposed){
                     return;
                 }
                 SetState(SIP_UA_CallState.Disposed);
@@ -154,7 +146,7 @@ namespace LumiSoft.Net.SIP.UA
                 lock(m_pLock){
                     // If remote party provided SDP, parse it.               
                     if(e.Response.ContentType != null && e.Response.ContentType.ToLower().IndexOf("application/sdp") > -1){
-                        m_pRemoteSDP = SDP_Message.Parse(Encoding.UTF8.GetString(e.Response.Data));
+                        RemoteSDP = SDP_Message.Parse(Encoding.UTF8.GetString(e.Response.Data));
 
                         // TODO: If parsing failed, end call.
                     }
@@ -181,7 +173,7 @@ namespace LumiSoft.Net.SIP.UA
                         }
                     }
                     else if(e.Response.StatusCodeType == SIP_StatusCodeType.Success){
-                        m_StartTime = DateTime.Now;
+                        StartTime = DateTime.Now;
                         SetState(SIP_UA_CallState.Active);
 
                         m_pDialog = m_pUA.Stack.TransactionLayer.GetOrCreateDialog(e.ClientTransaction,e.Response);
@@ -233,10 +225,10 @@ namespace LumiSoft.Net.SIP.UA
         public void Start()
         {
             lock(m_pLock){
-                if(m_State == SIP_UA_CallState.Disposed){
+                if(State == SIP_UA_CallState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
-                if(m_State != SIP_UA_CallState.WaitingForStart){
+                if(State != SIP_UA_CallState.WaitingForStart){
                     throw new InvalidOperationException("Start method can be called only in 'SIP_UA_CallState.WaitingForStart' state.");
                 }
 
@@ -261,10 +253,10 @@ namespace LumiSoft.Net.SIP.UA
         /// <exception cref="InvalidOperationException">Is raised when call is not in valid state and this method is called.</exception>
         public void SendRinging(SDP_Message sdp)
         {
-            if(m_State == SIP_UA_CallState.Disposed){
+            if(State == SIP_UA_CallState.Disposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
-            if(m_State != SIP_UA_CallState.WaitingToAccept){
+            if(State != SIP_UA_CallState.WaitingToAccept){
                 throw new InvalidOperationException("Accept method can be called only in 'SIP_UA_CallState.WaitingToAccept' state.");
             }
 
@@ -273,7 +265,7 @@ namespace LumiSoft.Net.SIP.UA
                 response.ContentType = "application/sdp";
                 response.Data = sdp.ToByte();
 
-                m_pLocalSDP = sdp;
+                LocalSDP = sdp;
             }
             m_pInitialInviteTransaction.SendResponse(response);
         }
@@ -291,17 +283,17 @@ namespace LumiSoft.Net.SIP.UA
         /// <exception cref="ArgumentNullException">Is raised when <b>sdp</b> is null reference.</exception>
         public void Accept(SDP_Message sdp)
         {
-            if(m_State == SIP_UA_CallState.Disposed){
+            if(State == SIP_UA_CallState.Disposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
-            if(m_State != SIP_UA_CallState.WaitingToAccept){
+            if(State != SIP_UA_CallState.WaitingToAccept){
                 throw new InvalidOperationException("Accept method can be called only in 'SIP_UA_CallState.WaitingToAccept' state.");
             }
             if(sdp == null){
                 throw new ArgumentNullException("sdp");
             }
 
-            m_pLocalSDP = sdp;
+            LocalSDP = sdp;
 
             // TODO: We must add Contact header and SDP to response.
 
@@ -394,22 +386,22 @@ namespace LumiSoft.Net.SIP.UA
         public void Terminate()
         {
             lock(m_pLock){
-                if(m_State == SIP_UA_CallState.Disposed){
+                if(State == SIP_UA_CallState.Disposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
-                if(m_State == SIP_UA_CallState.Terminating || m_State == SIP_UA_CallState.Terminated){
+                if(State == SIP_UA_CallState.Terminating || State == SIP_UA_CallState.Terminated){
                     return;
                 }
-                else if(m_State == SIP_UA_CallState.WaitingForStart){
+                else if(State == SIP_UA_CallState.WaitingForStart){
                     SetState(SIP_UA_CallState.Terminated);
                 }
-                else if(m_State == SIP_UA_CallState.WaitingToAccept){
+                else if(State == SIP_UA_CallState.WaitingToAccept){
                     m_pInitialInviteTransaction.SendResponse(m_pUA.Stack.CreateResponse(SIP_ResponseCodes.x487_Request_Terminated,m_pInitialInviteTransaction.Request));
 
                     SetState(SIP_UA_CallState.Terminated);
                 }
-                else if(m_State == SIP_UA_CallState.Active){
+                else if(State == SIP_UA_CallState.Active){
                     m_pDialog.Terminate();
 
                     SetState(SIP_UA_CallState.Terminated);
@@ -468,7 +460,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <param name="state">New call state.</param>
         private void SetState(SIP_UA_CallState state)
         {
-            m_State = state;
+            State = state;
 
             OnStateChanged(state);
         }
@@ -483,56 +475,38 @@ namespace LumiSoft.Net.SIP.UA
         /// </summary>
         public bool IsDisposed
         {
-            get{ return m_State == SIP_UA_CallState.Disposed; }
+            get{ return State == SIP_UA_CallState.Disposed; }
         }
 
         /// <summary>
         /// Gets current call state.
         /// </summary>
-        public SIP_UA_CallState State
-        {
-            get{ return m_State; }
-        }
+        public SIP_UA_CallState State { get; private set; } = SIP_UA_CallState.WaitingForStart;
 
         /// <summary>
         /// Gets call start time.
         /// </summary>
-        public DateTime StartTime
-        {
-            get{ return m_StartTime; }
-        }
+        public DateTime StartTime { get; private set; }
 
         /// <summary>
         /// Gets call local party URI.
         /// </summary>
-        public AbsoluteUri LocalUri
-        {
-            get{ return m_pLocalUri; }
-        }
+        public AbsoluteUri LocalUri { get; }
 
         /// <summary>
         /// Gets call remote party URI.
         /// </summary>
-        public AbsoluteUri RemoteUri
-        {
-            get{ return m_pRemoteUri; }
-        }
-                
+        public AbsoluteUri RemoteUri { get; }
+
         /// <summary>
         /// Gets local SDP.
         /// </summary>
-        public SDP_Message LocalSDP
-        {
-            get{ return m_pLocalSDP; }
-        }
+        public SDP_Message LocalSDP { get; private set; }
 
         /// <summary>
         /// Gets remote SDP.
         /// </summary>
-        public SDP_Message RemoteSDP
-        {
-            get{ return m_pRemoteSDP; }
-        }
+        public SDP_Message RemoteSDP { get; private set; }
 
         /// <summary>
         /// Gets call duration in seconds.
@@ -540,7 +514,7 @@ namespace LumiSoft.Net.SIP.UA
         public int Duration
         {            
             get{ 
-                return ((TimeSpan)(DateTime.Now - m_StartTime)).Seconds; 
+                return ((TimeSpan)(DateTime.Now - StartTime)).Seconds; 
 
                 // TODO: if terminated, we need static value here.
             }
@@ -549,10 +523,7 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Gets if call has been redirected by remote party.
         /// </summary>
-        public bool IsRedirected
-        {
-            get{ return m_IsRedirected; }
-        }
+        public bool IsRedirected { get; } = false;
 
         /// <summary>
         /// Gets if call is on hold.
@@ -567,12 +538,9 @@ namespace LumiSoft.Net.SIP.UA
         /// <summary>
         /// Gets user data items collection.
         /// </summary>
-        public Dictionary<string,object> Tag
-        {
-            get{ return m_pTags; }
-        }
+        public Dictionary<string,object> Tag { get; }
 
-        #endregion
+#endregion
 
         #region Events implementation
                 

@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_DeleteAcl : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private readonly string              m_Identifier;
 
         /// <summary>
         /// Default constructor.
@@ -31,8 +29,8 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             m_pResponse  = response;
-            m_Folder     = folder;
-            m_Identifier = identifier;
+            Folder     = folder;
+            Identifier = identifier;
         }
 
 
@@ -58,19 +56,13 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets ACL identifier (normally user or group name).
         /// </summary>
-        public string Identifier
-        {
-            get{ return m_Identifier; }
-        }
+        public string Identifier { get; }
 
-        #endregion
+#endregion
     }
 }

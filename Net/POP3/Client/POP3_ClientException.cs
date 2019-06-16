@@ -7,9 +7,6 @@ namespace LumiSoft.Net.POP3.Client
     /// </summary>
     public class POP3_ClientException : Exception
     {
-        private readonly string m_StatusCode   = "";
-        private readonly string m_ResponseText = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,9 +20,9 @@ namespace LumiSoft.Net.POP3.Client
 
             // <status-code> SP <response-text>
             string[] code_text = responseLine.Split(new char[]{ },2);
-            m_StatusCode = code_text[0];
+            StatusCode = code_text[0];
             if(code_text.Length == 2){
-                m_ResponseText = code_text[1];
+                ResponseText = code_text[1];
             }
         }
 
@@ -35,20 +32,14 @@ namespace LumiSoft.Net.POP3.Client
         /// <summary>
         /// Gets POP3 server error status code.
         /// </summary>
-        public string StatusCode
-        {
-            get{ return m_StatusCode; }
-        }
+        public string StatusCode { get; } = "";
 
         /// <summary>
         /// Gets POP3 server response text after status code.
         /// </summary>
-        public string ResponseText
-        {
-            get{ return m_ResponseText; }
-        }
+        public string ResponseText { get; } = "";
 
-        #endregion
+#endregion
 
     }
 }

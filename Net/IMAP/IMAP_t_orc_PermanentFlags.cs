@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_PermanentFlags : IMAP_t_orc
     {
-        private readonly string[] m_pFlags;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("flags");
             }
 
-            m_pFlags = flags;
+            Flags = flags;
         }
 
 
@@ -63,7 +61,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "PERMANENTFLAGS (" + Net_Utils.ArrayToString(m_pFlags," ") + ")";
+            return "PERMANENTFLAGS (" + Net_Utils.ArrayToString(Flags," ") + ")";
         }
 
         #endregion
@@ -74,11 +72,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets list of supported permanent flags.
         /// </summary>
-        public string[] Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public string[] Flags { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -24,12 +24,6 @@ namespace LumiSoft.Net.SMTP.Relay
         /// </summary>
         private class Relay_Target
         {
-            private readonly string     m_HostName = "";
-            private readonly IPEndPoint m_pTarget;
-            private readonly SslMode    m_SslMode  = SslMode.None;
-            private readonly string     m_UserName;
-            private readonly string     m_Password;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -37,8 +31,8 @@ namespace LumiSoft.Net.SMTP.Relay
             /// <param name="target">Target host IP end point.</param>
             public Relay_Target(string hostName,IPEndPoint target)
             {
-                m_HostName = hostName;
-                m_pTarget  = target;
+                HostName = hostName;
+                Target  = target;
             }
 
             /// <summary>
@@ -51,11 +45,11 @@ namespace LumiSoft.Net.SMTP.Relay
             /// <param name="password">Target host password.</param>
             public Relay_Target(string hostName,IPEndPoint target,SslMode sslMode,string userName,string password)
             {
-                m_HostName = hostName;
-                m_pTarget  = target;
-                m_SslMode  = sslMode;
-                m_UserName = userName;
-                m_Password = password;
+                HostName = hostName;
+                Target  = target;
+                SslMode  = sslMode;
+                UserName = userName;
+                Password = password;
             }
 
 
@@ -64,50 +58,34 @@ namespace LumiSoft.Net.SMTP.Relay
             /// <summary>
             /// Gets target host name.
             /// </summary>
-            public string HostName
-            {
-                get{ return m_HostName; }
-            }
+            public string HostName { get; } = "";
 
             /// <summary>
             /// Gets specified target IP end point.
             /// </summary>
-            public IPEndPoint Target
-            {
-                get{ return m_pTarget; }
-            }
+            public IPEndPoint Target { get; }
 
             /// <summary>
             /// Gets target SSL mode.
             /// </summary>
-            public SslMode SslMode
-            {
-                get{ return m_SslMode; }
-            }
+            public SslMode SslMode { get; } = SslMode.None;
 
             /// <summary>
             /// Gets target server user name.
             /// </summary>
-            public string UserName
-            {
-                get{ return m_UserName; }
-            }
+            public string UserName { get; }
 
             /// <summary>
             /// Gets target server password.
             /// </summary>
-            public string Password
-            {
-                get{ return m_Password; }
-            }
+            public string Password { get; }
 
-            #endregion
+#endregion
 
         }
 
         #endregion
 
-        private bool               m_IsDisposed;
         private Relay_Server       m_pServer;
         private IPBindInfo         m_pLocalBindInfo;
         private Relay_QueueItem    m_pRelayItem;
@@ -193,7 +171,7 @@ namespace LumiSoft.Net.SMTP.Relay
         {
             try{
                 lock(this){
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         return;
                     }
                     try{
@@ -202,7 +180,7 @@ namespace LumiSoft.Net.SMTP.Relay
                     catch{
                     }
                     m_pServer.Sessions.Remove(this);
-                    m_IsDisposed = true;
+                    IsDisposed = true;
                         
                     m_pLocalBindInfo = null;
                     m_pRelayItem = null;
@@ -287,7 +265,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Disconnect()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(!this.IsConnected){
@@ -304,7 +282,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public void Disconnect(string text)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(!this.IsConnected){
@@ -903,10 +881,7 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets local host name for LoaclEP.
@@ -915,7 +890,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public string LocalHostName
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -930,7 +905,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public DateTime SessionCreateTime
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -945,7 +920,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public int ExpectedTimeout
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -960,7 +935,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public string From
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -975,7 +950,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public string To
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                 
@@ -990,7 +965,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public string MessageID
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1005,7 +980,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public Stream MessageStream
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1020,7 +995,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public string RemoteHostName
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1039,7 +1014,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public Relay_Queue Queue
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1054,7 +1029,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public object QueueTag
         {
             get{               
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1089,7 +1064,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override bool IsConnected
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1104,7 +1079,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override string ID
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1119,7 +1094,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override DateTime ConnectTime
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1134,7 +1109,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override DateTime LastActivity
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1149,7 +1124,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override IPEndPoint LocalEndPoint
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1164,7 +1139,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override IPEndPoint RemoteEndPoint
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -1179,7 +1154,7 @@ namespace LumiSoft.Net.SMTP.Relay
         public override SmartStream TcpStream
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

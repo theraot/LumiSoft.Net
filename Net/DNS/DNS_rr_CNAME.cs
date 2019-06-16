@@ -10,9 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_CNAME : DNS_rr
 	{
-		private readonly string m_Alias = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_CNAME(string name,string alias,int ttl) : base(name,DNS_QType.CNAME,ttl)
 		{
-			m_Alias = alias;
+			Alias = alias;
         }
 
 
@@ -53,12 +51,9 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets alias.
 		/// </summary>
-		public string Alias
-		{
-			get{ return m_Alias; }
-		}
+		public string Alias { get; } = "";
 
-		#endregion
+#endregion
 
 	}
 }

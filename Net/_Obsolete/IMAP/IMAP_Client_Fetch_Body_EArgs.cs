@@ -9,10 +9,6 @@ namespace LumiSoft.Net.IMAP.Client
     [Obsolete("Use Fetch(bool uid,IMAP_t_SeqSet seqSet,IMAP_t_Fetch_i[] items,EventHandler<EventArgs<IMAP_r_u>> callback) intead.")]
     public class IMAP_Client_Fetch_Body_EArgs : EventArgs
     {
-        private readonly string m_Section;
-        private readonly int    m_Offset  = -1;
-        private Stream m_pStream;
-
         /// <summary>
         /// Defualt constructor.
         /// </summary>
@@ -20,8 +16,8 @@ namespace LumiSoft.Net.IMAP.Client
         /// <param name="offset">Body data offset.</param>
         internal IMAP_Client_Fetch_Body_EArgs(string bodySection,int offset)
         {
-            m_Section = bodySection;
-            m_Offset  = offset;
+            BodySection = bodySection;
+            Offset  = offset;
         }
 
 
@@ -30,30 +26,19 @@ namespace LumiSoft.Net.IMAP.Client
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).
         /// </summary>
-        public string BodySection
-        {
-            get{ return m_Section; }
-        }
+        public string BodySection { get; }
 
         /// <summary>
         /// Gets BODY data returning start offset. Value null means not specified.
         /// </summary>
-        public int Offset
-        {
-            get{ return m_Offset; }
-        }
+        public int Offset { get; } = -1;
 
         /// <summary>
         /// Gets or sets stream where BODY data is stored.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
+        public Stream Stream { get; set; }
 
-            set{ m_pStream = value; }
-        }
-
-        #endregion
+#endregion
 
         #region Events implementation
 

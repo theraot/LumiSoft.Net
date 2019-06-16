@@ -162,8 +162,6 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class MessageType2
         {
-            private readonly byte[] m_Nonce;
-
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -179,7 +177,7 @@ namespace LumiSoft.Net.AUTH
                     throw new ArgumentException("Argument 'nonce' value must be 8 bytes value.","nonce");
                 }
 
-                m_Nonce = nonce;
+                Nonce = nonce;
             }
 
 
@@ -249,12 +247,9 @@ namespace LumiSoft.Net.AUTH
             /// <summary>
             /// Gets nonce.
             /// </summary>
-            public byte[] Nonce
-            {
-                get{ return m_Nonce; }
-            }
+            public byte[] Nonce { get; }
 
-            #endregion
+#endregion
         }
 
         #endregion

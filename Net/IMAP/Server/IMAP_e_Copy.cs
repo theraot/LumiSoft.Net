@@ -8,9 +8,6 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Copy : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_SourceFolder;
-        private readonly string              m_TargetFolder;
-        private readonly IMAP_MessageInfo[]  m_pMessagesInfo;
 
         /// <summary>
         /// Default constructor.
@@ -36,9 +33,9 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             m_pResponse     = response;
-            m_SourceFolder  = sourceFolder;
-            m_TargetFolder  = targetFolder;
-            m_pMessagesInfo = messagesInfo;
+            SourceFolder  = sourceFolder;
+            TargetFolder  = targetFolder;
+            MessagesInfo = messagesInfo;
         }
 
 
@@ -64,27 +61,18 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets source folder name with optional path.
         /// </summary>
-        public string SourceFolder
-        {
-            get{ return m_SourceFolder; }
-        }
+        public string SourceFolder { get; }
 
         /// <summary>
         /// Gets target folder name with optional path.
         /// </summary>
-        public string TargetFolder
-        {
-            get{ return m_TargetFolder; }
-        }
+        public string TargetFolder { get; }
 
         /// <summary>
         /// Gets messages info.
         /// </summary>
-        public IMAP_MessageInfo[] MessagesInfo
-        {
-            get{ return m_pMessagesInfo; }
-        }
+        public IMAP_MessageInfo[] MessagesInfo { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -8,9 +8,7 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public abstract class RTP_Participant
     {
-        private readonly string           m_CNAME    = "";
         private List<RTP_Source> m_pSources;
-        private object           m_pTag;
 
         /// <summary>
         /// Default constructor.
@@ -26,7 +24,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'cname' value must be specified.");
             }
 
-            m_CNAME = cname;
+            CNAME = cname;
 
             m_pSources = new List<RTP_Source>();
         }
@@ -88,10 +86,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets canonical name of participant.
         /// </summary>
-        public string CNAME
-        {
-            get{ return m_CNAME; }
-        }
+        public string CNAME { get; } = "";
 
         /// <summary>
         /// Gets the sources what participant owns(sends).
@@ -104,14 +99,9 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
+        public object Tag { get; set; }
 
-            set{ m_pTag = value; }
-        }
-
-        #endregion
+#endregion
 
         #region Events implementation
 

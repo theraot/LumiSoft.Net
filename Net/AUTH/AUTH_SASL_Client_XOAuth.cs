@@ -11,7 +11,6 @@ namespace LumiSoft.Net.AUTH
     {
         private bool                              m_IsCompleted;
         private readonly int                               m_State                 = 0;
-        private readonly string                            m_UserName;
         private readonly string                            m_RequestUri;
         private readonly KeyValueCollection<string,string> m_pRequestUriParameters;
 
@@ -34,7 +33,7 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentNullException("requestUriParameters");
             }
 
-            m_UserName              = userName;
+            UserName              = userName;
             m_RequestUri            = requestUri;
             m_pRequestUriParameters = requestUriParameters;
         }
@@ -143,10 +142,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName
-        {
-            get{ return m_UserName; }
-        }
+        public override string UserName { get; }
 
         /// <summary>
         /// Returns always true, because XOAUTH authentication method supports SASL client "inital response".

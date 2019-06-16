@@ -9,14 +9,13 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_SDES : RTCP_Packet
     {
         private int                          m_Version = 2;
-        private readonly List<RTCP_Packet_SDES_Chunk> m_pChunks;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal RTCP_Packet_SDES()
         {
-            m_pChunks = new List<RTCP_Packet_SDES_Chunk>();
+            Chunks = new List<RTCP_Packet_SDES_Chunk>();
         }
 
 
@@ -60,7 +59,7 @@ namespace LumiSoft.Net.RTP
             for(int i=0;i<sourceCount;i++){
                 RTCP_Packet_SDES_Chunk chunk = new RTCP_Packet_SDES_Chunk();
                 chunk.Parse(buffer,ref offset);
-                m_pChunks.Add(chunk);
+                Chunks.Add(chunk);
             }
         }
 
@@ -94,7 +93,7 @@ namespace LumiSoft.Net.RTP
             */
 
             // V=2 P SC
-            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | m_pChunks.Count & 0x1F);
+            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | Chunks.Count & 0x1F);
             // PT=SDES=202
             buffer[offset++] = 202;
             // length
@@ -105,7 +104,7 @@ namespace LumiSoft.Net.RTP
             int chunksStartOffset = offset;
 
             // Add chunks.            
-            foreach(RTCP_Packet_SDES_Chunk chunk in m_pChunks){
+            foreach(RTCP_Packet_SDES_Chunk chunk in Chunks){
                 chunk.ToByte(buffer,ref offset);
             }   
          
@@ -140,11 +139,8 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets session description(SDES) chunks.
         /// </summary>
-        public List<RTCP_Packet_SDES_Chunk> Chunks
-        {
-            get{ return m_pChunks; }
-        }
-        
+        public List<RTCP_Packet_SDES_Chunk> Chunks { get; }
+
         /// <summary>
         /// Gets number of bytes needed for this packet.
         /// </summary>
@@ -152,7 +148,7 @@ namespace LumiSoft.Net.RTP
         {
             get{
                 int size = 4;
-                foreach(RTCP_Packet_SDES_Chunk chunk in m_pChunks){
+                foreach(RTCP_Packet_SDES_Chunk chunk in Chunks){
                     size += chunk.Size;
                 }
             

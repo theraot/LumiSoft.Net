@@ -7,9 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_AppendUid : IMAP_t_orc
     {
-        private readonly long m_MailboxUid;
-        private readonly int  m_MessageUid;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -17,8 +14,8 @@ namespace LumiSoft.Net.IMAP
         /// <param name="msgUid">Message UID value.</param>
         public IMAP_t_orc_AppendUid(long mailboxUid,int msgUid)
         {
-            m_MailboxUid = mailboxUid;
-            m_MessageUid = msgUid;
+            MailboxUid = mailboxUid;
+            MessageUid = msgUid;
         }
 
 
@@ -66,7 +63,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "APPENDUID " + m_MailboxUid + " " + m_MessageUid;
+            return "APPENDUID " + MailboxUid + " " + MessageUid;
         }
 
         #endregion
@@ -77,19 +74,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets mailbox(folder) UID value.
         /// </summary>
-        public long MailboxUid
-        {
-            get{ return m_MailboxUid; }
-        }
+        public long MailboxUid { get; }
 
         /// <summary>
         /// Gets message UID value.
         /// </summary>
-        public int MessageUid
-        {
-            get{ return m_MessageUid; }
-        }
+        public int MessageUid { get; }
 
-        #endregion
+#endregion
     }
 }

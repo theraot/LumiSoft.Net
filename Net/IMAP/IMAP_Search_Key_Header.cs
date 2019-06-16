@@ -16,9 +16,6 @@ namespace LumiSoft.Net.IMAP
     /// </remarks>
     public class IMAP_Search_Key_Header : IMAP_Search_Key
     {
-        private readonly string m_FieldName = "";
-        private readonly string m_Value     = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -34,8 +31,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("value");
             }
 
-            m_FieldName = fieldName;
-            m_Value     = value;
+            FieldName = fieldName;
+            Value     = value;
         }
 
 
@@ -81,7 +78,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "HEADER " + TextUtils.QuoteString(m_FieldName) + " " + TextUtils.QuoteString(m_Value);
+            return "HEADER " + TextUtils.QuoteString(FieldName) + " " + TextUtils.QuoteString(Value);
         }
 
         #endregion
@@ -101,9 +98,9 @@ namespace LumiSoft.Net.IMAP
             }
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"HEADER "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,m_FieldName));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,FieldName));
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant," "));
-            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,m_Value));
+            list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.String,Value));
         }
 
         #endregion
@@ -114,19 +111,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets header field name.
         /// </summary>
-        public string FieldName
-        {
-            get{ return m_FieldName; }
-        }
+        public string FieldName { get; } = "";
 
         /// <summary>
         /// Gets filter value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; } = "";
 
-        #endregion
+#endregion
     }
 }

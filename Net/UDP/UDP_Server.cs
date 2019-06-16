@@ -9,8 +9,7 @@ namespace LumiSoft.Net.UDP
     /// This class implements generic UDP server.
     /// </summary>
     public class UDP_Server : IDisposable
-    {      
-        private bool                     m_IsDisposed;
+    {
         private bool                     m_IsRunning;
         private int                      m_MTU                = 1400;
         private IPEndPoint[]             m_pBindings;
@@ -39,10 +38,10 @@ namespace LumiSoft.Net.UDP
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = false;
+            IsDisposed = false;
             Stop();
             // Release all events.
             this.Error = null;
@@ -219,7 +218,7 @@ namespace LumiSoft.Net.UDP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public void SendPacket(byte[] packet,int offset,int count,IPEndPoint remoteEP,out IPEndPoint localEP)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("UdpServer");
             }
             if(!m_IsRunning){
@@ -250,7 +249,7 @@ namespace LumiSoft.Net.UDP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         public void SendPacket(IPEndPoint localEP,byte[] packet,int offset,int count,IPEndPoint remoteEP)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("UdpServer");
             }
             if(!m_IsRunning){
@@ -413,10 +412,7 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets if UDP server is running.
@@ -425,7 +421,7 @@ namespace LumiSoft.Net.UDP
         public bool IsRunning
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
 
@@ -441,7 +437,7 @@ namespace LumiSoft.Net.UDP
         public int MTU
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
 
@@ -449,7 +445,7 @@ namespace LumiSoft.Net.UDP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(m_IsRunning){
@@ -468,7 +464,7 @@ namespace LumiSoft.Net.UDP
         public IPEndPoint[] Bindings
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
 
@@ -476,7 +472,7 @@ namespace LumiSoft.Net.UDP
             }
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(value == null){
@@ -514,7 +510,7 @@ namespace LumiSoft.Net.UDP
         public DateTime StartTime
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(!m_IsRunning){
@@ -533,7 +529,7 @@ namespace LumiSoft.Net.UDP
         public long BytesReceived
         {
             get{               
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(!m_IsRunning){
@@ -552,7 +548,7 @@ namespace LumiSoft.Net.UDP
         public long PacketsReceived
         {
             get{               
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(!m_IsRunning){
@@ -571,7 +567,7 @@ namespace LumiSoft.Net.UDP
         public long BytesSent
         {
             get{               
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(!m_IsRunning){
@@ -590,7 +586,7 @@ namespace LumiSoft.Net.UDP
         public long PacketsSent
         {
             get{               
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("UdpServer");
                 }
                 if(!m_IsRunning){

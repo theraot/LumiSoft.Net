@@ -7,10 +7,6 @@ namespace LumiSoft.Net.SMTP
     /// </summary>
     public class SMTP_t_ReplyLine
     {
-        private readonly int    m_ReplyCode;
-        private readonly string m_Text;
-        private readonly bool   m_IsLastLine = true;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -23,9 +19,9 @@ namespace LumiSoft.Net.SMTP
                 text = "";
             }
 
-            m_ReplyCode  = replyCode;
-            m_Text       = text;
-            m_IsLastLine = isLastLine;
+            ReplyCode  = replyCode;
+            Text       = text;
+            IsLastLine = isLastLine;
         }
 
 
@@ -85,11 +81,11 @@ namespace LumiSoft.Net.SMTP
         /// <returns>Returns this as SMTP server <b>reply-line</b>.</returns>
         public override string ToString()
         {
-            if(m_IsLastLine){
-                return m_ReplyCode.ToString() + " " + m_Text + "\r\n";
+            if(IsLastLine){
+                return ReplyCode.ToString() + " " + Text + "\r\n";
             }
             else{
-                return m_ReplyCode.ToString() + "-" + m_Text + "\r\n";
+                return ReplyCode.ToString() + "-" + Text + "\r\n";
             }
         }
 
@@ -101,27 +97,18 @@ namespace LumiSoft.Net.SMTP
         /// <summary>
         /// Gets SMTP server reply code.
         /// </summary>
-        public int ReplyCode
-        {
-            get{ return m_ReplyCode; }
-        }
+        public int ReplyCode { get; }
 
         /// <summary>
         /// Gets SMTP server relpy text.
         /// </summary>
-        public string Text
-        {
-            get{ return m_Text; }
-        }
+        public string Text { get; }
 
         /// <summary>
         /// Gets if this is last reply line.
         /// </summary>
-        public bool IsLastLine
-        {
-            get{ return m_IsLastLine; }
-        }
+        public bool IsLastLine { get; } = true;
 
-        #endregion
+#endregion
     }
 }

@@ -14,7 +14,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Fetch : IMAP_r_u
     {
-        private int                    m_MsgSeqNo;
         private readonly List<IMAP_t_Fetch_r_i> m_pDataItems;
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("dataItems");
             }
 
-            m_MsgSeqNo = msgSeqNo;
+            SeqNo = msgSeqNo;
 
             m_pDataItems = new List<IMAP_t_Fetch_r_i>();
             m_pDataItems.AddRange(dataItems);
@@ -50,7 +49,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'msgSeqNo' value must be >= 1.","msgSeqNo");
             }
 
-            m_MsgSeqNo = msgSeqNo;
+            SeqNo = msgSeqNo;
 
             m_pDataItems = new List<IMAP_t_Fetch_r_i>();
         }
@@ -86,7 +85,7 @@ namespace LumiSoft.Net.IMAP
             // Eat '*'
             r.ReadWord();
             // Parse seqNo
-            m_MsgSeqNo = Convert.ToInt32(r.ReadWord());
+            SeqNo = Convert.ToInt32(r.ReadWord());
             // Eat 'FETCH'
             r.ReadWord();
             // Eat '(', if list of fetch data-items.
@@ -120,7 +119,7 @@ namespace LumiSoft.Net.IMAP
             }
 
             StringBuilder buffer = new StringBuilder();
-            buffer.Append("* " + m_MsgSeqNo + " FETCH (");
+            buffer.Append("* " + SeqNo + " FETCH (");
 
             for(int i=0;i<m_pDataItems.Count;i++){
                 IMAP_t_Fetch_r_i dataItem = m_pDataItems[i];
@@ -847,10 +846,7 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message 1-based sequence number.
         /// </summary>
-        public int SeqNo
-        {
-            get{ return m_MsgSeqNo; }
-        }
+        public int SeqNo { get; private set; }
 
         /// <summary>
         /// Gets fetch response data items.

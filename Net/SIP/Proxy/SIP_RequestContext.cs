@@ -11,11 +11,8 @@ namespace LumiSoft.Net.SIP.Proxy
     public class SIP_RequestContext
     {
         private readonly SIP_Proxy             m_pProxy;
-        private readonly SIP_Request           m_pRequest;
         private readonly SIP_Flow              m_pFlow;
         private SIP_ServerTransaction m_pTransaction;
-        private readonly List<SIP_ProxyTarget> m_pTargets;
-        private string                m_User;
         private readonly SIP_ProxyContext      m_pProxyContext = null;
 
         /// <summary>
@@ -38,10 +35,10 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             m_pProxy   = proxy;
-            m_pRequest = request;
+            Request = request;
             m_pFlow    = flow;
 
-            m_pTargets = new List<SIP_ProxyTarget>();
+            Targets = new List<SIP_ProxyTarget>();
         }
 
 
@@ -79,7 +76,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <param name="user">User name.</param>
         internal void SetUser(string user)
         {
-            m_User = user;
+            User = user;
         }
 
         #endregion
@@ -90,10 +87,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets current incoming SIP request.
         /// </summary>
-        public SIP_Request Request
-        {
-            get{ return m_pRequest; }
-        }
+        public SIP_Request Request { get; }
 
         /// <summary>
         /// Gets or creates server transaction that will handle request.
@@ -109,7 +103,7 @@ namespace LumiSoft.Net.SIP.Proxy
 
                 // Create server transaction for that request.
                 if(m_pTransaction == null){
-                    m_pTransaction = m_pProxy.Stack.TransactionLayer.EnsureServerTransaction(m_pFlow,m_pRequest);
+                    m_pTransaction = m_pProxy.Stack.TransactionLayer.EnsureServerTransaction(m_pFlow,Request);
                 }
 
                 return m_pTransaction; 
@@ -119,18 +113,12 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets proxy determined request targets.
         /// </summary>
-        public List<SIP_ProxyTarget> Targets
-        {
-            get{ return m_pTargets; }
-        }
+        public List<SIP_ProxyTarget> Targets { get; }
 
         /// <summary>
         /// Gets authenticated user name. Returns null if user not authenticated.
         /// </summary>
-        public string User
-        {
-            get{ return m_User; }
-        }
+        public string User { get; private set; }
 
         /// <summary>
         /// Gets or creates statefull proxy context for this request.

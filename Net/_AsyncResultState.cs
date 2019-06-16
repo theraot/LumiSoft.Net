@@ -8,13 +8,8 @@ namespace LumiSoft.Net
     /// </summary>
     internal class AsyncResultState : IAsyncResult
     {
-        private readonly object        m_pAsyncObject;
-        private readonly Delegate      m_pAsyncDelegate;
         private readonly AsyncCallback m_pCallback;
-        private readonly object        m_pState;
-        private IAsyncResult  m_pAsyncResult;
-        private bool          m_IsEndCalled;
-                
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -24,10 +19,10 @@ namespace LumiSoft.Net
         /// <param name="state">User data.</param>
         public AsyncResultState(object asyncObject,Delegate asyncDelegate,AsyncCallback callback,object state)
         {
-            m_pAsyncObject   = asyncObject;
-            m_pAsyncDelegate = asyncDelegate;
+            AsyncObject   = asyncObject;
+            AsyncDelegate = asyncDelegate;
             m_pCallback      = callback;
-            m_pState         = state;
+            AsyncState         = state;
         }
 
 
@@ -43,7 +38,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("asyncResult");
             }
 
-            m_pAsyncResult = asyncResult;
+            AsyncResult = asyncResult;
         }
 
         #endregion
@@ -69,52 +64,35 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets or sets caller's async object.
         /// </summary>
-        public object AsyncObject
-        {
-            get{ return m_pAsyncObject; }
-        }
+        public object AsyncObject { get; }
 
         /// <summary>
         /// Gets delegate which is called asynchronously.
         /// </summary>
-        public Delegate AsyncDelegate
-        {
-            get{ return m_pAsyncDelegate; }
-        }
+        public Delegate AsyncDelegate { get; }
 
         /// <summary>
         /// Gets source asynchronous result what we wrap.
         /// </summary>
-        public IAsyncResult AsyncResult
-        {
-            get{ return m_pAsyncResult; }
-        }
+        public IAsyncResult AsyncResult { get; private set; }
 
         /// <summary>
         /// Gets if the user called the End*() method.
         /// </summary>
-        public bool IsEndCalled
-        {
-            get{ return m_IsEndCalled; }
-
-            set{ m_IsEndCalled = value; }
-        }
+        public bool IsEndCalled { get; set; }
 
 
         /// <summary>
         /// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
         /// </summary>
-        public object AsyncState 
-        { 
-            get { return m_pState; } 
-        }
+        public object AsyncState { get; }
 
         /// <summary>
         /// Gets a WaitHandle that is used to wait for an asynchronous operation to complete.
         /// </summary>
         public WaitHandle AsyncWaitHandle
         {
-            get{ return m_pAsyncResult.AsyncWaitHandle; }
+            get{ return AsyncResult.AsyncWaitHandle; }
         }
 
         /// <summary>
@@ -122,7 +100,7 @@ namespace LumiSoft.Net
         /// </summary>
         public bool CompletedSynchronously
         { 
-            get{ return m_pAsyncResult.CompletedSynchronously; }
+            get{ return AsyncResult.CompletedSynchronously; }
         }
 
         /// <summary>
@@ -130,7 +108,7 @@ namespace LumiSoft.Net
         /// </summary>
         public bool IsCompleted
         {
-            get{ return m_pAsyncResult.IsCompleted; } 
+            get{ return AsyncResult.IsCompleted; } 
         }
 
 

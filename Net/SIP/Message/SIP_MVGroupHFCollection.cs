@@ -9,7 +9,6 @@ namespace LumiSoft.Net.SIP.Message
     public class SIP_MVGroupHFCollection<T> where T : SIP_t_Value,new()
     {
         private readonly SIP_Message               m_pMessage;
-        private readonly string                    m_FieldName = "";
         private readonly List<SIP_MultiValueHF<T>> m_pFields;
 
         /// <summary>
@@ -20,7 +19,7 @@ namespace LumiSoft.Net.SIP.Message
         public SIP_MVGroupHFCollection(SIP_Message owner,string fieldName)
         {
             m_pMessage  = owner;
-            m_FieldName = fieldName;
+            FieldName = fieldName;
 
             m_pFields = new List<SIP_MultiValueHF<T>>();
 
@@ -38,7 +37,7 @@ namespace LumiSoft.Net.SIP.Message
             m_pFields.Clear();
            
             foreach(SIP_HeaderField h in m_pMessage.Header){
-                if(h.Name.ToLower() == m_FieldName.ToLower()){                
+                if(h.Name.ToLower() == FieldName.ToLower()){                
                     m_pFields.Add((SIP_MultiValueHF<T>)h);
                 }
             }
@@ -55,7 +54,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         public void AddToTop(string value)
         {            
-            m_pMessage.Header.Insert(0,m_FieldName,value);
+            m_pMessage.Header.Insert(0,FieldName,value);
             Refresh();
         }
 
@@ -69,7 +68,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         public void Add(string value)
         {            
-            m_pMessage.Header.Add(m_FieldName,value);
+            m_pMessage.Header.Add(FieldName,value);
             Refresh();
         }
 
@@ -82,7 +81,7 @@ namespace LumiSoft.Net.SIP.Message
         /// </summary>
         public void RemoveAll()
         {
-            m_pMessage.Header.RemoveAll(m_FieldName);
+            m_pMessage.Header.RemoveAll(FieldName);
             m_pFields.Clear();
         }
 
@@ -171,10 +170,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets header field name what this group holds.
         /// </summary>
-        public string FieldName
-        {
-            get{ return m_FieldName; }
-        }
+        public string FieldName { get; } = "";
 
         /// <summary>
         /// Gets number of header fields in this group.

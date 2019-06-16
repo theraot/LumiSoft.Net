@@ -16,7 +16,6 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_ServerSession : TCP_Session
     {
-        private bool                      m_IsDisposed;
         private bool                      m_IsTerminated;
         private object                    m_pServer;
         private string                    m_ID            = "";
@@ -28,7 +27,6 @@ namespace LumiSoft.Net.TCP
         private bool                      m_IsSecure;
         private X509Certificate           m_pCertificate;
         private SmartStream               m_pTcpStream;
-        private object                    m_pTag;
         private Dictionary<string,object> m_pTags;
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace LumiSoft.Net.TCP
         /// </summary>
         public override void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
             if(!m_IsTerminated){
@@ -57,7 +55,7 @@ namespace LumiSoft.Net.TCP
                     // Skip disconnect errors.
                 }
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             // We must call disposed event before we release events.
             try{
@@ -184,7 +182,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="InvalidOperationException">Is raised when connection is already secure or when SSL certificate is not specified.</exception>
         public void SwitchToSecure()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("TCP_ServerSession");
             }
             if(m_IsSecure){
@@ -224,7 +222,6 @@ namespace LumiSoft.Net.TCP
         {
             private readonly object            m_pLock         = new object();
             private bool              m_RiseCompleted;
-            private AsyncOP_State     m_State         = AsyncOP_State.WaitingForStart;
             private Exception         m_pException;
             private TCP_ServerSession m_pTcpSession;
             private SslStream         m_pSslStream;
@@ -243,7 +240,7 @@ namespace LumiSoft.Net.TCP
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -290,7 +287,7 @@ namespace LumiSoft.Net.TCP
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -305,14 +302,14 @@ namespace LumiSoft.Net.TCP
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -353,10 +350,7 @@ namespace LumiSoft.Net.TCP
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -366,10 +360,10 @@ namespace LumiSoft.Net.TCP
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -455,7 +449,7 @@ namespace LumiSoft.Net.TCP
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public void Disconnect(string text)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("TCP_ServerSession");
             }
             if(m_IsTerminated){
@@ -579,10 +573,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets if TCP server session is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets owner TCP server.
@@ -591,7 +582,7 @@ namespace LumiSoft.Net.TCP
         public object Server
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -606,7 +597,7 @@ namespace LumiSoft.Net.TCP
         public string LocalHostName
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -621,7 +612,7 @@ namespace LumiSoft.Net.TCP
         public X509Certificate Certificate
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
                 
@@ -632,12 +623,7 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
-
-            set{ m_pTag = value; }
-        }
+        public object Tag { get; set; }
 
         /// <summary>
         /// Gets user data items collection.
@@ -646,7 +632,7 @@ namespace LumiSoft.Net.TCP
         public Dictionary<string,object> Tags
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -670,7 +656,7 @@ namespace LumiSoft.Net.TCP
         public override string ID
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -685,7 +671,7 @@ namespace LumiSoft.Net.TCP
         public override DateTime ConnectTime
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -700,7 +686,7 @@ namespace LumiSoft.Net.TCP
         public override DateTime LastActivity
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
  
@@ -715,7 +701,7 @@ namespace LumiSoft.Net.TCP
         public override IPEndPoint LocalEndPoint
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -730,7 +716,7 @@ namespace LumiSoft.Net.TCP
         public override IPEndPoint RemoteEndPoint
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
                 
@@ -745,7 +731,7 @@ namespace LumiSoft.Net.TCP
         public override bool IsSecureConnection
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
 
@@ -760,7 +746,7 @@ namespace LumiSoft.Net.TCP
         public override SmartStream TcpStream
         {
             get{  
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("TCP_ServerSession");
                 }
                 

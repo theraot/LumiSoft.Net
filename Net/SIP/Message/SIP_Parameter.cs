@@ -7,9 +7,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_Parameter
     {
-        private readonly string m_Name  = "";
-        private string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -32,8 +29,8 @@ namespace LumiSoft.Net.SIP.Message
                 throw new ArgumentException("Parameter 'name' value may no be empty string !");
             }
 
-            m_Name  = name;
-            m_Value = value;
+            Name  = name;
+            Value = value;
         }
 
 
@@ -42,22 +39,14 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets parameter name.
         /// </summary>
-        public string Name
-        {
-            get{ return m_Name; }
-        }
+        public string Name { get; } = "";
 
         /// <summary>
         /// Gets or sets parameter name. Value null means value less tag prameter.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
+        public string Value { get; set; } = "";
 
-            set{ m_Value = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

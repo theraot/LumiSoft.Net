@@ -7,10 +7,6 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_p_Default : WebDav_p
     {
-        private readonly string m_Namespace = "";
-        private readonly string m_Name;
-        private readonly string m_Value;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,9 +24,9 @@ namespace LumiSoft.Net.WebDav
                 throw new ArgumentException("Argument 'name' value must be specified.");
             }
 
-            m_Namespace = nameSpace;
-            m_Name      = name;
-            m_Value     = value;
+            Namespace = nameSpace;
+            Name      = name;
+            Value     = value;
         }
 
 
@@ -39,27 +35,18 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets property namespace.
         /// </summary>
-        public override string Namespace
-        {
-            get{ return m_Namespace; }
-        }
+        public override string Namespace { get; } = "";
 
         /// <summary>
         /// Gets property name.
         /// </summary>
-        public override string Name
-        {
-            get{ return m_Name; }
-        }
+        public override string Name { get; }
 
         /// <summary>
         /// Gets property value.
         /// </summary>
-        public override string Value
-        {
-            get{ return m_Value; }
-        }
-        
-        #endregion
+        public override string Value { get; }
+
+#endregion
     }
 }

@@ -10,15 +10,13 @@ namespace LumiSoft.Net.RTP
     public class RTCP_Packet_RR : RTCP_Packet
     {
         private int                           m_Version       = 2;
-        private uint                          m_SSRC;
-        private readonly List<RTCP_Packet_ReportBlock> m_pReportBlocks;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal RTCP_Packet_RR()
         {
-            m_pReportBlocks = new List<RTCP_Packet_ReportBlock>();
+            ReportBlocks = new List<RTCP_Packet_ReportBlock>();
         }
 
         /// <summary>
@@ -27,7 +25,7 @@ namespace LumiSoft.Net.RTP
         /// <param name="ssrc">SSRC of this packet sender.</param>
         internal RTCP_Packet_RR(uint ssrc)
         {
-            m_pReportBlocks = new List<RTCP_Packet_ReportBlock>();
+            ReportBlocks = new List<RTCP_Packet_ReportBlock>();
         }
 
 
@@ -86,11 +84,11 @@ namespace LumiSoft.Net.RTP
                 this.PaddBytesCount = buffer[offset + length];
             }
 
-            m_SSRC = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
+            SSRC = (uint)(buffer[offset++] << 24 | buffer[offset++] << 16 | buffer[offset++] << 8 | buffer[offset++]);
             for(int i=0;i<reportBlockCount;i++){
                 RTCP_Packet_ReportBlock reportBlock = new RTCP_Packet_ReportBlock();
                 reportBlock.Parse(buffer,offset);
-                m_pReportBlocks.Add(reportBlock);
+                ReportBlocks.Add(reportBlock);
                 offset += 24;
             }
             // TODO: profile-specific extensions
@@ -145,22 +143,22 @@ namespace LumiSoft.Net.RTP
             }
 
             // NOTE: Size in 32-bit boundary, header not included.
-            int length =  (4 + (m_pReportBlocks.Count * 24)) / 4;
+            int length =  (4 + (ReportBlocks.Count * 24)) / 4;
 
             // V P RC
-            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | (m_pReportBlocks.Count & 0x1F));
+            buffer[offset++] = (byte)(2 << 6 | 0 << 5 | (ReportBlocks.Count & 0x1F));
             // PT=RR=201
             buffer[offset++] = 201;
             // length
             buffer[offset++] = (byte)((length >> 8) & 0xFF);
             buffer[offset++] = (byte)((length)      & 0xFF);
             // SSRC
-            buffer[offset++] = (byte)((m_SSRC >> 24) & 0xFF);
-            buffer[offset++] = (byte)((m_SSRC >> 16) & 0xFF);
-            buffer[offset++] = (byte)((m_SSRC >> 8)  & 0xFF);
-            buffer[offset++] = (byte)((m_SSRC)       & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 24) & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 16) & 0xFF);
+            buffer[offset++] = (byte)((SSRC >> 8)  & 0xFF);
+            buffer[offset++] = (byte)((SSRC)       & 0xFF);
             // Report blocks
-            foreach(RTCP_Packet_ReportBlock block in m_pReportBlocks){
+            foreach(RTCP_Packet_ReportBlock block in ReportBlocks){
                 block.ToByte(buffer,ref offset);
             }
         }
@@ -178,8 +176,8 @@ namespace LumiSoft.Net.RTP
             StringBuilder retVal = new StringBuilder();
             retVal.AppendLine("Type: RR");
             retVal.AppendLine("Version: " + m_Version);            
-            retVal.AppendLine("SSRC: " + m_SSRC);
-            retVal.AppendLine("Report blocks: " + m_pReportBlocks.Count.ToString());
+            retVal.AppendLine("SSRC: " + SSRC);
+            retVal.AppendLine("Report blocks: " + ReportBlocks.Count.ToString());
 
             return retVal.ToString();
         }
@@ -208,27 +206,19 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets or sets sender(local reporting) synchronization source identifier.
         /// </summary>
-        public uint SSRC
-        {
-            get{ return m_SSRC; }
-
-            set{ m_SSRC = value; }
-        }
+        public uint SSRC { get; set; }
 
         /// <summary>
         /// Gets reports blocks.
         /// </summary>
-        public List<RTCP_Packet_ReportBlock> ReportBlocks
-        {
-            get{ return m_pReportBlocks; }
-        }
+        public List<RTCP_Packet_ReportBlock> ReportBlocks { get; }
 
         /// <summary>
         /// Gets number of bytes needed for this packet.
         /// </summary>
         public override int Size
         {
-            get{ return 8 + (24 * m_pReportBlocks.Count); }
+            get{ return 8 + (24 * ReportBlocks.Count); }
         }
 
         #endregion

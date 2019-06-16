@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Recent : IMAP_r_u
     {
-        private readonly int m_MessageCount;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Arguments 'messageCount' value must be >= 0.","messageCount");
             }
 
-            m_MessageCount = messageCount;
+            MessageCount = messageCount;
         }
 
 
@@ -82,7 +80,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * 5 RECENT
 
-            return "* " + m_MessageCount.ToString() + " RECENT\r\n";
+            return "* " + MessageCount.ToString() + " RECENT\r\n";
         }
 
         #endregion
@@ -93,11 +91,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets number of messages in mailbox with \Recent flag set.
         /// </summary>
-        public int MessageCount
-        {
-            get{ return m_MessageCount; }
-        }
+        public int MessageCount { get; }
 
-        #endregion
+#endregion
     }
 }

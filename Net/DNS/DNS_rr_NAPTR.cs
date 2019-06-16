@@ -10,13 +10,6 @@ namespace LumiSoft.Net.DNS
     [Serializable]
     public class DNS_rr_NAPTR : DNS_rr
     {
-        private readonly int    m_Order;
-        private readonly int    m_Preference;
-        private readonly string m_Flags       = "";
-        private readonly string m_Services    = "";
-        private readonly string m_Regexp      = "";
-        private readonly string m_Replacement = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -30,12 +23,12 @@ namespace LumiSoft.Net.DNS
         /// <param name="ttl">Time to live value in seconds.</param>
         public DNS_rr_NAPTR(string name,int order,int preference,string flags,string services,string regexp,string replacement,int ttl) : base(name,DNS_QType.NAPTR,ttl)
         {
-            m_Order       = order;
-            m_Preference  = preference;
-            m_Flags       = flags;
-            m_Services    = services;
-            m_Regexp      = regexp;
-            m_Replacement = replacement;
+            Order       = order;
+            Preference  = preference;
+            Flags       = flags;
+            Services    = services;
+            Regexp      = regexp;
+            Replacement = replacement;
         }
 
 
@@ -96,54 +89,36 @@ namespace LumiSoft.Net.DNS
         /// Gets order in which the NAPTR records MUST be processed in order to accurately 
         /// represent the ordered list of Rules.
         /// </summary>
-        public int Order
-        {
-            get{ return m_Order; }
-        }
+        public int Order { get; }
 
         /// <summary>
         /// Gets the order in which NAPTR records with equal Order values SHOULD be processed, 
         /// low numbers being processed before high numbers.
         /// </summary>
-        public int Preference
-        {
-            get{ return m_Preference; }
-        }
+        public int Preference { get; }
 
         /// <summary>
         /// Gets flags which control the rewriting and interpretation of the fields in the record.
         /// </summary>
-        public string Flags
-        {
-            get{ return m_Flags; }
-        }
+        public string Flags { get; } = "";
 
         /// <summary>
         /// Gets services related to this record. Known values can be get from: http://www.iana.org/assignments/enum-services.
         /// </summary>
-        public string Services
-        {
-            get{ return m_Services; }
-        }
+        public string Services { get; } = "";
 
         /// <summary>
         /// Gets regular expression that is applied to the original string held by the client in order to 
         /// construct the next domain name to lookup.
         /// </summary>
-        public string Regexp
-        {
-            get{ return m_Regexp; }
-        }
+        public string Regexp { get; } = "";
 
         /// <summary>
         /// Gets regular expressions replacement value.
         /// </summary>
-        public string Replacement
-        {
-            get{ return m_Replacement; }
-        }
+        public string Replacement { get; } = "";
 
-        #endregion
+#endregion
 
     }
 }

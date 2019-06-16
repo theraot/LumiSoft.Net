@@ -8,8 +8,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_RuleName : ABNF_Element
     {
-        private readonly string m_RuleName;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,7 +23,7 @@ namespace LumiSoft.Net.ABNF
                 throw new ArgumentException("Invalid argument 'ruleName' value. Value must be 'rulename =  ALPHA *(ALPHA / DIGIT / \"-\")'.");
             }
 
-            m_RuleName = ruleName;
+            RuleName = ruleName;
         }
 
 
@@ -108,11 +106,8 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets rule name.
         /// </summary>
-        public string RuleName
-        {
-            get{ return m_RuleName; }
-        }
+        public string RuleName { get; }
 
-        #endregion
+#endregion
     }
 }

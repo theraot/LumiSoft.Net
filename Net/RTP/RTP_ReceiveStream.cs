@@ -7,7 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_ReceiveStream
     {
-        private bool                   m_IsDisposed;
         private RTP_Session            m_pSession;
         private readonly RTP_Source             m_pSSRC;
         private RTP_Participant_Remote m_pParticipant;
@@ -62,10 +61,10 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         internal void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             m_pSession = null;
             m_pParticipant = null;
@@ -351,10 +350,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets stream owner RTP session.
@@ -363,7 +359,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Session Session
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -378,7 +374,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Source SSRC
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -393,7 +389,7 @@ namespace LumiSoft.Net.RTP
         public RTP_Participant_Remote Participant
         {            
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -408,7 +404,7 @@ namespace LumiSoft.Net.RTP
         public int SeqNoWrapCount
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -423,7 +419,7 @@ namespace LumiSoft.Net.RTP
         public int FirstSeqNo
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -438,7 +434,7 @@ namespace LumiSoft.Net.RTP
         public int MaxSeqNo
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -453,7 +449,7 @@ namespace LumiSoft.Net.RTP
         public long PacketsReceived
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -468,7 +464,7 @@ namespace LumiSoft.Net.RTP
         public long PacketsMisorder
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -483,7 +479,7 @@ namespace LumiSoft.Net.RTP
         public long PacketsLost
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -503,7 +499,7 @@ namespace LumiSoft.Net.RTP
         public long BytesReceived
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -518,7 +514,7 @@ namespace LumiSoft.Net.RTP
         public double Jitter
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -532,7 +528,7 @@ namespace LumiSoft.Net.RTP
         public int DelaySinceLastSR
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
                
@@ -546,7 +542,7 @@ namespace LumiSoft.Net.RTP
         public DateTime LastSRTime
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -561,7 +557,7 @@ namespace LumiSoft.Net.RTP
         public RTCP_Report_Sender LastSR
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

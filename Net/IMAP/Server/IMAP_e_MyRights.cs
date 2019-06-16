@@ -7,9 +7,7 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_MyRights : EventArgs
     {
-        private IMAP_r_u_MyRights   m_pMyRightsResponse;
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
 
         /// <summary>
         /// Default constructor.
@@ -26,7 +24,7 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
 
-            m_Folder    = folder;
+            Folder    = folder;
             m_pResponse = response;
         }
 
@@ -36,12 +34,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets or sets MYRIGHTS response.
         /// </summary>
-        public IMAP_r_u_MyRights MyRightsResponse
-        {
-            get{ return m_pMyRightsResponse; }
-
-            set{ m_pMyRightsResponse = value; }
-        }
+        public IMAP_r_u_MyRights MyRightsResponse { get; set; }
 
         /// <summary>
         /// Gets or sets IMAP server response to this operation.
@@ -63,11 +56,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
-        #endregion
+#endregion
     }
 }

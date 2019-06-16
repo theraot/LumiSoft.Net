@@ -5,7 +5,6 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class EmailAddress
     {
-        private readonly Item                  m_pItem;
         private EmailAddressType_enum m_Type         = EmailAddressType_enum.Internet;
         private string                m_EmailAddress = "";
                 
@@ -17,7 +16,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="emailAddress">Email address.</param>
         internal EmailAddress(Item item,EmailAddressType_enum type,string emailAddress)
         {
-            m_pItem        = item;
+            Item        = item;
             m_Type         = type;
             m_EmailAddress = emailAddress;
         }
@@ -30,8 +29,8 @@ namespace LumiSoft.Net.Mime.vCard
         /// </summary>
         private void Changed()
         {
-            m_pItem.ParametersString = EmailTypeToString(m_Type);
-            m_pItem.SetDecodedValue(m_EmailAddress);
+            Item.ParametersString = EmailTypeToString(m_Type);
+            Item.SetDecodedValue(m_EmailAddress);
         }
 
         #endregion
@@ -95,10 +94,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets underlaying vCrad item.
         /// </summary>
-        public Item Item
-        {
-            get{ return m_pItem; }
-        }
+        public Item Item { get; }
 
         /// <summary>
         /// Gets or sets email type. Note: This property can be flagged value !

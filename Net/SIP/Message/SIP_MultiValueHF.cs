@@ -10,8 +10,6 @@ namespace LumiSoft.Net.SIP.Message
     /// </summary>
     public class SIP_MultiValueHF<T> : SIP_HeaderField where T : SIP_t_Value,new()
     {
-        private readonly List<T> m_pValues;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -19,7 +17,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         public SIP_MultiValueHF(string name,string value) : base(name,value)
         {
-            m_pValues = new List<T>();
+            Values = new List<T>();
 
             SetMultiValue(true);
 
@@ -35,7 +33,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="value">Header field value.</param>
         private void Parse(string value)
         {
-            m_pValues.Clear();
+            Values.Clear();
             
             StringReader r = new StringReader(value);
             while(r.Available > 0){
@@ -48,7 +46,7 @@ namespace LumiSoft.Net.SIP.Message
                 // Allow xxx-param to pasre 1 value from reader.
                 T param = new T();
                 param.Parse(r);
-                m_pValues.Add(param);                
+                Values.Add(param);                
             }
         }
 
@@ -64,11 +62,11 @@ namespace LumiSoft.Net.SIP.Message
         {
             StringBuilder retVal = new StringBuilder();
             // Syntax: xxx-parm *(COMMA xxx-parm)
-            for(int i=0;i<m_pValues.Count;i++){
-                retVal.Append(m_pValues[i].ToStringValue());
+            for(int i=0;i<Values.Count;i++){
+                retVal.Append(Values[i].ToStringValue());
 
                 // Don't add comma for last item.
-                if(i < m_pValues.Count - 1){
+                if(i < Values.Count - 1){
                     retVal.Append(',');
                 }
             }
@@ -87,7 +85,7 @@ namespace LumiSoft.Net.SIP.Message
         /// <returns></returns>
         public object[] GetValues()
         {
-            return m_pValues.ToArray();
+            return Values.ToArray();
         }
 
         #endregion
@@ -100,8 +98,8 @@ namespace LumiSoft.Net.SIP.Message
         /// <param name="index">Index of value to remove.</param>
         public void Remove(int index)
         {
-            if(index > -1 && index < m_pValues.Count){
-                m_pValues.RemoveAt(index);
+            if(index > -1 && index < Values.Count){
+                Values.RemoveAt(index);
             }
         }
 
@@ -131,17 +129,14 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets header field values.
         /// </summary>
-        public List<T> Values
-        {
-            get{ return m_pValues; }
-        }
+        public List<T> Values { get; }
 
         /// <summary>
         /// Gets values count.
         /// </summary>
         public int Count
         {
-            get{ return m_pValues.Count; }
+            get{ return Values.Count; }
         }
                 
         #endregion

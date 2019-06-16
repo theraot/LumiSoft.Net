@@ -8,10 +8,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Repetition
     {
-        private readonly int          m_Min;
-        private readonly int          m_Max      = int.MaxValue;
-        private readonly ABNF_Element m_pElement;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -35,9 +31,9 @@ namespace LumiSoft.Net.ABNF
                 throw new ArgumentNullException("element");
             }
 
-            m_Min      = min;
-            m_Max      = max;
-            m_pElement = element;
+            Min      = min;
+            Max      = max;
+            Element = element;
         }
 
 
@@ -127,27 +123,18 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets minimum repetitions.
         /// </summary>
-        public int Min
-        {
-            get{ return m_Min; }
-        }
+        public int Min { get; }
 
         /// <summary>
         /// Gets maximum repetitions.
         /// </summary>
-        public int Max
-        {
-            get{ return m_Max; }
-        }
+        public int Max { get; } = int.MaxValue;
 
         /// <summary>
         /// Gets repeated element.
         /// </summary>
-        public ABNF_Element Element
-        {
-            get{ return m_pElement; }
-        }
+        public ABNF_Element Element { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -9,11 +9,6 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Append : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private readonly string[]            m_pFlags;
-        private readonly DateTime            m_Date      = DateTime.MinValue;
-        private readonly int                 m_Size;
-        private Stream              m_pStream;      
 
         /// <summary>
         /// Default constructor.
@@ -36,10 +31,10 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
 
-            m_Folder    = folder;
-            m_pFlags    = flags;
-            m_Date      = date;
-            m_Size      = size;
+            Folder    = folder;
+            Flags    = flags;
+            InternalDate      = date;
+            Size      = size;
             m_pResponse = response;
         }
 
@@ -66,46 +61,29 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets message flags.
         /// </summary>
-        public string[] Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public string[] Flags { get; }
 
         /// <summary>
         /// Gets message internal date. Value DateTime.MinValue means not specified.
         /// </summary>
-        public DateTime InternalDate
-        {
-            get{ return m_Date; }
-        }
+        public DateTime InternalDate { get; } = DateTime.MinValue;
 
         /// <summary>
         /// Gets message size in bytes.
         /// </summary>
-        public int Size
-        {
-            get{ return m_Size; }
-        }
+        public int Size { get; }
 
         /// <summary>
         /// Gets or sets message stream.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
+        public Stream Stream { get; set; }
 
-            set{ m_pStream = value; }
-        }
-
-        #endregion
+#endregion
 
         #region Events implementation
 

@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Uid : IMAP_t_Fetch_r_i
     {
-        private readonly long m_UID;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'uid' value must be >= 0.","uid");
             }
 
-            m_UID = uid;
+            UID = uid;
         }
 
 
@@ -29,11 +27,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message UID value.
         /// </summary>
-        public long UID
-        {
-            get{ return m_UID; }
-        }
+        public long UID { get; }
 
-        #endregion
+#endregion
     }
 }

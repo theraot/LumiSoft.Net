@@ -11,15 +11,14 @@ namespace LumiSoft.Net.Mime
 	public class GroupAddress : Address
 	{
 		private string                   m_DisplayName   = "";
-		private readonly MailboxAddressCollection m_pGroupMembers;
 
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		public GroupAddress() : base(true)
 		{
-			m_pGroupMembers = new MailboxAddressCollection();
-			m_pGroupMembers.Owner = this;
+			GroupMembers = new MailboxAddressCollection();
+			GroupMembers.Owner = this;
 		}
 
 
@@ -93,12 +92,9 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Gets group members collection.
 		/// </summary>
-		public MailboxAddressCollection GroupMembers
-		{
-			get{ return m_pGroupMembers; }
-		}
+		public MailboxAddressCollection GroupMembers { get; }
 
-		#endregion
+#endregion
 
 	}
 }

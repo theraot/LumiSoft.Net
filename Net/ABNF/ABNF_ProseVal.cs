@@ -8,8 +8,6 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_ProseVal : ABNF_Element
     {
-        private readonly string m_Value = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,7 +24,7 @@ namespace LumiSoft.Net.ABNF
                 // throw new ArgumentException("Invalid argument 'value' value. Value must be: '*(%x20-3D / %x3F-7E)'.");
             }
 
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -131,11 +129,8 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets value.
         /// </summary>
-        public string Value
-        {
-            get{ return m_Value; }
-        }
+        public string Value { get; } = "";
 
-        #endregion
+#endregion
     }
 }

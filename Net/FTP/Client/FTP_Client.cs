@@ -46,8 +46,6 @@ namespace LumiSoft.Net.FTP.Client
             private Socket           m_pSocket;
             private int              m_ActivePort   = -1;
             private FTP_TransferMode m_TransferMode = FTP_TransferMode.Active;
-            private DateTime         m_LastActivity;
-            private bool             m_IsActive;
 
             /// <summary>
             /// Default constructor.
@@ -133,7 +131,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ArgumentNullException("stream");
                 }
 
-                m_IsActive = true;
+                IsActive = true;
                 try{
                     if(m_TransferMode == FTP_TransferMode.Active){
                         using(NetworkStream dataStream = WaitFtpServerToConnect(20)){
@@ -149,7 +147,7 @@ namespace LumiSoft.Net.FTP.Client
                     }
                 }
                 finally{
-                    m_IsActive = false;
+                    IsActive = false;
                     CleanUpSocket();
                 }
             }
@@ -184,7 +182,7 @@ namespace LumiSoft.Net.FTP.Client
                     }
                 }
                 finally{
-                    m_IsActive = false;
+                    IsActive = false;
                     CleanUpSocket();
                 }
             }
@@ -315,7 +313,7 @@ namespace LumiSoft.Net.FTP.Client
                     else{
                         target.Write(buffer,0,readedCount);
                         totalReadedCount += readedCount;
-                        m_LastActivity = DateTime.Now;
+                        LastActivity = DateTime.Now;
                     }
                 }
             }
@@ -336,20 +334,14 @@ namespace LumiSoft.Net.FTP.Client
             /// <summary>
             /// Gets last time when data connection has read or written data.
             /// </summary>
-            public DateTime LastActivity
-            {
-                get{ return m_LastActivity; }
-            }
+            public DateTime LastActivity { get; private set; }
 
             /// <summary>
             /// Gets if there is active read or write job in data stream.
             /// </summary>
-            public bool IsActive
-            {
-                get{ return m_IsActive; }
-            }
+            public bool IsActive { get; private set; }
 
-            #endregion
+#endregion
 
         }
 

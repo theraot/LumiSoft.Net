@@ -11,13 +11,7 @@ namespace LumiSoft.Net.SIP.Proxy
     public class SIP_RegistrationBinding : IComparable
     {
         private readonly SIP_Registration m_pRegistration;
-        private DateTime         m_LastUpdate;
-        private SIP_Flow         m_pFlow;
-        private readonly AbsoluteUri      m_ContactURI;
         private int              m_Expires       = 3600;
-        private double           m_QValue        = 1.0;
-        private string           m_CallID        = "";
-        private int              m_CSeqNo        = 1;
 
         /// <summary>
         /// Default constructor.
@@ -35,7 +29,7 @@ namespace LumiSoft.Net.SIP.Proxy
             }
 
             m_pRegistration = owner;
-            m_ContactURI    = contactUri;
+            ContactURI    = contactUri;
         }
 
 
@@ -65,13 +59,13 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentException("Argument 'cseqNo' value must be >= 0.");
             }
 
-            m_pFlow    = flow;
+            Flow    = flow;
             m_Expires  = expires;
-            m_QValue   = qvalue;
-            m_CallID   = callID;
-            m_CSeqNo   = cseqNo;
+            QValue   = qvalue;
+            CallID   = callID;
+            CSeqNo   = cseqNo;
 
-            m_LastUpdate = DateTime.Now;
+            LastUpdate = DateTime.Now;
         }
 
         #endregion
@@ -97,7 +91,7 @@ namespace LumiSoft.Net.SIP.Proxy
         public string ToContactValue()
         {
             SIP_t_ContactParam retVal = new SIP_t_ContactParam();
-            retVal.Parse(new StringReader(m_ContactURI.ToString()));
+            retVal.Parse(new StringReader(ContactURI.ToString()));
             retVal.Expires = m_Expires;
 
             return retVal.ToStringValue();
@@ -145,10 +139,7 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets the last time when the binding was updated.
         /// </summary>
-        public DateTime LastUpdate
-        {
-            get{ return m_LastUpdate; }
-        }
+        public DateTime LastUpdate { get; private set; }
 
         /// <summary>
         /// Gets if binding has expired.
@@ -164,11 +155,11 @@ namespace LumiSoft.Net.SIP.Proxy
         public int TTL
         {
             get{
-                if(DateTime.Now > m_LastUpdate.AddSeconds(m_Expires)){
+                if(DateTime.Now > LastUpdate.AddSeconds(m_Expires)){
                     return 0;
                 }
                 else{
-                    return (int)((TimeSpan)(m_LastUpdate.AddSeconds(m_Expires) - DateTime.Now)).TotalSeconds;
+                    return (int)((TimeSpan)(LastUpdate.AddSeconds(m_Expires) - DateTime.Now)).TotalSeconds;
                 }
             }
         }
@@ -177,44 +168,29 @@ namespace LumiSoft.Net.SIP.Proxy
         /// Gets data flow what added this binding. This value is null if binding was not added through network or
         /// flow has disposed.
         /// </summary>
-        public SIP_Flow Flow
-        {
-            get{ return m_pFlow; }
-        }
+        public SIP_Flow Flow { get; private set; }
 
         /// <summary>
         /// Gets contact URI what can be used to contact the registration.
         /// </summary>
-        public AbsoluteUri ContactURI
-        {
-            get{ return m_ContactURI; }
-        }
+        public AbsoluteUri ContactURI { get; }
 
         /// <summary>
         /// Gets binding priority. Higher value means greater priority.
         /// </summary>
-        public double QValue
-        {
-            get{ return m_QValue; }
-        }
+        public double QValue { get; private set; } = 1.0;
 
         /// <summary>
         /// Gets Call-ID header field value which added this binding.
         /// </summary>
-        public string CallID
-        {
-            get{ return m_CallID; }
-        }
+        public string CallID { get; private set; } = "";
 
         /// <summary>
         /// Gets CSeq header field sequence number value which added this binding.
         /// </summary>
-        public int CSeqNo
-        {
-            get{ return m_CSeqNo; }
-        }
+        public int CSeqNo { get; private set; } = 1;
 
-        #endregion
+#endregion
 
     }
 }

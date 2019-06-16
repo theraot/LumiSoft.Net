@@ -7,9 +7,6 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_Dele : EventArgs
     {
-        private FTP_t_ReplyLine[] m_pReplyLines;
-        private readonly string            m_FileName;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +18,7 @@ namespace LumiSoft.Net.FTP.Server
                 throw new ArgumentNullException("fileName");
             }
 
-            m_FileName = fileName;
+            FileName = fileName;
         }
 
 
@@ -30,21 +27,13 @@ namespace LumiSoft.Net.FTP.Server
         /// <summary>
         /// Gets or sets FTP server response.
         /// </summary>
-        public FTP_t_ReplyLine[] Response
-        {
-            get{ return m_pReplyLines; }
-
-            set{ m_pReplyLines = value; }
-        }
+        public FTP_t_ReplyLine[] Response { get; set; }
 
         /// <summary>
         /// Gets file name with optional path.
         /// </summary>
-        public string FileName
-        {
-            get{ return m_FileName; }
-        }
+        public string FileName { get; }
 
-        #endregion
+#endregion
     }
 }

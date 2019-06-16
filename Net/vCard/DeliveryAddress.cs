@@ -5,7 +5,6 @@ namespace LumiSoft.Net.Mime.vCard
     /// </summary>
     public class DeliveryAddress
     {
-        private readonly Item                     m_pItem;
         private DeliveryAddressType_enum m_Type              = DeliveryAddressType_enum.Ineternational | DeliveryAddressType_enum.Postal | DeliveryAddressType_enum.Parcel | DeliveryAddressType_enum.Work;
         private string                   m_PostOfficeAddress = "";
         private string                   m_ExtendedAddress   = "";
@@ -29,7 +28,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <param name="country">Country.</param>
         internal DeliveryAddress(Item item,DeliveryAddressType_enum addressType,string postOfficeAddress,string extendedAddress,string street,string locality,string region,string postalCode,string country)
         {
-            m_pItem             = item;
+            Item             = item;
             m_Type              = addressType;
             m_PostOfficeAddress = postOfficeAddress;
             m_ExtendedAddress   = extendedAddress;
@@ -57,8 +56,8 @@ namespace LumiSoft.Net.Mime.vCard
                 m_PostalCode + ";" +
                 m_Country;
 
-            m_pItem.ParametersString = AddressTypeToString(m_Type);
-            m_pItem.SetDecodedValue(value);
+            Item.ParametersString = AddressTypeToString(m_Type);
+            Item.SetDecodedValue(value);
         }
 
         #endregion
@@ -157,10 +156,7 @@ namespace LumiSoft.Net.Mime.vCard
         /// <summary>
         /// Gets underlaying vCrad item.
         /// </summary>
-        public Item Item
-        {
-            get{ return m_pItem; }
-        }
+        public Item Item { get; }
 
         /// <summary>
         /// Gets or sets address type. Note: This property can be flagged value !

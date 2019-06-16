@@ -7,9 +7,6 @@ namespace LumiSoft.Net.TCP
     /// </summary>
     public class TCP_ServerSessionEventArgs<T> : EventArgs where T : TCP_ServerSession,new()
     {
-        private readonly TCP_Server<T> m_pServer;
-        private readonly T             m_pSession;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -17,8 +14,8 @@ namespace LumiSoft.Net.TCP
         /// <param name="session">TCP server session.</param>
         internal TCP_ServerSessionEventArgs(TCP_Server<T> server,T session)
         {
-            m_pServer  = server;
-            m_pSession = session;
+            Server  = server;
+            Session = session;
         }
 
 
@@ -27,20 +24,14 @@ namespace LumiSoft.Net.TCP
         /// <summary>
         /// Gets TCP server.
         /// </summary>
-        public TCP_Server<T> Server
-        {
-            get{ return m_pServer; }
-        }
+        public TCP_Server<T> Server { get; }
 
         /// <summary>
         /// Gets TCP server session.
         /// </summary>
-        public T Session
-        {
-            get{ return m_pSession; }
-        }
+        public T Session { get; }
 
-        #endregion
+#endregion
 
     }
 }

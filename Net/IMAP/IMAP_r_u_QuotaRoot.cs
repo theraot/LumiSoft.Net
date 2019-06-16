@@ -9,9 +9,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_QuotaRoot : IMAP_r_u
     {
-        private readonly string   m_FolderName = "";
-        private readonly string[] m_QuotaRoots;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -31,8 +28,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("quotaRoots");
             }
 
-            m_FolderName = folder;
-            m_QuotaRoots = quotaRoots;
+            FolderName = folder;
+            QuotaRoots = quotaRoots;
         }
 
 
@@ -107,8 +104,8 @@ namespace LumiSoft.Net.IMAP
             // Example:    S: * QUOTAROOT INBOX ""
 
             StringBuilder retVal = new StringBuilder();
-            retVal.Append("* QUOTAROOT " + IMAP_Utils.EncodeMailbox(m_FolderName,encoding));
-            foreach(string root in m_QuotaRoots){
+            retVal.Append("* QUOTAROOT " + IMAP_Utils.EncodeMailbox(FolderName,encoding));
+            foreach(string root in QuotaRoots){
                 retVal.Append(" \"" + root + "\"");
             }
             retVal.Append("\r\n");
@@ -124,19 +121,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets folder name.
         /// </summary>
-        public string FolderName
-        {
-            get{ return m_FolderName; }
-        }
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Gets quota roots.
         /// </summary>
-        public string[] QuotaRoots
-        {
-            get{ return m_QuotaRoots; }
-        }
+        public string[] QuotaRoots { get; }
 
-        #endregion
+#endregion
     }
 }

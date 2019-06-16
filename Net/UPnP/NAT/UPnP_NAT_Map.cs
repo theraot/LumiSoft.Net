@@ -5,15 +5,6 @@
     /// </summary>
     public class UPnP_NAT_Map
     {
-        private readonly bool   m_Enabled;
-        private readonly string m_Protocol      = "";
-        private readonly string m_RemoteHost    = "";
-        private readonly string m_ExternalPort  = "";
-        private readonly string m_InternalHost  = "";
-        private readonly int    m_InternalPort;
-        private readonly string m_Description   = "";
-        private readonly int    m_LeaseDuration;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,14 +18,14 @@
         /// <param name="leaseDuration">Lease duration in in seconds. Value null means "never expires".</param>
         public UPnP_NAT_Map(bool enabled,string protocol,string remoteHost,string externalPort,string internalHost,int internalPort,string description,int leaseDuration)
         {
-            m_Enabled       = enabled;
-            m_Protocol      = protocol;
-            m_RemoteHost    = remoteHost;
-            m_ExternalPort  = externalPort;
-            m_InternalHost  = internalHost;
-            m_InternalPort  = internalPort;
-            m_Description   = description;
-            m_LeaseDuration = leaseDuration;
+            Enabled       = enabled;
+            Protocol      = protocol;
+            RemoteHost    = remoteHost;
+            ExternalPort  = externalPort;
+            InternalHost  = internalHost;
+            InternalPort  = internalPort;
+            Description   = description;
+            LeaseDuration = leaseDuration;
         }
 
 
@@ -43,67 +34,43 @@
         /// <summary>
         /// Gets if NAT port map is enabled.
         /// </summary>
-        public bool Enabled
-        {
-            get{ return m_Enabled; }
-        }
+        public bool Enabled { get; }
 
         /// <summary>
         /// Gets port mapping protocol. Nomrally this value TCP or UDP.
         /// </summary>
-        public string Protocol
-        {
-            get{ return m_Protocol; }
-        }
+        public string Protocol { get; } = "";
 
         /// <summary>
         /// Gets remote host IP address. NOTE: Some implementations may use wilcard(*,?) values.
         /// </summary>
-        public string RemoteHost
-        {
-            get{ return m_RemoteHost; }
-        }
+        public string RemoteHost { get; } = "";
 
         /// <summary>
         /// Gets NAT external port number. NOTE: Some implementations may use wilcard(*,?) values.
         /// </summary>
-        public string ExternalPort
-        {
-            get{ return m_ExternalPort; }
-        }
+        public string ExternalPort { get; } = "";
 
         /// <summary>
         /// Gets internal host IP address.
         /// </summary>
-        public string InternalHost
-        {
-            get{ return m_InternalHost; }
-        }
+        public string InternalHost { get; } = "";
 
         /// <summary>
         /// Gets internal host port number.
         /// </summary>
-        public int InternalPort
-        {
-            get{ return m_InternalPort; }
-        }
+        public int InternalPort { get; }
 
         /// <summary>
         /// Gets NAT port mapping description.
         /// </summary>
-        public string Description
-        {
-            get{ return m_Description; }
-        }
+        public string Description { get; } = "";
 
         /// <summary>
         /// Gets lease duration in in seconds. Value null means "never expires".
         /// </summary>
-        public int LeaseDuration
-        {
-            get{ return m_LeaseDuration; }
-        }
+        public int LeaseDuration { get; }
 
-        #endregion
+#endregion
     }
 }

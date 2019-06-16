@@ -10,15 +10,13 @@ namespace LumiSoft.Net.IMAP
     /// <remarks>Messages with an [RFC-2822] size smaller than the specified number of octets.</remarks>
     public class IMAP_Search_Key_Smaller : IMAP_Search_Key
     {
-        private readonly int m_Value;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">Message size in bytes.</param>
         public IMAP_Search_Key_Smaller(int value)
         {
-            m_Value = value;
+            Value = value;
         }
 
 
@@ -64,7 +62,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "SMALLER " + m_Value;
+            return "SMALLER " + Value;
         }
 
         #endregion
@@ -94,11 +92,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets value.
         /// </summary>
-        public int Value
-        {
-            get{ return m_Value; }
-        }
+        public int Value { get; }
 
-        #endregion
+#endregion
     }
 }

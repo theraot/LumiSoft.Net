@@ -8,8 +8,6 @@ namespace LumiSoft.Net.SIP.Stack
     public class SIP_RequestReceivedEventArgs : EventArgs
     {
         private readonly SIP_Stack             m_pStack;
-        private readonly SIP_Flow              m_pFlow;
-        private readonly SIP_Request           m_pRequest;
         private SIP_ServerTransaction m_pTransaction;
         private bool                  m_IsHandled;
 
@@ -33,8 +31,8 @@ namespace LumiSoft.Net.SIP.Stack
         internal SIP_RequestReceivedEventArgs(SIP_Stack stack,SIP_Flow flow,SIP_Request request,SIP_ServerTransaction transaction)
         {
             m_pStack       = stack;
-            m_pFlow        = flow;
-            m_pRequest     = request;
+            Flow        = flow;
+            Request     = request;
             m_pTransaction = transaction;
         }
 
@@ -44,18 +42,12 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets data flow what received SIP request.
         /// </summary>
-        public SIP_Flow Flow
-        {
-            get{ return m_pFlow; }
-        }
+        public SIP_Flow Flow { get; }
 
         /// <summary>
         /// Gets the received rquest.
         /// </summary>
-        public SIP_Request Request
-        {
-            get{ return m_pRequest; }
-        }
+        public SIP_Request Request { get; }
 
         /// <summary>
         /// Gets server transaction for that request. Server transaction is created when this property is 
@@ -67,13 +59,13 @@ namespace LumiSoft.Net.SIP.Stack
         {
             get{
                 // ACK never creates transaction.
-                if(m_pRequest.RequestLine.Method == SIP_Methods.ACK){
+                if(Request.RequestLine.Method == SIP_Methods.ACK){
                     return null;
                 }
 
                 // Create server transaction for that request.
                 if(m_pTransaction == null){
-                    m_pTransaction = m_pStack.TransactionLayer.EnsureServerTransaction(m_pFlow,m_pRequest);
+                    m_pTransaction = m_pStack.TransactionLayer.EnsureServerTransaction(Flow,Request);
                 }
 
                 return m_pTransaction; 
@@ -85,7 +77,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public SIP_Dialog Dialog
         {
-            get{ return m_pStack.TransactionLayer.MatchDialog(m_pRequest); }
+            get{ return m_pStack.TransactionLayer.MatchDialog(Request); }
         }
 
         /// <summary>

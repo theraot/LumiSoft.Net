@@ -7,9 +7,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class PortRange
     {
-        private readonly int m_Start = 1000;
-        private readonly int m_End   = 1100;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,8 +25,8 @@ namespace LumiSoft.Net
                 throw new ArgumentOutOfRangeException("Argumnet 'start' value must be >= argument 'end' value.");
             }
 
-            m_Start = start;
-            m_End   = end;
+            Start = start;
+            End   = end;
         }
 
 
@@ -38,20 +35,14 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets start port.
         /// </summary>
-        public int Start
-        {
-            get{ return m_Start; }
-        }
+        public int Start { get; } = 1000;
 
         /// <summary>
         /// Gets end port.
         /// </summary>
-        public int End
-        {
-            get{ return m_End; }
-        }
+        public int End { get; } = 1100;
 
-        #endregion
+#endregion
 
     }
 }

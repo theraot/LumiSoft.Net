@@ -8,11 +8,7 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Store : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly string              m_Folder;
-        private readonly IMAP_MessageInfo    m_pMsgInfo;
-        private readonly IMAP_Flags_SetType  m_SetType   = IMAP_Flags_SetType.Replace;
-        private readonly string[]            m_pFlags;
- 
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -35,10 +31,10 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             m_pResponse = response;
-            m_Folder    = folder;
-            m_pMsgInfo  = msgInfo;
-            m_SetType   = flagsSetType;
-            m_pFlags    = flags;
+            Folder    = folder;
+            MessageInfo  = msgInfo;
+            FlagsSetType   = flagsSetType;
+            Flags    = flags;
         }
 
 
@@ -64,35 +60,23 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets folder name with optional path.
         /// </summary>
-        public string Folder
-        {
-            get{ return m_Folder; }
-        }
+        public string Folder { get; }
 
         /// <summary>
         /// Gets IMAP message info.
         /// </summary>
-        public IMAP_MessageInfo MessageInfo
-        {
-            get{ return m_pMsgInfo; }
-        }
+        public IMAP_MessageInfo MessageInfo { get; }
 
         /// <summary>
         /// Gets flags set type.
         /// </summary>
-        public IMAP_Flags_SetType FlagsSetType
-        {
-            get{ return m_SetType; }
-        }
+        public IMAP_Flags_SetType FlagsSetType { get; } = IMAP_Flags_SetType.Replace;
 
         /// <summary>
         /// Gets flags.
         /// </summary>
-        public string[] Flags
-        {
-            get{ return m_pFlags; }
-        }
+        public string[] Flags { get; }
 
-        #endregion
+#endregion
     }
 }

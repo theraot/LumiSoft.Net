@@ -5,10 +5,6 @@
     /// </summary>
     public class AudioFormat
     {
-        private readonly int m_SamplesPerSecond;
-        private readonly int m_BitsPerSample;
-        private readonly int m_Channels;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -17,9 +13,9 @@
         /// <param name="channels">The number of channels that are provided by the audio format.</param>
         public AudioFormat(int samplesPerSecond,int bitsPerSample,int channels)
         {
-            m_SamplesPerSecond = samplesPerSecond;
-            m_BitsPerSample    = bitsPerSample;
-            m_Channels         = channels;
+            SamplesPerSecond = samplesPerSecond;
+            BitsPerSample    = bitsPerSample;
+            Channels         = channels;
         }
 
 
@@ -74,27 +70,18 @@
         /// <summary>
         /// Gets the number of samples per second that are provided by the audio format.
         /// </summary>
-        public int SamplesPerSecond
-        {
-            get{ return m_SamplesPerSecond; }
-        }
+        public int SamplesPerSecond { get; }
 
         /// <summary>
         /// Gets the number of bits that are used to store the audio information for a single sample of an audio format.
         /// </summary>
-        public int BitsPerSample
-        {
-            get{ return m_BitsPerSample; }
-        }
+        public int BitsPerSample { get; }
 
         /// <summary>
         /// Gets the number of channels that are provided by the audio format.
         /// </summary>
-        public int Channels
-        {
-            get{ return m_Channels; }
-        }
-                
-        #endregion
+        public int Channels { get; }
+
+#endregion
     }
 }

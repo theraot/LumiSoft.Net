@@ -10,9 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_NS : DNS_rr
 	{
-		private readonly string m_NameServer = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_NS(string name,string nameServer,int ttl) : base(name,DNS_QType.NS,ttl)
 		{
-			m_NameServer = nameServer;
+			NameServer = nameServer;
 		}
 
 
@@ -55,12 +53,9 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets name server name.
 		/// </summary>
-		public string NameServer
-		{
-			get{ return m_NameServer; }
-		}
+		public string NameServer { get; } = "";
 
-		#endregion
+#endregion
 
 	}
 }

@@ -114,19 +114,17 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class Mime
 	{
-		private readonly MimeEntity m_pMainEntity;
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		public Mime()
 		{
-			m_pMainEntity = new MimeEntity();
+			MainEntity = new MimeEntity();
 
 			// Add default header fields
-			m_pMainEntity.MessageID = MimeUtils.CreateMessageID();
-			m_pMainEntity.Date = DateTime.Now;
-			m_pMainEntity.MimeVersion = "1.0";
+			MainEntity.MessageID = MimeUtils.CreateMessageID();
+			MainEntity.Date = DateTime.Now;
+			MainEntity.MimeVersion = "1.0";
 		}
 
 
@@ -341,7 +339,7 @@ namespace LumiSoft.Net.Mime
 		/// <param name="storeStream">Stream where to store mime message.</param>
 		public void ToStream(Stream storeStream)
 		{
-			m_pMainEntity.ToStream(storeStream);
+			MainEntity.ToStream(storeStream);
 		}
 
 		#endregion
@@ -376,20 +374,17 @@ namespace LumiSoft.Net.Mime
 		/// <summary>
 		/// Message main(top-level) entity.
 		/// </summary>
-		public MimeEntity MainEntity
-		{
-			get{ return m_pMainEntity; }
-		}
+		public MimeEntity MainEntity { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets all mime entities contained in message, including child entities.
 		/// </summary>
 		public MimeEntity[] MimeEntities
 		{
 			get{ 
 				List<MimeEntity> allEntities = new List<MimeEntity>();
-				allEntities.Add(m_pMainEntity);
-				GetEntities(m_pMainEntity.ChildEntities,allEntities);
+				allEntities.Add(MainEntity);
+				GetEntities(MainEntity.ChildEntities,allEntities);
 
 				return allEntities.ToArray(); 
 			}

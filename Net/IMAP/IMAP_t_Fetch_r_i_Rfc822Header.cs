@@ -8,8 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Rfc822Header : IMAP_t_Fetch_r_i
     {
-        private Stream m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -21,7 +19,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("stream");
             }
 
-            m_pStream = stream;
+            Stream = stream;
         }
 
 
@@ -38,7 +36,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("stream");
             }
 
-            m_pStream = stream;
+            Stream = stream;
         }
 
         #endregion
@@ -49,11 +47,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets message header stream.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
-        }
+        public Stream Stream { get; private set; }
 
-        #endregion
+#endregion
     }
 }

@@ -8,14 +8,12 @@ namespace LumiSoft.Net.ABNF
     /// </summary>
     public class ABNF_Concatenation
     {
-        private readonly List<ABNF_Repetition> m_pItems;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public ABNF_Concatenation()
         {
-            m_pItems = new List<ABNF_Repetition>();
+            Items = new List<ABNF_Repetition>();
         }
 
 
@@ -38,7 +36,7 @@ namespace LumiSoft.Net.ABNF
             while(true){
                 ABNF_Repetition item = ABNF_Repetition.Parse(reader);
                 if(item != null){
-                    retVal.m_pItems.Add(item);
+                    retVal.Items.Add(item);
                 }
                 // We reached end of string.
                 else if(reader.Peek() == -1){
@@ -63,11 +61,8 @@ namespace LumiSoft.Net.ABNF
         /// <summary>
         /// Gets concatenation items.
         /// </summary>
-        public List<ABNF_Repetition> Items
-        {
-            get{ return m_pItems; }
-        }
+        public List<ABNF_Repetition> Items { get; }
 
-        #endregion
+#endregion
     }
 }

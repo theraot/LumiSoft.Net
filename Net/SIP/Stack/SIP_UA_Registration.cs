@@ -11,8 +11,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_UA_Registration
     {
-        private bool                     m_IsDisposed;
-        private SIP_UA_RegistrationState m_State             = SIP_UA_RegistrationState.Unregistered;
         private SIP_Stack                m_pStack;
         private readonly SIP_Uri                  m_pServer;
         private readonly string                   m_AOR               = "";
@@ -75,10 +73,10 @@ namespace LumiSoft.Net.SIP.Stack
         /// </summary>
         public void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             m_pStack = null;
             m_pTimer.Dispose();
@@ -217,7 +215,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         public void BeginRegister(bool autoRefresh)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -257,7 +255,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and and this method is accessed.</exception>
         public void BeginUnregister(bool dispose)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
 
@@ -266,7 +264,7 @@ namespace LumiSoft.Net.SIP.Stack
             // Stop register timer, otherwise we may get register and unregister race condition.
             m_pTimer.Enabled = false;
 
-            if(m_State == SIP_UA_RegistrationState.Registered){
+            if(State == SIP_UA_RegistrationState.Registered){
                 /* RFC 3261 10.1 Constructing the REGISTER Request.
                     Request-URI: The Request-URI names the domain of the location service for which the registration is meant (for example,
                                  "sip:chicago.com").  The "userinfo" and "@" components of the SIP URI MUST NOT be present.
@@ -304,7 +302,7 @@ namespace LumiSoft.Net.SIP.Stack
         /// <param name="newState">New registration state.</param>
         private void SetState(SIP_UA_RegistrationState newState)
         {
-            m_State = newState;
+            State = newState;
 
             OnStateChanged();
         }
@@ -317,18 +315,12 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Gets registration state.
         /// </summary>
-        public SIP_UA_RegistrationState State
-        {
-            get{ return m_State; }
-        }
+        public SIP_UA_RegistrationState State { get; private set; } = SIP_UA_RegistrationState.Unregistered;
 
         /// <summary>
         /// Gets after how many seconds contact expires.
@@ -337,7 +329,7 @@ namespace LumiSoft.Net.SIP.Stack
         public int Expires
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -352,7 +344,7 @@ namespace LumiSoft.Net.SIP.Stack
         public string AOR
         {
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -367,7 +359,7 @@ namespace LumiSoft.Net.SIP.Stack
         public AbsoluteUri Contact
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -382,7 +374,7 @@ namespace LumiSoft.Net.SIP.Stack
         public AbsoluteUri[] Contacts
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 
@@ -397,7 +389,7 @@ namespace LumiSoft.Net.SIP.Stack
         public bool AutoFixContact
         {
             get{ 
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException(this.GetType().Name);
                 }
 

@@ -10,14 +10,12 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_MultiStatus
     {
-        private readonly List<WebDav_Response> m_pResponses;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public WebDav_MultiStatus()
         {
-            m_pResponses = new List<WebDav_Response>();
+            Responses = new List<WebDav_Response>();
         }
 
 
@@ -62,11 +60,8 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets responses collection.
         /// </summary>
-        public List<WebDav_Response> Responses
-        {
-            get{ return m_pResponses; }
-        }
+        public List<WebDav_Response> Responses { get; }
 
-        #endregion
+#endregion
     }
 }

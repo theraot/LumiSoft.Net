@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_orc_Alert : IMAP_t_orc
     {
-        private readonly string m_AlertText;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("text");
             }
 
-            m_AlertText = text;
+            AlertText = text;
         }
 
 
@@ -57,7 +55,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public override string ToString()
         {
-            return "ALERT " + m_AlertText;
+            return "ALERT " + AlertText;
         }
 
         #endregion
@@ -68,11 +66,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets alert text.
         /// </summary>
-        public string AlertText
-        {
-            get{ return m_AlertText; }
-        }
+        public string AlertText { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -37,7 +37,7 @@ namespace LumiSoft.Net.DNS.Client
     {        
         private static Dns_Client  m_pDnsClient;
         private static IPAddress[] m_DnsServers;
-		private static bool        m_UseDnsCache = true;
+
         // 
         private bool                                  m_IsDisposed;
         private Dictionary<int,DNS_ClientTransaction> m_pTransactions;
@@ -45,9 +45,8 @@ namespace LumiSoft.Net.DNS.Client
         private Socket                                m_pIPv6Socket;
         private List<UDP_DataReceiver>                m_pReceivers;
         private Random                                m_pRandom;
-        private DNS_ClientCache                       m_pCache;
 
-		/// <summary>
+        /// <summary>
 		/// Static constructor.
 		/// </summary>
 		static Dns_Client()
@@ -92,7 +91,7 @@ namespace LumiSoft.Net.DNS.Client
 
             m_pReceivers = new List<UDP_DataReceiver>();
             m_pRandom = new Random();
-            m_pCache = new DNS_ClientCache();
+            Cache = new DNS_ClientCache();
 
             // Create UDP data receivers.
             for(int i=0;i<5;i++){
@@ -145,8 +144,8 @@ namespace LumiSoft.Net.DNS.Client
             
             m_pRandom = null;
 
-            m_pCache.Dispose();
-            m_pCache = null;
+            Cache.Dispose();
+            Cache = null;
         }
 
         #endregion
@@ -358,7 +357,6 @@ namespace LumiSoft.Net.DNS.Client
         public class GetHostAddressesAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object          m_pLock          = new object();
-            private AsyncOP_State   m_State          = AsyncOP_State.WaitingForStart;
             private Exception       m_pException;
             private string          m_HostNameOrIP;
             private List<IPAddress> m_pIPv4Addresses;
@@ -390,7 +388,7 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -543,7 +541,7 @@ namespace LumiSoft.Net.DNS.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -558,14 +556,14 @@ namespace LumiSoft.Net.DNS.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -579,10 +577,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -592,10 +587,10 @@ namespace LumiSoft.Net.DNS.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -610,7 +605,7 @@ namespace LumiSoft.Net.DNS.Client
             public string HostNameOrIP
             {
                 get{
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -626,10 +621,10 @@ namespace LumiSoft.Net.DNS.Client
             public IPAddress[] Addresses
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Addresses' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -765,7 +760,6 @@ namespace LumiSoft.Net.DNS.Client
         public class GetHostsAddressesAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object                                  m_pLock          = new object();
-            private AsyncOP_State                           m_State          = AsyncOP_State.WaitingForStart;
             private Exception                               m_pException;
             private string[]                                m_pHostNames;
             private readonly bool                                    m_ResolveAny;
@@ -809,7 +803,7 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -872,7 +866,7 @@ namespace LumiSoft.Net.DNS.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -887,14 +881,14 @@ namespace LumiSoft.Net.DNS.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -963,10 +957,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -976,10 +967,10 @@ namespace LumiSoft.Net.DNS.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -994,7 +985,7 @@ namespace LumiSoft.Net.DNS.Client
             public string[] HostNames
             {
                 get{
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -1010,10 +1001,10 @@ namespace LumiSoft.Net.DNS.Client
             public HostEntry[] HostEntries
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'HostEntries' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -1133,7 +1124,6 @@ namespace LumiSoft.Net.DNS.Client
         public class GetEmailHostsAsyncOP : IDisposable,IAsyncOP
         {
             private readonly object        m_pLock         = new object();
-            private AsyncOP_State m_State         = AsyncOP_State.WaitingForStart;
             private Exception     m_pException;
             private string        m_Domain;
             private HostEntry[]   m_pHosts;
@@ -1169,7 +1159,7 @@ namespace LumiSoft.Net.DNS.Client
             /// </summary>
             public void Dispose()
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
                 SetState(AsyncOP_State.Disposed);
@@ -1222,7 +1212,7 @@ namespace LumiSoft.Net.DNS.Client
                 lock(m_pLock){
                     m_RiseCompleted = true;
 
-                    return m_State == AsyncOP_State.Active;
+                    return State == AsyncOP_State.Active;
                 }
             }
 
@@ -1237,14 +1227,14 @@ namespace LumiSoft.Net.DNS.Client
             /// <param name="state">New state.</param>
             private void SetState(AsyncOP_State state)
             {
-                if(m_State == AsyncOP_State.Disposed){
+                if(State == AsyncOP_State.Disposed){
                     return;
                 }
 
                 lock(m_pLock){
-                    m_State = state;
+                    State = state;
 
-                    if(m_State == AsyncOP_State.Completed && m_RiseCompleted){
+                    if(State == AsyncOP_State.Completed && m_RiseCompleted){
                         OnCompletedAsync();
                     }
                 }
@@ -1473,10 +1463,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <summary>
             /// Gets asynchronous operation state.
             /// </summary>
-            public AsyncOP_State State
-            {
-                get{ return m_State; }
-            }
+            public AsyncOP_State State { get; private set; } = AsyncOP_State.WaitingForStart;
 
             /// <summary>
             /// Gets error happened during operation. Returns null if no error.
@@ -1486,10 +1473,10 @@ namespace LumiSoft.Net.DNS.Client
             public Exception Error
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
@@ -1504,7 +1491,7 @@ namespace LumiSoft.Net.DNS.Client
             public string EmailDomain
             {
                 get{ 
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
 
@@ -1520,10 +1507,10 @@ namespace LumiSoft.Net.DNS.Client
             public HostEntry[] Hosts
             {
                 get{
-                    if(m_State == AsyncOP_State.Disposed){
+                    if(State == AsyncOP_State.Disposed){
                         throw new ObjectDisposedException(this.GetType().Name);
                     }
-                    if(m_State != AsyncOP_State.Completed){
+                    if(State != AsyncOP_State.Completed){
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
                     if(m_pException != null){
@@ -1640,8 +1627,8 @@ namespace LumiSoft.Net.DNS.Client
                 if(m_pTransactions.TryGetValue(serverResponse.ID,out transaction)){
                     if(transaction.State == DNS_ClientTransactionState.Active){
                         // Cache query.
-                        if(m_UseDnsCache && serverResponse.ResponseCode == DNS_RCode.NO_ERROR){
-	                        m_pCache.AddToCache(transaction.QName,(int)transaction.QType,serverResponse);
+                        if(UseDnsCache && serverResponse.ResponseCode == DNS_RCode.NO_ERROR){
+	                        Cache.AddToCache(transaction.QName,(int)transaction.QType,serverResponse);
 		                }
                         
                         transaction.ProcessResponse(serverResponse);
@@ -1979,22 +1966,14 @@ namespace LumiSoft.Net.DNS.Client
 		/// <summary>
 		/// Gets or sets if to use dns caching.
 		/// </summary>
-		public static bool UseDnsCache
-		{
-			get{ return m_UseDnsCache; }
-
-			set{ m_UseDnsCache = value; }
-		}
+		public static bool UseDnsCache { get; set; } = true;
 
         /// <summary>
         /// Gets DNS cache.
         /// </summary>
-        public DNS_ClientCache Cache
-        {
-            get{ return m_pCache; }
-        }
+        public DNS_ClientCache Cache { get; private set; }
 
-		#endregion
+#endregion
 
 
         //--- OBSOLETE --------------------

@@ -10,9 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_TXT : DNS_rr
 	{
-		private readonly string m_Text = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_TXT(string name,string text,int ttl) : base(name,DNS_QType.TXT,ttl)
 		{
-			m_Text = text;
+			Text = text;
 		}
 
 
@@ -51,11 +49,8 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets text.
 		/// </summary>
-		public string Text
-		{
-			get{ return m_Text; }
-		}
+		public string Text { get; } = "";
 
-		#endregion
+#endregion
 	}
 }

@@ -8,10 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_List : IMAP_r_u
     {
-        private readonly string   m_FolderName        = "";
-        private readonly char     m_Delimiter         = '/';
-        private readonly string[] m_pFolderAttributes = new string[0];
-                
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,10 +22,10 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("folder");
             }
 
-            m_FolderName = folder;
-            m_Delimiter  = delimiter;
+            FolderName = folder;
+            HierarchyDelimiter  = delimiter;
             if(attributes != null){
-                m_pFolderAttributes = attributes;
+                FolderAttributes = attributes;
             }
         }
 
@@ -40,7 +36,7 @@ namespace LumiSoft.Net.IMAP
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         internal IMAP_r_u_List(char delimiter)
         {
-            m_Delimiter = delimiter;
+            HierarchyDelimiter = delimiter;
         }
 
 
@@ -148,23 +144,23 @@ namespace LumiSoft.Net.IMAP
             */
 
             // Hierarchy delimiter request.
-            if(string.IsNullOrEmpty(m_FolderName)){
+            if(string.IsNullOrEmpty(FolderName)){
                 return "* LIST (\\Noselect) \"/\" \"\"\r\n";
             }
             else{
                 StringBuilder retVal = new StringBuilder();
                 retVal.Append("* LIST (");
-                if(m_pFolderAttributes != null){
-                    for(int i=0;i<m_pFolderAttributes.Length;i++){
+                if(FolderAttributes != null){
+                    for(int i=0;i<FolderAttributes.Length;i++){
                         if(i > 0){
                             retVal.Append(" ");
                         }
-                        retVal.Append(m_pFolderAttributes[i]);
+                        retVal.Append(FolderAttributes[i]);
                     }
                 }
                 retVal.Append(") ");
-                retVal.Append("\"" + m_Delimiter + "\" ");
-                retVal.Append(IMAP_Utils.EncodeMailbox(m_FolderName,encoding));
+                retVal.Append("\"" + HierarchyDelimiter + "\" ");
+                retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
                 retVal.Append("\r\n");
 
                 return retVal.ToString();
@@ -179,27 +175,18 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets folder name.
         /// </summary>
-        public string FolderName
-        {
-            get{ return m_FolderName; }
-        }
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Gets hierarchy delimiter char.
         /// </summary>
-        public char HierarchyDelimiter
-        {
-            get{ return m_Delimiter; }
-        }
+        public char HierarchyDelimiter { get; } = '/';
 
         /// <summary>
         /// Gets folder attributes list.
         /// </summary>
-        public string[] FolderAttributes
-        {
-            get{ return m_pFolderAttributes; }
-        }
+        public string[] FolderAttributes { get; } = new string[0];
 
-        #endregion
+#endregion
     }
 }

@@ -7,10 +7,6 @@ namespace LumiSoft.Net.POP3.Server
     /// </summary>
     public class POP3_e_GetTopOfMessage : EventArgs
     {
-        private readonly POP3_ServerMessage m_pMessage;
-        private readonly int                m_LineCount;
-        private byte[]             m_pData;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -27,8 +23,8 @@ namespace LumiSoft.Net.POP3.Server
                 throw new ArgumentException("Argument 'lines' value must be >= 0.","lines");
             }
 
-            m_pMessage  = message;
-            m_LineCount = lines;
+            Message  = message;
+            LineCount = lines;
         }
 
 
@@ -37,30 +33,19 @@ namespace LumiSoft.Net.POP3.Server
         /// <summary>
         /// Gets message info.
         /// </summary>
-        public POP3_ServerMessage Message
-        {
-            get{ return m_pMessage; }
-        }
+        public POP3_ServerMessage Message { get; }
 
         /// <summary>
         /// Gets number message body lines should be included.
         /// </summary>
-        public int LineCount
-        {
-            get{ return m_LineCount; }
-        }
+        public int LineCount { get; }
 
         /// <summary>
         /// Gets or sets top of message data.
         /// </summary>
         /// <remarks>This value should contain message header + number of <b>lineCount</b> body lines.</remarks>
-        public byte[] Data
-        {
-            get{ return m_pData; }
+        public byte[] Data { get; set; }
 
-            set{ m_pData = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

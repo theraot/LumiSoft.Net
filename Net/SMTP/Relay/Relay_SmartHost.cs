@@ -7,12 +7,6 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_SmartHost
     {
-        private readonly string  m_Host     = "";
-        private readonly int     m_Port     = 25;
-        private readonly SslMode m_SslMode  = SslMode.None;
-        private readonly string  m_UserName;
-        private readonly string  m_Password;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -46,11 +40,11 @@ namespace LumiSoft.Net.SMTP.Relay
                 throw new ArgumentException("Argument 'port' value is invalid.");
             }
 
-            m_Host     = host;
-            m_Port     = port;
-            m_SslMode  = sslMode;
-            m_UserName = userName;
-            m_Password = password;
+            Host     = host;
+            Port     = port;
+            SslMode  = sslMode;
+            UserName = userName;
+            Password = password;
         }
 
 
@@ -71,19 +65,19 @@ namespace LumiSoft.Net.SMTP.Relay
             }
 
             Relay_SmartHost smartHost = (Relay_SmartHost)obj;
-            if(m_Host != smartHost.Host){
+            if(Host != smartHost.Host){
                 return false;
             }
-            else if(m_Port != smartHost.Port){
+            else if(Port != smartHost.Port){
                 return false;
             }
-            else if(m_SslMode != smartHost.SslMode){
+            else if(SslMode != smartHost.SslMode){
                 return false;
             }
-            else if(m_UserName != smartHost.UserName){
+            else if(UserName != smartHost.UserName){
                 return false;
             }
-            else if(m_Password != smartHost.Password){
+            else if(Password != smartHost.Password){
                 return false;
             }
 
@@ -111,44 +105,29 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets smart host name or IP address.
         /// </summary>
-        public string Host
-        {
-            get{ return m_Host; }
-        }
+        public string Host { get; } = "";
 
         /// <summary>
         /// Gets smart host port.
         /// </summary>
-        public int Port
-        {
-            get{ return m_Port; }
-        }
+        public int Port { get; } = 25;
 
         /// <summary>
         /// Gets smart host SSL mode.
         /// </summary>
-        public SslMode SslMode
-        {
-            get{ return m_SslMode; }
-        }
+        public SslMode SslMode { get; } = SslMode.None;
 
         /// <summary>
         /// Gets smart host user name. Value null means no authentication used.
         /// </summary>
-        public string UserName
-        {
-            get{ return m_UserName; }
-        }
+        public string UserName { get; }
 
         /// <summary>
         /// Gets smart host password.
         /// </summary>
-        public string Password
-        {
-            get{ return m_Password;}
-        }
+        public string Password { get; }
 
-        #endregion
+#endregion
 
     }
 }

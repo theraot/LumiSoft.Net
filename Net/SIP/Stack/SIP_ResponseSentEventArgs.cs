@@ -7,9 +7,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_ResponseSentEventArgs : EventArgs
     {
-        private readonly SIP_ServerTransaction m_pTransaction;
-        private readonly SIP_Response          m_pResponse;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,8 +22,8 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("response");
             }
 
-            m_pTransaction = transaction;
-            m_pResponse    = response;
+            ServerTransaction = transaction;
+            Response    = response;
         }
 
 
@@ -35,20 +32,14 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets server transaction which sent response.
         /// </summary>
-        public SIP_ServerTransaction ServerTransaction
-        {
-            get{ return m_pTransaction; }
-        }
+        public SIP_ServerTransaction ServerTransaction { get; }
 
         /// <summary>
         /// Gets response which was sent.
         /// </summary>
-        public SIP_Response Response
-        {
-            get{ return m_pResponse; }
-        }
+        public SIP_Response Response { get; }
 
-        #endregion
+#endregion
 
     }
 }

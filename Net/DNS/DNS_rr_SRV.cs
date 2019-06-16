@@ -10,11 +10,6 @@ namespace LumiSoft.Net.DNS
     [Serializable]
     public class DNS_rr_SRV : DNS_rr
     {
-        private readonly int    m_Priority = 1;
-        private readonly int    m_Weight   = 1;
-        private readonly int    m_Port;
-        private readonly string m_Target   = "";
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -26,10 +21,10 @@ namespace LumiSoft.Net.DNS
         /// <param name="ttl">Time to live value in seconds.</param>
         public DNS_rr_SRV(string name,int priority,int weight,int port,string target,int ttl) : base(name,DNS_QType.SRV,ttl)
         {
-            m_Priority = priority;
-            m_Weight   = weight;
-            m_Port     = port;
-            m_Target   = target;
+            Priority = priority;
+            Weight   = weight;
+            Port     = port;
+            Target   = target;
         }
 
 
@@ -71,37 +66,25 @@ namespace LumiSoft.Net.DNS
         /// <summary>
         /// Gets service priority. Lowest value means greater priority.
         /// </summary>
-        public int Priority
-        {
-            get{ return m_Priority; }
-        }
+        public int Priority { get; } = 1;
 
         /// <summary>
         /// Gets weight. The weight field specifies a relative weight for entries with the same priority. 
         /// Larger weights SHOULD be given a proportionately higher probability of being selected.
         /// </summary>
-        public int Weight
-        {
-            get{ return m_Weight; }
-        }
+        public int Weight { get; } = 1;
 
         /// <summary>
         /// Port where service runs.
         /// </summary>
-        public int Port
-        {
-            get{ return m_Port; }
-        }
+        public int Port { get; }
 
         /// <summary>
         /// Service provider host name or IP address.
         /// </summary>
-        public string Target
-        {
-            get{ return m_Target; }
-        }
+        public string Target { get; } = "";
 
-        #endregion
+#endregion
 
     }
 }

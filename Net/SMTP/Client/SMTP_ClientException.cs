@@ -7,8 +7,6 @@ namespace LumiSoft.Net.SMTP.Client
     /// </summary>
     public class SMTP_ClientException : Exception
     {
-        private readonly SMTP_t_ReplyLine[] m_pReplyLines;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("responseLine");
             }
 
-            m_pReplyLines = new SMTP_t_ReplyLine[]{SMTP_t_ReplyLine.Parse(responseLine)};
+            ReplyLines = new SMTP_t_ReplyLine[]{SMTP_t_ReplyLine.Parse(responseLine)};
         }
 
         /// <summary>
@@ -34,7 +32,7 @@ namespace LumiSoft.Net.SMTP.Client
                 throw new ArgumentNullException("replyLines");
             }
 
-            m_pReplyLines = replyLines;            
+            ReplyLines = replyLines;            
         }
 
 
@@ -46,7 +44,7 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use property 'ReplyLines' insead.")]
         public int StatusCode
         {
-            get{ return m_pReplyLines[0].ReplyCode; }
+            get{ return ReplyLines[0].ReplyCode; }
         }
 
         /// <summary>
@@ -55,16 +53,13 @@ namespace LumiSoft.Net.SMTP.Client
         [Obsolete("Use property 'ReplyLines' insead.")]
         public string ResponseText
         {
-            get{ return m_pReplyLines[0].Text; }
+            get{ return ReplyLines[0].Text; }
         }
 
         /// <summary>
         /// Gets SMTP server error reply lines.
         /// </summary>
-        public SMTP_t_ReplyLine[] ReplyLines
-        {
-            get{ return m_pReplyLines; }
-        }
+        public SMTP_t_ReplyLine[] ReplyLines { get; }
 
         /// <summary>
         /// Gets if it is permanent SMTP(5xx) error.
@@ -72,7 +67,7 @@ namespace LumiSoft.Net.SMTP.Client
         public bool IsPermanentError
         {
             get{
-                if(m_pReplyLines[0].ReplyCode >= 500 && m_pReplyLines[0].ReplyCode <= 599){
+                if(ReplyLines[0].ReplyCode >= 500 && ReplyLines[0].ReplyCode <= 599){
                     return true;
                 }
                 else{

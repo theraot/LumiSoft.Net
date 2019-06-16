@@ -8,10 +8,6 @@ namespace LumiSoft.Net.WebDav
     /// </summary>
     public class WebDav_PropStat
     {
-        private string      m_Status;
-        private readonly string      m_ResponseDescription = null;
-        private WebDav_Prop m_pProp;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -44,10 +40,10 @@ namespace LumiSoft.Net.WebDav
 
             foreach(XmlNode node in propstatNode.ChildNodes){
                 if(string.Equals(node.LocalName,"status",StringComparison.InvariantCultureIgnoreCase)){
-                    retVAl.m_Status = node.ChildNodes[0].Value;
+                    retVAl.Status = node.ChildNodes[0].Value;
                 }
                 else if(string.Equals(node.LocalName,"prop",StringComparison.InvariantCultureIgnoreCase)){
-                    retVAl.m_pProp = WebDav_Prop.Parse(node);
+                    retVAl.Prop = WebDav_Prop.Parse(node);
                 }                
             }
 
@@ -62,27 +58,18 @@ namespace LumiSoft.Net.WebDav
         /// <summary>
         /// Gets property HTTP status.
         /// </summary>
-        public string Status
-        {
-            get{ return m_Status; }
-        }
+        public string Status { get; private set; }
 
         /// <summary>
         /// Gets human-readable status property description.
         /// </summary>
-        public string ResponseDescription
-        {
-            get{ return m_ResponseDescription; }
-        }
-        
+        public string ResponseDescription { get; } = null;
+
         /// <summary>
         /// Gets 'prop' element value.
         /// </summary>
-        public WebDav_Prop Prop
-        {
-            get{ return m_pProp; }
-        }
-        
-        #endregion
+        public WebDav_Prop Prop { get; private set; }
+
+#endregion
     }
 }

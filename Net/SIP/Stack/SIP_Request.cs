@@ -12,11 +12,6 @@ namespace LumiSoft.Net.SIP.Stack
     /// </summary>
     public class SIP_Request : SIP_Message
     {
-        private readonly SIP_RequestLine m_pRequestLine;
-        private SIP_Flow        m_pFlow;
-        private IPEndPoint      m_pLocalEP;
-        private IPEndPoint      m_pRemoteEP;
-        
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,7 +23,7 @@ namespace LumiSoft.Net.SIP.Stack
                 throw new ArgumentNullException("method");
             }
 
-            m_pRequestLine = new SIP_RequestLine(method,new AbsoluteUri());
+            RequestLine = new SIP_RequestLine(method,new AbsoluteUri());
         }
 
 
@@ -41,9 +36,9 @@ namespace LumiSoft.Net.SIP.Stack
         public SIP_Request Copy()
         {
             SIP_Request retVal = SIP_Request.Parse(this.ToByteData());
-            retVal.Flow           = m_pFlow;
-            retVal.LocalEndPoint  = m_pLocalEP;
-            retVal.RemoteEndPoint = m_pRemoteEP;
+            retVal.Flow           = Flow;
+            retVal.LocalEndPoint  = LocalEndPoint;
+            retVal.RemoteEndPoint = RemoteEndPoint;
 
             return retVal;
         }
@@ -194,7 +189,7 @@ namespace LumiSoft.Net.SIP.Stack
         public void ToStream(Stream stream)
         {
             // Add request-line
-            byte[] responseLine = Encoding.UTF8.GetBytes(m_pRequestLine.ToString());
+            byte[] responseLine = Encoding.UTF8.GetBytes(RequestLine.ToString());
             stream.Write(responseLine,0,responseLine.Length);
 
             // Add SIP-message
@@ -238,42 +233,24 @@ namespace LumiSoft.Net.SIP.Stack
         /// <summary>
         /// Gets request-line.
         /// </summary>
-        public SIP_RequestLine RequestLine
-        {
-            get{ return m_pRequestLine; }
-        }
+        public SIP_RequestLine RequestLine { get; }
 
         /// <summary>
         /// Gets or sets flow what received or sent this request. Returns null if this request isn't sent or received.
         /// </summary>
-        internal SIP_Flow Flow
-        {
-            get{ return m_pFlow; }
+        internal SIP_Flow Flow { get; set; }
 
-            set{ m_pFlow = value; }
-        }
-            
         /// <summary>
         /// Gets or sets local end point what sent/received this request. Returns null if this request isn't sent or received.
         /// </summary>
-        internal IPEndPoint LocalEndPoint
-        {
-            get{ return m_pLocalEP; }
-
-            set{ m_pLocalEP = value; }
-        }
+        internal IPEndPoint LocalEndPoint { get; set; }
 
         /// <summary>
         /// Gets or sets remote end point what sent/received this request. Returns null if this request isn't sent or received.
         /// </summary>
-        internal IPEndPoint RemoteEndPoint
-        {
-            get{ return m_pRemoteEP; }
+        internal IPEndPoint RemoteEndPoint { get; set; }
 
-            set{ m_pRemoteEP = value; }
-        }
-
-        #endregion
+#endregion
 
     }    
 }

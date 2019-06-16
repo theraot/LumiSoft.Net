@@ -9,9 +9,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Acl : IMAP_r_u
     {
-        private readonly string           m_FolderName = "";
-        private readonly IMAP_Acl_Entry[] m_pEntries;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -30,8 +27,8 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("entries");
             }
 
-            m_FolderName = folderName;
-            m_pEntries   = entries;
+            FolderName = folderName;
+            Entires   = entries;
         }
 
 
@@ -105,8 +102,8 @@ namespace LumiSoft.Net.IMAP
 
             StringBuilder retVal = new StringBuilder();
             retVal.Append("* ACL ");
-            retVal.Append(IMAP_Utils.EncodeMailbox(m_FolderName,encoding));
-            foreach(IMAP_Acl_Entry e in m_pEntries){
+            retVal.Append(IMAP_Utils.EncodeMailbox(FolderName,encoding));
+            foreach(IMAP_Acl_Entry e in Entires){
                 retVal.Append(" \"" + e.Identifier + "\" \"" + e.Rights + "\"");
             }
             retVal.Append("\r\n");
@@ -122,19 +119,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets folder name.
         /// </summary>
-        public string FolderName
-        {
-            get{ return m_FolderName; }
-        }
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Gets ACL entries.
         /// </summary>
-        public IMAP_Acl_Entry[] Entires
-        {
-            get{ return m_pEntries; }
-        }
+        public IMAP_Acl_Entry[] Entires { get; }
 
-        #endregion
+#endregion
     }
 }

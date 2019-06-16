@@ -8,13 +8,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Address
     {
-        private readonly IPAddress  m_pIP;
-        private readonly int        m_DataPort;
-        private readonly int        m_ControlPort;
-        private readonly int        m_TTL;
-        private readonly IPEndPoint m_pRtpEP;
-        private readonly IPEndPoint m_pRtcpEP;    
-
         /// <summary>
         /// Unicast constructor.
         /// </summary>
@@ -38,12 +31,12 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Arguments 'dataPort' and 'controlPort' values must be different.");
             }
 
-            m_pIP         = ip;
-            m_DataPort    = dataPort;
-            m_ControlPort = controlPort;
+            IP         = ip;
+            DataPort    = dataPort;
+            ControlPort = controlPort;
 
-            m_pRtpEP  = new IPEndPoint(ip,dataPort);
-            m_pRtcpEP = new IPEndPoint(ip,controlPort);
+            RtpEP  = new IPEndPoint(ip,dataPort);
+            RtcpEP = new IPEndPoint(ip,controlPort);
         }
 
         /// <summary>
@@ -76,13 +69,13 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'ttl' value must be between '0' and '255'.");
             }
 
-            m_pIP         = ip;
-            m_DataPort    = dataPort;
-            m_ControlPort = controlPort;
-            m_TTL         = ttl;
+            IP         = ip;
+            DataPort    = dataPort;
+            ControlPort = controlPort;
+            TTL         = ttl;
 
-            m_pRtpEP  = new IPEndPoint(ip,dataPort);
-            m_pRtcpEP = new IPEndPoint(ip,controlPort);
+            RtpEP  = new IPEndPoint(ip,dataPort);
+            RtcpEP = new IPEndPoint(ip,controlPort);
         }
 
 
@@ -133,58 +126,40 @@ namespace LumiSoft.Net.RTP
         /// </summary>
         public bool IsMulticast
         {
-            get{ return Net_Utils.IsMulticastAddress(m_pIP); }
+            get{ return Net_Utils.IsMulticastAddress(IP); }
         }
 
         /// <summary>
         /// Gets IP address.
         /// </summary>
-        public IPAddress IP
-        {
-            get{ return m_pIP; }
-        }
+        public IPAddress IP { get; }
 
         /// <summary>
         /// Gets RTP data port.
         /// </summary>
-        public int DataPort
-        {
-            get{ return m_DataPort; }
-        }
+        public int DataPort { get; }
 
         /// <summary>
         /// Gets RTCP control port.
         /// </summary>
-        public int ControlPort
-        {
-            get{ return m_ControlPort; }
-        }
+        public int ControlPort { get; }
 
         /// <summary>
         /// Gets mulicast TTL(time to live) value.
         /// </summary>
-        public int TTL
-        {
-            get{ return m_TTL; }
-        }
+        public int TTL { get; }
 
         /// <summary>
         /// Gets RTP end point.
         /// </summary>
-        public IPEndPoint RtpEP
-        {
-            get{ return m_pRtpEP; }
-        }
+        public IPEndPoint RtpEP { get; }
 
         /// <summary>
         /// Gets RTPCP end point.
         /// </summary>
-        public IPEndPoint RtcpEP
-        {
-            get{ return m_pRtcpEP; }
-        }
+        public IPEndPoint RtcpEP { get; }
 
-        #endregion
+#endregion
 
     }
 }

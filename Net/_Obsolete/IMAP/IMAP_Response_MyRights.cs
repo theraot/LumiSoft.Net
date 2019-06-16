@@ -9,9 +9,6 @@ namespace LumiSoft.Net.IMAP
     [Obsolete("Use class IMAP_r_u_MyRights instead.")]
     public class IMAP_Response_MyRights : IMAP_r_u
     {
-        private readonly string m_FolderName = "";
-        private readonly string m_pRights;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -28,9 +25,9 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'folder' value must be specified.","folder");
             }
 
-            m_FolderName = folder;
+            FolderName = folder;
             
-            m_pRights = rights;
+            Rights = rights;
         }
 
 
@@ -90,7 +87,7 @@ namespace LumiSoft.Net.IMAP
             // Example:    S: * MYRIGHTS INBOX rwiptsldaex
 
             StringBuilder retVal = new StringBuilder();
-            retVal.Append("* MYRIGHTS \"" + m_FolderName + "\" \"" + m_pRights + "\"\r\n");
+            retVal.Append("* MYRIGHTS \"" + FolderName + "\" \"" + Rights + "\"\r\n");
 
             return retVal.ToString();
         }
@@ -103,19 +100,13 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets folder name.
         /// </summary>
-        public string FolderName
-        {
-            get{ return m_FolderName; }
-        }
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Gets rights list.
         /// </summary>
-        public string Rights
-        {
-            get{ return m_pRights; }
-        }
+        public string Rights { get; }
 
-        #endregion
+#endregion
     }
 }

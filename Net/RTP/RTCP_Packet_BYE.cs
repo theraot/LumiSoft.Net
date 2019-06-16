@@ -10,7 +10,6 @@ namespace LumiSoft.Net.RTP
     {
         private int    m_Version       = 2;
         private uint[] m_Sources;
-        private string m_LeavingReason = "";
 
         /// <summary>
         /// Default constructor.
@@ -69,7 +68,7 @@ namespace LumiSoft.Net.RTP
             // See if we have optional reason text.
             if(length > m_Sources.Length * 4){
                 int reasonLength = buffer[offset++];
-                m_LeavingReason = Encoding.UTF8.GetString(buffer,offset,reasonLength);
+                LeavingReason = Encoding.UTF8.GetString(buffer,offset,reasonLength);
                 offset += reasonLength;
             }
         }
@@ -111,9 +110,9 @@ namespace LumiSoft.Net.RTP
             // Calculate packet body size in bytes.
             int length = 0;
             length += m_Sources.Length * 4;
-            if(!string.IsNullOrEmpty(m_LeavingReason)){
+            if(!string.IsNullOrEmpty(LeavingReason)){
                 length++;
-                length += Encoding.UTF8.GetByteCount(m_LeavingReason);
+                length += Encoding.UTF8.GetByteCount(LeavingReason);
             }
 
             // V=2 P SC
@@ -131,8 +130,8 @@ namespace LumiSoft.Net.RTP
                 buffer[offset++] = (byte)((source & 0x000000FF));
             }
             // reason for leaving
-            if(!string.IsNullOrEmpty(m_LeavingReason)){
-                byte[] reasonBytes = Encoding.UTF8.GetBytes(m_LeavingReason);
+            if(!string.IsNullOrEmpty(LeavingReason)){
+                byte[] reasonBytes = Encoding.UTF8.GetBytes(LeavingReason);
                 buffer[offset++] = (byte)reasonBytes.Length;
                 Array.Copy(reasonBytes,0,buffer,offset,reasonBytes.Length);
                 offset += reasonBytes.Length;
@@ -180,12 +179,7 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets leaving reason.
         /// </summary>
-        public string LeavingReason
-        {
-            get{ return m_LeavingReason; }
-
-            set{ m_LeavingReason =value; }
-        }
+        public string LeavingReason { get; set; } = "";
 
         /// <summary>
         /// Gets number of bytes needed for this packet.
@@ -197,9 +191,9 @@ namespace LumiSoft.Net.RTP
                 if(m_Sources != null){
                     size += 4 * m_Sources.Length;
                 }
-                if(!string.IsNullOrEmpty(m_LeavingReason)){
+                if(!string.IsNullOrEmpty(LeavingReason)){
                     size++;
-                    size += Encoding.UTF8.GetByteCount(m_LeavingReason);
+                    size += Encoding.UTF8.GetByteCount(LeavingReason);
                 }
 
                 return size; 

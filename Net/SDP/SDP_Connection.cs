@@ -7,7 +7,6 @@ namespace LumiSoft.Net.SDP
     /// </summary>
     public class SDP_Connection
     {
-        private readonly string m_NetType     = "IN";
         private string m_AddressType = "";
         private string m_Address     = "";
 
@@ -40,7 +39,7 @@ namespace LumiSoft.Net.SDP
                 throw new ArgumentException("Argument 'address' value must be specified.");
             }
 
-            m_NetType     = netType;
+            NetType     = netType;
             m_AddressType = addressType;
             m_Address     = address;
         }
@@ -112,10 +111,7 @@ namespace LumiSoft.Net.SDP
         /// <summary>
         /// Gets net type. Currently it's always IN(Internet).
         /// </summary>
-        public string NetType
-        {
-            get{ return m_NetType; }
-        }
+        public string NetType { get; } = "IN";
 
         /// <summary>
         /// Gets or sets address type. Currently defined values IP4 or IP6.

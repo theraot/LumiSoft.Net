@@ -8,10 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_t_Fetch_r_i_Body : IMAP_t_Fetch_r_i
     {
-        private readonly string m_Section;
-        private readonly int    m_Offset  = -1;
-        private Stream m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -25,9 +21,9 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("stream");
             }
 
-            m_Section = section;
-            m_Offset  = offset;
-            m_pStream = stream;
+            BodySection = section;
+            Offset  = offset;
+            Stream = stream;
         }
 
 
@@ -44,7 +40,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentNullException("stream");
             }
 
-            m_pStream = stream;
+            Stream = stream;
         }
 
         #endregion
@@ -55,27 +51,18 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets BODY section value. Value null means not specified(full message).
         /// </summary>
-        public string BodySection
-        {
-            get{ return m_Section; }
-        }
+        public string BodySection { get; }
 
         /// <summary>
         /// Gets BODY data returning start offset. Value -1 means not specified.
         /// </summary>
-        public int Offset
-        {
-            get{ return m_Offset; }
-        }
+        public int Offset { get; } = -1;
 
         /// <summary>
         /// Gets data stream.
         /// </summary>
-        public Stream Stream
-        {
-            get{ return m_pStream; }
-        }
+        public Stream Stream { get; private set; }
 
-        #endregion
+#endregion
     }
 }

@@ -18,7 +18,6 @@ namespace LumiSoft.Net.Mail
     {
         private string         m_ParseValue;
         private readonly string         m_Name;
-        private readonly Mail_t_Mailbox m_pAddress;
 
         /// <summary>
         /// Default constructor.
@@ -40,7 +39,7 @@ namespace LumiSoft.Net.Mail
             }
 
             m_Name     = fieldName;
-            m_pAddress = mailbox;
+            Address = mailbox;
         }
 
 
@@ -105,7 +104,7 @@ namespace LumiSoft.Net.Mail
                 return m_ParseValue;
             }
             else{
-                return m_Name + ": " + m_pAddress.ToString(wordEncoder) + "\r\n";
+                return m_Name + ": " + Address.ToString(wordEncoder) + "\r\n";
             }
         }
 
@@ -135,11 +134,8 @@ namespace LumiSoft.Net.Mail
         /// <summary>
         /// Gets mailbox address.
         /// </summary>
-        public Mail_t_Mailbox Address
-        {
-            get{ return m_pAddress; }
-        }
+        public Mail_t_Mailbox Address { get; }
 
-        #endregion
+#endregion
     }
 }

@@ -438,7 +438,6 @@ namespace LumiSoft.Net.Media
             {
                 private GCHandle m_HeaderHandle;
                 private GCHandle m_DataHandle;
-                private readonly int      m_DataSize;
 
                 /// <summary>
                 /// Default constructor.
@@ -450,7 +449,7 @@ namespace LumiSoft.Net.Media
                 {
                     m_HeaderHandle = headerHandle;
                     m_DataHandle   = dataHandle;
-                    m_DataSize     = dataSize;
+                    DataSize     = dataSize;
                 }
 
                 #region method Dispose
@@ -496,12 +495,9 @@ namespace LumiSoft.Net.Media
                 /// <summary>
                 /// Gets wav header data size in bytes.
                 /// </summary>
-                public int DataSize
-                {
-                    get{ return m_DataSize; }
-                }
+                public int DataSize { get; }
 
-                #endregion
+#endregion
 
             }
 
@@ -514,12 +510,10 @@ namespace LumiSoft.Net.Media
             private readonly int             m_MinBuffer     = 1200;
             private IntPtr          m_pWavDevHandle = IntPtr.Zero;
             private readonly int             m_BlockSize;
-            private int             m_BytesBuffered;
             private bool            m_IsPaused;
             private List<PlayItem>  m_pPlayItems;
             private waveOutProc     m_pWaveOutProc;
-            private bool            m_IsDisposed;
-        
+
             /// <summary>
             /// Default constructor.
             /// </summary>
@@ -584,10 +578,10 @@ namespace LumiSoft.Net.Media
             /// </summary>
             public void Dispose()
             {
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
-                m_IsDisposed = true;
+                IsDisposed = true;
 
                 try{
                     // If playing, we need to reset wav device first.
@@ -648,7 +642,7 @@ namespace LumiSoft.Net.Media
             /// <param name="state">User data.</param>
             private void OnCleanUpFirstBlock(object state)
             {
-                if(m_IsDisposed){
+                if(IsDisposed){
                     return;
                 }
 
@@ -657,7 +651,7 @@ namespace LumiSoft.Net.Media
                         PlayItem item = m_pPlayItems[0];
                         WavMethods.waveOutUnprepareHeader(m_pWavDevHandle,item.HeaderHandle.AddrOfPinnedObject(),Marshal.SizeOf(item.Header));                    
                         m_pPlayItems.Remove(item);
-                        m_BytesBuffered -= item.DataSize;
+                        BytesBuffered -= item.DataSize;
                         item.Dispose();
                     }
                 }
@@ -681,7 +675,7 @@ namespace LumiSoft.Net.Media
             /// <exception cref="ArgumentException">Is raised when <b>audioData</b> is with invalid length.</exception>
             public void Play(byte[] audioData,int offset,int count)
             {
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("WaveOut");
                 }
                 if(audioData == null){
@@ -712,17 +706,17 @@ namespace LumiSoft.Net.Media
                     PlayItem item = new PlayItem(ref headerHandle,ref dataHandle,data.Length);
                     m_pPlayItems.Add(item);
 
-                    m_BytesBuffered += data.Length;
+                    BytesBuffered += data.Length;
 
                     // We ran out of minimum buffer, we must pause playing while min buffer filled.
-                    if(m_BytesBuffered < 1000){
+                    if(BytesBuffered < 1000){
                         if(!m_IsPaused){
                             WavMethods.waveOutPause(m_pWavDevHandle);
                             m_IsPaused = true;
                         }
                     }
                     // Buffering completed,we may resume playing.
-                    else if(m_IsPaused && m_BytesBuffered > m_MinBuffer){
+                    else if(m_IsPaused && BytesBuffered > m_MinBuffer){
                         WavMethods.waveOutRestart(m_pWavDevHandle);
                         m_IsPaused = false;
                     }
@@ -765,10 +759,7 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets if this object is disposed.
             /// </summary>
-            public bool IsDisposed
-            {
-                get{ return m_IsDisposed; }
-            }
+            public bool IsDisposed { get; private set; }
 
             /// <summary>
             /// Gets if wav player is currently playing something.
@@ -777,7 +768,7 @@ namespace LumiSoft.Net.Media
             public bool IsPlaying
             {
                 get{
-                    if(m_IsDisposed){
+                    if(IsDisposed){
                         throw new ObjectDisposedException("WaveOut");
                     }
                 
@@ -820,12 +811,9 @@ namespace LumiSoft.Net.Media
             /// <summary>
             /// Gets number of bytes buffered for playing.
             /// </summary>
-            public int BytesBuffered
-            {
-                get{ return m_BytesBuffered; }
-            }
+            public int BytesBuffered { get; private set; }
 
-            #endregion
+#endregion
         }
 
         #endregion

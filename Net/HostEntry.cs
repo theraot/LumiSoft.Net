@@ -8,10 +8,6 @@ namespace LumiSoft.Net
     /// </summary>
     public class HostEntry
     {
-        private readonly string      m_HostName;
-        private readonly IPAddress[] m_pAddresses;
-        private readonly string[]    m_pAliases;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -31,9 +27,9 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ipAddresses");
             }
 
-            m_HostName   = hostName;
-            m_pAddresses = ipAddresses;
-            m_pAliases   = (aliases == null ? new string[0] : aliases);
+            HostName   = hostName;
+            Addresses = ipAddresses;
+            Aliases   = (aliases == null ? new string[0] : aliases);
         }
 
 
@@ -42,27 +38,18 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets DNS host name.
         /// </summary>
-        public string HostName
-        {
-            get{ return m_HostName; }
-        }
+        public string HostName { get; }
 
         /// <summary>
         /// Gets list of IP addresses that are associated with a host.
         /// </summary>
-        public IPAddress[] Addresses
-        {
-            get{ return m_pAddresses; }
-        }
+        public IPAddress[] Addresses { get; }
 
         /// <summary>
         /// Gets list of aliases(CNAME) that are associated with a host.
         /// </summary>
-        public string[] Aliases
-        {
-            get{ return m_pAliases; }
-        }
+        public string[] Aliases { get; }
 
-        #endregion
+#endregion
     }
 }

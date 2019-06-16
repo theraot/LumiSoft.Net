@@ -7,8 +7,6 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_RegistrationEventArgs : EventArgs
     {
-        private readonly SIP_Registration m_pRegistration;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.SIP.Proxy
                 throw new ArgumentNullException("registration");
             }
 
-            m_pRegistration = registration;
+            Registration = registration;
         }
 
 
@@ -29,12 +27,9 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets SIP registration.
         /// </summary>
-        public SIP_Registration Registration
-        {
-            get{ return m_pRegistration; }
-        }
+        public SIP_Registration Registration { get; }
 
-        #endregion
+#endregion
 
     }
 }

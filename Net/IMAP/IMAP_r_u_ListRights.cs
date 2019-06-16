@@ -8,11 +8,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_ListRights : IMAP_r_u
     {
-        private readonly string m_FolderName     = "";
-        private readonly string m_Identifier     = "";
-        private readonly string m_RequiredRights;
-        private readonly string m_OptionalRights;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -37,10 +32,10 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Argument 'identifier' name must be specified.","identifier");
             }
 
-            m_FolderName     = folder;
-            m_Identifier     = identifier;
-            m_RequiredRights = requiredRights == string.Empty ? null : requiredRights;
-            m_OptionalRights = optionalRights == string.Empty ? null : optionalRights;
+            FolderName     = folder;
+            Identifier     = identifier;
+            RequiredRights = requiredRights == string.Empty ? null : requiredRights;
+            OptionalRights = optionalRights == string.Empty ? null : optionalRights;
         }
 
 
@@ -123,7 +118,7 @@ namespace LumiSoft.Net.IMAP
             // Example:    S: * LISTRIGHTS ~/Mail/saved smith la r swicdkxte
 
             StringBuilder retVal = new StringBuilder();
-            retVal.Append("* LISTRIGHTS " + IMAP_Utils.EncodeMailbox(m_FolderName,encoding) + " \"" + m_RequiredRights + "\" " + m_OptionalRights + "\r\n");
+            retVal.Append("* LISTRIGHTS " + IMAP_Utils.EncodeMailbox(FolderName,encoding) + " \"" + RequiredRights + "\" " + OptionalRights + "\r\n");
             
             return retVal.ToString();
         }
@@ -136,35 +131,23 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets folder name.
         /// </summary>
-        public string FolderName
-        {
-            get{ return m_FolderName; }
-        }
+        public string FolderName { get; } = "";
 
         /// <summary>
         /// Gets identifier. Normaly this is user or group name.
         /// </summary>
-        public string Identifier
-        {
-            get{ return m_Identifier; }
-        }
+        public string Identifier { get; } = "";
 
         /// <summary>
         /// Gets required rights.
         /// </summary>
-        public string RequiredRights
-        {
-            get{ return m_RequiredRights; }
-        }
+        public string RequiredRights { get; }
 
         /// <summary>
         /// Gets optional rights.
         /// </summary>
-        public string OptionalRights
-        {
-            get{ return m_OptionalRights; }
-        }
+        public string OptionalRights { get; }
 
-        #endregion
+#endregion
     }
 }

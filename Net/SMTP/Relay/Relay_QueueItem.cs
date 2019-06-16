@@ -7,17 +7,6 @@ namespace LumiSoft.Net.SMTP.Relay
     /// </summary>
     public class Relay_QueueItem
     {
-        private readonly Relay_Queue     m_pQueue;
-        private readonly string          m_From              = "";
-        private readonly string          m_EnvelopeID;
-        private readonly SMTP_DSN_Ret    m_DSN_Ret           = SMTP_DSN_Ret.NotSpecified;
-        private readonly string          m_To                = "";
-        private readonly string          m_OriginalRecipient;
-        private readonly SMTP_DSN_Notify m_DSN_Notify        = SMTP_DSN_Notify.NotSpecified;
-        private readonly string          m_MessageID         = "";
-        private readonly Stream          m_pMessageStream;
-        private object          m_pTag;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -33,16 +22,16 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <param name="tag">User data.</param>
         internal Relay_QueueItem(Relay_Queue queue,string from,string envelopeID,SMTP_DSN_Ret ret,string to,string originalRecipient,SMTP_DSN_Notify notify,string messageID,Stream message,object tag)
         {
-            m_pQueue            = queue;
-            m_From              = from;
-            m_EnvelopeID        = envelopeID;
-            m_DSN_Ret           = ret;
-            m_To                = to;
-            m_OriginalRecipient = originalRecipient;
-            m_DSN_Notify        = notify;
-            m_MessageID         = messageID;
-            m_pMessageStream    = message;
-            m_pTag              = tag;
+            Queue            = queue;
+            From              = from;
+            EnvelopeID        = envelopeID;
+            DSN_Ret           = ret;
+            To                = to;
+            OriginalRecipient = originalRecipient;
+            DSN_Notify        = notify;
+            MessageID         = messageID;
+            MessageStream    = message;
+            Tag              = tag;
         }
 
 
@@ -51,86 +40,54 @@ namespace LumiSoft.Net.SMTP.Relay
         /// <summary>
         /// Gets this relay item owner queue.
         /// </summary>
-        public Relay_Queue Queue
-        {
-            get{ return m_pQueue; }
-        }
+        public Relay_Queue Queue { get; }
 
         /// <summary>
         /// Gets from address.
         /// </summary>
-        public string From
-        {
-            get{ return m_From; }
-        }
+        public string From { get; } = "";
 
         /// <summary>
         /// Gets DSN ENVID value.
         /// </summary>
-        public string EnvelopeID
-        {
-            get{ return m_EnvelopeID; }
-        }
+        public string EnvelopeID { get; }
 
         /// <summary>
         /// Gets DSN RET value.
         /// </summary>
-        public SMTP_DSN_Ret DSN_Ret
-        {
-            get{ return m_DSN_Ret; }
-        }
+        public SMTP_DSN_Ret DSN_Ret { get; } = SMTP_DSN_Ret.NotSpecified;
 
         /// <summary>
         /// Gets target recipient.
         /// </summary>
-        public string To
-        {
-            get{ return m_To; }
-        }
+        public string To { get; } = "";
 
         /// <summary>
         /// Gets DSN ORCPT value.
         /// </summary>
-        public string OriginalRecipient
-        {
-            get{ return m_OriginalRecipient; }
-        }
+        public string OriginalRecipient { get; }
 
         /// <summary>
         /// Gets DSN Notify value.
         /// </summary>
-        public SMTP_DSN_Notify DSN_Notify
-        {
-            get{ return m_DSN_Notify; }
-        }
+        public SMTP_DSN_Notify DSN_Notify { get; } = SMTP_DSN_Notify.NotSpecified;
 
         /// <summary>
         /// Gets message ID which is being relayed now.
         /// </summary>
-        public string MessageID
-        {
-            get{ return m_MessageID; }
-        }
+        public string MessageID { get; } = "";
 
         /// <summary>
         /// Gets raw mime message which must be relayed.
         /// </summary>
-        public Stream MessageStream
-        {
-            get{ return m_pMessageStream; }
-        }
+        public Stream MessageStream { get; }
 
         /// <summary>
         /// Gets or sets user data.
         /// </summary>
-        public object Tag
-        {
-            get{ return m_pTag; }
+        public object Tag { get; set; }
 
-            set{ m_pTag = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

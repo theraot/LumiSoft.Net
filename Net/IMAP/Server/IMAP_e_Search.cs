@@ -11,7 +11,6 @@ namespace LumiSoft.Net.IMAP.Server
     public class IMAP_e_Search : EventArgs
     {
         private IMAP_r_ServerStatus m_pResponse;
-        private readonly IMAP_Search_Key     m_pCriteria;
 
         /// <summary>
         /// Default constructor.
@@ -26,7 +25,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             m_pResponse = response;
-            m_pCriteria = criteria;
+            Criteria = criteria;
         }
 
 
@@ -66,12 +65,9 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets search criteria.
         /// </summary>
-        public IMAP_Search_Key Criteria
-        {
-            get{ return m_pCriteria; }
-        }
+        public IMAP_Search_Key Criteria { get; }
 
-        #endregion
+#endregion
 
         #region Events implementation
                 

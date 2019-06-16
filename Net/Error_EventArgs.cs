@@ -8,19 +8,15 @@ namespace LumiSoft.Net
 	/// </summary>
 	public class Error_EventArgs
 	{
-		private readonly Exception  m_pException;
-		private readonly StackTrace m_pStackTrace;
-		private readonly string     m_Text        = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="stackTrace"></param>
 		public Error_EventArgs(Exception x,StackTrace stackTrace)
 		{
-			m_pException  = x;
-			m_pStackTrace = stackTrace;
+			Exception  = x;
+			StackTrace = stackTrace;
 		}
 
 
@@ -29,28 +25,19 @@ namespace LumiSoft.Net
 		/// <summary>
 		/// Occured error's exception.
 		/// </summary>
-		public Exception Exception
-		{
-			get{ return m_pException; }
-		}
+		public Exception Exception { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Occured error's stacktrace.
 		/// </summary>
-		public StackTrace StackTrace
-		{
-			get{ return m_pStackTrace; }
-		}
+		public StackTrace StackTrace { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets comment text.
 		/// </summary>
-		public string Text
-		{
-			get{ return m_Text; }
-		}
+		public string Text { get; } = "";
 
-		#endregion
+#endregion
 
 	}
 }

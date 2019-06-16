@@ -11,15 +11,13 @@ namespace LumiSoft.Net.IMAP
     /// timezone) is within or later than the specified date.</remarks>
     public class IMAP_Search_Key_SentSince : IMAP_Search_Key
     {
-        private readonly DateTime m_Date;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">Date value</param>
         public IMAP_Search_Key_SentSince(DateTime value)
         {
-            m_Date = value;
+            Date = value;
         }
 
 
@@ -68,7 +66,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns>Returns this as string.</returns>
         public override string ToString()
         {
-            return "SENTSINCE " + m_Date.ToString("dd-MMM-yyyy");
+            return "SENTSINCE " + Date.ToString("dd-MMM-yyyy");
         }
 
         #endregion
@@ -98,11 +96,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets date value.
         /// </summary>
-        public DateTime Date
-        {
-            get{ return m_Date; }
-        }
+        public DateTime Date { get; }
 
-        #endregion
+#endregion
     }
 }

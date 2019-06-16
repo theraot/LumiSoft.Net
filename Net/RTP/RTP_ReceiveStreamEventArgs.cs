@@ -7,8 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_ReceiveStreamEventArgs : EventArgs
     {
-        private readonly RTP_ReceiveStream m_pStream;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentNullException("stream");
             }
 
-            m_pStream = stream;
+            Stream = stream;
         }
 
 
@@ -29,12 +27,9 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets RTP stream.
         /// </summary>
-        public RTP_ReceiveStream Stream
-        {
-            get{ return m_pStream; }
-        }
+        public RTP_ReceiveStream Stream { get; }
 
-        #endregion
+#endregion
 
     }
 }

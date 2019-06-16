@@ -10,10 +10,7 @@ namespace LumiSoft.Net.DNS
 	[Serializable]
 	public class DNS_rr_MX : DNS_rr,IComparable
 	{
-		private readonly int    m_Preference;
-		private readonly string m_Host       = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
         /// <param name="name">DNS domain name that owns a resource record.</param>
@@ -22,8 +19,8 @@ namespace LumiSoft.Net.DNS
 		/// <param name="ttl">TTL value.</param>
 		public DNS_rr_MX(string name,int preference,string host,int ttl) : base(name,DNS_QType.MX,ttl)
 		{
-			m_Preference = preference;
-			m_Host       = host;
+			Preference = preference;
+			Host       = host;
         }
 
 
@@ -111,20 +108,14 @@ namespace LumiSoft.Net.DNS
         /// <summary>
 		/// Gets MX record preference. The lower number is the higher priority server.
 		/// </summary>
-		public int Preference
-		{
-			get{ return m_Preference; }
-		}
+		public int Preference { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets mail host dns name.
 		/// </summary>
-		public string Host
-		{
-			get{ return m_Host; }
-		}
+		public string Host { get; } = "";
 
-		#endregion
+#endregion
 
 	}
 }

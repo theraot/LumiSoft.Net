@@ -100,8 +100,6 @@ namespace LumiSoft.Net.SIP.Message
 
         #endregion
 
-        private DirectiveType m_Directive = DirectiveType.Fork;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -156,40 +154,40 @@ namespace LumiSoft.Net.SIP.Message
                 throw new SIP_ParseException("'directive' value is missing !");
             }
             if(word.ToLower() == "proxy"){
-                m_Directive = DirectiveType.Proxy;
+                Directive = DirectiveType.Proxy;
             }
             else if(word.ToLower() == "redirect"){
-                m_Directive = DirectiveType.Redirect;
+                Directive = DirectiveType.Redirect;
             }
             else if(word.ToLower() == "cancel"){
-                m_Directive = DirectiveType.Cancel;
+                Directive = DirectiveType.Cancel;
             }
             else if(word.ToLower() == "no-cancel"){
-                m_Directive = DirectiveType.NoCancel;
+                Directive = DirectiveType.NoCancel;
             }
             else if(word.ToLower() == "fork"){
-                m_Directive = DirectiveType.Fork;
+                Directive = DirectiveType.Fork;
             }
             else if(word.ToLower() == "no-fork"){
-                m_Directive = DirectiveType.NoFork;
+                Directive = DirectiveType.NoFork;
             }
             else if(word.ToLower() == "recurse"){
-                m_Directive = DirectiveType.Recurse;
+                Directive = DirectiveType.Recurse;
             }
             else if(word.ToLower() == "no-recurse"){
-                m_Directive = DirectiveType.NoRecurse;
+                Directive = DirectiveType.NoRecurse;
             }
             else if(word.ToLower() == "parallel"){
-                m_Directive = DirectiveType.Parallel;
+                Directive = DirectiveType.Parallel;
             }
             else if(word.ToLower() == "sequential"){
-                m_Directive = DirectiveType.Sequential;
+                Directive = DirectiveType.Sequential;
             }
             else if(word.ToLower() == "queue"){
-                m_Directive = DirectiveType.Queue;
+                Directive = DirectiveType.Queue;
             }
             else if(word.ToLower() == "no-queue"){
-                m_Directive = DirectiveType.NoQueue;
+                Directive = DirectiveType.NoQueue;
             }
             else{
                 throw new SIP_ParseException("Invalid 'directive' value !");
@@ -217,40 +215,40 @@ namespace LumiSoft.Net.SIP.Message
                 queue-directive    = "queue" / "no-queue"
             */
 
-            if(m_Directive == DirectiveType.Proxy){
+            if(Directive == DirectiveType.Proxy){
                 return "proxy";
             }
-            else if(m_Directive == DirectiveType.Redirect){
+            else if(Directive == DirectiveType.Redirect){
                 return "redirect";
             }
-            else if(m_Directive == DirectiveType.Cancel){
+            else if(Directive == DirectiveType.Cancel){
                 return "cancel";
             }
-            else if(m_Directive == DirectiveType.NoCancel){
+            else if(Directive == DirectiveType.NoCancel){
                 return "no-cancel";
             }
-            else if(m_Directive == DirectiveType.Fork){
+            else if(Directive == DirectiveType.Fork){
                 return "fork";
             }
-            else if(m_Directive == DirectiveType.NoFork){
+            else if(Directive == DirectiveType.NoFork){
                 return "no-fork";
             }
-            else if(m_Directive == DirectiveType.Recurse){
+            else if(Directive == DirectiveType.Recurse){
                 return "recurse";
             }
-            else if(m_Directive == DirectiveType.NoRecurse){
+            else if(Directive == DirectiveType.NoRecurse){
                 return "no-recurse";
             }
-            else if(m_Directive == DirectiveType.Parallel){
+            else if(Directive == DirectiveType.Parallel){
                 return "parallel";
             }
-            else if(m_Directive == DirectiveType.Sequential){
+            else if(Directive == DirectiveType.Sequential){
                 return "sequential";
             }
-            else if(m_Directive == DirectiveType.Queue){
+            else if(Directive == DirectiveType.Queue){
                 return "queue";
             }
-            else if(m_Directive == DirectiveType.NoQueue){
+            else if(Directive == DirectiveType.NoQueue){
                 return "no-queue";
             }
             else{
@@ -266,14 +264,9 @@ namespace LumiSoft.Net.SIP.Message
         /// <summary>
         /// Gets or sets directive.
         /// </summary>
-        public DirectiveType Directive
-        {
-            get{ return m_Directive; }
+        public DirectiveType Directive { get; set; } = DirectiveType.Fork;
 
-            set{ m_Directive = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

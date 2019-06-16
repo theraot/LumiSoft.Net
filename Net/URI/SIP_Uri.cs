@@ -20,19 +20,14 @@ namespace LumiSoft.Net
     /// </remarks>
     public class SIP_Uri : AbsoluteUri
     {
-        private bool                    m_IsSecure;
-        private string                  m_User;
         private string                  m_Host        = "";
-        private int                     m_Port        = -1;
-        private readonly SIP_ParameterCollection m_pParameters;
-        private string                  m_Header;  
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SIP_Uri()
         {
-            m_pParameters = new SIP_ParameterCollection();
+            Parameters = new SIP_ParameterCollection();
         }
 
 
@@ -229,7 +224,7 @@ namespace LumiSoft.Net
 
                 // We have header
                 if(r.Available > 0){
-                    this.m_Header = r.ReadToEnd();
+                    this.Header = r.ReadToEnd();
                 }
             }
         }
@@ -264,7 +259,7 @@ namespace LumiSoft.Net
             }
             
             // Add URI parameters.
-            foreach(SIP_Parameter parameter in m_pParameters){
+            foreach(SIP_Parameter parameter in Parameters){
                 /*
                  * If value is token value is not quoted(quoted-string).
                  * If value contains `tspecials', value should be represented as quoted-string.
@@ -313,30 +308,20 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets or sets if secure SIP. If true then sips: uri, otherwise sip: uri.
         /// </summary>
-        public bool IsSecure
-        {
-            get{ return m_IsSecure; }
-
-            set{ m_IsSecure = value; }
-        }
+        public bool IsSecure { get; set; }
 
         /// <summary>
         /// Gets address from SIP URI. Examples: ivar@lumisoft.ee,ivar@195.222.10.1.
         /// </summary>
         public string Address
         {
-            get{ return m_User + "@" + m_Host; }
+            get{ return User + "@" + m_Host; }
         }
 
         /// <summary>
         /// Gets or sets user name. Value null means not specified.
         /// </summary>
-        public string User
-        {
-            get{ return m_User; }
-
-            set{ m_User = value; }
-        }
+        public string User { get; set; }
 
         /// <summary>
         /// Gets or sets host name or IP.
@@ -357,12 +342,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets or sets host port. Value -1 means not specified.
         /// </summary>
-        public int Port
-        {
-            get{ return m_Port; }
-
-            set{ m_Port = value; }
-        }
+        public int Port { get; set; } = -1;
 
         /// <summary>
         /// Gets host with optional port. If port specified returns Host:Port, otherwise Host.
@@ -370,11 +350,11 @@ namespace LumiSoft.Net
         public string HostPort
         {
             get{
-                if(m_Port == -1){
+                if(Port == -1){
                     return m_Host;
                 }
                 else{
-                    return m_Host + ":" + m_Port;
+                    return m_Host + ":" + Port;
                 }
             }
         }
@@ -382,10 +362,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets URI parameters.
         /// </summary>
-        public SIP_ParameterCollection Parameters
-        {
-            get{ return m_pParameters; }
-        }
+        public SIP_ParameterCollection Parameters { get; }
 
         /// <summary>
         /// Gets or sets 'cause' parameter value. Value -1 means not specified.
@@ -823,14 +800,9 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets or sets header.
         /// </summary>
-        public string Header
-        {
-            get{ return m_Header; }
+        public string Header { get; set; }
 
-            set{ m_Header = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

@@ -7,8 +7,6 @@ namespace LumiSoft.Net.RTP
     /// </summary>
     public class RTP_Clock
     {
-        private readonly int      m_BaseValue;
-        private readonly int      m_Rate      = 1;
         private readonly DateTime m_CreateTime;
 
         /// <summary>
@@ -22,8 +20,8 @@ namespace LumiSoft.Net.RTP
                 throw new ArgumentException("Argument 'rate' value must be between 1 and 100 000.","rate");
             }
 
-            m_BaseValue  = baseValue;
-            m_Rate       = rate;
+            BaseValue  = baseValue;
+            Rate       = rate;
             m_CreateTime = DateTime.Now;
         }
 
@@ -37,7 +35,7 @@ namespace LumiSoft.Net.RTP
         /// <returns>Returns RTP clock ticks.</returns>
         public int MillisecondsToRtpTicks(int milliseconds)
         {
-            return ((m_Rate * milliseconds) / 1000);
+            return ((Rate * milliseconds) / 1000);
         }
 
         #endregion
@@ -48,18 +46,12 @@ namespace LumiSoft.Net.RTP
         /// <summary>
         /// Gets clock base value from where clock started.
         /// </summary>
-        public int BaseValue
-        {
-            get{ return m_BaseValue; }
-        }
+        public int BaseValue { get; }
 
         /// <summary>
         /// Gets current clock rate in Hz.
         /// </summary>
-        public int Rate
-        {
-            get{ return m_Rate; }
-        }
+        public int Rate { get; } = 1;
 
         /// <summary>
         /// Gets current RTP timestamp.
@@ -74,7 +66,7 @@ namespace LumiSoft.Net.RTP
 
                 long elapsed =  (long)((TimeSpan)(DateTime.Now - m_CreateTime)).TotalMilliseconds;
                 
-                return (uint)(m_BaseValue + ((m_Rate  * elapsed) / 1000));
+                return (uint)(BaseValue + ((Rate  * elapsed) / 1000));
             }
         }
 

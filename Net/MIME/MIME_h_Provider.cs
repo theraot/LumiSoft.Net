@@ -9,7 +9,6 @@ namespace LumiSoft.Net.MIME
     public class MIME_h_Provider
     {
         private Type                    m_pDefaultHeaderField;
-        private readonly Dictionary<string,Type> m_pHeadrFields;
 
         /// <summary>
         /// Default constructor.
@@ -18,9 +17,9 @@ namespace LumiSoft.Net.MIME
         {
             m_pDefaultHeaderField = typeof(MIME_h_Unstructured);
 
-            m_pHeadrFields = new Dictionary<string,Type>(StringComparer.CurrentCultureIgnoreCase);
-            m_pHeadrFields.Add("Content-Type",typeof(MIME_h_ContentType));
-            m_pHeadrFields.Add("Content-Disposition",typeof(MIME_h_ContentDisposition));
+            HeaderFields = new Dictionary<string,Type>(StringComparer.CurrentCultureIgnoreCase);
+            HeaderFields.Add("Content-Type",typeof(MIME_h_ContentType));
+            HeaderFields.Add("Content-Disposition",typeof(MIME_h_ContentDisposition));
         }
 
 
@@ -52,8 +51,8 @@ namespace LumiSoft.Net.MIME
             }
             else{
                 try{
-                    if(m_pHeadrFields.ContainsKey(name)){ 
-                        headerField = (MIME_h)m_pHeadrFields[name].GetMethod("Parse").Invoke(null,new object[]{field});
+                    if(HeaderFields.ContainsKey(name)){ 
+                        headerField = (MIME_h)HeaderFields[name].GetMethod("Parse").Invoke(null,new object[]{field});
                     }
                     else{
                         headerField = (MIME_h)m_pDefaultHeaderField.GetMethod("Parse").Invoke(null,new object[]{field});
@@ -97,11 +96,8 @@ namespace LumiSoft.Net.MIME
         /// <summary>
         /// Gets header fields parsers collection.
         /// </summary>
-        public Dictionary<string,Type> HeaderFields
-        {
-            get{ return m_pHeadrFields; }
-        }
+        public Dictionary<string,Type> HeaderFields { get; }
 
-        #endregion
+#endregion
     }
 }

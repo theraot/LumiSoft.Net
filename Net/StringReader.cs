@@ -8,10 +8,7 @@ namespace LumiSoft.Net
 	/// </summary>
 	public class StringReader
 	{
-        private readonly string m_OriginalString = "";
-		private string m_SourceString   = "";
-
-		/// <summary>
+        /// <summary>
 		/// Default constructor.
 		/// </summary>
 		/// <param name="source">Source string.</param>
@@ -22,8 +19,8 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("source");
             }
 
-            m_OriginalString = source;
-			m_SourceString   = source;
+            OriginalString = source;
+			SourceString   = source;
 		}
 
 
@@ -35,7 +32,7 @@ namespace LumiSoft.Net
 		/// <param name="value">String value to append.</param>
 		public void AppendString(string value)
 		{
-			m_SourceString += value;
+			SourceString += value;
 		}
 
 		#endregion
@@ -50,8 +47,8 @@ namespace LumiSoft.Net
 		public string ReadToFirstChar()
 		{   
             int whiteSpaces = 0;
-            for(int i=0;i<m_SourceString.Length;i++){
-                if(char.IsWhiteSpace(m_SourceString[i])){
+            for(int i=0;i<SourceString.Length;i++){
+                if(char.IsWhiteSpace(SourceString[i])){
                     whiteSpaces++;
                 }
                 else{
@@ -59,8 +56,8 @@ namespace LumiSoft.Net
                 }
             }
      
-            string whiteSpaceChars = m_SourceString.Substring(0,whiteSpaces);
-			m_SourceString = m_SourceString.Substring(whiteSpaces);
+            string whiteSpaceChars = SourceString.Substring(0,whiteSpaces);
+			SourceString = SourceString.Substring(whiteSpaces);
 
             return whiteSpaceChars;
 		}
@@ -80,9 +77,9 @@ namespace LumiSoft.Net
 		/// <returns></returns>
 		public string ReadSpecifiedLength(int length)
 		{
-			if(m_SourceString.Length >= length){
-				string retVal = m_SourceString.Substring(0,length);
-				m_SourceString = m_SourceString.Substring(length);
+			if(SourceString.Length >= length){
+				string retVal = SourceString.Substring(0,length);
+				SourceString = SourceString.Substring(length);
 
 				return retVal;
 			}
@@ -132,8 +129,8 @@ namespace LumiSoft.Net
 			bool          inQuotedString     = false;               // Holds flag if position is quoted string or not
             bool          doEscape           = false;
 
-			for(int i=0;i<m_SourceString.Length;i++){
-				char c = m_SourceString[i];
+			for(int i=0;i<SourceString.Length;i++){
+				char c = SourceString[i];
 
                 if(doEscape){
                     currentSplitBuffer.Append(c);
@@ -164,11 +161,11 @@ namespace LumiSoft.Net
                                 
 					    // Remove readed string + delimiter from source string
                         if(removeDelimiter){
-					        m_SourceString = m_SourceString.Substring(i + 1);
+					        SourceString = SourceString.Substring(i + 1);
                         }
                         // Remove readed string
                         else{
-                            m_SourceString = m_SourceString.Substring(i); 
+                            SourceString = SourceString.Substring(i); 
                         }
 
 					    return retVal;
@@ -180,7 +177,7 @@ namespace LumiSoft.Net
 			}
 
 			// If we reached so far then we are end of string, return it
-			m_SourceString = "";
+			SourceString = "";
 			return currentSplitBuffer.ToString();
 		}
 
@@ -229,7 +226,7 @@ namespace LumiSoft.Net
 			// quoted word can contain any char, " must be escaped with \
 			// unqouted word can conatin any char except: SP VTAB HTAB,{}()[]<>
 
-			if(m_SourceString.StartsWith("\"")){
+			if(SourceString.StartsWith("\"")){
                 if(unQuote){
                     return TextUtils.UnQuoteString(QuotedReadToDelimiter(wordTerminatorChars,removeWordTerminator));
                 }
@@ -239,8 +236,8 @@ namespace LumiSoft.Net
 			}
 			else{
 				int wordLength = 0;
-				for(int i=0;i<m_SourceString.Length;i++){
-					char c = m_SourceString[i];
+				for(int i=0;i<SourceString.Length;i++){
+					char c = SourceString[i];
 
                     bool isTerminator = false;
                     foreach(char terminator in wordTerminatorChars){
@@ -256,14 +253,14 @@ namespace LumiSoft.Net
 					wordLength++;
 				}
 				
-				string retVal = m_SourceString.Substring(0,wordLength);
+				string retVal = SourceString.Substring(0,wordLength);
                 if(removeWordTerminator){
-                    if(m_SourceString.Length >= wordLength + 1){
-                        m_SourceString = m_SourceString.Substring(wordLength + 1);
+                    if(SourceString.Length >= wordLength + 1){
+                        SourceString = SourceString.Substring(wordLength + 1);
                     }
                 }
                 else{
-				    m_SourceString = m_SourceString.Substring(wordLength);
+				    SourceString = SourceString.Substring(wordLength);
                 }
 
 				return retVal;
@@ -286,24 +283,24 @@ namespace LumiSoft.Net
 			char startingChar = ' ';
 			char closingChar  = ' ';
 
-			if(m_SourceString.StartsWith("{")){
+			if(SourceString.StartsWith("{")){
 				startingChar = '{';
 				closingChar = '}';
 			}
-			else if(m_SourceString.StartsWith("(")){
+			else if(SourceString.StartsWith("(")){
 				startingChar = '(';
 				closingChar = ')';
 			}			
-			else if(m_SourceString.StartsWith("[")){
+			else if(SourceString.StartsWith("[")){
 				startingChar = '[';
 				closingChar = ']';
 			}						
-			else if(m_SourceString.StartsWith("<")){
+			else if(SourceString.StartsWith("<")){
 				startingChar = '<';
 				closingChar = '>';
 			}
 			else{
-				throw new Exception("No parenthesized value '" + m_SourceString + "' !");
+				throw new Exception("No parenthesized value '" + SourceString + "' !");
 			}
 
 			bool inQuotedString = false; // Holds flag if position is quoted string or not
@@ -311,27 +308,27 @@ namespace LumiSoft.Net
 
 			int closingCharIndex = -1;
 			int nestedStartingCharCounter = 0;
-			for(int i=1;i<m_SourceString.Length;i++){
+			for(int i=1;i<SourceString.Length;i++){
                 // Skip this char.
                 if(skipNextChar){
                     skipNextChar = false;
                 }
                 // We have char escape '\', skip next char.
-                else if(m_SourceString[i] == '\\'){
+                else if(SourceString[i] == '\\'){
                     skipNextChar = true;
                 }
                 // Start/end quoted string area
-                else if(m_SourceString[i] == '\"'){
+                else if(SourceString[i] == '\"'){
                     inQuotedString = !inQuotedString;
                 }
 				// We need to skip parenthesis in quoted string
 				else if(!inQuotedString){
 					// There is nested parenthesis
-					if(m_SourceString[i] == startingChar){
+					if(SourceString[i] == startingChar){
 						nestedStartingCharCounter++;
 					}
 					// Closing char
-					else if(m_SourceString[i] == closingChar){
+					else if(SourceString[i] == closingChar){
 						// There isn't nested parenthesis closing chars left, this is closing char what we want
 						if(nestedStartingCharCounter == 0){
 							closingCharIndex = i;
@@ -346,11 +343,11 @@ namespace LumiSoft.Net
 			}
 
 			if(closingCharIndex == -1){
-				throw new Exception("There is no closing parenthesize for '" + m_SourceString + "' !");
+				throw new Exception("There is no closing parenthesize for '" + SourceString + "' !");
 			}
 			else{
-				string retVal = m_SourceString.Substring(1,closingCharIndex - 1);
-				m_SourceString = m_SourceString.Substring(closingCharIndex + 1);
+				string retVal = SourceString.Substring(1,closingCharIndex - 1);
+				SourceString = SourceString.Substring(closingCharIndex + 1);
 
 				return retVal;
 			}
@@ -370,8 +367,8 @@ namespace LumiSoft.Net
 				return null;
 			}
 
-            string retVal = m_SourceString;
-            m_SourceString = "";
+            string retVal = SourceString;
+            SourceString = "";
 
             return retVal;
         }
@@ -391,7 +388,7 @@ namespace LumiSoft.Net
                 throw new ArgumentException("Argument 'count' value must be >= 0.","count");
             }
 
-            m_SourceString = m_SourceString.Substring(0,m_SourceString.Length - count);
+            SourceString = SourceString.Substring(0,SourceString.Length - count);
         }
 
         #endregion
@@ -406,7 +403,7 @@ namespace LumiSoft.Net
 		/// <returns>Returns true if source string starts with specified value.</returns>
 		public bool StartsWith(string value)
 		{
-			return m_SourceString.StartsWith(value);
+			return SourceString.StartsWith(value);
 		}
 		
 		/// <summary>
@@ -418,10 +415,10 @@ namespace LumiSoft.Net
 		public bool StartsWith(string value,bool case_sensitive)
 		{
 			if(case_sensitive){
-				return m_SourceString.StartsWith(value);
+				return SourceString.StartsWith(value);
 			}
 			else{
-				return m_SourceString.ToLower().StartsWith(value.ToLower());
+				return SourceString.ToLower().StartsWith(value.ToLower());
 			}
 		}
 
@@ -436,7 +433,7 @@ namespace LumiSoft.Net
 		/// <returns>Returns true if source string ends with specified value.</returns>
 		public bool EndsWith(string value)
 		{
-			return m_SourceString.EndsWith(value);
+			return SourceString.EndsWith(value);
 		}
 		
 		/// <summary>
@@ -448,10 +445,10 @@ namespace LumiSoft.Net
 		public bool EndsWith(string value,bool case_sensitive)
 		{
 			if(case_sensitive){
-				return m_SourceString.EndsWith(value);
+				return SourceString.EndsWith(value);
 			}
 			else{
-				return m_SourceString.EndsWith(value,StringComparison.InvariantCultureIgnoreCase);
+				return SourceString.EndsWith(value,StringComparison.InvariantCultureIgnoreCase);
 			}
 		}
 
@@ -466,19 +463,19 @@ namespace LumiSoft.Net
         /// <returns></returns>
         public bool StartsWithWord()
         {
-            if(m_SourceString.Length == 0){
+            if(SourceString.Length == 0){
                 return false;
             }
                         
-            if(char.IsWhiteSpace(m_SourceString[0])){
+            if(char.IsWhiteSpace(SourceString[0])){
                 return false;
             }
-            if(char.IsSeparator(m_SourceString[0])){
+            if(char.IsSeparator(SourceString[0])){
                 return false;
             }
             char[] wordTerminators = new char[]{' ',',',';','{','}','(',')','[',']','<','>','\r','\n'};
             foreach(char c in wordTerminators){
-                if(c == m_SourceString[0]){
+                if(c == SourceString[0]){
                     return false;
                 }
             }
@@ -496,31 +493,25 @@ namespace LumiSoft.Net
 		/// </summary>
 		public long Available
 		{
-			get{ return m_SourceString.Length; }
+			get{ return SourceString.Length; }
 		}
 
         /// <summary>
         /// Gets original string passed to class constructor.
         /// </summary>
-        public string OriginalString
-        {
-            get{ return m_OriginalString; }
-        }
+        public string OriginalString { get; } = "";
 
-		/// <summary>
+        /// <summary>
 		/// Gets currently remaining string.
 		/// </summary>
-		public string SourceString
-		{
-			get{ return m_SourceString; }
-		}
+		public string SourceString { get; private set; } = "";
 
         /// <summary>
         /// Gets position in original string.
         /// </summary>
         public int Position
         {
-            get{ return m_OriginalString.Length - m_SourceString.Length; }
+            get{ return OriginalString.Length - SourceString.Length; }
         }
 
 		#endregion

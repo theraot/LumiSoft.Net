@@ -7,8 +7,6 @@ namespace LumiSoft.Net.SMTP.Server
     /// </summary>
     public class SMTP_e_RcptTo : EventArgs
     {
-        private readonly SMTP_Session m_pSession;
-        private readonly SMTP_RcptTo  m_pRcptTo;
         private SMTP_Reply   m_pReply;
 
         /// <summary>
@@ -30,8 +28,8 @@ namespace LumiSoft.Net.SMTP.Server
                 throw new ArgumentNullException("reply");
             }
 
-            m_pSession = session;
-            m_pRcptTo  = to;
+            Session = session;
+            RcptTo  = to;
             m_pReply   = reply;
         }
 
@@ -41,18 +39,12 @@ namespace LumiSoft.Net.SMTP.Server
         /// <summary>
         /// Gets owner SMTP session.
         /// </summary>
-        public SMTP_Session Session
-        {
-            get{ return m_pSession; }
-        }
+        public SMTP_Session Session { get; }
 
         /// <summary>
         /// Gets RCPT TO: value.
         /// </summary>
-        public SMTP_RcptTo RcptTo
-        {
-            get{ return m_pRcptTo; }
-        }
+        public SMTP_RcptTo RcptTo { get; }
 
         /// <summary>
         /// Gets or sets SMTP server reply.

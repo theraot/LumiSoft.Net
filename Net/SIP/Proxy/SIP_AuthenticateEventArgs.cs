@@ -8,16 +8,13 @@ namespace LumiSoft.Net.SIP.Proxy
     /// </summary>
     public class SIP_AuthenticateEventArgs
     {
-        private readonly Auth_HttpDigest m_pAuth;
-        private bool            m_Authenticated;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="auth">Authentication context.</param>
         public SIP_AuthenticateEventArgs(Auth_HttpDigest auth)
         {
-            m_pAuth = auth;
+            AuthContext = auth;
         }
 
 
@@ -26,22 +23,14 @@ namespace LumiSoft.Net.SIP.Proxy
         /// <summary>
         /// Gets authentication context.
         /// </summary>
-        public Auth_HttpDigest AuthContext
-        {
-            get{ return m_pAuth; }
-        }
+        public Auth_HttpDigest AuthContext { get; }
 
         /// <summary>
         /// Gets or sets if specified request is authenticated.
         /// </summary>
-        public bool Authenticated
-        {
-            get{ return m_Authenticated; }
+        public bool Authenticated { get; set; }
 
-            set{ m_Authenticated = value; }
-        }
-
-        #endregion
+#endregion
 
     }
 }

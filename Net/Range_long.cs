@@ -5,17 +5,14 @@
     /// </summary>
     public class Range_long
     {
-        private readonly long m_Start;
-        private readonly long m_End;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">Start/End value.</param>
         public Range_long(long value)
         {
-            m_Start = value;
-            m_End   = value;
+            Start = value;
+            End   = value;
         }
 
         /// <summary>
@@ -25,8 +22,8 @@
         /// <param name="end">Range end value.</param>
         public Range_long(long start,long end)
         {
-            m_Start = start;
-            m_End   = end;
+            Start = start;
+            End   = end;
         }
 
 
@@ -39,7 +36,7 @@
         /// <returns>Returns true if specified value is within range, otherwise false.</returns>
         public bool Contains(long value)
         {
-            if(value >= m_Start && value <= m_End){
+            if(value >= Start && value <= End){
                 return true;
             }
 
@@ -54,19 +51,13 @@
         /// <summary>
         /// Gets range start.
         /// </summary>
-        public long Start
-        {
-            get{ return m_Start; }
-        }
+        public long Start { get; }
 
         /// <summary>
         /// Gets range end.
         /// </summary>
-        public long End
-        {
-            get{ return m_End; }
-        }
+        public long End { get; }
 
-        #endregion
+#endregion
     }
 }

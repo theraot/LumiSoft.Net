@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_r_u_Exists : IMAP_r_u
     {
-        private readonly int m_MessageCount;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP
                 throw new ArgumentException("Arguments 'messageCount' value must be >= 0.","messageCount");
             }
 
-            m_MessageCount = messageCount;
+            MessageCount = messageCount;
         }
 
 
@@ -67,7 +65,7 @@ namespace LumiSoft.Net.IMAP
         {
             // Example:    S: * 23 EXISTS
 
-            return "* " + m_MessageCount.ToString() + " EXISTS\r\n";
+            return "* " + MessageCount.ToString() + " EXISTS\r\n";
         }
 
         #endregion
@@ -78,11 +76,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets number of messages in mailbox.
         /// </summary>
-        public int MessageCount
-        {
-            get{ return m_MessageCount; }
-        }
+        public int MessageCount { get; }
 
-        #endregion
+#endregion
     }
 }

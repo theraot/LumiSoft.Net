@@ -7,8 +7,6 @@ namespace LumiSoft.Net.IMAP.Server
     /// </summary>
     public class IMAP_e_Started : EventArgs
     {
-        private IMAP_r_u_ServerStatus m_pResponse;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -20,7 +18,7 @@ namespace LumiSoft.Net.IMAP.Server
                 throw new ArgumentNullException("response");
             }
 
-            m_pResponse = response;
+            Response = response;
         }
 
 
@@ -30,13 +28,8 @@ namespace LumiSoft.Net.IMAP.Server
         /// Gets or sets IMAP server response.
         /// </summary>
         /// <remarks>Response should be OK,NO with human readable text."</remarks>
-        public IMAP_r_u_ServerStatus Response
-        {
-            get{ return m_pResponse; }
+        public IMAP_r_u_ServerStatus Response { get; set; }
 
-            set{ m_pResponse = value; }
-        }
-
-        #endregion
+#endregion
     }
 }

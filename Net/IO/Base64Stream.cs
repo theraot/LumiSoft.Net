@@ -42,7 +42,6 @@ namespace LumiSoft.Net.IO
 
         #endregion
 
-        private bool        m_IsDisposed;
         private bool        m_IsFinished;
         private readonly Stream      m_pStream;
         private readonly bool        m_IsOwner;
@@ -98,7 +97,7 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public new void Dispose()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 return;
             }
             try{
@@ -106,7 +105,7 @@ namespace LumiSoft.Net.IO
             }
             catch{
             }
-            m_IsDisposed = true;
+            IsDisposed = true;
 
             if(m_IsOwner){
                 m_pStream.Close();
@@ -124,7 +123,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("Base64Stream");
             }
         }
@@ -143,7 +142,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override long Seek(long offset,SeekOrigin origin)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("Base64Stream");
             }
 
@@ -162,7 +161,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="Seek">Is raised when this method is accessed.</exception>
         public override void SetLength(long value)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("Base64Stream");
             }
 
@@ -186,7 +185,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when reading not supported.</exception>
         public override int Read(byte[] buffer,int offset,int count)
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException("Base64Stream");
             }
             if(buffer == null){
@@ -266,7 +265,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when reading not supported.</exception>
         public override void Write(byte[] buffer,int offset,int count)        
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_IsFinished){
@@ -356,7 +355,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public void Finish()
         {
-            if(m_IsDisposed){
+            if(IsDisposed){
                 throw new ObjectDisposedException(this.GetType().Name);
             }
             if(m_IsFinished){
@@ -391,10 +390,7 @@ namespace LumiSoft.Net.IO
         /// <summary>
         /// Gets if this object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get{ return m_IsDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
 
         /// <summary>
@@ -404,7 +400,7 @@ namespace LumiSoft.Net.IO
         public override bool CanRead
         { 
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
 
@@ -419,7 +415,7 @@ namespace LumiSoft.Net.IO
         public override bool CanSeek
         { 
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
 
@@ -434,7 +430,7 @@ namespace LumiSoft.Net.IO
         public override bool CanWrite
         { 
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
 
@@ -450,7 +446,7 @@ namespace LumiSoft.Net.IO
         public override long Length
         { 
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
 
@@ -466,7 +462,7 @@ namespace LumiSoft.Net.IO
         public override long Position
         { 
             get{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
 
@@ -474,7 +470,7 @@ namespace LumiSoft.Net.IO
             } 
 
             set{
-                if(m_IsDisposed){
+                if(IsDisposed){
                     throw new ObjectDisposedException("SmartStream");
                 }
 

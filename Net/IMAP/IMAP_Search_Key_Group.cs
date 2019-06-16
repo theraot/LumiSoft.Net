@@ -10,14 +10,12 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_Search_Key_Group : IMAP_Search_Key
     {
-        private readonly List<IMAP_Search_Key> m_pKeys;
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public IMAP_Search_Key_Group()
         {
-            m_pKeys = new List<IMAP_Search_Key>();
+            Keys = new List<IMAP_Search_Key>();
         }
 
 
@@ -45,7 +43,7 @@ namespace LumiSoft.Net.IMAP
 
             r.ReadToFirstChar();
             while(r.Available > 0){
-                retVal.m_pKeys.Add(IMAP_Search_Key.ParseKey(r));
+                retVal.Keys.Add(IMAP_Search_Key.ParseKey(r));
             }
 
             return retVal;
@@ -64,11 +62,11 @@ namespace LumiSoft.Net.IMAP
         {
             StringBuilder retVal = new StringBuilder();
             retVal.Append("(");
-            for(int i=0;i<m_pKeys.Count;i++){
+            for(int i=0;i<Keys.Count;i++){
                 if(i > 0){
                     retVal.Append(" ");
                 }
-                retVal.Append(m_pKeys[i].ToString());
+                retVal.Append(Keys[i].ToString());
             }
             retVal.Append(")");
 
@@ -92,11 +90,11 @@ namespace LumiSoft.Net.IMAP
             }
 
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,"("));
-            for(int i=0;i<m_pKeys.Count;i++){
+            for(int i=0;i<Keys.Count;i++){
                 if(i > 0){
                     list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant," "));
                 }
-                m_pKeys[i].ToCmdParts(list);
+                Keys[i].ToCmdParts(list);
             }
             list.Add(new IMAP_Client_CmdPart(IMAP_Client_CmdPart_Type.Constant,")"));
         }
@@ -109,11 +107,8 @@ namespace LumiSoft.Net.IMAP
         /// <summary>
         /// Gets AND-ded keys collection.
         /// </summary>
-        public List<IMAP_Search_Key> Keys
-        {
-            get{ return m_pKeys; }
-        }
+        public List<IMAP_Search_Key> Keys { get; }
 
-        #endregion
+#endregion
     }
 }
