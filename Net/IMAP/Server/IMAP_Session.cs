@@ -20,9 +20,6 @@ namespace LumiSoft.Net.IMAP.Server
     {
         private int m_BadCommands;
         private readonly char m_FolderSeparator = '/';
-        private IMAP_Mailbox_Encoding m_MailboxEncoding = IMAP_Mailbox_Encoding.ImapUtf7;
-
-        #endregion
 
         private Dictionary<string, AUTH_SASL_ServerMechanism> m_pAuthentications;
         private List<string> m_pCapabilities;
@@ -44,177 +41,125 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender = new ResponseSender(this);
         }
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle APPEND command.
         /// </summary>
         public event EventHandler<IMAP_e_Append> Append;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle COPY command.
         /// </summary>
         public event EventHandler<IMAP_e_Copy> Copy;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle CREATE command.
         /// </summary>
         public event EventHandler<IMAP_e_Folder> Create;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle DELETE command.
         /// </summary>
         public event EventHandler<IMAP_e_Folder> Delete;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle DELETEACL command.
         /// </summary>
         public event EventHandler<IMAP_e_DeleteAcl> DeleteAcl;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle EXPUNGE command.
         /// </summary>
         public event EventHandler<IMAP_e_Expunge> Expunge;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle FETCH command.
         /// </summary>
         public event EventHandler<IMAP_e_Fetch> Fetch;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle GETACL command.
         /// </summary>
         public event EventHandler<IMAP_e_GetAcl> GetAcl;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to get folder messages info.
         /// </summary>
         public event EventHandler<IMAP_e_MessagesInfo> GetMessagesInfo;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle GETQUOTA command.
         /// </summary>
         public event EventHandler<IMAP_e_GetQuota> GetQuota;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle GETQUOTAROOT command.
         /// </summary>
         public event EventHandler<IMAP_e_GetQuotaRoot> GetQuotaRoot;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle LIST command.
         /// </summary>
         public event EventHandler<IMAP_e_List> List;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle LISTRIGHTS command.
         /// </summary>
         public event EventHandler<IMAP_e_ListRights> ListRights;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle LOGIN command.
         /// </summary>
         public event EventHandler<IMAP_e_Login> Login;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle LSUB command.
         /// </summary>
         public event EventHandler<IMAP_e_LSub> LSub;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle MYRIGHTS command.
         /// </summary>
         public event EventHandler<IMAP_e_MyRights> MyRights;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle NAMESPACE command.
         /// </summary>
         public event EventHandler<IMAP_e_Namespace> Namespace;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle RENAME command.
         /// </summary>
         public event EventHandler<IMAP_e_Rename> Rename;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle SEARCH command.
         /// </summary>
         public event EventHandler<IMAP_e_Search> Search;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle SELECT command.
         /// </summary>
         public event EventHandler<IMAP_e_Select> Select;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle SETACL command.
         /// </summary>
         public event EventHandler<IMAP_e_SetAcl> SetAcl;
-
-        #endregion
-
-        #region Events implementation
 
         /// <summary>
         /// Is raised when session has started processing and needs to send "* OK ..." greeting or "* NO ..." error resposne to the connected client.
         /// </summary>
         public event EventHandler<IMAP_e_Started> Started;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle STORE command.
         /// </summary>
         public event EventHandler<IMAP_e_Store> Store;
 
-        #endregion
-
         /// <summary>
         /// Is raised when IMAP session needs to handle SUBSCRIBE command.
         /// </summary>
         public event EventHandler<IMAP_e_Folder> Subscribe;
-
-        #endregion
 
         /// <summary>
         /// Is raised when IMAP session needs to handle SUBSCRIBE command.
@@ -305,10 +250,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region Properties implementation
-
         /// <summary>
         /// Gets session owner IMAP server.
         /// </summary>
@@ -329,14 +270,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <summary>
         /// Gets mailbox encoding.
         /// </summary>
-        internal IMAP_Mailbox_Encoding MailboxEncoding
-        {
-            get { return m_MailboxEncoding; }
-        }
-
-        #endregion
-
-        #region mehtod ConstructBodyStructure
+        internal IMAP_Mailbox_Encoding MailboxEncoding { get; private set; } = IMAP_Mailbox_Encoding.ImapUtf7;
 
         /// <summary>
         /// Constructs FETCH BODY and BODYSTRUCTURE response.
@@ -353,8 +287,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return "BODY " + ConstructParts(message, bodystructure);
         }
-
-        #region override method Dispose
 
         /// <summary>
         /// Cleans up any resource being used.
@@ -404,15 +336,11 @@ namespace LumiSoft.Net.IMAP.Server
             Expunge = null;
         }
 
-        #endregion
-
-        #region method GetMimeEntity
-
         /// <summary>
         /// Gets specified mime entity. Returns null if specified mime entity doesn't exist.
         /// </summary>
         /// <param name="message">Mail message.</param>
-        /// <param name="partNumber">MIME part-number specifier. Nested mime entities are pointed by '.'. 
+        /// <param name="partNumber">MIME part-number specifier. Nested mime entities are pointed by '.'.
         /// For example: 1,1.1,2.1, ... .</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>message</b> is null reference.</exception>
@@ -425,15 +353,15 @@ namespace LumiSoft.Net.IMAP.Server
 
             // For single part message there is only one entity with value 1.
             // Example:
-            //        header
-            //        entity -> 1
+            //		header
+            //		entity -> 1
 
             // For multipart message, entity counting starts from MainEntity.ChildEntities
             // Example:
-            //        header
-            //        multipart/mixed
-            //            text/plain  -> 1
-            //            application/pdf  -> 2
+            //		header
+            //		multipart/mixed
+            //			text/plain  -> 1
+            //			application/pdf  -> 2
             //          ...
 
             // TODO: nested rfc 822 message
@@ -457,9 +385,9 @@ namespace LumiSoft.Net.IMAP.Server
 
             MIME_Entity entity = message;
             var parts = partNumber.Split('.');
-            foreach (string part in parts)
+            foreach (var part in parts)
             {
-                int mEntryNo = Convert.ToInt32(part) - 1; // Enitites are zero base, mimeEntitySpecifier is 1 based.
+                var mEntryNo = Convert.ToInt32(part) - 1; // Enitites are zero base, mimeEntitySpecifier is 1 based.
                 if (entity.Body is MIME_b_Multipart)
                 {
                     var multipart = (MIME_b_Multipart)entity.Body;
@@ -480,10 +408,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return entity;
         }
-
-        #endregion
-
-        #region method LogAddException
 
         /// <summary>
         /// Logs specified exception.
@@ -516,10 +440,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method LogAddRead
-
         /// <summary>
         /// Logs read operation.
         /// </summary>
@@ -546,10 +466,6 @@ namespace LumiSoft.Net.IMAP.Server
                 // We skip all logging errors, normally there shouldn't be any.
             }
         }
-
-        #endregion
-
-        #region method LogAddText
 
         /// <summary>
         /// Logs specified text.
@@ -581,10 +497,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method LogAddWrite
-
         /// <summary>
         /// Logs write operation.
         /// </summary>
@@ -612,10 +524,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region override method OnError
-
         /// <summary>
         /// Is called when session has processing error.
         /// </summary>
@@ -631,8 +539,8 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            /* Error handling:
-                IO and Socket exceptions are permanent, so we must end session.
+            /* Error handling: 
+                IO and Socket exceptions are permanent, so we must end session. 
             */
 
             try
@@ -666,10 +574,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region override method OnTimeout
-
         /// <summary>
         /// This method is called when specified session times out.
         /// </summary>
@@ -689,10 +593,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region override method Start
-
         /// <summary>
         /// Starts session processing.
         /// </summary>
@@ -700,20 +600,20 @@ namespace LumiSoft.Net.IMAP.Server
         {
             base.Start();
 
-            /* RFC 3501 7.1.1. Greeting text.
-                The untagged form is also used as one of three possible greetings
-                at connection startup.  It indicates that the connection is not
-                yet authenticated and that a LOGIN command is needed.
-
-                Example:    S: * OK IMAP4rev1 server ready
-                            C: A001 LOGIN fred blurdybloop
-                            S: * OK [ALERT] System shutdown in 10 minutes
-                            S: A001 OK LOGIN Completed
+            /* RFC 3501 7.1.1. Greeting text. 
+                The untagged form is also used as one of three possible greetings 
+                at connection startup.  It indicates that the connection is not 
+                yet authenticated and that a LOGIN command is needed. 
+ 
+                Example:    S: * OK IMAP4rev1 server ready 
+                            C: A001 LOGIN fred blurdybloop 
+                            S: * OK [ALERT] System shutdown in 10 minutes 
+                            S: A001 OK LOGIN Completed 
             */
 
             try
             {
-                IMAP_r_u_ServerStatus response = null;
+                IMAP_r_u_ServerStatus response;
                 if (string.IsNullOrEmpty(Server.GreetingText))
                 {
                     response = new IMAP_r_u_ServerStatus("OK", "<" + Net_Utils.GetLocalHostName(LocalHostName) + "> IMAP4rev1 server ready.");
@@ -743,10 +643,6 @@ namespace LumiSoft.Net.IMAP.Server
                 OnError(x);
             }
         }
-
-        #endregion
-
-        #region method APPEND
 
         private void APPEND(string cmdTag, string cmdText)
         {
@@ -831,13 +727,11 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
-
-            #region Parse arguments
+            var startTime = DateTime.Now.Ticks;
 
             var r = new StringReader(cmdText);
             r.ReadToFirstChar();
-            string folder = null;
+            string folder;
             if (r.StartsWith("\""))
             {
                 folder = IMAP_Utils.DecodeMailbox(r.ReadWord());
@@ -850,7 +744,7 @@ namespace LumiSoft.Net.IMAP.Server
             var flags = new List<string>();
             if (r.StartsWith("("))
             {
-                foreach (string f in r.ReadParenthesized().Split(' '))
+                foreach (var f in r.ReadParenthesized().Split(' '))
                 {
                     if (f.Length > 0 && !flags.Contains(f.Substring(1)))
                     {
@@ -864,15 +758,13 @@ namespace LumiSoft.Net.IMAP.Server
             {
                 date = IMAP_Utils.ParseDate(r.ReadWord());
             }
-            int size = Convert.ToInt32(r.ReadParenthesized());
+            var size = Convert.ToInt32(r.ReadParenthesized());
             if (r.Available > 0)
             {
                 m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "BAD", "Error in arguments."));
 
                 return;
             }
-
-            #endregion
 
             var e = OnAppend(folder, flags.ToArray(), date, size, new IMAP_r_ServerStatus(cmdTag, "OK", "APPEND command completed in %exectime seconds."));
 
@@ -928,137 +820,133 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method AUTHENTICATE
-
         private void AUTHENTICATE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.2.2. AUTHENTICATE Command.
-                Arguments:  authentication mechanism name
-
-                Responses:  continuation data can be requested
-
-                Result:     OK - authenticate completed, now in authenticated state
-                            NO - authenticate failure: unsupported authentication
-                                 mechanism, credentials rejected
-                            BAD - command unknown or arguments invalid,
-                                  authentication exchange cancelled
-
-                The AUTHENTICATE command indicates a [SASL] authentication
-                mechanism to the server.  If the server supports the requested
-                authentication mechanism, it performs an authentication protocol
-                exchange to authenticate and identify the client.  It MAY also
-                negotiate an OPTIONAL security layer for subsequent protocol
-                interactions.  If the requested authentication mechanism is not
-                supported, the server SHOULD reject the AUTHENTICATE command by
-                sending a tagged NO response.
-
-                The AUTHENTICATE command does not support the optional "initial
-                response" feature of [SASL].  Section 5.1 of [SASL] specifies how
-                to handle an authentication mechanism which uses an initial
-                response.
-
-                The service name specified by this protocol's profile of [SASL] is
-                "imap".
-
-                The authentication protocol exchange consists of a series of
-                server challenges and client responses that are specific to the
-                authentication mechanism.  A server challenge consists of a
-                command continuation request response with the "+" token followed
-                by a BASE64 encoded string.  The client response consists of a
-                single line consisting of a BASE64 encoded string.  If the client
-                wishes to cancel an authentication exchange, it issues a line
-                consisting of a single "*".  If the server receives such a
-                response, it MUST reject the AUTHENTICATE command by sending a
-                tagged BAD response.
-
-                If a security layer is negotiated through the [SASL]
-                authentication exchange, it takes effect immediately following the
-                CRLF that concludes the authentication exchange for the client,
-                and the CRLF of the tagged OK response for the server.
-
-                While client and server implementations MUST implement the
-                AUTHENTICATE command itself, it is not required to implement any
-                authentication mechanisms other than the PLAIN mechanism described
-                in [IMAP-TLS].  Also, an authentication mechanism is not required
-                to support any security layers.
-
-                    Note: a server implementation MUST implement a
-                    configuration in which it does NOT permit any plaintext
-                    password mechanisms, unless either the STARTTLS command
-                    has been negotiated or some other mechanism that
-                    protects the session from password snooping has been
-                    provided.  Server sites SHOULD NOT use any configuration
-                    which permits a plaintext password mechanism without
-                    such a protection mechanism against password snooping.
-                    Client and server implementations SHOULD implement
-                    additional [SASL] mechanisms that do not use plaintext
-                    passwords, such the GSSAPI mechanism described in [SASL]
-                    and/or the [DIGEST-MD5] mechanism.
-
-                Servers and clients can support multiple authentication
-                mechanisms.  The server SHOULD list its supported authentication
-                mechanisms in the response to the CAPABILITY command so that the
-                client knows which authentication mechanisms to use.
-
-                A server MAY include a CAPABILITY response code in the tagged OK
-                response of a successful AUTHENTICATE command in order to send
-                capabilities automatically.  It is unnecessary for a client to
-                send a separate CAPABILITY command if it recognizes these
-                automatic capabilities.  This should only be done if a security
-                layer was not negotiated by the AUTHENTICATE command, because the
-                tagged OK response as part of an AUTHENTICATE command is not
-                protected by encryption/integrity checking.  [SASL] requires the
-                client to re-issue a CAPABILITY command in this case.
-                            
-                The authorization identity passed from the client to the server
-                during the authentication exchange is interpreted by the server as
-                the user name whose privileges the client is requesting.
-
-                Example:    S: * OK IMAP4rev1 Server
-                            C: A001 AUTHENTICATE GSSAPI
-                            S: +
-                            C: YIIB+wYJKoZIhvcSAQICAQBuggHqMIIB5qADAgEFoQMCAQ6iBw
-                               MFACAAAACjggEmYYIBIjCCAR6gAwIBBaESGxB1Lndhc2hpbmd0
-                               b24uZWR1oi0wK6ADAgEDoSQwIhsEaW1hcBsac2hpdmFtcy5jYW
-                               Mud2FzaGluZ3Rvbi5lZHWjgdMwgdCgAwIBAaEDAgEDooHDBIHA
-                               cS1GSa5b+fXnPZNmXB9SjL8Ollj2SKyb+3S0iXMljen/jNkpJX
-                               AleKTz6BQPzj8duz8EtoOuNfKgweViyn/9B9bccy1uuAE2HI0y
-                               C/PHXNNU9ZrBziJ8Lm0tTNc98kUpjXnHZhsMcz5Mx2GR6dGknb
-                               I0iaGcRerMUsWOuBmKKKRmVMMdR9T3EZdpqsBd7jZCNMWotjhi
-                               vd5zovQlFqQ2Wjc2+y46vKP/iXxWIuQJuDiisyXF0Y8+5GTpAL
-                               pHDc1/pIGmMIGjoAMCAQGigZsEgZg2on5mSuxoDHEA1w9bcW9n
-                               FdFxDKpdrQhVGVRDIzcCMCTzvUboqb5KjY1NJKJsfjRQiBYBdE
-                               NKfzK+g5DlV8nrw81uOcP8NOQCLR5XkoMHC0Dr/80ziQzbNqhx
-                               O6652Npft0LQwJvenwDI13YxpwOdMXzkWZN/XrEqOWp6GCgXTB
-                               vCyLWLlWnbaUkZdEYbKHBPjd8t/1x5Yg==
-                            S: + YGgGCSqGSIb3EgECAgIAb1kwV6ADAgEFoQMCAQ+iSzBJoAMC
-                               AQGiQgRAtHTEuOP2BXb9sBYFR4SJlDZxmg39IxmRBOhXRKdDA0
-                                uHTCOT9Bq3OsUTXUlk0CsFLoa8j+gvGDlgHuqzWHPSQg==
-                            C:
-                            S: + YDMGCSqGSIb3EgECAgIBAAD/////6jcyG4GE3KkTzBeBiVHe
-                               ceP2CWY0SR0fAQAgAAQEBAQ=
-                            C: YDMGCSqGSIb3EgECAgIBAAD/////3LQBHXTpFfZgrejpLlLImP
-                               wkhbfa2QteAQAgAG1yYwE=
-                            S: A001 OK GSSAPI authentication successful
-
-                            Note: The line breaks within server challenges and client
-                            responses are for editorial clarity and are not in real
-                            authenticators.
+            /* RFC 3501 6.2.2. AUTHENTICATE Command. 
+                Arguments:  authentication mechanism name 
+ 
+                Responses:  continuation data can be requested 
+ 
+                Result:     OK - authenticate completed, now in authenticated state 
+                            NO - authenticate failure: unsupported authentication 
+                                 mechanism, credentials rejected 
+                            BAD - command unknown or arguments invalid, 
+                                  authentication exchange cancelled 
+ 
+                The AUTHENTICATE command indicates a [SASL] authentication 
+                mechanism to the server.  If the server supports the requested 
+                authentication mechanism, it performs an authentication protocol 
+                exchange to authenticate and identify the client.  It MAY also 
+                negotiate an OPTIONAL security layer for subsequent protocol 
+                interactions.  If the requested authentication mechanism is not 
+                supported, the server SHOULD reject the AUTHENTICATE command by 
+                sending a tagged NO response. 
+ 
+                The AUTHENTICATE command does not support the optional "initial 
+                response" feature of [SASL].  Section 5.1 of [SASL] specifies how 
+                to handle an authentication mechanism which uses an initial 
+                response. 
+ 
+                The service name specified by this protocol's profile of [SASL] is 
+                "imap". 
+ 
+                The authentication protocol exchange consists of a series of 
+                server challenges and client responses that are specific to the 
+                authentication mechanism.  A server challenge consists of a 
+                command continuation request response with the "+" token followed 
+                by a BASE64 encoded string.  The client response consists of a 
+                single line consisting of a BASE64 encoded string.  If the client 
+                wishes to cancel an authentication exchange, it issues a line 
+                consisting of a single "*".  If the server receives such a 
+                response, it MUST reject the AUTHENTICATE command by sending a 
+                tagged BAD response. 
+ 
+                If a security layer is negotiated through the [SASL] 
+                authentication exchange, it takes effect immediately following the 
+                CRLF that concludes the authentication exchange for the client, 
+                and the CRLF of the tagged OK response for the server. 
+ 
+                While client and server implementations MUST implement the 
+                AUTHENTICATE command itself, it is not required to implement any 
+                authentication mechanisms other than the PLAIN mechanism described 
+                in [IMAP-TLS].  Also, an authentication mechanism is not required 
+                to support any security layers. 
+ 
+                    Note: a server implementation MUST implement a 
+                    configuration in which it does NOT permit any plaintext 
+                    password mechanisms, unless either the STARTTLS command 
+                    has been negotiated or some other mechanism that 
+                    protects the session from password snooping has been 
+                    provided.  Server sites SHOULD NOT use any configuration 
+                    which permits a plaintext password mechanism without 
+                    such a protection mechanism against password snooping. 
+                    Client and server implementations SHOULD implement 
+                    additional [SASL] mechanisms that do not use plaintext 
+                    passwords, such the GSSAPI mechanism described in [SASL] 
+                    and/or the [DIGEST-MD5] mechanism. 
+ 
+                Servers and clients can support multiple authentication 
+                mechanisms.  The server SHOULD list its supported authentication 
+                mechanisms in the response to the CAPABILITY command so that the 
+                client knows which authentication mechanisms to use. 
+ 
+                A server MAY include a CAPABILITY response code in the tagged OK 
+                response of a successful AUTHENTICATE command in order to send 
+                capabilities automatically.  It is unnecessary for a client to 
+                send a separate CAPABILITY command if it recognizes these 
+                automatic capabilities.  This should only be done if a security 
+                layer was not negotiated by the AUTHENTICATE command, because the 
+                tagged OK response as part of an AUTHENTICATE command is not 
+                protected by encryption/integrity checking.  [SASL] requires the 
+                client to re-issue a CAPABILITY command in this case. 
+                             
+                The authorization identity passed from the client to the server 
+                during the authentication exchange is interpreted by the server as 
+                the user name whose privileges the client is requesting. 
+ 
+                Example:    S: * OK IMAP4rev1 Server 
+                            C: A001 AUTHENTICATE GSSAPI 
+                            S: + 
+                            C: YIIB+wYJKoZIhvcSAQICAQBuggHqMIIB5qADAgEFoQMCAQ6iBw 
+                               MFACAAAACjggEmYYIBIjCCAR6gAwIBBaESGxB1Lndhc2hpbmd0 
+                               b24uZWR1oi0wK6ADAgEDoSQwIhsEaW1hcBsac2hpdmFtcy5jYW 
+                               Mud2FzaGluZ3Rvbi5lZHWjgdMwgdCgAwIBAaEDAgEDooHDBIHA 
+                               cS1GSa5b+fXnPZNmXB9SjL8Ollj2SKyb+3S0iXMljen/jNkpJX 
+                               AleKTz6BQPzj8duz8EtoOuNfKgweViyn/9B9bccy1uuAE2HI0y 
+                               C/PHXNNU9ZrBziJ8Lm0tTNc98kUpjXnHZhsMcz5Mx2GR6dGknb 
+                               I0iaGcRerMUsWOuBmKKKRmVMMdR9T3EZdpqsBd7jZCNMWotjhi 
+                               vd5zovQlFqQ2Wjc2+y46vKP/iXxWIuQJuDiisyXF0Y8+5GTpAL 
+                               pHDc1/pIGmMIGjoAMCAQGigZsEgZg2on5mSuxoDHEA1w9bcW9n 
+                               FdFxDKpdrQhVGVRDIzcCMCTzvUboqb5KjY1NJKJsfjRQiBYBdE 
+                               NKfzK+g5DlV8nrw81uOcP8NOQCLR5XkoMHC0Dr/80ziQzbNqhx 
+                               O6652Npft0LQwJvenwDI13YxpwOdMXzkWZN/XrEqOWp6GCgXTB 
+                               vCyLWLlWnbaUkZdEYbKHBPjd8t/1x5Yg== 
+                            S: + YGgGCSqGSIb3EgECAgIAb1kwV6ADAgEFoQMCAQ+iSzBJoAMC 
+                               AQGiQgRAtHTEuOP2BXb9sBYFR4SJlDZxmg39IxmRBOhXRKdDA0 
+                                uHTCOT9Bq3OsUTXUlk0CsFLoa8j+gvGDlgHuqzWHPSQg== 
+                            C: 
+                            S: + YDMGCSqGSIb3EgECAgIBAAD/////6jcyG4GE3KkTzBeBiVHe 
+                               ceP2CWY0SR0fAQAgAAQEBAQ= 
+                            C: YDMGCSqGSIb3EgECAgIBAAD/////3LQBHXTpFfZgrejpLlLImP 
+                               wkhbfa2QteAQAgAG1yYwE= 
+                            S: A001 OK GSSAPI authentication successful 
+ 
+                            Note: The line breaks within server challenges and client 
+                            responses are for editorial clarity and are not in real 
+                            authenticators. 
             */
 
-            /* RFC 4959.l7 SASL-IR 7.
-                The following syntax specification uses the Augmented Backus-Naur
-                Form [RFC4234] notation.  [RFC3501] defines the non-terminals
-                capability, auth-type, and base64.
-
-                capability    =/ "SASL-IR"
-
-                authenticate  = "AUTHENTICATE" SP auth-type [SP (base64 / "=")]
-                                *(CRLF base64)
-                                ;;redefine AUTHENTICATE from [RFC3501]
-            
+            /* RFC 4959.l7 SASL-IR 7. 
+                The following syntax specification uses the Augmented Backus-Naur 
+                Form [RFC4234] notation.  [RFC3501] defines the non-terminals 
+                capability, auth-type, and base64. 
+ 
+                capability    =/ "SASL-IR" 
+ 
+                authenticate  = "AUTHENTICATE" SP auth-type [SP (base64 / "=")] 
+                                *(CRLF base64) 
+                                ;;redefine AUTHENTICATE from [RFC3501] 
+             
             */
 
             if (m_SessionRejected)
@@ -1073,8 +961,6 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-
-            #region Parse parameters
 
             var arguments = cmdText.Split(' ');
             if (arguments.Length > 2)
@@ -1105,8 +991,6 @@ namespace LumiSoft.Net.IMAP.Server
                 }
             }
             var mechanism = arguments[0];
-
-            #endregion
 
             if (!Authentications.ContainsKey(mechanism))
             {
@@ -1148,7 +1032,7 @@ namespace LumiSoft.Net.IMAP.Server
                     m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus("+", Convert.ToBase64String(serverResponse)));
                 }
 
-                // Read client response. 
+                // Read client response.
                 var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
                 TcpStream.ReadLine(readLineOP, false);
                 if (readLineOP.Error != null)
@@ -1182,10 +1066,6 @@ namespace LumiSoft.Net.IMAP.Server
                 }
             }
         }
-
-        #endregion
-
-        #region method BeginReadCmd
 
         /// <summary>
         /// Starts reading incoming command from the connected client.
@@ -1223,56 +1103,52 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method CAPABILITY
-
         private void CAPABILITY(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.1.1. CAPABILITY Command.
-                Arguments:  none
-
-                Responses:  REQUIRED untagged response: CAPABILITY
-
-                Result:     OK - capability completed
-                            BAD - command unknown or arguments invalid
-
-                The CAPABILITY command requests a listing of capabilities that the
-                server supports.  The server MUST send a single untagged
-                CAPABILITY response with "IMAP4rev1" as one of the listed
-                capabilities before the (tagged) OK response.
-
-                A capability name which begins with "AUTH=" indicates that the
-                server supports that particular authentication mechanism.  All
-                such names are, by definition, part of this specification.  For
-                example, the authorization capability for an experimental
-                "blurdybloop" authenticator would be "AUTH=XBLURDYBLOOP" and not
-                "XAUTH=BLURDYBLOOP" or "XAUTH=XBLURDYBLOOP".
-
-                Other capability names refer to extensions, revisions, or
-                amendments to this specification.  See the documentation of the
-                CAPABILITY response for additional information.  No capabilities,
-                beyond the base IMAP4rev1 set defined in this specification, are
-                enabled without explicit client action to invoke the capability.
-
-                Client and server implementations MUST implement the STARTTLS,
-                LOGINDISABLED, and AUTH=PLAIN (described in [IMAP-TLS])
-                capabilities.  See the Security Considerations section for
-                important information.
-
-                See the section entitled "Client Commands -
-                Experimental/Expansion" for information about the form of site or
-                implementation-specific capabilities.
-
-                Example:    C: abcd CAPABILITY
-                            S: * CAPABILITY IMAP4rev1 STARTTLS AUTH=GSSAPI LOGINDISABLED
-                            S: abcd OK CAPABILITY completed
-                            C: efgh STARTTLS
-                            S: efgh OK STARTLS completed
-                            <TLS negotiation, further commands are under [TLS] layer>
-                            C: ijkl CAPABILITY
-                            S: * CAPABILITY IMAP4rev1 AUTH=GSSAPI AUTH=PLAIN
-                            S: ijkl OK CAPABILITY completed
+            /* RFC 3501 6.1.1. CAPABILITY Command. 
+                Arguments:  none 
+ 
+                Responses:  REQUIRED untagged response: CAPABILITY 
+ 
+                Result:     OK - capability completed 
+                            BAD - command unknown or arguments invalid 
+ 
+                The CAPABILITY command requests a listing of capabilities that the 
+                server supports.  The server MUST send a single untagged 
+                CAPABILITY response with "IMAP4rev1" as one of the listed 
+                capabilities before the (tagged) OK response. 
+ 
+                A capability name which begins with "AUTH=" indicates that the 
+                server supports that particular authentication mechanism.  All 
+                such names are, by definition, part of this specification.  For 
+                example, the authorization capability for an experimental 
+                "blurdybloop" authenticator would be "AUTH=XBLURDYBLOOP" and not 
+                "XAUTH=BLURDYBLOOP" or "XAUTH=XBLURDYBLOOP". 
+ 
+                Other capability names refer to extensions, revisions, or 
+                amendments to this specification.  See the documentation of the 
+                CAPABILITY response for additional information.  No capabilities, 
+                beyond the base IMAP4rev1 set defined in this specification, are 
+                enabled without explicit client action to invoke the capability. 
+ 
+                Client and server implementations MUST implement the STARTTLS, 
+                LOGINDISABLED, and AUTH=PLAIN (described in [IMAP-TLS]) 
+                capabilities.  See the Security Considerations section for 
+                important information. 
+ 
+                See the section entitled "Client Commands - 
+                Experimental/Expansion" for information about the form of site or 
+                implementation-specific capabilities. 
+ 
+                Example:    C: abcd CAPABILITY 
+                            S: * CAPABILITY IMAP4rev1 STARTTLS AUTH=GSSAPI LOGINDISABLED 
+                            S: abcd OK CAPABILITY completed 
+                            C: efgh STARTTLS 
+                            S: efgh OK STARTLS completed 
+                            <TLS negotiation, further commands are under [TLS] layer> 
+                            C: ijkl CAPABILITY 
+                            S: * CAPABILITY IMAP4rev1 AUTH=GSSAPI AUTH=PLAIN 
+                            S: ijkl OK CAPABILITY completed 
             */
 
             var capabilities = new List<string>();
@@ -1280,11 +1156,11 @@ namespace LumiSoft.Net.IMAP.Server
             {
                 capabilities.Add("STARTTLS");
             }
-            foreach (string c in m_pCapabilities)
+            foreach (var c in m_pCapabilities)
             {
                 capabilities.Add(c);
             }
-            foreach (AUTH_SASL_ServerMechanism auth in Authentications.Values)
+            foreach (var auth in Authentications.Values)
             {
                 capabilities.Add("AUTH=" + auth.Name);
             }
@@ -1293,35 +1169,31 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "OK", "CAPABILITY completed."));
         }
 
-        #endregion
-
-        #region method CHECK
-
         private void CHECK(string cmdTag, string cmdText)
         {
-            /* 6.4.1.  CHECK Command
-                Arguments:  none
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - check completed
-                            BAD - command unknown or arguments invalid
-
-                The CHECK command requests a checkpoint of the currently selected
-                mailbox.  A checkpoint refers to any implementation-dependent
-                housekeeping associated with the mailbox (e.g., resolving the
-                server's in-memory state of the mailbox with the state on its
-                disk) that is not normally executed as part of each command.  A
-                checkpoint MAY take a non-instantaneous amount of real time to
-                complete.  If a server implementation has no such housekeeping
-                considerations, CHECK is equivalent to NOOP.
-
-                There is no guarantee that an EXISTS untagged response will happen
-                as a result of CHECK.  NOOP, not CHECK, SHOULD be used for new
-                message polling.
-
-                Example:    C: FXXZ CHECK
-                            S: FXXZ OK CHECK Completed
+            /* 6.4.1.  CHECK Command 
+                Arguments:  none 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - check completed 
+                            BAD - command unknown or arguments invalid 
+ 
+                The CHECK command requests a checkpoint of the currently selected 
+                mailbox.  A checkpoint refers to any implementation-dependent 
+                housekeeping associated with the mailbox (e.g., resolving the 
+                server's in-memory state of the mailbox with the state on its 
+                disk) that is not normally executed as part of each command.  A 
+                checkpoint MAY take a non-instantaneous amount of real time to 
+                complete.  If a server implementation has no such housekeeping 
+                considerations, CHECK is equivalent to NOOP. 
+ 
+                There is no guarantee that an EXISTS untagged response will happen 
+                as a result of CHECK.  NOOP, not CHECK, SHOULD be used for new 
+                message polling. 
+ 
+                Example:    C: FXXZ CHECK 
+                            S: FXXZ OK CHECK Completed 
             */
 
             if (!IsAuthenticated)
@@ -1338,7 +1210,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
 
             UpdateSelectedFolderAndSendChanges();
@@ -1346,39 +1218,35 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "OK", "CHECK Completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds."));
         }
 
-        #endregion
-
-        #region method CLOSE
-
         private void CLOSE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.4.2. CLOSE Command.
-                Arguments:  none
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - close completed, now in authenticated state
-                            BAD - command unknown or arguments invalid
-
-                The CLOSE command permanently removes all messages that have the
-                \Deleted flag set from the currently selected mailbox, and returns
-                to the authenticated state from the selected state.  No untagged
-                EXPUNGE responses are sent.
-
-                No messages are removed, and no error is given, if the mailbox is
-                selected by an EXAMINE command or is otherwise selected read-only.
-
-                Even if a mailbox is selected, a SELECT, EXAMINE, or LOGOUT
-                command MAY be issued without previously issuing a CLOSE command.
-                The SELECT, EXAMINE, and LOGOUT commands implicitly close the
-                currently selected mailbox without doing an expunge.  However,
-                when many messages are deleted, a CLOSE-LOGOUT or CLOSE-SELECT
-                sequence is considerably faster than an EXPUNGE-LOGOUT or
-                EXPUNGE-SELECT because no untagged EXPUNGE responses (which the
-                client would probably ignore) are sent.
-
-                Example:    C: A341 CLOSE
-                            S: A341 OK CLOSE completed
+            /* RFC 3501 6.4.2. CLOSE Command. 
+                Arguments:  none 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - close completed, now in authenticated state 
+                            BAD - command unknown or arguments invalid 
+ 
+                The CLOSE command permanently removes all messages that have the 
+                \Deleted flag set from the currently selected mailbox, and returns 
+                to the authenticated state from the selected state.  No untagged 
+                EXPUNGE responses are sent. 
+ 
+                No messages are removed, and no error is given, if the mailbox is 
+                selected by an EXAMINE command or is otherwise selected read-only. 
+ 
+                Even if a mailbox is selected, a SELECT, EXAMINE, or LOGOUT 
+                command MAY be issued without previously issuing a CLOSE command. 
+                The SELECT, EXAMINE, and LOGOUT commands implicitly close the 
+                currently selected mailbox without doing an expunge.  However, 
+                when many messages are deleted, a CLOSE-LOGOUT or CLOSE-SELECT 
+                sequence is considerably faster than an EXPUNGE-LOGOUT or 
+                EXPUNGE-SELECT because no untagged EXPUNGE responses (which the 
+                client would probably ignore) are sent. 
+ 
+                Example:    C: A341 CLOSE 
+                            S: A341 OK CLOSE completed 
             */
 
             if (!IsAuthenticated)
@@ -1396,7 +1264,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             if (m_pSelectedFolder != null && !m_pSelectedFolder.IsReadOnly)
             {
-                foreach (IMAP_MessageInfo msgInfo in m_pSelectedFolder.MessagesInfo)
+                foreach (var msgInfo in m_pSelectedFolder.MessagesInfo)
                 {
                     if (msgInfo.ContainsFlag("Deleted"))
                     {
@@ -1417,150 +1285,150 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns></returns>
         private string ConstructParts(MIME_Entity entity, bool bodystructure)
         {
-            /* RFC 3501 7.4.2 BODYSTRUCTURE
-                              BODY A form of BODYSTRUCTURE without extension data.
-              
-                A parenthesized list that describes the [MIME-IMB] body
-                structure of a message.  This is computed by the server by
-                parsing the [MIME-IMB] header fields, defaulting various fields
-                as necessary.
-
-                For example, a simple text message of 48 lines and 2279 octets
-                can have a body structure of: ("TEXT" "PLAIN" ("CHARSET"
-                "US-ASCII") NIL NIL "7BIT" 2279 48)
-
-                Multiple parts are indicated by parenthesis nesting.  Instead
-                of a body type as the first element of the parenthesized list,
-                there is a sequence of one or more nested body structures.  The
-                second element of the parenthesized list is the multipart
-                subtype (mixed, digest, parallel, alternative, etc.).
-                    
-                For example, a two part message consisting of a text and a
-                BASE64-encoded text attachment can have a body structure of:
-                (("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL "7BIT" 1152
-                23)("TEXT" "PLAIN" ("CHARSET" "US-ASCII" "NAME" "cc.diff")
-                "<960723163407.20117h@cac.washington.edu>" "Compiler diff"
-                "BASE64" 4554 73) "MIXED")
-
-                Extension data follows the multipart subtype.  Extension data
-                is never returned with the BODY fetch, but can be returned with
-                a BODYSTRUCTURE fetch.  Extension data, if present, MUST be in
-                the defined order.  The extension data of a multipart body part
-                are in the following order:
-
-                body parameter parenthesized list
-                    A parenthesized list of attribute/value pairs [e.g., ("foo"
-                    "bar" "baz" "rag") where "bar" is the value of "foo", and
-                    "rag" is the value of "baz"] as defined in [MIME-IMB].
-
-                body disposition
-                    A parenthesized list, consisting of a disposition type
-                    string, followed by a parenthesized list of disposition
-                    attribute/value pairs as defined in [DISPOSITION].
-
-                body language
-                    A string or parenthesized list giving the body language
-                    value as defined in [LANGUAGE-TAGS].
-
-                body location
-                    A string list giving the body content URI as defined in [LOCATION].
-
-                Any following extension data are not yet defined in this
-                version of the protocol.  Such extension data can consist of
-                zero or more NILs, strings, numbers, or potentially nested
-                parenthesized lists of such data.  Client implementations that
-                do a BODYSTRUCTURE fetch MUST be prepared to accept such
-                extension data.  Server implementations MUST NOT send such
-                extension data until it has been defined by a revision of this
-                protocol.
-
-                The basic fields of a non-multipart body part are in the
-                following order:
-
-                body type
-                    A string giving the content media type name as defined in [MIME-IMB].
-                
-                body subtype
-                     A string giving the content subtype name as defined in [MIME-IMB].
-
-                body parameter parenthesized list
-                    A parenthesized list of attribute/value pairs [e.g., ("foo"
-                    "bar" "baz" "rag") where "bar" is the value of "foo" and
-                    "rag" is the value of "baz"] as defined in [MIME-IMB].
-
-                body id
-                    A string giving the content id as defined in [MIME-IMB].
-
-                body description
-                    A string giving the content description as defined in [MIME-IMB].
-
-                body encoding
-                    A string giving the content transfer encoding as defined in    [MIME-IMB].
-
-                body size
-                    A number giving the size of the body in octets.  Note that
-                    this size is the size in its transfer encoding and not the
-                    resulting size after any decoding.
-
-                A body type of type MESSAGE and subtype RFC822 contains,
-                immediately after the basic fields, the envelope structure,
-                body structure, and size in text lines of the encapsulated
-                message.
-
-                A body type of type TEXT contains, immediately after the basic
-                fields, the size of the body in text lines.  Note that this
-                size is the size in its content transfer encoding and not the
-                resulting size after any decoding.
-
-                Extension data follows the basic fields and the type-specific
-                fields listed above.  Extension data is never returned with the
-                BODY fetch, but can be returned with a BODYSTRUCTURE fetch.
-                Extension data, if present, MUST be in the defined order.
-
-                The extension data of a non-multipart body part are in the
-                following order:
-
-                body MD5
-                    A string giving the body MD5 value as defined in [MD5].
-                    
-                body disposition
-                    A parenthesized list with the same content and function as
-                    the body disposition for a multipart body part.
-
-                body language
-                    A string or parenthesized list giving the body language
-                    value as defined in [LANGUAGE-TAGS].
-
-                body location
-                    A string list giving the body content URI as defined in [LOCATION].
-
-                Any following extension data are not yet defined in this
-                version of the protocol, and would be as described above under
-                multipart extension data.
-            
-            
-                // We don't construct extention fields like rfc says:
-                    Server implementations MUST NOT send such
-                    extension data until it has been defined by a revision of this
-                    protocol.
-            
-                                        
-                contentTypeMainMediaType - Example: 'TEXT'
-                contentTypeSubMediaType  - Example: 'PLAIN'
-                conentTypeParameters     - Example: '("CHARSET" "iso-8859-1" ...)'
-                contentID                - Content-ID: header field value.
-                contentDescription       - Content-Description: header field value.
-                contentEncoding          - Content-Transfer-Encoding: header field value.
-                contentSize              - mimeEntity ENCODED data size
-                [envelope]               - NOTE: included only if contentType = "message" !!!
-                [contentLines]           - number of ENCODED data lines. NOTE: included only if contentType = "text" !!!
-                                                   
-                // Basic fields for multipart
-                (nestedMimeEntries) contentTypeSubMediaType
-                                                
-                // Basic fields for non-multipart
-                contentTypeMainMediaType contentTypeSubMediaType (conentTypeParameters) contentID contentDescription contentEncoding contentSize [envelope] [contentLine]
-
+            /* RFC 3501 7.4.2 BODYSTRUCTURE 
+                              BODY A form of BODYSTRUCTURE without extension data. 
+               
+                A parenthesized list that describes the [MIME-IMB] body 
+                structure of a message.  This is computed by the server by 
+                parsing the [MIME-IMB] header fields, defaulting various fields 
+                as necessary. 
+ 
+                For example, a simple text message of 48 lines and 2279 octets 
+                can have a body structure of: ("TEXT" "PLAIN" ("CHARSET" 
+                "US-ASCII") NIL NIL "7BIT" 2279 48) 
+ 
+                Multiple parts are indicated by parenthesis nesting.  Instead 
+                of a body type as the first element of the parenthesized list, 
+                there is a sequence of one or more nested body structures.  The 
+                second element of the parenthesized list is the multipart 
+                subtype (mixed, digest, parallel, alternative, etc.). 
+                     
+                For example, a two part message consisting of a text and a 
+                BASE64-encoded text attachment can have a body structure of: 
+                (("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL "7BIT" 1152 
+                23)("TEXT" "PLAIN" ("CHARSET" "US-ASCII" "NAME" "cc.diff") 
+                "<960723163407.20117h@cac.washington.edu>" "Compiler diff" 
+                "BASE64" 4554 73) "MIXED") 
+ 
+                Extension data follows the multipart subtype.  Extension data 
+                is never returned with the BODY fetch, but can be returned with 
+                a BODYSTRUCTURE fetch.  Extension data, if present, MUST be in 
+                the defined order.  The extension data of a multipart body part 
+                are in the following order: 
+ 
+                body parameter parenthesized list 
+                    A parenthesized list of attribute/value pairs [e.g., ("foo" 
+                    "bar" "baz" "rag") where "bar" is the value of "foo", and 
+                    "rag" is the value of "baz"] as defined in [MIME-IMB]. 
+ 
+                body disposition 
+                    A parenthesized list, consisting of a disposition type 
+                    string, followed by a parenthesized list of disposition 
+                    attribute/value pairs as defined in [DISPOSITION]. 
+ 
+                body language 
+                    A string or parenthesized list giving the body language 
+                    value as defined in [LANGUAGE-TAGS]. 
+ 
+                body location 
+                    A string list giving the body content URI as defined in [LOCATION]. 
+ 
+                Any following extension data are not yet defined in this 
+                version of the protocol.  Such extension data can consist of 
+                zero or more NILs, strings, numbers, or potentially nested 
+                parenthesized lists of such data.  Client implementations that 
+                do a BODYSTRUCTURE fetch MUST be prepared to accept such 
+                extension data.  Server implementations MUST NOT send such 
+                extension data until it has been defined by a revision of this 
+                protocol. 
+ 
+                The basic fields of a non-multipart body part are in the 
+                following order: 
+ 
+                body type 
+                    A string giving the content media type name as defined in [MIME-IMB]. 
+                 
+                body subtype 
+                     A string giving the content subtype name as defined in [MIME-IMB]. 
+ 
+                body parameter parenthesized list 
+                    A parenthesized list of attribute/value pairs [e.g., ("foo" 
+                    "bar" "baz" "rag") where "bar" is the value of "foo" and 
+                    "rag" is the value of "baz"] as defined in [MIME-IMB]. 
+ 
+                body id 
+                    A string giving the content id as defined in [MIME-IMB]. 
+ 
+                body description 
+                    A string giving the content description as defined in [MIME-IMB]. 
+ 
+                body encoding 
+                    A string giving the content transfer encoding as defined in	[MIME-IMB]. 
+ 
+                body size 
+                    A number giving the size of the body in octets.  Note that 
+                    this size is the size in its transfer encoding and not the 
+                    resulting size after any decoding. 
+ 
+                A body type of type MESSAGE and subtype RFC822 contains, 
+                immediately after the basic fields, the envelope structure, 
+                body structure, and size in text lines of the encapsulated 
+                message. 
+ 
+                A body type of type TEXT contains, immediately after the basic 
+                fields, the size of the body in text lines.  Note that this 
+                size is the size in its content transfer encoding and not the 
+                resulting size after any decoding. 
+ 
+                Extension data follows the basic fields and the type-specific 
+                fields listed above.  Extension data is never returned with the 
+                BODY fetch, but can be returned with a BODYSTRUCTURE fetch. 
+                Extension data, if present, MUST be in the defined order. 
+ 
+                The extension data of a non-multipart body part are in the 
+                following order: 
+ 
+                body MD5 
+                    A string giving the body MD5 value as defined in [MD5]. 
+                     
+                body disposition 
+                    A parenthesized list with the same content and function as 
+                    the body disposition for a multipart body part. 
+ 
+                body language 
+                    A string or parenthesized list giving the body language 
+                    value as defined in [LANGUAGE-TAGS]. 
+ 
+                body location 
+                    A string list giving the body content URI as defined in [LOCATION]. 
+ 
+                Any following extension data are not yet defined in this 
+                version of the protocol, and would be as described above under 
+                multipart extension data. 
+             
+             
+                // We don't construct extention fields like rfc says: 
+                    Server implementations MUST NOT send such 
+                    extension data until it has been defined by a revision of this 
+                    protocol. 
+             
+                                         
+                contentTypeMainMediaType - Example: 'TEXT' 
+                contentTypeSubMediaType  - Example: 'PLAIN' 
+                conentTypeParameters     - Example: '("CHARSET" "iso-8859-1" ...)' 
+                contentID                - Content-ID: header field value. 
+                contentDescription       - Content-Description: header field value. 
+                contentEncoding          - Content-Transfer-Encoding: header field value. 
+                contentSize              - mimeEntity ENCODED data size 
+                [envelope]               - NOTE: included only if contentType = "message" !!! 
+                [contentLines]           - number of ENCODED data lines. NOTE: included only if contentType = "text" !!! 
+                                                 
+                // Basic fields for multipart 
+                (nestedMimeEntries) contentTypeSubMediaType 
+                                                 
+                // Basic fields for non-multipart 
+                contentTypeMainMediaType contentTypeSubMediaType (conentTypeParameters) contentID contentDescription contentEncoding contentSize [envelope] [contentLine] 
+ 
             */
 
             var wordEncoder = new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8);
@@ -1624,7 +1492,7 @@ namespace LumiSoft.Net.IMAP.Server
                     if (entity.ContentType.Parameters.Count > 0)
                     {
                         retVal.Append(" (");
-                        bool first = true;
+                        var first = true;
                         foreach (MIME_h_Parameter parameter in entity.ContentType.Parameters)
                         {
                             // For the first item, don't add SP.
@@ -1724,42 +1592,38 @@ namespace LumiSoft.Net.IMAP.Server
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method COPY
-
         private void COPY(bool uid, string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.4.7. COPY Command.
-                Arguments:  sequence set
-                            mailbox name
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - copy completed
-                            NO - copy error: can't copy those messages or to that
-                                 name
-                            BAD - command unknown or arguments invalid
-
-                The COPY command copies the specified message(s) to the end of the
-                specified destination mailbox.  The flags and internal date of the
-                message(s) SHOULD be preserved, and the Recent flag SHOULD be set,
-                in the copy.
-
-                If the destination mailbox does not exist, a server SHOULD return
-                an error.  It SHOULD NOT automatically create the mailbox.  Unless
-                it is certain that the destination mailbox can not be created, the
-                server MUST send the response code "[TRYCREATE]" as the prefix of
-                the text of the tagged NO response.  This gives a hint to the
-                client that it can attempt a CREATE command and retry the COPY if
-                the CREATE is successful.
-
-                If the COPY command is unsuccessful for any reason, server
-                implementations MUST restore the destination mailbox to its state
-                before the COPY attempt.
-
-                Example:    C: A003 COPY 2:4 MEETING
-                            S: A003 OK COPY completed
+            /* RFC 3501 6.4.7. COPY Command. 
+                Arguments:  sequence set 
+                            mailbox name 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - copy completed 
+                            NO - copy error: can't copy those messages or to that 
+                                 name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The COPY command copies the specified message(s) to the end of the 
+                specified destination mailbox.  The flags and internal date of the 
+                message(s) SHOULD be preserved, and the Recent flag SHOULD be set, 
+                in the copy. 
+ 
+                If the destination mailbox does not exist, a server SHOULD return 
+                an error.  It SHOULD NOT automatically create the mailbox.  Unless 
+                it is certain that the destination mailbox can not be created, the 
+                server MUST send the response code "[TRYCREATE]" as the prefix of 
+                the text of the tagged NO response.  This gives a hint to the 
+                client that it can attempt a CREATE command and retry the COPY if 
+                the CREATE is successful. 
+ 
+                If the COPY command is unsuccessful for any reason, server 
+                implementations MUST restore the destination mailbox to its state 
+                before the COPY attempt. 
+ 
+                Example:    C: A003 COPY 2:4 MEETING 
+                            S: A003 OK COPY completed 
             */
 
             if (!IsAuthenticated)
@@ -1805,60 +1669,56 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method CREATE
-
         private void CREATE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.3. CREATE Command.
-                Arguments:  mailbox name
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - create completed
-                            NO - create failure: can't create mailbox with that name
-                            BAD - command unknown or arguments invalid
-
-                The CREATE command creates a mailbox with the given name.  An OK
-                response is returned only if a new mailbox with that name has been
-                created.  It is an error to attempt to create INBOX or a mailbox
-                with a name that refers to an extant mailbox.  Any error in
-                creation will return a tagged NO response.
-
-                If the mailbox name is suffixed with the server's hierarchy
-                separator character (as returned from the server by a LIST
-                command), this is a declaration that the client intends to create
-                mailbox names under this name in the hierarchy.  Server
-                implementations that do not require this declaration MUST ignore
-                the declaration.  In any case, the name created is without the
-                trailing hierarchy delimiter.
-
-                If the server's hierarchy separator character appears elsewhere in
-                the name, the server SHOULD create any superior hierarchical names
-                that are needed for the CREATE command to be successfully
-                completed.  In other words, an attempt to create "foo/bar/zap" on
-                a server in which "/" is the hierarchy separator character SHOULD
-                create foo/ and foo/bar/ if they do not already exist.
-
-                If a new mailbox is created with the same name as a mailbox which
-                was deleted, its unique identifiers MUST be greater than any
-                unique identifiers used in the previous incarnation of the mailbox
-                UNLESS the new incarnation has a different unique identifier
-                validity value.  See the description of the UID command for more
-                detail.
-
-                Example:    C: A003 CREATE owatagusiam/
-                            S: A003 OK CREATE completed
-                            C: A004 CREATE owatagusiam/blurdybloop
-                            S: A004 OK CREATE completed
-
-                    Note: The interpretation of this example depends on whether
-                    "/" was returned as the hierarchy separator from LIST.  If
-                    "/" is the hierarchy separator, a new level of hierarchy
-                    named "owatagusiam" with a member called "blurdybloop" is
-                    created.  Otherwise, two mailboxes at the same hierarchy
-                    level are created.
+            /* RFC 3501 6.3.3. CREATE Command. 
+                Arguments:  mailbox name 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - create completed 
+                            NO - create failure: can't create mailbox with that name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The CREATE command creates a mailbox with the given name.  An OK 
+                response is returned only if a new mailbox with that name has been 
+                created.  It is an error to attempt to create INBOX or a mailbox 
+                with a name that refers to an extant mailbox.  Any error in 
+                creation will return a tagged NO response. 
+ 
+                If the mailbox name is suffixed with the server's hierarchy 
+                separator character (as returned from the server by a LIST 
+                command), this is a declaration that the client intends to create 
+                mailbox names under this name in the hierarchy.  Server 
+                implementations that do not require this declaration MUST ignore 
+                the declaration.  In any case, the name created is without the 
+                trailing hierarchy delimiter. 
+ 
+                If the server's hierarchy separator character appears elsewhere in 
+                the name, the server SHOULD create any superior hierarchical names 
+                that are needed for the CREATE command to be successfully 
+                completed.  In other words, an attempt to create "foo/bar/zap" on 
+                a server in which "/" is the hierarchy separator character SHOULD 
+                create foo/ and foo/bar/ if they do not already exist. 
+ 
+                If a new mailbox is created with the same name as a mailbox which 
+                was deleted, its unique identifiers MUST be greater than any 
+                unique identifiers used in the previous incarnation of the mailbox 
+                UNLESS the new incarnation has a different unique identifier 
+                validity value.  See the description of the UID command for more 
+                detail. 
+ 
+                Example:    C: A003 CREATE owatagusiam/ 
+                            S: A003 OK CREATE completed 
+                            C: A004 CREATE owatagusiam/blurdybloop 
+                            S: A004 OK CREATE completed 
+ 
+                    Note: The interpretation of this example depends on whether 
+                    "/" was returned as the hierarchy separator from LIST.  If 
+                    "/" is the hierarchy separator, a new level of hierarchy 
+                    named "owatagusiam" with a member called "blurdybloop" is 
+                    created.  Otherwise, two mailboxes at the same hierarchy 
+                    level are created. 
             */
 
             if (!IsAuthenticated)
@@ -1875,62 +1735,58 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method DELETE
-
         private void DELETE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.4. DELETE Command.
-                Arguments:  mailbox name
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - delete completed
-                            NO - delete failure: can't delete mailbox with that name
-                            BAD - command unknown or arguments invalid
-
-                The DELETE command permanently removes the mailbox with the given
-                name.  A tagged OK response is returned only if the mailbox has
-                been deleted.  It is an error to attempt to delete INBOX or a
-                mailbox name that does not exist.
-
-                The DELETE command MUST NOT remove inferior hierarchical names.
-                For example, if a mailbox "foo" has an inferior "foo.bar"
-                (assuming "." is the hierarchy delimiter character), removing
-                "foo" MUST NOT remove "foo.bar".  It is an error to attempt to
-                delete a name that has inferior hierarchical names and also has
-                the \Noselect mailbox name attribute (see the description of the
-                LIST response for more details).
-
-                It is permitted to delete a name that has inferior hierarchical
-                names and does not have the \Noselect mailbox name attribute.  In
-                this case, all messages in that mailbox are removed, and the name
-                will acquire the \Noselect mailbox name attribute.
-
-                The value of the highest-used unique identifier of the deleted
-                mailbox MUST be preserved so that a new mailbox created with the
-                same name will not reuse the identifiers of the former
-                incarnation, UNLESS the new incarnation has a different unique
-                identifier validity value.  See the description of the UID command
-                for more detail.
-
-                Examples:   C: A682 LIST "" *
-                            S: * LIST () "/" blurdybloop
-                            S: * LIST (\Noselect) "/" foo
-                            S: * LIST () "/" foo/bar
-                            S: A682 OK LIST completed
-                            C: A683 DELETE blurdybloop
-                            S: A683 OK DELETE completed
-                            C: A684 DELETE foo
-                            S: A684 NO Name "foo" has inferior hierarchical names
-                            C: A685 DELETE foo/bar
-                            S: A685 OK DELETE Completed
-                            C: A686 LIST "" *
-                            S: * LIST (\Noselect) "/" foo
-                            S: A686 OK LIST completed
-                            C: A687 DELETE foo
-                            S: A687 OK DELETE Completed
+            /* RFC 3501 6.3.4. DELETE Command. 
+                Arguments:  mailbox name 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - delete completed 
+                            NO - delete failure: can't delete mailbox with that name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The DELETE command permanently removes the mailbox with the given 
+                name.  A tagged OK response is returned only if the mailbox has 
+                been deleted.  It is an error to attempt to delete INBOX or a 
+                mailbox name that does not exist. 
+ 
+                The DELETE command MUST NOT remove inferior hierarchical names. 
+                For example, if a mailbox "foo" has an inferior "foo.bar" 
+                (assuming "." is the hierarchy delimiter character), removing 
+                "foo" MUST NOT remove "foo.bar".  It is an error to attempt to 
+                delete a name that has inferior hierarchical names and also has 
+                the \Noselect mailbox name attribute (see the description of the 
+                LIST response for more details). 
+ 
+                It is permitted to delete a name that has inferior hierarchical 
+                names and does not have the \Noselect mailbox name attribute.  In 
+                this case, all messages in that mailbox are removed, and the name 
+                will acquire the \Noselect mailbox name attribute. 
+ 
+                The value of the highest-used unique identifier of the deleted 
+                mailbox MUST be preserved so that a new mailbox created with the 
+                same name will not reuse the identifiers of the former 
+                incarnation, UNLESS the new incarnation has a different unique 
+                identifier validity value.  See the description of the UID command 
+                for more detail. 
+ 
+                Examples:   C: A682 LIST "" * 
+                            S: * LIST () "/" blurdybloop 
+                            S: * LIST (\Noselect) "/" foo 
+                            S: * LIST () "/" foo/bar 
+                            S: A682 OK LIST completed 
+                            C: A683 DELETE blurdybloop 
+                            S: A683 OK DELETE completed 
+                            C: A684 DELETE foo 
+                            S: A684 NO Name "foo" has inferior hierarchical names 
+                            C: A685 DELETE foo/bar 
+                            S: A685 OK DELETE Completed 
+                            C: A686 LIST "" * 
+                            S: * LIST (\Noselect) "/" foo 
+                            S: A686 OK LIST completed 
+                            C: A687 DELETE foo 
+                            S: A687 OK DELETE Completed 
             */
 
             if (!IsAuthenticated)
@@ -1947,31 +1803,27 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method DELETEACL
-
         private void DELETEACL(string cmdTag, string cmdText)
         {
-            /* RFC 4314 3.2. DELETEACL Command.
-                Arguments:  mailbox name
-                            identifier
-
-                Data:       no specific data for this command
-
-                Result:     OK - deleteacl completed
-                            NO - deleteacl failure: can't delete acl
-                            BAD - arguments invalid
-
-                The DELETEACL command removes any <identifier,rights> pair for the
-                specified identifier from the access control list for the specified
-                mailbox.
-
-                Example:    C: B001 getacl INBOX
-                            S: * ACL INBOX Fred rwipslxetad -Fred wetd $team w
-                            S: B001 OK Getacl complete
-                            C: B002 DeleteAcl INBOX Fred
-                            S: B002 OK Deleteacl complete
+            /* RFC 4314 3.2. DELETEACL Command. 
+                Arguments:  mailbox name 
+                            identifier 
+ 
+                Data:       no specific data for this command 
+ 
+                Result:     OK - deleteacl completed 
+                            NO - deleteacl failure: can't delete acl 
+                            BAD - arguments invalid 
+ 
+                The DELETEACL command removes any <identifier,rights> pair for the 
+                specified identifier from the access control list for the specified 
+                mailbox. 
+ 
+                Example:    C: B001 getacl INBOX 
+                            S: * ACL INBOX Fred rwipslxetad -Fred wetd $team w 
+                            S: B001 OK Getacl complete 
+                            C: B002 DeleteAcl INBOX Fred 
+                            S: B002 OK Deleteacl complete 
             */
 
             if (!SupportsCap("ACL"))
@@ -2003,83 +1855,79 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method ENABLE
-
         private void ENABLE(string cmdTag, string cmdText)
         {
-            /* RFC 5161 3.1. The ENABLE Command.
-                Arguments: capability names
-
-                Result: OK: Relevant capabilities enabled
-                        BAD: No arguments, or syntax error in an argument
-
-                The ENABLE command takes a list of capability names, and requests the
-                server to enable the named extensions.  Once enabled using ENABLE,
-                each extension remains active until the IMAP connection is closed.
-                For each argument, the server does the following:
-
-                    - If the argument is not an extension known to the server, the server
-                      MUST ignore the argument.
-
-                    - If the argument is an extension known to the server, and it is not
-                      specifically permitted to be enabled using ENABLE, the server MUST
-                      ignore the argument.  (Note that knowing about an extension doesn't
-                      necessarily imply supporting that extension.)
-
-                    - If the argument is an extension that is supported by the server and
-                      that needs to be enabled, the server MUST enable the extension for
-                      the duration of the connection.  At present, this applies only to
-                      CONDSTORE ([RFC4551]).  Note that once an extension is enabled,
-                      there is no way to disable it.
-
-                If the ENABLE command is successful, the server MUST send an untagged
-                ENABLED response (see Section 3.2).
-
-                Clients SHOULD only include extensions that need to be enabled by the
-                server.  At the time of publication, CONDSTORE is the only such
-                extension (i.e., ENABLE CONDSTORE is an additional "CONDSTORE
-                enabling command" as defined in [RFC4551]).  Future RFCs may add to
-                this list.
-
-                The ENABLE command is only valid in the authenticated state (see
-                [RFC3501]), before any mailbox is selected.  Clients MUST NOT issue
-                ENABLE once they SELECT/EXAMINE a mailbox; however, server
-                implementations don't have to check that no mailbox is selected or
-                was previously selected during the duration of a connection.
-
-                The ENABLE command can be issued multiple times in a session.  It is
-                additive; i.e., "ENABLE a b", followed by "ENABLE c" is the same as a
-                single command "ENABLE a b c".  When multiple ENABLE commands are
-                issued, each corresponding ENABLED response SHOULD only contain
-                extensions enabled by the corresponding ENABLE command.
-
-                There are no limitations on pipelining ENABLE.  For example, it is
-                possible to send ENABLE and then immediately SELECT, or a LOGIN
-                immediately followed by ENABLE.
-
-                The server MUST NOT change the CAPABILITY list as a result of
-                executing ENABLE; i.e., a CAPABILITY command issued right after an
-                ENABLE command MUST list the same capabilities as a CAPABILITY
-                command issued before the ENABLE command.  This is demonstrated in
-                the following example:
-             
-                    C: t1 CAPABILITY
-                    S: * CAPABILITY IMAP4rev1 ID LITERAL+ ENABLE X-GOOD-IDEA
-                    S: t1 OK foo
-                    C: t2 ENABLE CONDSTORE X-GOOD-IDEA
-                    S: * ENABLED X-GOOD-IDEA
-                    S: t2 OK foo
-                    C: t3 CAPABILITY
-                    S: * CAPABILITY IMAP4rev1 ID LITERAL+ ENABLE X-GOOD-IDEA
-                    S: t3 OK foo again
-
-                In the following example, the client enables CONDSTORE:
-
-                    C: a1 ENABLE CONDSTORE
-                    S: * ENABLED CONDSTORE
-                    S: a1 OK Conditional Store enabled
+            /* RFC 5161 3.1. The ENABLE Command. 
+                Arguments: capability names 
+ 
+                Result: OK: Relevant capabilities enabled 
+                        BAD: No arguments, or syntax error in an argument 
+ 
+                The ENABLE command takes a list of capability names, and requests the 
+                server to enable the named extensions.  Once enabled using ENABLE, 
+                each extension remains active until the IMAP connection is closed. 
+                For each argument, the server does the following: 
+ 
+                    - If the argument is not an extension known to the server, the server 
+                      MUST ignore the argument. 
+ 
+                    - If the argument is an extension known to the server, and it is not 
+                      specifically permitted to be enabled using ENABLE, the server MUST 
+                      ignore the argument.  (Note that knowing about an extension doesn't 
+                      necessarily imply supporting that extension.) 
+ 
+                    - If the argument is an extension that is supported by the server and 
+                      that needs to be enabled, the server MUST enable the extension for 
+                      the duration of the connection.  At present, this applies only to 
+                      CONDSTORE ([RFC4551]).  Note that once an extension is enabled, 
+                      there is no way to disable it. 
+ 
+                If the ENABLE command is successful, the server MUST send an untagged 
+                ENABLED response (see Section 3.2). 
+ 
+                Clients SHOULD only include extensions that need to be enabled by the 
+                server.  At the time of publication, CONDSTORE is the only such 
+                extension (i.e., ENABLE CONDSTORE is an additional "CONDSTORE 
+                enabling command" as defined in [RFC4551]).  Future RFCs may add to 
+                this list. 
+ 
+                The ENABLE command is only valid in the authenticated state (see 
+                [RFC3501]), before any mailbox is selected.  Clients MUST NOT issue 
+                ENABLE once they SELECT/EXAMINE a mailbox; however, server 
+                implementations don't have to check that no mailbox is selected or 
+                was previously selected during the duration of a connection. 
+ 
+                The ENABLE command can be issued multiple times in a session.  It is 
+                additive; i.e., "ENABLE a b", followed by "ENABLE c" is the same as a 
+                single command "ENABLE a b c".  When multiple ENABLE commands are 
+                issued, each corresponding ENABLED response SHOULD only contain 
+                extensions enabled by the corresponding ENABLE command. 
+ 
+                There are no limitations on pipelining ENABLE.  For example, it is 
+                possible to send ENABLE and then immediately SELECT, or a LOGIN 
+                immediately followed by ENABLE. 
+ 
+                The server MUST NOT change the CAPABILITY list as a result of 
+                executing ENABLE; i.e., a CAPABILITY command issued right after an 
+                ENABLE command MUST list the same capabilities as a CAPABILITY 
+                command issued before the ENABLE command.  This is demonstrated in 
+                the following example: 
+              
+                    C: t1 CAPABILITY 
+                    S: * CAPABILITY IMAP4rev1 ID LITERAL+ ENABLE X-GOOD-IDEA 
+                    S: t1 OK foo 
+                    C: t2 ENABLE CONDSTORE X-GOOD-IDEA 
+                    S: * ENABLED X-GOOD-IDEA 
+                    S: t2 OK foo 
+                    C: t3 CAPABILITY 
+                    S: * CAPABILITY IMAP4rev1 ID LITERAL+ ENABLE X-GOOD-IDEA 
+                    S: t3 OK foo again 
+ 
+                In the following example, the client enables CONDSTORE: 
+ 
+                    C: a1 ENABLE CONDSTORE 
+                    S: * ENABLED CONDSTORE 
+                    S: a1 OK Conditional Store enabled 
             */
 
             // Capability disabled.
@@ -2102,11 +1950,11 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            foreach (string capa in cmdText.Split(' '))
+            foreach (var capa in cmdText.Split(' '))
             {
                 if (string.Equals("UTF8=ACCEPT", capa, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    m_MailboxEncoding = IMAP_Mailbox_Encoding.ImapUtf8;
+                    MailboxEncoding = IMAP_Mailbox_Encoding.ImapUtf8;
                     m_pResponseSender.SendResponseAsync(new IMAP_r_u_Enable(new[] { "UTF8=ACCEPT" }));
                 }
                 // Ignore as specification says.
@@ -2116,79 +1964,75 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "OK", "ENABLE command completed."));
         }
 
-        #endregion
-
-        #region method EXAMINE
-
         private void EXAMINE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.2. EXAMINE Command.
-                Arguments:  mailbox name
-
-                Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
-                            REQUIRED OK untagged responses:  UNSEEN,  PERMANENTFLAGS,
-                            UIDNEXT, UIDVALIDITY
-
-                Result:     OK - examine completed, now in selected state
-                            NO - examine failure, now in authenticated state: no
-                                 such mailbox, can't access mailbox
-                            BAD - command unknown or arguments invalid
-
-                The EXAMINE command is identical to SELECT and returns the same
-                output; however, the selected mailbox is identified as read-only.
-                No changes to the permanent state of the mailbox, including
-                per-user state, are permitted; in particular, EXAMINE MUST NOT
-                cause messages to lose the \Recent flag.
-
-                The text of the tagged OK response to the EXAMINE command MUST
-                begin with the "[READ-ONLY]" response code.
-
-                Example:    C: A932 EXAMINE blurdybloop
-                            S: * 17 EXISTS
-                            S: * 2 RECENT
-                            S: * OK [UNSEEN 8] Message 8 is first unseen
-                            S: * OK [UIDVALIDITY 3857529045] UIDs valid
-                            S: * OK [UIDNEXT 4392] Predicted next UID
-                            S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
-                            S: * OK [PERMANENTFLAGS ()] No permanent flags permitted
-                            S: A932 OK [READ-ONLY] EXAMINE completed
+            /* RFC 3501 6.3.2. EXAMINE Command. 
+                Arguments:  mailbox name 
+ 
+                Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT 
+                            REQUIRED OK untagged responses:  UNSEEN,  PERMANENTFLAGS, 
+                            UIDNEXT, UIDVALIDITY 
+ 
+                Result:     OK - examine completed, now in selected state 
+                            NO - examine failure, now in authenticated state: no 
+                                 such mailbox, can't access mailbox 
+                            BAD - command unknown or arguments invalid 
+ 
+                The EXAMINE command is identical to SELECT and returns the same 
+                output; however, the selected mailbox is identified as read-only. 
+                No changes to the permanent state of the mailbox, including 
+                per-user state, are permitted; in particular, EXAMINE MUST NOT 
+                cause messages to lose the \Recent flag. 
+ 
+                The text of the tagged OK response to the EXAMINE command MUST 
+                begin with the "[READ-ONLY]" response code. 
+ 
+                Example:    C: A932 EXAMINE blurdybloop 
+                            S: * 17 EXISTS 
+                            S: * 2 RECENT 
+                            S: * OK [UNSEEN 8] Message 8 is first unseen 
+                            S: * OK [UIDVALIDITY 3857529045] UIDs valid 
+                            S: * OK [UIDNEXT 4392] Predicted next UID 
+                            S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft) 
+                            S: * OK [PERMANENTFLAGS ()] No permanent flags permitted 
+                            S: A932 OK [READ-ONLY] EXAMINE completed 
             */
 
-            /* 5738 3.2.  UTF8 Parameter to SELECT and EXAMINE
-                The "UTF8=ACCEPT" capability also indicates that the server supports
-                the "UTF8" parameter to SELECT and EXAMINE.  When a mailbox is
-                selected with the "UTF8" parameter, it alters the behavior of all
-                IMAP commands related to message sizes, message headers, and MIME
-                body headers so they refer to the message with UTF-8 headers.  If the
-                mailstore is not UTF-8 header native and the SELECT or EXAMINE
-                command with UTF-8 header modifier succeeds, then the server MUST
-                return results as if the mailstore were UTF-8 header native with
-                upconversion requirements as described in Section 8.  The server MAY
-                reject the SELECT or EXAMINE command with the [NOT-UTF-8] response
-                code, unless the "UTF8=ALL" or "UTF8=ONLY" capability is advertised.
-
-                Servers MAY include mailboxes that can only be selected or examined
-                if the "UTF8" parameter is provided.  However, such mailboxes MUST
-                NOT be included in the output of an unextended LIST, LSUB, or
-                equivalent command.  If a client attempts to SELECT or EXAMINE such
-                mailboxes without the "UTF8" parameter, the server MUST reject the
-                command with a [UTF-8-ONLY] response code.  As a result, such
-                mailboxes will not be accessible by IMAP clients written prior to
-                this specification and are discouraged unless the server advertises
-                "UTF8=ONLY" or the server implements IMAP4 LIST Command Extensions
-   
-                    utf8-select-param = "UTF8"
-                        ;; Conforms to <select-param> from RFC 4466
-
-                    C: a SELECT newmailbox (UTF8)
-                    S: ...
-                    S: a OK SELECT completed
-                    C: b FETCH 1 (SIZE ENVELOPE BODY)
-                    S: ... < UTF-8 header native results >
-                    S: b OK FETCH completed
-
-                    C: c EXAMINE legacymailbox (UTF8)
-                    S: c NO [NOT-UTF-8] Mailbox does not support UTF-8 access
+            /* 5738 3.2.  UTF8 Parameter to SELECT and EXAMINE 
+                The "UTF8=ACCEPT" capability also indicates that the server supports 
+                the "UTF8" parameter to SELECT and EXAMINE.  When a mailbox is 
+                selected with the "UTF8" parameter, it alters the behavior of all 
+                IMAP commands related to message sizes, message headers, and MIME 
+                body headers so they refer to the message with UTF-8 headers.  If the 
+                mailstore is not UTF-8 header native and the SELECT or EXAMINE 
+                command with UTF-8 header modifier succeeds, then the server MUST 
+                return results as if the mailstore were UTF-8 header native with 
+                upconversion requirements as described in Section 8.  The server MAY 
+                reject the SELECT or EXAMINE command with the [NOT-UTF-8] response 
+                code, unless the "UTF8=ALL" or "UTF8=ONLY" capability is advertised. 
+ 
+                Servers MAY include mailboxes that can only be selected or examined 
+                if the "UTF8" parameter is provided.  However, such mailboxes MUST 
+                NOT be included in the output of an unextended LIST, LSUB, or 
+                equivalent command.  If a client attempts to SELECT or EXAMINE such 
+                mailboxes without the "UTF8" parameter, the server MUST reject the 
+                command with a [UTF-8-ONLY] response code.  As a result, such 
+                mailboxes will not be accessible by IMAP clients written prior to 
+                this specification and are discouraged unless the server advertises 
+                "UTF8=ONLY" or the server implements IMAP4 LIST Command Extensions 
+    
+                    utf8-select-param = "UTF8" 
+                        ;; Conforms to <select-param> from RFC 4466 
+ 
+                    C: a SELECT newmailbox (UTF8) 
+                    S: ... 
+                    S: a OK SELECT completed 
+                    C: b FETCH 1 (SIZE ENVELOPE BODY) 
+                    S: ... < UTF-8 header native results > 
+                    S: b OK FETCH completed 
+ 
+                    C: c EXAMINE legacymailbox (UTF8) 
+                    S: c NO [NOT-UTF-8] Mailbox does not support UTF-8 access 
             */
 
             if (!IsAuthenticated)
@@ -2199,7 +2043,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             // Unselect folder if any selected.
             if (m_pSelectedFolder != null)
@@ -2251,37 +2095,33 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method EXPUNGE
-
         private void EXPUNGE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.4.3. EXPUNGE Command.
-                Arguments:  none
-
-                Responses:  untagged responses: EXPUNGE
-
-                Result:     OK - expunge completed
-                            NO - expunge failure: can't expunge (e.g., permission
-                                 denied)
-                            BAD - command unknown or arguments invalid
-
-                The EXPUNGE command permanently removes all messages that have the
-                \Deleted flag set from the currently selected mailbox.  Before
-                returning an OK to the client, an untagged EXPUNGE response is
-                sent for each message that is removed.
-
-                Example:    C: A202 EXPUNGE
-                            S: * 3 EXPUNGE
-                            S: * 3 EXPUNGE
-                            S: * 5 EXPUNGE
-                            S: * 8 EXPUNGE
-                            S: A202 OK EXPUNGE completed
-
-                    Note: In this example, messages 3, 4, 7, and 11 had the
-                    \Deleted flag set.  See the description of the EXPUNGE
-                    response for further explanation.
+            /* RFC 3501 6.4.3. EXPUNGE Command. 
+                Arguments:  none 
+ 
+                Responses:  untagged responses: EXPUNGE 
+ 
+                Result:     OK - expunge completed 
+                            NO - expunge failure: can't expunge (e.g., permission 
+                                 denied) 
+                            BAD - command unknown or arguments invalid 
+ 
+                The EXPUNGE command permanently removes all messages that have the 
+                \Deleted flag set from the currently selected mailbox.  Before 
+                returning an OK to the client, an untagged EXPUNGE response is 
+                sent for each message that is removed. 
+ 
+                Example:    C: A202 EXPUNGE 
+                            S: * 3 EXPUNGE 
+                            S: * 3 EXPUNGE 
+                            S: * 5 EXPUNGE 
+                            S: * 8 EXPUNGE 
+                            S: A202 OK EXPUNGE completed 
+ 
+                    Note: In this example, messages 3, 4, 7, and 11 had the 
+                    \Deleted flag set.  See the description of the EXPUNGE 
+                    response for further explanation. 
             */
 
             if (!IsAuthenticated)
@@ -2298,10 +2138,10 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             var response = new IMAP_r_ServerStatus(cmdTag, "OK", "EXPUNGE completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds.");
-            for (int i = 0; i < m_pSelectedFolder.MessagesInfo.Length; i++)
+            for (var i = 0; i < m_pSelectedFolder.MessagesInfo.Length; i++)
             {
                 var msgInfo = m_pSelectedFolder.MessagesInfo[i];
                 if (msgInfo.ContainsFlag("Deleted"))
@@ -2324,198 +2164,196 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(response);
         }
 
-        #endregion
         //
-        #region method FETCH
 
         private void FETCH(bool uid, string cmdTag, string cmdText)
         {
-            /* RFC 3501. 6.4.5. FETCH Command.
-                Arguments:  sequence set
-                            message data item names or macro
-
-                Responses:  untagged responses: FETCH
-
-                Result:     OK - fetch completed
-                            NO - fetch error: can't fetch that data
-                            BAD - command unknown or arguments invalid
-
-                The FETCH command retrieves data associated with a message in the
-                mailbox.  The data items to be fetched can be either a single atom
-                or a parenthesized list.
-
-                Most data items, identified in the formal syntax under the
-                msg-att-static rule, are static and MUST NOT change for any
-                particular message.  Other data items, identified in the formal
-                syntax under the msg-att-dynamic rule, MAY change, either as a
-                result of a STORE command or due to external events.
-
-                    For example, if a client receives an ENVELOPE for a
-                    message when it already knows the envelope, it can
-                    safely ignore the newly transmitted envelope.
-
-                There are three macros which specify commonly-used sets of data
-                items, and can be used instead of data items.  A macro must be
-                used by itself, and not in conjunction with other macros or data
-                items.
-
-                ALL
-                    Macro equivalent to: (FLAGS INTERNALDATE RFC822.SIZE ENVELOPE)
-
-                FAST
-                    Macro equivalent to: (FLAGS INTERNALDATE RFC822.SIZE)
-
-                FULL
-                    Macro equivalent to: (FLAGS INTERNALDATE RFC822.SIZE ENVELOPE BODY)
-
-                The currently defined data items that can be fetched are:
-
-                BODY
-                    Non-extensible form of BODYSTRUCTURE.
-
-                BODY[<section>]<<partial>>
-                    The text of a particular body section.  The section
-                    specification is a set of zero or more part specifiers
-                    delimited by periods.  A part specifier is either a part number
-                    or one of the following: HEADER, HEADER.FIELDS,
-                    HEADER.FIELDS.NOT, MIME, and TEXT.  An empty section
-                    specification refers to the entire message, including the
-                    header.
-
-                    Every message has at least one part number.  Non-[MIME-IMB]
-                    messages, and non-multipart [MIME-IMB] messages with no
-                    encapsulated message, only have a part 1.
-
-                    Multipart messages are assigned consecutive part numbers, as
-                    they occur in the message.  If a particular part is of type
-                    message or multipart, its parts MUST be indicated by a period
-                    followed by the part number within that nested multipart part.
-
-                    A part of type MESSAGE/RFC822 also has nested part numbers,
-                    referring to parts of the MESSAGE part's body.
-
-                    The HEADER, HEADER.FIELDS, HEADER.FIELDS.NOT, and TEXT part
-                    specifiers can be the sole part specifier or can be prefixed by
-                    one or more numeric part specifiers, provided that the numeric
-                    part specifier refers to a part of type MESSAGE/RFC822.  The
-                    MIME part specifier MUST be prefixed by one or more numeric
-                    part specifiers.
-
-                    The HEADER, HEADER.FIELDS, and HEADER.FIELDS.NOT part
-                    specifiers refer to the [RFC-2822] header of the message or of
-                    an encapsulated [MIME-IMT] MESSAGE/RFC822 message.
-                    HEADER.FIELDS and HEADER.FIELDS.NOT are followed by a list of
-                    field-name (as defined in [RFC-2822]) names, and return a
-                    subset of the header.  The subset returned by HEADER.FIELDS
-                    contains only those header fields with a field-name that
-                    matches one of the names in the list; similarly, the subset
-                    returned by HEADER.FIELDS.NOT contains only the header fields
-                    with a non-matching field-name.  The field-matching is
-                    case-insensitive but otherwise exact.  Subsetting does not
-                    exclude the [RFC-2822] delimiting blank line between the header
-                    and the body; the blank line is included in all header fetches,
-                    except in the case of a message which has no body and no blank
-                    line.
-
-                    The MIME part specifier refers to the [MIME-IMB] header for
-                    this part.
-
-                    The TEXT part specifier refers to the text body of the message,
-                    omitting the [RFC-2822] header.
-
-                        Here is an example of a complex message with some of its
-                        part specifiers:
-
-                    HEADER     ([RFC-2822] header of the message)
-                    TEXT       ([RFC-2822] text body of the message) MULTIPART/MIXED
-                    1          TEXT/PLAIN
-                    2          APPLICATION/OCTET-STREAM
-                    3          MESSAGE/RFC822
-                    3.HEADER   ([RFC-2822] header of the message)
-                    3.TEXT     ([RFC-2822] text body of the message) MULTIPART/MIXED
-                    3.1        TEXT/PLAIN
-                    3.2        APPLICATION/OCTET-STREAM
-                    4          MULTIPART/MIXED
-                    4.1        IMAGE/GIF
-                    4.1.MIME   ([MIME-IMB] header for the IMAGE/GIF)
-                    4.2        MESSAGE/RFC822
-                    4.2.HEADER ([RFC-2822] header of the message)
-                    4.2.TEXT   ([RFC-2822] text body of the message) MULTIPART/MIXED
-                    4.2.1      TEXT/PLAIN
-                    4.2.2      MULTIPART/ALTERNATIVE
-                    4.2.2.1    TEXT/PLAIN
-                    4.2.2.2    TEXT/RICHTEXT
-            
-                    It is possible to fetch a substring of the designated text.
-                    This is done by appending an open angle bracket ("<"), the
-                    octet position of the first desired octet, a period, the
-                    maximum number of octets desired, and a close angle bracket
-                    (">") to the part specifier.  If the starting octet is beyond
-                    the end of the text, an empty string is returned.
-                    Any partial fetch that attempts to read beyond the end of the
-                    text is truncated as appropriate.  A partial fetch that starts
-                    at octet 0 is returned as a partial fetch, even if this
-                    truncation happened.
-
-                        Note: This means that BODY[]<0.2048> of a 1500-octet message
-                        will return BODY[]<0> with a literal of size 1500, not
-                        BODY[].
-
-                        Note: A substring fetch of a HEADER.FIELDS or
-                        HEADER.FIELDS.NOT part specifier is calculated after
-                        subsetting the header.
-
-                    The \Seen flag is implicitly set; if this causes the flags to
-                    change, they SHOULD be included as part of the FETCH responses.
-
-                BODY.PEEK[<section>]<<partial>>
-                    An alternate form of BODY[<section>] that does not implicitly
-                    set the \Seen flag.
-
-                BODYSTRUCTURE
-                    The [MIME-IMB] body structure of the message.  This is computed
-                    by the server by parsing the [MIME-IMB] header fields in the
-                    [RFC-2822] header and [MIME-IMB] headers.
-
-                ENVELOPE
-                    The envelope structure of the message.  This is computed by the
-                    server by parsing the [RFC-2822] header into the component
-                    parts, defaulting various fields as necessary.
-
-                FLAGS
-                    The flags that are set for this message.
-
-                INTERNALDATE
-                    The internal date of the message.
-
-                RFC822
-                    Functionally equivalent to BODY[], differing in the syntax of
-                    the resulting untagged FETCH data (RFC822 is returned).
-
-                RFC822.HEADER
-                    Functionally equivalent to BODY.PEEK[HEADER], differing in the
-                    syntax of the resulting untagged FETCH data (RFC822.HEADER is
-                    returned).
-
-                RFC822.SIZE
-                    The [RFC-2822] size of the message.
-
-                RFC822.TEXT
-                    Functionally equivalent to BODY[TEXT], differing in the syntax
-                    of the resulting untagged FETCH data (RFC822.TEXT is returned).
-                UID
-                    The unique identifier for the message.
-
-
-                Example:    C: A654 FETCH 2:4 (FLAGS BODY[HEADER.FIELDS (DATE FROM)])
-                            S: * 2 FETCH ....
-                            S: * 3 FETCH ....
-                            S: * 4 FETCH ....
-                            S: A654 OK FETCH completed
+            /* RFC 3501. 6.4.5. FETCH Command. 
+                Arguments:  sequence set 
+                            message data item names or macro 
+ 
+                Responses:  untagged responses: FETCH 
+ 
+                Result:     OK - fetch completed 
+                            NO - fetch error: can't fetch that data 
+                            BAD - command unknown or arguments invalid 
+ 
+                The FETCH command retrieves data associated with a message in the 
+                mailbox.  The data items to be fetched can be either a single atom 
+                or a parenthesized list. 
+ 
+                Most data items, identified in the formal syntax under the 
+                msg-att-static rule, are static and MUST NOT change for any 
+                particular message.  Other data items, identified in the formal 
+                syntax under the msg-att-dynamic rule, MAY change, either as a 
+                result of a STORE command or due to external events. 
+ 
+                    For example, if a client receives an ENVELOPE for a 
+                    message when it already knows the envelope, it can 
+                    safely ignore the newly transmitted envelope. 
+ 
+                There are three macros which specify commonly-used sets of data 
+                items, and can be used instead of data items.  A macro must be 
+                used by itself, and not in conjunction with other macros or data 
+                items. 
+ 
+                ALL 
+                    Macro equivalent to: (FLAGS INTERNALDATE RFC822.SIZE ENVELOPE) 
+ 
+                FAST 
+                    Macro equivalent to: (FLAGS INTERNALDATE RFC822.SIZE) 
+ 
+                FULL 
+                    Macro equivalent to: (FLAGS INTERNALDATE RFC822.SIZE ENVELOPE BODY) 
+ 
+                The currently defined data items that can be fetched are: 
+ 
+                BODY 
+                    Non-extensible form of BODYSTRUCTURE. 
+ 
+                BODY[<section>]<<partial>> 
+                    The text of a particular body section.  The section 
+                    specification is a set of zero or more part specifiers 
+                    delimited by periods.  A part specifier is either a part number 
+                    or one of the following: HEADER, HEADER.FIELDS, 
+                    HEADER.FIELDS.NOT, MIME, and TEXT.  An empty section 
+                    specification refers to the entire message, including the 
+                    header. 
+ 
+                    Every message has at least one part number.  Non-[MIME-IMB] 
+                    messages, and non-multipart [MIME-IMB] messages with no 
+                    encapsulated message, only have a part 1. 
+ 
+                    Multipart messages are assigned consecutive part numbers, as 
+                    they occur in the message.  If a particular part is of type 
+                    message or multipart, its parts MUST be indicated by a period 
+                    followed by the part number within that nested multipart part. 
+ 
+                    A part of type MESSAGE/RFC822 also has nested part numbers, 
+                    referring to parts of the MESSAGE part's body. 
+ 
+                    The HEADER, HEADER.FIELDS, HEADER.FIELDS.NOT, and TEXT part 
+                    specifiers can be the sole part specifier or can be prefixed by 
+                    one or more numeric part specifiers, provided that the numeric 
+                    part specifier refers to a part of type MESSAGE/RFC822.  The 
+                    MIME part specifier MUST be prefixed by one or more numeric 
+                    part specifiers. 
+ 
+                    The HEADER, HEADER.FIELDS, and HEADER.FIELDS.NOT part 
+                    specifiers refer to the [RFC-2822] header of the message or of 
+                    an encapsulated [MIME-IMT] MESSAGE/RFC822 message. 
+                    HEADER.FIELDS and HEADER.FIELDS.NOT are followed by a list of 
+                    field-name (as defined in [RFC-2822]) names, and return a 
+                    subset of the header.  The subset returned by HEADER.FIELDS 
+                    contains only those header fields with a field-name that 
+                    matches one of the names in the list; similarly, the subset 
+                    returned by HEADER.FIELDS.NOT contains only the header fields 
+                    with a non-matching field-name.  The field-matching is 
+                    case-insensitive but otherwise exact.  Subsetting does not 
+                    exclude the [RFC-2822] delimiting blank line between the header 
+                    and the body; the blank line is included in all header fetches, 
+                    except in the case of a message which has no body and no blank 
+                    line. 
+ 
+                    The MIME part specifier refers to the [MIME-IMB] header for 
+                    this part. 
+ 
+                    The TEXT part specifier refers to the text body of the message, 
+                    omitting the [RFC-2822] header. 
+ 
+                        Here is an example of a complex message with some of its 
+                        part specifiers: 
+ 
+                    HEADER     ([RFC-2822] header of the message) 
+                    TEXT       ([RFC-2822] text body of the message) MULTIPART/MIXED 
+                    1          TEXT/PLAIN 
+                    2          APPLICATION/OCTET-STREAM 
+                    3          MESSAGE/RFC822 
+                    3.HEADER   ([RFC-2822] header of the message) 
+                    3.TEXT     ([RFC-2822] text body of the message) MULTIPART/MIXED 
+                    3.1        TEXT/PLAIN 
+                    3.2        APPLICATION/OCTET-STREAM 
+                    4          MULTIPART/MIXED 
+                    4.1        IMAGE/GIF 
+                    4.1.MIME   ([MIME-IMB] header for the IMAGE/GIF) 
+                    4.2        MESSAGE/RFC822 
+                    4.2.HEADER ([RFC-2822] header of the message) 
+                    4.2.TEXT   ([RFC-2822] text body of the message) MULTIPART/MIXED 
+                    4.2.1      TEXT/PLAIN 
+                    4.2.2      MULTIPART/ALTERNATIVE 
+                    4.2.2.1    TEXT/PLAIN 
+                    4.2.2.2    TEXT/RICHTEXT 
+             
+                    It is possible to fetch a substring of the designated text. 
+                    This is done by appending an open angle bracket ("<"), the 
+                    octet position of the first desired octet, a period, the 
+                    maximum number of octets desired, and a close angle bracket 
+                    (">") to the part specifier.  If the starting octet is beyond 
+                    the end of the text, an empty string is returned. 
+                    Any partial fetch that attempts to read beyond the end of the 
+                    text is truncated as appropriate.  A partial fetch that starts 
+                    at octet 0 is returned as a partial fetch, even if this 
+                    truncation happened. 
+ 
+                        Note: This means that BODY[]<0.2048> of a 1500-octet message 
+                        will return BODY[]<0> with a literal of size 1500, not 
+                        BODY[]. 
+ 
+                        Note: A substring fetch of a HEADER.FIELDS or 
+                        HEADER.FIELDS.NOT part specifier is calculated after 
+                        subsetting the header. 
+ 
+                    The \Seen flag is implicitly set; if this causes the flags to 
+                    change, they SHOULD be included as part of the FETCH responses. 
+ 
+                BODY.PEEK[<section>]<<partial>> 
+                    An alternate form of BODY[<section>] that does not implicitly 
+                    set the \Seen flag. 
+ 
+                BODYSTRUCTURE 
+                    The [MIME-IMB] body structure of the message.  This is computed 
+                    by the server by parsing the [MIME-IMB] header fields in the 
+                    [RFC-2822] header and [MIME-IMB] headers. 
+ 
+                ENVELOPE 
+                    The envelope structure of the message.  This is computed by the 
+                    server by parsing the [RFC-2822] header into the component 
+                    parts, defaulting various fields as necessary. 
+ 
+                FLAGS 
+                    The flags that are set for this message. 
+ 
+                INTERNALDATE 
+                    The internal date of the message. 
+ 
+                RFC822 
+                    Functionally equivalent to BODY[], differing in the syntax of 
+                    the resulting untagged FETCH data (RFC822 is returned). 
+ 
+                RFC822.HEADER 
+                    Functionally equivalent to BODY.PEEK[HEADER], differing in the 
+                    syntax of the resulting untagged FETCH data (RFC822.HEADER is 
+                    returned). 
+ 
+                RFC822.SIZE 
+                    The [RFC-2822] size of the message. 
+ 
+                RFC822.TEXT 
+                    Functionally equivalent to BODY[TEXT], differing in the syntax 
+                    of the resulting untagged FETCH data (RFC822.TEXT is returned). 
+                UID 
+                    The unique identifier for the message. 
+ 
+ 
+                Example:    C: A654 FETCH 2:4 (FLAGS BODY[HEADER.FIELDS (DATE FROM)]) 
+                            S: * 2 FETCH .... 
+                            S: * 3 FETCH .... 
+                            S: * 4 FETCH .... 
+                            S: A654 OK FETCH completed 
             */
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             if (!IsAuthenticated)
             {
@@ -2550,10 +2388,8 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
 
-            #region Parse data-items
-
             var dataItems = new List<IMAP_t_Fetch_i>();
-            bool msgDataNeeded = false;
+            var msgDataNeeded = false;
 
             // Remove parenthesizes.
             var dataItemsString = parts[1].Trim();
@@ -2576,8 +2412,6 @@ namespace LumiSoft.Net.IMAP.Server
             {
                 r.ReadToFirstChar();
 
-                #region BODYSTRUCTURE
-
                 if (r.StartsWith("BODYSTRUCTURE", false))
                 {
                     r.ReadWord();
@@ -2586,16 +2420,10 @@ namespace LumiSoft.Net.IMAP.Server
                     fetchDataType = IMAP_Fetch_DataType.MessageStructure;
                 }
 
-                #endregion
-
-                #region BODY[<section>]<<partial>> and BODY.PEEK[<section>]<<partial>>
-
                 else if (r.StartsWith("BODY[", false) || r.StartsWith("BODY.PEEK[", false))
                 {
-                    bool peek = r.StartsWith("BODY.PEEK[", false);
+                    var peek = r.StartsWith("BODY.PEEK[", false);
                     r.ReadWord();
-
-                    #region Parse <section>
 
                     var section = r.ReadParenthesized();
 
@@ -2669,12 +2497,8 @@ namespace LumiSoft.Net.IMAP.Server
                         }
                     }
 
-                    #endregion
-
-                    #region Parse <partial>
-
-                    int offset = -1;
-                    int maxCount = -1;
+                    var offset = -1;
+                    var maxCount = -1;
                     // Partial data wanted.
                     if (r.StartsWith("<"))
                     {
@@ -2703,8 +2527,6 @@ namespace LumiSoft.Net.IMAP.Server
                         }
                     }
 
-                    #endregion
-
                     if (peek)
                     {
                         dataItems.Add(new IMAP_t_Fetch_i_BodyPeek(section, offset, maxCount));
@@ -2717,10 +2539,6 @@ namespace LumiSoft.Net.IMAP.Server
                     fetchDataType = IMAP_Fetch_DataType.FullMessage;
                 }
 
-                #endregion
-
-                #region BODY
-
                 else if (r.StartsWith("BODY", false))
                 {
                     r.ReadWord();
@@ -2728,10 +2546,6 @@ namespace LumiSoft.Net.IMAP.Server
                     msgDataNeeded = true;
                     fetchDataType = IMAP_Fetch_DataType.MessageStructure;
                 }
-
-                #endregion
-
-                #region ENVELOPE
 
                 else if (r.StartsWith("ENVELOPE", false))
                 {
@@ -2741,29 +2555,17 @@ namespace LumiSoft.Net.IMAP.Server
                     fetchDataType = IMAP_Fetch_DataType.MessageHeader;
                 }
 
-                #endregion
-
-                #region FLAGS
-
                 else if (r.StartsWith("FLAGS", false))
                 {
                     r.ReadWord();
                     dataItems.Add(new IMAP_t_Fetch_i_Flags());
                 }
 
-                #endregion
-
-                #region INTERNALDATE
-
                 else if (r.StartsWith("INTERNALDATE", false))
                 {
                     r.ReadWord();
                     dataItems.Add(new IMAP_t_Fetch_i_InternalDate());
                 }
-
-                #endregion
-
-                #region RFC822.HEADER
 
                 else if (r.StartsWith("RFC822.HEADER", false))
                 {
@@ -2773,19 +2575,11 @@ namespace LumiSoft.Net.IMAP.Server
                     fetchDataType = IMAP_Fetch_DataType.MessageHeader;
                 }
 
-                #endregion
-
-                #region RFC822.SIZE
-
                 else if (r.StartsWith("RFC822.SIZE", false))
                 {
                     r.ReadWord();
                     dataItems.Add(new IMAP_t_Fetch_i_Rfc822Size());
                 }
-
-                #endregion
-
-                #region RFC822.TEXT
 
                 else if (r.StartsWith("RFC822.TEXT", false))
                 {
@@ -2795,10 +2589,6 @@ namespace LumiSoft.Net.IMAP.Server
                     fetchDataType = IMAP_Fetch_DataType.FullMessage;
                 }
 
-                #endregion
-
-                #region RFC822
-
                 else if (r.StartsWith("RFC822", false))
                 {
                     r.ReadWord();
@@ -2807,19 +2597,11 @@ namespace LumiSoft.Net.IMAP.Server
                     fetchDataType = IMAP_Fetch_DataType.FullMessage;
                 }
 
-                #endregion
-
-                #region UID
-
                 else if (r.StartsWith("UID", false))
                 {
                     r.ReadWord();
                     dataItems.Add(new IMAP_t_Fetch_i_Uid());
                 }
-
-                #endregion
-
-                #region Unknown data-item.
 
                 else
                 {
@@ -2827,17 +2609,13 @@ namespace LumiSoft.Net.IMAP.Server
 
                     return;
                 }
-
-                #endregion
             }
-
-            #endregion
 
             // UID FETCH must always return UID data-item, even if user didn't request it.
             if (uid)
             {
-                bool add = true;
-                foreach (IMAP_t_Fetch_i item in dataItems)
+                var add = true;
+                foreach (var item in dataItems)
                 {
                     if (item is IMAP_t_Fetch_i_Uid)
                     {
@@ -2860,43 +2638,43 @@ namespace LumiSoft.Net.IMAP.Server
             );
             fetchEArgs.NewMessageData += new EventHandler<IMAP_e_Fetch.e_NewMessageData>(delegate (object s, IMAP_e_Fetch.e_NewMessageData e)
             {
-                /*
-                // Build response data-items.
-                List<IMAP_t_Fetch_r_i> responseItems = new List<IMAP_t_Fetch_r_i>();
-                foreach(IMAP_t_Fetch_i dataItem in dataItems){
-                    if(dataItem is IMAP_t_Fetch_i_BodyS){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Body){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_BodyStructure){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Envelope){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Flags){
-                        responseItems.Add(new IMAP_t_Fetch_r_i_Flags(new IMAP_t_MsgFlags(e.MessageInfo.Flags)));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_InternalDate){
-                        responseItems.Add(new IMAP_t_Fetch_r_i_InternalDate(e.MessageInfo.InternalDate));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Rfc822){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Rfc822Header){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Rfc822Size){
-                        responseItems.Add(new IMAP_t_Fetch_r_i_Rfc822Size(e.MessageInfo.Size));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Rfc822Text){
-                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
-                    else if(dataItem is IMAP_t_Fetch_i_Uid){
-                        responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID));
-                    }
+                /* 
+                // Build response data-items. 
+                List<IMAP_t_Fetch_r_i> responseItems = new List<IMAP_t_Fetch_r_i>(); 
+                foreach(IMAP_t_Fetch_i dataItem in dataItems){ 
+                    if(dataItem is IMAP_t_Fetch_i_BodyS){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Body){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_BodyStructure){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Envelope){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Flags){ 
+                        responseItems.Add(new IMAP_t_Fetch_r_i_Flags(new IMAP_t_MsgFlags(e.MessageInfo.Flags))); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_InternalDate){ 
+                        responseItems.Add(new IMAP_t_Fetch_r_i_InternalDate(e.MessageInfo.InternalDate)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Rfc822){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Rfc822Header){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Rfc822Size){ 
+                        responseItems.Add(new IMAP_t_Fetch_r_i_Rfc822Size(e.MessageInfo.Size)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Rfc822Text){ 
+                        //responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
+                    else if(dataItem is IMAP_t_Fetch_i_Uid){ 
+                        responseItems.Add(new IMAP_t_Fetch_r_i_Uid(e.MessageInfo.UID)); 
+                    } 
                 }*/
 
                 var reponseBuffer = new StringBuilder();
@@ -2905,7 +2683,7 @@ namespace LumiSoft.Net.IMAP.Server
                 var message = e.MessageData;
 
                 // Return requested data-items for the returned message.
-                for (int i = 0; i < dataItems.Count; i++)
+                for (var i = 0; i < dataItems.Count; i++)
                 {
                     var dataItem = dataItems[i];
 
@@ -2915,22 +2693,16 @@ namespace LumiSoft.Net.IMAP.Server
                         reponseBuffer.Append(" ");
                     }
 
-                    #region BODY
-
                     if (dataItem is IMAP_t_Fetch_i_BodyS)
                     {
                         reponseBuffer.Append(ConstructBodyStructure(message, false));
                     }
 
-                    #endregion
-
-                    #region BODY[<section>]<<partial>> and BODY.PEEK[<section>]<<partial>>
-
                     else if (dataItem is IMAP_t_Fetch_i_Body || dataItem is IMAP_t_Fetch_i_BodyPeek)
                     {
                         var section = "";
-                        int offset = -1;
-                        int maxCount = -1;
+                        var offset = -1;
+                        var maxCount = -1;
                         if (dataItem is IMAP_t_Fetch_i_Body)
                         {
                             section = ((IMAP_t_Fetch_i_Body)dataItem).Section;
@@ -2944,7 +2716,7 @@ namespace LumiSoft.Net.IMAP.Server
                             maxCount = ((IMAP_t_Fetch_i_BodyPeek)dataItem).MaxCount;
                         }
 
-                        using (MemoryStreamEx tmpFs = new MemoryStreamEx(32000))
+                        using (var tmpFs = new MemoryStreamEx(32000))
                         {
                             // Empty section, full message wanted.
                             if (string.IsNullOrEmpty(section))
@@ -2961,8 +2733,6 @@ namespace LumiSoft.Net.IMAP.Server
                                 {
                                     var partSpecifier = ParsePartSpecifierFromSection(section);
 
-                                    #region HEADER
-
                                     if (string.Equals(partSpecifier, "HEADER", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         entity.Header.ToStream(tmpFs, new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8);
@@ -2975,20 +2745,16 @@ namespace LumiSoft.Net.IMAP.Server
                                         tmpFs.Position = 0;
                                     }
 
-                                    #endregion
-
-                                    #region HEADER.FIELDS
-
                                     else if (string.Equals(partSpecifier, "HEADER.FIELDS", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         var fieldsString = section.Split(new[] { ' ' }, 2)[1];
                                         var fieldNames = fieldsString.Substring(1, fieldsString.Length - 2).Split(' ');
-                                        foreach (string filedName in fieldNames)
+                                        foreach (var filedName in fieldNames)
                                         {
                                             var fields = entity.Header[filedName];
                                             if (fields != null)
                                             {
-                                                foreach (MIME_h field in fields)
+                                                foreach (var field in fields)
                                                 {
                                                     var fieldBytes = Encoding.UTF8.GetBytes(field.ToString(new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8));
                                                     tmpFs.Write(fieldBytes, 0, fieldBytes.Length);
@@ -3004,18 +2770,14 @@ namespace LumiSoft.Net.IMAP.Server
                                         tmpFs.Position = 0;
                                     }
 
-                                    #endregion
-
-                                    #region HEADER.FIELDS.NOT
-
                                     else if (string.Equals(partSpecifier, "HEADER.FIELDS.NOT", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         var fieldsString = section.Split(new[] { ' ' }, 2)[1];
                                         var fieldNames = fieldsString.Substring(1, fieldsString.Length - 2).Split(' ');
                                         foreach (MIME_h field in entity.Header)
                                         {
-                                            bool contains = false;
-                                            foreach (string fieldName in fieldNames)
+                                            var contains = false;
+                                            foreach (var fieldName in fieldNames)
                                             {
                                                 if (string.Equals(field.Name, fieldName, StringComparison.InvariantCultureIgnoreCase))
                                                 {
@@ -3039,10 +2801,6 @@ namespace LumiSoft.Net.IMAP.Server
                                         tmpFs.Position = 0;
                                     }
 
-                                    #endregion
-
-                                    #region MIME
-
                                     else if (string.Equals(partSpecifier, "MIME", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         entity.Header.ToStream(tmpFs, new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8);
@@ -3055,31 +2813,19 @@ namespace LumiSoft.Net.IMAP.Server
                                         tmpFs.Position = 0;
                                     }
 
-                                    #endregion
-
-                                    #region TEXT
-
                                     else if (string.Equals(partSpecifier, "TEXT", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         entity.Body.ToStream(tmpFs, new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8, false);
                                         tmpFs.Position = 0;
                                     }
 
-                                    #endregion
-
-                                    #region part-number only
-
                                     else
                                     {
                                         entity.Body.ToStream(tmpFs, new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8, false);
                                         tmpFs.Position = 0;
                                     }
-
-                                    #endregion
                                 }
                             }
-
-                            #region Send data
 
                             // All data wanted.
                             if (offset < 0)
@@ -3103,7 +2849,7 @@ namespace LumiSoft.Net.IMAP.Server
                                 {
                                     tmpFs.Position = offset;
 
-                                    int count = maxCount > -1 ? (int)Math.Min(maxCount, tmpFs.Length - tmpFs.Position) : (int)(tmpFs.Length - tmpFs.Position);
+                                    var count = maxCount > -1 ? (int)Math.Min(maxCount, tmpFs.Length - tmpFs.Position) : (int)(tmpFs.Length - tmpFs.Position);
                                     reponseBuffer.Append("BODY[" + section + "]<" + offset + "> {" + count + "}");
                                     WriteLine(reponseBuffer.ToString());
                                     reponseBuffer = new StringBuilder();
@@ -3112,8 +2858,6 @@ namespace LumiSoft.Net.IMAP.Server
                                     LogAddWrite(tmpFs.Length, "Wrote " + count + " bytes.");
                                 }
                             }
-
-                            #endregion
                         }
 
                         // Set Seen flag.
@@ -3129,49 +2873,29 @@ namespace LumiSoft.Net.IMAP.Server
                         }
                     }
 
-                    #endregion
-
-                    #region BODYSTRUCTURE
-
                     else if (dataItem is IMAP_t_Fetch_i_BodyStructure)
                     {
                         reponseBuffer.Append(ConstructBodyStructure(message, true));
                     }
-
-                    #endregion
-
-                    #region ENVELOPE
 
                     else if (dataItem is IMAP_t_Fetch_i_Envelope)
                     {
                         reponseBuffer.Append(IMAP_t_Fetch_r_i_Envelope.ConstructEnvelope(message));
                     }
 
-                    #endregion
-
-                    #region FLAGS
-
                     else if (dataItem is IMAP_t_Fetch_i_Flags)
                     {
                         reponseBuffer.Append("FLAGS " + e.MessageInfo.FlagsToImapString());
                     }
-
-                    #endregion
-
-                    #region INTERNALDATE
 
                     else if (dataItem is IMAP_t_Fetch_i_InternalDate)
                     {
                         reponseBuffer.Append("INTERNALDATE \"" + IMAP_Utils.DateTimeToString(e.MessageInfo.InternalDate) + "\"");
                     }
 
-                    #endregion
-
-                    #region RFC822
-
                     else if (dataItem is IMAP_t_Fetch_i_Rfc822)
                     {
-                        using (MemoryStreamEx tmpFs = new MemoryStreamEx(32000))
+                        using (var tmpFs = new MemoryStreamEx(32000))
                         {
                             message.ToStream(tmpFs, new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8);
                             tmpFs.Position = 0;
@@ -3184,10 +2908,6 @@ namespace LumiSoft.Net.IMAP.Server
                             LogAddWrite(tmpFs.Length, "Wrote " + tmpFs.Length + " bytes.");
                         }
                     }
-
-                    #endregion
-
-                    #region RFC822.HEADER
 
                     else if (dataItem is IMAP_t_Fetch_i_Rfc822Header)
                     {
@@ -3203,22 +2923,14 @@ namespace LumiSoft.Net.IMAP.Server
                         LogAddWrite(ms.Length, "Wrote " + ms.Length + " bytes.");
                     }
 
-                    #endregion
-
-                    #region RFC822.SIZE
-
                     else if (dataItem is IMAP_t_Fetch_i_Rfc822Size)
                     {
                         reponseBuffer.Append("RFC822.SIZE " + e.MessageInfo.Size);
                     }
 
-                    #endregion
-
-                    #region RFC822.TEXT
-
                     else if (dataItem is IMAP_t_Fetch_i_Rfc822Text)
                     {
-                        using (MemoryStreamEx tmpFs = new MemoryStreamEx(32000))
+                        using (var tmpFs = new MemoryStreamEx(32000))
                         {
                             message.Body.ToStream(tmpFs, new MIME_Encoding_EncodedWord(MIME_EncodedWordEncoding.B, Encoding.UTF8), Encoding.UTF8, false);
                             tmpFs.Position = 0;
@@ -3232,16 +2944,10 @@ namespace LumiSoft.Net.IMAP.Server
                         }
                     }
 
-                    #endregion
-
-                    #region UID
-
                     else if (dataItem is IMAP_t_Fetch_i_Uid)
                     {
                         reponseBuffer.Append("UID " + e.MessageInfo.UID);
                     }
-
-                    #endregion
                 }
 
                 reponseBuffer.Append(")\r\n");
@@ -3251,7 +2957,7 @@ namespace LumiSoft.Net.IMAP.Server
             // We have all needed data in message info.
             if (!msgDataNeeded)
             {
-                foreach (IMAP_MessageInfo msgInfo in m_pSelectedFolder.Filter(uid, seqSet))
+                foreach (var msgInfo in m_pSelectedFolder.Filter(uid, seqSet))
                 {
                     fetchEArgs.AddData(msgInfo);
                 }
@@ -3265,40 +2971,36 @@ namespace LumiSoft.Net.IMAP.Server
             WriteLine(fetchEArgs.Response.ToString().Replace("%exectime", ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2")));
         }
 
-        #endregion
-
-        #region method GETACL
-
         private void GETACL(string cmdTag, string cmdText)
         {
-            /* RFC 4314 3.3. GETACL Command.
-                Arguments:  mailbox name
-
-                Data:       untagged responses: ACL
-
-                Result:     OK - getacl completed
-                            NO - getacl failure: can't get acl
-                            BAD - arguments invalid
-
-                The GETACL command returns the access control list for mailbox in an
-                untagged ACL response.
-
-                Some implementations MAY permit multiple forms of an identifier to
-                reference the same IMAP account.  Usually, such implementations will
-                have a canonical form that is stored internally.  An ACL response
-                caused by a GETACL command MAY include a canonicalized form of the
-                identifier that might be different from the one used in the
-                corresponding SETACL command.
-
-                Example:    C: A002 GETACL INBOX
-                            S: * ACL INBOX Fred rwipslda
-                            S: A002 OK Getacl complete
-                            
-                            .... Multiple users
-                            S: * ACL INBOX Fred rwipslda test rwipslda
-                            
-                            .... No acl flags for Fred
-                            S: * ACL INBOX Fred "" test rwipslda         
+            /* RFC 4314 3.3. GETACL Command. 
+                Arguments:  mailbox name 
+ 
+                Data:       untagged responses: ACL 
+ 
+                Result:     OK - getacl completed 
+                            NO - getacl failure: can't get acl 
+                            BAD - arguments invalid 
+ 
+                The GETACL command returns the access control list for mailbox in an 
+                untagged ACL response. 
+ 
+                Some implementations MAY permit multiple forms of an identifier to 
+                reference the same IMAP account.  Usually, such implementations will 
+                have a canonical form that is stored internally.  An ACL response 
+                caused by a GETACL command MAY include a canonicalized form of the 
+                identifier that might be different from the one used in the 
+                corresponding SETACL command. 
+ 
+                Example:    C: A002 GETACL INBOX 
+                            S: * ACL INBOX Fred rwipslda 
+                            S: A002 OK Getacl complete 
+                             
+                            .... Multiple users 
+                            S: * ACL INBOX Fred rwipslda test rwipslda 
+                             
+                            .... No acl flags for Fred 
+                            S: * ACL INBOX Fred "" test rwipslda          
             */
 
             if (!SupportsCap("ACL"))
@@ -3319,7 +3021,7 @@ namespace LumiSoft.Net.IMAP.Server
             var e = OnGetAcl(folder, new IMAP_r_ServerStatus(cmdTag, "OK", "GETACL command completed."));
             if (e.AclResponses.Count > 0)
             {
-                foreach (IMAP_r_u_Acl r in e.AclResponses)
+                foreach (var r in e.AclResponses)
                 {
                     m_pResponseSender.SendResponseAsync(r);
                 }
@@ -3327,28 +3029,24 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method GETQUOTA
-
         private void GETQUOTA(string cmdTag, string cmdText)
         {
-            /* RFC 2087 4.2. GETQUOTA
-                Arguments:  quota root
-
-                Data:       untagged responses: QUOTA
-
-                Result:     OK - getquota completed
-                            NO - getquota  error:  no  such  quota  root,  permission denied
-                            BAD - command unknown or arguments invalid
-
-                The GETQUOTA command takes the name of a quota root and returns the
-                quota root's resource usage and limits in an untagged QUOTA response.
-
-                Example:    C: A003 GETQUOTA ""
-                            S: * QUOTA "" (STORAGE 10 512)
-                            S: A003 OK Getquota completed
-                            
+            /* RFC 2087 4.2. GETQUOTA 
+                Arguments:  quota root 
+ 
+                Data:       untagged responses: QUOTA 
+ 
+                Result:     OK - getquota completed 
+                            NO - getquota  error:  no  such  quota  root,  permission denied 
+                            BAD - command unknown or arguments invalid 
+ 
+                The GETQUOTA command takes the name of a quota root and returns the 
+                quota root's resource usage and limits in an untagged QUOTA response. 
+ 
+                Example:    C: A003 GETQUOTA "" 
+                            S: * QUOTA "" (STORAGE 10 512) 
+                            S: A003 OK Getquota completed 
+                             
             */
 
             if (!IsAuthenticated)
@@ -3363,7 +3061,7 @@ namespace LumiSoft.Net.IMAP.Server
             var e = OnGetQuota(quotaRoot, new IMAP_r_ServerStatus(cmdTag, "OK", "QUOTA command completed."));
             if (e.QuotaResponses.Count > 0)
             {
-                foreach (IMAP_r_u_Quota r in e.QuotaResponses)
+                foreach (var r in e.QuotaResponses)
                 {
                     m_pResponseSender.SendResponseAsync(r);
                 }
@@ -3371,31 +3069,27 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method GETQUOTAROOT
-
         private void GETQUOTAROOT(string cmdTag, string cmdText)
         {
-            /* RFC 2087 4.3. GETQUOTAROOT
-                Arguments:  mailbox name
-
-                Data:       untagged responses: QUOTAROOT, QUOTA
-
-                Result:     OK - getquota completed
-                            NO - getquota error: no such mailbox, permission denied
-                            BAD - command unknown or arguments invalid
-
-                The GETQUOTAROOT command takes the name of a mailbox and returns the
-                list of quota roots for the mailbox in an untagged QUOTAROOT
-                response.  For each listed quota root, it also returns the quota
-                root's resource usage and limits in an untagged QUOTA response.
-
-                Example:    C: A003 GETQUOTAROOT INBOX
-                            S: * QUOTAROOT INBOX ""
-                            S: * QUOTA "" (STORAGE 10 512)
-                            S: A003 OK Getquota completed
-                            
+            /* RFC 2087 4.3. GETQUOTAROOT 
+                Arguments:  mailbox name 
+ 
+                Data:       untagged responses: QUOTAROOT, QUOTA 
+ 
+                Result:     OK - getquota completed 
+                            NO - getquota error: no such mailbox, permission denied 
+                            BAD - command unknown or arguments invalid 
+ 
+                The GETQUOTAROOT command takes the name of a mailbox and returns the 
+                list of quota roots for the mailbox in an untagged QUOTAROOT 
+                response.  For each listed quota root, it also returns the quota 
+                root's resource usage and limits in an untagged QUOTA response. 
+ 
+                Example:    C: A003 GETQUOTAROOT INBOX 
+                            S: * QUOTAROOT INBOX "" 
+                            S: * QUOTA "" (STORAGE 10 512) 
+                            S: A003 OK Getquota completed 
+                             
             */
 
             if (!SupportsCap("QUOTA"))
@@ -3423,14 +3117,14 @@ namespace LumiSoft.Net.IMAP.Server
 
             if (e.QuotaRootResponses.Count > 0)
             {
-                foreach (IMAP_r_u_QuotaRoot r in e.QuotaRootResponses)
+                foreach (var r in e.QuotaRootResponses)
                 {
                     m_pResponseSender.SendResponseAsync(r);
                 }
             }
             if (e.QuotaResponses.Count > 0)
             {
-                foreach (IMAP_r_u_Quota r in e.QuotaResponses)
+                foreach (var r in e.QuotaResponses)
                 {
                     m_pResponseSender.SendResponseAsync(r);
                 }
@@ -3438,88 +3132,84 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method IDLE
-
         private bool IDLE(string cmdTag, string cmdText)
         {
-            /* RFC 2177 3. IDLE Command.
-                Arguments:  none
-
-                Responses:  continuation data will be requested; the client sends
-                            the continuation data "DONE" to end the command
-
-                Result:     OK - IDLE completed after client sent "DONE"
-                            NO - failure: the server will not allow the IDLE
-                            command at this time
-                BAD - command unknown or arguments invalid
-
-                The IDLE command may be used with any IMAP4 server implementation
-                that returns "IDLE" as one of the supported capabilities to the
-                CAPABILITY command.  If the server does not advertise the IDLE
-                capability, the client MUST NOT use the IDLE command and must poll
-                for mailbox updates.  In particular, the client MUST continue to be
-                able to accept unsolicited untagged responses to ANY command, as
-                specified in the base IMAP specification.
-
-                The IDLE command is sent from the client to the server when the
-                client is ready to accept unsolicited mailbox update messages.  The
-                server requests a response to the IDLE command using the continuation
-                ("+") response.  The IDLE command remains active until the client
-                responds to the continuation, and as long as an IDLE command is
-                active, the server is now free to send untagged EXISTS, EXPUNGE, and
-                other messages at any time.
-
-                The IDLE command is terminated by the receipt of a "DONE"
-                continuation from the client; such response satisfies the server's
-                continuation request.  At that point, the server MAY send any
-                remaining queued untagged responses and then MUST immediately send
-                the tagged response to the IDLE command and prepare to process other
-                commands. As in the base specification, the processing of any new
-                command may cause the sending of unsolicited untagged responses,
-                subject to the ambiguity limitations.  The client MUST NOT send a
-                command while the server is waiting for the DONE, since the server
-                will not be able to distinguish a command from a continuation.
-
-                The server MAY consider a client inactive if it has an IDLE command
-                running, and if such a server has an inactivity timeout it MAY log
-                the client off implicitly at the end of its timeout period.  Because
-                of that, clients using IDLE are advised to terminate the IDLE and
-                re-issue it at least every 29 minutes to avoid being logged off.
-                This still allows a client to receive immediate mailbox updates even
-                though it need only "poll" at half hour intervals.
-
-                Example:    C: A001 SELECT INBOX
-                            S: * FLAGS (Deleted Seen)
-                            S: * 3 EXISTS
-                            S: * 0 RECENT
-                            S: * OK [UIDVALIDITY 1]
-                            S: A001 OK SELECT completed
-                            C: A002 IDLE
-                            S: + idling
-                            ...time passes; new mail arrives...
-                            S: * 4 EXISTS
-                            C: DONE
-                            S: A002 OK IDLE terminated
-                            ...another client expunges message 2 now...
-                            C: A003 FETCH 4 ALL
-                            S: * 4 FETCH (...)
-                            S: A003 OK FETCH completed
-                            C: A004 IDLE
-                            S: * 2 EXPUNGE
-                            S: * 3 EXISTS
-                            S: + idling
-                            ...time passes; another client expunges message 3...
-                            S: * 3 EXPUNGE
-                            S: * 2 EXISTS
-                            ...time passes; new mail arrives...
-                            S: * 3 EXISTS
-                            C: DONE
-                            S: A004 OK IDLE terminated
-                            C: A005 FETCH 3 ALL
-                            S: * 3 FETCH (...)
-                            S: A005 OK FETCH completed
+            /* RFC 2177 3. IDLE Command. 
+                Arguments:  none 
+ 
+                Responses:  continuation data will be requested; the client sends 
+                            the continuation data "DONE" to end the command 
+ 
+                Result:     OK - IDLE completed after client sent "DONE" 
+                            NO - failure: the server will not allow the IDLE 
+                            command at this time 
+                BAD - command unknown or arguments invalid 
+ 
+                The IDLE command may be used with any IMAP4 server implementation 
+                that returns "IDLE" as one of the supported capabilities to the 
+                CAPABILITY command.  If the server does not advertise the IDLE 
+                capability, the client MUST NOT use the IDLE command and must poll 
+                for mailbox updates.  In particular, the client MUST continue to be 
+                able to accept unsolicited untagged responses to ANY command, as 
+                specified in the base IMAP specification. 
+ 
+                The IDLE command is sent from the client to the server when the 
+                client is ready to accept unsolicited mailbox update messages.  The 
+                server requests a response to the IDLE command using the continuation 
+                ("+") response.  The IDLE command remains active until the client 
+                responds to the continuation, and as long as an IDLE command is 
+                active, the server is now free to send untagged EXISTS, EXPUNGE, and 
+                other messages at any time. 
+ 
+                The IDLE command is terminated by the receipt of a "DONE" 
+                continuation from the client; such response satisfies the server's 
+                continuation request.  At that point, the server MAY send any 
+                remaining queued untagged responses and then MUST immediately send 
+                the tagged response to the IDLE command and prepare to process other 
+                commands. As in the base specification, the processing of any new 
+                command may cause the sending of unsolicited untagged responses, 
+                subject to the ambiguity limitations.  The client MUST NOT send a 
+                command while the server is waiting for the DONE, since the server 
+                will not be able to distinguish a command from a continuation. 
+ 
+                The server MAY consider a client inactive if it has an IDLE command 
+                running, and if such a server has an inactivity timeout it MAY log 
+                the client off implicitly at the end of its timeout period.  Because 
+                of that, clients using IDLE are advised to terminate the IDLE and 
+                re-issue it at least every 29 minutes to avoid being logged off. 
+                This still allows a client to receive immediate mailbox updates even 
+                though it need only "poll" at half hour intervals. 
+ 
+                Example:    C: A001 SELECT INBOX 
+                            S: * FLAGS (Deleted Seen) 
+                            S: * 3 EXISTS 
+                            S: * 0 RECENT 
+                            S: * OK [UIDVALIDITY 1] 
+                            S: A001 OK SELECT completed 
+                            C: A002 IDLE 
+                            S: + idling 
+                            ...time passes; new mail arrives... 
+                            S: * 4 EXISTS 
+                            C: DONE 
+                            S: A002 OK IDLE terminated 
+                            ...another client expunges message 2 now... 
+                            C: A003 FETCH 4 ALL 
+                            S: * 4 FETCH (...) 
+                            S: A003 OK FETCH completed 
+                            C: A004 IDLE 
+                            S: * 2 EXPUNGE 
+                            S: * 3 EXISTS 
+                            S: + idling 
+                            ...time passes; another client expunges message 3... 
+                            S: * 3 EXPUNGE 
+                            S: * 2 EXISTS 
+                            ...time passes; new mail arrives... 
+                            S: * 3 EXISTS 
+                            C: DONE 
+                            S: A004 OK IDLE terminated 
+                            C: A005 FETCH 3 ALL 
+                            S: * 3 FETCH (...) 
+                            S: A005 OK FETCH completed 
             */
 
             if (!IsAuthenticated)
@@ -3544,7 +3234,7 @@ namespace LumiSoft.Net.IMAP.Server
             });
             timer.Enabled = true;
 
-            // Read client response. 
+            // Read client response.
             var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
             readLineOP.Completed += new EventHandler<EventArgs<SmartStream.ReadLineAsyncOP>>(delegate (object sender, EventArgs<SmartStream.ReadLineAsyncOP> e)
             {
@@ -3635,154 +3325,150 @@ namespace LumiSoft.Net.IMAP.Server
             return false;
         }
 
-        #endregion
-
-        #region method LIST
-
         private void LIST(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.8. LIST Command.
-                Arguments:  reference name
-                            mailbox name with possible wildcards
-
-                Responses:  untagged responses: LIST
-
-                Result:     OK - list completed
-                            NO - list failure: can't list that reference or name
-                            BAD - command unknown or arguments invalid
-
-                The LIST command returns a subset of names from the complete set
-                of all names available to the client.  Zero or more untagged LIST
-                replies are returned, containing the name attributes, hierarchy
-                delimiter, and name; see the description of the LIST reply for
-                more detail.
-
-                The LIST command SHOULD return its data quickly, without undue
-                delay.  For example, it SHOULD NOT go to excess trouble to
-                calculate the \Marked or \Unmarked status or perform other
-                processing; if each name requires 1 second of processing, then a
-                list of 1200 names would take 20 minutes!
-
-                An empty ("" string) reference name argument indicates that the
-                mailbox name is interpreted as by SELECT.  The returned mailbox
-                names MUST match the supplied mailbox name pattern.  A non-empty
-                reference name argument is the name of a mailbox or a level of
-                mailbox hierarchy, and indicates the context in which the mailbox
-                name is interpreted.
-
-                An empty ("" string) mailbox name argument is a special request to
-                return the hierarchy delimiter and the root name of the name given
-                in the reference.  The value returned as the root MAY be the empty
-                string if the reference is non-rooted or is an empty string.  In
-                all cases, a hierarchy delimiter (or NIL if there is no hierarchy)
-                is returned.  This permits a client to get the hierarchy delimiter
-                (or find out that the mailbox names are flat) even when no
-                mailboxes by that name currently exist.
-
-                The reference and mailbox name arguments are interpreted into a
-                canonical form that represents an unambiguous left-to-right
-                hierarchy.  The returned mailbox names will be in the interpreted
-                form.
-
-                    Note: The interpretation of the reference argument is
-                    implementation-defined.  It depends upon whether the
-                    server implementation has a concept of the "current
-                    working directory" and leading "break out characters",
-                    which override the current working directory.
-
-                    For example, on a server which exports a UNIX or NT
-                    filesystem, the reference argument contains the current
-                    working directory, and the mailbox name argument would
-                    contain the name as interpreted in the current working
-                    directory.
-
-                    If a server implementation has no concept of break out
-                    characters, the canonical form is normally the reference
-                    name appended with the mailbox name.  Note that if the
-                    server implements the namespace convention (section
-                    5.1.2), "#" is a break out character and must be treated
-                    as such.
-
-                    If the reference argument is not a level of mailbox
-                    hierarchy (that is, it is a \NoInferiors name), and/or
-                    the reference argument does not end with the hierarchy
-                    delimiter, it is implementation-dependent how this is
-                    interpreted.  For example, a reference of "foo/bar" and
-                    mailbox name of "rag/baz" could be interpreted as
-                    "foo/bar/rag/baz", "foo/barrag/baz", or "foo/rag/baz".
-                    A client SHOULD NOT use such a reference argument except
-                    at the explicit request of the user.  A hierarchical
-                    browser MUST NOT make any assumptions about server
-                    interpretation of the reference unless the reference is
-                    a level of mailbox hierarchy AND ends with the hierarchy
-                    delimiter.
-
-                Any part of the reference argument that is included in the
-                interpreted form SHOULD prefix the interpreted form.  It SHOULD
-                also be in the same form as the reference name argument.  This
-                rule permits the client to determine if the returned mailbox name
-                is in the context of the reference argument, or if something about
-                the mailbox argument overrode the reference argument.  Without
-                this rule, the client would have to have knowledge of the server's
-                naming semantics including what characters are "breakouts" that
-                override a naming context.
-
-                    For example, here are some examples of how references
-                    and mailbox names might be interpreted on a UNIX-based
-                    server:
-
-                        Reference     Mailbox Name  Interpretation
-                        ------------  ------------  --------------
-                        ~smith/Mail/  foo.*         ~smith/Mail/foo.*
-                        archive/      %             archive/%
-                        #news.        comp.mail.*   #news.comp.mail.*
-                        ~smith/Mail/  /usr/doc/foo  /usr/doc/foo
-                        archive/      ~fred/Mail/*  ~fred/Mail/*
-
-                    The first three examples demonstrate interpretations in
-                    the context of the reference argument.  Note that
-                    "~smith/Mail" SHOULD NOT be transformed into something
-                    like "/u2/users/smith/Mail", or it would be impossible
-                    for the client to determine that the interpretation was
-                    in the context of the reference.
-
-                The character "*" is a wildcard, and matches zero or more
-                characters at this position.  The character "%" is similar to "*",
-                but it does not match a hierarchy delimiter.  If the "%" wildcard
-                is the last character of a mailbox name argument, matching levels
-                of hierarchy are also returned.  If these levels of hierarchy are
-                not also selectable mailboxes, they are returned with the
-                \Noselect mailbox name attribute (see the description of the LIST
-                response for more details).
-
-                Server implementations are permitted to "hide" otherwise
-                accessible mailboxes from the wildcard characters, by preventing
-                certain characters or names from matching a wildcard in certain
-                situations.  For example, a UNIX-based server might restrict the
-                interpretation of "*" so that an initial "/" character does not
-                match.
-
-                The special name INBOX is included in the output from LIST, if
-                INBOX is supported by this server for this user and if the
-                uppercase string "INBOX" matches the interpreted reference and
-                mailbox name arguments with wildcards as described above.  The
-                criteria for omitting INBOX is whether SELECT INBOX will return
-                failure; it is not relevant whether the user's real INBOX resides
-                on this or some other server.
-
-                Example:    C: A101 LIST "" ""
-                            S: * LIST (\Noselect) "/" ""
-                            S: A101 OK LIST Completed
-                            C: A102 LIST #news.comp.mail.misc ""
-                            S: * LIST (\Noselect) "." #news.
-                            S: A102 OK LIST Completed
-                            C: A103 LIST /usr/staff/jones ""
-                            S: * LIST (\Noselect) "/" /
-                            S: A103 OK LIST Completed
-                            C: A202 LIST ~/Mail/ %
-                            S: * LIST (\Noselect) "/" ~/Mail/foo
-                            S: * LIST () "/" ~/Mail/meetings
-                            S: A202 OK LIST completed
+            /* RFC 3501 6.3.8. LIST Command. 
+                Arguments:  reference name 
+                            mailbox name with possible wildcards 
+ 
+                Responses:  untagged responses: LIST 
+ 
+                Result:     OK - list completed 
+                            NO - list failure: can't list that reference or name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The LIST command returns a subset of names from the complete set 
+                of all names available to the client.  Zero or more untagged LIST 
+                replies are returned, containing the name attributes, hierarchy 
+                delimiter, and name; see the description of the LIST reply for 
+                more detail. 
+ 
+                The LIST command SHOULD return its data quickly, without undue 
+                delay.  For example, it SHOULD NOT go to excess trouble to 
+                calculate the \Marked or \Unmarked status or perform other 
+                processing; if each name requires 1 second of processing, then a 
+                list of 1200 names would take 20 minutes! 
+ 
+                An empty ("" string) reference name argument indicates that the 
+                mailbox name is interpreted as by SELECT.  The returned mailbox 
+                names MUST match the supplied mailbox name pattern.  A non-empty 
+                reference name argument is the name of a mailbox or a level of 
+                mailbox hierarchy, and indicates the context in which the mailbox 
+                name is interpreted. 
+ 
+                An empty ("" string) mailbox name argument is a special request to 
+                return the hierarchy delimiter and the root name of the name given 
+                in the reference.  The value returned as the root MAY be the empty 
+                string if the reference is non-rooted or is an empty string.  In 
+                all cases, a hierarchy delimiter (or NIL if there is no hierarchy) 
+                is returned.  This permits a client to get the hierarchy delimiter 
+                (or find out that the mailbox names are flat) even when no 
+                mailboxes by that name currently exist. 
+ 
+                The reference and mailbox name arguments are interpreted into a 
+                canonical form that represents an unambiguous left-to-right 
+                hierarchy.  The returned mailbox names will be in the interpreted 
+                form. 
+ 
+                    Note: The interpretation of the reference argument is 
+                    implementation-defined.  It depends upon whether the 
+                    server implementation has a concept of the "current 
+                    working directory" and leading "break out characters", 
+                    which override the current working directory. 
+ 
+                    For example, on a server which exports a UNIX or NT 
+                    filesystem, the reference argument contains the current 
+                    working directory, and the mailbox name argument would 
+                    contain the name as interpreted in the current working 
+                    directory. 
+ 
+                    If a server implementation has no concept of break out 
+                    characters, the canonical form is normally the reference 
+                    name appended with the mailbox name.  Note that if the 
+                    server implements the namespace convention (section 
+                    5.1.2), "#" is a break out character and must be treated 
+                    as such. 
+ 
+                    If the reference argument is not a level of mailbox 
+                    hierarchy (that is, it is a \NoInferiors name), and/or 
+                    the reference argument does not end with the hierarchy 
+                    delimiter, it is implementation-dependent how this is 
+                    interpreted.  For example, a reference of "foo/bar" and 
+                    mailbox name of "rag/baz" could be interpreted as 
+                    "foo/bar/rag/baz", "foo/barrag/baz", or "foo/rag/baz". 
+                    A client SHOULD NOT use such a reference argument except 
+                    at the explicit request of the user.  A hierarchical 
+                    browser MUST NOT make any assumptions about server 
+                    interpretation of the reference unless the reference is 
+                    a level of mailbox hierarchy AND ends with the hierarchy 
+                    delimiter. 
+ 
+                Any part of the reference argument that is included in the 
+                interpreted form SHOULD prefix the interpreted form.  It SHOULD 
+                also be in the same form as the reference name argument.  This 
+                rule permits the client to determine if the returned mailbox name 
+                is in the context of the reference argument, or if something about 
+                the mailbox argument overrode the reference argument.  Without 
+                this rule, the client would have to have knowledge of the server's 
+                naming semantics including what characters are "breakouts" that 
+                override a naming context. 
+ 
+                    For example, here are some examples of how references 
+                    and mailbox names might be interpreted on a UNIX-based 
+                    server: 
+ 
+                        Reference     Mailbox Name  Interpretation 
+                        ------------  ------------  -------------- 
+                        ~smith/Mail/  foo.*         ~smith/Mail/foo.* 
+                        archive/      %             archive/% 
+                        #news.        comp.mail.*   #news.comp.mail.* 
+                        ~smith/Mail/  /usr/doc/foo  /usr/doc/foo 
+                        archive/      ~fred/Mail/*  ~fred/Mail/* 
+ 
+                    The first three examples demonstrate interpretations in 
+                    the context of the reference argument.  Note that 
+                    "~smith/Mail" SHOULD NOT be transformed into something 
+                    like "/u2/users/smith/Mail", or it would be impossible 
+                    for the client to determine that the interpretation was 
+                    in the context of the reference. 
+ 
+                The character "*" is a wildcard, and matches zero or more 
+                characters at this position.  The character "%" is similar to "*", 
+                but it does not match a hierarchy delimiter.  If the "%" wildcard 
+                is the last character of a mailbox name argument, matching levels 
+                of hierarchy are also returned.  If these levels of hierarchy are 
+                not also selectable mailboxes, they are returned with the 
+                \Noselect mailbox name attribute (see the description of the LIST 
+                response for more details). 
+ 
+                Server implementations are permitted to "hide" otherwise 
+                accessible mailboxes from the wildcard characters, by preventing 
+                certain characters or names from matching a wildcard in certain 
+                situations.  For example, a UNIX-based server might restrict the 
+                interpretation of "*" so that an initial "/" character does not 
+                match. 
+ 
+                The special name INBOX is included in the output from LIST, if 
+                INBOX is supported by this server for this user and if the 
+                uppercase string "INBOX" matches the interpreted reference and 
+                mailbox name arguments with wildcards as described above.  The 
+                criteria for omitting INBOX is whether SELECT INBOX will return 
+                failure; it is not relevant whether the user's real INBOX resides 
+                on this or some other server. 
+ 
+                Example:    C: A101 LIST "" "" 
+                            S: * LIST (\Noselect) "/" "" 
+                            S: A101 OK LIST Completed 
+                            C: A102 LIST #news.comp.mail.misc "" 
+                            S: * LIST (\Noselect) "." #news. 
+                            S: A102 OK LIST Completed 
+                            C: A103 LIST /usr/staff/jones "" 
+                            S: * LIST (\Noselect) "/" / 
+                            S: A103 OK LIST Completed 
+                            C: A202 LIST ~/Mail/ % 
+                            S: * LIST (\Noselect) "/" ~/Mail/foo 
+                            S: * LIST () "/" ~/Mail/meetings 
+                            S: A202 OK LIST completed 
             */
 
             if (!IsAuthenticated)
@@ -3804,7 +3490,7 @@ namespace LumiSoft.Net.IMAP.Server
             var folder = IMAP_Utils.DecodeMailbox(parts[1]);
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             // Folder separator request.
             if (folder == string.Empty)
@@ -3814,7 +3500,7 @@ namespace LumiSoft.Net.IMAP.Server
             else
             {
                 var e = OnList(refName, folder);
-                foreach (IMAP_r_u_List r in e.Folders)
+                foreach (var r in e.Folders)
                 {
                     m_pResponseSender.SendResponseAsync(r);
                 }
@@ -3823,41 +3509,37 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "OK", "LIST Completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds."));
         }
 
-        #endregion
-
-        #region method LISTRIGHTS
-
         private void LISTRIGHTS(string cmdTag, string cmdText)
         {
-            /* RFC 4314 3.4. LISTRIGHTS Command.
-                Arguments:  mailbox name
-                            identifier
-
-                Data:       untagged responses: LISTRIGHTS
-
-                Result:     OK - listrights completed
-                            NO - listrights failure: can't get rights list
-                            BAD - arguments invalid
-
-                The LISTRIGHTS command takes a mailbox name and an identifier and
-                returns information about what rights can be granted to the
-                identifier in the ACL for the mailbox.
-
-                Some implementations MAY permit multiple forms of an identifier to
-                reference the same IMAP account.  Usually, such implementations will
-                have a canonical form that is stored internally.  A LISTRIGHTS
-                response caused by a LISTRIGHTS command MUST always return the same
-                form of an identifier as specified by the client.  This is to allow
-                the client to correlate the response with the command.
-
-                Example:    C: a001 LISTRIGHTS ~/Mail/saved smith
-                            S: * LISTRIGHTS ~/Mail/saved smith la r swicdkxte
-                            S: a001 OK Listrights completed
-
-                Example:    C: a005 listrights archive/imap anyone
-                            S: * LISTRIGHTS archive.imap anyone ""
-                               l r s w i p k x t e c d a 0 1 2 3 4 5 6 7 8 9
-                            S: a005 Listrights successful
+            /* RFC 4314 3.4. LISTRIGHTS Command. 
+                Arguments:  mailbox name 
+                            identifier 
+ 
+                Data:       untagged responses: LISTRIGHTS 
+ 
+                Result:     OK - listrights completed 
+                            NO - listrights failure: can't get rights list 
+                            BAD - arguments invalid 
+ 
+                The LISTRIGHTS command takes a mailbox name and an identifier and 
+                returns information about what rights can be granted to the 
+                identifier in the ACL for the mailbox. 
+ 
+                Some implementations MAY permit multiple forms of an identifier to 
+                reference the same IMAP account.  Usually, such implementations will 
+                have a canonical form that is stored internally.  A LISTRIGHTS 
+                response caused by a LISTRIGHTS command MUST always return the same 
+                form of an identifier as specified by the client.  This is to allow 
+                the client to correlate the response with the command. 
+ 
+                Example:    C: a001 LISTRIGHTS ~/Mail/saved smith 
+                            S: * LISTRIGHTS ~/Mail/saved smith la r swicdkxte 
+                            S: a001 OK Listrights completed 
+ 
+                Example:    C: a005 listrights archive/imap anyone 
+                            S: * LISTRIGHTS archive.imap anyone "" 
+                               l r s w i p k x t e c d a 0 1 2 3 4 5 6 7 8 9 
+                            S: a005 Listrights successful 
             */
 
             if (!SupportsCap("ACL"))
@@ -3896,52 +3578,48 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method LOGIN
-
         private void LOGIN(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.2.3. LOGIN Command.
-                Arguments:  user name
-                            password
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - login completed, now in authenticated state
-                            NO - login failure: user name or password rejected
-                            BAD - command unknown or arguments invalid
-
-                The LOGIN command identifies the client to the server and carries
-                the plaintext password authenticating this user.
-
-                A server MAY include a CAPABILITY response code in the tagged OK
-                response to a successful LOGIN command in order to send
-                capabilities automatically.  It is unnecessary for a client to
-                send a separate CAPABILITY command if it recognizes these
-                automatic capabilities.
-
-                Example:    C: a001 LOGIN SMITH SESAME
-                            S: a001 OK LOGIN completed
-
-                    Note: Use of the LOGIN command over an insecure network
-                    (such as the Internet) is a security risk, because anyone
-                    monitoring network traffic can obtain plaintext passwords.
-                    The LOGIN command SHOULD NOT be used except as a last
-                    resort, and it is recommended that client implementations
-                    have a means to disable any automatic use of the LOGIN
-                    command.
-
-                Unless either the STARTTLS command has been negotiated or
-                some other mechanism that protects the session from
-                password snooping has been provided, a server
-                implementation MUST implement a configuration in which it
-                advertises the LOGINDISABLED capability and does NOT permit
-                the LOGIN command.  Server sites SHOULD NOT use any
-                configuration which permits the LOGIN command without such
-                a protection mechanism against password snooping.  A client
-                implementation MUST NOT send a LOGIN command if the
-                LOGINDISABLED capability is advertised.
+            /* RFC 3501 6.2.3. LOGIN Command. 
+                Arguments:  user name 
+                            password 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - login completed, now in authenticated state 
+                            NO - login failure: user name or password rejected 
+                            BAD - command unknown or arguments invalid 
+ 
+                The LOGIN command identifies the client to the server and carries 
+                the plaintext password authenticating this user. 
+ 
+                A server MAY include a CAPABILITY response code in the tagged OK 
+                response to a successful LOGIN command in order to send 
+                capabilities automatically.  It is unnecessary for a client to 
+                send a separate CAPABILITY command if it recognizes these 
+                automatic capabilities. 
+ 
+                Example:    C: a001 LOGIN SMITH SESAME 
+                            S: a001 OK LOGIN completed 
+ 
+                    Note: Use of the LOGIN command over an insecure network 
+                    (such as the Internet) is a security risk, because anyone 
+                    monitoring network traffic can obtain plaintext passwords. 
+                    The LOGIN command SHOULD NOT be used except as a last 
+                    resort, and it is recommended that client implementations 
+                    have a means to disable any automatic use of the LOGIN 
+                    command. 
+ 
+                Unless either the STARTTLS command has been negotiated or 
+                some other mechanism that protects the session from 
+                password snooping has been provided, a server 
+                implementation MUST implement a configuration in which it 
+                advertises the LOGINDISABLED capability and does NOT permit 
+                the LOGIN command.  Server sites SHOULD NOT use any 
+                configuration which permits the LOGIN command without such 
+                a protection mechanism against password snooping.  A client 
+                implementation MUST NOT send a LOGIN command if the 
+                LOGINDISABLED capability is advertised. 
             */
 
             if (m_SessionRejected)
@@ -3990,29 +3668,25 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method LOGOUT
-
         private void LOGOUT(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.1.3. LOGOUT Command.
-                Arguments:  none
-
-                Responses:  REQUIRED untagged response: BYE
-
-                Result:     OK - logout completed
-                            BAD - command unknown or arguments invalid
-
-                The LOGOUT command informs the server that the client is done with
-                the connection.  The server MUST send a BYE untagged response
-                before the (tagged) OK response, and then close the network
-                connection.
-
-                Example:    C: A023 LOGOUT
-                            S: * BYE IMAP4rev1 Server logging out
-                            S: A023 OK LOGOUT completed
-                            (Server and client then close the connection)
+            /* RFC 3501 6.1.3. LOGOUT Command. 
+                Arguments:  none 
+ 
+                Responses:  REQUIRED untagged response: BYE 
+ 
+                Result:     OK - logout completed 
+                            BAD - command unknown or arguments invalid 
+ 
+                The LOGOUT command informs the server that the client is done with 
+                the connection.  The server MUST send a BYE untagged response 
+                before the (tagged) OK response, and then close the network 
+                connection. 
+ 
+                Example:    C: A023 LOGOUT 
+                            S: * BYE IMAP4rev1 Server logging out 
+                            S: A023 OK LOGOUT completed 
+                            (Server and client then close the connection) 
             */
 
             try
@@ -4048,48 +3722,44 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method LSUB
-
         private void LSUB(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.9. LSUB Command.
-                Arguments:  reference name
-                            mailbox name with possible wildcards
-
-                Responses:  untagged responses: LSUB
-
-                Result:     OK - lsub completed
-                            NO - lsub failure: can't list that reference or name
-                            BAD - command unknown or arguments invalid
-
-                The LSUB command returns a subset of names from the set of names
-                that the user has declared as being "active" or "subscribed".
-                Zero or more untagged LSUB replies are returned.  The arguments to
-                LSUB are in the same form as those for LIST.
-
-                The returned untagged LSUB response MAY contain different mailbox
-                flags from a LIST untagged response.  If this should happen, the
-                flags in the untagged LIST are considered more authoritative.
-
-                A special situation occurs when using LSUB with the % wildcard.
-                Consider what happens if "foo/bar" (with a hierarchy delimiter of
-                "/") is subscribed but "foo" is not.  A "%" wildcard to LSUB must
-                return foo, not foo/bar, in the LSUB response, and it MUST be
-                flagged with the \Noselect attribute.
-
-                The server MUST NOT unilaterally remove an existing mailbox name
-                from the subscription list even if a mailbox by that name no
-                longer exists.
-
-                Example:    C: A002 LSUB "#news." "comp.mail.*"
-                            S: * LSUB () "." #news.comp.mail.mime
-                            S: * LSUB () "." #news.comp.mail.misc
-                            S: A002 OK LSUB completed
-                            C: A003 LSUB "#news." "comp.%"
-                            S: * LSUB (\NoSelect) "." #news.comp.mail
-                            S: A003 OK LSUB completed
+            /* RFC 3501 6.3.9. LSUB Command. 
+                Arguments:  reference name 
+                            mailbox name with possible wildcards 
+ 
+                Responses:  untagged responses: LSUB 
+ 
+                Result:     OK - lsub completed 
+                            NO - lsub failure: can't list that reference or name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The LSUB command returns a subset of names from the set of names 
+                that the user has declared as being "active" or "subscribed". 
+                Zero or more untagged LSUB replies are returned.  The arguments to 
+                LSUB are in the same form as those for LIST. 
+ 
+                The returned untagged LSUB response MAY contain different mailbox 
+                flags from a LIST untagged response.  If this should happen, the 
+                flags in the untagged LIST are considered more authoritative. 
+ 
+                A special situation occurs when using LSUB with the % wildcard. 
+                Consider what happens if "foo/bar" (with a hierarchy delimiter of 
+                "/") is subscribed but "foo" is not.  A "%" wildcard to LSUB must 
+                return foo, not foo/bar, in the LSUB response, and it MUST be 
+                flagged with the \Noselect attribute. 
+ 
+                The server MUST NOT unilaterally remove an existing mailbox name 
+                from the subscription list even if a mailbox by that name no 
+                longer exists. 
+ 
+                Example:    C: A002 LSUB "#news." "comp.mail.*" 
+                            S: * LSUB () "." #news.comp.mail.mime 
+                            S: * LSUB () "." #news.comp.mail.misc 
+                            S: A002 OK LSUB completed 
+                            C: A003 LSUB "#news." "comp.%" 
+                            S: * LSUB (\NoSelect) "." #news.comp.mail 
+                            S: A003 OK LSUB completed 
             */
 
             if (!IsAuthenticated)
@@ -4111,10 +3781,10 @@ namespace LumiSoft.Net.IMAP.Server
             var folder = IMAP_Utils.DecodeMailbox(parts[1]);
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             var e = OnLSub(refName, folder);
-            foreach (IMAP_r_u_LSub r in e.Folders)
+            foreach (var r in e.Folders)
             {
                 m_pResponseSender.SendResponseAsync(r);
             }
@@ -4122,27 +3792,23 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "OK", "LSUB Completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds."));
         }
 
-        #endregion
-
-        #region method MYRIGHTS
-
         private void MYRIGHTS(string cmdTag, string cmdText)
         {
-            /* RFC 4314 3.5. MYRIGHTS Command.
-                Arguments:  mailbox name
-
-                Data:       untagged responses: MYRIGHTS
-
-                Result:     OK - myrights completed
-                            NO - myrights failure: can't get rights
-                            BAD - arguments invalid
-
-                The MYRIGHTS command returns the set of rights that the user has to
-                mailbox in an untagged MYRIGHTS reply.
-
-                Example:    C: A003 MYRIGHTS INBOX
-                            S: * MYRIGHTS INBOX rwiptsldaex
-                            S: A003 OK Myrights complete
+            /* RFC 4314 3.5. MYRIGHTS Command. 
+                Arguments:  mailbox name 
+ 
+                Data:       untagged responses: MYRIGHTS 
+ 
+                Result:     OK - myrights completed 
+                            NO - myrights failure: can't get rights 
+                            BAD - arguments invalid 
+ 
+                The MYRIGHTS command returns the set of rights that the user has to 
+                mailbox in an untagged MYRIGHTS reply. 
+ 
+                Example:    C: A003 MYRIGHTS INBOX 
+                            S: * MYRIGHTS INBOX rwiptsldaex 
+                            S: A003 OK Myrights complete 
             */
 
             if (!SupportsCap("ACL"))
@@ -4168,35 +3834,31 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method NAMESPACE
-
         private void NAMESPACE(string cmdTag, string cmdText)
         {
-            /* RFC 2342 5. NAMESPACE Command.
-                Arguments: none
-
-                Response:  an untagged NAMESPACE response that contains the prefix
-                           and hierarchy delimiter to the server's Personal
-                           Namespace(s), Other Users' Namespace(s), and Shared
-                           Namespace(s) that the server wishes to expose. The
-                           response will contain a NIL for any namespace class
-                           that is not available. Namespace_Response_Extensions
-                           MAY be included in the response.
-                           Namespace_Response_Extensions which are not on the IETF
-                           standards track, MUST be prefixed with an "X-".
-
-                Result:    OK - Command completed
-                           NO - Error: Can't complete command
-                           BAD - argument invalid
-                
-                Example:
-                    < A server that contains a Personal Namespace and a single Shared Namespace. >
-
-                    C: A001 NAMESPACE
-                    S: * NAMESPACE (("" "/")) NIL (("Public Folders/" "/"))
-                    S: A001 OK NAMESPACE command completed
+            /* RFC 2342 5. NAMESPACE Command. 
+                Arguments: none 
+ 
+                Response:  an untagged NAMESPACE response that contains the prefix 
+                           and hierarchy delimiter to the server's Personal 
+                           Namespace(s), Other Users' Namespace(s), and Shared 
+                           Namespace(s) that the server wishes to expose. The 
+                           response will contain a NIL for any namespace class 
+                           that is not available. Namespace_Response_Extensions 
+                           MAY be included in the response. 
+                           Namespace_Response_Extensions which are not on the IETF 
+                           standards track, MUST be prefixed with an "X-". 
+ 
+                Result:    OK - Command completed 
+                           NO - Error: Can't complete command 
+                           BAD - argument invalid 
+                 
+                Example: 
+                    < A server that contains a Personal Namespace and a single Shared Namespace. > 
+ 
+                    C: A001 NAMESPACE 
+                    S: * NAMESPACE (("" "/")) NIL (("Public Folders/" "/")) 
+                    S: A001 OK NAMESPACE command completed 
             */
 
             if (!SupportsCap("NAMESPACE"))
@@ -4220,41 +3882,37 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method NOOP
-
         private void NOOP(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.1.2. NOOP Command.
-                Arguments:  none
-
-                Responses:  no specific responses for this command (but see below)
-
-                Result:     OK - noop completed
-                            BAD - command unknown or arguments invalid
-
-                The NOOP command always succeeds.  It does nothing.
-
-                Since any command can return a status update as untagged data, the
-                NOOP command can be used as a periodic poll for new messages or
-                message status updates during a period of inactivity (this is the
-                preferred method to do this).  The NOOP command can also be used
-                to reset any inactivity autologout timer on the server.
-
-                Example:    C: a002 NOOP
-                            S: a002 OK NOOP completed
-                            . . .
-                            C: a047 NOOP
-                            S: * 22 EXPUNGE
-                            S: * 23 EXISTS
-                            S: * 3 RECENT
-                            S: * 14 FETCH (FLAGS (\Seen \Deleted))
-                            S: a047 OK NOOP completed
+            /* RFC 3501 6.1.2. NOOP Command. 
+                Arguments:  none 
+ 
+                Responses:  no specific responses for this command (but see below) 
+ 
+                Result:     OK - noop completed 
+                            BAD - command unknown or arguments invalid 
+ 
+                The NOOP command always succeeds.  It does nothing. 
+ 
+                Since any command can return a status update as untagged data, the 
+                NOOP command can be used as a periodic poll for new messages or 
+                message status updates during a period of inactivity (this is the 
+                preferred method to do this).  The NOOP command can also be used 
+                to reset any inactivity autologout timer on the server. 
+ 
+                Example:    C: a002 NOOP 
+                            S: a002 OK NOOP completed 
+                            . . . 
+                            C: a047 NOOP 
+                            S: * 22 EXPUNGE 
+                            S: * 23 EXISTS 
+                            S: * 3 RECENT 
+                            S: * 14 FETCH (FLAGS (\Seen \Deleted)) 
+                            S: a047 OK NOOP completed 
             */
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             if (m_pSelectedFolder != null)
             {
@@ -4263,8 +3921,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             m_pResponseSender.SendResponseAsync(new IMAP_r_ServerStatus(cmdTag, "OK", "NOOP Completed in " + ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2") + " seconds."));
         }
-
-        #region method OnAppend
 
         /// <summary>
         /// Raises <b>StoreMessage</b> event.
@@ -4286,8 +3942,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnCopy
-
         /// <summary>
         /// Raises <b>Copy</b> event.
         /// </summary>
@@ -4305,8 +3959,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnCreate
 
         /// <summary>
         /// Raises <b>Create</b> event.
@@ -4326,8 +3978,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnDelete
-
         /// <summary>
         /// Raises <b>Delete</b> event.
         /// </summary>
@@ -4345,8 +3995,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnDeleteAcl
 
         /// <summary>
         /// Raises <b>DeleteAcl</b> event.
@@ -4366,8 +4014,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnExpunge
-
         /// <summary>
         /// Raises <b>Expunge</b> event.
         /// </summary>
@@ -4385,8 +4031,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnFetch
-
         /// <summary>
         /// Raises <b>Fetch</b> event.
         /// </summary>
@@ -4398,8 +4042,6 @@ namespace LumiSoft.Net.IMAP.Server
                 Fetch(this, e);
             }
         }
-
-        #region method OnGetAcl
 
         /// <summary>
         /// Raises <b>GetAcl</b> event.
@@ -4418,8 +4060,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnGetGuotaRoot
-
         /// <summary>
         /// Raises <b>GetQuotaRoot</b> event.
         /// </summary>
@@ -4437,8 +4077,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnGetMessagesInfo
-
         /// <summary>
         /// Raises <b>GetMessagesInfo</b> event.
         /// </summary>
@@ -4454,8 +4092,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnGetQuota
 
         /// <summary>
         /// Raises <b>GetQuota</b> event.
@@ -4474,8 +4110,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnList
-
         /// <summary>
         /// Raises <b>List</b> event.
         /// </summary>
@@ -4492,8 +4126,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnListRights
 
         /// <summary>
         /// Raises <b>ListRights</b> event.
@@ -4513,8 +4145,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnLogin
-
         /// <summary>
         /// Raises <b>Login</b> event.
         /// </summary>
@@ -4531,8 +4161,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnLSub
 
         /// <summary>
         /// Raises <b>LSub</b> event.
@@ -4551,8 +4179,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnMyRights
-
         /// <summary>
         /// Raises <b>MyRights</b> event.
         /// </summary>
@@ -4570,8 +4196,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnNamespace
-
         /// <summary>
         /// Raises <b>Namespace</b> event.
         /// </summary>
@@ -4587,8 +4211,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnRename
 
         /// <summary>
         /// Raises <b>Rename</b> event.
@@ -4608,8 +4230,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnSearch
-
         /// <summary>
         /// Raises <b>Search</b> event.
         /// </summary>
@@ -4621,8 +4241,6 @@ namespace LumiSoft.Net.IMAP.Server
                 Search(this, e);
             }
         }
-
-        #region method OnSelect
 
         /// <summary>
         /// Raises <b>Select</b> event.
@@ -4640,8 +4258,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnSetAcl
 
         /// <summary>
         /// Raises <b>SetAcl</b> event.
@@ -4663,8 +4279,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnStarted
-
         /// <summary>
         /// Raises <b>Started</b> event.
         /// </summary>
@@ -4680,8 +4294,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnStore
 
         /// <summary>
         /// Raises <b>Store</b> event.
@@ -4702,8 +4314,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #region method OnSubscribe
-
         /// <summary>
         /// Raises <b>Subscribe</b> event.
         /// </summary>
@@ -4721,8 +4331,6 @@ namespace LumiSoft.Net.IMAP.Server
 
             return eArgs;
         }
-
-        #region method OnUnsubscribe
 
         /// <summary>
         /// Raises <b>OnUnsubscribe</b> event.
@@ -4742,10 +4350,6 @@ namespace LumiSoft.Net.IMAP.Server
             return eArgs;
         }
 
-        #endregion
-
-        #region method ParsePartNumberFromSection
-
         /// <summary>
         /// Parses MIME part-number specifier from BODY[] section string.
         /// </summary>
@@ -4761,7 +4365,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             var retVal = new StringBuilder();
             var parts = section.Split('.');
-            foreach (string part in parts)
+            foreach (var part in parts)
             {
                 if (Net_Utils.IsInteger(part))
                 {
@@ -4780,10 +4384,6 @@ namespace LumiSoft.Net.IMAP.Server
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method ParsePartSpecifierFromSection
-
         /// <summary>
         /// Parses MIME part specifier from BODY[] section string.
         /// </summary>
@@ -4799,7 +4399,7 @@ namespace LumiSoft.Net.IMAP.Server
 
             var retVal = new StringBuilder();
             var parts = section.Split(' ')[0].Split('.');
-            foreach (string part in parts)
+            foreach (var part in parts)
             {
                 if (!Net_Utils.IsInteger(part))
                 {
@@ -4814,10 +4414,6 @@ namespace LumiSoft.Net.IMAP.Server
             return retVal.ToString();
         }
 
-        #endregion
-
-        #region method ProcessCmd
-
         /// <summary>
         /// Completes command reading operation.
         /// </summary>
@@ -4825,7 +4421,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns true if server should start reading next command.</returns>
         private bool ProcessCmd(SmartStream.ReadLineAsyncOP op)
         {
-            bool readNextCommand = true;
+            var readNextCommand = true;
 
             try
             {
@@ -5041,68 +4637,64 @@ namespace LumiSoft.Net.IMAP.Server
             return readNextCommand;
         }
 
-        #endregion
-
-        #region method RENAME
-
         private void RENAME(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.5. RENAME Command.
-                Arguments:  existing mailbox name
-                            new mailbox name
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - rename completed
-                            NO - rename failure: can't rename mailbox with that name,
-                                 can't rename to mailbox with that name
-                            BAD - command unknown or arguments invalid
-
-                The RENAME command changes the name of a mailbox.  A tagged OK
-                response is returned only if the mailbox has been renamed.  It is
-                an error to attempt to rename from a mailbox name that does not
-                exist or to a mailbox name that already exists.  Any error in
-                renaming will return a tagged NO response.
-
-                If the name has inferior hierarchical names, then the inferior
-                hierarchical names MUST also be renamed.  For example, a rename of
-                "foo" to "zap" will rename "foo/bar" (assuming "/" is the
-                hierarchy delimiter character) to "zap/bar".
-
-                If the server's hierarchy separator character appears in the name,
-                the server SHOULD create any superior hierarchical names that are
-                needed for the RENAME command to complete successfully.  In other
-                words, an attempt to rename "foo/bar/zap" to baz/rag/zowie on a
-                server in which "/" is the hierarchy separator character SHOULD
-                create baz/ and baz/rag/ if they do not already exist.
-
-                The value of the highest-used unique identifier of the old mailbox
-                name MUST be preserved so that a new mailbox created with the same
-                name will not reuse the identifiers of the former incarnation,
-                UNLESS the new incarnation has a different unique identifier
-                validity value.  See the description of the UID command for more
-                detail.
-
-                Renaming INBOX is permitted, and has special behavior.  It moves
-                all messages in INBOX to a new mailbox with the given name,
-                leaving INBOX empty.  If the server implementation supports
-                inferior hierarchical names of INBOX, these are unaffected by a
-                rename of INBOX.
-
-                Examples:   C: A682 LIST "" *
-                            S: * LIST () "/" blurdybloop
-                            S: * LIST (\Noselect) "/" foo
-                            S: * LIST () "/" foo/bar
-                            S: A682 OK LIST completed
-                            C: A683 RENAME blurdybloop sarasoop
-                            S: A683 OK RENAME completed
-                            C: A684 RENAME foo zowie
-                            S: A684 OK RENAME Completed
-                            C: A685 LIST "" *
-                            S: * LIST () "/" sarasoop
-                            S: * LIST (\Noselect) "/" zowie
-                            S: * LIST () "/" zowie/bar
-                            S: A685 OK LIST completed
+            /* RFC 3501 6.3.5. RENAME Command. 
+                Arguments:  existing mailbox name 
+                            new mailbox name 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - rename completed 
+                            NO - rename failure: can't rename mailbox with that name, 
+                                 can't rename to mailbox with that name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The RENAME command changes the name of a mailbox.  A tagged OK 
+                response is returned only if the mailbox has been renamed.  It is 
+                an error to attempt to rename from a mailbox name that does not 
+                exist or to a mailbox name that already exists.  Any error in 
+                renaming will return a tagged NO response. 
+ 
+                If the name has inferior hierarchical names, then the inferior 
+                hierarchical names MUST also be renamed.  For example, a rename of 
+                "foo" to "zap" will rename "foo/bar" (assuming "/" is the 
+                hierarchy delimiter character) to "zap/bar". 
+ 
+                If the server's hierarchy separator character appears in the name, 
+                the server SHOULD create any superior hierarchical names that are 
+                needed for the RENAME command to complete successfully.  In other 
+                words, an attempt to rename "foo/bar/zap" to baz/rag/zowie on a 
+                server in which "/" is the hierarchy separator character SHOULD 
+                create baz/ and baz/rag/ if they do not already exist. 
+ 
+                The value of the highest-used unique identifier of the old mailbox 
+                name MUST be preserved so that a new mailbox created with the same 
+                name will not reuse the identifiers of the former incarnation, 
+                UNLESS the new incarnation has a different unique identifier 
+                validity value.  See the description of the UID command for more 
+                detail. 
+ 
+                Renaming INBOX is permitted, and has special behavior.  It moves 
+                all messages in INBOX to a new mailbox with the given name, 
+                leaving INBOX empty.  If the server implementation supports 
+                inferior hierarchical names of INBOX, these are unaffected by a 
+                rename of INBOX. 
+ 
+                Examples:   C: A682 LIST "" * 
+                            S: * LIST () "/" blurdybloop 
+                            S: * LIST (\Noselect) "/" foo 
+                            S: * LIST () "/" foo/bar 
+                            S: A682 OK LIST completed 
+                            C: A683 RENAME blurdybloop sarasoop 
+                            S: A683 OK RENAME completed 
+                            C: A684 RENAME foo zowie 
+                            S: A684 OK RENAME Completed 
+                            C: A685 LIST "" * 
+                            S: * LIST () "/" sarasoop 
+                            S: * LIST (\Noselect) "/" zowie 
+                            S: * LIST () "/" zowie/bar 
+                            S: A685 OK LIST completed 
             */
 
             if (!IsAuthenticated)
@@ -5131,203 +4723,199 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method SEARCH
-
         private void SEARCH(bool uid, string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.4.4. SEARCH Command.
-                Arguments:  OPTIONAL [CHARSET] specification
-                            searching criteria (one or more)
-
-                Responses:  REQUIRED untagged response: SEARCH
-
-                Result:     OK - search completed
-                            NO - search error: can't search that [CHARSET] or criteria
-                            BAD - command unknown or arguments invalid
-
-                The SEARCH command searches the mailbox for messages that match
-                the given searching criteria.  Searching criteria consist of one
-                or more search keys.  The untagged SEARCH response from the server
-                contains a listing of message sequence numbers corresponding to
-                those messages that match the searching criteria.
-            
-                When multiple keys are specified, the result is the intersection
-                (AND function) of all the messages that match those keys.  For
-                example, the criteria DELETED FROM "SMITH" SINCE 1-Feb-1994 refers
-                to all deleted messages from Smith that were placed in the mailbox
-                since February 1, 1994.  A search key can also be a parenthesized
-                list of one or more search keys (e.g., for use with the OR and NOT
-                keys).
-
-                Server implementations MAY exclude [MIME-IMB] body parts with
-                terminal content media types other than TEXT and MESSAGE from
-                consideration in SEARCH matching.
-
-                The OPTIONAL [CHARSET] specification consists of the word
-                "CHARSET" followed by a registered [CHARSET].  It indicates the
-                [CHARSET] of the strings that appear in the search criteria.
-                [MIME-IMB] content transfer encodings, and [MIME-HDRS] strings in
-                [RFC-2822]/[MIME-IMB] headers, MUST be decoded before comparing
-                text in a [CHARSET] other than US-ASCII.  US-ASCII MUST be
-                supported; other [CHARSET]s MAY be supported.
-
-                If the server does not support the specified [CHARSET], it MUST
-                return a tagged NO response (not a BAD).  This response SHOULD
-                contain the BADCHARSET response code, which MAY list the
-                [CHARSET]s supported by the server.
-
-                In all search keys that use strings, a message matches the key if
-                the string is a substring of the field.  The matching is
-                case-insensitive.
-
-                The defined search keys are as follows.  Refer to the Formal
-                Syntax section for the precise syntactic definitions of the
-                arguments.
-
-                <sequence set>
-                    Messages with message sequence numbers corresponding to the
-                    specified message sequence number set.
-
-                ALL
-                    All messages in the mailbox; the default initial key for ANDing.
-
-                ANSWERED
-                    Messages with the \Answered flag set.
-
-                BCC <string>
-                    Messages that contain the specified string in the envelope
-                    structure's BCC field.
-
-                BEFORE <date>
-                    Messages whose internal date (disregarding time and timezone)
-                    is earlier than the specified date.
-
-                BODY <string>
-                    Messages that contain the specified string in the body of the
-                    message.
-
-                CC <string>
-                    Messages that contain the specified string in the envelope
-                    structure's CC field.
-
-                DELETED
-                    Messages with the \Deleted flag set.
-
-                DRAFT
-                    Messages with the \Draft flag set.
-
-                FLAGGED
-                    Messages with the \Flagged flag set.
-
-                FROM <string>
-                    Messages that contain the specified string in the envelope
-                    structure's FROM field.
-
-                HEADER <field-name> <string>
-                    Messages that have a header with the specified field-name (as
-                    defined in [RFC-2822]) and that contains the specified string
-                    in the text of the header (what comes after the colon).  If the
-                    string to search is zero-length, this matches all messages that
-                    have a header line with the specified field-name regardless of
-                    the contents.
-
-                KEYWORD <flag>
-                    Messages with the specified keyword flag set.
-
-                LARGER <n>
-                    Messages with an [RFC-2822] size larger than the specified
-                    number of octets.
-
-                NEW
-                    Messages that have the \Recent flag set but not the \Seen flag.
-                    This is functionally equivalent to "(RECENT UNSEEN)".
-
-                NOT <search-key>
-                    Messages that do not match the specified search key.
-
-                OLD
-                    Messages that do not have the \Recent flag set.  This is
-                    functionally equivalent to "NOT RECENT" (as opposed to "NOT NEW").
-
-                ON <date>
-                    Messages whose internal date (disregarding time and timezone)
-                    is within the specified date.
-
-                OR <search-key1> <search-key2>
-                    Messages that match either search key.
-
-                RECENT
-                    Messages that have the \Recent flag set.
-
-                SEEN
-                    Messages that have the \Seen flag set.
-
-                SENTBEFORE <date>
-                    Messages whose [RFC-2822] Date: header (disregarding time and
-                    timezone) is earlier than the specified date.
-
-                SENTON <date>
-                    Messages whose [RFC-2822] Date: header (disregarding time and
-                    timezone) is within the specified date.
-
-                SENTSINCE <date>
-                    Messages whose [RFC-2822] Date: header (disregarding time and
-                    timezone) is within or later than the specified date.
-
-                SINCE <date>
-                    Messages whose internal date (disregarding time and timezone)
-                    is within or later than the specified date.
-
-                SMALLER <n>
-                    Messages with an [RFC-2822] size smaller than the specified
-                    number of octets.
-
-                SUBJECT <string>
-                    Messages that contain the specified string in the envelope
-                    structure's SUBJECT field.
-
-                TEXT <string>
-                    Messages that contain the specified string in the header or
-                    body of the message.
-
-                TO <string>
-                    Messages that contain the specified string in the envelope
-                    structure's TO field.
-
-                UID <sequence set>
-                    Messages with unique identifiers corresponding to the specified
-                    unique identifier set.  Sequence set ranges are permitted.
-
-                UNANSWERED
-                    Messages that do not have the \Answered flag set.
-
-                UNDELETED
-                    Messages that do not have the \Deleted flag set.
-
-                UNDRAFT
-                    Messages that do not have the \Draft flag set.
-
-                UNFLAGGED
-                    Messages that do not have the \Flagged flag set.
-
-                UNKEYWORD <flag>
-                    Messages that do not have the specified keyword flag set.
-
-                UNSEEN
-                    Messages that do not have the \Seen flag set.
-
-                Example:    C: A282 SEARCH FLAGGED SINCE 1-Feb-1994 NOT FROM "Smith"
-                            S: * SEARCH 2 84 882
-                            S: A282 OK SEARCH completed
-                            C: A283 SEARCH TEXT "string not in mailbox"
-                            S: * SEARCH
-                            S: A283 OK SEARCH completed
-                            C: A284 SEARCH CHARSET UTF-8 TEXT {6}
-                            C: XXXXXX
-                            S: * SEARCH 43
-                            S: A284 OK SEARCH completed
+            /* RFC 3501 6.4.4. SEARCH Command. 
+                Arguments:  OPTIONAL [CHARSET] specification 
+                            searching criteria (one or more) 
+ 
+                Responses:  REQUIRED untagged response: SEARCH 
+ 
+                Result:     OK - search completed 
+                            NO - search error: can't search that [CHARSET] or criteria 
+                            BAD - command unknown or arguments invalid 
+ 
+                The SEARCH command searches the mailbox for messages that match 
+                the given searching criteria.  Searching criteria consist of one 
+                or more search keys.  The untagged SEARCH response from the server 
+                contains a listing of message sequence numbers corresponding to 
+                those messages that match the searching criteria. 
+             
+                When multiple keys are specified, the result is the intersection 
+                (AND function) of all the messages that match those keys.  For 
+                example, the criteria DELETED FROM "SMITH" SINCE 1-Feb-1994 refers 
+                to all deleted messages from Smith that were placed in the mailbox 
+                since February 1, 1994.  A search key can also be a parenthesized 
+                list of one or more search keys (e.g., for use with the OR and NOT 
+                keys). 
+ 
+                Server implementations MAY exclude [MIME-IMB] body parts with 
+                terminal content media types other than TEXT and MESSAGE from 
+                consideration in SEARCH matching. 
+ 
+                The OPTIONAL [CHARSET] specification consists of the word 
+                "CHARSET" followed by a registered [CHARSET].  It indicates the 
+                [CHARSET] of the strings that appear in the search criteria. 
+                [MIME-IMB] content transfer encodings, and [MIME-HDRS] strings in 
+                [RFC-2822]/[MIME-IMB] headers, MUST be decoded before comparing 
+                text in a [CHARSET] other than US-ASCII.  US-ASCII MUST be 
+                supported; other [CHARSET]s MAY be supported. 
+ 
+                If the server does not support the specified [CHARSET], it MUST 
+                return a tagged NO response (not a BAD).  This response SHOULD 
+                contain the BADCHARSET response code, which MAY list the 
+                [CHARSET]s supported by the server. 
+ 
+                In all search keys that use strings, a message matches the key if 
+                the string is a substring of the field.  The matching is 
+                case-insensitive. 
+ 
+                The defined search keys are as follows.  Refer to the Formal 
+                Syntax section for the precise syntactic definitions of the 
+                arguments. 
+ 
+                <sequence set> 
+                    Messages with message sequence numbers corresponding to the 
+                    specified message sequence number set. 
+ 
+                ALL 
+                    All messages in the mailbox; the default initial key for ANDing. 
+ 
+                ANSWERED 
+                    Messages with the \Answered flag set. 
+ 
+                BCC <string> 
+                    Messages that contain the specified string in the envelope 
+                    structure's BCC field. 
+ 
+                BEFORE <date> 
+                    Messages whose internal date (disregarding time and timezone) 
+                    is earlier than the specified date. 
+ 
+                BODY <string> 
+                    Messages that contain the specified string in the body of the 
+                    message. 
+ 
+                CC <string> 
+                    Messages that contain the specified string in the envelope 
+                    structure's CC field. 
+ 
+                DELETED 
+                    Messages with the \Deleted flag set. 
+ 
+                DRAFT 
+                    Messages with the \Draft flag set. 
+ 
+                FLAGGED 
+                    Messages with the \Flagged flag set. 
+ 
+                FROM <string> 
+                    Messages that contain the specified string in the envelope 
+                    structure's FROM field. 
+ 
+                HEADER <field-name> <string> 
+                    Messages that have a header with the specified field-name (as 
+                    defined in [RFC-2822]) and that contains the specified string 
+                    in the text of the header (what comes after the colon).  If the 
+                    string to search is zero-length, this matches all messages that 
+                    have a header line with the specified field-name regardless of 
+                    the contents. 
+ 
+                KEYWORD <flag> 
+                    Messages with the specified keyword flag set. 
+ 
+                LARGER <n> 
+                    Messages with an [RFC-2822] size larger than the specified 
+                    number of octets. 
+ 
+                NEW 
+                    Messages that have the \Recent flag set but not the \Seen flag. 
+                    This is functionally equivalent to "(RECENT UNSEEN)". 
+ 
+                NOT <search-key> 
+                    Messages that do not match the specified search key. 
+ 
+                OLD 
+                    Messages that do not have the \Recent flag set.  This is 
+                    functionally equivalent to "NOT RECENT" (as opposed to "NOT NEW"). 
+ 
+                ON <date> 
+                    Messages whose internal date (disregarding time and timezone) 
+                    is within the specified date. 
+ 
+                OR <search-key1> <search-key2> 
+                    Messages that match either search key. 
+ 
+                RECENT 
+                    Messages that have the \Recent flag set. 
+ 
+                SEEN 
+                    Messages that have the \Seen flag set. 
+ 
+                SENTBEFORE <date> 
+                    Messages whose [RFC-2822] Date: header (disregarding time and 
+                    timezone) is earlier than the specified date. 
+ 
+                SENTON <date> 
+                    Messages whose [RFC-2822] Date: header (disregarding time and 
+                    timezone) is within the specified date. 
+ 
+                SENTSINCE <date> 
+                    Messages whose [RFC-2822] Date: header (disregarding time and 
+                    timezone) is within or later than the specified date. 
+ 
+                SINCE <date> 
+                    Messages whose internal date (disregarding time and timezone) 
+                    is within or later than the specified date. 
+ 
+                SMALLER <n> 
+                    Messages with an [RFC-2822] size smaller than the specified 
+                    number of octets. 
+ 
+                SUBJECT <string> 
+                    Messages that contain the specified string in the envelope 
+                    structure's SUBJECT field. 
+ 
+                TEXT <string> 
+                    Messages that contain the specified string in the header or 
+                    body of the message. 
+ 
+                TO <string> 
+                    Messages that contain the specified string in the envelope 
+                    structure's TO field. 
+ 
+                UID <sequence set> 
+                    Messages with unique identifiers corresponding to the specified 
+                    unique identifier set.  Sequence set ranges are permitted. 
+ 
+                UNANSWERED 
+                    Messages that do not have the \Answered flag set. 
+ 
+                UNDELETED 
+                    Messages that do not have the \Deleted flag set. 
+ 
+                UNDRAFT 
+                    Messages that do not have the \Draft flag set. 
+ 
+                UNFLAGGED 
+                    Messages that do not have the \Flagged flag set. 
+ 
+                UNKEYWORD <flag> 
+                    Messages that do not have the specified keyword flag set. 
+ 
+                UNSEEN 
+                    Messages that do not have the \Seen flag set. 
+ 
+                Example:    C: A282 SEARCH FLAGGED SINCE 1-Feb-1994 NOT FROM "Smith" 
+                            S: * SEARCH 2 84 882 
+                            S: A282 OK SEARCH completed 
+                            C: A283 SEARCH TEXT "string not in mailbox" 
+                            S: * SEARCH 
+                            S: A283 OK SEARCH completed 
+                            C: A284 SEARCH CHARSET UTF-8 TEXT {6} 
+                            C: XXXXXX 
+                            S: * SEARCH 43 
+                            S: A284 OK SEARCH completed 
             */
 
             if (!IsAuthenticated)
@@ -5344,9 +4932,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
-
-            #region Parse arguments
+            var startTime = DateTime.Now.Ticks;
 
             var cmdReader = new _CmdReader(this, cmdText, Encoding.UTF8);
             cmdReader.Start();
@@ -5367,8 +4953,6 @@ namespace LumiSoft.Net.IMAP.Server
                 }
             }
 
-            #endregion
-
             try
             {
                 var criteria = IMAP_Search_Key_Group.Parse(r);
@@ -5387,7 +4971,7 @@ namespace LumiSoft.Net.IMAP.Server
                     else
                     {
                         // Search sequence-number for that message.
-                        int seqNo = m_pSelectedFolder.GetSeqNo(e.Value);
+                        var seqNo = m_pSelectedFolder.GetSeqNo(e.Value);
                         if (seqNo != -1)
                         {
                             matchedValues.Add((int)e.Value);
@@ -5405,137 +4989,133 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method SELECT
-
         private void SELECT(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.1. SELECT Command.
-                Arguments:  mailbox name
-
-                Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
-                            REQUIRED OK untagged responses:  UNSEEN,  PERMANENTFLAGS,
-                            UIDNEXT, UIDVALIDITY
-
-                Result:     OK - select completed, now in selected state
-                            NO - select failure, now in authenticated state: no
-                                 such mailbox, can't access mailbox
-                            BAD - command unknown or arguments invalid
-
-                The SELECT command selects a mailbox so that messages in the
-                mailbox can be accessed.  Before returning an OK to the client,
-                the server MUST send the following untagged data to the client.
-                Note that earlier versions of this protocol only required the
-                FLAGS, EXISTS, and RECENT untagged data; consequently, client
-                implementations SHOULD implement default behavior for missing data
-                as discussed with the individual item.
-
-                    FLAGS       Defined flags in the mailbox.  See the description
-                                of the FLAGS response for more detail.
-
-                    <n> EXISTS  The number of messages in the mailbox.  See the
-                                description of the EXISTS response for more detail.
-
-                    <n> RECENT  The number of messages with the \Recent flag set.
-                                See the description of the RECENT response for more
-                                detail.
-
-                    OK [UNSEEN <n>]
-                                The message sequence number of the first unseen
-                                message in the mailbox.  If this is missing, the
-                                client can not make any assumptions about the first
-                                unseen message in the mailbox, and needs to issue a
-                                SEARCH command if it wants to find it.
-
-                    OK [PERMANENTFLAGS (<list of flags>)]
-                                A list of message flags that the client can change
-                                permanently.  If this is missing, the client should
-                                assume that all flags can be changed permanently.
-
-                    OK [UIDNEXT <n>]
-                                The next unique identifier value.  Refer to section
-                                2.3.1.1 for more information.  If this is missing,
-                                the client can not make any assumptions about the
-                                next unique identifier value.
-
-                    OK [UIDVALIDITY <n>]
-                                The unique identifier validity value.  Refer to
-                                section 2.3.1.1 for more information.  If this is
-                                missing, the server does not support unique
-                                identifiers.
-
-                Only one mailbox can be selected at a time in a connection;
-                simultaneous access to multiple mailboxes requires multiple
-                connections.  The SELECT command automatically deselects any
-                currently selected mailbox before attempting the new selection.
-                Consequently, if a mailbox is selected and a SELECT command that
-                fails is attempted, no mailbox is selected.
-
-                If the client is permitted to modify the mailbox, the server
-                SHOULD prefix the text of the tagged OK response with the
-                "[READ-WRITE]" response code.
-
-                If the client is not permitted to modify the mailbox but is
-                permitted read access, the mailbox is selected as read-only, and
-                the server MUST prefix the text of the tagged OK response to
-                SELECT with the "[READ-ONLY]" response code.  Read-only access
-                through SELECT differs from the EXAMINE command in that certain
-                read-only mailboxes MAY permit the change of permanent state on a
-                per-user (as opposed to global) basis.  Netnews messages marked in
-                a server-based .newsrc file are an example of such per-user
-                permanent state that can be modified with read-only mailboxes.
-
-                Example:    C: A142 SELECT INBOX
-                            S: * 172 EXISTS
-                            S: * 1 RECENT
-                            S: * OK [UNSEEN 12] Message 12 is first unseen
-                            S: * OK [UIDVALIDITY 3857529045] UIDs valid
-                            S: * OK [UIDNEXT 4392] Predicted next UID
-                            S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
-                            S: * OK [PERMANENTFLAGS (\Deleted \Seen \*)] Limited
-                            S: A142 OK [READ-WRITE] SELECT completed
+            /* RFC 3501 6.3.1. SELECT Command. 
+                Arguments:  mailbox name 
+ 
+                Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT 
+                            REQUIRED OK untagged responses:  UNSEEN,  PERMANENTFLAGS, 
+                            UIDNEXT, UIDVALIDITY 
+ 
+                Result:     OK - select completed, now in selected state 
+                            NO - select failure, now in authenticated state: no 
+                                 such mailbox, can't access mailbox 
+                            BAD - command unknown or arguments invalid 
+ 
+                The SELECT command selects a mailbox so that messages in the 
+                mailbox can be accessed.  Before returning an OK to the client, 
+                the server MUST send the following untagged data to the client. 
+                Note that earlier versions of this protocol only required the 
+                FLAGS, EXISTS, and RECENT untagged data; consequently, client 
+                implementations SHOULD implement default behavior for missing data 
+                as discussed with the individual item. 
+ 
+                    FLAGS       Defined flags in the mailbox.  See the description 
+                                of the FLAGS response for more detail. 
+ 
+                    <n> EXISTS  The number of messages in the mailbox.  See the 
+                                description of the EXISTS response for more detail. 
+ 
+                    <n> RECENT  The number of messages with the \Recent flag set. 
+                                See the description of the RECENT response for more 
+                                detail. 
+ 
+                    OK [UNSEEN <n>] 
+                                The message sequence number of the first unseen 
+                                message in the mailbox.  If this is missing, the 
+                                client can not make any assumptions about the first 
+                                unseen message in the mailbox, and needs to issue a 
+                                SEARCH command if it wants to find it. 
+ 
+                    OK [PERMANENTFLAGS (<list of flags>)] 
+                                A list of message flags that the client can change 
+                                permanently.  If this is missing, the client should 
+                                assume that all flags can be changed permanently. 
+ 
+                    OK [UIDNEXT <n>] 
+                                The next unique identifier value.  Refer to section 
+                                2.3.1.1 for more information.  If this is missing, 
+                                the client can not make any assumptions about the 
+                                next unique identifier value. 
+ 
+                    OK [UIDVALIDITY <n>] 
+                                The unique identifier validity value.  Refer to 
+                                section 2.3.1.1 for more information.  If this is 
+                                missing, the server does not support unique 
+                                identifiers. 
+ 
+                Only one mailbox can be selected at a time in a connection; 
+                simultaneous access to multiple mailboxes requires multiple 
+                connections.  The SELECT command automatically deselects any 
+                currently selected mailbox before attempting the new selection. 
+                Consequently, if a mailbox is selected and a SELECT command that 
+                fails is attempted, no mailbox is selected. 
+ 
+                If the client is permitted to modify the mailbox, the server 
+                SHOULD prefix the text of the tagged OK response with the 
+                "[READ-WRITE]" response code. 
+ 
+                If the client is not permitted to modify the mailbox but is 
+                permitted read access, the mailbox is selected as read-only, and 
+                the server MUST prefix the text of the tagged OK response to 
+                SELECT with the "[READ-ONLY]" response code.  Read-only access 
+                through SELECT differs from the EXAMINE command in that certain 
+                read-only mailboxes MAY permit the change of permanent state on a 
+                per-user (as opposed to global) basis.  Netnews messages marked in 
+                a server-based .newsrc file are an example of such per-user 
+                permanent state that can be modified with read-only mailboxes. 
+ 
+                Example:    C: A142 SELECT INBOX 
+                            S: * 172 EXISTS 
+                            S: * 1 RECENT 
+                            S: * OK [UNSEEN 12] Message 12 is first unseen 
+                            S: * OK [UIDVALIDITY 3857529045] UIDs valid 
+                            S: * OK [UIDNEXT 4392] Predicted next UID 
+                            S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft) 
+                            S: * OK [PERMANENTFLAGS (\Deleted \Seen \*)] Limited 
+                            S: A142 OK [READ-WRITE] SELECT completed 
             */
 
-            /* 5738 3.2.  UTF8 Parameter to SELECT and EXAMINE
-                The "UTF8=ACCEPT" capability also indicates that the server supports
-                the "UTF8" parameter to SELECT and EXAMINE.  When a mailbox is
-                selected with the "UTF8" parameter, it alters the behavior of all
-                IMAP commands related to message sizes, message headers, and MIME
-                body headers so they refer to the message with UTF-8 headers.  If the
-                mailstore is not UTF-8 header native and the SELECT or EXAMINE
-                command with UTF-8 header modifier succeeds, then the server MUST
-                return results as if the mailstore were UTF-8 header native with
-                upconversion requirements as described in Section 8.  The server MAY
-                reject the SELECT or EXAMINE command with the [NOT-UTF-8] response
-                code, unless the "UTF8=ALL" or "UTF8=ONLY" capability is advertised.
-
-                Servers MAY include mailboxes that can only be selected or examined
-                if the "UTF8" parameter is provided.  However, such mailboxes MUST
-                NOT be included in the output of an unextended LIST, LSUB, or
-                equivalent command.  If a client attempts to SELECT or EXAMINE such
-                mailboxes without the "UTF8" parameter, the server MUST reject the
-                command with a [UTF-8-ONLY] response code.  As a result, such
-                mailboxes will not be accessible by IMAP clients written prior to
-                this specification and are discouraged unless the server advertises
-                "UTF8=ONLY" or the server implements IMAP4 LIST Command Extensions
-   
-                    utf8-select-param = "UTF8"
-                        ;; Conforms to <select-param> from RFC 4466
-
-                    C: a SELECT newmailbox (UTF8)
-                    S: ...
-                    S: a OK SELECT completed
-                    C: b FETCH 1 (SIZE ENVELOPE BODY)
-                    S: ... < UTF-8 header native results >
-                    S: b OK FETCH completed
-
-                    C: c EXAMINE legacymailbox (UTF8)
-                    S: c NO [NOT-UTF-8] Mailbox does not support UTF-8 access
+            /* 5738 3.2.  UTF8 Parameter to SELECT and EXAMINE 
+                The "UTF8=ACCEPT" capability also indicates that the server supports 
+                the "UTF8" parameter to SELECT and EXAMINE.  When a mailbox is 
+                selected with the "UTF8" parameter, it alters the behavior of all 
+                IMAP commands related to message sizes, message headers, and MIME 
+                body headers so they refer to the message with UTF-8 headers.  If the 
+                mailstore is not UTF-8 header native and the SELECT or EXAMINE 
+                command with UTF-8 header modifier succeeds, then the server MUST 
+                return results as if the mailstore were UTF-8 header native with 
+                upconversion requirements as described in Section 8.  The server MAY 
+                reject the SELECT or EXAMINE command with the [NOT-UTF-8] response 
+                code, unless the "UTF8=ALL" or "UTF8=ONLY" capability is advertised. 
+ 
+                Servers MAY include mailboxes that can only be selected or examined 
+                if the "UTF8" parameter is provided.  However, such mailboxes MUST 
+                NOT be included in the output of an unextended LIST, LSUB, or 
+                equivalent command.  If a client attempts to SELECT or EXAMINE such 
+                mailboxes without the "UTF8" parameter, the server MUST reject the 
+                command with a [UTF-8-ONLY] response code.  As a result, such 
+                mailboxes will not be accessible by IMAP clients written prior to 
+                this specification and are discouraged unless the server advertises 
+                "UTF8=ONLY" or the server implements IMAP4 LIST Command Extensions 
+    
+                    utf8-select-param = "UTF8" 
+                        ;; Conforms to <select-param> from RFC 4466 
+ 
+                    C: a SELECT newmailbox (UTF8) 
+                    S: ... 
+                    S: a OK SELECT completed 
+                    C: b FETCH 1 (SIZE ENVELOPE BODY) 
+                    S: ... < UTF-8 header native results > 
+                    S: b OK FETCH completed 
+ 
+                    C: c EXAMINE legacymailbox (UTF8) 
+                    S: c NO [NOT-UTF-8] Mailbox does not support UTF-8 access 
             */
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             if (!IsAuthenticated)
             {
@@ -5601,44 +5181,40 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method SETACL
-
         private void SETACL(string cmdTag, string cmdText)
         {
-            /* RFC 4314 3.1. SETACL Command.
-                Arguments:  mailbox name
-                            identifier
-                            access right modification
-
-                Data:       no specific data for this command
-
-                Result:     OK - setacl completed
-                            NO - setacl failure: can't set acl
-                            BAD - arguments invalid
-
-                The SETACL command changes the access control list on the specified
-                mailbox so that the specified identifier is granted permissions as
-                specified in the third argument.
-
-                The third argument is a string containing an optional plus ("+") or
-                minus ("-") prefix, followed by zero or more rights characters.  If
-                the string starts with a plus, the following rights are added to any
-                existing rights for the identifier.  If the string starts with a
-                minus, the following rights are removed from any existing rights for
-                the identifier.  If the string does not start with a plus or minus,
-                the rights replace any existing rights for the identifier.
-
-                Note that an unrecognized right MUST cause the command to return the
-                BAD response.  In particular, the server MUST NOT silently ignore
-                unrecognized rights.
-
-                Example:    C: A035 SETACL INBOX/Drafts John lrQswicda
-                            S: A035 BAD Uppercase rights are not allowed
-            
-                            C: A036 SETACL INBOX/Drafts John lrqswicda
-                            S: A036 BAD The q right is not supported
+            /* RFC 4314 3.1. SETACL Command. 
+                Arguments:  mailbox name 
+                            identifier 
+                            access right modification 
+ 
+                Data:       no specific data for this command 
+ 
+                Result:     OK - setacl completed 
+                            NO - setacl failure: can't set acl 
+                            BAD - arguments invalid 
+ 
+                The SETACL command changes the access control list on the specified 
+                mailbox so that the specified identifier is granted permissions as 
+                specified in the third argument. 
+ 
+                The third argument is a string containing an optional plus ("+") or 
+                minus ("-") prefix, followed by zero or more rights characters.  If 
+                the string starts with a plus, the following rights are added to any 
+                existing rights for the identifier.  If the string starts with a 
+                minus, the following rights are removed from any existing rights for 
+                the identifier.  If the string does not start with a plus or minus, 
+                the rights replace any existing rights for the identifier. 
+ 
+                Note that an unrecognized right MUST cause the command to return the 
+                BAD response.  In particular, the server MUST NOT silently ignore 
+                unrecognized rights. 
+ 
+                Example:    C: A035 SETACL INBOX/Drafts John lrQswicda 
+                            S: A035 BAD Uppercase rights are not allowed 
+             
+                            C: A036 SETACL INBOX/Drafts John lrqswicda 
+                            S: A036 BAD The q right is not supported 
             */
 
             if (!SupportsCap("ACL"))
@@ -5685,49 +5261,45 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method STARTTLS
-
         private void STARTTLS(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.2.1. STARTTLS Command.
-                Arguments:  none
-
-                Responses:  no specific response for this command
-
-                Result:     OK - starttls completed, begin TLS negotiation
-                            BAD - command unknown or arguments invalid
-
-                A [TLS] negotiation begins immediately after the CRLF at the end
-                of the tagged OK response from the server.  Once a client issues a
-                STARTTLS command, it MUST NOT issue further commands until a
-                server response is seen and the [TLS] negotiation is complete.
-
-                The server remains in the non-authenticated state, even if client
-                credentials are supplied during the [TLS] negotiation.  This does
-                not preclude an authentication mechanism such as EXTERNAL (defined
-                in [SASL]) from using client identity determined by the [TLS]
-                negotiation.
-
-                Once [TLS] has been started, the client MUST discard cached
-                information about server capabilities and SHOULD re-issue the
-                CAPABILITY command.  This is necessary to protect against man-in-
-                the-middle attacks which alter the capabilities list prior to
-                STARTTLS.  The server MAY advertise different capabilities after
-                STARTTLS.
-
-                Example:    C: a001 CAPABILITY
-                            S: * CAPABILITY IMAP4rev1 STARTTLS LOGINDISABLED
-                            S: a001 OK CAPABILITY completed
-                            C: a002 STARTTLS
-                            S: a002 OK Begin TLS negotiation now
-                            <TLS negotiation, further commands are under [TLS] layer>
-                            C: a003 CAPABILITY
-                            S: * CAPABILITY IMAP4rev1 AUTH=PLAIN
-                            S: a003 OK CAPABILITY completed
-                            C: a004 LOGIN joe password
-                            S: a004 OK LOGIN completed
+            /* RFC 3501 6.2.1. STARTTLS Command. 
+                Arguments:  none 
+ 
+                Responses:  no specific response for this command 
+ 
+                Result:     OK - starttls completed, begin TLS negotiation 
+                            BAD - command unknown or arguments invalid 
+ 
+                A [TLS] negotiation begins immediately after the CRLF at the end 
+                of the tagged OK response from the server.  Once a client issues a 
+                STARTTLS command, it MUST NOT issue further commands until a 
+                server response is seen and the [TLS] negotiation is complete. 
+ 
+                The server remains in the non-authenticated state, even if client 
+                credentials are supplied during the [TLS] negotiation.  This does 
+                not preclude an authentication mechanism such as EXTERNAL (defined 
+                in [SASL]) from using client identity determined by the [TLS] 
+                negotiation. 
+ 
+                Once [TLS] has been started, the client MUST discard cached 
+                information about server capabilities and SHOULD re-issue the 
+                CAPABILITY command.  This is necessary to protect against man-in- 
+                the-middle attacks which alter the capabilities list prior to 
+                STARTTLS.  The server MAY advertise different capabilities after 
+                STARTTLS. 
+ 
+                Example:    C: a001 CAPABILITY 
+                            S: * CAPABILITY IMAP4rev1 STARTTLS LOGINDISABLED 
+                            S: a001 OK CAPABILITY completed 
+                            C: a002 STARTTLS 
+                            S: a002 OK Begin TLS negotiation now 
+                            <TLS negotiation, further commands are under [TLS] layer> 
+                            C: a003 CAPABILITY 
+                            S: * CAPABILITY IMAP4rev1 AUTH=PLAIN 
+                            S: a003 OK CAPABILITY completed 
+                            C: a004 LOGIN joe password 
+                            S: a004 OK LOGIN completed 
             */
 
             if (m_SessionRejected)
@@ -5806,80 +5378,76 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method STATUS
-
         private void STATUS(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.10.STATUS Command.
-                Arguments:  mailbox name
-                            status data item names
-
-                Responses:  untagged responses: STATUS
-
-                Result:     OK - status completed
-                            NO - status failure: no status for that name
-                            BAD - command unknown or arguments invalid
-
-                The STATUS command requests the status of the indicated mailbox.
-                It does not change the currently selected mailbox, nor does it
-                affect the state of any messages in the queried mailbox (in
-                particular, STATUS MUST NOT cause messages to lose the \Recent
-                flag).
-
-                The STATUS command provides an alternative to opening a second
-                IMAP4rev1 connection and doing an EXAMINE command on a mailbox to
-                query that mailbox's status without deselecting the current
-                mailbox in the first IMAP4rev1 connection.
-
-                Unlike the LIST command, the STATUS command is not guaranteed to
-                be fast in its response.  Under certain circumstances, it can be
-                quite slow.  In some implementations, the server is obliged to
-                open the mailbox read-only internally to obtain certain status
-                information.  Also unlike the LIST command, the STATUS command
-                does not accept wildcards.
-
-                Note: The STATUS command is intended to access the
-                status of mailboxes other than the currently selected
-                mailbox.  Because the STATUS command can cause the
-                mailbox to be opened internally, and because this
-                information is available by other means on the selected
-                mailbox, the STATUS command SHOULD NOT be used on the
-                currently selected mailbox.
-
-                The STATUS command MUST NOT be used as a "check for new
-                messages in the selected mailbox" operation (refer to
-                sections 7, 7.3.1, and 7.3.2 for more information about
-                the proper method for new message checking).
-
-                Because the STATUS command is not guaranteed to be fast
-                in its results, clients SHOULD NOT expect to be able to
-                issue many consecutive STATUS commands and obtain
-                reasonable performance.
-
-                The currently defined status data items that can be requested are:
-
-                MESSAGES
-                    The number of messages in the mailbox.
-
-                RECENT
-                    The number of messages with the \Recent flag set.
-
-                UIDNEXT
-                    The next unique identifier value of the mailbox.  Refer to
-                    section 2.3.1.1 for more information.
-
-                UIDVALIDITY
-                    The unique identifier validity value of the mailbox.  Refer to
-                    section 2.3.1.1 for more information.
-
-                UNSEEN
-                    The number of messages which do not have the \Seen flag set.
-
-                Example:    C: A042 STATUS blurdybloop (UIDNEXT MESSAGES)
-                            S: * STATUS blurdybloop (MESSAGES 231 UIDNEXT 44292)
-                            S: A042 OK STATUS completed
+            /* RFC 3501 6.3.10.STATUS Command. 
+                Arguments:  mailbox name 
+                            status data item names 
+ 
+                Responses:  untagged responses: STATUS 
+ 
+                Result:     OK - status completed 
+                            NO - status failure: no status for that name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The STATUS command requests the status of the indicated mailbox. 
+                It does not change the currently selected mailbox, nor does it 
+                affect the state of any messages in the queried mailbox (in 
+                particular, STATUS MUST NOT cause messages to lose the \Recent 
+                flag). 
+ 
+                The STATUS command provides an alternative to opening a second 
+                IMAP4rev1 connection and doing an EXAMINE command on a mailbox to 
+                query that mailbox's status without deselecting the current 
+                mailbox in the first IMAP4rev1 connection. 
+ 
+                Unlike the LIST command, the STATUS command is not guaranteed to 
+                be fast in its response.  Under certain circumstances, it can be 
+                quite slow.  In some implementations, the server is obliged to 
+                open the mailbox read-only internally to obtain certain status 
+                information.  Also unlike the LIST command, the STATUS command 
+                does not accept wildcards. 
+ 
+                Note: The STATUS command is intended to access the 
+                status of mailboxes other than the currently selected 
+                mailbox.  Because the STATUS command can cause the 
+                mailbox to be opened internally, and because this 
+                information is available by other means on the selected 
+                mailbox, the STATUS command SHOULD NOT be used on the 
+                currently selected mailbox. 
+ 
+                The STATUS command MUST NOT be used as a "check for new 
+                messages in the selected mailbox" operation (refer to 
+                sections 7, 7.3.1, and 7.3.2 for more information about 
+                the proper method for new message checking). 
+ 
+                Because the STATUS command is not guaranteed to be fast 
+                in its results, clients SHOULD NOT expect to be able to 
+                issue many consecutive STATUS commands and obtain 
+                reasonable performance. 
+ 
+                The currently defined status data items that can be requested are: 
+ 
+                MESSAGES 
+                    The number of messages in the mailbox. 
+ 
+                RECENT 
+                    The number of messages with the \Recent flag set. 
+ 
+                UIDNEXT 
+                    The next unique identifier value of the mailbox.  Refer to 
+                    section 2.3.1.1 for more information. 
+ 
+                UIDVALIDITY 
+                    The unique identifier validity value of the mailbox.  Refer to 
+                    section 2.3.1.1 for more information. 
+ 
+                UNSEEN 
+                    The number of messages which do not have the \Seen flag set. 
+ 
+                Example:    C: A042 STATUS blurdybloop (UIDNEXT MESSAGES) 
+                            S: * STATUS blurdybloop (MESSAGES 231 UIDNEXT 44292) 
+                            S: A042 OK STATUS completed 
             */
 
             if (!IsAuthenticated)
@@ -5898,7 +5466,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             var folder = IMAP_Utils.DecodeMailbox(TextUtils.UnQuoteString(parts[0]));
             if (!(parts[1].StartsWith("(") && parts[1].EndsWith(")")))
@@ -5917,14 +5485,14 @@ namespace LumiSoft.Net.IMAP.Server
 
                 var eMessagesInfo = OnGetMessagesInfo(folder);
 
-                int msgCount = -1;
-                int recentCount = -1;
+                var msgCount = -1;
+                var recentCount = -1;
                 long uidNext = -1;
                 long folderUid = -1;
-                int unseenCount = -1;
+                var unseenCount = -1;
 
                 var statusItems = parts[1].Substring(1, parts[1].Length - 2).Split(' ');
-                for (int i = 0; i < statusItems.Length; i++)
+                for (var i = 0; i < statusItems.Length; i++)
                 {
                     var statusItem = statusItems[i];
                     if (string.Equals(statusItem, "MESSAGES", StringComparison.InvariantCultureIgnoreCase))
@@ -5961,71 +5529,67 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method STORE
-
         private void STORE(bool uid, string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.4.6. STORE Command.
-                Arguments:  sequence set
-                            message data item name
-                            value for message data item
-
-                Responses:  untagged responses: FETCH
-
-                Result:     OK - store completed
-                            NO - store error: can't store that data
-                            BAD - command unknown or arguments invalid
-
-                The STORE command alters data associated with a message in the
-                mailbox.  Normally, STORE will return the updated value of the
-                data with an untagged FETCH response.  A suffix of ".SILENT" in
-                the data item name prevents the untagged FETCH, and the server
-                SHOULD assume that the client has determined the updated value
-                itself or does not care about the updated value.
-
-                    Note: Regardless of whether or not the ".SILENT" suffix
-                    was used, the server SHOULD send an untagged FETCH
-                    response if a change to a message's flags from an
-                    external source is observed.  The intent is that the
-                    status of the flags is determinate without a race
-                    condition.
-
-                The currently defined data items that can be stored are:
-
-                FLAGS <flag list>
-                    Replace the flags for the message (other than \Recent) with the
-                    argument.  The new value of the flags is returned as if a FETCH
-                    of those flags was done.
-
-                FLAGS.SILENT <flag list>
-                    Equivalent to FLAGS, but without returning a new value.
-
-                +FLAGS <flag list>
-                    Add the argument to the flags for the message.  The new value
-                    of the flags is returned as if a FETCH of those flags was done.
-
-                +FLAGS.SILENT <flag list>
-                    Equivalent to +FLAGS, but without returning a new value.
-
-                -FLAGS <flag list>
-                    Remove the argument from the flags for the message.  The new
-                    value of the flags is returned as if a FETCH of those flags was
-                    done.
-
-                -FLAGS.SILENT <flag list>
-                    Equivalent to -FLAGS, but without returning a new value.
-
-                Example:    C: A003 STORE 2:4 +FLAGS (\Deleted)
-                            S: * 2 FETCH (FLAGS (\Deleted \Seen))
-                            S: * 3 FETCH (FLAGS (\Deleted))
-                            S: * 4 FETCH (FLAGS (\Deleted \Flagged \Seen))
-                            S: A003 OK STORE completed
+            /* RFC 3501 6.4.6. STORE Command. 
+                Arguments:  sequence set 
+                            message data item name 
+                            value for message data item 
+ 
+                Responses:  untagged responses: FETCH 
+ 
+                Result:     OK - store completed 
+                            NO - store error: can't store that data 
+                            BAD - command unknown or arguments invalid 
+ 
+                The STORE command alters data associated with a message in the 
+                mailbox.  Normally, STORE will return the updated value of the 
+                data with an untagged FETCH response.  A suffix of ".SILENT" in 
+                the data item name prevents the untagged FETCH, and the server 
+                SHOULD assume that the client has determined the updated value 
+                itself or does not care about the updated value. 
+ 
+                    Note: Regardless of whether or not the ".SILENT" suffix 
+                    was used, the server SHOULD send an untagged FETCH 
+                    response if a change to a message's flags from an 
+                    external source is observed.  The intent is that the 
+                    status of the flags is determinate without a race 
+                    condition. 
+ 
+                The currently defined data items that can be stored are: 
+ 
+                FLAGS <flag list> 
+                    Replace the flags for the message (other than \Recent) with the 
+                    argument.  The new value of the flags is returned as if a FETCH 
+                    of those flags was done. 
+ 
+                FLAGS.SILENT <flag list> 
+                    Equivalent to FLAGS, but without returning a new value. 
+ 
+                +FLAGS <flag list> 
+                    Add the argument to the flags for the message.  The new value 
+                    of the flags is returned as if a FETCH of those flags was done. 
+ 
+                +FLAGS.SILENT <flag list> 
+                    Equivalent to +FLAGS, but without returning a new value. 
+ 
+                -FLAGS <flag list> 
+                    Remove the argument from the flags for the message.  The new 
+                    value of the flags is returned as if a FETCH of those flags was 
+                    done. 
+ 
+                -FLAGS.SILENT <flag list> 
+                    Equivalent to -FLAGS, but without returning a new value. 
+ 
+                Example:    C: A003 STORE 2:4 +FLAGS (\Deleted) 
+                            S: * 2 FETCH (FLAGS (\Deleted \Seen)) 
+                            S: * 3 FETCH (FLAGS (\Deleted)) 
+                            S: * 4 FETCH (FLAGS (\Deleted \Flagged \Seen)) 
+                            S: A003 OK STORE completed 
             */
 
             // Store start time
-            long startTime = DateTime.Now.Ticks;
+            var startTime = DateTime.Now.Ticks;
 
             if (!IsAuthenticated)
             {
@@ -6039,8 +5603,6 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return;
             }
-
-            #region Parse arguments
 
             var parts = cmdText.Split(new[] { ' ' }, 3);
             if (parts.Length != 3)
@@ -6063,7 +5625,7 @@ namespace LumiSoft.Net.IMAP.Server
             }
 
             IMAP_Flags_SetType setType;
-            bool silent = false;
+            var silent = false;
             if (string.Equals(parts[1], "FLAGS", StringComparison.InvariantCultureIgnoreCase))
             {
                 setType = IMAP_Flags_SetType.Replace;
@@ -6105,7 +5667,7 @@ namespace LumiSoft.Net.IMAP.Server
                 return;
             }
             var flags = new List<string>();
-            foreach (string f in parts[2].Substring(1, parts[2].Length - 2).Split(' '))
+            foreach (var f in parts[2].Substring(1, parts[2].Length - 2).Split(' '))
             {
                 if (f.Length > 0 && !flags.Contains(f.Substring(1)))
                 {
@@ -6113,10 +5675,8 @@ namespace LumiSoft.Net.IMAP.Server
                 }
             }
 
-            #endregion
-
             var response = new IMAP_r_ServerStatus(cmdTag, "OK", "STORE command completed in %exectime seconds.");
-            foreach (IMAP_MessageInfo msgInfo in m_pSelectedFolder.Filter(uid, seqSet))
+            foreach (var msgInfo in m_pSelectedFolder.Filter(uid, seqSet))
             {
                 var e = OnStore(msgInfo, setType, flags.ToArray(), response);
                 response = e.Response;
@@ -6160,39 +5720,35 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(IMAP_r_ServerStatus.Parse(response.ToString().TrimEnd().Replace("%exectime", ((DateTime.Now.Ticks - startTime) / (decimal)10000000).ToString("f2"))));
         }
 
-        #endregion
-
-        #region method SUBSCRIBE
-
         private void SUBSCRIBE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.6. SUBSCRIBE Command.
-                Arguments:  mailbox
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - subscribe completed
-                            NO - subscribe failure: can't subscribe to that name
-                            BAD - command unknown or arguments invalid
-
-                The SUBSCRIBE command adds the specified mailbox name to the
-                server's set of "active" or "subscribed" mailboxes as returned by
-                the LSUB command.  This command returns a tagged OK response only
-                if the subscription is successful.
-
-                A server MAY validate the mailbox argument to SUBSCRIBE to verify
-                that it exists.  However, it MUST NOT unilaterally remove an
-                existing mailbox name from the subscription list even if a mailbox
-                by that name no longer exists.
-
-                    Note: This requirement is because a server site can
-                    choose to routinely remove a mailbox with a well-known
-                    name (e.g., "system-alerts") after its contents expire,
-                    with the intention of recreating it when new contents
-                    are appropriate.
-
-                Example:    C: A002 SUBSCRIBE #news.comp.mail.mime
-                S: A002 OK SUBSCRIBE completed
+            /* RFC 3501 6.3.6. SUBSCRIBE Command. 
+                Arguments:  mailbox 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - subscribe completed 
+                            NO - subscribe failure: can't subscribe to that name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The SUBSCRIBE command adds the specified mailbox name to the 
+                server's set of "active" or "subscribed" mailboxes as returned by 
+                the LSUB command.  This command returns a tagged OK response only 
+                if the subscription is successful. 
+ 
+                A server MAY validate the mailbox argument to SUBSCRIBE to verify 
+                that it exists.  However, it MUST NOT unilaterally remove an 
+                existing mailbox name from the subscription list even if a mailbox 
+                by that name no longer exists. 
+ 
+                    Note: This requirement is because a server site can 
+                    choose to routinely remove a mailbox with a well-known 
+                    name (e.g., "system-alerts") after its contents expire, 
+                    with the intention of recreating it when new contents 
+                    are appropriate. 
+ 
+                Example:    C: A002 SUBSCRIBE #news.comp.mail.mime 
+                S: A002 OK SUBSCRIBE completed 
             */
 
             if (!IsAuthenticated)
@@ -6209,10 +5765,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method SupportsCap
-
         /// <summary>
         /// Gets if session supports specified capability.
         /// </summary>
@@ -6220,7 +5772,7 @@ namespace LumiSoft.Net.IMAP.Server
         /// <returns>Returns true if session supports specified capability.</returns>
         private bool SupportsCap(string capability)
         {
-            foreach (string c in m_pCapabilities)
+            foreach (var c in m_pCapabilities)
             {
                 if (string.Equals(c, capability, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -6231,78 +5783,74 @@ namespace LumiSoft.Net.IMAP.Server
             return false;
         }
 
-        #endregion
-
-        #region method UID
-
         private void UID(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.4.8. UID Command.
-                Arguments:  command name
-                            command arguments
-
-                Responses:  untagged responses: FETCH, SEARCH
-
-                Result:     OK - UID command completed
-                            NO - UID command error
-                            BAD - command unknown or arguments invalid
-
-                The UID command has two forms.  In the first form, it takes as its
-                arguments a COPY, FETCH, or STORE command with arguments
-                appropriate for the associated command.  However, the numbers in
-                the sequence set argument are unique identifiers instead of
-                message sequence numbers.  Sequence set ranges are permitted, but
-                there is no guarantee that unique identifiers will be contiguous.
-
-                A non-existent unique identifier is ignored without any error
-                message generated.  Thus, it is possible for a UID FETCH command
-                to return an OK without any data or a UID COPY or UID STORE to
-                return an OK without performing any operations.
-
-                In the second form, the UID command takes a SEARCH command with
-                SEARCH command arguments.  The interpretation of the arguments is
-                the same as with SEARCH; however, the numbers returned in a SEARCH
-                response for a UID SEARCH command are unique identifiers instead
-                of message sequence numbers.  For example, the command UID SEARCH
-                1:100 UID 443:557 returns the unique identifiers corresponding to
-                the intersection of two sequence sets, the message sequence number
-                range 1:100 and the UID range 443:557.
-
-                    Note: in the above example, the UID range 443:557
-                    appears.  The same comment about a non-existent unique
-                    identifier being ignored without any error message also
-                    applies here.  Hence, even if neither UID 443 or 557
-                    exist, this range is valid and would include an existing
-                    UID 495.
-
-                Also note that a UID range of 559:* always includes the
-                UID of the last message in the mailbox, even if 559 is
-                higher than any assigned UID value.  This is because the
-                contents of a range are independent of the order of the
-                range endpoints.  Thus, any UID range with * as one of
-                the endpoints indicates at least one message (the
-                message with the highest numbered UID), unless the
-                mailbox is empty.
-
-                The number after the "*" in an untagged FETCH response is always a
-                message sequence number, not a unique identifier, even for a UID
-                command response.  However, server implementations MUST implicitly
-                include the UID message data item as part of any FETCH response
-                caused by a UID command, regardless of whether a UID was specified
-                as a message data item to the FETCH.
-
-                    Note: The rule about including the UID message data item as part
-                    of a FETCH response primarily applies to the UID FETCH and UID
-                    STORE commands, including a UID FETCH command that does not
-                    include UID as a message data item.  Although it is unlikely that
-                    the other UID commands will cause an untagged FETCH, this rule
-                    applies to these commands as well.
-
-                Example:    C: A999 UID FETCH 4827313:4828442 FLAGS
-                            S: * 23 FETCH (FLAGS (\Seen) UID 4827313)
-                            S: * 24 FETCH (FLAGS (\Seen) UID 4827943)
-                            S: * 25 FETCH (FLAGS (\Seen) UID 4828442)
-                            S: A999 OK UID FETCH completed
+            /* RFC 3501 6.4.8. UID Command. 
+                Arguments:  command name 
+                            command arguments 
+ 
+                Responses:  untagged responses: FETCH, SEARCH 
+ 
+                Result:     OK - UID command completed 
+                            NO - UID command error 
+                            BAD - command unknown or arguments invalid 
+ 
+                The UID command has two forms.  In the first form, it takes as its 
+                arguments a COPY, FETCH, or STORE command with arguments 
+                appropriate for the associated command.  However, the numbers in 
+                the sequence set argument are unique identifiers instead of 
+                message sequence numbers.  Sequence set ranges are permitted, but 
+                there is no guarantee that unique identifiers will be contiguous. 
+ 
+                A non-existent unique identifier is ignored without any error 
+                message generated.  Thus, it is possible for a UID FETCH command 
+                to return an OK without any data or a UID COPY or UID STORE to 
+                return an OK without performing any operations. 
+ 
+                In the second form, the UID command takes a SEARCH command with 
+                SEARCH command arguments.  The interpretation of the arguments is 
+                the same as with SEARCH; however, the numbers returned in a SEARCH 
+                response for a UID SEARCH command are unique identifiers instead 
+                of message sequence numbers.  For example, the command UID SEARCH 
+                1:100 UID 443:557 returns the unique identifiers corresponding to 
+                the intersection of two sequence sets, the message sequence number 
+                range 1:100 and the UID range 443:557. 
+ 
+                    Note: in the above example, the UID range 443:557 
+                    appears.  The same comment about a non-existent unique 
+                    identifier being ignored without any error message also 
+                    applies here.  Hence, even if neither UID 443 or 557 
+                    exist, this range is valid and would include an existing 
+                    UID 495. 
+ 
+                Also note that a UID range of 559:* always includes the 
+                UID of the last message in the mailbox, even if 559 is 
+                higher than any assigned UID value.  This is because the 
+                contents of a range are independent of the order of the 
+                range endpoints.  Thus, any UID range with * as one of 
+                the endpoints indicates at least one message (the 
+                message with the highest numbered UID), unless the 
+                mailbox is empty. 
+ 
+                The number after the "*" in an untagged FETCH response is always a 
+                message sequence number, not a unique identifier, even for a UID 
+                command response.  However, server implementations MUST implicitly 
+                include the UID message data item as part of any FETCH response 
+                caused by a UID command, regardless of whether a UID was specified 
+                as a message data item to the FETCH. 
+ 
+                    Note: The rule about including the UID message data item as part 
+                    of a FETCH response primarily applies to the UID FETCH and UID 
+                    STORE commands, including a UID FETCH command that does not 
+                    include UID as a message data item.  Although it is unlikely that 
+                    the other UID commands will cause an untagged FETCH, this rule 
+                    applies to these commands as well. 
+ 
+                Example:    C: A999 UID FETCH 4827313:4828442 FLAGS 
+                            S: * 23 FETCH (FLAGS (\Seen) UID 4827313) 
+                            S: * 24 FETCH (FLAGS (\Seen) UID 4827943) 
+                            S: * 25 FETCH (FLAGS (\Seen) UID 4828442) 
+                            S: A999 OK UID FETCH completed 
             */
 
             if (!IsAuthenticated)
@@ -6342,28 +5890,24 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region method UNSUBSCRIBE
-
         private void UNSUBSCRIBE(string cmdTag, string cmdText)
         {
-            /* RFC 3501 6.3.7. UNSUBSCRIBE Command.
-                Arguments:  mailbox name
-
-                Responses:  no specific responses for this command
-
-                Result:     OK - unsubscribe completed
-                            NO - unsubscribe failure: can't unsubscribe that name
-                            BAD - command unknown or arguments invalid
-
-                The UNSUBSCRIBE command removes the specified mailbox name from
-                the server's set of "active" or "subscribed" mailboxes as returned
-                by the LSUB command.  This command returns a tagged OK response
-                only if the unsubscription is successful.
-
-                Example:    C: A002 UNSUBSCRIBE #news.comp.mail.mime
-                            S: A002 OK UNSUBSCRIBE completed
+            /* RFC 3501 6.3.7. UNSUBSCRIBE Command. 
+                Arguments:  mailbox name 
+ 
+                Responses:  no specific responses for this command 
+ 
+                Result:     OK - unsubscribe completed 
+                            NO - unsubscribe failure: can't unsubscribe that name 
+                            BAD - command unknown or arguments invalid 
+ 
+                The UNSUBSCRIBE command removes the specified mailbox name from 
+                the server's set of "active" or "subscribed" mailboxes as returned 
+                by the LSUB command.  This command returns a tagged OK response 
+                only if the unsubscription is successful. 
+ 
+                Example:    C: A002 UNSUBSCRIBE #news.comp.mail.mime 
+                            S: A002 OK UNSUBSCRIBE completed 
             */
 
             if (!IsAuthenticated)
@@ -6380,10 +5924,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pResponseSender.SendResponseAsync(e.Response);
         }
 
-        #endregion
-
-        #region method UpdateSelectedFolderAndSendChanges
-
         /// <summary>
         /// Updates current slected folder status and sends currently selected folder changes versus current folder state.
         /// </summary>
@@ -6396,17 +5936,17 @@ namespace LumiSoft.Net.IMAP.Server
 
             var e = OnGetMessagesInfo(m_pSelectedFolder.Folder);
 
-            int currentExists = m_pSelectedFolder.MessagesInfo.Length;
+            var currentExists = m_pSelectedFolder.MessagesInfo.Length;
             // Create ID indexed lookup table for new messages.
             var newMessagesLookup = new Dictionary<string, string>();
-            foreach (IMAP_MessageInfo msgInfo in e.MessagesInfo)
+            foreach (var msgInfo in e.MessagesInfo)
             {
                 newMessagesLookup.Add(msgInfo.ID, null);
             }
 
             var retVal = new StringBuilder();
             // Check deleted messages, send "* n EXPUNGE" for each deleted message.
-            foreach (IMAP_MessageInfo msgInfo in m_pSelectedFolder.MessagesInfo)
+            foreach (var msgInfo in m_pSelectedFolder.MessagesInfo)
             {
                 // Message deleted.
                 if (!newMessagesLookup.ContainsKey(msgInfo.ID))
@@ -6432,10 +5972,6 @@ namespace LumiSoft.Net.IMAP.Server
             m_pSelectedFolder = new _SelectedFolder(m_pSelectedFolder.Folder, m_pSelectedFolder.IsReadOnly, e.MessagesInfo);
         }
 
-        #endregion
-
-
-        #region method WriteLine
 
         /// <summary>
         /// Sends and logs specified line to connected host.
@@ -6467,10 +6003,6 @@ namespace LumiSoft.Net.IMAP.Server
             }
         }
 
-        #endregion
-
-        #region class _CmdReader
-
         /// <summary>
         /// This class implements IMAP client command reader.
         /// </summary>
@@ -6480,7 +6012,6 @@ namespace LumiSoft.Net.IMAP.Server
             private readonly IMAP_Session m_pSession;
             private readonly string m_InitialCmdLine;
             private readonly Encoding m_pCharset;
-            private string m_CmdLine;
 
             /// <summary>
             /// Default constructor.
@@ -6491,45 +6022,30 @@ namespace LumiSoft.Net.IMAP.Server
             /// <exception cref="ArgumentNullException">Is raised when <b>session</b>,<b>initialCmdLine</b> or <b>charset</b> is null reference.</exception>
             public _CmdReader(IMAP_Session session, string initialCmdLine, Encoding charset)
             {
-                if (session == null)
-                {
-                    throw new ArgumentNullException("session");
-                }
-                if (initialCmdLine == null)
-                {
-                    throw new ArgumentNullException("initialCmdLine");
-                }
-                if (charset == null)
-                {
-                    throw new ArgumentNullException("charset");
-                }
-
-                m_pSession = session;
-                m_InitialCmdLine = initialCmdLine;
-                m_pCharset = charset;
+                m_pSession = session ?? throw new ArgumentNullException("session");
+                m_InitialCmdLine = initialCmdLine ?? throw new ArgumentNullException("initialCmdLine");
+                m_pCharset = charset ?? throw new ArgumentNullException("charset");
             }
-
-            #region method Start
 
             /// <summary>
             /// Start operation processing.
             /// </summary>
             public void Start()
             {
-                /* RFC 3501.
-                    literal = "{" number "}" CRLF *CHAR8
-                              ; Number represents the number of CHAR8s
+                /* RFC 3501. 
+                    literal = "{" number "}" CRLF *CHAR8 
+                              ; Number represents the number of CHAR8s 
                 */
 
                 // TODO: Async
-                // TODO: Limit total command size. 64k ? 
+                // TODO: Limit total command size. 64k ?
 
 
                 // If initial command line ends with literal string, read literal string and remaining command text.
                 if (EndsWithLiteralString(m_InitialCmdLine))
                 {
                     var cmdText = new StringBuilder();
-                    int literalSize = GetLiteralSize(m_InitialCmdLine);
+                    var literalSize = GetLiteralSize(m_InitialCmdLine);
 
                     // Add initial command line part to command text.
                     cmdText.Append(RemoveLiteralSpecifier(m_InitialCmdLine));
@@ -6537,8 +6053,6 @@ namespace LumiSoft.Net.IMAP.Server
                     var readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
                     while (true)
                     {
-                        #region Read literal string
-
                         // Send "+ Continue".
                         m_pSession.WriteLine("+ Continue.");
 
@@ -6551,10 +6065,6 @@ namespace LumiSoft.Net.IMAP.Server
 
                         // Add to command text as quoted string.
                         cmdText.Append(TextUtils.QuoteString(m_pCharset.GetString(msLiteral.ToArray())));
-
-                        #endregion
-
-                        #region Read continuing command text
 
                         // Read continuing command text.
                         m_pSession.TcpStream.ReadLine(readLineOP, false);
@@ -6587,22 +6097,16 @@ namespace LumiSoft.Net.IMAP.Server
                         }
 
                         literalSize = GetLiteralSize(line);
-
-                        #endregion
                     }
 
-                    m_CmdLine = cmdText.ToString();
+                    CmdLine = cmdText.ToString();
                 }
                 // We have no literal string, so initial cmd line is final.
                 else
                 {
-                    m_CmdLine = m_InitialCmdLine;
+                    CmdLine = m_InitialCmdLine;
                 }
             }
-
-            #endregion
-
-            #region method EndsWithLiteralString
 
             /// <summary>
             /// Cheks if specified value ends with IMAP literal string.
@@ -6619,9 +6123,9 @@ namespace LumiSoft.Net.IMAP.Server
 
                 if (value.EndsWith("}"))
                 {
-                    int digitCount = 0;
+                    var digitCount = 0;
                     var chars = value.ToCharArray();
-                    for (int i = chars.Length - 2; i >= 0; i--)
+                    for (var i = chars.Length - 2; i >= 0; i--)
                     {
                         // We have literal string start tag.
                         if (chars[i] == '{')
@@ -6651,10 +6155,6 @@ namespace LumiSoft.Net.IMAP.Server
                 return false;
             }
 
-            #endregion
-
-            #region method GetLiteralSize
-
             /// <summary>
             /// Gets literal string bytes count.
             /// </summary>
@@ -6670,10 +6170,6 @@ namespace LumiSoft.Net.IMAP.Server
 
                 return Convert.ToInt32(cmdLine.Substring(cmdLine.LastIndexOf('{') + 1, cmdLine.Length - cmdLine.LastIndexOf('{') - 2));
             }
-
-            #endregion
-
-            #region method RemoveLiteralSpecifier
 
             /// <summary>
             /// Removes literal string specifier({no_bytes}) from the specified string.
@@ -6691,29 +6187,16 @@ namespace LumiSoft.Net.IMAP.Server
                 return value.Substring(0, value.LastIndexOf('{'));
             }
 
-            #endregion
-
-            #region Properties implementation
-
             /// <summary>
             /// Gets command line text.
             /// </summary>
-            public string CmdLine
-            {
-                get { return m_CmdLine; }
-            }
-
-            #endregion
+            public string CmdLine { get; private set; }
         }
-        #region class _SelectedFolder
-
         /// <summary>
         /// This class holds selected folder data.
         /// </summary>
         private class _SelectedFolder
         {
-            private readonly string m_Folder;
-            private readonly bool m_IsReadOnly;
             private readonly List<IMAP_MessageInfo> m_pMessagesInfo;
 
             /// <summary>
@@ -6725,24 +6208,13 @@ namespace LumiSoft.Net.IMAP.Server
             /// <exception cref="ArgumentNullException">Is raised when <b>folder</b> or <b>messagesInfo</b> is null reference.</exception>
             public _SelectedFolder(string folder, bool isReadOnly, List<IMAP_MessageInfo> messagesInfo)
             {
-                if (folder == null)
-                {
-                    throw new ArgumentNullException("folder");
-                }
-                if (messagesInfo == null)
-                {
-                    throw new ArgumentNullException("messagesInfo");
-                }
-
-                m_Folder = folder;
-                m_IsReadOnly = isReadOnly;
-                m_pMessagesInfo = messagesInfo;
+                Folder = folder ?? throw new ArgumentNullException("folder");
+                IsReadOnly = isReadOnly;
+                m_pMessagesInfo = messagesInfo ?? throw new ArgumentNullException("messagesInfo");
 
                 Reindex();
             }
 
-
-            #region method Filter
 
             /// <summary>
             /// Gets messages which match to the specified sequence set.
@@ -6759,7 +6231,7 @@ namespace LumiSoft.Net.IMAP.Server
                 }
 
                 var retVal = new List<IMAP_MessageInfo>();
-                for (int i = 0; i < m_pMessagesInfo.Count; i++)
+                for (var i = 0; i < m_pMessagesInfo.Count; i++)
                 {
                     var msgInfo = m_pMessagesInfo[i];
                     if (uid)
@@ -6781,10 +6253,6 @@ namespace LumiSoft.Net.IMAP.Server
                 return retVal.ToArray();
             }
 
-            #endregion
-
-            #region method RemoveMessage
-
             /// <summary>
             /// Removes specified message from messages info.
             /// </summary>
@@ -6799,10 +6267,6 @@ namespace LumiSoft.Net.IMAP.Server
 
                 m_pMessagesInfo.Remove(message);
             }
-
-            #endregion
-
-            #region method GetSeqNo
 
             /// <summary>
             /// Gets specified message info IMAP 1-based sequence number.
@@ -6827,7 +6291,7 @@ namespace LumiSoft.Net.IMAP.Server
             /// <returns>Returns specified message info IMAP 1-based sequence number or -1 if no such message.</returns>
             internal int GetSeqNo(long uid)
             {
-                foreach (IMAP_MessageInfo msgInfo in m_pMessagesInfo)
+                foreach (var msgInfo in m_pMessagesInfo)
                 {
                     if (msgInfo.UID == uid)
                     {
@@ -6838,40 +6302,26 @@ namespace LumiSoft.Net.IMAP.Server
                 return -1;
             }
 
-            #endregion
-
-            #region method Reindex
-
             /// <summary>
             /// Reindexes messages sequence numbers.
             /// </summary>
             internal void Reindex()
             {
-                for (int i = 0; i < m_pMessagesInfo.Count; i++)
+                for (var i = 0; i < m_pMessagesInfo.Count; i++)
                 {
                     m_pMessagesInfo[i].SeqNo = i + 1;
                 }
             }
 
-            #endregion
-
-            #region Properties implementation
-
             /// <summary>
             /// Gets folder name with optional path.
             /// </summary>
-            public string Folder
-            {
-                get { return m_Folder; }
-            }
+            public string Folder { get; }
 
             /// <summary>
             /// Gets if folder is read-only.
             /// </summary>
-            public bool IsReadOnly
-            {
-                get { return m_IsReadOnly; }
-            }
+            public bool IsReadOnly { get; }
 
             /// <summary>
             /// Gets messages info.
@@ -6880,31 +6330,18 @@ namespace LumiSoft.Net.IMAP.Server
             {
                 get { return m_pMessagesInfo.ToArray(); }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region class ResponseSender
 
         /// <summary>
         /// This class implements IMAP response sender.
         /// </summary>
         private class ResponseSender
         {
-            #region class QueueItem
-
             /// <summary>
             /// This class represents queued IMAP response and it's status.
             /// </summary>
             private class QueueItem
             {
-                private bool m_IsSent;
-                private bool m_IsAsync;
-                private readonly IMAP_r m_pResponse;
-                private readonly EventHandler<EventArgs<Exception>> m_pCompletedAsyncCallback;
-
                 /// <summary>
                 /// Default constructor.
                 /// </summary>
@@ -6913,57 +6350,30 @@ namespace LumiSoft.Net.IMAP.Server
                 /// <exception cref="ArgumentNullException">Is raised when <b>response</b> is null reference.</exception>
                 public QueueItem(IMAP_r response, EventHandler<EventArgs<Exception>> completedAsyncCallback)
                 {
-                    if (response == null)
-                    {
-                        throw new ArgumentNullException("response");
-                    }
-
-                    m_pResponse = response;
-                    m_pCompletedAsyncCallback = completedAsyncCallback;
+                    Response = response ?? throw new ArgumentNullException("response");
+                    CompletedAsyncCallback = completedAsyncCallback;
                 }
-
-                #region Properties implementation
 
                 /// <summary>
                 /// Gets or sets if IMAP response is sent.
                 /// </summary>
-                public bool IsSent
-                {
-                    get { return m_IsSent; }
-
-                    set { m_IsSent = value; }
-                }
+                public bool IsSent { get; set; }
 
                 /// <summary>
                 /// Gets or sets if sending complte asynchronously.
                 /// </summary>
-                public bool IsAsync
-                {
-                    get { return m_IsAsync; }
-
-                    set { m_IsAsync = value; }
-                }
+                public bool IsAsync { get; set; }
 
                 /// <summary>
                 /// Gets IMAP response.
                 /// </summary>
-                public IMAP_r Response
-                {
-                    get { return m_pResponse; }
-                }
+                public IMAP_r Response { get; }
 
                 /// <summary>
                 /// Gets callback to be called when response sending completes asynchronously.
                 /// </summary>
-                public EventHandler<EventArgs<Exception>> CompletedAsyncCallback
-                {
-                    get { return m_pCompletedAsyncCallback; }
-                }
-
-                #endregion
+                public EventHandler<EventArgs<Exception>> CompletedAsyncCallback { get; }
             }
-
-            #endregion
 
             private readonly object m_pLock = new object();
             private readonly IMAP_Session m_pImap;
@@ -6977,17 +6387,10 @@ namespace LumiSoft.Net.IMAP.Server
             /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
             public ResponseSender(IMAP_Session session)
             {
-                if (session == null)
-                {
-                    throw new ArgumentNullException("session");
-                }
-
-                m_pImap = session;
+                m_pImap = session ?? throw new ArgumentNullException("session");
 
                 m_pResponses = new Queue<QueueItem>();
             }
-
-            #region method Dispose
 
             /// <summary>
             /// Cleans up any resources being used.
@@ -6995,10 +6398,6 @@ namespace LumiSoft.Net.IMAP.Server
             public void Dispose()
             {
             }
-
-            #endregion
-
-            #region method SendResponseAsync
 
             /// <summary>
             /// Starts sending response.
@@ -7053,10 +6452,6 @@ namespace LumiSoft.Net.IMAP.Server
                     return true;
                 }
             }
-
-            #endregion
-
-            #region method SendResponsesAsync
 
             /// <summary>
             /// Starts sending queued responses.
@@ -7136,12 +6531,6 @@ namespace LumiSoft.Net.IMAP.Server
                     m_IsSending = false;
                 }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #endregion
     }
 }
