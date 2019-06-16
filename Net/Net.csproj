@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -416,10 +416,6 @@
     <Compile Include="WebDav\WebDav_ResourceTypes.cs" />
     <Compile Include="WebDav\WebDav_Response.cs" />
     <Compile Include="_Obsolete\IMAP\IMAP_Response_MyRights.cs" />
-    <None Include="HTTP\Server\HTTP_Server.cs">
-      <SubType>Component</SubType>
-    </None>
-    <None Include="HTTP\Server\HTTP_Session.cs" />
     <Compile Include="BalanceMode.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="ExceptionEventArgs.cs" />
