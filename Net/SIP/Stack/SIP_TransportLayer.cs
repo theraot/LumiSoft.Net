@@ -1,18 +1,14 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Security.Cryptography.X509Certificates;
 
 using LumiSoft.Net.DNS;
 using LumiSoft.Net.DNS.Client;
 using LumiSoft.Net.SIP.Message;
 using LumiSoft.Net.UDP;
 using LumiSoft.Net.TCP;
-using LumiSoft.Net.STUN.Client;
 
 namespace LumiSoft.Net.SIP.Stack
 {

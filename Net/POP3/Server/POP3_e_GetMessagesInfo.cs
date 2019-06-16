@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Security.Principal;
 
 namespace LumiSoft.Net.POP3.Server
 {

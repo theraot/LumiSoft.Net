@@ -1,13 +1,12 @@
-using System;
 
 using LumiSoft.Net.DNS.Client;
 
 namespace LumiSoft.Net.DNS
 {
-	/// <summary>
-	/// HINFO record.
-	/// </summary>
-	public class DNS_rr_HINFO : DNS_rr
+    /// <summary>
+    /// HINFO record.
+    /// </summary>
+    public class DNS_rr_HINFO : DNS_rr
 	{
 		private string m_CPU = "";
 		private string m_OS  = "";

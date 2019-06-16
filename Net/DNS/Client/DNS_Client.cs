@@ -2,41 +2,38 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.NetworkInformation;
 using System.Threading;
-
-using LumiSoft.Net;
 using LumiSoft.Net.UDP;
 
 namespace LumiSoft.Net.DNS.Client
 {
-	/// <summary>
-	/// DNS client.
-	/// </summary>
-	/// <example>
-	/// <code>
-	/// // Optionally set dns servers, by default DNS client uses defaultt NIC DNS servers.
-	/// Dns_Client.DnsServers = new string[]{"194.126.115.18"};
-	/// 
-	/// Dns_Client dns = Dns_Client.Static;
-	/// 
-	/// // Get MX records.
-	/// DnsServerResponse resp = dns.Query("lumisoft.ee",QTYPE.MX);
-	/// if(resp.ConnectionOk &amp;&amp; resp.ResponseCode == RCODE.NO_ERROR){
-	///		MX_Record[] mxRecords = resp.GetMXRecords();
-	///		
-	///		// Do your stuff
-	///	}
-	///	else{
-	///		// Handle error there, for more exact error info see RCODE 
-	///	}	 
-	/// 
-	/// </code>
-	/// </example>
-	public class Dns_Client : IDisposable
+    /// <summary>
+    /// DNS client.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// // Optionally set dns servers, by default DNS client uses defaultt NIC DNS servers.
+    /// Dns_Client.DnsServers = new string[]{"194.126.115.18"};
+    /// 
+    /// Dns_Client dns = Dns_Client.Static;
+    /// 
+    /// // Get MX records.
+    /// DnsServerResponse resp = dns.Query("lumisoft.ee",QTYPE.MX);
+    /// if(resp.ConnectionOk &amp;&amp; resp.ResponseCode == RCODE.NO_ERROR){
+    ///		MX_Record[] mxRecords = resp.GetMXRecords();
+    ///		
+    ///		// Do your stuff
+    ///	}
+    ///	else{
+    ///		// Handle error there, for more exact error info see RCODE 
+    ///	}	 
+    /// 
+    /// </code>
+    /// </example>
+    public class Dns_Client : IDisposable
     {        
         private static Dns_Client  m_pDnsClient  = null;
         private static IPAddress[] m_DnsServers  = null;

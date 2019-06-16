@@ -1,15 +1,13 @@
 using System;
 using System.IO;
-using System.Text;
-using System.Collections;
 
 namespace LumiSoft.Net
 {
-	/// <summary>
-	/// Stream line reader.
-	/// </summary>
+    /// <summary>
+    /// Stream line reader.
+    /// </summary>
     //[Obsolete("Use StreamHelper instead !")]
-	public class StreamLineReader
+    public class StreamLineReader
 	{
 		private Stream m_StrmSource     = null;
 		private string m_Encoding       = "";

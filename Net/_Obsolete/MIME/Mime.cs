@@ -1,117 +1,116 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using LumiSoft.Net.IO;
 
 namespace LumiSoft.Net.Mime
 {
-	/// <summary>
-	/// Class for creating,parsing,modifing rfc 2822 mime messages.
-	/// </summary>
-	/// <remarks>
-	/// <code>
-	/// 
-	/// Message examples:
-	/// 
-	/// <B>Simple message:</B>
-	/// 
-	/// //--- Beginning of message
-	/// From: sender@domain.com
-	/// To: recipient@domain.com
-	/// Subject: Message subject.
-	/// Content-Type: text/plain
-	/// 
-	/// Message body text. Bla blaa
-	/// blaa,blaa.
-	/// //--- End of message
-	/// 
-	/// 
-	/// In simple message MainEntity is whole message.
-	/// 
-	/// <B>Message with attachments:</B>
-	/// 
-	/// //--- Beginning of message
-	/// From: sender@domain.com
-	/// To: recipient@domain.com
-	/// Subject: Message subject.
-	/// Content-Type: multipart/mixed; boundary="multipart_mixed"
-	/// 
-	/// --multipart_mixed	/* text entity */
-	///	Content-Type: text/plain
-	///	
-	///	Message body text. Bla blaa
-	///	blaa,blaa.	
-	///	--multipart_mixed	/* attachment entity */
-	///	Content-Type: application/octet-stream
-	///	
-	///	attachment_data
-	///	--multipart_mixed--
-	///	//--- End of message
-	///	
-	///	MainEntity is multipart_mixed entity and text and attachment entities are child entities of MainEntity.
-	/// </code>
-	/// </remarks>
-	/// <example>
-	/// <code>
-	/// // Parsing example:
-	/// Mime m = Mime.Parse("message.eml");
-	/// // Do your stuff with mime
-	/// </code>
-	/// <code>
-	/// // Create simple message with simple way:
-	/// AddressList from = new AddressList();
-	/// from.Add(new MailboxAddress("dispaly name","user@domain.com"));
-	///	AddressList to = new AddressList();
-	///	to.Add(new MailboxAddress("dispaly name","user@domain.com"));
-	///	
-	///	Mime m = Mime.CreateSimple(from,to,"test subject","test body text","");
-	/// </code>
-	/// <code>
-	/// // Creating a new simple message
-	/// Mime m = new Mime();
-	/// MimeEntity mainEntity = m.MainEntity;
-	/// // Force to create From: header field
-	/// mainEntity.From = new AddressList();
-	/// mainEntity.From.Add(new MailboxAddress("dispaly name","user@domain.com"));
-	/// // Force to create To: header field
-	/// mainEntity.To = new AddressList();
-	/// mainEntity.To.Add(new MailboxAddress("dispaly name","user@domain.com"));
-	/// mainEntity.Subject = "subject";
-	/// mainEntity.ContentType = MediaType_enum.Text_plain;
-	/// mainEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-	/// mainEntity.DataText = "Message body text.";
-	/// 
-	/// m.ToFile("message.eml");
-	/// </code>
-	/// <code>
-	/// // Creating message with text and attachments
-	/// Mime m = new Mime();
-	/// MimeEntity mainEntity = m.MainEntity;
-	/// // Force to create From: header field
-	/// mainEntity.From = new AddressList();
-	/// mainEntity.From.Add(new MailboxAddress("dispaly name","user@domain.com"));
-	/// // Force to create To: header field
-	/// mainEntity.To = new AddressList();
-	/// mainEntity.To.Add(new MailboxAddress("dispaly name","user@domain.com"));
-	/// mainEntity.Subject = "subject";
-	/// mainEntity.ContentType = MediaType_enum.Multipart_mixed;
-	/// 
-	/// MimeEntity textEntity = mainEntity.ChildEntities.Add();
-	/// textEntity.ContentType = MediaType_enum.Text_plain;
-	/// textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
-	/// textEntity.DataText = "Message body text.";
-	/// 
-	/// MimeEntity attachmentEntity = mainEntity.ChildEntities.Add();
-	/// attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
-	/// attachmentEntity.ContentDisposition = ContentDisposition_enum.Attachment;
-	/// attachmentEntity.ContentTransferEncoding = ContentTransferEncoding_enum.Base64;
-	/// attachmentEntity.ContentDisposition_FileName = "yourfile.xxx";
-	/// attachmentEntity.DataFromFile("yourfile.xxx");
-	/// // or
-	/// attachmentEntity.Data = your_attachment_data;
-	/// </code>
-	/// </example>
+    /// <summary>
+    /// Class for creating,parsing,modifing rfc 2822 mime messages.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// 
+    /// Message examples:
+    /// 
+    /// <B>Simple message:</B>
+    /// 
+    /// //--- Beginning of message
+    /// From: sender@domain.com
+    /// To: recipient@domain.com
+    /// Subject: Message subject.
+    /// Content-Type: text/plain
+    /// 
+    /// Message body text. Bla blaa
+    /// blaa,blaa.
+    /// //--- End of message
+    /// 
+    /// 
+    /// In simple message MainEntity is whole message.
+    /// 
+    /// <B>Message with attachments:</B>
+    /// 
+    /// //--- Beginning of message
+    /// From: sender@domain.com
+    /// To: recipient@domain.com
+    /// Subject: Message subject.
+    /// Content-Type: multipart/mixed; boundary="multipart_mixed"
+    /// 
+    /// --multipart_mixed	/* text entity */
+    ///	Content-Type: text/plain
+    ///	
+    ///	Message body text. Bla blaa
+    ///	blaa,blaa.	
+    ///	--multipart_mixed	/* attachment entity */
+    ///	Content-Type: application/octet-stream
+    ///	
+    ///	attachment_data
+    ///	--multipart_mixed--
+    ///	//--- End of message
+    ///	
+    ///	MainEntity is multipart_mixed entity and text and attachment entities are child entities of MainEntity.
+    /// </code>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// // Parsing example:
+    /// Mime m = Mime.Parse("message.eml");
+    /// // Do your stuff with mime
+    /// </code>
+    /// <code>
+    /// // Create simple message with simple way:
+    /// AddressList from = new AddressList();
+    /// from.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    ///	AddressList to = new AddressList();
+    ///	to.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    ///	
+    ///	Mime m = Mime.CreateSimple(from,to,"test subject","test body text","");
+    /// </code>
+    /// <code>
+    /// // Creating a new simple message
+    /// Mime m = new Mime();
+    /// MimeEntity mainEntity = m.MainEntity;
+    /// // Force to create From: header field
+    /// mainEntity.From = new AddressList();
+    /// mainEntity.From.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    /// // Force to create To: header field
+    /// mainEntity.To = new AddressList();
+    /// mainEntity.To.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    /// mainEntity.Subject = "subject";
+    /// mainEntity.ContentType = MediaType_enum.Text_plain;
+    /// mainEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+    /// mainEntity.DataText = "Message body text.";
+    /// 
+    /// m.ToFile("message.eml");
+    /// </code>
+    /// <code>
+    /// // Creating message with text and attachments
+    /// Mime m = new Mime();
+    /// MimeEntity mainEntity = m.MainEntity;
+    /// // Force to create From: header field
+    /// mainEntity.From = new AddressList();
+    /// mainEntity.From.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    /// // Force to create To: header field
+    /// mainEntity.To = new AddressList();
+    /// mainEntity.To.Add(new MailboxAddress("dispaly name","user@domain.com"));
+    /// mainEntity.Subject = "subject";
+    /// mainEntity.ContentType = MediaType_enum.Multipart_mixed;
+    /// 
+    /// MimeEntity textEntity = mainEntity.ChildEntities.Add();
+    /// textEntity.ContentType = MediaType_enum.Text_plain;
+    /// textEntity.ContentTransferEncoding = ContentTransferEncoding_enum.QuotedPrintable;
+    /// textEntity.DataText = "Message body text.";
+    /// 
+    /// MimeEntity attachmentEntity = mainEntity.ChildEntities.Add();
+    /// attachmentEntity.ContentType = MediaType_enum.Application_octet_stream;
+    /// attachmentEntity.ContentDisposition = ContentDisposition_enum.Attachment;
+    /// attachmentEntity.ContentTransferEncoding = ContentTransferEncoding_enum.Base64;
+    /// attachmentEntity.ContentDisposition_FileName = "yourfile.xxx";
+    /// attachmentEntity.DataFromFile("yourfile.xxx");
+    /// // or
+    /// attachmentEntity.Data = your_attachment_data;
+    /// </code>
+    /// </example>
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
 	public class Mime
 	{

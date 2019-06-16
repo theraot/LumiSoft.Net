@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.ABNF
+﻿namespace LumiSoft.Net.ABNF
 {
     /// <summary>
     /// Thsi class is base class for any ABNF element.

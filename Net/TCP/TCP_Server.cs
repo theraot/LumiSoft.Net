@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -8,7 +7,7 @@ using System.Threading;
 using LumiSoft.Net.Log;
 
 namespace LumiSoft.Net.TCP
-{    
+{
     /// <summary>
     /// This class implements generic TCP session based server.
     /// </summary>

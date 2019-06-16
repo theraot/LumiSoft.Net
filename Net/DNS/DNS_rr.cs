@@ -1,11 +1,9 @@
-using System;
-
 namespace LumiSoft.Net.DNS
 {
-	/// <summary>
-	/// This is base class for DNS records.
-	/// </summary>
-	public abstract class DNS_rr
+    /// <summary>
+    /// This is base class for DNS records.
+    /// </summary>
+    public abstract class DNS_rr
 	{
         private string    m_Name = "";
 		private DNS_QType m_Type = DNS_QType.A;

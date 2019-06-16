@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.RTP
+﻿namespace LumiSoft.Net.RTP
 {
     /// <summary>
     /// This enum specifies <b>RTP_SyncSource</b> state.

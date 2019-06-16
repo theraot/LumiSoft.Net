@@ -4,13 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Security.Principal;
-
-using LumiSoft.Net;
 using LumiSoft.Net.IO;
 using LumiSoft.Net.TCP;
-using LumiSoft.Net.SMTP;
 using LumiSoft.Net.SMTP.Client;
-using LumiSoft.Net.DNS;
 using LumiSoft.Net.DNS.Client;
 using LumiSoft.Net.Log;
 

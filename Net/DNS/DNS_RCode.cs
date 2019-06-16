@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.DNS
+﻿namespace LumiSoft.Net.DNS
 {
     /// <summary>
     /// This class holds DNS server responce code. Defined in RFC 1035.

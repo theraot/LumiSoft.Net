@@ -1,9 +1,6 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
-
-using LumiSoft.Net.Mime;
 using LumiSoft.Net.MIME;
 using LumiSoft.Net.Mail;
 

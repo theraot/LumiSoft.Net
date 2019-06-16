@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.Media.Codec.Audio
+﻿namespace LumiSoft.Net.Media.Codec.Audio
 {
     /// <summary>
     /// This class is base calss for audio codecs.

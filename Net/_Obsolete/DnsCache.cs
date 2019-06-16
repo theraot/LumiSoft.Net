@@ -1,17 +1,16 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LumiSoft.Net.DNS.Client
 {
-	#region struct CacheEntry
+    #region struct CacheEntry
 
-	/// <summary>
-	/// Dns cache entry.
-	/// </summary>
-	[Serializable]
+    /// <summary>
+    /// Dns cache entry.
+    /// </summary>
+    [Serializable]
 	internal struct DnsCacheEntry
 	{
 		private DnsServerResponse m_pResponse;

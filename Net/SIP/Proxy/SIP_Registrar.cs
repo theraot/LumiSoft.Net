@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Timers;
-using System.Net;
 
 using LumiSoft.Net.SIP.Message;
 using LumiSoft.Net.SIP.Stack;

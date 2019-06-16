@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.SIP.Stack
+﻿namespace LumiSoft.Net.SIP.Stack
 {
     /// <summary>
     /// This class specifies SIP UA registration state.

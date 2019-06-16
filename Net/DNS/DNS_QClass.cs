@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.DNS
+﻿namespace LumiSoft.Net.DNS
 {
     /// <summary>
     /// This enum holds DNS QCLASS value. Defined in RFC 1035 3.2.4.

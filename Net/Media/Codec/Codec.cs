@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.Media.Codec
+﻿namespace LumiSoft.Net.Media.Codec
 {
     /// <summary>
     /// This class is base class for media codecs.

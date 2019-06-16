@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace LumiSoft.Net.DNS.Client
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	internal enum OPCODE
+    /// <summary>
+    /// 
+    /// </summary>
+    internal enum OPCODE
 	{
 		/// <summary>
 		/// A standard query.

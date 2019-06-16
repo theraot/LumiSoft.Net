@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using System.Threading;
-
-using LumiSoft.Net.SIP;
-using LumiSoft.Net.SIP.Stack;
 using LumiSoft.Net.SIP.Message;
 using LumiSoft.Net.AUTH;
 

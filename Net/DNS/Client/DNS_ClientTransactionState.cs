@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.DNS.Client
+﻿namespace LumiSoft.Net.DNS.Client
 {
     /// <summary>
     /// This class represents DNS client state.

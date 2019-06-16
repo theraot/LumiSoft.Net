@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Principal;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 using LumiSoft.Net.IO;

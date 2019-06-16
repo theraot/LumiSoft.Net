@@ -5,8 +5,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Principal;
-using System.Data;
-using System.Globalization;
 
 using LumiSoft.Net.IO;
 using LumiSoft.Net.TCP;
@@ -14,10 +12,10 @@ using LumiSoft.Net.AUTH;
 
 namespace LumiSoft.Net.FTP.Server
 {
-	/// <summary>
-	/// FTP Session.
-	/// </summary>
-	public class FTP_Session : TCP_ServerSession
+    /// <summary>
+    /// FTP Session.
+    /// </summary>
+    public class FTP_Session : TCP_ServerSession
     {
         #region class DataConnection
 

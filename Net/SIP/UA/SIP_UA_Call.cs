@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
-using LumiSoft.Net.Media;
 using LumiSoft.Net.SDP;
 using LumiSoft.Net.SIP.Message;
 using LumiSoft.Net.SIP.Stack;

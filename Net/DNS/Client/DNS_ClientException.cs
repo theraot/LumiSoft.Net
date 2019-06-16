@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using LumiSoft.Net.DNS;
 
 namespace LumiSoft.Net.DNS.Client
 {

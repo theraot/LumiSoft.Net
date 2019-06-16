@@ -1,15 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-
-using LumiSoft.Net.DNS;
 
 namespace LumiSoft.Net.DNS.Client
 {
-	/// <summary>
-	/// This class represents dns server response.
-	/// </summary>
-	[Serializable]
+    /// <summary>
+    /// This class represents dns server response.
+    /// </summary>
+    [Serializable]
 	public class DnsServerResponse
 	{
 		private bool         m_Success             = true;

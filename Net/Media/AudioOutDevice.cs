@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.Media
+﻿namespace LumiSoft.Net.Media
 {
     /// <summary>
     /// This class represents audio oputput device(speakers,head-phones, ....).

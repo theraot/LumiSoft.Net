@@ -1,11 +1,9 @@
-using System;
-
 namespace LumiSoft.Net.IMAP
 {
-	/// <summary>
-	/// IMAP ACL(access control list) rights.
-	/// </summary>
-	public enum IMAP_ACL_Flags
+    /// <summary>
+    /// IMAP ACL(access control list) rights.
+    /// </summary>
+    public enum IMAP_ACL_Flags
 	{
 		/// <summary>
 		/// No permissions at all.

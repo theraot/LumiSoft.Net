@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
-
-using LumiSoft.Net.Media.Codec.Audio;
-using LumiSoft.Net.SIP;
 using LumiSoft.Net.SIP.Stack;
-using LumiSoft.Net.SIP.Message;
 
 namespace LumiSoft.Net.SIP.UA
 {

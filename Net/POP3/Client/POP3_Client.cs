@@ -1,12 +1,8 @@
 using System;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Net.Security;
 using System.Security.Principal;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Text;
 
@@ -16,36 +12,36 @@ using LumiSoft.Net.AUTH;
 
 namespace LumiSoft.Net.POP3.Client
 {
-	/// <summary>
-	/// POP3 Client. Defined in RFC 1939.
-	/// </summary>
-	/// <example>
-	/// <code>
-	/// 
-	/// /*
-	///  To make this code to work, you need to import following namespaces:
-	///  using LumiSoft.Net.Mail;
-	///  using LumiSoft.Net.POP3.Client; 
-	///  */
-	/// 
-	/// using(POP3_Client c = new POP3_Client()){
-	///		c.Connect("ivx",WellKnownPorts.POP3);
-	///		c.Login("test","test");
+    /// <summary>
+    /// POP3 Client. Defined in RFC 1939.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// 
+    /// /*
+    ///  To make this code to work, you need to import following namespaces:
+    ///  using LumiSoft.Net.Mail;
+    ///  using LumiSoft.Net.POP3.Client; 
+    ///  */
+    /// 
+    /// using(POP3_Client c = new POP3_Client()){
+    ///		c.Connect("ivx",WellKnownPorts.POP3);
+    ///		c.Login("test","test");
     ///		// Or Auth(sasl-method);
-	///				
-	///		// Get first message if there is any
-	///		if(c.Messages.Count > 0){
-	///			// Do your suff
-	///			
-	///			// Parse message
-	///			Mail_Message m = Mail_Message.Parse(c.Messages[0].MessageToByte());
-	///			string subject = m.Subject;			
-	///			// ... 
-	///		}		
-	///	}
-	/// </code>
-	/// </example>
-	public class POP3_Client : TCP_Client
+    ///				
+    ///		// Get first message if there is any
+    ///		if(c.Messages.Count > 0){
+    ///			// Do your suff
+    ///			
+    ///			// Parse message
+    ///			Mail_Message m = Mail_Message.Parse(c.Messages[0].MessageToByte());
+    ///			string subject = m.Subject;			
+    ///			// ... 
+    ///		}		
+    ///	}
+    /// </code>
+    /// </example>
+    public class POP3_Client : TCP_Client
 	{
         private string                       m_GreetingText       = "";
 		private string                       m_ApopHashKey        = "";

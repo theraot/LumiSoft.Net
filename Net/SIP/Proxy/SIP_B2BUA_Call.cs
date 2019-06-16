@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using LumiSoft.Net.SIP.Message;
 using LumiSoft.Net.SIP.Stack;
-using LumiSoft.Net.AUTH;
 
 namespace LumiSoft.Net.SIP.Proxy
 {

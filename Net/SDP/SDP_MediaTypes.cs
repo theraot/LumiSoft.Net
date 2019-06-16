@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.SDP
+﻿namespace LumiSoft.Net.SDP
 {
     /// <summary>
     /// This class contains known SDP media types.

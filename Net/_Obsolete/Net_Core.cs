@@ -2,21 +2,19 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections;
 using System.Text;
-using System.Text.RegularExpressions;
 
 using LumiSoft.Net.DNS;
 using LumiSoft.Net.DNS.Client;
 
 namespace LumiSoft.Net
 {
-	#region enum AuthType
+    #region enum AuthType
 
-	/// <summary>
-	/// Authentication type.
-	/// </summary>
-	public enum AuthType
+    /// <summary>
+    /// Authentication type.
+    /// </summary>
+    public enum AuthType
 	{
 		/// <summary>
 		/// Plain username/password authentication.

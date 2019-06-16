@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
-using LumiSoft.Net.SIP;
 using LumiSoft.Net.SIP.Message;
 
 namespace LumiSoft.Net.SIP.Stack

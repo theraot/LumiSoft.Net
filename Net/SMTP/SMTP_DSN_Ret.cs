@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.SMTP
+﻿namespace LumiSoft.Net.SMTP
 {
     /// <summary>
     /// This value represents DSN RET value. Defined in RFC 3461 4.3.

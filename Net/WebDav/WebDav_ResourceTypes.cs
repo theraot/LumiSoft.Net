@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.WebDav
+﻿namespace LumiSoft.Net.WebDav
 {
     /// <summary>
     /// This class holds well-known WebDav resource types.

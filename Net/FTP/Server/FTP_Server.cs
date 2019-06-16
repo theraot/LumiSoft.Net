@@ -1,18 +1,14 @@
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
 using System.Net;
 
 using LumiSoft.Net.TCP;
-using LumiSoft.Net.AUTH;
 
 namespace LumiSoft.Net.FTP.Server
 {
-	/// <summary>
-	/// FTP Server component.
-	/// </summary>
-	public class FTP_Server : TCP_Server<FTP_Session>
+    /// <summary>
+    /// FTP Server component.
+    /// </summary>
+    public class FTP_Server : TCP_Server<FTP_Session>
 	{
         private string    m_GreetingText     = "";
         private int       m_MaxBadCommands   = 30;

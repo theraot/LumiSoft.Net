@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-
-using LumiSoft.Net.SIP.Stack;
 
 namespace LumiSoft.Net.SIP.Proxy
 {

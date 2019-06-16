@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net
+﻿namespace LumiSoft.Net
 {
     /// <summary>
     /// Implements TEL URI. Defined in RFC 2806.

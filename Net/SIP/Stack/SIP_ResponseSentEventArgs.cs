@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LumiSoft.Net.SIP.Stack
-{    
+{
     /// <summary>
     /// This class provides data for <b>SIP_ServerTransaction.ResponseSent</b> method.
     /// </summary>
