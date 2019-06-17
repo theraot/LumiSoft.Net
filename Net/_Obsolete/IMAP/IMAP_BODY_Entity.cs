@@ -10,23 +10,23 @@ namespace LumiSoft.Net.IMAP
     /// </summary>
     public class IMAP_BODY_Entity
     {
-        private int m_ContentLines = 0;
-        private readonly int m_ContentSize = 0;
-        private readonly List<IMAP_BODY_Entity> m_pChildEntities;
-        private IMAP_Envelope m_pEnvelope = null;
+        private int _contentLines = 0;
+        private readonly int _contentSize = 0;
+        private readonly List<IMAP_BODY_Entity> _childEntities;
+        private IMAP_Envelope _envelope = null;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal IMAP_BODY_Entity()
         {
-            m_pChildEntities = new List<IMAP_BODY_Entity>();
+            _childEntities = new List<IMAP_BODY_Entity>();
         }
 
         /// <summary>
         /// Gets child entities. This property is available only if ContentType = multipart/... .
         /// </summary>
-        public IMAP_BODY_Entity[] ChildEntities => m_pChildEntities.ToArray();
+        public IMAP_BODY_Entity[] ChildEntities => _childEntities.ToArray();
 
         /// <summary>
         /// Gets header field "<b>Content-Description:</b>" value. Returns null if value isn't set.
@@ -65,7 +65,7 @@ namespace LumiSoft.Net.IMAP
                     throw new Exception("NOTE: ContentLines property is available only for text/xxx content type !");
                 }
 
-                return m_ContentSize;
+                return _contentSize;
             }
         }
 
@@ -81,7 +81,7 @@ namespace LumiSoft.Net.IMAP
                     throw new Exception("NOTE: ContentSize property is available only for non-multipart contentype !");
                 }
 
-                return m_ContentSize;
+                return _contentSize;
             }
         }
 

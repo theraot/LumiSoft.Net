@@ -10,12 +10,12 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_Ntlm : AUTH_SASL_Client
     {
-        private readonly string m_Domain;
+        private readonly string _domain;
 
-        private bool m_IsCompleted;
-        private readonly string m_Password;
-        private int m_State;
-        private readonly string m_UserName;
+        private bool _isCompleted;
+        private readonly string _password;
+        private int _state;
+        private readonly string _userName;
 
         /// <summary>
         /// Default constructor.
@@ -26,15 +26,15 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>domain</b>,<b>userName</b> or <b>passowrd</b> is null reference.</exception>
         public AUTH_SASL_Client_Ntlm(string domain, string userName, string password)
         {
-            m_Domain = domain ?? throw new ArgumentNullException("domain");
-            m_UserName = userName ?? throw new ArgumentNullException("userName");
-            m_Password = password ?? throw new ArgumentNullException("password");
+            _domain = domain ?? throw new ArgumentNullException("domain");
+            _userName = userName ?? throw new ArgumentNullException("userName");
+            _password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "NTLM".
@@ -49,7 +49,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -59,7 +59,7 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="InvalidOperationException">Is raised when this method is called when authentication is completed.</exception>
         public override byte[] Continue(byte[] serverResponse)
         {
-            if (m_IsCompleted)
+            if (_isCompleted)
             {
                 throw new InvalidOperationException("Authentication is completed.");
             }
@@ -74,26 +74,26 @@ namespace LumiSoft.Net.AUTH
                     S : 235 AUTH OK 
             */
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_State++;
+                _state++;
 
-                return new MessageType1(m_Domain, Environment.MachineName).ToByte();
+                return new MessageType1(_domain, Environment.MachineName).ToByte();
             }
 
-            if (m_State == 1)
+            if (_state == 1)
             {
-                m_State++;
-                m_IsCompleted = true;
+                _state++;
+                _isCompleted = true;
 
                 var nonce = MessageType2.Parse(serverResponse).Nonce;
 
                 return new MessageType3(
-                    m_Domain,
-                    m_UserName,
+                    _domain,
+                    _userName,
                     Environment.MachineName,
-                    NTLM_Utils.CalculateLM(nonce, m_Password),
-                    NTLM_Utils.CalculateNT(nonce, m_Password)
+                    NTLM_Utils.CalculateLM(nonce, _password),
+                    NTLM_Utils.CalculateNT(nonce, _password)
                 ).ToByte();
             }
             throw new InvalidOperationException("Authentication is completed.");
@@ -103,8 +103,8 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class MessageType1
         {
-            private readonly string m_Domain;
-            private readonly string m_Host;
+            private readonly string _domain;
+            private readonly string _host;
 
             /// <summary>
             /// Default constructor.
@@ -114,8 +114,8 @@ namespace LumiSoft.Net.AUTH
             /// <exception cref="ArgumentNullException">Is raised when <b>domain</b> or <b>host</b> is null reference.</exception>
             public MessageType1(string domain, string host)
             {
-                m_Domain = domain ?? throw new ArgumentNullException("domain");
-                m_Host = host ?? throw new ArgumentNullException("host");
+                _domain = domain ?? throw new ArgumentNullException("domain");
+                _host = host ?? throw new ArgumentNullException("host");
             }
 
             /// <summary>
@@ -177,8 +177,8 @@ namespace LumiSoft.Net.AUTH
 
                 */
 
-                short dom_len = (short)m_Domain.Length;
-                short host_len = (short)m_Host.Length;
+                short dom_len = (short)_domain.Length;
+                short host_len = (short)_host.Length;
 
                 var data = new byte[32 + dom_len + host_len];
 
@@ -216,10 +216,10 @@ namespace LumiSoft.Net.AUTH
                 data[28] = 0x20;
                 data[29] = 0x00;
 
-                var host = Encoding.ASCII.GetBytes(m_Host.ToUpper(CultureInfo.InvariantCulture));
+                var host = Encoding.ASCII.GetBytes(_host.ToUpper(CultureInfo.InvariantCulture));
                 Buffer.BlockCopy(host, 0, data, 32, host.Length);
 
-                var domain = Encoding.ASCII.GetBytes(m_Domain.ToUpper(CultureInfo.InvariantCulture));
+                var domain = Encoding.ASCII.GetBytes(_domain.ToUpper(CultureInfo.InvariantCulture));
                 Buffer.BlockCopy(domain, 0, data, dom_off, domain.Length);
 
                 return data;
@@ -319,11 +319,11 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         private class MessageType3
         {
-            private readonly string m_Domain;
-            private readonly string m_User;
-            private readonly string m_Host;
-            private readonly byte[] m_LM;
-            private readonly byte[] m_NT;
+            private readonly string _domain;
+            private readonly string _user;
+            private readonly string _host;
+            private readonly byte[] _lM;
+            private readonly byte[] _nT;
 
             /// <summary>
             /// Default constructor.
@@ -336,11 +336,11 @@ namespace LumiSoft.Net.AUTH
             /// <exception cref="ArgumentNullException">Is raised when <b>domain</b>,<b>user</b>,<b>host</b>,<b>lm</b> or <b>nt</b> is null reference.</exception>
             public MessageType3(string domain, string user, string host, byte[] lm, byte[] nt)
             {
-                m_Domain = domain ?? throw new ArgumentNullException("domain");
-                m_User = user ?? throw new ArgumentNullException("user");
-                m_Host = host ?? throw new ArgumentNullException("host");
-                m_LM = lm ?? throw new ArgumentNullException("lm");
-                m_NT = nt ?? throw new ArgumentNullException("nt");
+                _domain = domain ?? throw new ArgumentNullException("domain");
+                _user = user ?? throw new ArgumentNullException("user");
+                _host = host ?? throw new ArgumentNullException("host");
+                _lM = lm ?? throw new ArgumentNullException("lm");
+                _nT = nt ?? throw new ArgumentNullException("nt");
             }
 
             /// <summary>
@@ -453,9 +453,9 @@ namespace LumiSoft.Net.AUTH
                              +-------+-------+-------+-------+
                 */
 
-                var domain = Encoding.Unicode.GetBytes(m_Domain.ToUpper(CultureInfo.InvariantCulture));
-                var user = Encoding.Unicode.GetBytes(m_User);
-                var host = Encoding.Unicode.GetBytes(m_Host.ToUpper(CultureInfo.InvariantCulture));
+                var domain = Encoding.Unicode.GetBytes(_domain.ToUpper(CultureInfo.InvariantCulture));
+                var user = Encoding.Unicode.GetBytes(_user);
+                var host = Encoding.Unicode.GetBytes(_host.ToUpper(CultureInfo.InvariantCulture));
 
                 var data = new byte[64 + domain.Length + user.Length + host.Length + 24 + 24];
 
@@ -534,8 +534,8 @@ namespace LumiSoft.Net.AUTH
                 Buffer.BlockCopy(domain, 0, data, dom_off, domain.Length);
                 Buffer.BlockCopy(user, 0, data, uname_off, user.Length);
                 Buffer.BlockCopy(host, 0, data, host_off, host.Length);
-                Buffer.BlockCopy(m_LM, 0, data, lmresp_off, 24);
-                Buffer.BlockCopy(m_NT, 0, data, ntresp_off, 24);
+                Buffer.BlockCopy(_lM, 0, data, lmresp_off, 24);
+                Buffer.BlockCopy(_nT, 0, data, ntresp_off, 24);
 
                 return data;
             }
@@ -595,7 +595,7 @@ namespace LumiSoft.Net.AUTH
                     des.CreateEncryptor().TransformBlock(magic, 0, 8, lmBuffer, 8);
                 }
 
-                return calc_resp(nonce, lmBuffer);
+                return Calc_resp(nonce, lmBuffer);
             }
 
             /// <summary>
@@ -621,10 +621,10 @@ namespace LumiSoft.Net.AUTH
                 var hash = md4.ComputeHash(Encoding.Unicode.GetBytes(password));
                 Buffer.BlockCopy(hash, 0, ntBuffer, 0, 16);
 
-                return calc_resp(nonce, ntBuffer);
+                return Calc_resp(nonce, ntBuffer);
             }
 
-            private static byte[] calc_resp(byte[] nonce, byte[] data)
+            private static byte[] Calc_resp(byte[] nonce, byte[] data)
             {
                 /*
                  * takes a 21 byte array and treats it as 3 56-bit DES keys. The
@@ -636,22 +636,22 @@ namespace LumiSoft.Net.AUTH
                 var des = DES.Create();
                 des.Mode = CipherMode.ECB;
 
-                des.Key = setup_des_key(data, 0);
+                des.Key = Setup_des_key(data, 0);
                 var ct = des.CreateEncryptor();
                 ct.TransformBlock(nonce, 0, 8, response, 0);
 
-                des.Key = setup_des_key(data, 7);
+                des.Key = Setup_des_key(data, 7);
                 ct = des.CreateEncryptor();
                 ct.TransformBlock(nonce, 0, 8, response, 8);
 
-                des.Key = setup_des_key(data, 14);
+                des.Key = Setup_des_key(data, 14);
                 ct = des.CreateEncryptor();
                 ct.TransformBlock(nonce, 0, 8, response, 16);
 
                 return response;
             }
 
-            private static byte[] setup_des_key(byte[] key56bits, int position)
+            private static byte[] Setup_des_key(byte[] key56bits, int position)
             {
                 var key = new byte[8];
                 key[0] = key56bits[position];
@@ -671,7 +671,7 @@ namespace LumiSoft.Net.AUTH
                 var key7 = new byte[7];
                 int len = Math.Min(password.Length - position, 7);
                 Encoding.ASCII.GetBytes(password.ToUpper(CultureInfo.CurrentCulture), position, len, key7, 0);
-                var key8 = setup_des_key(key7, 0);
+                var key8 = Setup_des_key(key7, 0);
 
                 return key8;
             }

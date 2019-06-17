@@ -9,7 +9,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class HeaderFieldParameterCollection : IEnumerable
     {
-        private readonly ParametizedHeaderField m_pHeaderField;
+        private readonly ParametizedHeaderField _headerField;
 
         /// <summary>
         /// Default constructor.
@@ -17,13 +17,13 @@ namespace LumiSoft.Net.Mime
         /// <param name="headerField">Header field.</param>
         internal HeaderFieldParameterCollection(ParametizedHeaderField headerField)
         {
-            m_pHeaderField = headerField;
+            _headerField = headerField;
         }
 
         /// <summary>
         /// Gets header field parameters count in the collection.
         /// </summary>
-        public int Count => m_pHeaderField.ParseParameters().Count;
+        public int Count => _headerField.ParseParameters().Count;
 
         /// <summary>
         /// Gets or sets specified parameter value.
@@ -34,7 +34,7 @@ namespace LumiSoft.Net.Mime
             {
                 parameterName = parameterName.ToLower();
 
-                var parameters = m_pHeaderField.ParseParameters();
+                var parameters = _headerField.ParseParameters();
                 if (!parameters.ContainsKey(parameterName))
                 {
                     throw new Exception("Specified parameter '" + parameterName + "' doesn't exist !");
@@ -47,12 +47,12 @@ namespace LumiSoft.Net.Mime
             {
                 parameterName = parameterName.ToLower();
 
-                var parameters = m_pHeaderField.ParseParameters();
+                var parameters = _headerField.ParseParameters();
                 if (parameters.ContainsKey(parameterName))
                 {
                     parameters[parameterName] = value;
 
-                    m_pHeaderField.StoreParameters(m_pHeaderField.Value, parameters);
+                    _headerField.StoreParameters(_headerField.Value, parameters);
                 }
             }
         }
@@ -66,16 +66,16 @@ namespace LumiSoft.Net.Mime
         {
             parameterName = parameterName.ToLower();
 
-            var parameters = m_pHeaderField.ParseParameters();
+            var parameters = _headerField.ParseParameters();
             if (!parameters.ContainsKey(parameterName))
             {
                 parameters.Add(parameterName, parameterValue);
 
-                m_pHeaderField.StoreParameters(m_pHeaderField.Value, parameters);
+                _headerField.StoreParameters(_headerField.Value, parameters);
             }
             else
             {
-                throw new Exception("Header field '" + m_pHeaderField.Name + "' parameter '" + parameterName + "' already exists !");
+                throw new Exception("Header field '" + _headerField.Name + "' parameter '" + parameterName + "' already exists !");
             }
         }
 
@@ -84,9 +84,9 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public void Clear()
         {
-            var parameters = m_pHeaderField.ParseParameters();
+            var parameters = _headerField.ParseParameters();
             parameters.Clear();
-            m_pHeaderField.StoreParameters(m_pHeaderField.Value, parameters);
+            _headerField.StoreParameters(_headerField.Value, parameters);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace LumiSoft.Net.Mime
         {
             parameterName = parameterName.ToLower();
 
-            var parameters = m_pHeaderField.ParseParameters();
+            var parameters = _headerField.ParseParameters();
             return parameters.ContainsKey(parameterName);
         }
 
@@ -108,7 +108,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            var parameters = m_pHeaderField.ParseParameters();
+            var parameters = _headerField.ParseParameters();
             var retVal = new HeaderFieldParameter[parameters.Count];
             int i = 0;
             foreach (DictionaryEntry entry in parameters)
@@ -128,12 +128,12 @@ namespace LumiSoft.Net.Mime
         {
             parameterName = parameterName.ToLower();
 
-            var parameters = m_pHeaderField.ParseParameters();
+            var parameters = _headerField.ParseParameters();
             if (!parameters.ContainsKey(parameterName))
             {
                 parameters.Remove(parameterName);
 
-                m_pHeaderField.StoreParameters(m_pHeaderField.Value, parameters);
+                _headerField.StoreParameters(_headerField.Value, parameters);
             }
         }
     }

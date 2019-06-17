@@ -8,9 +8,9 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_Plain : AUTH_SASL_ServerMechanism
     {
-        private bool m_IsAuthenticated;
-        private bool m_IsCompleted;
-        private string m_UserName = "";
+        private bool _isAuthenticated;
+        private bool _isCompleted;
+        private string _userName = "";
 
         /// <summary>
         /// Default constructor.
@@ -29,12 +29,12 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>
-        public override bool IsAuthenticated => m_IsAuthenticated;
+        public override bool IsAuthenticated => _isAuthenticated;
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "PLAIN".
@@ -49,7 +49,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -94,12 +94,12 @@ namespace LumiSoft.Net.AUTH
             var authzid_authcid_passwd = Encoding.UTF8.GetString(clientResponse).Split('\0');
             if (authzid_authcid_passwd.Length == 3 && !string.IsNullOrEmpty(authzid_authcid_passwd[1]))
             {
-                m_UserName = authzid_authcid_passwd[1];
+                _userName = authzid_authcid_passwd[1];
                 var result = OnAuthenticate(authzid_authcid_passwd[0], authzid_authcid_passwd[1], authzid_authcid_passwd[2]);
-                m_IsAuthenticated = result.IsAuthenticated;
+                _isAuthenticated = result.IsAuthenticated;
             }
 
-            m_IsCompleted = true;
+            _isCompleted = true;
 
             return null;
         }
@@ -109,9 +109,9 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public override void Reset()
         {
-            m_IsCompleted = false;
-            m_IsAuthenticated = false;
-            m_UserName = "";
+            _isCompleted = false;
+            _isAuthenticated = false;
+            _userName = "";
         }
 
         /// <summary>

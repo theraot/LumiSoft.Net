@@ -9,11 +9,11 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_CramMd5 : AUTH_SASL_ServerMechanism
     {
-        private bool m_IsAuthenticated;
-        private bool m_IsCompleted;
-        private string m_Key = "";
-        private int m_State;
-        private string m_UserName = "";
+        private bool _isAuthenticated;
+        private bool _isCompleted;
+        private string _key = "";
+        private int _state;
+        private string _userName = "";
 
         /// <summary>
         /// Default constructor.
@@ -32,12 +32,12 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>
-        public override bool IsAuthenticated => m_IsAuthenticated;
+        public override bool IsAuthenticated => _isAuthenticated;
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "CRAM-MD5".
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -132,32 +132,32 @@ namespace LumiSoft.Net.AUTH
                     dGltIGI5MTNhNjAyYzdlZGE3YTQ5NWI0ZTZlNzMzNGQzODkw
             */
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_State++;
-                m_Key = "<" + Guid.NewGuid().ToString() + "@host" + ">";
+                _state++;
+                _key = "<" + Guid.NewGuid().ToString() + "@host" + ">";
 
-                return Encoding.UTF8.GetBytes(m_Key);
+                return Encoding.UTF8.GetBytes(_key);
             }
 
             // Parse client response. response = userName SP hash.
             var user_hash = Encoding.UTF8.GetString(clientResponse).Split(' ');
             if (user_hash.Length == 2 && !string.IsNullOrEmpty(user_hash[0]))
             {
-                m_UserName = user_hash[0];
+                _userName = user_hash[0];
                 var result = OnGetUserInfo(user_hash[0]);
                 if (result.UserExists)
                 {
                     // hash = Hex(HmacMd5(hashKey,password))
-                    var hash = Net_Utils.ToHex(HmacMd5(m_Key, result.Password));
+                    var hash = Net_Utils.ToHex(HmacMd5(_key, result.Password));
                     if (hash == user_hash[1])
                     {
-                        m_IsAuthenticated = true;
+                        _isAuthenticated = true;
                     }
                 }
             }
 
-            m_IsCompleted = true;
+            _isCompleted = true;
 
             return null;
         }
@@ -167,11 +167,11 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public override void Reset()
         {
-            m_IsCompleted = false;
-            m_IsAuthenticated = false;
-            m_UserName = "";
-            m_State = 0;
-            m_Key = "";
+            _isCompleted = false;
+            _isAuthenticated = false;
+            _userName = "";
+            _state = 0;
+            _key = "";
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_e_GetFileSize : EventArgs
     {
-        private long              m_FileSize;
+        private long _fileSize;
 
         /// <summary>
         /// Default constructor.
@@ -34,14 +34,14 @@ namespace LumiSoft.Net.FTP.Server
         /// </summary>
         public long FileSize
         {
-            get => m_FileSize;
+            get => _fileSize;
 
             set{
                 if(value < 0){
                     throw new ArgumentException("Property 'FileSize' value must be >= 0.","FileSize");
                 }
 
-                m_FileSize = value;
+                _fileSize = value;
             }
         }
     }

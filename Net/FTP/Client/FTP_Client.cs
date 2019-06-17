@@ -31,14 +31,14 @@ namespace LumiSoft.Net.FTP.Client
     /// </summary>
     public class FTP_Client : TCP_Client
     {
-        private string m_GreetingText = "";
-        private GenericIdentity m_pAuthdUserIdentity;
-        private DataConnection m_pDataConnection;
-        private IPAddress m_pDataConnectionIP;
-        private PortRange m_pDataPortRange;
-        private List<string> m_pExtCapabilities;
+        private string _greetingText = "";
+        private GenericIdentity _authdUserIdentity;
+        private DataConnection _dataConnection;
+        private IPAddress _dataConnectionIP;
+        private PortRange _dataPortRange;
+        private List<string> _extCapabilities;
 
-        private FTP_TransferMode m_TransferMode = FTP_TransferMode.Passive;
+        private FTP_TransferMode _transferMode = FTP_TransferMode.Passive;
 
         /// <summary>
         /// Gets session authenticated user identity, returns null if not authenticated.
@@ -58,7 +58,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new InvalidOperationException("You must connect first.");
                 }
 
-                return m_pAuthdUserIdentity;
+                return _authdUserIdentity;
             }
         }
 
@@ -75,7 +75,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_pDataConnectionIP;
+                return _dataConnectionIP;
             }
 
             set
@@ -85,12 +85,12 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                m_pDataConnectionIP = value;
+                _dataConnectionIP = value;
 
                 // If We are connected, we need to reset data connection.
                 if (IsConnected)
                 {
-                    m_pDataConnection.CleanUpSocket();
+                    _dataConnection.CleanUpSocket();
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_pDataPortRange;
+                return _dataPortRange;
             }
 
             set
@@ -118,12 +118,12 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                m_pDataPortRange = value;
+                _dataPortRange = value;
 
                 // If We are connected, we need to reset data connection.
                 if (IsConnected)
                 {
-                    m_pDataConnection.CleanUpSocket();
+                    _dataConnection.CleanUpSocket();
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new InvalidOperationException("You must connect first.");
                 }
 
-                return m_pExtCapabilities.ToArray();
+                return _extCapabilities.ToArray();
             }
         }
 
@@ -168,7 +168,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new InvalidOperationException("You must connect first.");
                 }
 
-                return m_GreetingText;
+                return _greetingText;
             }
         }
 
@@ -185,7 +185,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_TransferMode;
+                return _transferMode;
             }
 
             set
@@ -195,7 +195,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                m_TransferMode = value;
+                _transferMode = value;
             }
         }
 
@@ -245,7 +245,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 throw new InvalidOperationException("You must connect first.");
             }
-            if (m_pDataConnection.IsActive)
+            if (_dataConnection.IsActive)
             {
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
@@ -265,7 +265,7 @@ namespace LumiSoft.Net.FTP.Client
             // Set transfer mode
             SetTransferType(TransferType.Binary);
 
-            if (m_TransferMode == FTP_TransferMode.Passive)
+            if (_transferMode == FTP_TransferMode.Passive)
             {
                 Pasv();
             }
@@ -283,7 +283,7 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(response[0]);
             }
 
-            m_pDataConnection.WriteAll(stream);
+            _dataConnection.WriteAll(stream);
 
             /* FTP server may give multiline reply here
             /  For example:
@@ -347,7 +347,7 @@ namespace LumiSoft.Net.FTP.Client
                     throw new FTP_ClientException(response[0]);
                 }
 
-                m_pAuthdUserIdentity = new GenericIdentity(userName, "ftp-user/pass");
+                _authdUserIdentity = new GenericIdentity(userName, "ftp-user/pass");
             }
             else
             {
@@ -499,12 +499,12 @@ namespace LumiSoft.Net.FTP.Client
             {
             }
 
-            m_pExtCapabilities = null;
-            m_pAuthdUserIdentity = null;
-            if (m_pDataConnection != null)
+            _extCapabilities = null;
+            _authdUserIdentity = null;
+            if (_dataConnection != null)
             {
-                m_pDataConnection.Dispose();
-                m_pDataConnection = null;
+                _dataConnection.Dispose();
+                _dataConnection = null;
             }
         }
 
@@ -517,7 +517,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 base.Dispose();
 
-                m_pDataConnectionIP = null;
+                _dataConnectionIP = null;
             }
         }
 
@@ -574,7 +574,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 throw new InvalidOperationException("You must connect first.");
             }
-            if (m_pDataConnection.IsActive)
+            if (_dataConnection.IsActive)
             {
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
@@ -621,7 +621,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 throw new InvalidOperationException("You must connect first.");
             }
-            if (m_pDataConnection.IsActive)
+            if (_dataConnection.IsActive)
             {
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
@@ -641,7 +641,7 @@ namespace LumiSoft.Net.FTP.Client
             // Set transfer mode
             SetTransferType(TransferType.Binary);
 
-            if (m_TransferMode == FTP_TransferMode.Passive)
+            if (_transferMode == FTP_TransferMode.Passive)
             {
                 Pasv();
             }
@@ -659,7 +659,7 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(response[0]);
             }
 
-            m_pDataConnection.ReadAll(stream);
+            _dataConnection.ReadAll(stream);
 
             /* FTP server may give multiline reply here
             /  For example:
@@ -703,7 +703,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 throw new InvalidOperationException("You must connect first.");
             }
-            if (m_pDataConnection.IsActive)
+            if (_dataConnection.IsActive)
             {
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
@@ -713,7 +713,7 @@ namespace LumiSoft.Net.FTP.Client
             // Set transfer mode
             SetTransferType(TransferType.Binary);
 
-            if (m_TransferMode == FTP_TransferMode.Passive)
+            if (_transferMode == FTP_TransferMode.Passive)
             {
                 Pasv();
             }
@@ -725,7 +725,7 @@ namespace LumiSoft.Net.FTP.Client
             // If FTP server supports MLSD command, use it to get directory listing.
             // MLSD is standard way to get dir listing, while LIST command isn't any strict standard.
             bool mlsdSupported = false;
-            foreach (string feature in m_pExtCapabilities)
+            foreach (string feature in _extCapabilities)
             {
                 if (feature.ToLower().StartsWith("mlsd"))
                 {
@@ -752,7 +752,7 @@ namespace LumiSoft.Net.FTP.Client
                 }
 
                 var ms = new MemoryStream();
-                m_pDataConnection.ReadAll(ms);
+                _dataConnection.ReadAll(ms);
 
                 response = ReadResponse();
                 if (!response[0].StartsWith("2"))
@@ -830,7 +830,7 @@ namespace LumiSoft.Net.FTP.Client
                 }
 
                 var ms = new MemoryStream();
-                m_pDataConnection.ReadAll(ms);
+                _dataConnection.ReadAll(ms);
 
                 response = ReadResponse();
                 if (!response[0].StartsWith("2"))
@@ -1103,7 +1103,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 throw new InvalidOperationException("You must connect first.");
             }
-            if (m_pDataConnection.IsActive)
+            if (_dataConnection.IsActive)
             {
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
@@ -1150,7 +1150,7 @@ namespace LumiSoft.Net.FTP.Client
             {
                 throw new InvalidOperationException("You must connect first.");
             }
-            if (m_pDataConnection.IsActive)
+            if (_dataConnection.IsActive)
             {
                 throw new InvalidOperationException("There is already active read/write operation on data connection.");
             }
@@ -1170,7 +1170,7 @@ namespace LumiSoft.Net.FTP.Client
             // Set transfer mode
             SetTransferType(TransferType.Binary);
 
-            if (m_TransferMode == FTP_TransferMode.Passive)
+            if (_transferMode == FTP_TransferMode.Passive)
             {
                 Pasv();
             }
@@ -1188,7 +1188,7 @@ namespace LumiSoft.Net.FTP.Client
                 throw new FTP_ClientException(response[0]);
             }
 
-            m_pDataConnection.WriteAll(stream);
+            _dataConnection.WriteAll(stream);
 
             /* FTP server may give multiline reply here
             /  For example:
@@ -1207,7 +1207,7 @@ namespace LumiSoft.Net.FTP.Client
         /// </summary>
         protected override void OnConnected()
         {
-            m_pDataConnection = new DataConnection(this);
+            _dataConnection = new DataConnection(this);
 
             /*
               Notes: Greeting may be single or multiline response.
@@ -1234,7 +1234,7 @@ namespace LumiSoft.Net.FTP.Client
                     greetText.AppendLine(line.Substring(4));
                 }
 
-                m_GreetingText = greetText.ToString();
+                _greetingText = greetText.ToString();
             }
             else
             {
@@ -1258,13 +1258,13 @@ namespace LumiSoft.Net.FTP.Client
             WriteLine("FEAT");
 
             line = ReadLine();
-            m_pExtCapabilities = new List<string>();
+            _extCapabilities = new List<string>();
             if (line.StartsWith("211"))
             {
                 line = ReadLine();
                 while (line.StartsWith(" "))
                 {
-                    m_pExtCapabilities.Add(line.Trim());
+                    _extCapabilities.Add(line.Trim());
 
                     line = ReadLine();
                 }
@@ -1287,7 +1287,7 @@ namespace LumiSoft.Net.FTP.Client
             // Parse IP:port from 227 Entering Passive Mode (192,168,1,10,1,10).
             var parts = response[0].Substring(response[0].IndexOf("(") + 1, response[0].IndexOf(")") - response[0].IndexOf("(") - 1).Split(',');
 
-            m_pDataConnection.SwitchToPassive(new IPEndPoint(IPAddress.Parse(parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3]), (Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5])));
+            _dataConnection.SwitchToPassive(new IPEndPoint(IPAddress.Parse(parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3]), (Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5])));
         }
 
         /// <summary>
@@ -1299,14 +1299,14 @@ namespace LumiSoft.Net.FTP.Client
             // We will try all IP addresses assigned to this machine, the first one that the remote machine likes will be chosen.
             foreach (IPAddress ip in Dns.GetHostAddresses(""))
             {
-                if (ip.AddressFamily == m_pDataConnection.LocalEndPoint.AddressFamily)
+                if (ip.AddressFamily == _dataConnection.LocalEndPoint.AddressFamily)
                 {
-                    WriteLine("PORT " + ip.ToString().Replace(".", ",") + "," + (m_pDataConnection.LocalEndPoint.Port >> 8) + "," + (m_pDataConnection.LocalEndPoint.Port & 0xFF));
+                    WriteLine("PORT " + ip.ToString().Replace(".", ",") + "," + (_dataConnection.LocalEndPoint.Port >> 8) + "," + (_dataConnection.LocalEndPoint.Port & 0xFF));
 
                     response = ReadResponse();
                     if (response[0].StartsWith("2"))
                     {
-                        m_pDataConnection.SwitchToActive();
+                        _dataConnection.SwitchToActive();
                         return;
                     }
                 }
@@ -1440,10 +1440,10 @@ namespace LumiSoft.Net.FTP.Client
         /// </summary>
         private class DataConnection : IDisposable
         {
-            private FTP_Client m_pOwner;
-            private Socket m_pSocket;
-            private int m_ActivePort = -1;
-            private FTP_TransferMode m_TransferMode = FTP_TransferMode.Active;
+            private FTP_Client _owner;
+            private Socket _socket;
+            private int _activePort = -1;
+            private FTP_TransferMode _transferMode = FTP_TransferMode.Active;
 
             /// <summary>
             /// Default constructor.
@@ -1451,7 +1451,7 @@ namespace LumiSoft.Net.FTP.Client
             /// <param name="owner">Data connection owner FTP client.</param>
             public DataConnection(FTP_Client owner)
             {
-                m_pOwner = owner;
+                _owner = owner;
 
                 CreateSocket();
             }
@@ -1461,12 +1461,12 @@ namespace LumiSoft.Net.FTP.Client
             /// </summary>
             public void Dispose()
             {
-                if (m_pSocket != null)
+                if (_socket != null)
                 {
-                    m_pSocket.Close();
-                    m_pSocket = null;
+                    _socket.Close();
+                    _socket = null;
                 }
-                m_pOwner = null;
+                _owner = null;
             }
 
             /// <summary>
@@ -1475,11 +1475,11 @@ namespace LumiSoft.Net.FTP.Client
             public void SwitchToActive()
             {
                 // In acvtive mode we must start listening incoming FTP server connection.
-                m_pSocket.Listen(1);
+                _socket.Listen(1);
 
-                m_TransferMode = FTP_TransferMode.Active;
+                _transferMode = FTP_TransferMode.Active;
 
-                m_pOwner.LogAddText("FTP data channel switched to Active mode, listening FTP server connect to '" + m_pSocket.LocalEndPoint.ToString() + "'.");
+                _owner.LogAddText("FTP data channel switched to Active mode, listening FTP server connect to '" + _socket.LocalEndPoint.ToString() + "'.");
             }
 
             /// <summary>
@@ -1494,14 +1494,14 @@ namespace LumiSoft.Net.FTP.Client
                     throw new ArgumentNullException("remoteEP");
                 }
 
-                m_pOwner.LogAddText("FTP data channel switched to Passive mode, connecting to FTP server '" + remoteEP.ToString() + "'.");
+                _owner.LogAddText("FTP data channel switched to Passive mode, connecting to FTP server '" + remoteEP.ToString() + "'.");
 
                 // In passive mode we just need to connect to the specified FTP host.
-                m_pSocket.Connect(remoteEP);
+                _socket.Connect(remoteEP);
 
-                m_TransferMode = FTP_TransferMode.Passive;
+                _transferMode = FTP_TransferMode.Passive;
 
-                m_pOwner.LogAddText("FTP Passive data channel established, localEP='" + m_pSocket.LocalEndPoint.ToString() + "' remoteEP='" + m_pSocket.RemoteEndPoint.ToString() + "'.");
+                _owner.LogAddText("FTP Passive data channel established, localEP='" + _socket.LocalEndPoint.ToString() + "' remoteEP='" + _socket.RemoteEndPoint.ToString() + "'.");
             }
 
             /// <summary>
@@ -1519,20 +1519,20 @@ namespace LumiSoft.Net.FTP.Client
                 IsActive = true;
                 try
                 {
-                    if (m_TransferMode == FTP_TransferMode.Active)
+                    if (_transferMode == FTP_TransferMode.Active)
                     {
                         using (NetworkStream dataStream = WaitFtpServerToConnect(20))
                         {
                             long bytesReaded = TransferStream(dataStream, stream);
-                            m_pOwner.LogAddRead(bytesReaded, "Data connection readed " + bytesReaded + " bytes.");
+                            _owner.LogAddRead(bytesReaded, "Data connection readed " + bytesReaded + " bytes.");
                         }
                     }
-                    else if (m_TransferMode == FTP_TransferMode.Passive)
+                    else if (_transferMode == FTP_TransferMode.Passive)
                     {
-                        using (NetworkStream dataStream = new NetworkStream(m_pSocket, true))
+                        using (NetworkStream dataStream = new NetworkStream(_socket, true))
                         {
                             long bytesReaded = TransferStream(dataStream, stream);
-                            m_pOwner.LogAddRead(bytesReaded, "Data connection readed " + bytesReaded + " bytes.");
+                            _owner.LogAddRead(bytesReaded, "Data connection readed " + bytesReaded + " bytes.");
                         }
                     }
                 }
@@ -1557,20 +1557,20 @@ namespace LumiSoft.Net.FTP.Client
 
                 try
                 {
-                    if (m_TransferMode == FTP_TransferMode.Active)
+                    if (_transferMode == FTP_TransferMode.Active)
                     {
                         using (NetworkStream dataStream = WaitFtpServerToConnect(20))
                         {
                             long bytesWritten = TransferStream(stream, dataStream);
-                            m_pOwner.LogAddWrite(bytesWritten, "Data connection wrote " + bytesWritten + " bytes.");
+                            _owner.LogAddWrite(bytesWritten, "Data connection wrote " + bytesWritten + " bytes.");
                         }
                     }
-                    else if (m_TransferMode == FTP_TransferMode.Passive)
+                    else if (_transferMode == FTP_TransferMode.Passive)
                     {
-                        using (NetworkStream dataStream = new NetworkStream(m_pSocket, true))
+                        using (NetworkStream dataStream = new NetworkStream(_socket, true))
                         {
                             long bytesWritten = TransferStream(stream, dataStream);
-                            m_pOwner.LogAddWrite(bytesWritten, "Data connection wrote " + bytesWritten + " bytes.");
+                            _owner.LogAddWrite(bytesWritten, "Data connection wrote " + bytesWritten + " bytes.");
                         }
                     }
                 }
@@ -1590,17 +1590,17 @@ namespace LumiSoft.Net.FTP.Client
             {
                 try
                 {
-                    m_pOwner.LogAddText("FTP Active data channel waiting FTP server connect to '" + m_pSocket.LocalEndPoint.ToString() + "'.");
+                    _owner.LogAddText("FTP Active data channel waiting FTP server connect to '" + _socket.LocalEndPoint.ToString() + "'.");
 
                     //--- Wait ftp server connection -----------------------------//
                     var startTime = DateTime.Now;
-                    while (!m_pSocket.Poll(0, SelectMode.SelectRead))
+                    while (!_socket.Poll(0, SelectMode.SelectRead))
                     {
                         System.Threading.Thread.Sleep(50);
 
                         if (startTime.AddSeconds(waitTime) < DateTime.Now)
                         {
-                            m_pOwner.LogAddText("FTP server didn't connect during expected time.");
+                            _owner.LogAddText("FTP server didn't connect during expected time.");
 
                             throw new IOException("FTP server didn't connect during expected time.");
                         }
@@ -1608,9 +1608,9 @@ namespace LumiSoft.Net.FTP.Client
                     //-----------------------------------------------------------//
 
                     // Accpet FTP server connection.
-                    var socket = m_pSocket.Accept();
+                    var socket = _socket.Accept();
 
-                    m_pOwner.LogAddText("FTP Active data channel established, localEP='" + socket.LocalEndPoint.ToString() + "' remoteEP='" + socket.RemoteEndPoint.ToString() + "'.");
+                    _owner.LogAddText("FTP Active data channel established, localEP='" + socket.LocalEndPoint.ToString() + "' remoteEP='" + socket.RemoteEndPoint.ToString() + "'.");
 
                     return new NetworkStream(socket, true);
                 }
@@ -1626,21 +1626,21 @@ namespace LumiSoft.Net.FTP.Client
             private void CreateSocket()
             {
                 // IPv4
-                if (m_pOwner.LocalEndPoint.Address.AddressFamily == AddressFamily.InterNetwork)
+                if (_owner.LocalEndPoint.Address.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    m_pSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 }
                 // IPv6
                 else
                 {
-                    m_pSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+                    _socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
                 }
-                m_pSocket.SendTimeout = m_pOwner.Timeout;
-                m_pSocket.ReceiveTimeout = m_pOwner.Timeout;
+                _socket.SendTimeout = _owner.Timeout;
+                _socket.ReceiveTimeout = _owner.Timeout;
 
                 int port = 0;
                 // Data connection port range not specified, let system to allocate port for us.
-                if (m_pOwner.DataPortRange == null)
+                if (_owner.DataPortRange == null)
                 {
                     port = 0;
                 }
@@ -1648,26 +1648,26 @@ namespace LumiSoft.Net.FTP.Client
                 else
                 {
                     // There is no acitve port or we have reached end of range, just reset range.
-                    if (m_ActivePort == -1 || (m_ActivePort + 1) > m_pOwner.DataPortRange.End)
+                    if (_activePort == -1 || (_activePort + 1) > _owner.DataPortRange.End)
                     {
-                        m_ActivePort = m_pOwner.DataPortRange.Start;
+                        _activePort = _owner.DataPortRange.Start;
                     }
                     else
                     {
-                        m_ActivePort++;
+                        _activePort++;
                     }
-                    port = m_ActivePort;
+                    port = _activePort;
                 }
 
                 // Data connection IP address not specified, use default.
-                if (m_pOwner.DataIP == null || m_pOwner.DataIP == IPAddress.Any)
+                if (_owner.DataIP == null || _owner.DataIP == IPAddress.Any)
                 {
-                    m_pSocket.Bind(new IPEndPoint(m_pOwner.LocalEndPoint.Address, port));
+                    _socket.Bind(new IPEndPoint(_owner.LocalEndPoint.Address, port));
                 }
                 // Data connection IP specified, use it.
                 else
                 {
-                    m_pSocket.Bind(new IPEndPoint(m_pOwner.DataIP, port));
+                    _socket.Bind(new IPEndPoint(_owner.DataIP, port));
                 }
             }
 
@@ -1676,7 +1676,7 @@ namespace LumiSoft.Net.FTP.Client
             /// </summary>
             public void CleanUpSocket()
             {
-                m_pSocket?.Close();
+                _socket?.Close();
 
                 // We can't reuse socket, so we need to recreate new one for each transfer.
                 CreateSocket();
@@ -1709,7 +1709,7 @@ namespace LumiSoft.Net.FTP.Client
             /// <summary>
             /// Gets data connection local IP end point.
             /// </summary>
-            public IPEndPoint LocalEndPoint => (IPEndPoint)m_pSocket.LocalEndPoint;
+            public IPEndPoint LocalEndPoint => (IPEndPoint)_socket.LocalEndPoint;
 
             /// <summary>
             /// Gets last time when data connection has read or written data.

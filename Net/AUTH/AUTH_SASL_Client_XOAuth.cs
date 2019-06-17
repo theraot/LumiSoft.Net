@@ -9,10 +9,10 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_XOAuth : AUTH_SASL_Client
     {
-        private bool m_IsCompleted;
-        private readonly KeyValueCollection<string, string> m_pRequestUriParameters;
-        private readonly string m_RequestUri;
-        private readonly int m_State = 0;
+        private bool _isCompleted;
+        private readonly KeyValueCollection<string, string> _requestUriParameters;
+        private readonly string _requestUri;
+        private readonly int _state = 0;
 
         /// <summary>
         /// Default constructor.
@@ -24,14 +24,14 @@ namespace LumiSoft.Net.AUTH
         public AUTH_SASL_Client_XOAuth(string userName, string requestUri, KeyValueCollection<string, string> requestUriParameters)
         {
             UserName = userName ?? throw new ArgumentNullException("userName");
-            m_RequestUri = requestUri ?? throw new ArgumentNullException("requestUri");
-            m_pRequestUriParameters = requestUriParameters ?? throw new ArgumentNullException("requestUriParameters");
+            _requestUri = requestUri ?? throw new ArgumentNullException("requestUri");
+            _requestUriParameters = requestUriParameters ?? throw new ArgumentNullException("requestUriParameters");
         }
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "LOGIN".
@@ -57,19 +57,19 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="InvalidOperationException">Is raised when this method is called when authentication is completed.</exception>
         public override byte[] Continue(byte[] serverResponse)
         {
-            if (m_IsCompleted)
+            if (_isCompleted)
             {
                 throw new InvalidOperationException("Authentication is completed.");
             }
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_IsCompleted = true;
+                _isCompleted = true;
 
                 var retVal = new StringBuilder();
-                retVal.Append("GET " + m_RequestUri + " ");
+                retVal.Append("GET " + _requestUri + " ");
                 bool first = true;
-                foreach (KeyValuePair<string, string> p in m_pRequestUriParameters)
+                foreach (KeyValuePair<string, string> p in _requestUriParameters)
                 {
                     if (first)
                     {

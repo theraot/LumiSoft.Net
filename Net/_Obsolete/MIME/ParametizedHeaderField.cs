@@ -12,7 +12,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class ParametizedHeaderField
     {
-        private readonly HeaderField m_pHeaderField;
+        private readonly HeaderField _headerField;
 
         /// <summary>
         /// Default constructor.
@@ -20,7 +20,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="headerField">Source header field.</param>
         public ParametizedHeaderField(HeaderField headerField)
         {
-            m_pHeaderField = headerField;
+            _headerField = headerField;
 
             Parameters = new HeaderFieldParameterCollection(this);
         }
@@ -28,7 +28,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets header field name.
         /// </summary>
-        public string Name => m_pHeaderField.Name;
+        public string Name => _headerField.Name;
 
         /// <summary>
         /// Gets header field parameters.
@@ -40,7 +40,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string Value
         {
-            get => TextUtils.SplitQuotedString(m_pHeaderField.Value, ';')[0];
+            get => TextUtils.SplitQuotedString(_headerField.Value, ';')[0];
 
             set => StoreParameters(value, ParseParameters());
         }
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.Mime
         internal Hashtable ParseParameters()
         {
             // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;...
-            var paramNameValues = TextUtils.SplitQuotedString(m_pHeaderField.EncodedValue, ';');
+            var paramNameValues = TextUtils.SplitQuotedString(_headerField.EncodedValue, ';');
 
             var retVal = new Hashtable();
             // Skip value, other entries are parameters
@@ -97,7 +97,7 @@ namespace LumiSoft.Net.Mime
             }
 
             // Syntax: value;parameterName=parameterValue;parameterName=parameterValue;... ;
-            m_pHeaderField.Value = retVal;
+            _headerField.Value = retVal;
         }
     }
 }

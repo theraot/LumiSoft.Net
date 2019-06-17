@@ -10,20 +10,20 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class MailboxAddressCollection : IEnumerable
     {
-        private readonly List<MailboxAddress> m_pMailboxes;
+        private readonly List<MailboxAddress> _mailboxes;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public MailboxAddressCollection()
         {
-            m_pMailboxes = new List<MailboxAddress>();
+            _mailboxes = new List<MailboxAddress>();
         }
 
         /// <summary>
         /// Gets mailboxes count in the collection.
         /// </summary>
-        public int Count => m_pMailboxes.Count;
+        public int Count => _mailboxes.Count;
 
         /// <summary>
         /// Gets or sets owner of this collection.
@@ -33,7 +33,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets mailbox from specified index.
         /// </summary>
-        public MailboxAddress this[int index] => (MailboxAddress)m_pMailboxes[index];
+        public MailboxAddress this[int index] => (MailboxAddress)_mailboxes[index];
 
         /// <summary>
         /// Adds a new mailbox to the end of the collection.
@@ -41,7 +41,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="mailbox">Mailbox to add.</param>
         public void Add(MailboxAddress mailbox)
         {
-            m_pMailboxes.Add(mailbox);
+            _mailboxes.Add(mailbox);
 
             OnCollectionChanged();
         }
@@ -51,7 +51,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public void Clear()
         {
-            m_pMailboxes.Clear();
+            _mailboxes.Clear();
 
             OnCollectionChanged();
         }
@@ -62,7 +62,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return m_pMailboxes.GetEnumerator();
+            return _mailboxes.GetEnumerator();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="mailbox">Mailbox to add.</param>
         public void Insert(int index, MailboxAddress mailbox)
         {
-            m_pMailboxes.Insert(index, mailbox);
+            _mailboxes.Insert(index, mailbox);
 
             OnCollectionChanged();
         }
@@ -90,7 +90,7 @@ namespace LumiSoft.Net.Mime
             var mailboxes = TextUtils.SplitQuotedString(mailboxList, ',');
             foreach (string mailbox in mailboxes)
             {
-                m_pMailboxes.Add(MailboxAddress.Parse(mailbox));
+                _mailboxes.Add(MailboxAddress.Parse(mailbox));
             }
         }
 
@@ -100,7 +100,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="index">Index of the mailbox which to remove.</param>
         public void Remove(int index)
         {
-            m_pMailboxes.RemoveAt(index);
+            _mailboxes.RemoveAt(index);
 
             OnCollectionChanged();
         }
@@ -111,7 +111,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="mailbox">Mailbox to remove.</param>
         public void Remove(MailboxAddress mailbox)
         {
-            m_pMailboxes.Remove(mailbox);
+            _mailboxes.Remove(mailbox);
 
             OnCollectionChanged();
         }
@@ -123,16 +123,16 @@ namespace LumiSoft.Net.Mime
         public string ToMailboxListString()
         {
             var retVal = "";
-            for (int i = 0; i < m_pMailboxes.Count; i++)
+            for (int i = 0; i < _mailboxes.Count; i++)
             {
                 // For last address don't add , and <TAB>
-                if (i == (m_pMailboxes.Count - 1))
+                if (i == (_mailboxes.Count - 1))
                 {
-                    retVal += ((MailboxAddress)m_pMailboxes[i]).ToMailboxAddressString();
+                    retVal += ((MailboxAddress)_mailboxes[i]).ToMailboxAddressString();
                 }
                 else
                 {
-                    retVal += ((MailboxAddress)m_pMailboxes[i]).ToMailboxAddressString() + ",\t";
+                    retVal += ((MailboxAddress)_mailboxes[i]).ToMailboxAddressString() + ",\t";
                 }
             }
 

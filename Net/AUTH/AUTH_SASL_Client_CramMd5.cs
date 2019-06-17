@@ -9,10 +9,10 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_CramMd5 : AUTH_SASL_Client
     {
-        private bool m_IsCompleted;
-        private readonly string m_Password;
-        private int m_State;
-        private readonly string m_UserName;
+        private bool _isCompleted;
+        private readonly string _password;
+        private int _state;
+        private readonly string _userName;
 
         /// <summary>
         /// Default constructor.
@@ -32,14 +32,14 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentException("Argument 'username' value must be specified.", "userName");
             }
 
-            m_UserName = userName;
-            m_Password = password ?? throw new ArgumentNullException("password");
+            _userName = userName;
+            _password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "LOGIN".
@@ -49,7 +49,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -64,7 +64,7 @@ namespace LumiSoft.Net.AUTH
             {
                 throw new ArgumentNullException("serverResponse");
             }
-            if (m_IsCompleted)
+            if (_isCompleted)
             {
                 throw new InvalidOperationException("Authentication is completed.");
             }
@@ -134,15 +134,15 @@ namespace LumiSoft.Net.AUTH
                     dGltIGI5MTNhNjAyYzdlZGE3YTQ5NWI0ZTZlNzMzNGQzODkw
             */
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_State++;
-                m_IsCompleted = true;
+                _state++;
+                _isCompleted = true;
 
-                var kMd5 = new HMACMD5(Encoding.UTF8.GetBytes(m_Password));
+                var kMd5 = new HMACMD5(Encoding.UTF8.GetBytes(_password));
                 var passwordHash = Net_Utils.ToHex(kMd5.ComputeHash(serverResponse)).ToLower();
 
-                return Encoding.UTF8.GetBytes(m_UserName + " " + passwordHash);
+                return Encoding.UTF8.GetBytes(_userName + " " + passwordHash);
             }
 
             throw new InvalidOperationException("Authentication is completed.");

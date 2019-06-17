@@ -9,10 +9,10 @@ namespace LumiSoft.Net
     //[Obsolete("Use StreamHelper instead !")]
     public class StreamLineReader
     {
-        private readonly byte[] m_Buffer = new byte[1024];
-        private string m_Encoding = "";
-        private readonly int m_ReadBufferSize = 1024;
-        private readonly Stream m_StrmSource;
+        private readonly byte[] _buffer = new byte[1024];
+        private string _encoding = "";
+        private readonly int _readBufferSize = 1024;
+        private readonly Stream _strmSource;
 
         /// <summary>
         /// Default constructor.
@@ -20,7 +20,7 @@ namespace LumiSoft.Net
         /// <param name="strmSource">Source stream from where to read data. Reading begins from stream current position.</param>
         public StreamLineReader(Stream strmSource)
         {
-            m_StrmSource = strmSource;
+            _strmSource = strmSource;
         }
 
         /// <summary>
@@ -33,14 +33,14 @@ namespace LumiSoft.Net
         /// </summary>
         public string Encoding
         {
-            get => m_Encoding;
+            get => _encoding;
 
             set
             {
                 // Check if encoding is valid
                 System.Text.Encoding.GetEncoding(value);
 
-                m_Encoding = value;
+                _encoding = value;
             }
         }
 
@@ -52,11 +52,11 @@ namespace LumiSoft.Net
         {
             // TODO: Allow to buffer source stream reads
 
-            var buffer = m_Buffer;
+            var buffer = _buffer;
             int posInBuffer = 0;
 
-            int prevByte = m_StrmSource.ReadByte();
-            int currByteInt = m_StrmSource.ReadByte();
+            int prevByte = _strmSource.ReadByte();
+            int currByteInt = _strmSource.ReadByte();
             while (prevByte > -1)
             {
                 // CRLF line found
@@ -79,7 +79,7 @@ namespace LumiSoft.Net
                 // Buffer is full, add addition m_ReadBufferSize bytes
                 if (posInBuffer == buffer.Length)
                 {
-                    var newBuffer = new byte[buffer.Length + m_ReadBufferSize];
+                    var newBuffer = new byte[buffer.Length + _readBufferSize];
                     Array.Copy(buffer, newBuffer, buffer.Length);
                     buffer = newBuffer;
                 }
@@ -88,7 +88,7 @@ namespace LumiSoft.Net
                 prevByte = currByteInt;
 
                 // Read next byte
-                currByteInt = m_StrmSource.ReadByte();
+                currByteInt = _strmSource.ReadByte();
             }
 
             // Line isn't terminated with <CRLF> and has some bytes left, return them.
@@ -111,12 +111,12 @@ namespace LumiSoft.Net
             var line = ReadLine();
             if (line != null)
             {
-                if (m_Encoding == null || m_Encoding == "")
+                if (_encoding == null || _encoding == "")
                 {
                     return System.Text.Encoding.Default.GetString(line);
                 }
 
-                return System.Text.Encoding.GetEncoding(m_Encoding).GetString(line);
+                return System.Text.Encoding.GetEncoding(_encoding).GetString(line);
             }
 
             return null;

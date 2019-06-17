@@ -8,11 +8,11 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_Login : AUTH_SASL_ServerMechanism
     {
-        private bool m_IsAuthenticated;
-        private bool m_IsCompleted;
-        private string m_Password;
-        private int m_State;
-        private string m_UserName;
+        private bool _isAuthenticated;
+        private bool _isCompleted;
+        private string _password;
+        private int _state;
+        private string _userName;
 
         /// <summary>
         /// Default constructor.
@@ -31,12 +31,12 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>
-        public override bool IsAuthenticated => m_IsAuthenticated;
+        public override bool IsAuthenticated => _isAuthenticated;
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "LOGIN".
@@ -51,7 +51,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -76,30 +76,30 @@ namespace LumiSoft.Net.AUTH
             */
 
             // User name provided, so skip that state.
-            if (m_State == 0 && clientResponse.Length > 0)
+            if (_state == 0 && clientResponse.Length > 0)
             {
-                m_State++;
+                _state++;
             }
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_State++;
+                _state++;
 
                 return Encoding.ASCII.GetBytes("UserName:");
             }
 
-            if (m_State == 1)
+            if (_state == 1)
             {
-                m_State++;
-                m_UserName = Encoding.UTF8.GetString(clientResponse);
+                _state++;
+                _userName = Encoding.UTF8.GetString(clientResponse);
 
                 return Encoding.ASCII.GetBytes("Password:");
             }
-            m_Password = Encoding.UTF8.GetString(clientResponse);
+            _password = Encoding.UTF8.GetString(clientResponse);
 
-            var result = OnAuthenticate("", m_UserName, m_Password);
-            m_IsAuthenticated = result.IsAuthenticated;
-            m_IsCompleted = true;
+            var result = OnAuthenticate("", _userName, _password);
+            _isAuthenticated = result.IsAuthenticated;
+            _isCompleted = true;
 
             return null;
         }
@@ -109,11 +109,11 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public override void Reset()
         {
-            m_IsCompleted = false;
-            m_IsAuthenticated = false;
-            m_UserName = null;
-            m_Password = null;
-            m_State = 0;
+            _isCompleted = false;
+            _isAuthenticated = false;
+            _userName = null;
+            _password = null;
+            _state = 0;
         }
 
         /// <summary>

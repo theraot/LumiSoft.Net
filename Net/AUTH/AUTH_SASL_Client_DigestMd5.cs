@@ -8,13 +8,13 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_Client_DigestMd5 : AUTH_SASL_Client
     {
-        private bool m_IsCompleted;
-        private readonly string m_Password;
-        private AUTH_SASL_DigestMD5_Response m_pResponse;
-        private readonly string m_Protocol;
-        private readonly string m_ServerName;
-        private int m_State;
-        private readonly string m_UserName;
+        private bool _isCompleted;
+        private readonly string _password;
+        private AUTH_SASL_DigestMD5_Response _response;
+        private readonly string _protocol;
+        private readonly string _serverName;
+        private int _state;
+        private readonly string _userName;
 
         /// <summary>
         /// Default constructor.
@@ -52,16 +52,16 @@ namespace LumiSoft.Net.AUTH
                 throw new ArgumentException("Argument 'username' value must be specified.", "userName");
             }
 
-            m_Protocol = protocol;
-            m_ServerName = server;
-            m_UserName = userName;
-            m_Password = password ?? throw new ArgumentNullException("password");
+            _protocol = protocol;
+            _serverName = server;
+            _userName = userName;
+            _password = password ?? throw new ArgumentNullException("password");
         }
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "DIGEST-MD5".
@@ -71,7 +71,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -86,7 +86,7 @@ namespace LumiSoft.Net.AUTH
             {
                 throw new ArgumentNullException("serverResponse");
             }
-            if (m_IsCompleted)
+            if (_isCompleted)
             {
                 throw new InvalidOperationException("Authentication is completed.");
             }
@@ -107,35 +107,35 @@ namespace LumiSoft.Net.AUTH
                 The password in this example was "secret".
             */
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_State++;
+                _state++;
 
                 // Parse server challenge.
                 var challenge = AUTH_SASL_DigestMD5_Challenge.Parse(Encoding.UTF8.GetString(serverResponse));
 
                 // Construct our response to server challenge.
-                m_pResponse = new AUTH_SASL_DigestMD5_Response(
+                _response = new AUTH_SASL_DigestMD5_Response(
                     challenge,
                     challenge.Realm[0],
-                    m_UserName,
-                    m_Password,
+                    _userName,
+                    _password,
                     Guid.NewGuid().ToString().Replace("-", ""),
                     1,
                     challenge.QopOptions[0],
-                    m_Protocol + "/" + m_ServerName
+                    _protocol + "/" + _serverName
                 );
 
-                return Encoding.UTF8.GetBytes(m_pResponse.ToResponse());
+                return Encoding.UTF8.GetBytes(_response.ToResponse());
             }
 
-            if (m_State == 1)
+            if (_state == 1)
             {
-                m_State++;
-                m_IsCompleted = true;
+                _state++;
+                _isCompleted = true;
 
                 // Check rspauth value.
-                if (!string.Equals(Encoding.UTF8.GetString(serverResponse), m_pResponse.ToRspauthResponse(m_UserName, m_Password), StringComparison.InvariantCultureIgnoreCase))
+                if (!string.Equals(Encoding.UTF8.GetString(serverResponse), _response.ToRspauthResponse(_userName, _password), StringComparison.InvariantCultureIgnoreCase))
                 {
                     throw new Exception("Server server 'rspauth' value mismatch with local 'rspauth' value.");
                 }

@@ -10,8 +10,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class MimeEntityCollection : IEnumerable
     {
-        private readonly List<MimeEntity> m_pEntities;
-        private readonly MimeEntity m_pOwnerEntity;
+        private readonly List<MimeEntity> _entities;
+        private readonly MimeEntity _ownerEntity;
 
         /// <summary>
         /// Default constructor.
@@ -19,20 +19,20 @@ namespace LumiSoft.Net.Mime
         /// <param name="ownerEntity">Mime entity what owns this collection.</param>
         internal MimeEntityCollection(MimeEntity ownerEntity)
         {
-            m_pOwnerEntity = ownerEntity;
+            _ownerEntity = ownerEntity;
 
-            m_pEntities = new List<MimeEntity>();
+            _entities = new List<MimeEntity>();
         }
 
         /// <summary>
         /// Gets mime entities count in the collection.
         /// </summary>
-        public int Count => m_pEntities.Count;
+        public int Count => _entities.Count;
 
         /// <summary>
         /// Gets mime entity at specified index.
         /// </summary>
-        public MimeEntity this[int index] => (MimeEntity)m_pEntities[index];
+        public MimeEntity this[int index] => (MimeEntity)_entities[index];
 
         /// <summary>
         /// Creates a new mime entity to the end of the collection.
@@ -53,17 +53,17 @@ namespace LumiSoft.Net.Mime
         public void Add(MimeEntity entity)
         {
             // Allow to add only for multipart/xxx...
-            if ((m_pOwnerEntity.ContentType & MediaType_enum.Multipart) == 0)
+            if ((_ownerEntity.ContentType & MediaType_enum.Multipart) == 0)
             {
                 throw new Exception("You don't have Content-Type: multipart/xxx. Only Content-Type: multipart/xxx can have nested mime entities !");
             }
             // Check boundary, this is required parameter for multipart/xx
-            if (m_pOwnerEntity.ContentType_Boundary == null || m_pOwnerEntity.ContentType_Boundary.Length == 0)
+            if (_ownerEntity.ContentType_Boundary == null || _ownerEntity.ContentType_Boundary.Length == 0)
             {
                 throw new Exception("Please specify Boundary property first !");
             }
 
-            m_pEntities.Add(entity);
+            _entities.Add(entity);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public void Clear()
         {
-            m_pEntities.Clear();
+            _entities.Clear();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public bool Contains(MimeEntity entity)
         {
-            return m_pEntities.Contains(entity);
+            return _entities.Contains(entity);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return m_pEntities.GetEnumerator();
+            return _entities.GetEnumerator();
         }
 
         /// <summary>
@@ -101,17 +101,17 @@ namespace LumiSoft.Net.Mime
         public void Insert(int index, MimeEntity entity)
         {
             // Allow to add only for multipart/xxx...
-            if ((m_pOwnerEntity.ContentType & MediaType_enum.Multipart) == 0)
+            if ((_ownerEntity.ContentType & MediaType_enum.Multipart) == 0)
             {
                 throw new Exception("You don't have Content-Type: multipart/xxx. Only Content-Type: multipart/xxx can have nested mime entities !");
             }
             // Check boundary, this is required parameter for multipart/xx
-            if (m_pOwnerEntity.ContentType_Boundary == null || m_pOwnerEntity.ContentType_Boundary.Length == 0)
+            if (_ownerEntity.ContentType_Boundary == null || _ownerEntity.ContentType_Boundary.Length == 0)
             {
                 throw new Exception("Please specify Boundary property first !");
             }
 
-            m_pEntities.Insert(index, entity);
+            _entities.Insert(index, entity);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="index">Index of mime entity to remove.</param>
         public void Remove(int index)
         {
-            m_pEntities.RemoveAt(index);
+            _entities.RemoveAt(index);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="entity">Mime entity to remove.</param>
         public void Remove(MimeEntity entity)
         {
-            m_pEntities.Remove(entity);
+            _entities.Remove(entity);
         }
     }
 }

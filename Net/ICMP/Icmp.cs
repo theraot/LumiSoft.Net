@@ -31,7 +31,7 @@ namespace LumiSoft.Net.ICMP
     /// </summary>
     public class EchoMessage
     {
-        private readonly int m_TTL;
+        private readonly int _ttl;
 
         /// <summary>
         /// Default constructor.
@@ -42,7 +42,7 @@ namespace LumiSoft.Net.ICMP
         internal EchoMessage(IPAddress ip, int ttl, int time)
         {
             IPAddress = ip;
-            m_TTL = ttl;
+            _ttl = ttl;
             ReplyTime = time;
         }
 
@@ -89,7 +89,7 @@ namespace LumiSoft.Net.ICMP
         [Obsolete("Will be removed !")]
         public string ToStringEx()
         {
-            return "TTL=" + m_TTL + "\tTime=" + ReplyTime + "ms" + "\tIP=" + IPAddress;
+            return "TTL=" + _ttl + "\tTime=" + ReplyTime + "ms" + "\tIP=" + IPAddress;
         }
     }
 

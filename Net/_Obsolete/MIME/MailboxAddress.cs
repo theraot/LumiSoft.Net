@@ -12,8 +12,8 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class MailboxAddress : Address
     {
-        private string m_DisplayName = "";
-        private string m_EmailAddress = "";
+        private string _displayName = "";
+        private string _emailAddress = "";
 
         /// <summary>
         /// Default constructor.
@@ -28,7 +28,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="emailAddress">Email address.</param>
         public MailboxAddress(string emailAddress) : base(false)
         {
-            m_EmailAddress = emailAddress;
+            _emailAddress = emailAddress;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace LumiSoft.Net.Mime
         /// <param name="emailAddress">Email address.</param>
         public MailboxAddress(string displayName, string emailAddress) : base(false)
         {
-            m_DisplayName = displayName;
-            m_EmailAddress = emailAddress;
+            _displayName = displayName;
+            _emailAddress = emailAddress;
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string DisplayName
         {
-            get => m_DisplayName;
+            get => _displayName;
 
             set
             {
-                m_DisplayName = value;
+                _displayName = value;
 
                 OnChanged();
             }
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string EmailAddress
         {
-            get => m_EmailAddress;
+            get => _emailAddress;
 
             set
             {
@@ -88,7 +88,7 @@ namespace LumiSoft.Net.Mime
                     throw new Exception("Email address can contain ASCII chars only !");
                 }
 
-                m_EmailAddress = value;
+                _emailAddress = value;
 
                 OnChanged();
             }
@@ -187,16 +187,16 @@ namespace LumiSoft.Net.Mime
         public string ToMailboxAddressString()
         {
             var retVal = "";
-            if (m_DisplayName.Length > 0)
+            if (_displayName.Length > 0)
             {
-                if (Core.IsAscii(m_DisplayName))
+                if (Core.IsAscii(_displayName))
                 {
-                    retVal = TextUtils.QuoteString(m_DisplayName) + " ";
+                    retVal = TextUtils.QuoteString(_displayName) + " ";
                 }
                 else
                 {
                     // Encoded word must be treated as unquoted and unescaped word.
-                    retVal = MimeUtils.EncodeWord(m_DisplayName) + " ";
+                    retVal = MimeUtils.EncodeWord(_displayName) + " ";
                 }
             }
             retVal += "<" + EmailAddress + ">";

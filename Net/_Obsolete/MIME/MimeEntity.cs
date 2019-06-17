@@ -13,7 +13,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class MimeEntity
     {
-        private readonly Hashtable m_pHeaderFieldCache;
+        private readonly Hashtable _headerFieldCache;
 
         /// <summary>
         /// Default constructor.
@@ -22,7 +22,7 @@ namespace LumiSoft.Net.Mime
         {
             Header = new HeaderFieldCollection();
             ChildEntities = new MimeEntityCollection(this);
-            m_pHeaderFieldCache = new Hashtable();
+            _headerFieldCache = new Hashtable();
         }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace LumiSoft.Net.Mime
                 if (Header.Contains("Bcc:"))
                 {
                     // There is already cached version, return it
-                    if (m_pHeaderFieldCache.Contains("Bcc:"))
+                    if (_headerFieldCache.Contains("Bcc:"))
                     {
-                        return (AddressList)m_pHeaderFieldCache["Bcc:"];
+                        return (AddressList)_headerFieldCache["Bcc:"];
                     }
                     // These isn't cached version, we need to create it
 
@@ -48,7 +48,7 @@ namespace LumiSoft.Net.Mime
                     list.BoundedHeaderField = field;
 
                     // Cache header field
-                    m_pHeaderFieldCache["Bcc:"] = list;
+                    _headerFieldCache["Bcc:"] = list;
 
                     return list;
                 }
@@ -66,9 +66,9 @@ namespace LumiSoft.Net.Mime
                 }
 
                 // Release old address collection
-                if (m_pHeaderFieldCache["Bcc:"] != null)
+                if (_headerFieldCache["Bcc:"] != null)
                 {
-                    ((AddressList)m_pHeaderFieldCache["Bcc:"]).BoundedHeaderField = null;
+                    ((AddressList)_headerFieldCache["Bcc:"]).BoundedHeaderField = null;
                 }
 
                 // Bound address-list to To: header field. If header field doesn't exist, add it.
@@ -84,7 +84,7 @@ namespace LumiSoft.Net.Mime
                 }
                 value.BoundedHeaderField = bcc;
 
-                m_pHeaderFieldCache["Bcc:"] = value;
+                _headerFieldCache["Bcc:"] = value;
             }
         }
 
@@ -98,9 +98,9 @@ namespace LumiSoft.Net.Mime
                 if (Header.Contains("Cc:"))
                 {
                     // There is already cached version, return it
-                    if (m_pHeaderFieldCache.Contains("Cc:"))
+                    if (_headerFieldCache.Contains("Cc:"))
                     {
-                        return (AddressList)m_pHeaderFieldCache["Cc:"];
+                        return (AddressList)_headerFieldCache["Cc:"];
                     }
                     // These isn't cached version, we need to create it
 
@@ -111,7 +111,7 @@ namespace LumiSoft.Net.Mime
                     list.BoundedHeaderField = field;
 
                     // Cache header field
-                    m_pHeaderFieldCache["Cc:"] = list;
+                    _headerFieldCache["Cc:"] = list;
 
                     return list;
                 }
@@ -129,9 +129,9 @@ namespace LumiSoft.Net.Mime
                 }
 
                 // Release old address collection
-                if (m_pHeaderFieldCache["Cc:"] != null)
+                if (_headerFieldCache["Cc:"] != null)
                 {
-                    ((AddressList)m_pHeaderFieldCache["Cc:"]).BoundedHeaderField = null;
+                    ((AddressList)_headerFieldCache["Cc:"]).BoundedHeaderField = null;
                 }
 
                 // Bound address-list to To: header field. If header field doesn't exist, add it.
@@ -147,7 +147,7 @@ namespace LumiSoft.Net.Mime
                 }
                 value.BoundedHeaderField = cc;
 
-                m_pHeaderFieldCache["Cc:"] = value;
+                _headerFieldCache["Cc:"] = value;
             }
         }
 
@@ -918,9 +918,9 @@ namespace LumiSoft.Net.Mime
                 if (Header.Contains("From:"))
                 {
                     // There is already cached version, return it
-                    if (m_pHeaderFieldCache.Contains("From:"))
+                    if (_headerFieldCache.Contains("From:"))
                     {
-                        return (AddressList)m_pHeaderFieldCache["From:"];
+                        return (AddressList)_headerFieldCache["From:"];
                     }
                     // These isn't cached version, we need to create it
 
@@ -931,7 +931,7 @@ namespace LumiSoft.Net.Mime
                     list.BoundedHeaderField = field;
 
                     // Cache header field
-                    m_pHeaderFieldCache["From:"] = list;
+                    _headerFieldCache["From:"] = list;
 
                     return list;
                 }
@@ -949,9 +949,9 @@ namespace LumiSoft.Net.Mime
                 }
 
                 // Release old address collection
-                if (m_pHeaderFieldCache["From:"] != null)
+                if (_headerFieldCache["From:"] != null)
                 {
-                    ((AddressList)m_pHeaderFieldCache["From:"]).BoundedHeaderField = null;
+                    ((AddressList)_headerFieldCache["From:"]).BoundedHeaderField = null;
                 }
 
                 // Bound address-list to To: header field. If header field doesn't exist, add it.
@@ -967,7 +967,7 @@ namespace LumiSoft.Net.Mime
                 }
                 value.BoundedHeaderField = from;
 
-                m_pHeaderFieldCache["From:"] = value;
+                _headerFieldCache["From:"] = value;
             }
         }
 
@@ -1081,9 +1081,9 @@ namespace LumiSoft.Net.Mime
                 if (Header.Contains("Reply-To:"))
                 {
                     // There is already cached version, return it
-                    if (m_pHeaderFieldCache.Contains("Reply-To:"))
+                    if (_headerFieldCache.Contains("Reply-To:"))
                     {
-                        return (AddressList)m_pHeaderFieldCache["Reply-To:"];
+                        return (AddressList)_headerFieldCache["Reply-To:"];
                     }
                     // These isn't cached version, we need to create it
 
@@ -1094,7 +1094,7 @@ namespace LumiSoft.Net.Mime
                     list.BoundedHeaderField = field;
 
                     // Cache header field
-                    m_pHeaderFieldCache["Reply-To:"] = list;
+                    _headerFieldCache["Reply-To:"] = list;
 
                     return list;
                 }
@@ -1112,9 +1112,9 @@ namespace LumiSoft.Net.Mime
                 }
 
                 // Release old address collection
-                if (m_pHeaderFieldCache["Reply-To:"] != null)
+                if (_headerFieldCache["Reply-To:"] != null)
                 {
-                    ((AddressList)m_pHeaderFieldCache["Reply-To:"]).BoundedHeaderField = null;
+                    ((AddressList)_headerFieldCache["Reply-To:"]).BoundedHeaderField = null;
                 }
 
                 // Bound address-list to To: header field. If header field doesn't exist, add it.
@@ -1130,7 +1130,7 @@ namespace LumiSoft.Net.Mime
                 }
                 value.BoundedHeaderField = replyTo;
 
-                m_pHeaderFieldCache["Reply-To:"] = value;
+                _headerFieldCache["Reply-To:"] = value;
             }
         }
 
@@ -1200,9 +1200,9 @@ namespace LumiSoft.Net.Mime
                 if (Header.Contains("To:"))
                 {
                     // There is already cached version, return it
-                    if (m_pHeaderFieldCache.Contains("To:"))
+                    if (_headerFieldCache.Contains("To:"))
                     {
-                        return (AddressList)m_pHeaderFieldCache["To:"];
+                        return (AddressList)_headerFieldCache["To:"];
                     }
                     // These isn't cached version, we need to create it
 
@@ -1213,7 +1213,7 @@ namespace LumiSoft.Net.Mime
                     list.BoundedHeaderField = field;
 
                     // Cache header field
-                    m_pHeaderFieldCache["To:"] = list;
+                    _headerFieldCache["To:"] = list;
 
                     return list;
                 }
@@ -1231,9 +1231,9 @@ namespace LumiSoft.Net.Mime
                 }
 
                 // Release old address collection
-                if (m_pHeaderFieldCache["To:"] != null)
+                if (_headerFieldCache["To:"] != null)
                 {
-                    ((AddressList)m_pHeaderFieldCache["To:"]).BoundedHeaderField = null;
+                    ((AddressList)_headerFieldCache["To:"]).BoundedHeaderField = null;
                 }
 
                 // Bound address-list to To: header field. If header field doesn't exist, add it.
@@ -1249,7 +1249,7 @@ namespace LumiSoft.Net.Mime
                 }
                 value.BoundedHeaderField = to;
 
-                m_pHeaderFieldCache["To:"] = value;
+                _headerFieldCache["To:"] = value;
             }
         }
 
@@ -1350,7 +1350,7 @@ namespace LumiSoft.Net.Mime
         {
             // Clear header fields
             Header.Clear();
-            m_pHeaderFieldCache.Clear();
+            _headerFieldCache.Clear();
 
             // Parse header
             Header.Parse(stream);

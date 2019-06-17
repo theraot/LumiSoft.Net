@@ -10,9 +10,9 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_Server : TCP_Server<FTP_Session>
     {
-        private string m_GreetingText = "";
-        private int m_MaxBadCommands = 30;
-        private int m_PassiveStartPort = 20000;
+        private string _greetingText = "";
+        private int _maxBadCommands = 30;
+        private int _passiveStartPort = 20000;
 
         /// <summary>
         /// Defalut constructor.
@@ -35,7 +35,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_GreetingText;
+                return _greetingText;
             }
 
             set
@@ -45,7 +45,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                m_GreetingText = value;
+                _greetingText = value;
             }
         }
 
@@ -63,7 +63,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_MaxBadCommands;
+                return _maxBadCommands;
             }
 
             set
@@ -77,7 +77,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ArgumentException("Property 'MaxBadCommands' value must be >= 0.");
                 }
 
-                m_MaxBadCommands = value;
+                _maxBadCommands = value;
             }
         }
 
@@ -94,7 +94,7 @@ namespace LumiSoft.Net.FTP.Server
         /// <exception cref="ArgumentException">Is raised when ivalid value is passed.</exception>
         public int PassiveStartPort
         {
-            get => m_PassiveStartPort;
+            get => _passiveStartPort;
 
             set
             {
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ArgumentException("Valu must be > 0 !");
                 }
 
-                m_PassiveStartPort = value;
+                _passiveStartPort = value;
             }
         }
 

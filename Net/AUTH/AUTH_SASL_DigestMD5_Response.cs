@@ -8,8 +8,8 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_DigestMD5_Response
     {
-        private string m_Password;
-        private readonly AUTH_SASL_DigestMD5_Challenge m_pChallenge;
+        private string _password;
+        private readonly AUTH_SASL_DigestMD5_Challenge _challenge;
 
         /// <summary>
         /// Default constructor.
@@ -25,11 +25,11 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentNullException">Is raised when <b>challenge</b>,<b>realm</b>,<b>password</b>,<b>nonce</b>,<b>qop</b> or <b>digestUri</b> is null reference.</exception>
         public AUTH_SASL_DigestMD5_Response(AUTH_SASL_DigestMD5_Challenge challenge, string realm, string userName, string password, string cnonce, int nonceCount, string qop, string digestUri)
         {
-            m_pChallenge = challenge ?? throw new ArgumentNullException("challenge");
+            _challenge = challenge ?? throw new ArgumentNullException("challenge");
             Realm = realm ?? throw new ArgumentNullException("realm");
             UserName = userName ?? throw new ArgumentNullException("userName");
-            m_Password = password ?? throw new ArgumentNullException("password");
-            Nonce = m_pChallenge.Nonce;
+            _password = password ?? throw new ArgumentNullException("password");
+            Nonce = _challenge.Nonce;
             Cnonce = cnonce ?? throw new ArgumentNullException("cnonce");
             NonceCount = nonceCount;
             Qop = qop ?? throw new ArgumentNullException("qop");
@@ -376,7 +376,7 @@ namespace LumiSoft.Net.AUTH
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return "rspauth=" + hex(kd(hex(h(a1(userName, password))), Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2))));
+                return "rspauth=" + Hex(KD(Hex(H(A1(userName, password))), Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + Hex(H(a2))));
             }
 
             throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
@@ -388,7 +388,7 @@ namespace LumiSoft.Net.AUTH
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
         /// <returns>Returns A1 value.</returns>
-        private byte[] a1(string userName, string password)
+        private byte[] A1(string userName, string password)
         {
             /* RFC 2831 2.1.2.1.
                 If authzid is specified, then A1 is
@@ -406,7 +406,7 @@ namespace LumiSoft.Net.AUTH
 
             if (string.IsNullOrEmpty(Authzid))
             {
-                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
+                var user_realm_pwd = H(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
                 var nonce_cnonce = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce);
 
                 var retVal = new byte[user_realm_pwd.Length + nonce_cnonce.Length];
@@ -417,7 +417,7 @@ namespace LumiSoft.Net.AUTH
             }
             else
             {
-                var user_realm_pwd = h(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
+                var user_realm_pwd = H(Encoding.UTF8.GetBytes(userName + ":" + Realm + ":" + password));
                 var nonce_cnonce_authzid = Encoding.UTF8.GetBytes(":" + Nonce + ":" + Cnonce + ":" + Authzid);
 
                 var retVal = new byte[user_realm_pwd.Length + nonce_cnonce_authzid.Length];
@@ -432,7 +432,7 @@ namespace LumiSoft.Net.AUTH
         /// Calculates A2 value.
         /// </summary>
         /// <returns>Returns A2 value.</returns>
-        private byte[] a2()
+        private byte[] A2()
         {
             /* RFC 2831 2.1.2.1.
                 If the "qop" directive's value is "auth", then A2 is:
@@ -540,7 +540,7 @@ namespace LumiSoft.Net.AUTH
                 // RFC 2831 2.1.2.1.
                 // response-value = HEX(KD(HEX(H(A1)),{nonce-value,":" nc-value,":",cnonce-value,":",qop-value,":",HEX(H(A2))}))
 
-                return hex(kd(hex(h(a1(userName, password))), Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + hex(h(a2()))));
+                return Hex(KD(Hex(H(A1(userName, password))), Nonce + ":" + NonceCount.ToString("x8") + ":" + Cnonce + ":" + Qop + ":" + Hex(H(A2()))));
             }
 
             throw new ArgumentException("Invalid 'qop' value '" + Qop + "'.");
@@ -551,7 +551,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         /// <param name="value">Value to process.</param>
         /// <returns>Return MD5 hash.</returns>
-        private byte[] h(byte[] value)
+        private byte[] H(byte[] value)
         {
             System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
 
@@ -563,16 +563,16 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         /// <param name="value">Value to convert.</param>
         /// <returns>Returns hex string.</returns>
-        private string hex(byte[] value)
+        private string Hex(byte[] value)
         {
             return Net_Utils.ToHex(value);
         }
 
-        private byte[] kd(string secret, string data)
+        private byte[] KD(string secret, string data)
         {
             // KD(secret, data) = H(concat(secret, ":", data))
 
-            return h(Encoding.UTF8.GetBytes(secret + ":" + data));
+            return H(Encoding.UTF8.GetBytes(secret + ":" + data));
         }
     }
 }

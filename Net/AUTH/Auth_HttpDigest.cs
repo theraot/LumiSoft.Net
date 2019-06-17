@@ -8,13 +8,13 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class Auth_HttpDigest
     {
-        private string m_Charset = "";
-        private string m_Cnonce = "";
-        private string m_Method = "";
-        private string m_Nonce = "";
-        private string m_Password = "";
-        private string m_Realm = "";
-        private string m_UserName = "";
+        private string _charset = "";
+        private string _cnonce = "";
+        private string _method = "";
+        private string _nonce = "";
+        private string _password = "";
+        private string _realm = "";
+        private string _userName = "";
 
         /// <summary>
         /// Default constructor.
@@ -23,7 +23,7 @@ namespace LumiSoft.Net.AUTH
         /// <param name="requestMethod">Request method.</param>
         public Auth_HttpDigest(string digestResponse, string requestMethod)
         {
-            m_Method = requestMethod;
+            _method = requestMethod;
 
             Parse(digestResponse);
         }
@@ -41,14 +41,14 @@ namespace LumiSoft.Net.AUTH
         {
             Parse(digestResponse);
 
-            m_UserName = userName;
-            m_Password = password;
-            m_Method = requestMethod;
-            m_Cnonce = cnonce;
+            _userName = userName;
+            _password = password;
+            _method = requestMethod;
+            _cnonce = cnonce;
             Uri = uri;
             Qop = "auth";
             NonceCount = 1;
-            Response = CalculateResponse(m_UserName, m_Password);
+            Response = CalculateResponse(_userName, _password);
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace LumiSoft.Net.AUTH
         /// <param name="opaque">Opaque value.</param>
         public Auth_HttpDigest(string realm, string nonce, string opaque)
         {
-            m_Realm = realm;
-            m_Nonce = nonce;
+            _realm = realm;
+            _nonce = nonce;
             Opaque = opaque;
         }
 
@@ -83,7 +83,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string CNonce
         {
-            get => m_Cnonce;
+            get => _cnonce;
 
             set
             {
@@ -91,7 +91,7 @@ namespace LumiSoft.Net.AUTH
                 {
                     value = "";
                 }
-                m_Cnonce = value;
+                _cnonce = value;
             }
         }
 
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.AUTH
         /// <exception cref="ArgumentException">Is raised when invalid value is specified.</exception>
         public string Nonce
         {
-            get => m_Nonce;
+            get => _nonce;
 
             set
             {
@@ -112,7 +112,7 @@ namespace LumiSoft.Net.AUTH
                     throw new ArgumentException("Nonce value can't be null or empty !");
                 }
 
-                m_Nonce = value;
+                _nonce = value;
             }
         }
 
@@ -135,7 +135,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string Password
         {
-            get => m_Password;
+            get => _password;
 
             set
             {
@@ -143,7 +143,7 @@ namespace LumiSoft.Net.AUTH
                 {
                     value = "";
                 }
-                m_Password = value;
+                _password = value;
             }
         }
 
@@ -163,7 +163,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string Realm
         {
-            get => m_Realm;
+            get => _realm;
 
             set
             {
@@ -171,7 +171,7 @@ namespace LumiSoft.Net.AUTH
                 {
                     value = "";
                 }
-                m_Realm = value;
+                _realm = value;
             }
         }
 
@@ -180,7 +180,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string RequestMethod
         {
-            get => m_Method;
+            get => _method;
 
             set
             {
@@ -188,7 +188,7 @@ namespace LumiSoft.Net.AUTH
                 {
                     value = "";
                 }
-                m_Method = value;
+                _method = value;
             }
         }
 
@@ -208,7 +208,7 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public string UserName
         {
-            get => m_UserName;
+            get => _userName;
 
             set
             {
@@ -216,7 +216,7 @@ namespace LumiSoft.Net.AUTH
                 {
                     value = "";
                 }
-                m_UserName = value;
+                _userName = value;
             }
         }
 
@@ -448,13 +448,13 @@ namespace LumiSoft.Net.AUTH
             */
 
             var response = "";
-            if (string.IsNullOrEmpty(m_Password))
+            if (string.IsNullOrEmpty(_password))
             {
                 response = Response;
             }
             else
             {
-                response = CalculateResponse(m_UserName, m_Password);
+                response = CalculateResponse(_userName, _password);
             }
 
             var authData = new StringBuilder();
@@ -462,9 +462,9 @@ namespace LumiSoft.Net.AUTH
             {
                 authData.Append("digest ");
             }
-            authData.Append("realm=\"" + m_Realm + "\",");
-            authData.Append("username=\"" + m_UserName + "\",");
-            authData.Append("nonce=\"" + m_Nonce + "\",");
+            authData.Append("realm=\"" + _realm + "\",");
+            authData.Append("username=\"" + _userName + "\",");
+            authData.Append("nonce=\"" + _nonce + "\",");
             if (!string.IsNullOrEmpty(Uri))
             {
                 authData.Append("uri=\"" + Uri + "\",");
@@ -478,18 +478,18 @@ namespace LumiSoft.Net.AUTH
             {
                 authData.Append("nc=" + NonceCount.ToString("x8") + ",");
             }
-            if (!string.IsNullOrEmpty(m_Cnonce))
+            if (!string.IsNullOrEmpty(_cnonce))
             {
-                authData.Append("cnonce=\"" + m_Cnonce + "\",");
+                authData.Append("cnonce=\"" + _cnonce + "\",");
             }
             authData.Append("response=\"" + response + "\",");
             if (!string.IsNullOrEmpty(Opaque))
             {
                 authData.Append("opaque=\"" + Opaque + "\",");
             }
-            if (!string.IsNullOrEmpty(m_Charset))
+            if (!string.IsNullOrEmpty(_charset))
             {
-                authData.Append("charset=" + m_Charset + ",");
+                authData.Append("charset=" + _charset + ",");
             }
 
             var retVal = authData.ToString().Trim();
@@ -524,12 +524,12 @@ namespace LumiSoft.Net.AUTH
             {
                 retVal.Append("digest ");
             }
-            retVal.Append("realm=" + TextUtils.QuoteString(m_Realm) + ",");
+            retVal.Append("realm=" + TextUtils.QuoteString(_realm) + ",");
             if (!string.IsNullOrEmpty(Qop))
             {
                 retVal.Append("qop=" + TextUtils.QuoteString(Qop) + ",");
             }
-            retVal.Append("nonce=" + TextUtils.QuoteString(m_Nonce) + ",");
+            retVal.Append("nonce=" + TextUtils.QuoteString(_nonce) + ",");
             retVal.Append("opaque=" + TextUtils.QuoteString(Opaque));
 
             return retVal.ToString();
@@ -542,15 +542,15 @@ namespace LumiSoft.Net.AUTH
         public override string ToString()
         {
             var retVal = new StringBuilder();
-            retVal.Append("realm=\"" + m_Realm + "\",");
-            retVal.Append("username=\"" + m_UserName + "\",");
+            retVal.Append("realm=\"" + _realm + "\",");
+            retVal.Append("username=\"" + _userName + "\",");
             if (!string.IsNullOrEmpty(Qop))
             {
                 retVal.Append("qop=\"" + Qop + "\",");
             }
-            retVal.Append("nonce=\"" + m_Nonce + "\",");
+            retVal.Append("nonce=\"" + _nonce + "\",");
             retVal.Append("nc=\"" + NonceCount + "\",");
-            retVal.Append("cnonce=\"" + m_Cnonce + "\",");
+            retVal.Append("cnonce=\"" + _cnonce + "\",");
             retVal.Append("response=\"" + Response + "\",");
             retVal.Append("opaque=\"" + Opaque + "\",");
             retVal.Append("uri=\"" + Uri + "\"");
@@ -586,11 +586,11 @@ namespace LumiSoft.Net.AUTH
                 {
                     if (name.ToLower() == "realm")
                     {
-                        m_Realm = TextUtils.UnQuoteString(name_value[1]);
+                        _realm = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if (name.ToLower() == "nonce")
                     {
-                        m_Nonce = TextUtils.UnQuoteString(name_value[1]);
+                        _nonce = TextUtils.UnQuoteString(name_value[1]);
                     }
                     // RFC bug ?: RFC 2831. digest-uri = "digest-uri" "=" <"> digest-uri-value <">
                     //            RFC 2617  digest-uri        = "uri" "=" digest-uri-value
@@ -608,7 +608,7 @@ namespace LumiSoft.Net.AUTH
                     }
                     else if (name.ToLower() == "cnonce")
                     {
-                        m_Cnonce = TextUtils.UnQuoteString(name_value[1]);
+                        _cnonce = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if (name.ToLower() == "response")
                     {
@@ -620,7 +620,7 @@ namespace LumiSoft.Net.AUTH
                     }
                     else if (name.ToLower() == "username")
                     {
-                        m_UserName = TextUtils.UnQuoteString(name_value[1]);
+                        _userName = TextUtils.UnQuoteString(name_value[1]);
                     }
                     else if (name.ToLower() == "algorithm")
                     {
@@ -628,7 +628,7 @@ namespace LumiSoft.Net.AUTH
                     }
                     else if (name.ToLower() == "charset")
                     {
-                        m_Charset = TextUtils.UnQuoteString(name_value[1]);
+                        _charset = TextUtils.UnQuoteString(name_value[1]);
                     }
                 }
             }

@@ -10,10 +10,10 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientTransaction
     {
-        private readonly object m_pLock = new object();
-        private Dns_Client m_pOwner;
-        private TimerEx m_pTimeoutTimer;
-        private int m_ResponseCount;
+        private readonly object _lock = new object();
+        private Dns_Client _owner;
+        private TimerEx _timeoutTimer;
+        private int _responseCount;
 
         /// <summary>
         /// Default constructor.
@@ -26,14 +26,14 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>owner</b> or <b>qname</b> is null reference.</exception>
         internal DNS_ClientTransaction(Dns_Client owner, int id, DNS_QType qtype, string qname, int timeout)
         {
-            m_pOwner = owner ?? throw new ArgumentNullException("owner");
+            _owner = owner ?? throw new ArgumentNullException("owner");
             ID = id;
             QName = qname ?? throw new ArgumentNullException("qname");
             QType = qtype;
 
             CreateTime = DateTime.Now;
-            m_pTimeoutTimer = new TimerEx(timeout);
-            m_pTimeoutTimer.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimeoutTimer_Elapsed);
+            _timeoutTimer = new TimerEx(timeout);
+            _timeoutTimer.Elapsed += new System.Timers.ElapsedEventHandler(TimeoutTimer_Elapsed);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public void Dispose()
         {
-            lock (m_pLock)
+            lock (_lock)
             {
                 if (State == DNS_ClientTransactionState.Disposed)
                 {
@@ -90,10 +90,10 @@ namespace LumiSoft.Net.DNS.Client
 
                 SetState(DNS_ClientTransactionState.Disposed);
 
-                m_pTimeoutTimer.Dispose();
-                m_pTimeoutTimer = null;
+                _timeoutTimer.Dispose();
+                _timeoutTimer = null;
 
-                m_pOwner = null;
+                _owner = null;
 
                 Response = null;
 
@@ -123,7 +123,7 @@ namespace LumiSoft.Net.DNS.Client
                     // Use DNS cache if allowed.
                     if (Dns_Client.UseDnsCache)
                     {
-                        var response = m_pOwner.Cache.GetFromCache(QName, (int)QType);
+                        var response = _owner.Cache.GetFromCache(QName, (int)QType);
                         if (response != null)
                         {
                             Response = response;
@@ -144,11 +144,11 @@ namespace LumiSoft.Net.DNS.Client
                         if (Net_Utils.IsIPAddress(server))
                         {
                             var ip = IPAddress.Parse(server);
-                            m_pOwner.Send(ip, buffer, count);
+                            _owner.Send(ip, buffer, count);
                         }
                     }
 
-                    m_pTimeoutTimer.Start();
+                    _timeoutTimer.Start();
                 }
                 catch
                 {
@@ -171,13 +171,13 @@ namespace LumiSoft.Net.DNS.Client
 
             try
             {
-                lock (m_pLock)
+                lock (_lock)
                 {
                     if (State != DNS_ClientTransactionState.Active)
                     {
                         return;
                     }
-                    m_ResponseCount++;
+                    _responseCount++;
 
                     // Late arriving response or retransmitted response, just skip it.
                     if (Response != null)
@@ -185,7 +185,7 @@ namespace LumiSoft.Net.DNS.Client
                         return;
                     }
                     // If server refused to complete query and we more active queries to other servers, skip that response.
-                    if (response.ResponseCode == DNS_RCode.REFUSED && m_ResponseCount < Dns_Client.DnsServers.Length)
+                    if (response.ResponseCode == DNS_RCode.REFUSED && _responseCount < Dns_Client.DnsServers.Length)
                     {
                         return;
                     }
@@ -328,7 +328,7 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Event data.</param>
-        private void m_pTimeoutTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void TimeoutTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {

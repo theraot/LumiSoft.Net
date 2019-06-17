@@ -35,56 +35,56 @@ namespace LumiSoft.Net.DNS.Client
     /// </example>
     public class Dns_Client : IDisposable
     {
-        private static IPAddress[] m_DnsServers;
-        private static Dns_Client m_pDnsClient;
+        private static IPAddress[] _dnsServers;
+        private static Dns_Client _dnsClient;
 
         //
-        private bool m_IsDisposed;
-        private Socket m_pIPv4Socket;
-        private Socket m_pIPv6Socket;
-        private Random m_pRandom;
-        private List<UDP_DataReceiver> m_pReceivers;
-        private Dictionary<int, DNS_ClientTransaction> m_pTransactions;
+        private bool _isDisposed;
+        private Socket _ipv4Socket;
+        private Socket _ipv6Socket;
+        private Random _random;
+        private List<UDP_DataReceiver> _receivers;
+        private Dictionary<int, DNS_ClientTransaction> _transactions;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public Dns_Client()
         {
-            m_pTransactions = new Dictionary<int, DNS_ClientTransaction>();
+            _transactions = new Dictionary<int, DNS_ClientTransaction>();
 
-            m_pIPv4Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            m_pIPv4Socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+            _ipv4Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            _ipv4Socket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
             if (Socket.OSSupportsIPv6)
             {
-                m_pIPv6Socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
-                m_pIPv6Socket.Bind(new IPEndPoint(IPAddress.IPv6Any, 0));
+                _ipv6Socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
+                _ipv6Socket.Bind(new IPEndPoint(IPAddress.IPv6Any, 0));
             }
 
-            m_pReceivers = new List<UDP_DataReceiver>();
-            m_pRandom = new Random();
+            _receivers = new List<UDP_DataReceiver>();
+            _random = new Random();
             Cache = new DNS_ClientCache();
 
             // Create UDP data receivers.
             for (int i = 0; i < 5; i++)
             {
-                var ipv4Receiver = new UDP_DataReceiver(m_pIPv4Socket);
+                var ipv4Receiver = new UDP_DataReceiver(_ipv4Socket);
                 ipv4Receiver.PacketReceived += delegate (object s1, UDP_e_PacketReceived e1)
                 {
                     ProcessUdpPacket(e1);
                 };
-                m_pReceivers.Add(ipv4Receiver);
+                _receivers.Add(ipv4Receiver);
                 ipv4Receiver.Start();
 
-                if (m_pIPv6Socket != null)
+                if (_ipv6Socket != null)
                 {
-                    var ipv6Receiver = new UDP_DataReceiver(m_pIPv6Socket);
+                    var ipv6Receiver = new UDP_DataReceiver(_ipv6Socket);
                     ipv6Receiver.PacketReceived += delegate (object s1, UDP_e_PacketReceived e1)
                     {
                         ProcessUdpPacket(e1);
                     };
-                    m_pReceivers.Add(ipv6Receiver);
+                    _receivers.Add(ipv6Receiver);
                     ipv6Receiver.Start();
                 }
             }
@@ -118,7 +118,7 @@ namespace LumiSoft.Net.DNS.Client
                     }
                 }
 
-                m_DnsServers = dnsServers.ToArray();
+                _dnsServers = dnsServers.ToArray();
             }
             catch
             {
@@ -133,10 +133,10 @@ namespace LumiSoft.Net.DNS.Client
         {
             get
             {
-                var retVal = new string[m_DnsServers.Length];
-                for (int i = 0; i < m_DnsServers.Length; i++)
+                var retVal = new string[_dnsServers.Length];
+                for (int i = 0; i < _dnsServers.Length; i++)
                 {
-                    retVal[i] = m_DnsServers[i].ToString();
+                    retVal[i] = _dnsServers[i].ToString();
                 }
 
                 return retVal;
@@ -155,7 +155,7 @@ namespace LumiSoft.Net.DNS.Client
                     retVal[i] = IPAddress.Parse(value[i]);
                 }
 
-                m_DnsServers = retVal;
+                _dnsServers = retVal;
             }
         }
 
@@ -166,12 +166,12 @@ namespace LumiSoft.Net.DNS.Client
         {
             get
             {
-                if (m_pDnsClient == null)
+                if (_dnsClient == null)
                 {
-                    m_pDnsClient = new Dns_Client();
+                    _dnsClient = new Dns_Client();
                 }
 
-                return m_pDnsClient;
+                return _dnsClient;
             }
         }
 
@@ -280,7 +280,7 @@ namespace LumiSoft.Net.DNS.Client
         /// It is allowd to create multiple conccurent transactions.</remarks>
         public DNS_ClientTransaction CreateTransaction(DNS_QType queryType, string queryText, int timeout)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -342,14 +342,14 @@ namespace LumiSoft.Net.DNS.Client
 
             // Create transaction ID.
             int transactionID = 0;
-            lock (m_pTransactions)
+            lock (_transactions)
             {
                 while (true)
                 {
-                    transactionID = m_pRandom.Next(0xFFFF);
+                    transactionID = _random.Next(0xFFFF);
 
                     // We got not used transaction ID.
-                    if (!m_pTransactions.ContainsKey(transactionID))
+                    if (!_transactions.ContainsKey(transactionID))
                     {
                         break;
                     }
@@ -361,15 +361,15 @@ namespace LumiSoft.Net.DNS.Client
             {
                 if (retVal.State == DNS_ClientTransactionState.Disposed)
                 {
-                    lock (m_pTransactions)
+                    lock (_transactions)
                     {
-                        m_pTransactions.Remove(e1.Value.ID);
+                        _transactions.Remove(e1.Value.ID);
                     }
                 }
             };
-            lock (m_pTransactions)
+            lock (_transactions)
             {
-                m_pTransactions.Add(retVal.ID, retVal);
+                _transactions.Add(retVal.ID, retVal);
             }
 
             return retVal;
@@ -380,33 +380,33 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public void Dispose()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 return;
             }
-            m_IsDisposed = true;
+            _isDisposed = true;
 
-            if (m_pReceivers != null)
+            if (_receivers != null)
             {
-                foreach (UDP_DataReceiver receiver in m_pReceivers)
+                foreach (UDP_DataReceiver receiver in _receivers)
                 {
                     receiver.Dispose();
                 }
-                m_pReceivers = null;
+                _receivers = null;
             }
 
-            m_pIPv4Socket.Close();
-            m_pIPv4Socket = null;
+            _ipv4Socket.Close();
+            _ipv4Socket = null;
 
-            if (m_pIPv6Socket != null)
+            if (_ipv6Socket != null)
             {
-                m_pIPv6Socket.Close();
-                m_pIPv6Socket = null;
+                _ipv6Socket.Close();
+                _ipv6Socket = null;
             }
 
-            m_pTransactions = null;
+            _transactions = null;
 
-            m_pRandom = null;
+            _random = null;
 
             Cache.Dispose();
             Cache = null;
@@ -424,7 +424,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="IOException">Is raised when IO reletaed error happens.</exception>
         public HostEntry[] GetEmailHosts(string domain)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -470,7 +470,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool GetEmailHostsAsync(GetEmailHostsAsyncOP op)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -497,7 +497,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="IOException">Is raised when IO reletaed error happens.</exception>
         public IPAddress[] GetHostAddresses(string hostNameOrIP)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -539,7 +539,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool GetHostAddressesAsync(GetHostAddressesAsyncOP op)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -581,7 +581,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="IOException">Is raised when IO reletaed error happens.</exception>
         public HostEntry[] GetHostsAddresses(string[] hostNames, bool resolveAny)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -623,7 +623,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>op</b> is null reference.</exception>
         public bool GetHostsAddressesAsync(GetHostsAddressesAsyncOP op)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -663,7 +663,7 @@ namespace LumiSoft.Net.DNS.Client
         /// <exception cref="ArgumentNullException">Is raised when <b>queryText</b> is null.</exception>
         public DnsServerResponse Query(string queryText, DNS_QType queryType, int timeout)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -752,11 +752,11 @@ namespace LumiSoft.Net.DNS.Client
             {
                 if (target.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    m_pIPv4Socket.SendTo(packet, count, SocketFlags.None, new IPEndPoint(target, 53));
+                    _ipv4Socket.SendTo(packet, count, SocketFlags.None, new IPEndPoint(target, 53));
                 }
                 else if (target.AddressFamily == AddressFamily.InterNetworkV6)
                 {
-                    m_pIPv6Socket.SendTo(packet, count, SocketFlags.None, new IPEndPoint(target, 53));
+                    _ipv6Socket.SendTo(packet, count, SocketFlags.None, new IPEndPoint(target, 53));
                 }
             }
             catch
@@ -1017,7 +1017,7 @@ namespace LumiSoft.Net.DNS.Client
         {
             try
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     return;
                 }
@@ -1025,7 +1025,7 @@ namespace LumiSoft.Net.DNS.Client
                 var serverResponse = ParseQuery(e.Buffer);
                 DNS_ClientTransaction transaction = null;
                 // Pass response to transaction.
-                if (m_pTransactions.TryGetValue(serverResponse.ID, out transaction))
+                if (_transactions.TryGetValue(serverResponse.ID, out transaction))
                 {
                     if (transaction.State == DNS_ClientTransactionState.Active)
                     {
@@ -1053,11 +1053,11 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public class GetEmailHostsAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object m_pLock = new object();
-            private Exception m_pException;
-            private string m_Domain;
-            private HostEntry[] m_pHosts;
-            private bool m_RiseCompleted;
+            private readonly object _lock = new object();
+            private Exception _exception;
+            private string _domain;
+            private HostEntry[] _hosts;
+            private bool _riseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -1076,12 +1076,12 @@ namespace LumiSoft.Net.DNS.Client
                     throw new ArgumentException("Argument 'domain' value must be specified.", "domain");
                 }
 
-                m_Domain = domain;
+                _domain = domain;
 
                 // We have email address, parse domain.
                 if (domain.IndexOf("@") > -1)
                 {
-                    m_Domain = domain.Split(new[] { '@' }, 2)[1];
+                    _domain = domain.Split(new[] { '@' }, 2)[1];
                 }
             }
 
@@ -1096,9 +1096,9 @@ namespace LumiSoft.Net.DNS.Client
                 }
                 SetState(AsyncOP_State.Disposed);
 
-                m_pException = null;
-                m_Domain = null;
-                m_pHosts = null;
+                _exception = null;
+                _domain = null;
+                _hosts = null;
 
                 CompletedAsync = null;
             }
@@ -1129,19 +1129,19 @@ namespace LumiSoft.Net.DNS.Client
 
                 try
                 {
-                    LookupMX(dnsClient, m_Domain, false);
+                    LookupMX(dnsClient, _domain, false);
                 }
                 catch (Exception x)
                 {
-                    m_pException = x;
+                    _exception = x;
                     SetState(AsyncOP_State.Completed);
                 }
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock (m_pLock)
+                lock (_lock)
                 {
-                    m_RiseCompleted = true;
+                    _riseCompleted = true;
 
                     return State == AsyncOP_State.Active;
                 }
@@ -1158,11 +1158,11 @@ namespace LumiSoft.Net.DNS.Client
                     return;
                 }
 
-                lock (m_pLock)
+                lock (_lock)
                 {
                     State = state;
 
-                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    if (State == AsyncOP_State.Completed && _riseCompleted)
                     {
                         OnCompletedAsync();
                     }
@@ -1214,14 +1214,14 @@ namespace LumiSoft.Net.DNS.Client
                                 // Use MX records.
                                 if (mxRecords.Count > 0)
                                 {
-                                    m_pHosts = new HostEntry[mxRecords.Count];
+                                    _hosts = new HostEntry[mxRecords.Count];
 
                                     // Create name to index map, so we can map asynchronous A/AAAA lookup results back to MX priority index.
                                     var name_to_index_map = new Dictionary<string, int>();
                                     var lookupQueue = new List<string>();
 
                                     // Process MX records.
-                                    for (int i = 0; i < m_pHosts.Length; i++)
+                                    for (int i = 0; i < _hosts.Length; i++)
                                     {
                                         var mx = mxRecords[i];
 
@@ -1234,7 +1234,7 @@ namespace LumiSoft.Net.DNS.Client
                                         }
                                         else
                                         {
-                                            m_pHosts[i] = new HostEntry(mx.Host, ips, null);
+                                            _hosts[i] = new HostEntry(mx.Host, ips, null);
                                         }
                                     }
 
@@ -1264,7 +1264,7 @@ namespace LumiSoft.Net.DNS.Client
                                 {
                                     if (domainIsCName)
                                     {
-                                        m_pException = new Exception("CNAME to CNAME loop dedected.");
+                                        _exception = new Exception("CNAME to CNAME loop dedected.");
                                         SetState(AsyncOP_State.Completed);
                                     }
                                     else
@@ -1275,7 +1275,7 @@ namespace LumiSoft.Net.DNS.Client
                                 // Use domain name as MX.
                                 else
                                 {
-                                    m_pHosts = new HostEntry[1];
+                                    _hosts = new HostEntry[1];
 
                                     // Create name to index map, so we can map asynchronous A/AAAA lookup results back to MX priority index.
                                     var name_to_index_map = new Dictionary<string, int>();
@@ -1297,19 +1297,19 @@ namespace LumiSoft.Net.DNS.Client
                             // DNS server returned error, just return error.
                             else
                             {
-                                m_pException = new DNS_ClientException(e1.Value.Response.ResponseCode);
+                                _exception = new DNS_ClientException(e1.Value.Response.ResponseCode);
                                 SetState(AsyncOP_State.Completed);
                             }
                         }
                         transaction_MX.Timeout += delegate (object s2, EventArgs e2)
                         {
-                            m_pException = new IOException("DNS transaction timeout, no response from DNS server.");
+                            _exception = new IOException("DNS transaction timeout, no response from DNS server.");
                             SetState(AsyncOP_State.Completed);
                         };
                     }
                     catch (Exception x)
                     {
-                        m_pException = x;
+                        _exception = x;
                         SetState(AsyncOP_State.Completed);
                     }
                 };
@@ -1375,7 +1375,7 @@ namespace LumiSoft.Net.DNS.Client
                 {
                     // If we have any resolved DNS, we don't return error if any.
                     bool anyResolved = false;
-                    foreach (HostEntry host in m_pHosts)
+                    foreach (HostEntry host in _hosts)
                     {
                         if (host != null)
                         {
@@ -1386,14 +1386,14 @@ namespace LumiSoft.Net.DNS.Client
                     }
                     if (!anyResolved)
                     {
-                        m_pException = op.Error;
+                        _exception = op.Error;
                     }
                 }
                 else
                 {
                     foreach (HostEntry host in op.HostEntries)
                     {
-                        m_pHosts[name_to_index[host.HostName]] = host;
+                        _hosts[name_to_index[host.HostName]] = host;
                     }
                 }
 
@@ -1401,14 +1401,14 @@ namespace LumiSoft.Net.DNS.Client
 
                 // Remove unresolved DNS entries from response.
                 var retVal = new List<HostEntry>();
-                foreach (HostEntry host in m_pHosts)
+                foreach (HostEntry host in _hosts)
                 {
                     if (host != null)
                     {
                         retVal.Add(host);
                     }
                 }
-                m_pHosts = retVal.ToArray();
+                _hosts = retVal.ToArray();
 
                 SetState(AsyncOP_State.Completed);
             }
@@ -1436,7 +1436,7 @@ namespace LumiSoft.Net.DNS.Client
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException;
+                    return _exception;
                 }
             }
 
@@ -1453,7 +1453,7 @@ namespace LumiSoft.Net.DNS.Client
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_Domain;
+                    return _domain;
                 }
             }
 
@@ -1474,12 +1474,12 @@ namespace LumiSoft.Net.DNS.Client
                     {
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
-                    if (m_pException != null)
+                    if (_exception != null)
                     {
-                        throw m_pException;
+                        throw _exception;
                     }
 
-                    return m_pHosts;
+                    return _hosts;
                 }
             }
 
@@ -1502,13 +1502,13 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public class GetHostAddressesAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object m_pLock = new object();
-            private Exception m_pException;
-            private string m_HostNameOrIP;
-            private List<IPAddress> m_pIPv4Addresses;
-            private List<IPAddress> m_pIPv6Addresses;
-            private int m_Counter;
-            private bool m_RiseCompleted;
+            private readonly object _lock = new object();
+            private Exception _exception;
+            private string _hostNameOrIP;
+            private List<IPAddress> _ipv4Addresses;
+            private List<IPAddress> _ipv6Addresses;
+            private int _counter;
+            private bool _riseCompleted;
 
             /// <summary>
             /// Default constructor.
@@ -1517,10 +1517,10 @@ namespace LumiSoft.Net.DNS.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>hostNameOrIP</b> is null reference.</exception>
             public GetHostAddressesAsyncOP(string hostNameOrIP)
             {
-                m_HostNameOrIP = hostNameOrIP ?? throw new ArgumentNullException("hostNameOrIP");
+                _hostNameOrIP = hostNameOrIP ?? throw new ArgumentNullException("hostNameOrIP");
 
-                m_pIPv4Addresses = new List<IPAddress>();
-                m_pIPv6Addresses = new List<IPAddress>();
+                _ipv4Addresses = new List<IPAddress>();
+                _ipv6Addresses = new List<IPAddress>();
             }
 
             /// <summary>
@@ -1534,10 +1534,10 @@ namespace LumiSoft.Net.DNS.Client
                 }
                 SetState(AsyncOP_State.Disposed);
 
-                m_pException = null;
-                m_HostNameOrIP = null;
-                m_pIPv4Addresses = null;
-                m_pIPv6Addresses = null;
+                _exception = null;
+                _hostNameOrIP = null;
+                _ipv4Addresses = null;
+                _ipv6Addresses = null;
 
                 CompletedAsync = null;
             }
@@ -1558,14 +1558,14 @@ namespace LumiSoft.Net.DNS.Client
                 SetState(AsyncOP_State.Active);
 
                 // Argument 'hostNameOrIP' is IP address.
-                if (Net_Utils.IsIPAddress(m_HostNameOrIP))
+                if (Net_Utils.IsIPAddress(_hostNameOrIP))
                 {
-                    m_pIPv4Addresses.Add(IPAddress.Parse(m_HostNameOrIP));
+                    _ipv4Addresses.Add(IPAddress.Parse(_hostNameOrIP));
 
                     SetState(AsyncOP_State.Completed);
                 }
                 // This is probably NetBios name.
-                if (m_HostNameOrIP.IndexOf(".") == -1)
+                if (_hostNameOrIP.IndexOf(".") == -1)
                 {
                     try
                     {
@@ -1578,56 +1578,56 @@ namespace LumiSoft.Net.DNS.Client
                                 {
                                     if (ip.AddressFamily == AddressFamily.InterNetwork)
                                     {
-                                        m_pIPv4Addresses.Add(ip);
+                                        _ipv4Addresses.Add(ip);
                                     }
                                     else
                                     {
-                                        m_pIPv6Addresses.Add(ip);
+                                        _ipv6Addresses.Add(ip);
                                     }
                                 }
                             }
                             catch (Exception x)
                             {
-                                m_pException = x;
+                                _exception = x;
                             }
 
                             SetState(AsyncOP_State.Completed);
                         };
 
                         // Start resolving host ip addresses.
-                        Dns.BeginGetHostAddresses(m_HostNameOrIP, callback, null);
+                        Dns.BeginGetHostAddresses(_hostNameOrIP, callback, null);
                     }
                     catch (Exception x)
                     {
-                        m_pException = x;
+                        _exception = x;
                     }
                 }
                 // Query A/AAAA records.
                 else
                 {
-                    var transaction_A = dnsClient.CreateTransaction(DNS_QType.A, m_HostNameOrIP, 2000);
+                    var transaction_A = dnsClient.CreateTransaction(DNS_QType.A, _hostNameOrIP, 2000);
                     transaction_A.StateChanged += delegate (object s1, EventArgs<DNS_ClientTransaction> e1)
                     {
                         if (e1.Value.State == DNS_ClientTransactionState.Completed)
                         {
-                            lock (m_pLock)
+                            lock (_lock)
                             {
                                 if (e1.Value.Response.ResponseCode != DNS_RCode.NO_ERROR)
                                 {
-                                    m_pException = new DNS_ClientException(e1.Value.Response.ResponseCode);
+                                    _exception = new DNS_ClientException(e1.Value.Response.ResponseCode);
                                 }
                                 else
                                 {
                                     foreach (DNS_rr_A record in e1.Value.Response.GetARecords())
                                     {
-                                        m_pIPv4Addresses.Add(record.IP);
+                                        _ipv4Addresses.Add(record.IP);
                                     }
                                 }
 
-                                m_Counter++;
+                                _counter++;
 
                                 // Both A and AAAA transactions are completed, we are done.
-                                if (m_Counter == 2)
+                                if (_counter == 2)
                                 {
                                     SetState(AsyncOP_State.Completed);
                                 }
@@ -1636,13 +1636,13 @@ namespace LumiSoft.Net.DNS.Client
                     };
                     transaction_A.Timeout += delegate (object s1, EventArgs e1)
                     {
-                        lock (m_pLock)
+                        lock (_lock)
                         {
-                            m_pException = new IOException("DNS transaction timeout, no response from DNS server.");
-                            m_Counter++;
+                            _exception = new IOException("DNS transaction timeout, no response from DNS server.");
+                            _counter++;
 
                             // Both A and AAAA transactions are completed, we are done.
-                            if (m_Counter == 2)
+                            if (_counter == 2)
                             {
                                 SetState(AsyncOP_State.Completed);
                             }
@@ -1650,29 +1650,29 @@ namespace LumiSoft.Net.DNS.Client
                     };
                     transaction_A.Start();
 
-                    var transaction_AAAA = dnsClient.CreateTransaction(DNS_QType.AAAA, m_HostNameOrIP, 2000);
+                    var transaction_AAAA = dnsClient.CreateTransaction(DNS_QType.AAAA, _hostNameOrIP, 2000);
                     transaction_AAAA.StateChanged += delegate (object s1, EventArgs<DNS_ClientTransaction> e1)
                     {
                         if (e1.Value.State == DNS_ClientTransactionState.Completed)
                         {
-                            lock (m_pLock)
+                            lock (_lock)
                             {
                                 if (e1.Value.Response.ResponseCode != DNS_RCode.NO_ERROR)
                                 {
-                                    m_pException = new DNS_ClientException(e1.Value.Response.ResponseCode);
+                                    _exception = new DNS_ClientException(e1.Value.Response.ResponseCode);
                                 }
                                 else
                                 {
                                     foreach (DNS_rr_AAAA record in e1.Value.Response.GetAAAARecords())
                                     {
-                                        m_pIPv6Addresses.Add(record.IP);
+                                        _ipv6Addresses.Add(record.IP);
                                     }
                                 }
 
-                                m_Counter++;
+                                _counter++;
 
                                 // Both A and AAAA transactions are completed, we are done.
-                                if (m_Counter == 2)
+                                if (_counter == 2)
                                 {
                                     SetState(AsyncOP_State.Completed);
                                 }
@@ -1681,13 +1681,13 @@ namespace LumiSoft.Net.DNS.Client
                     };
                     transaction_AAAA.Timeout += delegate (object s1, EventArgs e1)
                     {
-                        lock (m_pLock)
+                        lock (_lock)
                         {
-                            m_pException = new IOException("DNS transaction timeout, no response from DNS server.");
-                            m_Counter++;
+                            _exception = new IOException("DNS transaction timeout, no response from DNS server.");
+                            _counter++;
 
                             // Both A and AAAA transactions are completed, we are done.
-                            if (m_Counter == 2)
+                            if (_counter == 2)
                             {
                                 SetState(AsyncOP_State.Completed);
                             }
@@ -1698,9 +1698,9 @@ namespace LumiSoft.Net.DNS.Client
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock (m_pLock)
+                lock (_lock)
                 {
-                    m_RiseCompleted = true;
+                    _riseCompleted = true;
 
                     return State == AsyncOP_State.Active;
                 }
@@ -1717,11 +1717,11 @@ namespace LumiSoft.Net.DNS.Client
                     return;
                 }
 
-                lock (m_pLock)
+                lock (_lock)
                 {
                     State = state;
 
-                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    if (State == AsyncOP_State.Completed && _riseCompleted)
                     {
                         OnCompletedAsync();
                     }
@@ -1751,7 +1751,7 @@ namespace LumiSoft.Net.DNS.Client
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException;
+                    return _exception;
                 }
             }
 
@@ -1768,7 +1768,7 @@ namespace LumiSoft.Net.DNS.Client
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_HostNameOrIP;
+                    return _hostNameOrIP;
                 }
             }
 
@@ -1789,15 +1789,15 @@ namespace LumiSoft.Net.DNS.Client
                     {
                         throw new InvalidOperationException("Property 'Addresses' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
-                    if (m_pException != null)
+                    if (_exception != null)
                     {
-                        throw m_pException;
+                        throw _exception;
                     }
 
                     // We list IPv4 addresses before IPv6.
                     var retVal = new List<IPAddress>();
-                    retVal.AddRange(m_pIPv4Addresses);
-                    retVal.AddRange(m_pIPv6Addresses);
+                    retVal.AddRange(_ipv4Addresses);
+                    retVal.AddRange(_ipv6Addresses);
 
                     return retVal.ToArray();
                 }
@@ -1822,14 +1822,14 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public class GetHostsAddressesAsyncOP : IDisposable, IAsyncOP
         {
-            private readonly object m_pLock = new object();
-            private Exception m_pException;
-            private string[] m_pHostNames;
-            private readonly bool m_ResolveAny;
-            private Dictionary<int, GetHostAddressesAsyncOP> m_pIpLookupQueue;
-            private HostEntry[] m_pHostEntries;
-            private bool m_RiseCompleted;
-            private int m_ResolvedCount;
+            private readonly object _lock = new object();
+            private Exception _exception;
+            private string[] _hostNames;
+            private readonly bool _resolveAny;
+            private Dictionary<int, GetHostAddressesAsyncOP> _ipLookupQueue;
+            private HostEntry[] _hostEntries;
+            private bool _riseCompleted;
+            private int _resolvedCount;
 
             /// <summary>
             /// Default constructor.
@@ -1848,10 +1848,10 @@ namespace LumiSoft.Net.DNS.Client
             /// <exception cref="ArgumentNullException">Is raised when <b>hostNames</b> is null reference.</exception>
             public GetHostsAddressesAsyncOP(string[] hostNames, bool resolveAny)
             {
-                m_pHostNames = hostNames ?? throw new ArgumentNullException("hostNames");
-                m_ResolveAny = resolveAny;
+                _hostNames = hostNames ?? throw new ArgumentNullException("hostNames");
+                _resolveAny = resolveAny;
 
-                m_pIpLookupQueue = new Dictionary<int, GetHostAddressesAsyncOP>();
+                _ipLookupQueue = new Dictionary<int, GetHostAddressesAsyncOP>();
             }
 
             /// <summary>
@@ -1865,10 +1865,10 @@ namespace LumiSoft.Net.DNS.Client
                 }
                 SetState(AsyncOP_State.Disposed);
 
-                m_pException = null;
-                m_pHostNames = null;
-                m_pIpLookupQueue = null;
-                m_pHostEntries = null;
+                _exception = null;
+                _hostNames = null;
+                _ipLookupQueue = null;
+                _hostEntries = null;
 
                 CompletedAsync = null;
             }
@@ -1888,15 +1888,15 @@ namespace LumiSoft.Net.DNS.Client
 
                 SetState(AsyncOP_State.Active);
 
-                m_pHostEntries = new HostEntry[m_pHostNames.Length];
+                _hostEntries = new HostEntry[_hostNames.Length];
 
                 // Create look up operations for hosts. The "opList" copy array is needed because
                 // when we start asyn OP, m_pIpLookupQueue may be altered when OP completes.
                 var opList = new Dictionary<int, GetHostAddressesAsyncOP>();
-                for (int i = 0; i < m_pHostNames.Length; i++)
+                for (int i = 0; i < _hostNames.Length; i++)
                 {
-                    var op = new GetHostAddressesAsyncOP(m_pHostNames[i]);
-                    m_pIpLookupQueue.Add(i, op);
+                    var op = new GetHostAddressesAsyncOP(_hostNames[i]);
+                    _ipLookupQueue.Add(i, op);
                     opList.Add(i, op);
                 }
 
@@ -1920,9 +1920,9 @@ namespace LumiSoft.Net.DNS.Client
 
                 // Set flag rise CompletedAsync event flag. The event is raised when async op completes.
                 // If already completed sync, that flag has no effect.
-                lock (m_pLock)
+                lock (_lock)
                 {
-                    m_RiseCompleted = true;
+                    _riseCompleted = true;
 
                     return State == AsyncOP_State.Active;
                 }
@@ -1939,11 +1939,11 @@ namespace LumiSoft.Net.DNS.Client
                     return;
                 }
 
-                lock (m_pLock)
+                lock (_lock)
                 {
                     State = state;
 
-                    if (State == AsyncOP_State.Completed && m_RiseCompleted)
+                    if (State == AsyncOP_State.Completed && _riseCompleted)
                     {
                         OnCompletedAsync();
                     }
@@ -1957,7 +1957,7 @@ namespace LumiSoft.Net.DNS.Client
             /// <param name="index">Index in 'm_pHostEntries' where to store lookup result.</param>
             private void GetHostAddressesCompleted(GetHostAddressesAsyncOP op, int index)
             {
-                lock (m_pLock)
+                lock (_lock)
                 {
                     try
                     {
@@ -1966,28 +1966,28 @@ namespace LumiSoft.Net.DNS.Client
                             // We wanted any of the host names to resolve:
                             //  *) We have already one resolved host name.
                             //  *) We have more names to resolve, so next may succeed.
-                            if (m_ResolveAny && (m_ResolvedCount > 0 || m_pIpLookupQueue.Count > 1))
+                            if (_resolveAny && (_resolvedCount > 0 || _ipLookupQueue.Count > 1))
                             {
                             }
                             else
                             {
-                                m_pException = op.Error;
+                                _exception = op.Error;
                             }
                         }
                         else
                         {
-                            m_pHostEntries[index] = new HostEntry(op.HostNameOrIP, op.Addresses, null);
-                            m_ResolvedCount++;
+                            _hostEntries[index] = new HostEntry(op.HostNameOrIP, op.Addresses, null);
+                            _resolvedCount++;
                         }
 
-                        m_pIpLookupQueue.Remove(index);
-                        if (m_pIpLookupQueue.Count == 0)
+                        _ipLookupQueue.Remove(index);
+                        if (_ipLookupQueue.Count == 0)
                         {
                             // We wanted resolve any, so some host names may not be resolved and are null, remove them from response.
-                            if (m_ResolveAny)
+                            if (_resolveAny)
                             {
                                 var retVal = new List<HostEntry>();
-                                foreach (HostEntry host in m_pHostEntries)
+                                foreach (HostEntry host in _hostEntries)
                                 {
                                     if (host != null)
                                     {
@@ -1995,7 +1995,7 @@ namespace LumiSoft.Net.DNS.Client
                                     }
                                 }
 
-                                m_pHostEntries = retVal.ToArray();
+                                _hostEntries = retVal.ToArray();
                             }
 
                             SetState(AsyncOP_State.Completed);
@@ -2003,7 +2003,7 @@ namespace LumiSoft.Net.DNS.Client
                     }
                     catch (Exception x)
                     {
-                        m_pException = x;
+                        _exception = x;
 
                         SetState(AsyncOP_State.Completed);
                     }
@@ -2035,7 +2035,7 @@ namespace LumiSoft.Net.DNS.Client
                         throw new InvalidOperationException("Property 'Error' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
 
-                    return m_pException;
+                    return _exception;
                 }
             }
 
@@ -2052,7 +2052,7 @@ namespace LumiSoft.Net.DNS.Client
                         throw new ObjectDisposedException(GetType().Name);
                     }
 
-                    return m_pHostNames;
+                    return _hostNames;
                 }
             }
 
@@ -2073,12 +2073,12 @@ namespace LumiSoft.Net.DNS.Client
                     {
                         throw new InvalidOperationException("Property 'HostEntries' is accessible only in 'AsyncOP_State.Completed' state.");
                     }
-                    if (m_pException != null)
+                    if (_exception != null)
                     {
-                        throw m_pException;
+                        throw _exception;
                     }
 
-                    return m_pHostEntries;
+                    return _hostEntries;
                 }
             }
 

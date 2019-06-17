@@ -21,21 +21,21 @@ namespace LumiSoft.Net.IMAP
     [Obsolete("Use class 'IMAP_t_SeqSet' instead.")]
     public class IMAP_SequenceSet
     {
-        private readonly List<Range_long> m_pSequenceParts;
-        private string m_SequenceString = "";
+        private readonly List<Range_long> _sequenceParts;
+        private string _sequenceString = "";
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public IMAP_SequenceSet()
         {
-            m_pSequenceParts = new List<Range_long>();
+            _sequenceParts = new List<Range_long>();
         }
 
         /// <summary>
         /// Gets sequence set ranges.
         /// </summary>
-        public Range_long[] Items => m_pSequenceParts.ToArray();
+        public Range_long[] Items => _sequenceParts.ToArray();
 
         /// <summary>
         /// Gets if sequence set contains specified number.
@@ -43,7 +43,7 @@ namespace LumiSoft.Net.IMAP
         /// <param name="seqNumber">Number to check.</param>
         public bool Contains(long seqNumber)
         {
-            foreach (Range_long range in m_pSequenceParts)
+            foreach (Range_long range in _sequenceParts)
             {
                 if (range.Contains(seqNumber))
                 {
@@ -124,11 +124,11 @@ namespace LumiSoft.Net.IMAP
                         long end = Parse_Seq_Number(rangeParts[1], seqMaxValue);
                         if (start <= end)
                         {
-                            m_pSequenceParts.Add(new Range_long(start, end));
+                            _sequenceParts.Add(new Range_long(start, end));
                         }
                         else
                         {
-                            m_pSequenceParts.Add(new Range_long(end, start));
+                            _sequenceParts.Add(new Range_long(end, start));
                         }
                     }
                     else
@@ -139,12 +139,12 @@ namespace LumiSoft.Net.IMAP
                 // seq-number
                 else
                 {
-                    m_pSequenceParts.Add(new Range_long(Parse_Seq_Number(sequenceSet, seqMaxValue)));
+                    _sequenceParts.Add(new Range_long(Parse_Seq_Number(sequenceSet, seqMaxValue)));
                 }
             }
             //-----------------------------------------------------------------------------------//
 
-            m_SequenceString = sequenceSetString;
+            _sequenceString = sequenceSetString;
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace LumiSoft.Net.IMAP
         /// <returns></returns>
         public string ToSequenceSetString()
         {
-            return m_SequenceString;
+            return _sequenceString;
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace LumiSoft.Net
     /// </summary>
     internal class AsyncResultState : IAsyncResult
     {
-        private readonly AsyncCallback m_pCallback;
+        private readonly AsyncCallback _callback;
 
         /// <summary>
         /// Default constructor.
@@ -21,7 +21,7 @@ namespace LumiSoft.Net
         {
             AsyncObject = asyncObject;
             AsyncDelegate = asyncDelegate;
-            m_pCallback = callback;
+            _callback = callback;
             AsyncState = state;
         }
 
@@ -71,7 +71,7 @@ namespace LumiSoft.Net
         /// <param name="ar">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
         public void CompletedCallback(IAsyncResult ar)
         {
-            m_pCallback?.Invoke(this);
+            _callback?.Invoke(this);
         }
 
         /// <summary>

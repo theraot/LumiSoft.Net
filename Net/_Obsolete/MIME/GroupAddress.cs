@@ -10,7 +10,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class GroupAddress : Address
     {
-        private string m_DisplayName = "";
+        private string _displayName = "";
 
         /// <summary>
         /// Default constructor.
@@ -26,11 +26,11 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string DisplayName
         {
-            get => m_DisplayName;
+            get => _displayName;
 
             set
             {
-                m_DisplayName = value;
+                _displayName = value;
 
                 OnChanged();
             }

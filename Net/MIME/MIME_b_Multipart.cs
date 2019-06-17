@@ -15,7 +15,7 @@ namespace LumiSoft.Net.MIME
     /// </remarks>
     public class MIME_b_Multipart : MIME_b
     {
-        private readonly MIME_h_ContentType m_pContentType;
+        private readonly MIME_h_ContentType _contentType;
 
         /// <summary>
         /// Default constructor.
@@ -34,7 +34,7 @@ namespace LumiSoft.Net.MIME
                 throw new ArgumentException("Argument 'contentType' doesn't contain required boundary parameter.");
             }
 
-            m_pContentType = contentType;
+            _contentType = contentType;
 
             BodyParts = new MIME_EntityCollection();
         }
@@ -93,7 +93,7 @@ namespace LumiSoft.Net.MIME
             // Owner entity has no content-type or has different content-type, just add/overwrite it.
             if (setContentType && (Entity.ContentType == null || !string.Equals(Entity.ContentType.TypeWithSubtype, MediaType, StringComparison.InvariantCultureIgnoreCase)))
             {
-                Entity.ContentType = m_pContentType;
+                Entity.ContentType = _contentType;
             }
         }
 
@@ -302,12 +302,12 @@ namespace LumiSoft.Net.MIME
                 public int BytesInBuffer { get; private set; }
             }
 
-            private readonly SmartStream m_pStream;
-            private readonly string m_Boundary = "";
-            private _DataLine m_pPreviousLine;
-            private readonly SmartStream.ReadLineAsyncOP m_pReadLineOP;
-            private readonly StringBuilder m_pTextPreamble;
-            private readonly StringBuilder m_pTextEpilogue;
+            private readonly SmartStream _stream;
+            private readonly string _boundary = "";
+            private _DataLine _previousLine;
+            private readonly SmartStream.ReadLineAsyncOP _readLineOP;
+            private readonly StringBuilder _textPreamble;
+            private readonly StringBuilder _textEpilogue;
 
             /// <summary>
             /// Default constructor.
@@ -317,12 +317,12 @@ namespace LumiSoft.Net.MIME
             /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> or <b>boundary</b> is null reference.</exception>
             public _MultipartReader(SmartStream stream, string boundary)
             {
-                m_pStream = stream ?? throw new ArgumentNullException("stream");
-                m_Boundary = boundary ?? throw new ArgumentNullException("boundary");
+                _stream = stream ?? throw new ArgumentNullException("stream");
+                _boundary = boundary ?? throw new ArgumentNullException("boundary");
 
-                m_pReadLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.ThrowException);
-                m_pTextPreamble = new StringBuilder();
-                m_pTextEpilogue = new StringBuilder();
+                _readLineOP = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.ThrowException);
+                _textPreamble = new StringBuilder();
+                _textEpilogue = new StringBuilder();
             }
 
             /// <summary>
@@ -348,68 +348,68 @@ namespace LumiSoft.Net.MIME
                 }
                 if (ReaderState == State.SeekFirst)
                 {
-                    m_pPreviousLine = null;
+                    _previousLine = null;
 
                     while (true)
                     {
-                        m_pStream.ReadLine(m_pReadLineOP, false);
-                        if (m_pReadLineOP.Error != null)
+                        _stream.ReadLine(_readLineOP, false);
+                        if (_readLineOP.Error != null)
                         {
-                            throw m_pReadLineOP.Error;
+                            throw _readLineOP.Error;
                         }
                         // We reached end of stream. Bad boundary: boundary end tag missing.
 
-                        if (m_pReadLineOP.BytesInBuffer == 0)
+                        if (_readLineOP.BytesInBuffer == 0)
                         {
                             ReaderState = State.Done;
 
                             return false;
                         }
                         // Check if we have boundary start/end.
-                        if (m_pReadLineOP.Buffer[0] == '-')
+                        if (_readLineOP.Buffer[0] == '-')
                         {
-                            var boundary = m_pReadLineOP.LineUtf8;
+                            var boundary = _readLineOP.LineUtf8;
                             // We have readed all MIME entity body parts.
-                            if ("--" + m_Boundary + "--" == boundary)
+                            if ("--" + _boundary + "--" == boundary)
                             {
                                 ReaderState = State.Done;
 
                                 // Last CRLF is no part of preamble, but is part of boundary-tag.
-                                if (m_pTextPreamble.Length >= 2)
+                                if (_textPreamble.Length >= 2)
                                 {
-                                    m_pTextPreamble.Remove(m_pTextPreamble.Length - 2, 2);
+                                    _textPreamble.Remove(_textPreamble.Length - 2, 2);
                                 }
 
                                 // Read "epilogoue",if has any.
                                 while (true)
                                 {
-                                    m_pStream.ReadLine(m_pReadLineOP, false);
+                                    _stream.ReadLine(_readLineOP, false);
 
-                                    if (m_pReadLineOP.Error != null)
+                                    if (_readLineOP.Error != null)
                                     {
-                                        throw m_pReadLineOP.Error;
+                                        throw _readLineOP.Error;
                                     }
                                     // We reached end of stream. Epilogue reading completed.
 
-                                    if (m_pReadLineOP.BytesInBuffer == 0)
+                                    if (_readLineOP.BytesInBuffer == 0)
                                     {
                                         break;
                                     }
-                                    m_pTextEpilogue.Append(m_pReadLineOP.LineUtf8 + "\r\n");
+                                    _textEpilogue.Append(_readLineOP.LineUtf8 + "\r\n");
                                 }
 
                                 return false;
                             }
                             // We have next boundary.
 
-                            if ("--" + m_Boundary == boundary)
+                            if ("--" + _boundary == boundary)
                             {
                                 ReaderState = State.InBoundary;
 
                                 // Last CRLF is no part of preamble, but is part of boundary-tag.
-                                if (m_pTextPreamble.Length >= 2)
+                                if (_textPreamble.Length >= 2)
                                 {
-                                    m_pTextPreamble.Remove(m_pTextPreamble.Length - 2, 2);
+                                    _textPreamble.Remove(_textPreamble.Length - 2, 2);
                                 }
 
                                 return true;
@@ -418,12 +418,12 @@ namespace LumiSoft.Net.MIME
                             //else{
                         }
 
-                        m_pTextPreamble.Append(m_pReadLineOP.LineUtf8 + "\r\n");
+                        _textPreamble.Append(_readLineOP.LineUtf8 + "\r\n");
                     }
                 }
                 if (ReaderState == State.ReadNext)
                 {
-                    m_pPreviousLine = null;
+                    _previousLine = null;
                     ReaderState = State.InBoundary;
 
                     return true;
@@ -493,133 +493,133 @@ namespace LumiSoft.Net.MIME
                 */
 
                 // Read line ahead, if none available. This is done for the boundary first line only.
-                if (m_pPreviousLine == null)
+                if (_previousLine == null)
                 {
-                    m_pPreviousLine = new _DataLine();
+                    _previousLine = new _DataLine();
 
-                    m_pStream.ReadLine(m_pReadLineOP, false);
-                    if (m_pReadLineOP.Error != null)
+                    _stream.ReadLine(_readLineOP, false);
+                    if (_readLineOP.Error != null)
                     {
-                        throw m_pReadLineOP.Error;
+                        throw _readLineOP.Error;
                     }
                     // We reached end of stream. Bad boundary: boundary end tag missing.
 
-                    if (m_pReadLineOP.BytesInBuffer == 0)
+                    if (_readLineOP.BytesInBuffer == 0)
                     {
                         ReaderState = State.Done;
 
                         return 0;
                     }
                     // We have readed all MIME entity body parts.(boundary end tag reached)
-                    if (m_pReadLineOP.Buffer[0] == '-' && string.Equals("--" + m_Boundary + "--", m_pReadLineOP.LineUtf8))
+                    if (_readLineOP.Buffer[0] == '-' && string.Equals("--" + _boundary + "--", _readLineOP.LineUtf8))
                     {
                         ReaderState = State.Done;
 
                         // Read "epilogoue",if has any.
                         while (true)
                         {
-                            m_pStream.ReadLine(m_pReadLineOP, false);
+                            _stream.ReadLine(_readLineOP, false);
 
-                            if (m_pReadLineOP.Error != null)
+                            if (_readLineOP.Error != null)
                             {
-                                throw m_pReadLineOP.Error;
+                                throw _readLineOP.Error;
                             }
                             // We reached end of stream. Epilogue reading completed.
 
-                            if (m_pReadLineOP.BytesInBuffer == 0)
+                            if (_readLineOP.BytesInBuffer == 0)
                             {
                                 break;
                             }
-                            m_pTextEpilogue.Append(m_pReadLineOP.LineUtf8 + "\r\n");
+                            _textEpilogue.Append(_readLineOP.LineUtf8 + "\r\n");
                         }
 
                         return 0;
                     }
                     // We have readed all active boundary data, next boundary start tag.
-                    if (m_pReadLineOP.Buffer[0] == '-' && string.Equals("--" + m_Boundary, m_pReadLineOP.LineUtf8))
+                    if (_readLineOP.Buffer[0] == '-' && string.Equals("--" + _boundary, _readLineOP.LineUtf8))
                     {
                         ReaderState = State.ReadNext;
 
                         return 0;
                     }
                     // Store first read-ahed line.
-                    m_pPreviousLine.AssignFrom(m_pReadLineOP);
+                    _previousLine.AssignFrom(_readLineOP);
                 }
 
-                m_pStream.ReadLine(m_pReadLineOP, false);
-                if (m_pReadLineOP.Error != null)
+                _stream.ReadLine(_readLineOP, false);
+                if (_readLineOP.Error != null)
                 {
-                    throw m_pReadLineOP.Error;
+                    throw _readLineOP.Error;
                 }
                 // We reached end of stream. Bad boundary: boundary end tag missing.
 
-                if (m_pReadLineOP.BytesInBuffer == 0)
+                if (_readLineOP.BytesInBuffer == 0)
                 {
                     ReaderState = State.Done;
 
-                    if (count < m_pPreviousLine.BytesInBuffer)
+                    if (count < _previousLine.BytesInBuffer)
                     {
                         throw new ArgumentException("Argument 'buffer' is to small. This should never happen.");
                     }
-                    if (m_pPreviousLine.BytesInBuffer > 0)
+                    if (_previousLine.BytesInBuffer > 0)
                     {
-                        Array.Copy(m_pPreviousLine.LineBuffer, 0, buffer, offset, m_pPreviousLine.BytesInBuffer);
+                        Array.Copy(_previousLine.LineBuffer, 0, buffer, offset, _previousLine.BytesInBuffer);
                     }
 
-                    return m_pPreviousLine.BytesInBuffer;
+                    return _previousLine.BytesInBuffer;
                 }
                 // We have readed all MIME entity body parts.(boundary end tag reached)
-                if (m_pReadLineOP.Buffer[0] == '-' && string.Equals("--" + m_Boundary + "--", m_pReadLineOP.LineUtf8))
+                if (_readLineOP.Buffer[0] == '-' && string.Equals("--" + _boundary + "--", _readLineOP.LineUtf8))
                 {
                     ReaderState = State.Done;
 
                     // Read "epilogoue",if has any.
                     while (true)
                     {
-                        m_pStream.ReadLine(m_pReadLineOP, false);
+                        _stream.ReadLine(_readLineOP, false);
 
-                        if (m_pReadLineOP.Error != null)
+                        if (_readLineOP.Error != null)
                         {
-                            throw m_pReadLineOP.Error;
+                            throw _readLineOP.Error;
                         }
                         // We reached end of stream. Epilogue reading completed.
 
-                        if (m_pReadLineOP.BytesInBuffer == 0)
+                        if (_readLineOP.BytesInBuffer == 0)
                         {
                             break;
                         }
-                        m_pTextEpilogue.Append(m_pReadLineOP.LineUtf8 + "\r\n");
+                        _textEpilogue.Append(_readLineOP.LineUtf8 + "\r\n");
                     }
 
-                    if (count < m_pPreviousLine.BytesInBuffer)
+                    if (count < _previousLine.BytesInBuffer)
                     {
                         throw new ArgumentException("Argument 'buffer' is to small. This should never happen.");
                     }
                     // Return previous line data - CRLF, because CRLF if part of boundary tag.
-                    if (m_pPreviousLine.BytesInBuffer > 2)
+                    if (_previousLine.BytesInBuffer > 2)
                     {
-                        Array.Copy(m_pPreviousLine.LineBuffer, 0, buffer, offset, m_pPreviousLine.BytesInBuffer - 2);
+                        Array.Copy(_previousLine.LineBuffer, 0, buffer, offset, _previousLine.BytesInBuffer - 2);
 
-                        return m_pPreviousLine.BytesInBuffer - 2;
+                        return _previousLine.BytesInBuffer - 2;
                     }
 
                     return 0;
                 }
                 // We have readed all active boundary data, next boundary start tag.
-                if (m_pReadLineOP.Buffer[0] == '-' && string.Equals("--" + m_Boundary, m_pReadLineOP.LineUtf8))
+                if (_readLineOP.Buffer[0] == '-' && string.Equals("--" + _boundary, _readLineOP.LineUtf8))
                 {
                     ReaderState = State.ReadNext;
 
                     // Return previous line data - CRLF, because CRLF if part of boundary tag.
-                    if (count < m_pPreviousLine.BytesInBuffer)
+                    if (count < _previousLine.BytesInBuffer)
                     {
                         throw new ArgumentException("Argument 'buffer' is to small. This should never happen.");
                     }
-                    if (m_pPreviousLine.BytesInBuffer > 2)
+                    if (_previousLine.BytesInBuffer > 2)
                     {
-                        Array.Copy(m_pPreviousLine.LineBuffer, 0, buffer, offset, m_pPreviousLine.BytesInBuffer - 2);
+                        Array.Copy(_previousLine.LineBuffer, 0, buffer, offset, _previousLine.BytesInBuffer - 2);
 
-                        return m_pPreviousLine.BytesInBuffer - 2;
+                        return _previousLine.BytesInBuffer - 2;
                     }
 
                     return 0;
@@ -627,16 +627,16 @@ namespace LumiSoft.Net.MIME
                 // We have boundary data-line.
                 // Here we actually process previous line and store current.
 
-                if (count < m_pPreviousLine.BytesInBuffer)
+                if (count < _previousLine.BytesInBuffer)
                 {
                     throw new ArgumentException("Argument 'buffer' is to small. This should never happen.");
                 }
-                Array.Copy(m_pPreviousLine.LineBuffer, 0, buffer, offset, m_pPreviousLine.BytesInBuffer);
+                Array.Copy(_previousLine.LineBuffer, 0, buffer, offset, _previousLine.BytesInBuffer);
 
-                int countCopied = m_pPreviousLine.BytesInBuffer;
+                int countCopied = _previousLine.BytesInBuffer;
 
                 // Store current line as previous.
-                m_pPreviousLine.AssignFrom(m_pReadLineOP);
+                _previousLine.AssignFrom(_readLineOP);
 
                 return countCopied;
             }
@@ -689,13 +689,13 @@ namespace LumiSoft.Net.MIME
             /// Gets "preamble" text. Defined in RFC 2046 5.1.1.
             /// </summary>
             /// <remarks>Preamble text is text between MIME entiy headers and first boundary.</remarks>
-            public string TextPreamble => m_pTextPreamble.ToString();
+            public string TextPreamble => _textPreamble.ToString();
 
             /// <summary>
             /// Gets "epilogue" text. Defined in RFC 2046 5.1.1.
             /// </summary>
             /// <remarks>Epilogue text is text after last boundary end.</remarks>
-            public string TextEpilogue => m_pTextEpilogue.ToString();
+            public string TextEpilogue => _textEpilogue.ToString();
 
             /// <summary>
             /// Gets reader state.

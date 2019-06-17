@@ -14,25 +14,25 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class HeaderFieldCollection : IEnumerable
     {
-        private readonly List<HeaderField> m_pHeaderFields;
+        private readonly List<HeaderField> _headerFields;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public HeaderFieldCollection()
         {
-            m_pHeaderFields = new List<HeaderField>();
+            _headerFields = new List<HeaderField>();
         }
 
         /// <summary>
         /// Gets header fields count in the collection.
         /// </summary>
-        public int Count => m_pHeaderFields.Count;
+        public int Count => _headerFields.Count;
 
         /// <summary>
         /// Gets header field from specified index.
         /// </summary>
-        public HeaderField this[int index] => (HeaderField)m_pHeaderFields[index];
+        public HeaderField this[int index] => (HeaderField)_headerFields[index];
 
         /// <summary>
         /// Adds a new header field with specified name and value to the end of the collection.
@@ -41,7 +41,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="value">Header field value.</param>
         public void Add(string fieldName, string value)
         {
-            m_pHeaderFields.Add(new HeaderField(fieldName, value));
+            _headerFields.Add(new HeaderField(fieldName, value));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="headerField">Header field.</param>
         public void Add(HeaderField headerField)
         {
-            m_pHeaderFields.Add(headerField);
+            _headerFields.Add(headerField);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public void Clear()
         {
-            m_pHeaderFields.Clear();
+            _headerFields.Clear();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public bool Contains(string fieldName)
         {
-            foreach (HeaderField h in m_pHeaderFields)
+            foreach (HeaderField h in _headerFields)
             {
                 if (h.Name.ToLower() == fieldName.ToLower())
                 {
@@ -86,7 +86,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public bool Contains(HeaderField headerField)
         {
-            return m_pHeaderFields.Contains(headerField);
+            return _headerFields.Contains(headerField);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace LumiSoft.Net.Mime
         public HeaderField[] Get(string fieldName)
         {
             var fields = new ArrayList();
-            foreach (HeaderField h in m_pHeaderFields)
+            foreach (HeaderField h in _headerFields)
             {
                 if (h.Name.ToLower() == fieldName.ToLower())
                 {
@@ -122,7 +122,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return m_pHeaderFields.GetEnumerator();
+            return _headerFields.GetEnumerator();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public HeaderField GetFirst(string fieldName)
         {
-            foreach (HeaderField h in m_pHeaderFields)
+            foreach (HeaderField h in _headerFields)
             {
                 if (h.Name.ToLower() == fieldName.ToLower())
                 {
@@ -151,7 +151,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="value">Header field value.</param>
         public void Insert(int index, string fieldName, string value)
         {
-            m_pHeaderFields.Insert(index, new HeaderField(fieldName, value));
+            _headerFields.Insert(index, new HeaderField(fieldName, value));
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace LumiSoft.Net.Mime
                     <TAB or SP>aaaaa<CRLF>
             */
 
-            m_pHeaderFields.Clear();
+            _headerFields.Clear();
 
             var args = new SmartStream.ReadLineAsyncOP(new byte[32000], SizeExceededAction.JunkAndThrowException);
             stream.ReadLine(args, false);
@@ -257,7 +257,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="index">The index of the header field to remove.</param>
         public void Remove(int index)
         {
-            m_pHeaderFields.RemoveAt(index);
+            _headerFields.RemoveAt(index);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="field">Header field to remove.</param>
         public void Remove(HeaderField field)
         {
-            m_pHeaderFields.Remove(field);
+            _headerFields.Remove(field);
         }
 
         /// <summary>
@@ -275,12 +275,12 @@ namespace LumiSoft.Net.Mime
         /// <param name="fieldName">Header field name.</param>
         public void RemoveAll(string fieldName)
         {
-            for (int i = 0; i < m_pHeaderFields.Count; i++)
+            for (int i = 0; i < _headerFields.Count; i++)
             {
-                var h = (HeaderField)m_pHeaderFields[i];
+                var h = (HeaderField)_headerFields[i];
                 if (h.Name.ToLower() == fieldName.ToLower())
                 {
-                    m_pHeaderFields.Remove(h);
+                    _headerFields.Remove(h);
                     i--;
                 }
             }

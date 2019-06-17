@@ -8,25 +8,25 @@ namespace LumiSoft.Net.DNS.Client
     /// </summary>
     public class DNS_ClientCache
     {
-        private Dictionary<string, CacheEntry> m_pCache;
-        private TimerEx m_pTimerTimeout;
+        private Dictionary<string, CacheEntry> _cache;
+        private TimerEx _timerTimeout;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         internal DNS_ClientCache()
         {
-            m_pCache = new Dictionary<string, CacheEntry>();
+            _cache = new Dictionary<string, CacheEntry>();
 
-            m_pTimerTimeout = new TimerEx(60000);
-            m_pTimerTimeout.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimerTimeout_Elapsed);
-            m_pTimerTimeout.Start();
+            _timerTimeout = new TimerEx(60000);
+            _timerTimeout.Elapsed += new System.Timers.ElapsedEventHandler(TimerTimeout_Elapsed);
+            _timerTimeout.Start();
         }
 
         /// <summary>
         /// Gets number of DNS queries cached.
         /// </summary>
-        public int Count => m_pCache.Count;
+        public int Count => _cache.Count;
 
         /// <summary>
         /// Gets or sets maximum number of seconds to cache positive DNS responses.
@@ -61,12 +61,12 @@ namespace LumiSoft.Net.DNS.Client
                 throw new ArgumentNullException("response");
             }
 
-            lock (m_pCache)
+            lock (_cache)
             {
                 // Remove old cache entry, if any.
-                if (m_pCache.ContainsKey(qname + qtype))
+                if (_cache.ContainsKey(qname + qtype))
                 {
-                    m_pCache.Remove(qname + qtype);
+                    _cache.Remove(qname + qtype);
                 }
 
                 if (response.ResponseCode == DNS_RCode.NO_ERROR)
@@ -81,11 +81,11 @@ namespace LumiSoft.Net.DNS.Client
                         }
                     }
 
-                    m_pCache.Add(qname + qtype, new CacheEntry(response, DateTime.Now.AddSeconds(ttl)));
+                    _cache.Add(qname + qtype, new CacheEntry(response, DateTime.Now.AddSeconds(ttl)));
                 }
                 else
                 {
-                    m_pCache.Add(qname + qtype, new CacheEntry(response, DateTime.Now.AddSeconds(MaxNegativeCacheTtl)));
+                    _cache.Add(qname + qtype, new CacheEntry(response, DateTime.Now.AddSeconds(MaxNegativeCacheTtl)));
                 }
             }
         }
@@ -95,9 +95,9 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         public void ClearCache()
         {
-            lock (m_pCache)
+            lock (_cache)
             {
-                m_pCache.Clear();
+                _cache.Clear();
             }
         }
 
@@ -121,7 +121,7 @@ namespace LumiSoft.Net.DNS.Client
             }
 
             CacheEntry entry = null;
-            if (m_pCache.TryGetValue(qname + qtype, out entry))
+            if (_cache.TryGetValue(qname + qtype, out entry))
             {
                 // Cache entry has expired.
                 if (DateTime.Now > entry.Expires)
@@ -140,10 +140,10 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         internal void Dispose()
         {
-            m_pCache = null;
+            _cache = null;
 
-            m_pTimerTimeout.Dispose();
-            m_pTimerTimeout = null;
+            _timerTimeout.Dispose();
+            _timerTimeout = null;
         }
 
         /// <summary>
@@ -151,13 +151,13 @@ namespace LumiSoft.Net.DNS.Client
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Event data.</param>
-        private void m_pTimerTimeout_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void TimerTimeout_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            lock (m_pCache)
+            lock (_cache)
             {
                 // Copy entries to new array.
                 var values = new List<KeyValuePair<string, CacheEntry>>();
-                foreach (KeyValuePair<string, CacheEntry> entry in m_pCache)
+                foreach (KeyValuePair<string, CacheEntry> entry in _cache)
                 {
                     values.Add(entry);
                 }
@@ -167,7 +167,7 @@ namespace LumiSoft.Net.DNS.Client
                 {
                     if (DateTime.Now > entry.Value.Expires)
                     {
-                        m_pCache.Remove(entry.Key);
+                        _cache.Remove(entry.Key);
                     }
                 }
             }

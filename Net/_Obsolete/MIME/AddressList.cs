@@ -16,20 +16,20 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class AddressList : IEnumerable
     {
-        private readonly List<Address> m_pAddresses;
+        private readonly List<Address> _addresses;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public AddressList()
         {
-            m_pAddresses = new List<Address>();
+            _addresses = new List<Address>();
         }
 
         /// <summary>
         /// Gets address count in the collection.
         /// </summary>
-        public int Count => m_pAddresses.Count;
+        public int Count => _addresses.Count;
 
         /// <summary>
         /// Gets all mailbox addresses. Note: group address mailbox addresses are also included.
@@ -69,7 +69,7 @@ namespace LumiSoft.Net.Mime
         /// <summary>
         /// Gets address from specified index.
         /// </summary>
-        public Address this[int index] => (Address)m_pAddresses[index];
+        public Address this[int index] => (Address)_addresses[index];
 
         /// <summary>
         /// Adds a new address to the end of the collection.
@@ -78,7 +78,7 @@ namespace LumiSoft.Net.Mime
         public void Add(Address address)
         {
             address.Owner = this;
-            m_pAddresses.Add(address);
+            _addresses.Add(address);
 
             OnCollectionChanged();
         }
@@ -88,11 +88,11 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public void Clear()
         {
-            foreach (Address address in m_pAddresses)
+            foreach (Address address in _addresses)
             {
                 address.Owner = null;
             }
-            m_pAddresses.Clear();
+            _addresses.Clear();
 
             OnCollectionChanged();
         }
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.Mime
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return m_pAddresses.GetEnumerator();
+            return _addresses.GetEnumerator();
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace LumiSoft.Net.Mime
         public void Insert(int index, Address address)
         {
             address.Owner = this;
-            m_pAddresses.Insert(index, address);
+            _addresses.Insert(index, address);
 
             OnCollectionChanged();
         }
@@ -144,7 +144,7 @@ namespace LumiSoft.Net.Mime
 
                     // Read to ',' or to end if last element
                     var address = MailboxAddress.Parse(reader.QuotedReadToDelimiter(','));
-                    m_pAddresses.Add(address);
+                    _addresses.Add(address);
                     address.Owner = this;
                 }
                 // Group
@@ -152,7 +152,7 @@ namespace LumiSoft.Net.Mime
                 {
                     // Read to ';', this is end of group
                     var address = GroupAddress.Parse(reader.QuotedReadToDelimiter(';'));
-                    m_pAddresses.Add(address);
+                    _addresses.Add(address);
                     address.Owner = this;
 
                     // If there are next items, remove first comma because it's part of group address
@@ -172,7 +172,7 @@ namespace LumiSoft.Net.Mime
         /// <param name="index">Index of the address which to remove.</param>
         public void Remove(int index)
         {
-            Remove((Address)m_pAddresses[index]);
+            Remove((Address)_addresses[index]);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace LumiSoft.Net.Mime
         public void Remove(Address address)
         {
             address.Owner = null;
-            m_pAddresses.Remove(address);
+            _addresses.Remove(address);
 
             OnCollectionChanged();
         }
@@ -194,30 +194,30 @@ namespace LumiSoft.Net.Mime
         public string ToAddressListString()
         {
             var retVal = new StringBuilder();
-            for (int i = 0; i < m_pAddresses.Count; i++)
+            for (int i = 0; i < _addresses.Count; i++)
             {
-                if (m_pAddresses[i] is MailboxAddress)
+                if (_addresses[i] is MailboxAddress)
                 {
                     // For last address don't add , and <TAB>
-                    if (i == (m_pAddresses.Count - 1))
+                    if (i == (_addresses.Count - 1))
                     {
-                        retVal.Append(((MailboxAddress)m_pAddresses[i]).ToMailboxAddressString());
+                        retVal.Append(((MailboxAddress)_addresses[i]).ToMailboxAddressString());
                     }
                     else
                     {
-                        retVal.Append(((MailboxAddress)m_pAddresses[i]).ToMailboxAddressString() + ",\t");
+                        retVal.Append(((MailboxAddress)_addresses[i]).ToMailboxAddressString() + ",\t");
                     }
                 }
-                else if (m_pAddresses[i] is GroupAddress)
+                else if (_addresses[i] is GroupAddress)
                 {
                     // For last address don't add , and <TAB>
-                    if (i == (m_pAddresses.Count - 1))
+                    if (i == (_addresses.Count - 1))
                     {
-                        retVal.Append(((GroupAddress)m_pAddresses[i]).GroupString);
+                        retVal.Append(((GroupAddress)_addresses[i]).GroupString);
                     }
                     else
                     {
-                        retVal.Append(((GroupAddress)m_pAddresses[i]).GroupString + ",\t");
+                        retVal.Append(((GroupAddress)_addresses[i]).GroupString + ",\t");
                     }
                 }
             }

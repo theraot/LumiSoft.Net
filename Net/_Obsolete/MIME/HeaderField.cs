@@ -8,7 +8,7 @@ namespace LumiSoft.Net.Mime
     [Obsolete("See LumiSoft.Net.MIME or LumiSoft.Net.Mail namepaces for replacement.")]
     public class HeaderField
     {
-        private string m_Name  = "";
+        private string _name  = "";
 
         /// <summary>
         /// Default construtor.
@@ -33,7 +33,7 @@ namespace LumiSoft.Net.Mime
         /// </summary>
         public string Name
         {
-            get => m_Name;
+            get => _name;
 
             set{
                 /* RFC 2822 2.2 Header Fields
@@ -64,7 +64,7 @@ namespace LumiSoft.Net.Mime
                     }
                 }
 
-                m_Name = value;
+                _name = value;
             }
         }
 

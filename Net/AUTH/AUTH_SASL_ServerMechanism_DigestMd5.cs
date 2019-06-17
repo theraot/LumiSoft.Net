@@ -8,12 +8,12 @@ namespace LumiSoft.Net.AUTH
     /// </summary>
     public class AUTH_SASL_ServerMechanism_DigestMd5 : AUTH_SASL_ServerMechanism
     {
-        private bool m_IsAuthenticated;
-        private bool m_IsCompleted;
-        private readonly string m_Nonce = "";
-        private string m_Realm = "";
-        private int m_State;
-        private string m_UserName = "";
+        private bool _isAuthenticated;
+        private bool _isCompleted;
+        private readonly string _nonce = "";
+        private string _realm = "";
+        private int _state;
+        private string _userName = "";
 
         /// <summary>
         /// Default constructor.
@@ -23,7 +23,7 @@ namespace LumiSoft.Net.AUTH
         {
             RequireSSL = requireSSL;
 
-            m_Nonce = Auth_HttpDigest.CreateNonce();
+            _nonce = Auth_HttpDigest.CreateNonce();
         }
 
         /// <summary>
@@ -34,12 +34,12 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets if user has authenticated sucessfully.
         /// </summary>
-        public override bool IsAuthenticated => m_IsAuthenticated;
+        public override bool IsAuthenticated => _isAuthenticated;
 
         /// <summary>
         /// Gets if the authentication exchange has completed.
         /// </summary>
-        public override bool IsCompleted => m_IsCompleted;
+        public override bool IsCompleted => _isCompleted;
 
         /// <summary>
         /// Returns always "DIGEST-MD5".
@@ -52,7 +52,7 @@ namespace LumiSoft.Net.AUTH
         /// <remarks>Normally this is host or domain name.</remarks>
         public string Realm
         {
-            get => m_Realm;
+            get => _realm;
 
             set
             {
@@ -60,7 +60,7 @@ namespace LumiSoft.Net.AUTH
                 {
                     value = "";
                 }
-                m_Realm = value;
+                _realm = value;
             }
         }
 
@@ -72,7 +72,7 @@ namespace LumiSoft.Net.AUTH
         /// <summary>
         /// Gets user login name.
         /// </summary>
-        public override string UserName => m_UserName;
+        public override string UserName => _userName;
 
         /// <summary>
         /// Continues authentication process.
@@ -103,36 +103,36 @@ namespace LumiSoft.Net.AUTH
                 The password in this example was "secret".
             */
 
-            if (m_State == 0)
+            if (_state == 0)
             {
-                m_State++;
+                _state++;
 
-                var callenge = new AUTH_SASL_DigestMD5_Challenge(new[] { m_Realm }, m_Nonce, new[] { "auth" }, false);
+                var callenge = new AUTH_SASL_DigestMD5_Challenge(new[] { _realm }, _nonce, new[] { "auth" }, false);
 
                 return Encoding.UTF8.GetBytes(callenge.ToChallenge());
             }
 
-            if (m_State == 1)
+            if (_state == 1)
             {
-                m_State++;
+                _state++;
 
                 try
                 {
                     var response = AUTH_SASL_DigestMD5_Response.Parse(Encoding.UTF8.GetString(clientResponse));
 
                     // Check realm and nonce value.
-                    if (m_Realm != response.Realm || m_Nonce != response.Nonce)
+                    if (_realm != response.Realm || _nonce != response.Nonce)
                     {
                         return Encoding.UTF8.GetBytes("rspauth=\"\"");
                     }
 
-                    m_UserName = response.UserName;
+                    _userName = response.UserName;
                     var result = OnGetUserInfo(response.UserName);
                     if (result.UserExists)
                     {
                         if (response.Authenticate(result.UserName, result.Password))
                         {
-                            m_IsAuthenticated = true;
+                            _isAuthenticated = true;
 
                             return Encoding.UTF8.GetBytes(response.ToRspauthResponse(result.UserName, result.Password));
                         }
@@ -145,7 +145,7 @@ namespace LumiSoft.Net.AUTH
 
                 return Encoding.UTF8.GetBytes("rspauth=\"\"");
             }
-            m_IsCompleted = true;
+            _isCompleted = true;
 
             return null;
         }
@@ -155,10 +155,10 @@ namespace LumiSoft.Net.AUTH
         /// </summary>
         public override void Reset()
         {
-            m_IsCompleted = false;
-            m_IsAuthenticated = false;
-            m_UserName = "";
-            m_State = 0;
+            _isCompleted = false;
+            _isAuthenticated = false;
+            _userName = "";
+            _state = 0;
         }
 
         /// <summary>

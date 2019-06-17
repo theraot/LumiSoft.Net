@@ -17,17 +17,17 @@ namespace LumiSoft.Net.FTP.Server
     /// </summary>
     public class FTP_Session : TCP_ServerSession
     {
-        private int m_BadCommands;
-        private string m_CurrentDir = "/";
+        private int _badCommands;
+        private string _currentDir = "/";
 
-        private readonly Dictionary<string, AUTH_SASL_ServerMechanism> m_pAuthentications = null;
-        private IPEndPoint m_pDataConEndPoint;
-        private DataConnection m_pDataConnection;
-        private Socket m_pPassiveSocket;
-        private GenericIdentity m_pUser;
-        private string m_RenameFrom = "";
-        private bool m_SessionRejected;
-        private string m_UserName;
+        private readonly Dictionary<string, AUTH_SASL_ServerMechanism> _authentications = null;
+        private IPEndPoint _dataConEndPoint;
+        private DataConnection _dataConnection;
+        private Socket _passiveSocket;
+        private GenericIdentity _user;
+        private string _renameFrom = "";
+        private bool _sessionRejected;
+        private string _userName;
 
         /// <summary>
         /// This event is raised when session needs to complete APPE(append to file) command.
@@ -107,7 +107,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_pUser;
+                return _user;
             }
         }
 
@@ -124,7 +124,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_pAuthentications;
+                return _authentications;
             }
         }
 
@@ -141,7 +141,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_BadCommands;
+                return _badCommands;
             }
         }
 
@@ -157,7 +157,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                return m_CurrentDir;
+                return _currentDir;
             }
 
             set
@@ -167,7 +167,7 @@ namespace LumiSoft.Net.FTP.Server
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
-                m_CurrentDir = value;
+                _currentDir = value;
             }
         }
 
@@ -204,15 +204,15 @@ namespace LumiSoft.Net.FTP.Server
             }
             base.Dispose();
 
-            if (m_pDataConnection != null)
+            if (_dataConnection != null)
             {
-                m_pDataConnection.Dispose();
-                m_pDataConnection = null;
+                _dataConnection.Dispose();
+                _dataConnection = null;
             }
-            if (m_pPassiveSocket != null)
+            if (_passiveSocket != null)
             {
-                m_pPassiveSocket.Close();
-                m_pPassiveSocket = null;
+                _passiveSocket.Close();
+                _passiveSocket = null;
             }
         }
 
@@ -331,7 +331,7 @@ namespace LumiSoft.Net.FTP.Server
                 // Setup rejected flag, so we respond "-ERR Session rejected." any command except QUIT.
                 if (string.IsNullOrEmpty(e.Response) || e.Response.ToUpper().StartsWith("500"))
                 {
-                    m_SessionRejected = true;
+                    _sessionRejected = true;
                 }
 
                 BeginReadCmd();
@@ -344,7 +344,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void ABOR(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -389,14 +389,14 @@ namespace LumiSoft.Net.FTP.Server
                    processed.
             */
 
-            m_pDataConnection?.Abort();
+            _dataConnection?.Abort();
 
             WriteLine("226 ABOR command successful.");
         }
 
         private void APPE(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -443,8 +443,8 @@ namespace LumiSoft.Net.FTP.Server
                     return;
                 }
 
-                m_pDataConnection = new DataConnection(this, eArgs.FileStream, true);
-                m_pDataConnection.Start();
+                _dataConnection = new DataConnection(this, eArgs.FileStream, true);
+                _dataConnection.Start();
             }
         }
 
@@ -486,7 +486,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void CDUP(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -530,7 +530,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void CWD(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -571,7 +571,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void DELE(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -703,7 +703,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void LIST(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -762,14 +762,14 @@ namespace LumiSoft.Net.FTP.Server
                 }
                 retVal.Position = 0;
 
-                m_pDataConnection = new DataConnection(this, retVal, false);
-                m_pDataConnection.Start();
+                _dataConnection = new DataConnection(this, retVal, false);
+                _dataConnection.Start();
             }
         }
 
         private void MKD(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -812,7 +812,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void NLST(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -863,14 +863,14 @@ namespace LumiSoft.Net.FTP.Server
                 }
                 retVal.Position = 0;
 
-                m_pDataConnection = new DataConnection(this, retVal, false);
-                m_pDataConnection.Start();
+                _dataConnection = new DataConnection(this, retVal, false);
+                _dataConnection.Start();
             }
         }
 
         private void NOOP(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1014,7 +1014,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void OPTS(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1070,7 +1070,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void PASS(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1082,7 +1082,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if (m_UserName.Length == 0)
+            if (_userName.Length == 0)
             {
                 WriteLine("503 please specify username first");
 
@@ -1097,16 +1097,16 @@ namespace LumiSoft.Net.FTP.Server
                 var password = param[0];
 
                 // Authenticate user
-                if (OnAuthenticate(m_UserName, password).IsAuthenticated)
+                if (OnAuthenticate(_userName, password).IsAuthenticated)
                 {
                     WriteLine("230 Password ok");
 
-                    m_pUser = new GenericIdentity(m_UserName, "FTP-USER/PASS");
+                    _user = new GenericIdentity(_userName, "FTP-USER/PASS");
                 }
                 else
                 {
                     WriteLine("530 UserName or Password is incorrect");
-                    m_UserName = ""; // Reset userName !!!
+                    _userName = ""; // Reset userName !!!
                 }
             }
             else
@@ -1117,7 +1117,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void PASV(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1141,21 +1141,21 @@ namespace LumiSoft.Net.FTP.Server
             int port = Server.PassiveStartPort;
 
             // We have already passive socket.
-            if (m_pPassiveSocket != null)
+            if (_passiveSocket != null)
             {
                 // DO nothing ... Use existing socket.
             }
             // Create new passive socket.
             else
             {
-                m_pPassiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _passiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 // Find free port.
                 for (int i = port; i < IPEndPoint.MaxPort; i++)
                 {
                     try
                     {
-                        m_pPassiveSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+                        _passiveSocket.Bind(new IPEndPoint(IPAddress.Any, port));
 
                         // If we reach here then port is free
                         break;
@@ -1165,7 +1165,7 @@ namespace LumiSoft.Net.FTP.Server
                     }
                 }
 
-                m_pPassiveSocket.Listen(1);
+                _passiveSocket.Listen(1);
             }
 
             // Notify client on what IP and port server is listening client to connect.
@@ -1183,7 +1183,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void PORT(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1224,7 +1224,7 @@ namespace LumiSoft.Net.FTP.Server
             var ip = parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3];
             int port = (Convert.ToInt32(parts[4]) << 8) | Convert.ToInt32(parts[5]);
 
-            m_pDataConEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            _dataConEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 
             WriteLine("200 PORT Command successful.");
         }
@@ -1384,10 +1384,10 @@ namespace LumiSoft.Net.FTP.Server
                 }
                 else
                 {
-                    m_BadCommands++;
+                    _badCommands++;
 
                     // Maximum allowed bad commands exceeded.
-                    if (Server.MaxBadCommands != 0 && m_BadCommands > Server.MaxBadCommands)
+                    if (Server.MaxBadCommands != 0 && _badCommands > Server.MaxBadCommands)
                     {
                         WriteLine("500 Too many bad commands, closing transmission channel.");
                         Disconnect();
@@ -1408,7 +1408,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void PWD(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1426,7 +1426,7 @@ namespace LumiSoft.Net.FTP.Server
                 directory to be returned in the reply.
             */
 
-            WriteLine("257 \"" + m_CurrentDir + "\" is current directory.");
+            WriteLine("257 \"" + _currentDir + "\" is current directory.");
         }
 
         private void QUIT(string argsText)
@@ -1458,7 +1458,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void RETR(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1505,14 +1505,14 @@ namespace LumiSoft.Net.FTP.Server
                     return;
                 }
 
-                m_pDataConnection = new DataConnection(this, eArgs.FileStream, false);
-                m_pDataConnection.Start();
+                _dataConnection = new DataConnection(this, eArgs.FileStream, false);
+                _dataConnection.Start();
             }
         }
 
         private void RMD(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1555,7 +1555,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void RNFR(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1578,12 +1578,12 @@ namespace LumiSoft.Net.FTP.Server
                 a "rename to" command specifying the new file pathname.
             */
 
-            m_RenameFrom = argsText;
+            _renameFrom = argsText;
         }
 
         private void RNTO(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1599,7 +1599,7 @@ namespace LumiSoft.Net.FTP.Server
             {
                 WriteLine("501 Invalid path value.");
             }
-            if (m_RenameFrom.Length == 0)
+            if (_renameFrom.Length == 0)
             {
                 WriteLine("503 Bad sequence of commands.");
 
@@ -1613,7 +1613,7 @@ namespace LumiSoft.Net.FTP.Server
                 renamed.
             */
 
-            var eArgs = new FTP_e_Rnto(m_RenameFrom, argsText);
+            var eArgs = new FTP_e_Rnto(_renameFrom, argsText);
             OnRnto(eArgs);
 
             // API didn't provide response.
@@ -1632,7 +1632,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void SIZE(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1689,7 +1689,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void STOR(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1734,14 +1734,14 @@ namespace LumiSoft.Net.FTP.Server
                     return;
                 }
 
-                m_pDataConnection = new DataConnection(this, eArgs.FileStream, true);
-                m_pDataConnection.Start();
+                _dataConnection = new DataConnection(this, eArgs.FileStream, true);
+                _dataConnection.Start();
             }
         }
 
         private void SYST(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1765,7 +1765,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void TYPE(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1815,7 +1815,7 @@ namespace LumiSoft.Net.FTP.Server
 
         private void USER(string argsText)
         {
-            if (m_SessionRejected)
+            if (_sessionRejected)
             {
                 WriteLine("500 Bad sequence of commands: Session rejected.");
 
@@ -1827,7 +1827,7 @@ namespace LumiSoft.Net.FTP.Server
 
                 return;
             }
-            if (!string.IsNullOrEmpty(m_UserName))
+            if (!string.IsNullOrEmpty(_userName))
             {
                 WriteLine("500 username is already specified, please specify password");
 
@@ -1842,7 +1842,7 @@ namespace LumiSoft.Net.FTP.Server
                 var userName = param[0];
 
                 WriteLine("331 Password required or user:'" + userName + "'");
-                m_UserName = userName;
+                _userName = userName;
             }
             else
             {
@@ -1871,11 +1871,11 @@ namespace LumiSoft.Net.FTP.Server
         /// </summary>
         private class DataConnection
         {
-            private bool m_IsDisposed;
-            private FTP_Session m_pSession;
-            private Stream m_pStream;
-            private readonly bool m_Read_Write;
-            private Socket m_pSocket;
+            private bool _isDisposed;
+            private FTP_Session _session;
+            private Stream _stream;
+            private readonly bool _read_Write;
+            private Socket _socket;
 
             /// <summary>
             /// Default constructor.
@@ -1886,9 +1886,9 @@ namespace LumiSoft.Net.FTP.Server
             /// <exception cref="ArgumentNullException">Is raised when <b>session</b> or <b>stream</b> is null reference.</exception>
             public DataConnection(FTP_Session session, Stream stream, bool read_write)
             {
-                m_pSession = session ?? throw new ArgumentNullException("session");
-                m_pStream = stream ?? throw new ArgumentNullException("stream");
-                m_Read_Write = read_write;
+                _session = session ?? throw new ArgumentNullException("session");
+                _stream = stream ?? throw new ArgumentNullException("stream");
+                _read_Write = read_write;
             }
 
             /// <summary>
@@ -1896,30 +1896,30 @@ namespace LumiSoft.Net.FTP.Server
             /// </summary>
             public void Dispose()
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     return;
                 }
-                m_IsDisposed = true;
+                _isDisposed = true;
 
                 // Reset session PASV cached data.
-                if (m_pSession.m_pPassiveSocket != null)
+                if (_session._passiveSocket != null)
                 {
-                    m_pSession.m_pPassiveSocket.Close();
-                    m_pSession.m_pPassiveSocket = null;
+                    _session._passiveSocket.Close();
+                    _session._passiveSocket = null;
                 }
-                m_pSession.PassiveMode = false;
+                _session.PassiveMode = false;
 
-                m_pSession = null;
-                if (m_pStream != null)
+                _session = null;
+                if (_stream != null)
                 {
-                    m_pStream.Dispose();
-                    m_pStream = null;
+                    _stream.Dispose();
+                    _stream = null;
                 }
-                if (m_pSocket != null)
+                if (_socket != null)
                 {
-                    m_pSocket.Close();
-                    m_pSocket = null;
+                    _socket.Close();
+                    _socket = null;
                 }
             }
 
@@ -1929,15 +1929,15 @@ namespace LumiSoft.Net.FTP.Server
             /// <exception cref="ObjectDisposedException">Is raised when this is disposed and this method is accessed.</exception>
             public void Start()
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException(GetType().Name);
                 }
 
                 // Passive mode, start waiting client connection.
-                if (m_pSession.PassiveMode)
+                if (_session.PassiveMode)
                 {
-                    WriteLine("150 Waiting data connection on port '" + ((IPEndPoint)m_pSession.m_pPassiveSocket.LocalEndPoint).Port + "'.");
+                    WriteLine("150 Waiting data connection on port '" + ((IPEndPoint)_session._passiveSocket.LocalEndPoint).Port + "'.");
 
                     // Start connection wait timeout timer.
                     var timer = new TimerEx(10000, false);
@@ -1948,17 +1948,17 @@ namespace LumiSoft.Net.FTP.Server
                     };
                     timer.Enabled = true;
 
-                    m_pSession.m_pPassiveSocket.BeginAccept(
+                    _session._passiveSocket.BeginAccept(
                         delegate (IAsyncResult ar)
                         {
                             try
                             {
                                 timer.Dispose();
 
-                                m_pSocket = m_pSession.m_pPassiveSocket.EndAccept(ar);
+                                _socket = _session._passiveSocket.EndAccept(ar);
 
                                 // Log
-                                m_pSession.LogAddText("Data connection opened.");
+                                _session.LogAddText("Data connection opened.");
 
                                 StartDataTransfer();
                             }
@@ -1974,25 +1974,25 @@ namespace LumiSoft.Net.FTP.Server
                 // Active mode, connect to client data port.
                 else
                 {
-                    WriteLine("150 Opening data connection to '" + m_pSession.m_pDataConEndPoint.ToString() + "'.");
+                    WriteLine("150 Opening data connection to '" + _session._dataConEndPoint.ToString() + "'.");
 
-                    m_pSocket = new Socket(m_pSession.LocalEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                    m_pSocket.BeginConnect(
-                        m_pSession.m_pDataConEndPoint,
+                    _socket = new Socket(_session.LocalEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    _socket.BeginConnect(
+                        _session._dataConEndPoint,
                         delegate (IAsyncResult ar)
                         {
                             try
                             {
-                                m_pSocket.EndConnect(ar);
+                                _socket.EndConnect(ar);
 
                                 // Log
-                                m_pSession.LogAddText("Data connection opened.");
+                                _session.LogAddText("Data connection opened.");
 
                                 StartDataTransfer();
                             }
                             catch
                             {
-                                WriteLine("425 Opening data connection to '" + m_pSession.m_pDataConEndPoint.ToString() + "' failed.");
+                                WriteLine("425 Opening data connection to '" + _session._dataConEndPoint.ToString() + "' failed.");
                                 Dispose();
                             }
                         },
@@ -2007,7 +2007,7 @@ namespace LumiSoft.Net.FTP.Server
             /// <exception cref="ObjectDisposedException">Is raised when this is disposed and this method is accessed.</exception>
             public void Abort()
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException(GetType().Name);
                 }
@@ -2026,12 +2026,12 @@ namespace LumiSoft.Net.FTP.Server
                 {
                     throw new ArgumentNullException("line");
                 }
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     return;
                 }
 
-                m_pSession.WriteLine(line);
+                _session.WriteLine(line);
             }
 
             private void StartDataTransfer()
@@ -2040,17 +2040,17 @@ namespace LumiSoft.Net.FTP.Server
 
                 try
                 {
-                    if (m_Read_Write)
+                    if (_read_Write)
                     {
-                        Net_Utils.StreamCopy(new NetworkStream(m_pSocket, false), m_pStream, 64000);
+                        Net_Utils.StreamCopy(new NetworkStream(_socket, false), _stream, 64000);
                     }
                     else
                     {
-                        Net_Utils.StreamCopy(m_pStream, new NetworkStream(m_pSocket, false), 64000);
+                        Net_Utils.StreamCopy(_stream, new NetworkStream(_socket, false), 64000);
                     }
-                    m_pSocket.Shutdown(SocketShutdown.Both);
+                    _socket.Shutdown(SocketShutdown.Both);
 
-                    m_pSession.WriteLine("226 Transfer Complete.");
+                    _session.WriteLine("226 Transfer Complete.");
                 }
                 catch
                 {
