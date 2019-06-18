@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LumiSoft.Net.STUN.Client
 {
-    class STUN_Result
+    public class STUN_Result
     {
     }
 }
