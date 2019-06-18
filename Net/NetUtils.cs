@@ -224,10 +224,10 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="data">Data to to encode.</param>
         /// <param name="base64Chars">Custom base64 chars (64 chars) or null if default chars used.</param>
-        /// <param name="padd">Padd missing block chars. Normal base64 must be 4 bytes blocks, if not 4 bytes in block,
+        /// <param name="pad">Pad missing block chars. Normal base64 must be 4 bytes blocks, if not 4 bytes in block,
         /// missing bytes must be padded with '='. Modified base64 just skips missing bytes.</param>
         /// <returns></returns>
-        public static byte[] Base64EncodeEx(byte[] data, char[] base64Chars, bool padd)
+        public static byte[] Base64EncodeEx(byte[] data, char[] base64Chars, bool pad)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
 
@@ -283,8 +283,8 @@ namespace LumiSoft.Net
             }
 
             var encodedDataLength = (int)Math.Ceiling(data.Length * 8 / (double)6);
-            // Return value won't be integer 4 block, but has less. Padding requested, padd missing with '='
-            if (padd && encodedDataLength % 4 != 0)
+            // Return value won't be integer 4 block, but has less. Padding requested, pad missing with '='
+            if (pad && encodedDataLength % 4 != 0)
             {
                 encodedDataLength += (4 - (encodedDataLength % 4)) % 4;
             }
@@ -329,7 +329,7 @@ namespace LumiSoft.Net
                     retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
                     retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
                     retVal[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2];
-                    if (padd)
+                    if (pad)
                     {
                         retVal[position + 3] = (byte)'=';
                     }
@@ -339,7 +339,7 @@ namespace LumiSoft.Net
                 {
                     retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
                     retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4];
-                    if (!padd)
+                    if (!pad)
                     {
                         continue;
                     }
