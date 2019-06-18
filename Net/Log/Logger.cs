@@ -18,8 +18,8 @@ namespace LumiSoft.Net.Log
         /// Adds exception entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
-        /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
+        /// <param name="text">Log text.</param>
         /// <param name="localEp">Local IP endpoint.</param>
         /// <param name="remoteEp">Remote IP endpoint.</param>
         /// <param name="exception">Exception happened.</param>
@@ -42,9 +42,9 @@ namespace LumiSoft.Net.Log
         /// Adds read log entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
+        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="size">Read data size in bytes.</param>
         /// <param name="text">Log text.</param>
-        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="localEp">Local IP endpoint.</param>
         /// <param name="remoteEp">Remote IP endpoint.</param>
         public void AddRead(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp)
@@ -56,9 +56,9 @@ namespace LumiSoft.Net.Log
         /// Adds read log entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
+        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="size">Read data size in bytes.</param>
         /// <param name="text">Log text.</param>
-        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="localEp">Local IP endpoint.</param>
         /// <param name="remoteEp">Remote IP endpoint.</param>
         /// <param name="data">Log data.</param>
@@ -90,8 +90,8 @@ namespace LumiSoft.Net.Log
         /// Adds text entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
-        /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
+        /// <param name="text">Log text.</param>
         /// <param name="localEp">Local IP endpoint.</param>
         /// <param name="remoteEp">Remote IP endpoint.</param>
         public void AddText(string id, GenericIdentity userIdentity, string text, IPEndPoint localEp, IPEndPoint remoteEp)
@@ -113,9 +113,9 @@ namespace LumiSoft.Net.Log
         /// Add write log entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
+        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="size">Written data size in bytes.</param>
         /// <param name="text">Log text.</param>
-        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="localEp">Local IP endpoint.</param>
         /// <param name="remoteEp">Remote IP endpoint.</param>
         public void AddWrite(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp)
@@ -127,9 +127,9 @@ namespace LumiSoft.Net.Log
         /// Add write log entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
+        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="size">Written data size in bytes.</param>
         /// <param name="text">Log text.</param>
-        /// <param name="userIdentity">Authenticated user identity.</param>
         /// <param name="localEp">Local IP endpoint.</param>
         /// <param name="remoteEp">Remote IP endpoint.</param>
         /// <param name="data">Log data.</param>
@@ -137,6 +137,7 @@ namespace LumiSoft.Net.Log
         {
             OnWriteLog(new LogEntry(LogEntryType.Write, id, userIdentity, size, text, localEp, remoteEp, data));
         }
+
         /// <summary>
         /// Cleans up any resources being used.
         /// </summary>

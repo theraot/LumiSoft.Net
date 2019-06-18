@@ -49,12 +49,12 @@ namespace LumiSoft.Net
         public static byte[] Base64DecodeEx(byte[] base64Data, char[] base64Chars)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
-            
-                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block
                 are converted to 3 8-bit bytes.
-                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-                
-            
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =.
+
+
                 Value Encoding  Value Encoding  Value Encoding  Value Encoding
                     0 A            17 R            34 i            51 z
                     1 B            18 S            35 j            52 0
@@ -73,8 +73,8 @@ namespace LumiSoft.Net
                     14 O           31 f            48 w         (pad) =
                     15 P           32 g            49 x
                     16 Q           33 h            50 y
-                    
-                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes
                     // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
                     // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
                     // |    8-bit         |    8-bit        |    8-bit         |
@@ -121,7 +121,7 @@ namespace LumiSoft.Net
             }
             //---------------------------------------------//
 
-            var decodedDataBuffer = new byte[base64Data.Length * 6 / 8 + 4];
+            var decodedDataBuffer = new byte[(base64Data.Length * 6 / 8) + 4];
             var decodedBytesCount = 0;
             var nByteInBase64Block = 0;
             var base64Block = new byte[4];
@@ -148,7 +148,7 @@ namespace LumiSoft.Net
                     }
                 }
 
-                /* Check if we can decode some bytes. 
+                /* Check if we can decode some bytes.
                  * We must have full 4 byte base64 block or reached at the end of data.
                  */
                 var encodedBytesCount = -1;
@@ -160,20 +160,22 @@ namespace LumiSoft.Net
                 // We have reached at the end of base64 data, there may be some bytes left
                 else if (i == base64Data.Length - 1)
                 {
-                    // Invalid value, we can't have only 6 bit, just skip
-                    if (nByteInBase64Block == 1)
+                    switch (nByteInBase64Block)
                     {
-                        encodedBytesCount = 0;
-                    }
-                    // There is 1 byte in two base64 bytes (6 + 2 bit)
-                    else if (nByteInBase64Block == 2)
-                    {
-                        encodedBytesCount = 1;
-                    }
-                    // There are 2 bytes in two base64 bytes ([6 + 2],[4 + 4] bit)
-                    else if (nByteInBase64Block == 3)
-                    {
-                        encodedBytesCount = 2;
+                        // Invalid value, we can't have only 6 bit, just skip
+                        // There is 1 byte in two base64 bytes (6 + 2 bit)
+                        case 1:
+                            encodedBytesCount = 0;
+                            break;
+                        // There are 2 bytes in two base64 bytes ([6 + 2],[4 + 4] bit)
+                        case 2:
+                            encodedBytesCount = 1;
+                            break;
+                        case 3:
+                            encodedBytesCount = 2;
+                            break;
+                        default:
+                            break;
                     }
                 }
 
@@ -228,12 +230,12 @@ namespace LumiSoft.Net
         public static byte[] Base64EncodeEx(byte[] data, char[] base64Chars, bool padd)
         {
             /* RFC 2045 6.8.  Base64 Content-Transfer-Encoding
-            
-                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block
                 are converted to 3 8-bit bytes.
-                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-                
-            
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =.
+
+
                 Value Encoding  Value Encoding  Value Encoding  Value Encoding
                     0 A            17 R            34 i            51 z
                     1 B            18 S            35 j            52 0
@@ -252,8 +254,8 @@ namespace LumiSoft.Net
                     14 O           31 f            48 w         (pad) =
                     15 P           32 g            49 x
                     16 Q           33 h            50 y
-                    
-                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes
                     // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
                     // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
                     // |    8-bit         |    8-bit        |    8-bit         |
@@ -284,7 +286,7 @@ namespace LumiSoft.Net
             // Return value won't be integer 4 block, but has less. Padding requested, padd missing with '='
             if (padd && encodedDataLength % 4 != 0)
             {
-                encodedDataLength += (4 - encodedDataLength % 4) % 4;
+                encodedDataLength += (4 - (encodedDataLength % 4)) % 4;
             }
 
             // See how many line brakes we need
@@ -295,7 +297,7 @@ namespace LumiSoft.Net
             }
 
             // Construct return value buffer
-            var retVal = new byte[encodedDataLength + numberOfLineBreaks * 2];  // * 2 - CRLF
+            var retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];
 
             var lineBytes = 0;
             // Loop all 3 bye blocks
@@ -571,69 +573,64 @@ namespace LumiSoft.Net
                     // We need to convert hex char to decimal number, for example F = 15
                     for (var h = 0; h < 2; h++)
                     {
-                        if ((char)hexData[i + h] == '0')
+                        switch ((char)hexData[i + h])
                         {
-                            hexPairInDecimal[h] = 0;
-                        }
-                        else if ((char)hexData[i + h] == '1')
-                        {
-                            hexPairInDecimal[h] = 1;
-                        }
-                        else if ((char)hexData[i + h] == '2')
-                        {
-                            hexPairInDecimal[h] = 2;
-                        }
-                        else if ((char)hexData[i + h] == '3')
-                        {
-                            hexPairInDecimal[h] = 3;
-                        }
-                        else if ((char)hexData[i + h] == '4')
-                        {
-                            hexPairInDecimal[h] = 4;
-                        }
-                        else if ((char)hexData[i + h] == '5')
-                        {
-                            hexPairInDecimal[h] = 5;
-                        }
-                        else if ((char)hexData[i + h] == '6')
-                        {
-                            hexPairInDecimal[h] = 6;
-                        }
-                        else if ((char)hexData[i + h] == '7')
-                        {
-                            hexPairInDecimal[h] = 7;
-                        }
-                        else if ((char)hexData[i + h] == '8')
-                        {
-                            hexPairInDecimal[h] = 8;
-                        }
-                        else if ((char)hexData[i + h] == '9')
-                        {
-                            hexPairInDecimal[h] = 9;
-                        }
-                        else if ((char)hexData[i + h] == 'A' || (char)hexData[i + h] == 'a')
-                        {
-                            hexPairInDecimal[h] = 10;
-                        }
-                        else if ((char)hexData[i + h] == 'B' || (char)hexData[i + h] == 'b')
-                        {
-                            hexPairInDecimal[h] = 11;
-                        }
-                        else if ((char)hexData[i + h] == 'C' || (char)hexData[i + h] == 'c')
-                        {
-                            hexPairInDecimal[h] = 12;
-                        }
-                        else if ((char)hexData[i + h] == 'D' || (char)hexData[i + h] == 'd')
-                        {
-                            hexPairInDecimal[h] = 13;
-                        }
-                        else if ((char)hexData[i + h] == 'E' || (char)hexData[i + h] == 'e')
-                        {
-                            hexPairInDecimal[h] = 14;
-                        }
-                        else if ((char)hexData[i + h] == 'F' || (char)hexData[i + h] == 'f')
-                        {
-                            hexPairInDecimal[h] = 15;
+                            case '0':
+                                hexPairInDecimal[h] = 0;
+                                break;
+                            case '1':
+                                hexPairInDecimal[h] = 1;
+                                break;
+                            case '2':
+                                hexPairInDecimal[h] = 2;
+                                break;
+                            case '3':
+                                hexPairInDecimal[h] = 3;
+                                break;
+                            case '4':
+                                hexPairInDecimal[h] = 4;
+                                break;
+                            case '5':
+                                hexPairInDecimal[h] = 5;
+                                break;
+                            case '6':
+                                hexPairInDecimal[h] = 6;
+                                break;
+                            case '7':
+                                hexPairInDecimal[h] = 7;
+                                break;
+                            case '8':
+                                hexPairInDecimal[h] = 8;
+                                break;
+                            case '9':
+                                hexPairInDecimal[h] = 9;
+                                break;
+                            case 'A':
+                            case 'a':
+                                hexPairInDecimal[h] = 10;
+                                break;
+                            case 'B':
+                            case 'b':
+                                hexPairInDecimal[h] = 11;
+                                break;
+                            case 'C':
+                            case 'c':
+                                hexPairInDecimal[h] = 12;
+                                break;
+                            case 'D':
+                            case 'd':
+                                hexPairInDecimal[h] = 13;
+                                break;
+                            case 'E':
+                            case 'e':
+                                hexPairInDecimal[h] = 14;
+                                break;
+                            case 'F':
+                            case 'f':
+                                hexPairInDecimal[h] = 15;
+                                break;
+                            default:
+                                break;
                         }
                     }
 
@@ -644,6 +641,7 @@ namespace LumiSoft.Net
                 return retVal.ToArray();
             }
         }
+
         /// <summary>
         /// Gets local host name or argument <b>hostName</b> value if it's specified.
         /// </summary>
@@ -741,12 +739,7 @@ namespace LumiSoft.Net
             }
 
             var bytes = ip.GetAddressBytes();
-            if (bytes[0] >= 224 && bytes[0] <= 239)
-            {
-                return true;
-            }
-
-            return false;
+            return bytes[0] >= 224 && bytes[0] <= 239;
         }
 
         /// <summary>
@@ -786,7 +779,7 @@ namespace LumiSoft.Net
             var ipBytes = ip.GetAddressBytes();
 
             /* Private IPs:
-                    First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
+                    First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X)
                     First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
                     First Octet = 10 (Example: 10.X.X.X)
                     First Octet = 169 AND Second Octet = 254 (Example: 169.254.X.X)

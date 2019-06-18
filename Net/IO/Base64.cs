@@ -9,19 +9,19 @@ namespace LumiSoft.Net.IO
     public static class Base64
     {
         private readonly static short[] _base64_Decode_Table = {
-            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
-            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //10 -   19
-            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //20 -   29
-            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //30 -   39
-            -1,-1,-1,62,-1,-1,-1,63,52,53,  //40 -   49
-            54,55,56,57,58,59,60,61,-1,-1,  //50 -   59
-            -1,-1,-1,-1,-1, 0, 1, 2, 3, 4,  //60 -   69
-            5, 6, 7, 8, 9,10,11,12,13,14,   //70 -   79
-            15,16,17,18,19,20,21,22,23,24,  //80 -   89
-            25,-1,-1,-1,-1,-1,-1,26,27,28,  //90 -   99
-            29,30,31,32,33,34,35,36,37,38,  //100 - 109
-            39,40,41,42,43,44,45,46,47,48,  //110 - 119
-            49,50,51,-1,-1,-1,-1,-1         //120 - 127
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+            -1,-1,-1,62,-1,-1,-1,63,52,53,
+            54,55,56,57,58,59,60,61,-1,-1,
+            -1,-1,-1,-1,-1, 0, 1, 2, 3, 4,
+            5, 6, 7, 8, 9,10,11,12,13,14,
+            15,16,17,18,19,20,21,22,23,24,
+            25,-1,-1,-1,-1,-1,-1,26,27,28,
+            29,30,31,32,33,34,35,36,37,38,
+            39,40,41,42,43,44,45,46,47,48,
+            49,50,51,-1,-1,-1,-1,-1
         };
 
         /// <summary>
@@ -116,11 +116,11 @@ namespace LumiSoft.Net.IO
             }
 
             /* RFC 4648.
-            
-                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block 
+
+                Base64 is processed from left to right by 4 6-bit byte block, 4 6-bit byte block
                 are converted to 3 8-bit bytes.
-                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =. 
-                            
+                If base64 4 byte block doesn't have 3 8-bit bytes, missing bytes are marked with =.
+
                 Value Encoding  Value Encoding  Value Encoding  Value Encoding
                     0 A            17 R            34 i            51 z
                     1 B            18 S            35 j            52 0
@@ -139,8 +139,8 @@ namespace LumiSoft.Net.IO
                     14 O           31 f            48 w         (pad) =
                     15 P           32 g            49 x
                     16 Q           33 h            50 y
-                    
-                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes                
+
+                NOTE: 4 base64 6-bit bytes = 3 8-bit bytes
                     // |    6-bit    |    6-bit    |    6-bit    |    6-bit    |
                     // | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 | 1 2 3 4 5 6 |
                     // |    8-bit         |    8-bit        |    8-bit         |
@@ -176,8 +176,6 @@ namespace LumiSoft.Net.IO
                     if (b == '=')
                     {
                         // Padding may appear only in last two chars of 4-char block.
-                        // ab==
-                        // abc=
                         if (offsetInBlock < 2)
                         {
                             throw new FormatException("Invalid base64 padding.");

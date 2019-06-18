@@ -38,6 +38,7 @@ namespace LumiSoft.Net.IO
 
             set => throw new NotSupportedException();
         }
+
         /// <summary>
         /// Not used.
         /// </summary>

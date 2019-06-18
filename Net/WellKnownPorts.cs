@@ -19,6 +19,7 @@ namespace LumiSoft.Net
         /// FTP over SSL protocol.
         /// </summary>
         public static readonly int FtpControlSsl = 990;
+
         /// <summary>
         /// FTP - data port.
         /// </summary>

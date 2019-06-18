@@ -54,8 +54,10 @@ namespace LumiSoft.Net.UPnP
             xml.Load(stream);
 
             // Loop XML tree by nodes.
-            var queue = new List<XmlNode>();
-            queue.Add(xml);
+            var queue = new List<XmlNode>
+            {
+                xml
+            };
             while (queue.Count > 0)
             {
                 var currentNode = queue[0];

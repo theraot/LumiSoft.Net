@@ -21,7 +21,7 @@ namespace LumiSoft.Net
             {
                 throw new ArgumentNullException(nameof(host));
             }
-            if (host == "")
+            if (host.Length == 0)
             {
                 throw new ArgumentException("Argument 'host' value must be specified.");
             }
@@ -87,7 +87,7 @@ namespace LumiSoft.Net
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            if (value == "")
+            if (value.Length == 0)
             {
                 throw new ArgumentException("Argument 'value' value must be specified.");
             }

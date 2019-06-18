@@ -87,7 +87,6 @@ namespace LumiSoft.Net
             _list.Remove(value);
 
             return true;
-
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace LumiSoft.Net
         /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
         public bool TryGetValueAt(int index, out TV value)
         {
-            value = default(TV);
+            value = default;
 
             if (_list.Count <= 0 || index < 0 || index >= _list.Count)
             {
@@ -131,7 +130,6 @@ namespace LumiSoft.Net
             value = _list[index];
 
             return true;
-
         }
     }
 }

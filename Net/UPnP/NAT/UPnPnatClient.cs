@@ -13,16 +13,16 @@ namespace LumiSoft.Net.UPnP.NAT
     /// <summary>
     /// This class provides methods for managing UPnP NAT router.
     /// </summary>
-    public class UPnPnatClient
+    public class UPnPNatClient
     {
-        private static string mBaseUrl;
-        private static string mControlUrl;
-        private static string mServiceType;
+        private static string _baseUrl;
+        private static string _controlUrl;
+        private static string _serviceType;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public UPnPnatClient()
+        public UPnPNatClient()
         {
             Init();
         }
@@ -30,7 +30,7 @@ namespace LumiSoft.Net.UPnP.NAT
         /// <summary>
         /// Gets if UPnP NAT is supported.
         /// </summary>
-        public bool IsSupported => mControlUrl != null;
+        public bool IsSupported => _controlUrl != null;
 
         /// <summary>
         /// This method creates a new port mapping or overwrites an existing mapping.
@@ -63,12 +63,12 @@ namespace LumiSoft.Net.UPnP.NAT
                 This action creates a new port mapping or overwrites an existing mapping with the same internal
                 client. If the ExternalPort and PortMappingProtocol pair is already mapped to another
                 internal client, an error is returned.
-             
+
                 NOTE: Not all NAT implementations will support:
                     • Wildcard value (i.e. 0) for ExternalPort
                     • InternalPort values that are different from ExternalPort
                     • Dynamic port mappings i.e. with non-Infinite PortMappingLeaseDuration
-              
+
                 Arguments for AddPortMapping:
                     NewRemoteHost
                     NewExternalPort
@@ -84,7 +84,7 @@ namespace LumiSoft.Net.UPnP.NAT
             {
                 var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
                 "<s:Body>\r\n" +
-                "<u:AddPortMapping xmlns:u=\"" + mServiceType + "\">\r\n" +
+                "<u:AddPortMapping xmlns:u=\"" + _serviceType + "\">\r\n" +
                 "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
                 "<NewExternalPort>" + publicPort + "</NewExternalPort>\r\n" +
                 "<NewProtocol>" + protocol + "</NewProtocol>\r\n" +
@@ -138,7 +138,7 @@ namespace LumiSoft.Net.UPnP.NAT
             /* http://upnp.org DeletePortMapping.
                 This action deletes a previously instantiated port mapping. As each entry is deleted, the array is
                 compacted, and the variable PortMappingNumberOfEntries is decremented.
-            
+
                 Arguments for DeletePortMapping:
                     NewRemoteHost
                     NewExternalPort
@@ -154,7 +154,7 @@ namespace LumiSoft.Net.UPnP.NAT
             {
                 var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
                 "<s:Body>\r\n" +
-                "<u:DeletePortMapping xmlns:u=\"" + mServiceType + "\">\r\n" +
+                "<u:DeletePortMapping xmlns:u=\"" + _serviceType + "\">\r\n" +
                 "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
                 "<NewExternalPort>" + publicPort + "</NewExternalPort>\r\n" +
                 "<NewProtocol>" + protocol + "</NewProtocol>\r\n" +
@@ -182,14 +182,14 @@ namespace LumiSoft.Net.UPnP.NAT
         {
             /* http://upnp.org GetExternalIPAddress
                 This action retrieves the value of the external IP address on this connection instance.
-             
+
                 Returns:
                     NewExternalIPAddress
             */
 
             var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
             "<s:Body>\r\n" +
-            "<u:GetExternalIPAddress xmlns:u=\"" + mServiceType + "\"></u:GetExternalIPAddress>\r\n" +
+            "<u:GetExternalIPAddress xmlns:u=\"" + _serviceType + "\"></u:GetExternalIPAddress>\r\n" +
             "</s:Body>\r\n" +
             "</s:Envelope>\r\n";
 
@@ -224,10 +224,10 @@ namespace LumiSoft.Net.UPnP.NAT
                 variable PortMappingNumberOfEntries is decremented. Port mappings are logically
                 stored as an array on the IGD and retrieved using an array index ranging from 0 to
                 PortMappingNumberOfEntries-1.
-            
+
                 Arguments for GetGenericPortMappingEntry:
                     NewPortMappingIndex
-            
+
                 Returns:
                     NewRemoteHost
                     NewExternalPort
@@ -246,7 +246,7 @@ namespace LumiSoft.Net.UPnP.NAT
                 {
                     var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
                     "<s:Body>\r\n" +
-                    "<u:GetGenericPortMappingEntry xmlns:u=\"" + mServiceType + "\">\r\n" +
+                    "<u:GetGenericPortMappingEntry xmlns:u=\"" + _serviceType + "\">\r\n" +
                     "<NewPortMappingIndex>" + i + "</NewPortMappingIndex>\r\n" +
                     "</u:GetGenericPortMappingEntry>\r\n" +
                     "</s:Body>\r\n" +
@@ -379,8 +379,10 @@ namespace LumiSoft.Net.UPnP.NAT
                 xml.LoadXml(devices[0].DeviceXml);
 
                 // Loop XML tree by nodes.
-                var queue = new List<XmlNode>();
-                queue.Add(xml);
+                var queue = new List<XmlNode>
+                {
+                    xml
+                };
                 while (queue.Count > 0)
                 {
                     var currentNode = queue[0];
@@ -400,9 +402,9 @@ namespace LumiSoft.Net.UPnP.NAT
                                 continue;
                             }
 
-                            mBaseUrl = devices[0].BaseUrl;
-                            mServiceType = "urn:schemas-upnp-org:service:WANPPPConnection:1";
-                            mControlUrl = node.InnerText;
+                            _baseUrl = devices[0].BaseUrl;
+                            _serviceType = "urn:schemas-upnp-org:service:WANPPPConnection:1";
+                            _controlUrl = node.InnerText;
 
                             return;
                         }
@@ -421,9 +423,9 @@ namespace LumiSoft.Net.UPnP.NAT
                                 continue;
                             }
 
-                            mBaseUrl = devices[0].BaseUrl;
-                            mServiceType = "urn:schemas-upnp-org:service:WANIPConnection:1";
-                            mControlUrl = node.InnerText;
+                            _baseUrl = devices[0].BaseUrl;
+                            _serviceType = "urn:schemas-upnp-org:service:WANIPConnection:1";
+                            _controlUrl = node.InnerText;
 
                             return;
                         }
@@ -449,9 +451,9 @@ namespace LumiSoft.Net.UPnP.NAT
         {
             var requestBody = Encoding.UTF8.GetBytes(soapData);
 
-            var request = WebRequest.Create(mBaseUrl + mControlUrl);
+            var request = WebRequest.Create(_baseUrl + _controlUrl);
             request.Method = "POST";
-            request.Headers.Add("SOAPAction", mServiceType + "#" + method);
+            request.Headers.Add("SOAPAction", _serviceType + "#" + method);
             request.ContentType = "text/xml; charset=\"utf-8\";";
             request.ContentLength = requestBody.Length;
 

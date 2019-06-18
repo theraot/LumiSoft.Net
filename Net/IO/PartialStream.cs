@@ -212,16 +212,18 @@ namespace LumiSoft.Net.IO
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            if (origin == SeekOrigin.Begin)
+            switch (origin)
             {
-                _osition = 0;
-            }
-            else if (origin == SeekOrigin.Current)
-            {
-            }
-            else if (origin == SeekOrigin.End)
-            {
-                _osition = _length;
+                case SeekOrigin.Begin:
+                    _osition = 0;
+                    break;
+                case SeekOrigin.Current:
+                    break;
+                case SeekOrigin.End:
+                    _osition = _length;
+                    break;
+                default:
+                    break;
             }
 
             return _osition;

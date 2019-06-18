@@ -21,14 +21,14 @@ namespace LumiSoft.Net
             {
                 throw new ArgumentNullException(nameof(hostName));
             }
-            if (hostName == string.Empty)
+            if (hostName.Length == 0)
             {
                 throw new ArgumentException("Argument 'hostName' value must be specified.", nameof(hostName));
             }
 
             HostName = hostName;
             Addresses = ipAddresses ?? throw new ArgumentNullException(nameof(ipAddresses));
-            Aliases = aliases == null ? new string[0] : aliases;
+            Aliases = aliases ?? new string[0];
         }
 
         /// <summary>

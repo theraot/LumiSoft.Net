@@ -43,12 +43,7 @@
         /// <returns>Returns true if specified value is within range, otherwise false.</returns>
         public bool Contains(long value)
         {
-            if (value >= Start && value <= End)
-            {
-                return true;
-            }
-
-            return false;
+            return value >= Start && value <= End;
         }
     }
 }

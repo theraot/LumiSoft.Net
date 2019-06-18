@@ -7,18 +7,17 @@ namespace LumiSoft.Net
     /// </summary>
     public class ParseException : Exception
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="message"></param>
-        public ParseException(string message) 
-            : base(message)
+        public ParseException()
         {
             // Empty
         }
 
-        public ParseException()
-            : base()
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="message"></param>
+        public ParseException(string message)
+            : base(message)
         {
             // Empty
         }
