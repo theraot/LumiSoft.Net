@@ -418,27 +418,24 @@ namespace LumiSoft.Net.STUN.Client
                 var buffer = new byte[512];
                 socket.Receive(buffer);
                 var stunMessage = new STUN_Message(buffer);
-                var array1 = request.TransactionId;
-                var array2 = stunMessage.TransactionId;
+                var requestTransactionId = request.TransactionId;
+                var stunMessageTransactionId = stunMessage.TransactionId;
                 var arrayEquals = true;
-                if (array1 != null || array2 != null)
+                if (requestTransactionId.Length != stunMessageTransactionId.Length)
                 {
-                    if (array1 == null || array2 == null || array1.Length != array2.Length)
+                    arrayEquals = false;
+                }
+                else
+                {
+                    for (var index = 0; index < requestTransactionId.Length; index++)
                     {
-                        arrayEquals = false;
-                    }
-                    else
-                    {
-                        for (var index = 0; index < array1.Length; index++)
+                        if (requestTransactionId.GetValue(index).Equals(stunMessageTransactionId.GetValue(index)))
                         {
-                            if (array1.GetValue(index).Equals(array2.GetValue(index)))
-                            {
-                                continue;
-                            }
-
-                            arrayEquals = false;
-                            break;
+                            continue;
                         }
+
+                        arrayEquals = false;
+                        break;
                     }
                 }
 
