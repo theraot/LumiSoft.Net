@@ -7,6 +7,7 @@ using System.Xml;
 
 namespace LumiSoft.Net.UPnP
 {
+    /// <inheritdoc />
     /// <summary>
     ///     This class represents UPnP error.
     /// </summary>

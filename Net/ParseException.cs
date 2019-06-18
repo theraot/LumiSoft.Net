@@ -2,6 +2,7 @@
 
 namespace LumiSoft.Net
 {
+    /// <inheritdoc />
     /// <summary>
     ///     This exception is thrown when parse errors are encountered.
     /// </summary>
