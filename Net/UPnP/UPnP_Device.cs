@@ -7,13 +7,13 @@ namespace LumiSoft.Net.UPnP
     /// <summary>
     ///     This class represents UPnP device.
     /// </summary>
-    public class UPnPDevice
+    public class UPnP_Device
     {
         /// <summary>
         ///     Default constructor.
         /// </summary>
         /// <param name="url">Device URL.</param>
-        internal UPnPDevice(string url)
+        internal UPnP_Device(string url)
         {
             if (url == null)
             {

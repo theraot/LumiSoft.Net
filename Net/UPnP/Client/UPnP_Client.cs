@@ -9,14 +9,14 @@ namespace LumiSoft.Net.UPnP.Client
     /// <summary>
     ///     This class implements UPnP client.
     /// </summary>
-    public static class UPnPClient
+    public static class UPnP_Client
     {
         /// <summary>
         ///     Searches the network for UPnP root devices.
         /// </summary>
         /// <param name="timeout">Search wait timeout in milliseconds.</param>
         /// <returns>Returns matched UPnP devices.</returns>
-        public static UPnPDevice[] Search(int timeout)
+        public static UPnP_Device[] Search(int timeout)
         {
             return Search("upnp:rootdevice", timeout);
         }
@@ -27,7 +27,7 @@ namespace LumiSoft.Net.UPnP.Client
         /// <param name="deviceType">UPnP device type. For example: "urn:schemas-upnp-org:device:InternetGatewayDevice:1".</param>
         /// <param name="timeout">Search wait timeout in milliseconds.</param>
         /// <returns>Returns matched UPnP devices.</returns>
-        public static UPnPDevice[] Search(string deviceType, int timeout)
+        public static UPnP_Device[] Search(string deviceType, int timeout)
         {
             if (timeout < 1)
             {
@@ -164,10 +164,10 @@ namespace LumiSoft.Net.UPnP.Client
                 }
 
                 // Create devices.
-                var devices = new List<UPnPDevice>();
+                var devices = new List<UPnP_Device>();
                 foreach (var location in deviceLocations)
                 {
-                    devices.Add(new UPnPDevice(location));
+                    devices.Add(new UPnP_Device(location));
                 }
 
                 return devices.ToArray();
@@ -182,7 +182,7 @@ namespace LumiSoft.Net.UPnP.Client
         /// <param name="timeout">Search wait timeout in milliseconds.</param>
         /// <returns>Returns matched UPnP devices.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
-        public static UPnPDevice[] Search(IPAddress ip, string deviceType, int timeout)
+        public static UPnP_Device[] Search(IPAddress ip, string deviceType, int timeout)
         {
             if (ip == null)
             {
@@ -233,10 +233,10 @@ namespace LumiSoft.Net.UPnP.Client
                 }
 
                 // Create devices.
-                var devices = new List<UPnPDevice>();
+                var devices = new List<UPnP_Device>();
                 foreach (var location in deviceLocations)
                 {
-                    devices.Add(new UPnPDevice(location));
+                    devices.Add(new UPnP_Device(location));
                 }
 
                 return devices.ToArray();

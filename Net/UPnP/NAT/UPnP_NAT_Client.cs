@@ -12,7 +12,7 @@ namespace LumiSoft.Net.UPnP.NAT
     /// <summary>
     ///     This class provides methods for managing UPnP NAT router.
     /// </summary>
-    public class UPnPNatClient
+    public class UPnP_NAT_Client
     {
         private static string _baseUrl;
         private static string _controlUrl;
@@ -21,7 +21,7 @@ namespace LumiSoft.Net.UPnP.NAT
         /// <summary>
         ///     Default constructor.
         /// </summary>
-        public UPnPNatClient()
+        public UPnP_NAT_Client()
         {
             Init();
         }
@@ -45,7 +45,7 @@ namespace LumiSoft.Net.UPnP.NAT
         ///     Is raised when <b>description</b>,<b>protocol</b> or <b>localEP</b> is null
         ///     reference.
         /// </exception>
-        /// <exception cref="UPnPException">Is raised when UPnP device returns error.</exception>
+        /// <exception cref="UPnP_Exception">Is raised when UPnP device returns error.</exception>
         public static void AddPortMapping(bool enabled, string description, string protocol, string remoteHost, int publicPort, IPEndPoint localEp, int leaseDuration)
         {
             if (description == null)
@@ -108,7 +108,7 @@ namespace LumiSoft.Net.UPnP.NAT
                 // We have UPnP exception.
                 if (x.Response.ContentType.ToLower().IndexOf("text/xml", StringComparison.Ordinal) > -1)
                 {
-                    throw UPnPException.Parse(x.Response.GetResponseStream());
+                    throw UPnP_Exception.Parse(x.Response.GetResponseStream());
                 }
             }
         }
@@ -118,8 +118,8 @@ namespace LumiSoft.Net.UPnP.NAT
         /// </summary>
         /// <param name="map">NAT mapping entry to delete.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>map</b> is null reference.</exception>
-        /// <exception cref="UPnPException">Is raised when UPnP device returns error.</exception>
-        public static void DeletePortMapping(UPnPNatMap map)
+        /// <exception cref="UPnP_Exception">Is raised when UPnP device returns error.</exception>
+        public static void DeletePortMapping(UPnP_NAT_Map map)
         {
             if (map == null)
             {
@@ -136,7 +136,7 @@ namespace LumiSoft.Net.UPnP.NAT
         /// <param name="remoteHost">Remote host IP address.</param>
         /// <param name="publicPort">Public port number.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>protocol</b> is null reference.</exception>
-        /// <exception cref="UPnPException">Is raised when UPnP device returns error.</exception>
+        /// <exception cref="UPnP_Exception">Is raised when UPnP device returns error.</exception>
         public static void DeletePortMapping(string protocol, string remoteHost, int publicPort)
         {
             /* http://upnp.org DeletePortMapping.
@@ -173,7 +173,7 @@ namespace LumiSoft.Net.UPnP.NAT
                 // We have UPnP exception.
                 if (x.Response.ContentType.ToLower().IndexOf("text/xml", StringComparison.Ordinal) > -1)
                 {
-                    throw UPnPException.Parse(x.Response.GetResponseStream());
+                    throw UPnP_Exception.Parse(x.Response.GetResponseStream());
                 }
             }
         }
@@ -218,7 +218,7 @@ namespace LumiSoft.Net.UPnP.NAT
         ///     Gets all existing port mappings.
         /// </summary>
         /// <returns>Returns all existing port mappings.</returns>
-        public static UPnPNatMap[] GetPortMappings()
+        public static UPnP_NAT_Map[] GetPortMappings()
         {
             /* http://upnp.org GetGenericPortMappingEntry.
                 This action retrieves NAT port mappings one entry at a time. Control points can call this action
@@ -243,7 +243,7 @@ namespace LumiSoft.Net.UPnP.NAT
                     NewLeaseDuration
             */
 
-            var result = new List<UPnPNatMap>();
+            var result = new List<UPnP_NAT_Map>();
             for (var i = 0; i < 100; i++)
             {
                 try
@@ -306,7 +306,7 @@ namespace LumiSoft.Net.UPnP.NAT
                             }
                         }
 
-                        result.Add(new UPnPNatMap(enabled, protocol, remoteHost, externalPort, internalHost, internalPort, description, leaseDuration));
+                        result.Add(new UPnP_NAT_Map(enabled, protocol, remoteHost, externalPort, internalHost, internalPort, description, leaseDuration));
                     }
                 }
                 catch (WebException x)
@@ -316,7 +316,7 @@ namespace LumiSoft.Net.UPnP.NAT
                     // We have UPnP exception.
                     if (x.Response.ContentType.ToLower().IndexOf("text/xml", StringComparison.Ordinal) > -1)
                     {
-                        var uX = UPnPException.Parse(x.Response.GetResponseStream());
+                        var uX = UPnP_Exception.Parse(x.Response.GetResponseStream());
                         // Other error than "Index out of range", we pass it through.
                         if (uX.ErrorCode != 713)
                         {
@@ -342,7 +342,7 @@ namespace LumiSoft.Net.UPnP.NAT
         private static void Init()
         {
             {
-                UPnPDevice[] devices;
+                UPnP_Device[] devices;
                 {
                     IPAddress gwIP = null;
                     foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
@@ -361,7 +361,7 @@ namespace LumiSoft.Net.UPnP.NAT
                         break;
                     }
 
-                    devices = UPnPClient.Search(gwIP, "urn:schemas-upnp-org:device:InternetGatewayDevice:1", 1200);
+                    devices = UPnP_Client.Search(gwIP, "urn:schemas-upnp-org:device:InternetGatewayDevice:1", 1200);
                 }
 
                 if (devices == null)
@@ -372,7 +372,7 @@ namespace LumiSoft.Net.UPnP.NAT
                 // Gateway no UPnP device, search for UPnP router.
                 if (devices.Length == 0)
                 {
-                    devices = UPnPClient.Search("urn:schemas-upnp-org:device:InternetGatewayDevice:1", 1200);
+                    devices = UPnP_Client.Search("urn:schemas-upnp-org:device:InternetGatewayDevice:1", 1200);
                 }
 
                 if (devices.Length <= 0)

@@ -10,14 +10,14 @@ namespace LumiSoft.Net.UPnP
     /// <summary>
     ///     This class represents UPnP error.
     /// </summary>
-    public class UPnPException : Exception
+    public class UPnP_Exception : Exception
     {
         /// <summary>
         ///     Default constructor.
         /// </summary>
         /// <param name="errorCode">UPnP error code.</param>
         /// <param name="errorText">UPnP error text.</param>
-        public UPnPException(int errorCode, string errorText)
+        public UPnP_Exception(int errorCode, string errorText)
             : base("UPnP error: " + errorCode + " " + errorText + ".")
         {
             ErrorCode = errorCode;
@@ -41,7 +41,7 @@ namespace LumiSoft.Net.UPnP
         /// <returns>Returns UPnP exception.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        public static UPnPException Parse(Stream stream)
+        public static UPnP_Exception Parse(Stream stream)
         {
             if (stream == null)
             {
@@ -96,7 +96,7 @@ namespace LumiSoft.Net.UPnP
                 throw new ParseException("Failed to parse UPnP error.");
             }
 
-            return new UPnPException(errorCode, errorText);
+            return new UPnP_Exception(errorCode, errorText);
         }
     }
 }

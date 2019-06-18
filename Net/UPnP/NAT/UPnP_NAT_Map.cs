@@ -3,7 +3,7 @@
     /// <summary>
     ///     This class represents NAT port mapping entry.
     /// </summary>
-    public class UPnPNatMap
+    public class UPnP_NAT_Map
     {
         /// <summary>
         ///     Default constructor.
@@ -16,7 +16,7 @@
         /// <param name="internalPort">Internal host port number.</param>
         /// <param name="description">NAT port mapping description.</param>
         /// <param name="leaseDuration">Lease duration in in seconds. Value null means "never expires".</param>
-        public UPnPNatMap(bool enabled, string protocol, string remoteHost, string externalPort, string internalHost, int internalPort, string description, int leaseDuration)
+        public UPnP_NAT_Map(bool enabled, string protocol, string remoteHost, string externalPort, string internalHost, int internalPort, string description, int leaseDuration)
         {
             Enabled = enabled;
             Protocol = protocol;
