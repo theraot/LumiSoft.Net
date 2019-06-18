@@ -433,7 +433,7 @@ namespace LumiSoft.Net.STUN.Message
                     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                     */
 
-                    var errorCode = (data[offset + 2] & 0x7) * 100 + (data[offset + 3] & 0xFF);
+                    var errorCode = ((data[offset + 2] & 0x7) * 100) + (data[offset + 3] & 0xFF);
 
                     ErrorCode = new STUN_t_ErrorCode(errorCode, Encoding.Default.GetString(data, offset + 4, length - 4));
                     offset += length;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LumiSoft.Net.STUN.Client
+﻿namespace LumiSoft.Net.STUN.Client
 {
     /// <summary>
     /// Specifies UDP network type.
