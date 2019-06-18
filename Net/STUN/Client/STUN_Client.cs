@@ -69,10 +69,7 @@ namespace LumiSoft.Net.STUN.Client
             {
                 var stunMessage = DoTransaction
                 (
-                    new STUN_Message
-                    {
-                        Type = STUN_MessageType.BindingRequest
-                    },
+                    new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
                     remoteEndPoint,
                     1000
@@ -324,10 +321,7 @@ namespace LumiSoft.Net.STUN.Client
             {
                 var test1 = DoTransaction
                 (
-                    new STUN_Message
-                    {
-                        Type = STUN_MessageType.BindingRequest
-                    },
+                    new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
                     endPoint,
                     1600
@@ -339,9 +333,8 @@ namespace LumiSoft.Net.STUN.Client
 
                 if (socket.LocalEndPoint.Equals(test1.MappedAddress))
                 {
-                    var test2A = new STUN_Message
+                    var test2A = new STUN_Message(STUN_MessageType.BindingRequest)
                     {
-                        Type = STUN_MessageType.BindingRequest,
                         ChangeRequest = new STUN_t_ChangeRequest(true, true)
                     };
                     if (DoTransaction(test2A, socket, endPoint, 1600) == null)
@@ -352,9 +345,8 @@ namespace LumiSoft.Net.STUN.Client
                     return new STUN_Result(STUN_NetType.OpenInternet, test1.MappedAddress);
                 }
 
-                var test2B = new STUN_Message
+                var test2B = new STUN_Message(STUN_MessageType.BindingRequest)
                 {
-                    Type = STUN_MessageType.BindingRequest,
                     ChangeRequest = new STUN_t_ChangeRequest(true, true)
                 };
                 if (DoTransaction(test2B, socket, endPoint, 1600) != null)
@@ -364,10 +356,7 @@ namespace LumiSoft.Net.STUN.Client
 
                 var test3 = DoTransaction
                 (
-                    new STUN_Message
-                    {
-                        Type = STUN_MessageType.BindingRequest
-                    },
+                    new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
                     test1.ChangedAddress,
                     1600
@@ -384,9 +373,8 @@ namespace LumiSoft.Net.STUN.Client
 
                 var test4 = DoTransaction
                 (
-                    new STUN_Message
+                    new STUN_Message(STUN_MessageType.BindingRequest)
                     {
-                        Type = STUN_MessageType.BindingRequest,
                         ChangeRequest = new STUN_t_ChangeRequest(false, true)
                     }, socket, test1.ChangedAddress, 1600
                 );
@@ -426,10 +414,9 @@ namespace LumiSoft.Net.STUN.Client
 
                 var buffer = new byte[512];
                 socket.Receive(buffer);
-                var stunMessage = new STUN_Message();
-                stunMessage.Parse(buffer);
-                var array1 = request.TransactionID;
-                var array2 = stunMessage.TransactionID;
+                var stunMessage = new STUN_Message(buffer);
+                var array1 = request.TransactionId;
+                var array2 = stunMessage.TransactionId;
                 var arrayEquals = true;
                 if (array1 != null || array2 != null)
                 {

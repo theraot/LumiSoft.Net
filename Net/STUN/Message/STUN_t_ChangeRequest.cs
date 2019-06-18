@@ -10,5 +10,8 @@ namespace LumiSoft.Net.STUN.Message
         {
             throw new NotImplementedException();
         }
+
+        public object ChangeIP { get; set; }
+        public object ChangePort { get; set; }
     }
 }
