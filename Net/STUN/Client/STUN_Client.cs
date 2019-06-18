@@ -57,7 +57,7 @@ namespace LumiSoft.Net.STUN.Client
             }
             if (socket.ProtocolType != ProtocolType.Udp)
             {
-                throw new ArgumentException("Socket must be UDP socket!");
+                throw new ArgumentException("Socket must be UDP socket.");
             }
             var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(stunServer)[0], port);
             try
@@ -141,13 +141,25 @@ namespace LumiSoft.Net.STUN.Client
         /// </summary>
         /// <param name="host">STUN server name or IP.</param>
         /// <param name="port">STUN server port. Default port is 3478.</param>
-        /// <param name="localEP">Local IP end point.</param>
+        /// <param name="localEndPoint">Local IP end point.</param>
         /// <returns>Returns UDP network info.</returns>
-        /// <exception cref="T:System.ArgumentNullException">Is raised when <b>host</b> or <b>localEP</b> is null reference.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Is raised when <b>host</b> or <b>localEndPoint</b> is null reference.</exception>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
-        public static STUN_Result Query(string host, int port, IPEndPoint localEP)
+        public static STUN_Result Query(string host, int port, IPEndPoint localEndPoint)
         {
-            throw new NotImplementedException();
+            if (host == null)
+            {
+                throw new ArgumentNullException(nameof(host));
+            }
+            if (localEndPoint == null)
+            {
+                throw new ArgumentNullException(nameof(localEndPoint));
+            }
+            using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+            {
+                socket.Bind(localEndPoint);
+                return Query(host, port, socket);
+            }
         }
 
         /// <summary>
@@ -160,7 +172,164 @@ namespace LumiSoft.Net.STUN.Client
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
         public static STUN_Result Query(string host, int port, Socket socket)
         {
-            throw new NotImplementedException();
+            if (host == null)
+            {
+                throw new ArgumentNullException(nameof(host));
+            }
+            if (socket == null)
+            {
+                throw new ArgumentNullException(nameof(socket));
+            }
+            if (port < 1)
+            {
+                throw new ArgumentException("Port value must be >= 1.", nameof(port));
+            }
+            if (socket.ProtocolType != ProtocolType.Udp)
+            {
+                throw new ArgumentException("Socket must be UDP socket.");
+            }
+            var endPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0], port);
+
+            /*
+                In test I, the client sends a STUN Binding Request to a server, without any flags set in the
+                CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute. This causes the server 
+                to send the response back to the address and port that the request came from.
+            
+                In test II, the client sends a Binding Request with both the "change IP" and "change port" flags
+                from the CHANGE-REQUEST attribute set.  
+              
+                In test III, the client sends a Binding Request with only the "change port" flag set.
+                          
+                                    +--------+
+                                    |  Test  |
+                                    |   I    |
+                                    +--------+
+                                         |
+                                         |
+                                         V
+                                        /\                    /\
+                                     N /  \ Y                /  \ Y              +--------+
+                      UDP     <-------/Resp\--------------->/ IP \-------------->|  Test  |
+                      Blocked         \ ?  /                \Same/               |   IIA  |
+                                       \  /                  \? /                +--------+
+                                        \/                    \/                     |
+                                                              | N                    |
+                                                              |                      V
+                                                              V                     /\
+                                                          +--------+  Sym.       N /  \
+                                                          |  Test  |  UDP     <---/Resp\
+                                                          |   IIB  |  Firewall    \ ?  /
+                                                          +--------+               \  /
+                                                              |                     \/
+                                                              V                     |Y
+                              /\        /\                    /\                    |
+               Symmetric  N  /  \   Y  /  \   +--------+  N  /  \                   V
+                  NAT  <--- / IP \<---/Resp\- |  Test  |<---/Resp\                Open
+                            \Same/    \ ?  /  |   III  |    \ ?  /                Internet
+                             \? /      \  /   +--------+     \  /
+                              \/        \/                    \/
+                              |         |                     |Y
+                              |         |                     |
+                              |         v                     V
+                              |       Error                 Full
+                              |                             Cone
+                              V              /\
+                          +--------+        /  \ Y
+                          |  Test  |------>/Resp\---->Restricted
+                          |   IV   |       \ ?  /
+                          +--------+        \  /
+                                             \/
+                                              |N
+                                              |       Port
+                                              +------>Restricted
+
+            */
+
+            try
+            {
+                var test1 = DoTransaction
+                (
+                    new STUN_Message
+                    {
+                        Type = STUN_MessageType.BindingRequest
+                    },
+                    socket,
+                    endPoint,
+                    1600
+                );
+                if (test1 == null)
+                {
+                    return new STUN_Result(STUN_NetType.UdpBlocked, null);
+                }
+                if (socket.LocalEndPoint.Equals(test1.MappedAddress))
+                {
+                    var test2A = new STUN_Message
+                    {
+                        Type = STUN_MessageType.BindingRequest,
+                        ChangeRequest = new STUN_t_ChangeRequest(true, true)
+                    };
+                    if (DoTransaction(test2A, socket, endPoint, 1600) == null)
+                    {
+                        return new STUN_Result(STUN_NetType.SymmetricUdpFirewall, test1.MappedAddress);
+                    }
+                    return new STUN_Result(STUN_NetType.OpenInternet, test1.MappedAddress);
+                }
+                else
+                {
+                    var test2B = new STUN_Message
+                    {
+                        Type = STUN_MessageType.BindingRequest,
+                        ChangeRequest = new STUN_t_ChangeRequest(true, true)
+                    };
+                    if (DoTransaction(test2B, socket, endPoint, 1600) != null)
+                    {
+                        return new STUN_Result(STUN_NetType.FullCone, test1.MappedAddress);
+                    }
+                    var test3 = DoTransaction
+                    (
+                        new STUN_Message
+                        {
+                            Type = STUN_MessageType.BindingRequest
+                        },
+                        socket,
+                        test1.ChangedAddress,
+                        1600
+                    );
+                    if (test3 == null)
+                    {
+                        throw new Exception("STUN not available.");
+                    }
+                    if (!test3.MappedAddress.Equals(test1.MappedAddress))
+                    {
+                        return new STUN_Result(STUN_NetType.Symmetric, test1.MappedAddress);
+                    }
+                    var test4 = DoTransaction
+                    (
+                        new STUN_Message
+                        {
+                            Type = STUN_MessageType.BindingRequest,
+                            ChangeRequest = new STUN_t_ChangeRequest(false, true)
+                        }, socket, test1.ChangedAddress, 1600
+                    );
+                    if (test4 == null)
+                    {
+                        return new STUN_Result(STUN_NetType.PortRestrictedCone, test1.MappedAddress);
+                    }
+                    return new STUN_Result(STUN_NetType.RestrictedCone, test1.MappedAddress);
+                }
+            }
+            finally
+            {
+                var now = DateTime.Now;
+                while (now.AddMilliseconds(200) > DateTime.Now)
+                {
+                    if (!socket.Poll(1, SelectMode.SelectRead))
+                    {
+                        continue;
+                    }
+                    socket.Receive(new byte[512]);
+                }
+            }
         }
 
         private static STUN_Message DoTransaction(STUN_Message stunMessage, Socket socket, IPEndPoint pEndPoint, int i)

@@ -9,5 +9,8 @@ namespace LumiSoft.Net.STUN.Message
     {
         public IPEndPoint SourceAddress { get; internal set; }
         public STUN_MessageType Type { get; set; }
+        public STUN_t_ChangeRequest ChangeRequest { get; set; }
+        public object MappedAddress { get; set; }
+        public IPEndPoint ChangedAddress { get; set; }
     }
 }
