@@ -1,19 +1,19 @@
 ﻿#pragma warning disable RCS1194 // Implement exception constructors.
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace LumiSoft.Net.UPnP
 {
-   /// <summary>
-   /// This class represents UPnP error.
-   /// </summary>
+    /// <summary>
+    ///     This class represents UPnP error.
+    /// </summary>
     public class UPnPException : Exception
     {
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         /// <param name="errorCode">UPnP error code.</param>
         /// <param name="errorText">UPnP error text.</param>
@@ -25,17 +25,17 @@ namespace LumiSoft.Net.UPnP
         }
 
         /// <summary>
-        /// Gets UPnP error code.
+        ///     Gets UPnP error code.
         /// </summary>
         public int ErrorCode { get; }
 
         /// <summary>
-        /// Gets UPnP error text.
+        ///     Gets UPnP error text.
         /// </summary>
         public string ErrorText { get; }
 
         /// <summary>
-        /// Parses UPnP exception from UPnP xml error.
+        ///     Parses UPnP exception from UPnP xml error.
         /// </summary>
         /// <param name="stream">Error xml stream.</param>
         /// <returns>Returns UPnP exception.</returns>

@@ -1,17 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-
 using LumiSoft.Net.UPnP.Client;
 
 namespace LumiSoft.Net.UPnP.NAT
 {
     /// <summary>
-    /// This class provides methods for managing UPnP NAT router.
+    ///     This class provides methods for managing UPnP NAT router.
     /// </summary>
     public class UPnPNatClient
     {
@@ -20,7 +19,7 @@ namespace LumiSoft.Net.UPnP.NAT
         private static string _serviceType;
 
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         public UPnPNatClient()
         {
@@ -28,12 +27,12 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Gets if UPnP NAT is supported.
+        ///     Gets if UPnP NAT is supported.
         /// </summary>
         public bool IsSupported => _controlUrl != null;
 
         /// <summary>
-        /// This method creates a new port mapping or overwrites an existing mapping.
+        ///     This method creates a new port mapping or overwrites an existing mapping.
         /// </summary>
         /// <param name="enabled">Specifies if port mapping is enabled.</param>
         /// <param name="description">Port mapping description.</param>
@@ -42,7 +41,10 @@ namespace LumiSoft.Net.UPnP.NAT
         /// <param name="publicPort">Desired public port.</param>
         /// <param name="localEp">Local IP end point.</param>
         /// <param name="leaseDuration">Lease duration in seconds. Value null means never expires.</param>
-        /// <exception cref="ArgumentNullException">Is raised when <b>description</b>,<b>protocol</b> or <b>localEP</b> is null reference.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Is raised when <b>description</b>,<b>protocol</b> or <b>localEP</b> is null
+        ///     reference.
+        /// </exception>
         /// <exception cref="UPnPException">Is raised when UPnP device returns error.</exception>
         public static void AddPortMapping(bool enabled, string description, string protocol, string remoteHost, int publicPort, IPEndPoint localEp, int leaseDuration)
         {
@@ -50,10 +52,12 @@ namespace LumiSoft.Net.UPnP.NAT
             {
                 throw new ArgumentNullException(nameof(description));
             }
+
             if (protocol == null)
             {
                 throw new ArgumentNullException(nameof(protocol));
             }
+
             if (localEp == null)
             {
                 throw new ArgumentNullException(nameof(localEp));
@@ -83,19 +87,19 @@ namespace LumiSoft.Net.UPnP.NAT
             try
             {
                 var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
-                "<s:Body>\r\n" +
-                "<u:AddPortMapping xmlns:u=\"" + _serviceType + "\">\r\n" +
-                "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
-                "<NewExternalPort>" + publicPort + "</NewExternalPort>\r\n" +
-                "<NewProtocol>" + protocol + "</NewProtocol>\r\n" +
-                "<NewInternalPort>" + localEp.Port + "</NewInternalPort>\r\n" +
-                "<NewInternalClient>" + localEp.Address + "</NewInternalClient>\r\n" +
-                "<NewEnabled>" + Convert.ToInt32(enabled) + "</NewEnabled>\r\n" +
-                "<NewPortMappingDescription>" + description + "</NewPortMappingDescription>\r\n" +
-                "<NewLeaseDuration>" + leaseDuration + "</NewLeaseDuration>\r\n" +
-                "</u:AddPortMapping>\r\n" +
-                "</s:Body>\r\n" +
-                "</s:Envelope>\r\n";
+                               "<s:Body>\r\n" +
+                               "<u:AddPortMapping xmlns:u=\"" + _serviceType + "\">\r\n" +
+                               "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
+                               "<NewExternalPort>" + publicPort + "</NewExternalPort>\r\n" +
+                               "<NewProtocol>" + protocol + "</NewProtocol>\r\n" +
+                               "<NewInternalPort>" + localEp.Port + "</NewInternalPort>\r\n" +
+                               "<NewInternalClient>" + localEp.Address + "</NewInternalClient>\r\n" +
+                               "<NewEnabled>" + Convert.ToInt32(enabled) + "</NewEnabled>\r\n" +
+                               "<NewPortMappingDescription>" + description + "</NewPortMappingDescription>\r\n" +
+                               "<NewLeaseDuration>" + leaseDuration + "</NewLeaseDuration>\r\n" +
+                               "</u:AddPortMapping>\r\n" +
+                               "</s:Body>\r\n" +
+                               "</s:Envelope>\r\n";
 
                 SendCommand(nameof(AddPortMapping), soapBody);
             }
@@ -110,7 +114,7 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Deletes port mapping.
+        ///     Deletes port mapping.
         /// </summary>
         /// <param name="map">NAT mapping entry to delete.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>map</b> is null reference.</exception>
@@ -126,7 +130,7 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Deletes port mapping.
+        ///     Deletes port mapping.
         /// </summary>
         /// <param name="protocol">Port mapping protocol. Normally this value TCP or UDP.</param>
         /// <param name="remoteHost">Remote host IP address.</param>
@@ -153,14 +157,14 @@ namespace LumiSoft.Net.UPnP.NAT
             try
             {
                 var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
-                "<s:Body>\r\n" +
-                "<u:DeletePortMapping xmlns:u=\"" + _serviceType + "\">\r\n" +
-                "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
-                "<NewExternalPort>" + publicPort + "</NewExternalPort>\r\n" +
-                "<NewProtocol>" + protocol + "</NewProtocol>\r\n" +
-                "</u:DeletePortMapping>\r\n" +
-                "</s:Body>\r\n" +
-                "</s:Envelope>\r\n";
+                               "<s:Body>\r\n" +
+                               "<u:DeletePortMapping xmlns:u=\"" + _serviceType + "\">\r\n" +
+                               "<NewRemoteHost>" + remoteHost + "</NewRemoteHost>\r\n" +
+                               "<NewExternalPort>" + publicPort + "</NewExternalPort>\r\n" +
+                               "<NewProtocol>" + protocol + "</NewProtocol>\r\n" +
+                               "</u:DeletePortMapping>\r\n" +
+                               "</s:Body>\r\n" +
+                               "</s:Envelope>\r\n";
 
                 SendCommand(nameof(DeletePortMapping), soapBody);
             }
@@ -175,7 +179,7 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Gets NAT public IP address.
+        ///     Gets NAT public IP address.
         /// </summary>
         /// <returns>Returns NAT public IP address.</returns>
         public static IPAddress GetExternalIPAddress()
@@ -188,10 +192,10 @@ namespace LumiSoft.Net.UPnP.NAT
             */
 
             var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
-            "<s:Body>\r\n" +
-            "<u:GetExternalIPAddress xmlns:u=\"" + _serviceType + "\"></u:GetExternalIPAddress>\r\n" +
-            "</s:Body>\r\n" +
-            "</s:Envelope>\r\n";
+                           "<s:Body>\r\n" +
+                           "<u:GetExternalIPAddress xmlns:u=\"" + _serviceType + "\"></u:GetExternalIPAddress>\r\n" +
+                           "</s:Body>\r\n" +
+                           "</s:Envelope>\r\n";
 
             var soapResponse = SendCommand(nameof(GetExternalIPAddress), soapBody);
 
@@ -211,7 +215,7 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Gets all existing port mappings.
+        ///     Gets all existing port mappings.
         /// </summary>
         /// <returns>Returns all existing port mappings.</returns>
         public static UPnPNatMap[] GetPortMappings()
@@ -245,12 +249,12 @@ namespace LumiSoft.Net.UPnP.NAT
                 try
                 {
                     var soapBody = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\r\n" +
-                    "<s:Body>\r\n" +
-                    "<u:GetGenericPortMappingEntry xmlns:u=\"" + _serviceType + "\">\r\n" +
-                    "<NewPortMappingIndex>" + i + "</NewPortMappingIndex>\r\n" +
-                    "</u:GetGenericPortMappingEntry>\r\n" +
-                    "</s:Body>\r\n" +
-                    "</s:Envelope>\r\n";
+                                   "<s:Body>\r\n" +
+                                   "<u:GetGenericPortMappingEntry xmlns:u=\"" + _serviceType + "\">\r\n" +
+                                   "<NewPortMappingIndex>" + i + "</NewPortMappingIndex>\r\n" +
+                                   "</u:GetGenericPortMappingEntry>\r\n" +
+                                   "</s:Body>\r\n" +
+                                   "</s:Envelope>\r\n";
 
                     var soapResponse = SendCommand("GetGenericPortMappingEntry", soapBody);
 
@@ -333,7 +337,7 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Initializes UPnP NAT info.
+        ///     Initializes UPnP NAT info.
         /// </summary>
         private static void Init()
         {
@@ -353,6 +357,7 @@ namespace LumiSoft.Net.UPnP.NAT
                             gwIP = gwInformation.Address;
                             break;
                         }
+
                         break;
                     }
 
@@ -442,7 +447,7 @@ namespace LumiSoft.Net.UPnP.NAT
         }
 
         /// <summary>
-        /// Sends command to UPnP device and reads response.
+        ///     Sends command to UPnP device and reads response.
         /// </summary>
         /// <param name="method">Command method.</param>
         /// <param name="soapData">Soap xml.</param>

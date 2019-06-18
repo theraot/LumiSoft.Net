@@ -3,7 +3,7 @@
 namespace LumiSoft.Net
 {
     /// <summary>
-    /// This exception is thrown when parse errors are encountered.
+    ///     This exception is thrown when parse errors are encountered.
     /// </summary>
     public class ParseException : Exception
     {
@@ -13,7 +13,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         /// <param name="message"></param>
         public ParseException(string message)

@@ -1,12 +1,12 @@
 ﻿namespace LumiSoft.Net.UPnP.NAT
 {
     /// <summary>
-    /// This class represents NAT port mapping entry.
+    ///     This class represents NAT port mapping entry.
     /// </summary>
     public class UPnPNatMap
     {
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         /// <param name="enabled">Specifies if NAT port map is enabled.</param>
         /// <param name="protocol">Port mapping protocol. Normally this value TCP or UDP.</param>
@@ -29,42 +29,42 @@
         }
 
         /// <summary>
-        /// Gets NAT port mapping description.
+        ///     Gets NAT port mapping description.
         /// </summary>
         public string Description { get; }
 
         /// <summary>
-        /// Gets if NAT port map is enabled.
+        ///     Gets if NAT port map is enabled.
         /// </summary>
         public bool Enabled { get; }
 
         /// <summary>
-        /// Gets NAT external port number. NOTE: Some implementations may use wildcard(*,?) values.
+        ///     Gets NAT external port number. NOTE: Some implementations may use wildcard(*,?) values.
         /// </summary>
         public string ExternalPort { get; }
 
         /// <summary>
-        /// Gets internal host IP address.
+        ///     Gets internal host IP address.
         /// </summary>
         public string InternalHost { get; }
 
         /// <summary>
-        /// Gets internal host port number.
+        ///     Gets internal host port number.
         /// </summary>
         public int InternalPort { get; }
 
         /// <summary>
-        /// Gets lease duration in in seconds. Value null means "never expires".
+        ///     Gets lease duration in in seconds. Value null means "never expires".
         /// </summary>
         public int LeaseDuration { get; }
 
         /// <summary>
-        /// Gets port mapping protocol. Normally this value TCP or UDP.
+        ///     Gets port mapping protocol. Normally this value TCP or UDP.
         /// </summary>
         public string Protocol { get; }
 
         /// <summary>
-        /// Gets remote host IP address. NOTE: Some implementations may use wildcard(*,?) values.
+        ///     Gets remote host IP address. NOTE: Some implementations may use wildcard(*,?) values.
         /// </summary>
         public string RemoteHost { get; }
     }
