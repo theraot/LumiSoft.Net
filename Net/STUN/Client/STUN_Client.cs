@@ -274,49 +274,46 @@ namespace LumiSoft.Net.STUN.Client
                     }
                     return new STUN_Result(STUN_NetType.OpenInternet, test1.MappedAddress);
                 }
-                else
+                var test2B = new STUN_Message
                 {
-                    var test2B = new STUN_Message
+                    Type = STUN_MessageType.BindingRequest,
+                    ChangeRequest = new STUN_t_ChangeRequest(true, true)
+                };
+                if (DoTransaction(test2B, socket, endPoint, 1600) != null)
+                {
+                    return new STUN_Result(STUN_NetType.FullCone, test1.MappedAddress);
+                }
+                var test3 = DoTransaction
+                (
+                    new STUN_Message
+                    {
+                        Type = STUN_MessageType.BindingRequest
+                    },
+                    socket,
+                    test1.ChangedAddress,
+                    1600
+                );
+                if (test3 == null)
+                {
+                    throw new Exception("STUN not available.");
+                }
+                if (!test3.MappedAddress.Equals(test1.MappedAddress))
+                {
+                    return new STUN_Result(STUN_NetType.Symmetric, test1.MappedAddress);
+                }
+                var test4 = DoTransaction
+                (
+                    new STUN_Message
                     {
                         Type = STUN_MessageType.BindingRequest,
-                        ChangeRequest = new STUN_t_ChangeRequest(true, true)
-                    };
-                    if (DoTransaction(test2B, socket, endPoint, 1600) != null)
-                    {
-                        return new STUN_Result(STUN_NetType.FullCone, test1.MappedAddress);
-                    }
-                    var test3 = DoTransaction
-                    (
-                        new STUN_Message
-                        {
-                            Type = STUN_MessageType.BindingRequest
-                        },
-                        socket,
-                        test1.ChangedAddress,
-                        1600
-                    );
-                    if (test3 == null)
-                    {
-                        throw new Exception("STUN not available.");
-                    }
-                    if (!test3.MappedAddress.Equals(test1.MappedAddress))
-                    {
-                        return new STUN_Result(STUN_NetType.Symmetric, test1.MappedAddress);
-                    }
-                    var test4 = DoTransaction
-                    (
-                        new STUN_Message
-                        {
-                            Type = STUN_MessageType.BindingRequest,
-                            ChangeRequest = new STUN_t_ChangeRequest(false, true)
-                        }, socket, test1.ChangedAddress, 1600
-                    );
-                    if (test4 == null)
-                    {
-                        return new STUN_Result(STUN_NetType.PortRestrictedCone, test1.MappedAddress);
-                    }
-                    return new STUN_Result(STUN_NetType.RestrictedCone, test1.MappedAddress);
+                        ChangeRequest = new STUN_t_ChangeRequest(false, true)
+                    }, socket, test1.ChangedAddress, 1600
+                );
+                if (test4 == null)
+                {
+                    return new STUN_Result(STUN_NetType.PortRestrictedCone, test1.MappedAddress);
                 }
+                return new STUN_Result(STUN_NetType.RestrictedCone, test1.MappedAddress);
             }
             finally
             {
