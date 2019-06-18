@@ -1,15 +1,16 @@
-﻿using System;
-
-namespace LumiSoft.Net.STUN.Message
+﻿namespace LumiSoft.Net.STUN.Message
 {
-    class STUN_t_ChangeRequest
+    // ReSharper disable once InconsistentNaming
+    internal class STUN_t_ChangeRequest
     {
-        public STUN_t_ChangeRequest(bool b, bool b1)
+        public STUN_t_ChangeRequest(bool changeIP, bool changePort)
         {
-            throw new NotImplementedException();
+            ChangeIP = changeIP;
+            ChangePort = changePort;
         }
 
-        public object ChangeIP { get; set; }
-        public object ChangePort { get; set; }
+        public bool ChangeIP { get; }
+
+        public bool ChangePort { get; }
     }
 }
