@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using LumiSoft.Net.STUN.Message;
 
 namespace LumiSoft.Net.STUN.Client
 {
@@ -36,6 +38,65 @@ namespace LumiSoft.Net.STUN.Client
         /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
         public static IPEndPoint GetPublicEP(string stunServer, int port, Socket socket)
+        {
+            if (stunServer == null)
+            {
+                throw new ArgumentNullException(nameof(stunServer));
+            }
+            if (stunServer.Length == 0)
+            {
+                throw new ArgumentException("Argument 'stunServer' value must be specified.", nameof(stunServer));
+            }
+            if (port < 1)
+            {
+                throw new ArgumentException("Invalid argument 'port' value.", nameof(port));
+            }
+            if (socket == null)
+            {
+                throw new ArgumentNullException(nameof(socket));
+            }
+            if (socket.ProtocolType != ProtocolType.Udp)
+            {
+                throw new ArgumentException("Socket must be UDP socket!");
+            }
+            var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(stunServer)[0], port);
+            try
+            {
+                var stunMessage = DoTransaction
+                (
+                    new STUN_Message
+                    {
+                        Type = STUN_MessageType.BindingRequest
+                    },
+                    socket,
+                    remoteEndPoint,
+                    1000
+                );
+                if (stunMessage == null)
+                {
+                    throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+                }
+                return stunMessage.SourceAddress;
+            }
+            catch
+            {
+                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+            }
+            finally
+            {
+                var now = DateTime.Now;
+                while (now.AddMilliseconds(200) > DateTime.Now)
+                {
+                    if (!socket.Poll(1, SelectMode.SelectRead))
+                    {
+                        continue;
+                    }
+                    socket.Receive(new byte[512]);
+                }
+            }
+        }
+
+        private static STUN_Message DoTransaction(STUN_Message stunMessage, Socket socket, IPEndPoint pEndPoint, int i)
         {
             throw new NotImplementedException();
         }
