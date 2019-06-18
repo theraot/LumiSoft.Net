@@ -23,7 +23,7 @@ namespace LumiSoft.Net.STUN.Client
     /// }
     /// </code>
     /// </example>
-    public class STUN_Client
+    public static class STUN_Client
     {
         /// <summary>
         /// Resolves socket local end point to public end point.
