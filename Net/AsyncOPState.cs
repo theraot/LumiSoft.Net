@@ -3,7 +3,7 @@
     /// <summary>
     /// Specifies asynchronous operation state.
     /// </summary>
-    public enum AsyncOPState
+    public enum AsyncOpState
     {
         /// <summary>
         /// Operation waits for start.

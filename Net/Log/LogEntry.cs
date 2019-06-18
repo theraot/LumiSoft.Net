@@ -19,7 +19,7 @@ namespace LumiSoft.Net.Log
         public LogEntry(LogEntryType type, string id, long size, string text)
         {
             EntryType = type;
-            ID = id;
+            Id = id;
             Size = size;
             Text = text;
 
@@ -40,7 +40,7 @@ namespace LumiSoft.Net.Log
         public LogEntry(LogEntryType type, string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp, byte[] data)
         {
             EntryType = type;
-            ID = id;
+            Id = id;
             UserIdentity = userIdentity;
             Size = size;
             Text = text;
@@ -65,7 +65,7 @@ namespace LumiSoft.Net.Log
         public LogEntry(LogEntryType type, string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp, Exception exception)
         {
             EntryType = type;
-            ID = id;
+            Id = id;
             UserIdentity = userIdentity;
             Size = size;
             Text = text;
@@ -94,7 +94,7 @@ namespace LumiSoft.Net.Log
         /// <summary>
         /// Gets log entry ID.
         /// </summary>
-        public string ID { get; }
+        public string Id { get; }
 
         /// <summary>
         /// Gets local IP end point. Value null means no local end point.

@@ -3,7 +3,7 @@
     /// <summary>
     /// This is base class for asynchronous operation.
     /// </summary>
-    public abstract class AsyncOP
+    public abstract class AsyncOp
     {
         /// <summary>
         /// Gets if asynchronous operation has completed.
