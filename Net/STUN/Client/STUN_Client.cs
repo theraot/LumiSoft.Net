@@ -61,7 +61,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="host">STUN server name or IP.</param>
         /// <param name="port">STUN server port. Default port is 3478.</param>
         /// <param name="localEP">Local IP end point.</param>
-        /// <returns>Returns UDP netwrok info.</returns>
+        /// <returns>Returns UDP network info.</returns>
         /// <exception cref="T:System.ArgumentNullException">Is raised when <b>host</b> or <b>localEP</b> is null reference.</exception>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
         public static STUN_Result Query(string host, int port, IPEndPoint localEP)
@@ -75,7 +75,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="host">STUN server name or IP.</param>
         /// <param name="port">STUN server port. Default port is 3478.</param>
         /// <param name="socket">UDP socket to use.</param>
-        /// <returns>Returns UDP netwrok info.</returns>
+        /// <returns>Returns UDP network info.</returns>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
         public static STUN_Result Query(string host, int port, Socket socket)
         {
