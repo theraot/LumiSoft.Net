@@ -108,7 +108,32 @@ namespace LumiSoft.Net.STUN.Client
         /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
         public static IPAddress GetPublicIP(string stunServer, int port, IPAddress localIP)
         {
-            throw new NotImplementedException();
+            if (stunServer == null)
+            {
+                throw new ArgumentNullException(nameof(stunServer));
+            }
+            if (stunServer.Length == 0)
+            {
+                throw new ArgumentException("Argument 'stunServer' value must be specified.", nameof(stunServer));
+            }
+            if (port < 1)
+            {
+                throw new ArgumentException("Invalid argument 'port' value.", nameof(port));
+            }
+            if (localIP == null)
+            {
+                throw new ArgumentNullException(nameof(localIP));
+            }
+            if (!Net_Utils.IsPrivateIPv4(localIP))
+            {
+                return localIP;
+            }
+            var stunResult = Query(stunServer, port, Net_Utils.CreateSocket(new IPEndPoint(localIP, 0), ProtocolType.Udp));
+            if (stunResult.PublicEndPoint == null)
+            {
+                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+            }
+            return stunResult.PublicEndPoint.Address;
         }
 
         /// <summary>
