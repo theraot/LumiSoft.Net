@@ -37,7 +37,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <exception cref="T:System.ArgumentNullException">Is raised when <b>stunServer</b> or <b>socket</b> is null reference.</exception>
         /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
-        public static IPEndPoint GetPublicEP(string stunServer, int port, Socket socket)
+        public static IPEndPoint GetPublicEndPoint(string stunServer, int port, Socket socket)
         {
             if (stunServer == null)
             {
