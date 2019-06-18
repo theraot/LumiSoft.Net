@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -99,10 +100,13 @@ namespace LumiSoft.Net.STUN.Message
         }
 
         public IPEndPoint ChangedAddress { get; set; }
+
         public STUN_t_ChangeRequest ChangeRequest { get; set; }
 
         public STUN_t_ErrorCode ErrorCode { get; set; }
+
         public int MagicCookie { get; }
+
         public IPEndPoint MappedAddress { get; set; }
 
         public string Password { get; set; }
@@ -460,7 +464,7 @@ namespace LumiSoft.Net.STUN.Message
             }
         }
 
-        private static void StoreEndPoint(AttributeType type, IPEndPoint endPoint, byte[] message, ref int offset)
+        private static void StoreEndPoint(AttributeType type, IPEndPoint endPoint, IList<byte> message, ref int offset)
         {
             /*
                 It consists of an eight bit address family, and a sixteen bit

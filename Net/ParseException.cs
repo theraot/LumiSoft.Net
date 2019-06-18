@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA2237 // Mark ISerializable types with serializable
+
+using System;
 
 namespace LumiSoft.Net
 {
@@ -13,6 +15,7 @@ namespace LumiSoft.Net
             // Empty
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Default constructor.
         /// </summary>

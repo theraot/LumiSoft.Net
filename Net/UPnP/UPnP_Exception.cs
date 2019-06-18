@@ -1,4 +1,6 @@
-﻿#pragma warning disable RCS1194 // Implement exception constructors.
+﻿#pragma warning disable CA1032 // Implement standard exception constructors
+#pragma warning disable CA2237 // Mark ISerializable types with serializable
+#pragma warning disable RCS1194 // Implement exception constructors.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ namespace LumiSoft.Net.UPnP
     ///     This class represents UPnP error.
     /// </summary>
     public class UPnP_Exception : Exception
-    {
+                              {
         /// <summary>
         ///     Default constructor.
         /// </summary>

@@ -15,6 +15,6 @@
         ReflectedFrom = 0x000B,
         XorOnly = 0x0021,
         XorMappedAddress = 0x8020,
-        ServerName = 0x8022,
+        ServerName = 0x8022
     }
 }

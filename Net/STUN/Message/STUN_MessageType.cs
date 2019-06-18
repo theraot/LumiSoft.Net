@@ -33,6 +33,6 @@
         /// <summary>
         /// STUN message is "shared secret" request error response.
         /// </summary>
-        SharedSecretErrorResponse = 0x0112,
+        SharedSecretErrorResponse = 0x0112
     }
 }
