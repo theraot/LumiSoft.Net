@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 
 namespace LumiSoft.Net.STUN.Client
 {
     public class STUN_Result
     {
-        private object udpBlocked;
-        private object p;
-
-        public STUN_Result(object udpBlocked, object p)
+        public STUN_Result(STUN_NetType netType, IPEndPoint publicEndPoint)
         {
-            this.udpBlocked = udpBlocked;
-            this.p = p;
+            NetType = netType;
+            PublicEndPoint = publicEndPoint;
         }
 
-        public IPEndPoint PublicEndPoint { get; set; }
+        public STUN_NetType NetType { get; }
+
+        public IPEndPoint PublicEndPoint { get; }
     }
 }
