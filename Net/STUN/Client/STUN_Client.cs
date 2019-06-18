@@ -96,11 +96,6 @@ namespace LumiSoft.Net.STUN.Client
             }
         }
 
-        private static STUN_Message DoTransaction(STUN_Message stunMessage, Socket socket, IPEndPoint pEndPoint, int i)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Resolves local IP to public IP using STUN.
         /// </summary>
@@ -139,6 +134,11 @@ namespace LumiSoft.Net.STUN.Client
         /// <returns>Returns UDP network info.</returns>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
         public static STUN_Result Query(string host, int port, Socket socket)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static STUN_Message DoTransaction(STUN_Message stunMessage, Socket socket, IPEndPoint pEndPoint, int i)
         {
             throw new NotImplementedException();
         }
