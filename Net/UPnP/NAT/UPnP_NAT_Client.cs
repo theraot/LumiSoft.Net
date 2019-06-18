@@ -259,12 +259,12 @@ namespace LumiSoft.Net.UPnP.NAT
                     var soapResponse = SendCommand("GetGenericPortMappingEntry", soapBody);
 
                     var enabled = false;
-                    var protocol = "";
-                    var remoteHost = "";
-                    var externalPort = "";
-                    var internalHost = "";
+                    var protocol = string.Empty;
+                    var remoteHost = string.Empty;
+                    var externalPort = string.Empty;
+                    var internalHost = string.Empty;
                     var internalPort = 0;
-                    var description = "";
+                    var description = string.Empty;
                     var leaseDuration = 0;
 
                     using (var stringReader = new StringReader(soapResponse))

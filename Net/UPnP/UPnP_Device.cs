@@ -26,12 +26,12 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         ///     Gets device base URL.
         /// </summary>
-        public string BaseUrl { get; private set; } = "";
+        public string BaseUrl { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets device type.
         /// </summary>
-        public string DeviceType { get; private set; } = "";
+        public string DeviceType { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets UPnP device XML description.
@@ -41,37 +41,37 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         ///     Gets device short name.
         /// </summary>
-        public string FriendlyName { get; private set; } = "";
+        public string FriendlyName { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets manufacturer's name.
         /// </summary>
-        public string Manufacturer { get; private set; } = "";
+        public string Manufacturer { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets web site for Manufacturer.
         /// </summary>
-        public string ManufacturerUrl { get; private set; } = "";
+        public string ManufacturerUrl { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets device long description.
         /// </summary>
-        public string ModelDescription { get; private set; } = "";
+        public string ModelDescription { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets model name.
         /// </summary>
-        public string ModelName { get; private set; } = "";
+        public string ModelName { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets model number.
         /// </summary>
-        public string ModelNumber { get; private set; } = "";
+        public string ModelNumber { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets web site for model.
         /// </summary>
-        public string ModelUrl { get; private set; } = "";
+        public string ModelUrl { get; private set; } = string.Empty;
 
         // iconList
         // serviceList
@@ -80,17 +80,17 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         ///     Gets device UI url.
         /// </summary>
-        public string PresentationUrl { get; private set; } = "";
+        public string PresentationUrl { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets serial number.
         /// </summary>
-        public string SerialNumber { get; private set; } = "";
+        public string SerialNumber { get; private set; } = string.Empty;
 
         /// <summary>
         ///     Gets unique device name.
         /// </summary>
-        public string Udn { get; private set; } = "";
+        public string Udn { get; private set; } = string.Empty;
 
         private void Init(string url)
         {
