@@ -7,5 +7,21 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class LineSizeExceededException : Exception
     {
+        public LineSizeExceededException()
+        {
+            // Empty
+        }
+
+        public LineSizeExceededException(string message)
+            : base(message)
+        {
+            // Empty
+        }
+
+        public LineSizeExceededException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+            // Empty
+        }
     }
 }

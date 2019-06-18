@@ -29,7 +29,7 @@ namespace LumiSoft.Net
         {
             get => _charset;
 
-            set => _charset = value ?? throw new ArgumentNullException("value");
+            set => _charset = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LumiSoft.Net
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             Append(_charset.GetBytes(value));
@@ -62,11 +62,11 @@ namespace LumiSoft.Net
         {
             if (charset == null)
             {
-                throw new ArgumentNullException("charset");
+                throw new ArgumentNullException(nameof(charset));
             }
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             Append(charset.GetBytes(value));
@@ -81,7 +81,7 @@ namespace LumiSoft.Net
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             Append(value, 0, value.Length);
@@ -98,7 +98,7 @@ namespace LumiSoft.Net
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             // Increase buffer if needed.

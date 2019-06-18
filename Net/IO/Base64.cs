@@ -6,7 +6,7 @@ namespace LumiSoft.Net.IO
     /// <summary>
     /// This class implements base64 encoder/decoder.  Defined in RFC 4648.
     /// </summary>
-    public class Base64
+    public static class Base64
     {
         private readonly static short[] _base64_Decode_Table = {
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
@@ -32,11 +32,11 @@ namespace LumiSoft.Net.IO
         /// <returns>Returns decoded data.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         /// <exception cref="FormatException">Is raised when <b>value</b> contains invalid base64 data.</exception>
-        public byte[] Decode(string value, bool ignoreNonBase64Chars)
+        public static byte[] Decode(string value, bool ignoreNonBase64Chars)
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             var encBuffer = Encoding.ASCII.GetBytes(value);
@@ -59,11 +59,11 @@ namespace LumiSoft.Net.IO
         /// <returns>Returns decoded data.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>data</b> is null reference.</exception>
         /// <exception cref="FormatException">Is raised when <b>value</b> contains invalid base64 data.</exception>
-        public byte[] Decode(byte[] data, int offset, int count, bool ignoreNonBase64Chars)
+        public static byte[] Decode(byte[] data, int offset, int count, bool ignoreNonBase64Chars)
         {
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             var buffer = new byte[data.Length];
@@ -92,27 +92,27 @@ namespace LumiSoft.Net.IO
         {
             if (encBuffer == null)
             {
-                throw new ArgumentNullException("encBuffer");
+                throw new ArgumentNullException(nameof(encBuffer));
             }
             if (encOffset < 0)
             {
-                throw new ArgumentOutOfRangeException("encOffset", "Argument 'encOffset' value must be >= 0.");
+                throw new ArgumentOutOfRangeException(nameof(encOffset), "Argument 'encOffset' value must be >= 0.");
             }
             if (encCount < 0)
             {
-                throw new ArgumentOutOfRangeException("encCount", "Argument 'encCount' value must be >= 0.");
+                throw new ArgumentOutOfRangeException(nameof(encCount), "Argument 'encCount' value must be >= 0.");
             }
             if (encOffset + encCount > encBuffer.Length)
             {
-                throw new ArgumentOutOfRangeException("encCount", "Argument 'count' is bigger than than argument 'encBuffer'.");
+                throw new ArgumentOutOfRangeException(nameof(encCount), "Argument 'count' is bigger than than argument 'encBuffer'.");
             }
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
             if (offset < 0 || offset >= buffer.Length)
             {
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
             /* RFC 4648.
@@ -225,19 +225,6 @@ namespace LumiSoft.Net.IO
             }
 
             return decodedOffset;
-        }
-
-        /// <summary>
-        /// Encodes bytes.
-        /// </summary>
-        /// <param name="buffer">Data buffer.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="count">Number of bytes available in the buffer.</param>
-        /// <param name="last">Last data block.</param>
-        /// <returns>Returns encoded data.</returns>
-        public static byte[] Encode(byte[] buffer, int offset, int count, bool last)
-        {
-            throw new NotImplementedException();
         }
     }
 }

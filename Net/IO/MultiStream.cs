@@ -139,7 +139,7 @@ namespace LumiSoft.Net.IO
             }
             if (stream == null)
             {
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
             }
 
             _streams.Enqueue(stream);

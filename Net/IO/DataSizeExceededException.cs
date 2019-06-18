@@ -7,5 +7,21 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class DataSizeExceededException : Exception
     {
+        public DataSizeExceededException()
+        {
+            // Empty
+        }
+
+        public DataSizeExceededException(string message)
+            : base(message)
+        {
+            // Empty
+        }
+
+        public DataSizeExceededException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+            // Empty
+        }
     }
 }

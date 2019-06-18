@@ -13,14 +13,23 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public IncompleteDataException()
         {
+            // Empty
         }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="message">Exception message text.</param>
-        public IncompleteDataException(string message) : base(message)
+        public IncompleteDataException(string message)
+            : base(message)
         {
+            // Empty
+        }
+
+        public IncompleteDataException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+            // Empty
         }
     }
 }

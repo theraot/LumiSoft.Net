@@ -19,7 +19,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public ReadWriteControlledStream(Stream stream, FileAccess access)
         {
-            _stream = stream ?? throw new ArgumentNullException("stream");
+            _stream = stream ?? throw new ArgumentNullException(nameof(stream));
             _accessMode = access;
         }
 
@@ -81,7 +81,7 @@ namespace LumiSoft.Net.IO
         {
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
             if (offset < 0 || offset > buffer.Length)
             {
@@ -132,7 +132,7 @@ namespace LumiSoft.Net.IO
         {
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
             if (offset < 0 || offset > buffer.Length)
             {

@@ -3,7 +3,7 @@ namespace LumiSoft.Net
     /// <summary>
     /// This class provides well known TCP/UDP service ports.
     /// </summary>
-    public class WellKnownPorts
+    public static class WellKnownPorts
     {
         /// <summary>
         /// DNS protocol.

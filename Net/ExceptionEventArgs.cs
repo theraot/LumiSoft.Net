@@ -14,7 +14,7 @@ namespace LumiSoft.Net
         /// <exception cref="ArgumentNullException">Is raised when <b>exception</b> is null reference value.</exception>
         public ExceptionEventArgs(Exception exception)
         {
-            Exception = exception ?? throw new ArgumentNullException("exception");
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
 
         /// <summary>

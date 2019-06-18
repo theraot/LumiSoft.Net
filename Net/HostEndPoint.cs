@@ -19,7 +19,7 @@ namespace LumiSoft.Net
         {
             if (host == null)
             {
-                throw new ArgumentNullException("host");
+                throw new ArgumentNullException(nameof(host));
             }
             if (host == "")
             {
@@ -39,7 +39,7 @@ namespace LumiSoft.Net
         {
             if (endPoint == null)
             {
-                throw new ArgumentNullException("endPoint");
+                throw new ArgumentNullException(nameof(endPoint));
             }
 
             Host = endPoint.Address.ToString();
@@ -85,7 +85,7 @@ namespace LumiSoft.Net
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
             if (value == "")
             {

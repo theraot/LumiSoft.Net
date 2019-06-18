@@ -17,15 +17,15 @@ namespace LumiSoft.Net
         {
             if (start < 1 || start > 0xFFFF)
             {
-                throw new ArgumentOutOfRangeException("start", "Argument 'start' value must be > 0 and << 65 535.");
+                throw new ArgumentOutOfRangeException(nameof(start), "Argument 'start' value must be > 0 and << 65 535.");
             }
             if (end < 1 || end > 0xFFFF)
             {
-                throw new ArgumentOutOfRangeException("end", "Argument 'end' value must be > 0 and << 65 535.");
+                throw new ArgumentOutOfRangeException(nameof(end), "Argument 'end' value must be > 0 and << 65 535.");
             }
             if (start > end)
             {
-                throw new ArgumentOutOfRangeException("end", "Argument 'start' value must be >= argument 'end' value.");
+                throw new ArgumentOutOfRangeException(nameof(end), "Argument 'start' value must be >= argument 'end' value.");
             }
 
             Start = start;

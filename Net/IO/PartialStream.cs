@@ -26,7 +26,7 @@ namespace LumiSoft.Net.IO
         {
             if (stream == null)
             {
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
             }
             if (!stream.CanSeek)
             {

@@ -19,15 +19,15 @@ namespace LumiSoft.Net
         {
             if (hostName == null)
             {
-                throw new ArgumentNullException("hostName");
+                throw new ArgumentNullException(nameof(hostName));
             }
             if (hostName == string.Empty)
             {
-                throw new ArgumentException("Argument 'hostName' value must be specified.", "hostName");
+                throw new ArgumentException("Argument 'hostName' value must be specified.", nameof(hostName));
             }
 
             HostName = hostName;
-            Addresses = ipAddresses ?? throw new ArgumentNullException("ipAddresses");
+            Addresses = ipAddresses ?? throw new ArgumentNullException(nameof(ipAddresses));
             Aliases = aliases == null ? new string[0] : aliases;
         }
 

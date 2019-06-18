@@ -50,9 +50,9 @@ namespace LumiSoft.Net.IO
         /// </summary>
         /// <param name="buffer">This parameter is not used.</param>
         /// <param name="offset">This parameter is not used.</param>
-        /// <param name="size">This parameter is not used.</param>
+        /// <param name="count">This parameter is not used.</param>
         /// <returns></returns>
-        public override int Read([In, Out] byte[] buffer, int offset, int size)
+        public override int Read([In, Out] byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();
         }
@@ -82,8 +82,8 @@ namespace LumiSoft.Net.IO
         /// </summary>
         /// <param name="buffer">An array of type Byte that contains the data to write to the stream.</param>
         /// <param name="offset">The location in buffer from which to start writing data.</param>
-        /// <param name="size">The number of bytes to write to the stream.</param>
-        public override void Write(byte[] buffer, int offset, int size)
+        /// <param name="count">The number of bytes to write to the stream.</param>
+        public override void Write(byte[] buffer, int offset, int count)
         {
         }
     }

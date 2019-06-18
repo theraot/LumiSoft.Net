@@ -179,7 +179,7 @@ namespace LumiSoft.Net.IO
             }
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
 
             return _stream.Read(buffer, offset, count);
@@ -236,7 +236,7 @@ namespace LumiSoft.Net.IO
             }
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
 
             // We need switch to temporary file.

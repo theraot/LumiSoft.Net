@@ -142,6 +142,7 @@ namespace LumiSoft.Net.Log
         /// </summary>
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

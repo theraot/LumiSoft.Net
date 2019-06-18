@@ -1,3 +1,5 @@
+#pragma warning disable RECS0017 // Possible compare of value type with 'null'
+
 using System;
 using System.Collections.Generic;
 
@@ -40,7 +42,7 @@ namespace LumiSoft.Net
         {
             if (items == null)
             {
-                throw new ArgumentNullException("items");
+                throw new ArgumentNullException(nameof(items));
             }
 
             foreach (var item in items)
@@ -58,7 +60,7 @@ namespace LumiSoft.Net
         {
             if (item == null)
             {
-                throw new ArgumentNullException("item");
+                throw new ArgumentNullException(nameof(item));
             }
 
             _items.Add(item);
@@ -122,7 +124,7 @@ namespace LumiSoft.Net
         {
             if (item == null)
             {
-                throw new ArgumentNullException("item");
+                throw new ArgumentNullException(nameof(item));
             }
 
             _items.Remove(item);

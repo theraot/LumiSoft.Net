@@ -62,19 +62,19 @@ namespace LumiSoft.Net.IO
         {
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+                throw new ArgumentOutOfRangeException(nameof(offset), "Argument 'offset' value must be >= 0.");
             }
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("count", "Argument 'count' value must be >= 0.");
+                throw new ArgumentOutOfRangeException(nameof(count), "Argument 'count' value must be >= 0.");
             }
             if (offset + count > buffer.Length)
             {
-                throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
+                throw new ArgumentOutOfRangeException(nameof(count), "Argument 'count' is bigger than than argument 'buffer' can store.");
             }
 
             lock (_lock)
@@ -106,15 +106,15 @@ namespace LumiSoft.Net.IO
         {
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
+                throw new ArgumentOutOfRangeException(nameof(offset), "Argument 'offset' value must be >= 0.");
             }
             if (count < 0 || count + offset > buffer.Length)
             {
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             lock (_lock)
