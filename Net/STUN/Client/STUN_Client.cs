@@ -124,7 +124,7 @@ namespace LumiSoft.Net.STUN.Client
             {
                 throw new ArgumentNullException(nameof(localIP));
             }
-            if (!Net_Utils.IsPrivateIPv4(localIP))
+            if (!IsPrivateIPv4(localIP))
             {
                 return localIP;
             }
@@ -134,6 +134,35 @@ namespace LumiSoft.Net.STUN.Client
                 throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
             }
             return stunResult.PublicEndPoint.Address;
+
+            bool IsPrivateIPv4(IPAddress ipAddress)
+            {
+                if (ipAddress.AddressFamily != AddressFamily.InterNetwork)
+                {
+                    return false;
+                }
+
+                var bytes = ipAddress.GetAddressBytes();
+
+                /* Private IPs (RFC1918):
+                    First Octet = 10 (Example: 10.X.X.X)
+                    First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
+                    First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X)
+                   Link-Local IPs (RFC3927):
+                    First Octet = 169 AND Second Octet = 254 (Example: 169.254.X.X)
+                */
+
+                switch (bytes[0])
+                {
+                    case 10:
+                    case 172 when bytes[1] >= 16 && bytes[1] <= 31:
+                    case 192 when bytes[1] == 168:
+                    case 169 when bytes[1] == 254:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
         }
 
         /// <summary>
