@@ -116,8 +116,11 @@ namespace LumiSoft.Net.STUN.Message
         public IPEndPoint ResponseAddress { get; set; }
 
         public string ServerName { get; set; }
+
         public IPEndPoint SourceAddress { get; set; }
+
         public byte[] TransactionId { get; }
+
         public STUN_MessageType Type { get; }
 
         public string UserName { get; set; }
