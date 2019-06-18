@@ -332,9 +332,52 @@ namespace LumiSoft.Net.STUN.Client
             }
         }
 
-        private static STUN_Message DoTransaction(STUN_Message stunMessage, Socket socket, IPEndPoint pEndPoint, int i)
+        private static STUN_Message DoTransaction(STUN_Message request, Socket socket, IPEndPoint remoteEndPoint, int millisecondsTimeout)
         {
-            throw new NotImplementedException();
+            var byteData = request.ToByteData();
+            var start = DateTime.Now;
+            do
+            {
+                socket.SendTo(byteData, remoteEndPoint);
+                if (!socket.Poll(500000, SelectMode.SelectRead))
+                {
+                    continue;
+                }
+
+                var buffer = new byte[512];
+                socket.Receive(buffer);
+                var stunMessage = new STUN_Message();
+                stunMessage.Parse(buffer);
+                var array1 = request.TransactionID;
+                var array2 = stunMessage.TransactionID;
+                var arrayEquals = true;
+                if (array1 != null || array2 != null)
+                {
+                    if (array1 == null || array2 == null || array1.Length != array2.Length)
+                    {
+                        arrayEquals = false;
+                    }
+                    else
+                    {
+                        for (var index = 0; index < array1.Length; index++)
+                        {
+                            if (array1.GetValue(index).Equals(array2.GetValue(index)))
+                            {
+                                continue;
+                            }
+
+                            arrayEquals = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (arrayEquals)
+                {
+                    return stunMessage;
+                }
+            } while ((DateTime.Now - start).TotalMilliseconds > millisecondsTimeout);
+            return null;
         }
     }
 }
