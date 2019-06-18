@@ -43,10 +43,10 @@ namespace LumiSoft.Net.IO
             var buffer = new byte[encBuffer.Length];
 
             var decodedCount = Decode(encBuffer, 0, encBuffer.Length, buffer, 0, ignoreNonBase64Chars);
-            var retVal = new byte[decodedCount];
-            Array.Copy(buffer, retVal, decodedCount);
+            var result = new byte[decodedCount];
+            Array.Copy(buffer, result, decodedCount);
 
-            return retVal;
+            return result;
         }
 
         /// <summary>
@@ -69,10 +69,10 @@ namespace LumiSoft.Net.IO
             var buffer = new byte[data.Length];
 
             var decodedCount = Decode(data, offset, count, buffer, 0, ignoreNonBase64Chars);
-            var retVal = new byte[decodedCount];
-            Array.Copy(buffer, retVal, decodedCount);
+            var result = new byte[decodedCount];
+            Array.Copy(buffer, result, decodedCount);
 
-            return retVal;
+            return result;
         }
 
         /// <summary>

@@ -119,10 +119,10 @@ namespace LumiSoft.Net
         /// <returns>Returns this as byte[] data.</returns>
         public byte[] ToByte()
         {
-            var retVal = new byte[Count];
-            Array.Copy(_buffer, retVal, Count);
+            var result = new byte[Count];
+            Array.Copy(_buffer, result, Count);
 
-            return retVal;
+            return result;
         }
     }
 }

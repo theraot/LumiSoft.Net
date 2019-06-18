@@ -154,10 +154,10 @@ namespace LumiSoft.Net
             lock (_items)
             {
                 var index = _index;
-                var retVal = new T[_items.Count];
+                var result = new T[_items.Count];
                 for (var i = 0; i < _items.Count; i++)
                 {
-                    retVal[i] = _items[index];
+                    result[i] = _items[index];
 
                     index++;
                     if (index >= _items.Count)
@@ -166,7 +166,7 @@ namespace LumiSoft.Net
                     }
                 }
 
-                return retVal;
+                return result;
             }
         }
     }

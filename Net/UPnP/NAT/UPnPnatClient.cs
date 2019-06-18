@@ -239,7 +239,7 @@ namespace LumiSoft.Net.UPnP.NAT
                     NewLeaseDuration
             */
 
-            var retVal = new List<UPnPNatMap>();
+            var result = new List<UPnPNatMap>();
             for (var i = 0; i < 100; i++)
             {
                 try
@@ -302,7 +302,7 @@ namespace LumiSoft.Net.UPnP.NAT
                             }
                         }
 
-                        retVal.Add(new UPnPNatMap(enabled, protocol, remoteHost, externalPort, internalHost, internalPort, description, leaseDuration));
+                        result.Add(new UPnPNatMap(enabled, protocol, remoteHost, externalPort, internalHost, internalPort, description, leaseDuration));
                     }
                 }
                 catch (WebException x)
@@ -329,7 +329,7 @@ namespace LumiSoft.Net.UPnP.NAT
                 }
             }
 
-            return retVal.ToArray();
+            return result.ToArray();
         }
 
         /// <summary>

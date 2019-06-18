@@ -26,18 +26,18 @@ namespace LumiSoft.Net
                 return "";
             }
 
-            var retVal = new StringBuilder();
+            var result = new StringBuilder();
             for (var i = 0; i < values.Length; i++)
             {
                 if (i > 0)
                 {
-                    retVal.Append(delimiter);
+                    result.Append(delimiter);
                 }
 
-                retVal.Append(values[i]);
+                result.Append(values[i]);
             }
 
-            return retVal.ToString();
+            return result.ToString();
         }
 
         /// <summary>
@@ -202,9 +202,9 @@ namespace LumiSoft.Net
                 return new byte[0];
             }
 
-            var retVal = new byte[decodedBytesCount];
-            Array.Copy(decodedDataBuffer, 0, retVal, 0, decodedBytesCount);
-            return retVal;
+            var result = new byte[decodedBytesCount];
+            Array.Copy(decodedDataBuffer, 0, result, 0, decodedBytesCount);
+            return result;
             // There is no decoded bytes
 
         }
@@ -297,7 +297,7 @@ namespace LumiSoft.Net
             }
 
             // Construct return value buffer
-            var retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];
+            var result = new byte[encodedDataLength + (numberOfLineBreaks * 2)];
 
             var lineBytes = 0;
             // Loop all 3 bye blocks
@@ -307,8 +307,8 @@ namespace LumiSoft.Net
                 // Do line splitting
                 if (lineBytes >= 76)
                 {
-                    retVal[position + 0] = (byte)'\r';
-                    retVal[position + 1] = (byte)'\n';
+                    result[position + 0] = (byte)'\r';
+                    result[position + 1] = (byte)'\n';
                     position += 2;
                     lineBytes = 0;
                 }
@@ -316,40 +316,40 @@ namespace LumiSoft.Net
                 // Full 3 bytes data block
                 if (data.Length - i >= 3)
                 {
-                    retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
-                    retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
-                    retVal[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2 | data[i + 2] >> 6];
-                    retVal[position + 3] = base64LoockUpTable[data[i + 2] & 0x3F];
+                    result[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
+                    result[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
+                    result[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2 | data[i + 2] >> 6];
+                    result[position + 3] = base64LoockUpTable[data[i + 2] & 0x3F];
                     position += 4;
                     lineBytes += 4;
                 }
                 // 2 bytes data block, left (last block)
                 else if (data.Length - i == 2)
                 {
-                    retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
-                    retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
-                    retVal[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2];
+                    result[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
+                    result[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
+                    result[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2];
                     if (pad)
                     {
-                        retVal[position + 3] = (byte)'=';
+                        result[position + 3] = (byte)'=';
                     }
                 }
                 // 1 bytes data block, left (last block)
                 else if (data.Length - i == 1)
                 {
-                    retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
-                    retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4];
+                    result[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
+                    result[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4];
                     if (!pad)
                     {
                         continue;
                     }
 
-                    retVal[position + 2] = (byte)'=';
-                    retVal[position + 3] = (byte)'=';
+                    result[position + 2] = (byte)'=';
+                    result[position + 3] = (byte)'=';
                 }
             }
 
-            return retVal;
+            return result;
         }
 
         /// <summary>
@@ -564,7 +564,7 @@ namespace LumiSoft.Net
                 throw new Exception("Illegal hex data, hex data must be in two bytes pairs, for example: 0F,FF,A3,... .");
             }
 
-            using (var retVal = new MemoryStream(hexData.Length / 2))
+            using (var result = new MemoryStream(hexData.Length / 2))
             {
                 // Loop hex value pairs
                 for (var i = 0; i < hexData.Length; i += 2)
@@ -635,10 +635,10 @@ namespace LumiSoft.Net
                     }
 
                     // Join hex 4 bit(left hex char) + 4bit(right hex char) in bytes 8 it
-                    retVal.WriteByte((byte)((hexPairInDecimal[0] << 4) | hexPairInDecimal[1]));
+                    result.WriteByte((byte)((hexPairInDecimal[0] << 4) | hexPairInDecimal[1]));
                 }
 
-                return retVal.ToArray();
+                return result.ToArray();
             }
         }
 
