@@ -248,14 +248,14 @@ namespace LumiSoft.Net.STUN.Client
 
             /*
                 In test I, the client sends a STUN Binding Request to a server, without any flags set in the
-                CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute. This causes the server 
+                CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute. This causes the server
                 to send the response back to the address and port that the request came from.
-            
+
                 In test II, the client sends a Binding Request with both the "change IP" and "change port" flags
-                from the CHANGE-REQUEST attribute set.  
-              
+                from the CHANGE-REQUEST attribute set.
+
                 In test III, the client sends a Binding Request with only the "change port" flag set.
-                          
+
                                     +--------+
                                     |  Test  |
                                     |   I    |
