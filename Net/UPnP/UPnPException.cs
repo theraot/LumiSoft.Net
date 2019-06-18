@@ -11,7 +11,7 @@ namespace LumiSoft.Net.UPnP
    /// This class represents UPnP error.
    /// </summary>
     public class UPnPException : Exception
-                               {
+    {
         /// <summary>
         /// Default constructor.
         /// </summary>
