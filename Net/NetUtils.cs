@@ -276,10 +276,10 @@ namespace LumiSoft.Net
             }
 
             // Convert chars to bytes
-            var base64LoockUpTable = new byte[64];
+            var base64LookUpTable = new byte[64];
             for (var i = 0; i < 64; i++)
             {
-                base64LoockUpTable[i] = (byte)base64Chars[i];
+                base64LookUpTable[i] = (byte)base64Chars[i];
             }
 
             var encodedDataLength = (int)Math.Ceiling(data.Length * 8 / (double)6);
@@ -316,19 +316,19 @@ namespace LumiSoft.Net
                 // Full 3 bytes data block
                 if (data.Length - i >= 3)
                 {
-                    result[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
-                    result[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
-                    result[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2 | data[i + 2] >> 6];
-                    result[position + 3] = base64LoockUpTable[data[i + 2] & 0x3F];
+                    result[position + 0] = base64LookUpTable[data[i + 0] >> 2];
+                    result[position + 1] = base64LookUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
+                    result[position + 2] = base64LookUpTable[(data[i + 1] & 0xF) << 2 | data[i + 2] >> 6];
+                    result[position + 3] = base64LookUpTable[data[i + 2] & 0x3F];
                     position += 4;
                     lineBytes += 4;
                 }
                 // 2 bytes data block, left (last block)
                 else if (data.Length - i == 2)
                 {
-                    result[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
-                    result[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
-                    result[position + 2] = base64LoockUpTable[(data[i + 1] & 0xF) << 2];
+                    result[position + 0] = base64LookUpTable[data[i + 0] >> 2];
+                    result[position + 1] = base64LookUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
+                    result[position + 2] = base64LookUpTable[(data[i + 1] & 0xF) << 2];
                     if (pad)
                     {
                         result[position + 3] = (byte)'=';
@@ -337,8 +337,8 @@ namespace LumiSoft.Net
                 // 1 bytes data block, left (last block)
                 else if (data.Length - i == 1)
                 {
-                    result[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
-                    result[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4];
+                    result[position + 0] = base64LookUpTable[data[i + 0] >> 2];
+                    result[position + 1] = base64LookUpTable[(data[i + 0] & 0x3) << 4];
                     if (!pad)
                     {
                         continue;
@@ -894,18 +894,18 @@ namespace LumiSoft.Net
             }
 
             var buffer = new byte[blockSize];
-            long totalReaded = 0;
+            long totalRead = 0;
             while (true)
             {
-                var readedCount = source.Read(buffer, 0, buffer.Length);
+                var readCount = source.Read(buffer, 0, buffer.Length);
                 // We reached end of stream, we read all data successfully.
-                if (readedCount == 0)
+                if (readCount == 0)
                 {
-                    return totalReaded;
+                    return totalRead;
                 }
 
-                target.Write(buffer, 0, readedCount);
-                totalReaded += readedCount;
+                target.Write(buffer, 0, readCount);
+                totalRead += readCount;
             }
         }
 

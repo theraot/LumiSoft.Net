@@ -10,7 +10,7 @@ namespace LumiSoft.Net.IO
     {
         private bool _isDisposed;
         private readonly long _length;
-        private long _osition;
+        private long _position;
         private readonly Stream _stream;
         private readonly long _start;
 
@@ -128,7 +128,7 @@ namespace LumiSoft.Net.IO
                     throw new ObjectDisposedException("SmartStream");
                 }
 
-                return _osition;
+                return _position;
             }
 
             set
@@ -142,7 +142,7 @@ namespace LumiSoft.Net.IO
                     throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
                 }
 
-                _osition = value;
+                _position = value;
             }
         }
 
@@ -188,14 +188,14 @@ namespace LumiSoft.Net.IO
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            if (_stream.Position != _start + _osition)
+            if (_stream.Position != _start + _position)
             {
-                _stream.Position = _start + _osition;
+                _stream.Position = _start + _position;
             }
-            var readedCount = _stream.Read(buffer, offset, Math.Min(count, (int)(Length - _osition)));
-            _osition += readedCount;
+            var readCount = _stream.Read(buffer, offset, Math.Min(count, (int)(Length - _position)));
+            _position += readCount;
 
-            return readedCount;
+            return readCount;
         }
 
         /// <summary>
@@ -215,18 +215,18 @@ namespace LumiSoft.Net.IO
             switch (origin)
             {
                 case SeekOrigin.Begin:
-                    _osition = 0;
+                    _position = 0;
                     break;
                 case SeekOrigin.Current:
                     break;
                 case SeekOrigin.End:
-                    _osition = _length;
+                    _position = _length;
                     break;
                 default:
                     break;
             }
 
-            return _osition;
+            return _position;
         }
 
         /// <summary>
