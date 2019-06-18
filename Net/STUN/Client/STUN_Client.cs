@@ -128,12 +128,15 @@ namespace LumiSoft.Net.STUN.Client
             {
                 return localIP;
             }
-            var stunResult = Query(stunServer, port, Net_Utils.CreateSocket(new IPEndPoint(localIP, 0), ProtocolType.Udp));
-            if (stunResult.PublicEndPoint == null)
+            using (var ret = CreateSocket(localIP))
             {
-                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+                var stunResult = Query(stunServer, port, ret);
+                if (stunResult.PublicEndPoint == null)
+                {
+                    throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
+                }
+                return stunResult.PublicEndPoint.Address;
             }
-            return stunResult.PublicEndPoint.Address;
 
             bool IsPrivateIPv4(IPAddress ipAddress)
             {
@@ -161,6 +164,30 @@ namespace LumiSoft.Net.STUN.Client
                         return true;
                     default:
                         return false;
+                }
+            }
+
+            Socket CreateSocket(IPAddress localIP1)
+            {
+                var localEndPoint = new IPEndPoint(localIP, 0);
+                switch (localIP1.AddressFamily)
+                {
+                    case AddressFamily.InterNetwork:
+                    {
+                        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                        socket.Bind(localEndPoint);
+                        return socket;
+                    }
+
+                    case AddressFamily.InterNetworkV6:
+                    {
+                        var socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);
+                        socket.Bind(localEndPoint);
+                        return socket;
+                    }
+
+                    default:
+                        throw new ArgumentException("Invalid IPEndPoint address family.");
                 }
             }
         }
