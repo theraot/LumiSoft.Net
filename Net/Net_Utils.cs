@@ -690,30 +690,6 @@ namespace LumiSoft.Net
             return long.TryParse(value, out l);
         }
 
-        //--- Obsolte ------------------------------------------------------------------
-
-        /// <summary>
-        /// Gets if IO completion ports supported by OS.
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Use method 'IsSocketAsyncSupported' instead.")]
-        public static bool IsIoCompletionPortsSupported()
-        {
-            try
-            {
-                using (SocketAsyncEventArgs e = new SocketAsyncEventArgs())
-                {
-                    return true;
-                }
-            }
-            catch (NotSupportedException nX)
-            {
-                var dummy = nX.Message;
-
-                return false;
-            }
-        }
-
         /// <summary>
         /// Gets if the specified string value is IP address.
         /// </summary>
