@@ -8,17 +8,17 @@ namespace LumiSoft.Net
     /// </summary>
     public class ByteBuilder
     {
-        private readonly int m_BlockSize = 1024;
-        private byte[] m_pBuffer;
-        private Encoding m_pCharset;
+        private readonly int _blockSize = 1024;
+        private byte[] _buffer;
+        private Encoding _charset;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public ByteBuilder()
         {
-            m_pBuffer = new byte[m_BlockSize];
-            m_pCharset = Encoding.UTF8;
+            _buffer = new byte[_blockSize];
+            _charset = Encoding.UTF8;
         }
 
         /// <summary>
@@ -27,9 +27,9 @@ namespace LumiSoft.Net
         /// <exception cref="ArgumentNullException">Is raised when null reference value is set.</exception>
         public Encoding Charset
         {
-            get => m_pCharset;
+            get => _charset;
 
-            set => m_pCharset = value ?? throw new ArgumentNullException("value");
+            set => _charset = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace LumiSoft.Net
         /// Appends specified string value to the buffer. String is encoded with <see cref="Charset"/>.
         /// </summary>
         /// <param name="value">String value.</param>
-        /// <exception cref="ArgumentNullException">Is aised when <b>value</b> is null reference.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>value</b> is null reference.</exception>
         public void Append(string value)
         {
             if (value == null)
@@ -49,7 +49,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("value");
             }
 
-            Append(m_pCharset.GetBytes(value));
+            Append(_charset.GetBytes(value));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="charset">Character encoding.</param>
         /// <param name="value">String value.</param>
-        /// <exception cref="ArgumentNullException">Is aised when <b>charset</b> or <b>value</b> is null reference.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when <b>charset</b> or <b>value</b> is null reference.</exception>
         public void Append(Encoding charset, string value)
         {
             if (charset == null)
@@ -102,14 +102,14 @@ namespace LumiSoft.Net
             }
 
             // Increase buffer if needed.
-            while ((m_pBuffer.Length - Count) < count)
+            while (_buffer.Length - Count < count)
             {
-                var newBuffer = new byte[m_pBuffer.Length + m_BlockSize];
-                Array.Copy(m_pBuffer, newBuffer, Count);
-                m_pBuffer = newBuffer;
+                var newBuffer = new byte[_buffer.Length + _blockSize];
+                Array.Copy(_buffer, newBuffer, Count);
+                _buffer = newBuffer;
             }
 
-            Array.Copy(value, offset, m_pBuffer, Count, count);
+            Array.Copy(value, offset, _buffer, Count, count);
             Count += value.Length;
         }
 
@@ -120,7 +120,7 @@ namespace LumiSoft.Net
         public byte[] ToByte()
         {
             var retVal = new byte[Count];
-            Array.Copy(m_pBuffer, retVal, Count);
+            Array.Copy(_buffer, retVal, Count);
 
             return retVal;
         }

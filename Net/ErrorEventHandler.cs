@@ -5,5 +5,5 @@
     /// </summary>
     /// <param name="sender">Delegate caller.</param>
     /// <param name="e">Event data.</param>
-    public delegate void ErrorEventHandler(object sender,Error_EventArgs e);
+    public delegate void ErrorEventHandler(object sender,ErrorEventArgs e);
 }

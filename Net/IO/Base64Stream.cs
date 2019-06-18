@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class Base64Stream : Stream, IDisposable
     {
-        private readonly static short[] BASE64_DECODE_TABLE = new short[]{
+        private readonly static short[] _base64_Decode_Table = {
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //10 -   19
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //20 -   29
@@ -23,7 +23,7 @@ namespace LumiSoft.Net.IO
             39,40,41,42,43,44,45,46,47,48,  //110 - 119
             49,50,51,-1,-1,-1,-1,-1         //120 - 127
         };
-        private readonly static byte[] BASE64_ENCODE_TABLE = new[]{
+        private readonly static byte[] _base64_Encode_Table = {
             (byte)'A',(byte)'B',(byte)'C',(byte)'D',(byte)'E',(byte)'F',(byte)'G',(byte)'H',(byte)'I',(byte)'J',
             (byte)'K',(byte)'L',(byte)'M',(byte)'N',(byte)'O',(byte)'P',(byte)'Q',(byte)'R',(byte)'S',(byte)'T',
             (byte)'U',(byte)'V',(byte)'W',(byte)'X',(byte)'Y',(byte)'Z',(byte)'a',(byte)'b',(byte)'c',(byte)'d',
@@ -32,20 +32,19 @@ namespace LumiSoft.Net.IO
             (byte)'y',(byte)'z',(byte)'0',(byte)'1',(byte)'2',(byte)'3',(byte)'4',(byte)'5',(byte)'6',(byte)'7',
             (byte)'8',(byte)'9',(byte)'+',(byte)'/'
         };
-        private readonly FileAccess m_AccessMode = FileAccess.ReadWrite;
-        private readonly bool m_AddLineBreaks = true;
-        private int m_DecodedBlockCount;
-        private int m_DecodedBlockOffset;
-        private int m_EncodeBufferOffset;
+        private readonly FileAccess _accessMode;
+        private readonly bool _addLineBreaks;
+        private int _decodedBlockCount;
+        private int _decodedBlockOffset;
+        private int _encodeBufferOffset;
 
-        private bool m_IsFinished;
-        private readonly bool m_IsOwner;
-        private int m_OffsetInEncode3x8Block;
-        private readonly Base64 m_pBase64;
-        private readonly byte[] m_pDecodedBlock;
-        private readonly byte[] m_pEncode3x8Block = new byte[3];
-        private readonly byte[] m_pEncodeBuffer = new byte[78];
-        private readonly Stream m_pStream;
+        private bool _isFinished;
+        private readonly bool _isOwner;
+        private int _offsetInEncode3X8Block;
+        private readonly byte[] _decodedBlock;
+        private readonly byte[] _encode3X8Block = new byte[3];
+        private readonly byte[] _encodeBuffer = new byte[78];
+        private readonly Stream _stream;
 
         /// <summary>
         /// Default constructor.
@@ -68,13 +67,12 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public Base64Stream(Stream stream, bool owner, bool addLineBreaks, FileAccess access)
         {
-            m_pStream = stream ?? throw new ArgumentNullException("stream");
-            m_IsOwner = owner;
-            m_AddLineBreaks = addLineBreaks;
-            m_AccessMode = access;
+            _stream = stream ?? throw new ArgumentNullException("stream");
+            _isOwner = owner;
+            _addLineBreaks = addLineBreaks;
+            _accessMode = access;
 
-            m_pDecodedBlock = new byte[8000];
-            m_pBase64 = new Base64();
+            _decodedBlock = new byte[8000];
         }
 
         /// <summary>
@@ -168,6 +166,7 @@ namespace LumiSoft.Net.IO
                 throw new NotSupportedException();
             }
 
+            // ReSharper disable once ValueParameterNotUsed
             set
             {
                 if (IsDisposed)
@@ -180,7 +179,7 @@ namespace LumiSoft.Net.IO
         }
 
         /// <summary>
-        /// Celans up any resources being used.
+        /// Cleans up any resources being used.
         /// </summary>
         public new void Dispose()
         {
@@ -194,12 +193,14 @@ namespace LumiSoft.Net.IO
             }
             catch
             {
+                // ignored
             }
+
             IsDisposed = true;
 
-            if (m_IsOwner)
+            if (_isOwner)
             {
-                m_pStream.Close();
+                _stream.Close();
             }
         }
 
@@ -213,31 +214,31 @@ namespace LumiSoft.Net.IO
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if (m_IsFinished)
+            if (_isFinished)
             {
                 return;
             }
-            m_IsFinished = true;
+            _isFinished = true;
 
             // PADD left-over, if any. Write encode buffer to underlaying stream.
-            if (m_OffsetInEncode3x8Block == 1)
+            if (_offsetInEncode3X8Block == 1)
             {
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)BASE64_ENCODE_TABLE[m_pEncode3x8Block[0] >> 2];
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)BASE64_ENCODE_TABLE[(m_pEncode3x8Block[0] & 0x03) << 4];
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)'=';
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)'=';
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[_encode3X8Block[0] >> 2];
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[(_encode3X8Block[0] & 0x03) << 4];
+                _encodeBuffer[_encodeBufferOffset++] = (byte)'=';
+                _encodeBuffer[_encodeBufferOffset++] = (byte)'=';
             }
-            else if (m_OffsetInEncode3x8Block == 2)
+            else if (_offsetInEncode3X8Block == 2)
             {
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)BASE64_ENCODE_TABLE[m_pEncode3x8Block[0] >> 2];
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)BASE64_ENCODE_TABLE[(m_pEncode3x8Block[0] & 0x03) << 4 | m_pEncode3x8Block[1] >> 4];
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)BASE64_ENCODE_TABLE[(m_pEncode3x8Block[1] & 0x0F) << 2];
-                m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)'=';
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[_encode3X8Block[0] >> 2];
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[(_encode3X8Block[0] & 0x03) << 4 | _encode3X8Block[1] >> 4];
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[(_encode3X8Block[1] & 0x0F) << 2];
+                _encodeBuffer[_encodeBufferOffset++] = (byte)'=';
             }
 
-            if (m_EncodeBufferOffset > 0)
+            if (_encodeBufferOffset > 0)
             {
-                m_pStream.Write(m_pEncodeBuffer, 0, m_EncodeBufferOffset);
+                _stream.Write(_encodeBuffer, 0, _encodeBufferOffset);
             }
         }
 
@@ -286,16 +287,16 @@ namespace LumiSoft.Net.IO
             {
                 throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
             }
-            if ((m_AccessMode & FileAccess.Read) == 0)
+            if ((_accessMode & FileAccess.Read) == 0)
             {
                 throw new NotSupportedException();
             }
 
-            // We havn't any decoded data left, decode new data block.
-            if ((m_DecodedBlockCount - m_DecodedBlockOffset) == 0)
+            // We haven't any decoded data left, decode new data block.
+            if (_decodedBlockCount - _decodedBlockOffset == 0)
             {
-                var readBuffer = new byte[m_pDecodedBlock.Length + 3];
-                int readedCount = m_pStream.Read(readBuffer, 0, readBuffer.Length - 3);
+                var readBuffer = new byte[_decodedBlock.Length + 3];
+                var readedCount = _stream.Read(readBuffer, 0, readBuffer.Length - 3);
                 // We reached end of stream, no more data.
                 if (readedCount == 0)
                 {
@@ -304,41 +305,43 @@ namespace LumiSoft.Net.IO
 
                 // Decode block must contain only integral 4-byte base64 blocks.
                 // Count base64 chars.
-                int base64Count = 0;
-                for (int i = 0; i < readedCount; i++)
+                var base64Count = 0;
+                for (var i = 0; i < readedCount; i++)
                 {
-                    byte b = readBuffer[i];
-                    if (b == '=' || BASE64_DECODE_TABLE[b] != -1)
+                    var b = readBuffer[i];
+                    if (b == '=' || _base64_Decode_Table[b] != -1)
                     {
                         base64Count++;
                     }
                 }
                 // Read while last block is full 4-byte base64 block.
-                while ((base64Count % 4) != 0)
+                while (base64Count % 4 != 0)
                 {
-                    int b = m_pStream.ReadByte();
+                    var b = _stream.ReadByte();
                     // End of stream reached.
                     if (b == -1)
                     {
                         break;
                     }
 
-                    if (b == '=' || BASE64_DECODE_TABLE[b] != -1)
+                    if (b != '=' && _base64_Decode_Table[b] == -1)
                     {
-                        readBuffer[readedCount++] = (byte)b;
-                        base64Count++;
+                        continue;
                     }
+
+                    readBuffer[readedCount++] = (byte)b;
+                    base64Count++;
                 }
 
                 // Decode block.
-                m_DecodedBlockCount = m_pBase64.Decode(readBuffer, 0, readedCount, m_pDecodedBlock, 0, true);
-                m_DecodedBlockOffset = 0;
+                _decodedBlockCount = Base64.Decode(readBuffer, 0, readedCount, _decodedBlock, 0, true);
+                _decodedBlockOffset = 0;
             }
 
-            int available = m_DecodedBlockCount - m_DecodedBlockOffset;
-            int countToCopy = Math.Min(count, available);
-            Array.Copy(m_pDecodedBlock, m_DecodedBlockOffset, buffer, offset, countToCopy);
-            m_DecodedBlockOffset += countToCopy;
+            var available = _decodedBlockCount - _decodedBlockOffset;
+            var countToCopy = Math.Min(count, available);
+            Array.Copy(_decodedBlock, _decodedBlockOffset, buffer, offset, countToCopy);
+            _decodedBlockOffset += countToCopy;
 
             return countToCopy;
         }
@@ -394,7 +397,7 @@ namespace LumiSoft.Net.IO
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
-            if (m_IsFinished)
+            if (_isFinished)
             {
                 throw new InvalidOperationException("Stream is marked as finished by calling Finish method.");
             }
@@ -406,11 +409,11 @@ namespace LumiSoft.Net.IO
             {
                 throw new ArgumentException("Invalid argument 'offset' value.");
             }
-            if (count < 0 || count > (buffer.Length - offset))
+            if (count < 0 || count > buffer.Length - offset)
             {
                 throw new ArgumentException("Invalid argument 'count' value.");
             }
-            if ((m_AccessMode & FileAccess.Write) == 0)
+            if ((_accessMode & FileAccess.Write) == 0)
             {
                 throw new NotSupportedException();
             }
@@ -446,36 +449,38 @@ namespace LumiSoft.Net.IO
                     // |    8-bit         |    8-bit        |    8-bit         |
             */
 
-            int encodeBufSize = m_pEncodeBuffer.Length;
+            var encodeBufSize = _encodeBuffer.Length;
 
             // Process all bytes.
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                m_pEncode3x8Block[m_OffsetInEncode3x8Block++] = buffer[offset + i];
+                _encode3X8Block[_offsetInEncode3X8Block++] = buffer[offset + i];
 
                 // 3x8-bit encode block is full, encode it.
-                if (m_OffsetInEncode3x8Block == 3)
+                if (_offsetInEncode3X8Block != 3)
                 {
-                    m_pEncodeBuffer[m_EncodeBufferOffset++] = BASE64_ENCODE_TABLE[m_pEncode3x8Block[0] >> 2];
-                    m_pEncodeBuffer[m_EncodeBufferOffset++] = BASE64_ENCODE_TABLE[(m_pEncode3x8Block[0] & 0x03) << 4 | m_pEncode3x8Block[1] >> 4];
-                    m_pEncodeBuffer[m_EncodeBufferOffset++] = BASE64_ENCODE_TABLE[(m_pEncode3x8Block[1] & 0x0F) << 2 | m_pEncode3x8Block[2] >> 6];
-                    m_pEncodeBuffer[m_EncodeBufferOffset++] = BASE64_ENCODE_TABLE[(m_pEncode3x8Block[2] & 0x3F)];
+                    continue;
+                }
 
-                    // Encode buffer is full, write buffer to underlaying stream (we reserved 2 bytes for CRLF).
-                    if (m_EncodeBufferOffset >= (encodeBufSize - 2))
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[_encode3X8Block[0] >> 2];
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[(_encode3X8Block[0] & 0x03) << 4 | _encode3X8Block[1] >> 4];
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[(_encode3X8Block[1] & 0x0F) << 2 | _encode3X8Block[2] >> 6];
+                _encodeBuffer[_encodeBufferOffset++] = _base64_Encode_Table[_encode3X8Block[2] & 0x3F];
+
+                // Encode buffer is full, write buffer to underlaying stream (we reserved 2 bytes for CRLF).
+                if (_encodeBufferOffset >= encodeBufSize - 2)
+                {
+                    if (_addLineBreaks)
                     {
-                        if (m_AddLineBreaks)
-                        {
-                            m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)'\r';
-                            m_pEncodeBuffer[m_EncodeBufferOffset++] = (byte)'\n';
-                        }
-
-                        m_pStream.Write(m_pEncodeBuffer, 0, m_EncodeBufferOffset);
-                        m_EncodeBufferOffset = 0;
+                        _encodeBuffer[_encodeBufferOffset++] = (byte)'\r';
+                        _encodeBuffer[_encodeBufferOffset++] = (byte)'\n';
                     }
 
-                    m_OffsetInEncode3x8Block = 0;
+                    _stream.Write(_encodeBuffer, 0, _encodeBufferOffset);
+                    _encodeBufferOffset = 0;
                 }
+
+                _offsetInEncode3X8Block = 0;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets asynchronous operation state.
         /// </summary>
-        AsyncOP_State State
+        AsyncOPState State
         {
             get;
         }

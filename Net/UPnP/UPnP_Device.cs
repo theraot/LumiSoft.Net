@@ -7,13 +7,13 @@ namespace LumiSoft.Net.UPnP
     /// <summary>
     /// This class represents UPnP device.
     /// </summary>
-    public class UPnP_Device
+    public class UPnPDevice
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="url">Device URL.</param>
-        internal UPnP_Device(string url)
+        internal UPnPDevice(string url)
         {
             if (url == null)
             {
@@ -90,7 +90,7 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         /// Gets unique device name.
         /// </summary>
-        public string UDN { get; private set; } = "";
+        public string Udn { get; private set; } = "";
 
         private void Init(string url)
         {
@@ -105,18 +105,18 @@ namespace LumiSoft.Net.UPnP
             var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("n", xml.ChildNodes[1].NamespaceURI);
 
-            BaseUrl = xml.SelectSingleNode("n:root/n:URLBase", ns).InnerText;
-            DeviceType = xml.SelectSingleNode("n:root/n:device/n:deviceType", ns).InnerText;
-            FriendlyName = xml.SelectSingleNode("n:root/n:device/n:friendlyName", ns).InnerText;
-            Manufacturer = xml.SelectSingleNode("n:root/n:device/n:manufacturer", ns).InnerText;
-            ManufacturerUrl = xml.SelectSingleNode("n:root/n:device/n:manufacturerURL", ns).InnerText;
-            ModelDescription = xml.SelectSingleNode("n:root/n:device/n:modelDescription", ns).InnerText;
-            ModelName = xml.SelectSingleNode("n:root/n:device/n:modelName", ns).InnerText;
-            ModelNumber = xml.SelectSingleNode("n:root/n:device/n:modelNumber", ns).InnerText;
-            ModelUrl = xml.SelectSingleNode("n:root/n:device/n:modelURL", ns).InnerText;
-            SerialNumber = xml.SelectSingleNode("n:root/n:device/n:serialNumber", ns).InnerText;
-            UDN = xml.SelectSingleNode("n:root/n:device/n:UDN", ns).InnerText;
-            PresentationUrl = xml.SelectSingleNode("n:root/n:device/n:presentationURL", ns).InnerText;
+            BaseUrl = xml.SelectSingleNode("n:root/n:URLBase", ns)?.InnerText;
+            DeviceType = xml.SelectSingleNode("n:root/n:device/n:deviceType", ns)?.InnerText;
+            FriendlyName = xml.SelectSingleNode("n:root/n:device/n:friendlyName", ns)?.InnerText;
+            Manufacturer = xml.SelectSingleNode("n:root/n:device/n:manufacturer", ns)?.InnerText;
+            ManufacturerUrl = xml.SelectSingleNode("n:root/n:device/n:manufacturerURL", ns)?.InnerText;
+            ModelDescription = xml.SelectSingleNode("n:root/n:device/n:modelDescription", ns)?.InnerText;
+            ModelName = xml.SelectSingleNode("n:root/n:device/n:modelName", ns)?.InnerText;
+            ModelNumber = xml.SelectSingleNode("n:root/n:device/n:modelNumber", ns)?.InnerText;
+            ModelUrl = xml.SelectSingleNode("n:root/n:device/n:modelURL", ns)?.InnerText;
+            SerialNumber = xml.SelectSingleNode("n:root/n:device/n:serialNumber", ns)?.InnerText;
+            Udn = xml.SelectSingleNode("n:root/n:device/n:UDN", ns)?.InnerText;
+            PresentationUrl = xml.SelectSingleNode("n:root/n:device/n:presentationURL", ns)?.InnerText;
         }
     }
 }

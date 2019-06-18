@@ -20,18 +20,18 @@ namespace LumiSoft.Net.Log
         /// <param name="id">Log entry ID.</param>
         /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
-        /// <param name="localEP">Local IP endpoint.</param>
-        /// <param name="remoteEP">Remote IP endpoint.</param>
+        /// <param name="localEp">Local IP endpoint.</param>
+        /// <param name="remoteEp">Remote IP endpoint.</param>
         /// <param name="exception">Exception happened.</param>
-        public void AddException(string id, GenericIdentity userIdentity, string text, IPEndPoint localEP, IPEndPoint remoteEP, Exception exception)
+        public void AddException(string id, GenericIdentity userIdentity, string text, IPEndPoint localEp, IPEndPoint remoteEp, Exception exception)
         {
-            OnWriteLog(new LogEntry(LogEntryType.Exception, id, userIdentity, 0, text, localEP, remoteEP, exception));
+            OnWriteLog(new LogEntry(LogEntryType.Exception, id, userIdentity, 0, text, localEp, remoteEp, exception));
         }
 
         /// <summary>
         /// Adds read log entry.
         /// </summary>
-        /// <param name="size">Readed data size in bytes.</param>
+        /// <param name="size">Read data size in bytes.</param>
         /// <param name="text">Log text.</param>
         public void AddRead(long size, string text)
         {
@@ -42,29 +42,29 @@ namespace LumiSoft.Net.Log
         /// Adds read log entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
-        /// <param name="size">Readed data size in bytes.</param>
+        /// <param name="size">Read data size in bytes.</param>
         /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
-        /// <param name="localEP">Local IP endpoint.</param>
-        /// <param name="remoteEP">Remote IP endpoint.</param>
-        public void AddRead(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEP, IPEndPoint remoteEP)
+        /// <param name="localEp">Local IP endpoint.</param>
+        /// <param name="remoteEp">Remote IP endpoint.</param>
+        public void AddRead(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp)
         {
-            OnWriteLog(new LogEntry(LogEntryType.Read, id, userIdentity, size, text, localEP, remoteEP, (byte[])null));
+            OnWriteLog(new LogEntry(LogEntryType.Read, id, userIdentity, size, text, localEp, remoteEp, (byte[])null));
         }
 
         /// <summary>
         /// Adds read log entry.
         /// </summary>
         /// <param name="id">Log entry ID.</param>
-        /// <param name="size">Readed data size in bytes.</param>
+        /// <param name="size">Read data size in bytes.</param>
         /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
-        /// <param name="localEP">Local IP endpoint.</param>
-        /// <param name="remoteEP">Remote IP endpoint.</param>
+        /// <param name="localEp">Local IP endpoint.</param>
+        /// <param name="remoteEp">Remote IP endpoint.</param>
         /// <param name="data">Log data.</param>
-        public void AddRead(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEP, IPEndPoint remoteEP, byte[] data)
+        public void AddRead(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp, byte[] data)
         {
-            OnWriteLog(new LogEntry(LogEntryType.Read, id, userIdentity, size, text, localEP, remoteEP, data));
+            OnWriteLog(new LogEntry(LogEntryType.Read, id, userIdentity, size, text, localEp, remoteEp, data));
         }
 
         /// <summary>
@@ -92,11 +92,11 @@ namespace LumiSoft.Net.Log
         /// <param name="id">Log entry ID.</param>
         /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
-        /// <param name="localEP">Local IP endpoint.</param>
-        /// <param name="remoteEP">Remote IP endpoint.</param>
-        public void AddText(string id, GenericIdentity userIdentity, string text, IPEndPoint localEP, IPEndPoint remoteEP)
+        /// <param name="localEp">Local IP endpoint.</param>
+        /// <param name="remoteEp">Remote IP endpoint.</param>
+        public void AddText(string id, GenericIdentity userIdentity, string text, IPEndPoint localEp, IPEndPoint remoteEp)
         {
-            OnWriteLog(new LogEntry(LogEntryType.Text, id, userIdentity, 0, text, localEP, remoteEP, (byte[])null));
+            OnWriteLog(new LogEntry(LogEntryType.Text, id, userIdentity, 0, text, localEp, remoteEp, (byte[])null));
         }
 
         /// <summary>
@@ -116,11 +116,11 @@ namespace LumiSoft.Net.Log
         /// <param name="size">Written data size in bytes.</param>
         /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
-        /// <param name="localEP">Local IP endpoint.</param>
-        /// <param name="remoteEP">Remote IP endpoint.</param>
-        public void AddWrite(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEP, IPEndPoint remoteEP)
+        /// <param name="localEp">Local IP endpoint.</param>
+        /// <param name="remoteEp">Remote IP endpoint.</param>
+        public void AddWrite(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp)
         {
-            OnWriteLog(new LogEntry(LogEntryType.Write, id, userIdentity, size, text, localEP, remoteEP, (byte[])null));
+            OnWriteLog(new LogEntry(LogEntryType.Write, id, userIdentity, size, text, localEp, remoteEp, (byte[])null));
         }
 
         /// <summary>
@@ -130,12 +130,12 @@ namespace LumiSoft.Net.Log
         /// <param name="size">Written data size in bytes.</param>
         /// <param name="text">Log text.</param>
         /// <param name="userIdentity">Authenticated user identity.</param>
-        /// <param name="localEP">Local IP endpoint.</param>
-        /// <param name="remoteEP">Remote IP endpoint.</param>
+        /// <param name="localEp">Local IP endpoint.</param>
+        /// <param name="remoteEp">Remote IP endpoint.</param>
         /// <param name="data">Log data.</param>
-        public void AddWrite(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEP, IPEndPoint remoteEP, byte[] data)
+        public void AddWrite(string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp, byte[] data)
         {
-            OnWriteLog(new LogEntry(LogEntryType.Write, id, userIdentity, size, text, localEP, remoteEP, data));
+            OnWriteLog(new LogEntry(LogEntryType.Write, id, userIdentity, size, text, localEp, remoteEp, data));
         }
         /// <summary>
         /// Cleans up any resources being used.

@@ -11,7 +11,7 @@ namespace LumiSoft.Net
     /// <summary>
     /// Common utility methods.
     /// </summary>
-    public class Net_Utils
+    public class NetUtils
     {
         /// <summary>
         /// Convert array elements to string.
@@ -27,7 +27,7 @@ namespace LumiSoft.Net
             }
 
             var retVal = new StringBuilder();
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (i > 0)
                 {
@@ -96,16 +96,18 @@ namespace LumiSoft.Net
 
             //--- Create decode table ---------------------//
             var decodeTable = new byte[128];
-            for (int i = 0; i < 128; i++)
+            for (var i = 0; i < 128; i++)
             {
-                int mappingIndex = -1;
-                for (int bc = 0; bc < base64Chars.Length; bc++)
+                var mappingIndex = -1;
+                for (var bc = 0; bc < base64Chars.Length; bc++)
                 {
-                    if (i == base64Chars[bc])
+                    if (i != base64Chars[bc])
                     {
-                        mappingIndex = bc;
-                        break;
+                        continue;
                     }
+
+                    mappingIndex = bc;
+                    break;
                 }
 
                 if (mappingIndex > -1)
@@ -119,15 +121,14 @@ namespace LumiSoft.Net
             }
             //---------------------------------------------//
 
-            var decodedDataBuffer = new byte[((base64Data.Length * 6) / 8) + 4];
-            int decodedBytesCount = 0;
-            int nByteInBase64Block = 0;
-            var decodedBlock = new byte[3];
+            var decodedDataBuffer = new byte[base64Data.Length * 6 / 8 + 4];
+            var decodedBytesCount = 0;
+            var nByteInBase64Block = 0;
             var base64Block = new byte[4];
 
-            for (int i = 0; i < base64Data.Length; i++)
+            for (var i = 0; i < base64Data.Length; i++)
             {
-                byte b = base64Data[i];
+                var b = base64Data[i];
 
                 // Read 4 byte base64 block and process it
                 // Any characters outside of the base64 alphabet are to be ignored in base64-encoded data.
@@ -139,7 +140,7 @@ namespace LumiSoft.Net
                 }
                 else
                 {
-                    byte decodeByte = decodeTable[b & 0x7F];
+                    var decodeByte = decodeTable[b & 0x7F];
                     if (decodeByte != 0xFF)
                     {
                         base64Block[nByteInBase64Block] = decodeByte;
@@ -150,7 +151,7 @@ namespace LumiSoft.Net
                 /* Check if we can decode some bytes. 
                  * We must have full 4 byte base64 block or reached at the end of data.
                  */
-                int encodedBytesCount = -1;
+                var encodedBytesCount = -1;
                 // We have full 4 byte base64 block
                 if (nByteInBase64Block == 4)
                 {
@@ -177,30 +178,33 @@ namespace LumiSoft.Net
                 }
 
                 // We have some bytes available to decode, decode them
-                if (encodedBytesCount > -1)
+                if (encodedBytesCount <= -1)
                 {
-                    decodedDataBuffer[decodedBytesCount + 0] = (byte)((int)base64Block[0] << 2 | (int)base64Block[1] >> 4);
-                    decodedDataBuffer[decodedBytesCount + 1] = (byte)(((int)base64Block[1] & 0xF) << 4 | (int)base64Block[2] >> 2);
-                    decodedDataBuffer[decodedBytesCount + 2] = (byte)(((int)base64Block[2] & 0x3) << 6 | (int)base64Block[3] >> 0);
-
-                    // Increase decoded bytes count
-                    decodedBytesCount += encodedBytesCount;
-
-                    // Reset this block, reade next if there is any
-                    nByteInBase64Block = 0;
+                    continue;
                 }
+
+                decodedDataBuffer[decodedBytesCount + 0] = (byte)(base64Block[0] << 2 | base64Block[1] >> 4);
+                decodedDataBuffer[decodedBytesCount + 1] = (byte)((base64Block[1] & 0xF) << 4 | base64Block[2] >> 2);
+                decodedDataBuffer[decodedBytesCount + 2] = (byte)((base64Block[2] & 0x3) << 6 | base64Block[3] >> 0);
+
+                // Increase decoded bytes count
+                decodedBytesCount += encodedBytesCount;
+
+                // Reset this block, read next if there is any
+                nByteInBase64Block = 0;
             }
 
             // There is some decoded bytes, construct return value
-            if (decodedBytesCount > -1)
+            if (decodedBytesCount <= -1)
             {
-                var retVal = new byte[decodedBytesCount];
-                Array.Copy(decodedDataBuffer, 0, retVal, 0, decodedBytesCount);
-                return retVal;
+                return new byte[0];
             }
+
+            var retVal = new byte[decodedBytesCount];
+            Array.Copy(decodedDataBuffer, 0, retVal, 0, decodedBytesCount);
+            return retVal;
             // There is no decoded bytes
 
-            return new byte[0];
         }
 
         /// <summary>
@@ -271,32 +275,32 @@ namespace LumiSoft.Net
 
             // Convert chars to bytes
             var base64LoockUpTable = new byte[64];
-            for (int i = 0; i < 64; i++)
+            for (var i = 0; i < 64; i++)
             {
                 base64LoockUpTable[i] = (byte)base64Chars[i];
             }
 
-            int encodedDataLength = (int)Math.Ceiling((data.Length * 8) / (double)6);
-            // Retrun value won't be interegral 4 block, but has less. Padding requested, padd missing with '='
-            if (padd && (encodedDataLength / (double)4 != Math.Ceiling(encodedDataLength / (double)4)))
+            var encodedDataLength = (int)Math.Ceiling(data.Length * 8 / (double)6);
+            // Return value won't be integer 4 block, but has less. Padding requested, padd missing with '='
+            if (padd && encodedDataLength % 4 != 0)
             {
-                encodedDataLength += (int)(Math.Ceiling(encodedDataLength / (double)4) * 4) - encodedDataLength;
+                encodedDataLength += (4 - encodedDataLength % 4) % 4;
             }
 
             // See how many line brakes we need
-            int numberOfLineBreaks = 0;
+            var numberOfLineBreaks = 0;
             if (encodedDataLength > 76)
             {
                 numberOfLineBreaks = (int)Math.Ceiling(encodedDataLength / (double)76) - 1;
             }
 
-            // Construc return valu buffer
-            var retVal = new byte[encodedDataLength + (numberOfLineBreaks * 2)];  // * 2 - CRLF
+            // Construct return value buffer
+            var retVal = new byte[encodedDataLength + numberOfLineBreaks * 2];  // * 2 - CRLF
 
-            int lineBytes = 0;
+            var lineBytes = 0;
             // Loop all 3 bye blocks
-            int position = 0;
-            for (int i = 0; i < data.Length; i += 3)
+            var position = 0;
+            for (var i = 0; i < data.Length; i += 3)
             {
                 // Do line splitting
                 if (lineBytes >= 76)
@@ -308,7 +312,7 @@ namespace LumiSoft.Net
                 }
 
                 // Full 3 bytes data block
-                if ((data.Length - i) >= 3)
+                if (data.Length - i >= 3)
                 {
                     retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
                     retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
@@ -318,7 +322,7 @@ namespace LumiSoft.Net
                     lineBytes += 4;
                 }
                 // 2 bytes data block, left (last block)
-                else if ((data.Length - i) == 2)
+                else if (data.Length - i == 2)
                 {
                     retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
                     retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4 | data[i + 1] >> 4];
@@ -329,15 +333,17 @@ namespace LumiSoft.Net
                     }
                 }
                 // 1 bytes data block, left (last block)
-                else if ((data.Length - i) == 1)
+                else if (data.Length - i == 1)
                 {
                     retVal[position + 0] = base64LoockUpTable[data[i + 0] >> 2];
                     retVal[position + 1] = base64LoockUpTable[(data[i + 0] & 0x3) << 4];
-                    if (padd)
+                    if (!padd)
                     {
-                        retVal[position + 2] = (byte)'=';
-                        retVal[position + 3] = (byte)'=';
+                        continue;
                     }
+
+                    retVal[position + 2] = (byte)'=';
+                    retVal[position + 3] = (byte)'=';
                 }
             }
 
@@ -345,7 +351,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Compares if specified array itmes equals.
+        /// Compares if specified array items are equals.
         /// </summary>
         /// <param name="array1">Array 1.</param>
         /// <param name="array2">Array 2</param>
@@ -356,7 +362,7 @@ namespace LumiSoft.Net
         }
 
         /// <summary>
-        /// Compares if specified array itmes equals.
+        /// Compares if specified array items are equals.
         /// </summary>
         /// <param name="array1">Array 1.</param>
         /// <param name="array2">Array 2</param>
@@ -381,7 +387,7 @@ namespace LumiSoft.Net
                 return false;
             }
 
-            for (int i = 0; i < array1.Length; i++)
+            for (var i = 0; i < array1.Length; i++)
             {
                 if (!array1.GetValue(i).Equals(array2.GetValue(i)))
                 {
@@ -420,7 +426,7 @@ namespace LumiSoft.Net
                 return -1;
             }
             // IPv4 and IPv4 OR IPv6 and IPv6
-            for (int i = 0; i < sourceIpBytes.Length; i++)
+            for (var i = 0; i < sourceIpBytes.Length; i++)
             {
                 if (sourceIpBytes[i] < destinationIpBytes[i])
                 {
@@ -464,15 +470,15 @@ namespace LumiSoft.Net
         /// <summary>
         /// Creates new socket for the specified end point.
         /// </summary>
-        /// <param name="localEP">Local end point.</param>
+        /// <param name="localEp">Local end point.</param>
         /// <param name="protocolType">Protocol type.</param>
-        /// <returns>Retruns newly created socket.</returns>
+        /// <returns>Returns newly created socket.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>localEP</b> is null reference.</exception>
-        public static Socket CreateSocket(IPEndPoint localEP, ProtocolType protocolType)
+        public static Socket CreateSocket(IPEndPoint localEp, ProtocolType protocolType)
         {
-            if (localEP == null)
+            if (localEp == null)
             {
-                throw new ArgumentNullException("localEP");
+                throw new ArgumentNullException("localEp");
             }
 
             var socketType = SocketType.Stream;
@@ -481,22 +487,27 @@ namespace LumiSoft.Net
                 socketType = SocketType.Dgram;
             }
 
-            if (localEP.AddressFamily == AddressFamily.InterNetwork)
+            switch (localEp.AddressFamily)
             {
-                var socket = new Socket(AddressFamily.InterNetwork, socketType, protocolType);
-                socket.Bind(localEP);
+                case AddressFamily.InterNetwork:
+                {
+                    var socket = new Socket(AddressFamily.InterNetwork, socketType, protocolType);
+                    socket.Bind(localEp);
 
-                return socket;
+                    return socket;
+                }
+
+                case AddressFamily.InterNetworkV6:
+                {
+                    var socket = new Socket(AddressFamily.InterNetworkV6, socketType, protocolType);
+                    socket.Bind(localEp);
+
+                    return socket;
+                }
+
+                default:
+                    throw new ArgumentException("Invalid IPEndPoint address family.");
             }
-
-            if (localEP.AddressFamily == AddressFamily.InterNetworkV6)
-            {
-                var socket = new Socket(AddressFamily.InterNetworkV6, socketType, protocolType);
-                socket.Bind(localEP);
-
-                return socket;
-            }
-            throw new ArgumentException("Invalid IPEndPoint address family.");
         }
 
         /// <summary>
@@ -548,86 +559,86 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("hexData");
             }
 
-            if (hexData.Length < 2 || (hexData.Length / (double)2 != Math.Floor(hexData.Length / (double)2)))
+            if (hexData.Length < 2 || hexData.Length % 2 != 0)
             {
                 throw new Exception("Illegal hex data, hex data must be in two bytes pairs, for example: 0F,FF,A3,... .");
             }
 
             var retVal = new MemoryStream(hexData.Length / 2);
             // Loop hex value pairs
-            for (int i = 0; i < hexData.Length; i += 2)
+            for (var i = 0; i < hexData.Length; i += 2)
             {
                 var hexPairInDecimal = new byte[2];
                 // We need to convert hex char to decimal number, for example F = 15
-                for (int h = 0; h < 2; h++)
+                for (var h = 0; h < 2; h++)
                 {
-                    if (((char)hexData[i + h]) == '0')
+                    if ((char)hexData[i + h] == '0')
                     {
                         hexPairInDecimal[h] = 0;
                     }
-                    else if (((char)hexData[i + h]) == '1')
+                    else if ((char)hexData[i + h] == '1')
                     {
                         hexPairInDecimal[h] = 1;
                     }
-                    else if (((char)hexData[i + h]) == '2')
+                    else if ((char)hexData[i + h] == '2')
                     {
                         hexPairInDecimal[h] = 2;
                     }
-                    else if (((char)hexData[i + h]) == '3')
+                    else if ((char)hexData[i + h] == '3')
                     {
                         hexPairInDecimal[h] = 3;
                     }
-                    else if (((char)hexData[i + h]) == '4')
+                    else if ((char)hexData[i + h] == '4')
                     {
                         hexPairInDecimal[h] = 4;
                     }
-                    else if (((char)hexData[i + h]) == '5')
+                    else if ((char)hexData[i + h] == '5')
                     {
                         hexPairInDecimal[h] = 5;
                     }
-                    else if (((char)hexData[i + h]) == '6')
+                    else if ((char)hexData[i + h] == '6')
                     {
                         hexPairInDecimal[h] = 6;
                     }
-                    else if (((char)hexData[i + h]) == '7')
+                    else if ((char)hexData[i + h] == '7')
                     {
                         hexPairInDecimal[h] = 7;
                     }
-                    else if (((char)hexData[i + h]) == '8')
+                    else if ((char)hexData[i + h] == '8')
                     {
                         hexPairInDecimal[h] = 8;
                     }
-                    else if (((char)hexData[i + h]) == '9')
+                    else if ((char)hexData[i + h] == '9')
                     {
                         hexPairInDecimal[h] = 9;
                     }
-                    else if (((char)hexData[i + h]) == 'A' || ((char)hexData[i + h]) == 'a')
+                    else if ((char)hexData[i + h] == 'A' || (char)hexData[i + h] == 'a')
                     {
                         hexPairInDecimal[h] = 10;
                     }
-                    else if (((char)hexData[i + h]) == 'B' || ((char)hexData[i + h]) == 'b')
+                    else if ((char)hexData[i + h] == 'B' || (char)hexData[i + h] == 'b')
                     {
                         hexPairInDecimal[h] = 11;
                     }
-                    else if (((char)hexData[i + h]) == 'C' || ((char)hexData[i + h]) == 'c')
+                    else if ((char)hexData[i + h] == 'C' || (char)hexData[i + h] == 'c')
                     {
                         hexPairInDecimal[h] = 12;
                     }
-                    else if (((char)hexData[i + h]) == 'D' || ((char)hexData[i + h]) == 'd')
+                    else if ((char)hexData[i + h] == 'D' || (char)hexData[i + h] == 'd')
                     {
                         hexPairInDecimal[h] = 13;
                     }
-                    else if (((char)hexData[i + h]) == 'E' || ((char)hexData[i + h]) == 'e')
+                    else if ((char)hexData[i + h] == 'E' || (char)hexData[i + h] == 'e')
                     {
                         hexPairInDecimal[h] = 14;
                     }
-                    else if (((char)hexData[i + h]) == 'F' || ((char)hexData[i + h]) == 'f')
+                    else if ((char)hexData[i + h] == 'F' || (char)hexData[i + h] == 'f')
                     {
                         hexPairInDecimal[h] = 15;
                     }
                 }
 
-                // Join hex 4 bit(left hex cahr) + 4bit(right hex char) in bytes 8 it
+                // Join hex 4 bit(left hex char) + 4bit(right hex char) in bytes 8 it
                 retVal.WriteByte((byte)((hexPairInDecimal[0] << 4) | hexPairInDecimal[1]));
             }
 
@@ -661,9 +672,9 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("value");
             }
 
-            foreach (char c in value)
+            foreach (var c in value)
             {
-                if ((int)c > 127)
+                if (c > 127)
                 {
                     return false;
                 }
@@ -685,9 +696,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("value");
             }
 
-            long l = 0;
-
-            return long.TryParse(value, out l);
+            return long.TryParse(value, out _);
         }
 
         /// <summary>
@@ -703,16 +712,14 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("value");
             }
 
-            IPAddress ip = null;
-
-            return IPAddress.TryParse(value, out ip);
+            return IPAddress.TryParse(value, out _);
         }
 
         /// <summary>
         /// Gets if the specified IP address is multicast address.
         /// </summary>
         /// <param name="ip">IP address.</param>
-        /// <returns>Returns true if <b>ip</b> is muticast address, otherwise false.</returns>
+        /// <returns>Returns true if <b>ip</b> is multicast address, otherwise false.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> s null reference.</exception>
         public static bool IsMulticastAddress(IPAddress ip)
         {
@@ -728,13 +735,15 @@ namespace LumiSoft.Net
                 return true;
             }
 
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            if (ip.AddressFamily != AddressFamily.InterNetwork)
             {
-                var bytes = ip.GetAddressBytes();
-                if (bytes[0] >= 224 && bytes[0] <= 239)
-                {
-                    return true;
-                }
+                return false;
+            }
+
+            var bytes = ip.GetAddressBytes();
+            if (bytes[0] >= 224 && bytes[0] <= 239)
+            {
+                return true;
             }
 
             return false;
@@ -769,11 +778,14 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("ip");
             }
 
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            if (ip.AddressFamily != AddressFamily.InterNetwork)
             {
-                var ipBytes = ip.GetAddressBytes();
+                return false;
+            }
 
-                /* Private IPs:
+            var ipBytes = ip.GetAddressBytes();
+
+            /* Private IPs:
                     First Octet = 192 AND Second Octet = 168 (Example: 192.168.X.X) 
                     First Octet = 172 AND (Second Octet >= 16 AND Second Octet <= 31) (Example: 172.16.X.X - 172.31.X.X)
                     First Octet = 10 (Example: 10.X.X.X)
@@ -781,22 +793,21 @@ namespace LumiSoft.Net
 
                 */
 
-                if (ipBytes[0] == 192 && ipBytes[1] == 168)
-                {
-                    return true;
-                }
-                if (ipBytes[0] == 172 && ipBytes[1] >= 16 && ipBytes[1] <= 31)
-                {
-                    return true;
-                }
-                if (ipBytes[0] == 10)
-                {
-                    return true;
-                }
-                if (ipBytes[0] == 169 && ipBytes[1] == 254)
-                {
-                    return true;
-                }
+            if (ipBytes[0] == 192 && ipBytes[1] == 168)
+            {
+                return true;
+            }
+            if (ipBytes[0] == 172 && ipBytes[1] >= 16 && ipBytes[1] <= 31)
+            {
+                return true;
+            }
+            if (ipBytes[0] == 10)
+            {
+                return true;
+            }
+            if (ipBytes[0] == 169 && ipBytes[1] == 254)
+            {
+                return true;
             }
 
             return false;
@@ -805,12 +816,12 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets if socket async methods supported by OS.
         /// </summary>
-        /// <returns>returns ture if supported, otherwise false.</returns>
+        /// <returns>returns true if supported, otherwise false.</returns>
         public static bool IsSocketAsyncSupported()
         {
             try
             {
-                using (SocketAsyncEventArgs e = new SocketAsyncEventArgs())
+                using (new SocketAsyncEventArgs())
                 {
                     return true;
                 }
@@ -839,9 +850,9 @@ namespace LumiSoft.Net
 
             try
             {
-                var ip_port = value.Split(':');
+                var ipPort = value.Split(':');
 
-                return new IPEndPoint(IPAddress.Parse(ip_port[0]), Convert.ToInt32(ip_port[1]));
+                return new IPEndPoint(IPAddress.Parse(ipPort[0]), Convert.ToInt32(ipPort[1]));
             }
             catch (Exception x)
             {
@@ -893,8 +904,8 @@ namespace LumiSoft.Net
             long totalReaded = 0;
             while (true)
             {
-                int readedCount = source.Read(buffer, 0, buffer.Length);
-                // We reached end of stream, we readed all data sucessfully.
+                var readedCount = source.Read(buffer, 0, buffer.Length);
+                // We reached end of stream, we read all data successfully.
                 if (readedCount == 0)
                 {
                     return totalReaded;

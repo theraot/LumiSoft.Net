@@ -6,7 +6,7 @@ namespace LumiSoft.Net
     public enum BalanceMode
     {
         /// <summary>
-        /// Operation is load balanched by all workers.
+        /// Operation is load balanced by all workers.
         /// </summary>
         LoadBalance,
 

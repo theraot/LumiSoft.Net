@@ -6,14 +6,14 @@ namespace LumiSoft.Net
     /// <summary>
     /// Provides data for the SysError event for servers.
     /// </summary>
-    public class Error_EventArgs
+    public class ErrorEventArgs
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="stackTrace"></param>
-        public Error_EventArgs(Exception x,StackTrace stackTrace)
+        public ErrorEventArgs(Exception x,StackTrace stackTrace)
         {
             Exception  = x;
             StackTrace = stackTrace;

@@ -8,8 +8,8 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class ReadWriteControlledStream : Stream
     {
-        private readonly FileAccess m_AccessMode = FileAccess.ReadWrite;
-        private readonly Stream m_pStream;
+        private readonly FileAccess _accessMode;
+        private readonly Stream _stream;
 
         /// <summary>
         /// Default constructor.
@@ -19,33 +19,33 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         public ReadWriteControlledStream(Stream stream, FileAccess access)
         {
-            m_pStream = stream ?? throw new ArgumentNullException("stream");
-            m_AccessMode = access;
+            _stream = stream ?? throw new ArgumentNullException("stream");
+            _accessMode = access;
         }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanRead => (m_AccessMode & FileAccess.Read) != 0;
+        public override bool CanRead => (_accessMode & FileAccess.Read) != 0;
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanSeek => m_pStream.CanSeek;
+        public override bool CanSeek => _stream.CanSeek;
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override bool CanWrite => (m_AccessMode & FileAccess.Write) != 0;
+        public override bool CanWrite => (_accessMode & FileAccess.Write) != 0;
 
         /// <summary>
         /// Gets the length in bytes of the stream.  This method is not supported and always throws a NotSupportedException.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        public override long Length => m_pStream.Length;
+        public override long Length => _stream.Length;
 
         /// <summary>
         /// Gets or sets the position within the current stream. This method is not supported and always throws a NotSupportedException.
@@ -53,9 +53,9 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         public override long Position
         {
-            get => m_pStream.Position;
+            get => _stream.Position;
 
-            set => m_pStream.Position = value;
+            set => _stream.Position = value;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            m_pStream.Flush();
+            _stream.Flush();
         }
 
         /// <summary>
@@ -91,12 +91,12 @@ namespace LumiSoft.Net.IO
             {
                 throw new ArgumentException("Invalid argument 'count' value.");
             }
-            if ((m_AccessMode & FileAccess.Read) == 0)
+            if ((_accessMode & FileAccess.Read) == 0)
             {
                 throw new NotSupportedException();
             }
 
-            return m_pStream.Read(buffer, offset, count);
+            return _stream.Read(buffer, offset, count);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace LumiSoft.Net.IO
         /// <returns>The new position within the current stream.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return m_pStream.Seek(offset, origin);
+            return _stream.Seek(offset, origin);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace LumiSoft.Net.IO
         /// <param name="value">The desired length of the current stream in bytes.</param>
         public override void SetLength(long value)
         {
-            m_pStream.SetLength(value);
+            _stream.SetLength(value);
         }
 
         /// <summary>
@@ -142,12 +142,12 @@ namespace LumiSoft.Net.IO
             {
                 throw new ArgumentException("Invalid argument 'count' value.");
             }
-            if ((m_AccessMode & FileAccess.Write) == 0)
+            if ((_accessMode & FileAccess.Write) == 0)
             {
                 throw new NotSupportedException();
             }
 
-            m_pStream.Write(buffer, offset, count);
+            _stream.Write(buffer, offset, count);
         }
     }
 }

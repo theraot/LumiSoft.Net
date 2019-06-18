@@ -9,14 +9,14 @@ namespace LumiSoft.Net.UPnP.Client
     /// <summary>
     /// This class implements UPnP client.
     /// </summary>
-    public class UPnP_Client
+    public class UPnPClient
     {
         /// <summary>
         /// Searches the network for UPnP root devices.
         /// </summary>
         /// <param name="timeout">Search wait timeout in milliseconds.</param>
         /// <returns>Returns matched UPnP devices.</returns>
-        public UPnP_Device[] Search(int timeout)
+        public UPnPDevice[] Search(int timeout)
         {
             return Search("upnp:rootdevice",timeout);
         }
@@ -27,7 +27,7 @@ namespace LumiSoft.Net.UPnP.Client
         /// <param name="deviceType">UPnP device type. For example: "urn:schemas-upnp-org:device:InternetGatewayDevice:1".</param>
         /// <param name="timeout">Search wait timeout in milliseconds.</param>
         /// <returns>Returns matched UPnP devices.</returns>
-        public UPnP_Device[] Search(string deviceType,int timeout)
+        public static UPnPDevice[] Search(string deviceType,int timeout)
         {
             if(timeout < 1){
                 timeout = 1;
@@ -103,7 +103,7 @@ namespace LumiSoft.Net.UPnP.Client
                         Search for any service of this type where serviceType and ver are defined by the UPnP Forum working committee.
                     
                     urn:domain-name:device:deviceType:ver
-                        Search for any device of this typewhere domain-name (a Vendor Domain Name), deviceType and ver are defined
+                        Search for any device of this type where domain-name (a Vendor Domain Name), deviceType and ver are defined
                         by the UPnP vendor and ver specifies the highest specifies the highest supported version of the device type.
                         Period characters in the Vendor Domain Name MUST be replaced with hyphens in accordance with RFC 2141.
 
@@ -114,8 +114,8 @@ namespace LumiSoft.Net.UPnP.Client
             
             USER-AGENT
                 OPTIONAL. Specified by UPnP vendor. String. Field value MUST begin with the following “product tokens” (defined by
-                HTTP/1.1). The first product token identifes the operating system in the form OS name/OS version, the second token
-                represents the UPnP version and MUST be UPnP/1.1, and the third token identifes the product using the form
+                HTTP/1.1). The first product token identifies the operating system in the form OS name/OS version, the second token
+                represents the UPnP version and MUST be UPnP/1.1, and the third token identifies the product using the form
                 product name/product version. For example, “USER-AGENT: unix/5.1 UPnP/1.1 MyProduct/1.0”. Control points MUST be
                 prepared to accept a higher minor version number of the UPnP version than the control point itself implements. For
                 example, control points implementing UDA version 1.0 will be able to interoperate with devices implementing
@@ -130,7 +130,7 @@ namespace LumiSoft.Net.UPnP.Client
             query.Append("ST: " + deviceType + "\r\n");
             query.Append("\r\n");
 
-            using(Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
+            using(var socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
                 socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.Broadcast,1);
                 socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.IpTimeToLive,2);
 
@@ -142,26 +142,31 @@ namespace LumiSoft.Net.UPnP.Client
                 // Receive responses while timeout reached.
                 while (startTime.AddMilliseconds(timeout) > DateTime.Now){
                     // We have response, read it.
-                    if(socket.Poll(1,SelectMode.SelectRead)){
-                        int countReceived = socket.Receive(buffer);
+                    if (!socket.Poll(1, SelectMode.SelectRead))
+                    {
+                        continue;
+                    }
 
-                        var responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');
-                        foreach (string responseLine in responseLines){
-                            var name_value = responseLine.Split(new[]{':'},2);
-                            if (string.Equals(name_value[0],"location",StringComparison.InvariantCultureIgnoreCase)){
-                                deviceLocations.Add(name_value[1].Trim());
-                            }
+                    var countReceived = socket.Receive(buffer);
+
+                    var responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');
+                    foreach (var responseLine in responseLines){
+                        var nameValue = responseLine.Split(new[]{':'},2);
+                        if (string.Equals(nameValue[0],"location",StringComparison.InvariantCultureIgnoreCase)){
+                            deviceLocations.Add(nameValue[1].Trim());
                         }
                     }
                 }
 
                 // Create devices.
-                var devices = new List<UPnP_Device>();
-                foreach (string location in deviceLocations){
+                var devices = new List<UPnPDevice>();
+                foreach (var location in deviceLocations){
                     try{
-                        devices.Add(new UPnP_Device(location));
+                        devices.Add(new UPnPDevice(location));
                     }
-                    catch{
+                    catch
+                    {
+                        // ignored
                     }
                 }
 
@@ -177,7 +182,7 @@ namespace LumiSoft.Net.UPnP.Client
         /// <param name="timeout">Search wait timeout in milliseconds.</param>
         /// <returns>Returns matched UPnP devices.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>ip</b> is null reference.</exception>
-        public UPnP_Device[] Search(IPAddress ip,string deviceType,int timeout)
+        public static UPnPDevice[] Search(IPAddress ip,string deviceType,int timeout)
         {
             if(ip == null){
                 throw new ArgumentNullException("ip");
@@ -186,7 +191,7 @@ namespace LumiSoft.Net.UPnP.Client
                 timeout = 1;
             }
 
-            using(Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
+            using(var socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp)){
                 socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.IpTimeToLive,2);
 
                 var query = new StringBuilder();
@@ -204,26 +209,31 @@ namespace LumiSoft.Net.UPnP.Client
                 // Receive responses while timeout reached.
                 while (startTime.AddMilliseconds(timeout) > DateTime.Now){
                     // We have response, read it.
-                    if(socket.Poll(1,SelectMode.SelectRead)){
-                        int countReceived = socket.Receive(buffer);
+                    if (!socket.Poll(1, SelectMode.SelectRead))
+                    {
+                        continue;
+                    }
 
-                        var responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');
-                        foreach (string responseLine in responseLines){
-                            var name_value = responseLine.Split(new[]{':'},2);
-                            if (string.Equals(name_value[0],"location",StringComparison.InvariantCultureIgnoreCase)){
-                                deviceLocations.Add(name_value[1].Trim());
-                            }
+                    var countReceived = socket.Receive(buffer);
+
+                    var responseLines = Encoding.UTF8.GetString(buffer,0,countReceived).Split('\n');
+                    foreach (var responseLine in responseLines){
+                        var nameValue = responseLine.Split(new[]{':'},2);
+                        if (string.Equals(nameValue[0],"location",StringComparison.InvariantCultureIgnoreCase)){
+                            deviceLocations.Add(nameValue[1].Trim());
                         }
                     }
                 }
 
                 // Create devices.
-                var devices = new List<UPnP_Device>();
-                foreach (string location in deviceLocations){
+                var devices = new List<UPnPDevice>();
+                foreach (var location in deviceLocations){
                     try{
-                        devices.Add(new UPnP_Device(location));
+                        devices.Add(new UPnPDevice(location));
                     }
-                    catch{
+                    catch
+                    {
+                        // ignored
                     }
                 }
 

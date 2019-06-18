@@ -8,21 +8,21 @@ namespace LumiSoft.Net.UDP
     /// <summary>
     /// This class implements generic UDP server.
     /// </summary>
-    public class UDP_Server : IDisposable
+    public class UdpServer : IDisposable
     {
-        private readonly long m_BytesReceived = 0;
-        private long m_BytesSent;
-        private bool m_IsRunning;
-        private int m_MTU = 1400;
-        private readonly long m_PacketsReceived = 0;
-        private long m_PacketsSent;
-        private IPEndPoint[] m_pBindings;
-        private List<UDP_DataReceiver> m_pDataReceivers;
-        private CircleCollection<Socket> m_pSendSocketsIPv4;
-        private CircleCollection<Socket> m_pSendSocketsIPv6;
-        private List<Socket> m_pSockets;
-        private readonly int m_ReceiversPerSocket = 10;
-        private DateTime m_StartTime;
+        private readonly long _bytesReceived = 0;
+        private long _bytesSent;
+        private bool _isRunning;
+        private int _mtu = 1400;
+        private readonly long _acketsReceived = 0;
+        private long _acketsSent;
+        private IPEndPoint[] _bindings;
+        private List<UdpDataReceiver> _dataReceivers;
+        private CircleCollection<Socket> _sendSocketsIPv4;
+        private CircleCollection<Socket> _sendSocketsIPv6;
+        private List<Socket> _sockets;
+        private readonly int _receiversPerSocket = 10;
+        private DateTime _startTime;
 
         /// <summary>
         /// This event is raised when unexpected error happens.
@@ -32,10 +32,10 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// This event is raised when new UDP packet received.
         /// </summary>
-        public event EventHandler<UDP_e_PacketReceived> PacketReceived;
+        public event EventHandler<UdpEPacketReceived> PacketReceived;
 
         /// <summary>
-        /// Gets or sets IP end point where UDP server is binded.
+        /// Gets or sets IP end point where UDP server is bound.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="ArgumentNullException">Is raised when null value is passed.</exception>
@@ -48,7 +48,7 @@ namespace LumiSoft.Net.UDP
                     throw new ObjectDisposedException("UdpServer");
                 }
 
-                return m_pBindings;
+                return _bindings;
             }
 
             set
@@ -63,31 +63,36 @@ namespace LumiSoft.Net.UDP
                 }
 
                 // See if changed. Also if server running we must restart it.
-                bool changed = false;
-                if (m_pBindings == null)
+                var changed = false;
+                if (_bindings == null)
                 {
                     changed = true;
                 }
-                else if (m_pBindings.Length != value.Length)
+                else if (_bindings.Length != value.Length)
                 {
                     changed = true;
                 }
                 else
                 {
-                    for (int i = 0; i < m_pBindings.Length; i++)
+                    for (var i = 0; i < _bindings.Length; i++)
                     {
-                        if (!m_pBindings[i].Equals(value[i]))
+                        if (_bindings[i].Equals(value[i]))
                         {
-                            changed = true;
-                            break;
+                            continue;
                         }
+
+                        changed = true;
+                        break;
                     }
                 }
-                if (changed)
+
+                if (!changed)
                 {
-                    m_pBindings = value;
-                    Restart();
+                    return;
                 }
+
+                _bindings = value;
+                Restart();
             }
         }
 
@@ -95,7 +100,7 @@ namespace LumiSoft.Net.UDP
         /// Gets how many bytes this UDP server has received since start.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this property is accessed.</exception>
         public long BytesReceived
         {
             get
@@ -104,12 +109,12 @@ namespace LumiSoft.Net.UDP
                 {
                     throw new ObjectDisposedException("UdpServer");
                 }
-                if (!m_IsRunning)
+                if (!_isRunning)
                 {
                     throw new InvalidOperationException("UDP server is not running.");
                 }
 
-                return m_BytesReceived;
+                return _bytesReceived;
             }
         }
 
@@ -117,7 +122,7 @@ namespace LumiSoft.Net.UDP
         /// Gets how many bytes this UDP server has sent since start.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this property is accessed.</exception>
         public long BytesSent
         {
             get
@@ -126,12 +131,12 @@ namespace LumiSoft.Net.UDP
                 {
                     throw new ObjectDisposedException("UdpServer");
                 }
-                if (!m_IsRunning)
+                if (!_isRunning)
                 {
                     throw new InvalidOperationException("UDP server is not running.");
                 }
 
-                return m_BytesSent;
+                return _bytesSent;
             }
         }
 
@@ -153,7 +158,7 @@ namespace LumiSoft.Net.UDP
                     throw new ObjectDisposedException("UdpServer");
                 }
 
-                return m_IsRunning;
+                return _isRunning;
             }
         }
 
@@ -162,7 +167,7 @@ namespace LumiSoft.Net.UDP
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
         /// <exception cref="InvalidOperationException">Is raised when server is running and this property value is tried to set.</exception>
-        public int MTU
+        public int Mtu
         {
             get
             {
@@ -171,7 +176,7 @@ namespace LumiSoft.Net.UDP
                     throw new ObjectDisposedException("UdpServer");
                 }
 
-                return m_MTU;
+                return _mtu;
             }
 
             set
@@ -180,12 +185,12 @@ namespace LumiSoft.Net.UDP
                 {
                     throw new ObjectDisposedException("UdpServer");
                 }
-                if (m_IsRunning)
+                if (_isRunning)
                 {
                     throw new InvalidOperationException("MTU value can be changed only if UDP server is not running.");
                 }
 
-                m_MTU = value;
+                _mtu = value;
             }
         }
 
@@ -193,7 +198,7 @@ namespace LumiSoft.Net.UDP
         /// Gets how many UDP packets this UDP server has received since start.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this property is accessed.</exception>
         public long PacketsReceived
         {
             get
@@ -202,12 +207,12 @@ namespace LumiSoft.Net.UDP
                 {
                     throw new ObjectDisposedException("UdpServer");
                 }
-                if (!m_IsRunning)
+                if (!_isRunning)
                 {
                     throw new InvalidOperationException("UDP server is not running.");
                 }
 
-                return m_PacketsReceived;
+                return _acketsReceived;
             }
         }
 
@@ -215,7 +220,7 @@ namespace LumiSoft.Net.UDP
         /// Gets how many UDP packets this UDP server has sent since start.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this property is accessed.</exception>
         public long PacketsSent
         {
             get
@@ -224,12 +229,12 @@ namespace LumiSoft.Net.UDP
                 {
                     throw new ObjectDisposedException("UdpServer");
                 }
-                if (!m_IsRunning)
+                if (!_isRunning)
                 {
                     throw new InvalidOperationException("UDP server is not running.");
                 }
 
-                return m_PacketsSent;
+                return _acketsSent;
             }
         }
 
@@ -237,7 +242,7 @@ namespace LumiSoft.Net.UDP
         /// Gets time when server was started.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this property is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this property is accessed.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this property is accessed.</exception>
         public DateTime StartTime
         {
             get
@@ -246,12 +251,12 @@ namespace LumiSoft.Net.UDP
                 {
                     throw new ObjectDisposedException("UdpServer");
                 }
-                if (!m_IsRunning)
+                if (!_isRunning)
                 {
                     throw new InvalidOperationException("UDP server is not running.");
                 }
 
-                return m_StartTime;
+                return _startTime;
             }
         }
 
@@ -273,54 +278,49 @@ namespace LumiSoft.Net.UDP
 
         /// <summary>
         /// Gets suitable local IP end point for the specified remote endpoint.
-        /// If there are multiple sending local end points, they will be load-balanched with round-robin.
+        /// If there are multiple sending local end points, they will be load-balanced with round-robin.
         /// </summary>
-        /// <param name="remoteEP">Remote end point.</param>
+        /// <param name="remoteEp">Remote end point.</param>
         /// <returns>Returns local IP end point.</returns>
         /// <exception cref="ArgumentNullException">Is raised when argument <b>remoteEP</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when argument <b>remoteEP</b> has invalid value.</exception>
         /// <exception cref="InvalidOperationException">Is raised when no suitable IPv4 or IPv6 socket for <b>remoteEP</b>.</exception>
-        public IPEndPoint GetLocalEndPoint(IPEndPoint remoteEP)
+        public IPEndPoint GetLocalEndPoint(IPEndPoint remoteEp)
         {
-            if (remoteEP == null)
+            if (remoteEp == null)
             {
-                throw new ArgumentNullException("remoteEP");
+                throw new ArgumentNullException("remoteEp");
             }
 
-            if (remoteEP.AddressFamily == AddressFamily.InterNetwork)
+            switch (remoteEp.AddressFamily)
             {
-                // We don't have any IPv4 local end point.
-                if (m_pSendSocketsIPv4.Count == 0)
-                {
+                case AddressFamily.InterNetwork when _sendSocketsIPv4.Count == 0:
+                    // We don't have any IPv4 local end point.
                     throw new InvalidOperationException("There is no suitable IPv4 local end point in this.Bindings.");
-                }
-
-                return (IPEndPoint)m_pSendSocketsIPv4.Next().LocalEndPoint;
-            }
-
-            if (remoteEP.AddressFamily == AddressFamily.InterNetworkV6)
-            {
-                // We don't have any IPv6 local end point.
-                if (m_pSendSocketsIPv6.Count == 0)
-                {
+                case AddressFamily.InterNetwork:
+                    return (IPEndPoint)_sendSocketsIPv4.Next().LocalEndPoint;
+                case AddressFamily.InterNetworkV6 when _sendSocketsIPv6.Count == 0:
+                    // We don't have any IPv6 local end point.
                     throw new InvalidOperationException("There is no suitable IPv6 local end point in this.Bindings.");
-                }
-
-                return (IPEndPoint)m_pSendSocketsIPv6.Next().LocalEndPoint;
+                case AddressFamily.InterNetworkV6:
+                    return (IPEndPoint)_sendSocketsIPv6.Next().LocalEndPoint;
+                default:
+                    throw new ArgumentException("Argument 'remoteEP' has unknown AddressFamily.");
             }
-            throw new ArgumentException("Argument 'remoteEP' has unknown AddressFamily.");
         }
 
         /// <summary>
-        /// Restarts running server. If server is not running, this methods has no efffect.
+        /// Restarts running server. If server is not running, this methods has no effect.
         /// </summary>
         public void Restart()
         {
-            if (m_IsRunning)
+            if (!_isRunning)
             {
-                Stop();
-                Start();
+                return;
             }
+
+            Stop();
+            Start();
         }
 
         /// <summary>
@@ -329,15 +329,14 @@ namespace LumiSoft.Net.UDP
         /// <param name="packet">UDP packet to send.</param>
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="count">Number of bytes to send.</param>
-        /// <param name="remoteEP">Remote end point.</param>
+        /// <param name="remoteEp">Remote end point.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when any of the arumnets is null.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when any of the arguments is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void SendPacket(byte[] packet, int offset, int count, IPEndPoint remoteEP)
+        public void SendPacket(byte[] packet, int offset, int count, IPEndPoint remoteEp)
         {
-            IPEndPoint localEP = null;
-            SendPacket(packet, offset, count, remoteEP, out localEP);
+            SendPacket(packet, offset, count, remoteEp, out _);
         }
 
         /// <summary>
@@ -346,19 +345,19 @@ namespace LumiSoft.Net.UDP
         /// <param name="packet">UDP packet to send.</param>
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="count">Number of bytes to send.</param>
-        /// <param name="remoteEP">Remote end point.</param>
-        /// <param name="localEP">Returns local IP end point which was used to send UDP packet.</param>
+        /// <param name="remoteEp">Remote end point.</param>
+        /// <param name="localEp">Returns local IP end point which was used to send UDP packet.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when any of the arumnets is null.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when any of the arguments is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void SendPacket(byte[] packet, int offset, int count, IPEndPoint remoteEP, out IPEndPoint localEP)
+        public void SendPacket(byte[] packet, int offset, int count, IPEndPoint remoteEp, out IPEndPoint localEp)
         {
             if (IsDisposed)
             {
                 throw new ObjectDisposedException("UdpServer");
             }
-            if (!m_IsRunning)
+            if (!_isRunning)
             {
                 throw new InvalidOperationException("UDP server is not running.");
             }
@@ -366,34 +365,34 @@ namespace LumiSoft.Net.UDP
             {
                 throw new ArgumentNullException("packet");
             }
-            if (remoteEP == null)
+            if (remoteEp == null)
             {
-                throw new ArgumentNullException("remoteEP");
+                throw new ArgumentNullException("remoteEp");
             }
 
-            localEP = null;
-            SendPacket(null, packet, offset, count, remoteEP, out localEP);
+            localEp = null;
+            SendPacket(null, packet, offset, count, remoteEp, out localEp);
         }
 
         /// <summary>
         /// Sends specified UDP packet to the specified remote end point.
         /// </summary>
-        /// <param name="localEP">Local end point to use for sending.</param>
+        /// <param name="localEp">Local end point to use for sending.</param>
         /// <param name="packet">UDP packet to send.</param>
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="count">Number of bytes to send.</param>
-        /// <param name="remoteEP">Remote end point.</param>
+        /// <param name="remoteEp">Remote end point.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when any of the arumnets is null.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when any of the arguments is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        public void SendPacket(IPEndPoint localEP, byte[] packet, int offset, int count, IPEndPoint remoteEP)
+        public void SendPacket(IPEndPoint localEp, byte[] packet, int offset, int count, IPEndPoint remoteEp)
         {
             if (IsDisposed)
             {
                 throw new ObjectDisposedException("UdpServer");
             }
-            if (!m_IsRunning)
+            if (!_isRunning)
             {
                 throw new InvalidOperationException("UDP server is not running.");
             }
@@ -401,56 +400,66 @@ namespace LumiSoft.Net.UDP
             {
                 throw new ArgumentNullException("packet");
             }
-            if (localEP == null)
+            if (localEp == null)
             {
-                throw new ArgumentNullException("localEP");
+                throw new ArgumentNullException("localEp");
             }
-            if (remoteEP == null)
+            if (remoteEp == null)
             {
-                throw new ArgumentNullException("remoteEP");
+                throw new ArgumentNullException("remoteEp");
             }
-            if (localEP.AddressFamily != remoteEP.AddressFamily)
+            if (localEp.AddressFamily != remoteEp.AddressFamily)
             {
                 throw new ArgumentException("Argumnet localEP and remoteEP AddressFamily won't match.");
             }
 
             // Search specified local end point socket.
             Socket socket = null;
-            if (localEP.AddressFamily == AddressFamily.InterNetwork)
+            switch (localEp.AddressFamily)
             {
-                foreach (Socket s in m_pSendSocketsIPv4.ToArray())
+                case AddressFamily.InterNetwork:
                 {
-                    if (localEP.Equals((IPEndPoint)s.LocalEndPoint))
+                    foreach (var s in _sendSocketsIPv4.ToArray())
                     {
-                        socket = s;
+                        if (!localEp.Equals((IPEndPoint) s.LocalEndPoint))
+                            {
+                                continue;
+                            }
+
+                            socket = s;
                         break;
                     }
+
+                    break;
                 }
-            }
-            else if (localEP.AddressFamily == AddressFamily.InterNetworkV6)
-            {
-                foreach (Socket s in m_pSendSocketsIPv6.ToArray())
+
+                case AddressFamily.InterNetworkV6:
                 {
-                    if (localEP.Equals((IPEndPoint)s.LocalEndPoint))
+                    foreach (var s in _sendSocketsIPv6.ToArray())
                     {
-                        socket = s;
+                        if (!localEp.Equals((IPEndPoint) s.LocalEndPoint))
+                            {
+                                continue;
+                            }
+
+                            socket = s;
                         break;
                     }
+
+                    break;
                 }
-            }
-            else
-            {
-                throw new ArgumentException("Argument 'localEP' has unknown AddressFamily.");
+
+                default:
+                    throw new ArgumentException("Argument 'localEP' has unknown AddressFamily.");
             }
 
             // We don't have specified local end point.
             if (socket == null)
             {
-                throw new ArgumentException("Specified local end point '" + localEP + "' doesn't exist.");
+                throw new ArgumentException("Specified local end point '" + localEp + "' doesn't exist.");
             }
 
-            IPEndPoint lEP = null;
-            SendPacket(socket, packet, offset, count, remoteEP, out lEP);
+            SendPacket(socket, packet, offset, count, remoteEp, out _);
         }
 
         /// <summary>
@@ -458,106 +467,107 @@ namespace LumiSoft.Net.UDP
         /// </summary>
         public void Start()
         {
-            if (m_IsRunning)
+            if (_isRunning)
             {
                 return;
             }
-            m_IsRunning = true;
+            _isRunning = true;
 
-            m_StartTime = DateTime.Now;
-            m_pDataReceivers = new List<UDP_DataReceiver>();
+            _startTime = DateTime.Now;
+            _dataReceivers = new List<UdpDataReceiver>();
 
             // Run only if we have some listening point.
-            if (m_pBindings != null)
+            if (_bindings == null)
             {
-                // We must replace IPAddress.Any to all available IPs, otherwise it's impossible to send
-                // reply back to UDP packet sender on same local EP where packet received. This is very
-                // important when clients are behind NAT.
-                var listeningEPs = new List<IPEndPoint>();
-                foreach (IPEndPoint ep in m_pBindings)
+                return;
+            }
+            // We must replace IPAddress.Any to all available IPs, otherwise it's impossible to send
+            // reply back to UDP packet sender on same local EP where packet received. This is very
+            // important when clients are behind NAT.
+            var listeningEPs = new List<IPEndPoint>();
+            foreach (var ep in _bindings)
+            {
+                if (ep.Address.Equals(IPAddress.Any))
                 {
-                    if (ep.Address.Equals(IPAddress.Any))
+                    // Add localhost.
+                    var epLocalhost = new IPEndPoint(IPAddress.Loopback, ep.Port);
+                    if (!listeningEPs.Contains(epLocalhost))
                     {
-                        // Add localhost.
-                        var epLocalhost = new IPEndPoint(IPAddress.Loopback, ep.Port);
-                        if (!listeningEPs.Contains(epLocalhost))
+                        listeningEPs.Add(epLocalhost);
+                    }
+                    // Add all host IPs.
+                    foreach (var ip in Dns.GetHostAddresses(""))
+                    {
+                        var epNew = new IPEndPoint(ip, ep.Port);
+                        if (!listeningEPs.Contains(epNew))
                         {
-                            listeningEPs.Add(epLocalhost);
+                            listeningEPs.Add(epNew);
                         }
-                        // Add all host IPs.
-                        foreach (IPAddress ip in Dns.GetHostAddresses(""))
+                    }
+                }
+                else
+                {
+                    if (!listeningEPs.Contains(ep))
+                    {
+                        listeningEPs.Add(ep);
+                    }
+                }
+            }
+
+            // Create sockets.
+            _sockets = new List<Socket>();
+            foreach (var ep in listeningEPs)
+            {
+                try
+                {
+                    var socket = NetUtils.CreateSocket(ep, ProtocolType.Udp);
+                    _sockets.Add(socket);
+
+                    // Create UDP data receivers.
+                    for (var i = 0; i < _receiversPerSocket; i++)
+                    {
+                        var receiver = new UdpDataReceiver(socket);
+                        receiver.PacketReceived += delegate (object s, UdpEPacketReceived e)
                         {
-                            var epNew = new IPEndPoint(ip, ep.Port);
-                            if (!listeningEPs.Contains(epNew))
+                            try
                             {
-                                listeningEPs.Add(epNew);
+                                ProcessUdpPacket(e);
                             }
-                        }
-                    }
-                    else
-                    {
-                        if (!listeningEPs.Contains(ep))
+                            catch (Exception x)
+                            {
+                                OnError(x);
+                            }
+                        };
+                        receiver.Error += delegate (object s, ExceptionEventArgs e)
                         {
-                            listeningEPs.Add(ep);
-                        }
+                            OnError(e.Exception);
+                        };
+                        _dataReceivers.Add(receiver);
+                        receiver.Start();
                     }
                 }
-
-                // Create sockets.
-                m_pSockets = new List<Socket>();
-                foreach (IPEndPoint ep in listeningEPs)
+                catch (Exception x)
                 {
-                    try
-                    {
-                        var socket = Net_Utils.CreateSocket(ep, ProtocolType.Udp);
-                        m_pSockets.Add(socket);
+                    OnError(x);
+                }
+            }
 
-                        // Create UDP data receivers.
-                        for (int i = 0; i < m_ReceiversPerSocket; i++)
-                        {
-                            var receiver = new UDP_DataReceiver(socket);
-                            receiver.PacketReceived += delegate (object s, UDP_e_PacketReceived e)
-                            {
-                                try
-                                {
-                                    ProcessUdpPacket(e);
-                                }
-                                catch (Exception x)
-                                {
-                                    OnError(x);
-                                }
-                            };
-                            receiver.Error += delegate (object s, ExceptionEventArgs e)
-                            {
-                                OnError(e.Exception);
-                            };
-                            m_pDataReceivers.Add(receiver);
-                            receiver.Start();
-                        }
-                    }
-                    catch (Exception x)
+            // Create round-robin send sockets. NOTE: We must skip localhost, it can't be used
+            // for sending out of server.
+            _sendSocketsIPv4 = new CircleCollection<Socket>();
+            _sendSocketsIPv6 = new CircleCollection<Socket>();
+            foreach (var socket in _sockets)
+            {
+                if (((IPEndPoint)socket.LocalEndPoint).AddressFamily == AddressFamily.InterNetwork)
+                {
+                    if (!((IPEndPoint)socket.LocalEndPoint).Address.Equals(IPAddress.Loopback))
                     {
-                        OnError(x);
+                        _sendSocketsIPv4.Add(socket);
                     }
                 }
-
-                // Create round-robin send sockets. NOTE: We must skip localhost, it can't be used
-                // for sending out of server.
-                m_pSendSocketsIPv4 = new CircleCollection<Socket>();
-                m_pSendSocketsIPv6 = new CircleCollection<Socket>();
-                foreach (Socket socket in m_pSockets)
+                else if (((IPEndPoint)socket.LocalEndPoint).AddressFamily == AddressFamily.InterNetworkV6)
                 {
-                    if (((IPEndPoint)socket.LocalEndPoint).AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        if (!((IPEndPoint)socket.LocalEndPoint).Address.Equals(IPAddress.Loopback))
-                        {
-                            m_pSendSocketsIPv4.Add(socket);
-                        }
-                    }
-                    else if (((IPEndPoint)socket.LocalEndPoint).AddressFamily == AddressFamily.InterNetworkV6)
-                    {
-                        m_pSendSocketsIPv6.Add(socket);
-                    }
+                    _sendSocketsIPv6.Add(socket);
                 }
             }
         }
@@ -567,24 +577,24 @@ namespace LumiSoft.Net.UDP
         /// </summary>
         public void Stop()
         {
-            if (!m_IsRunning)
+            if (!_isRunning)
             {
                 return;
             }
-            m_IsRunning = false;
+            _isRunning = false;
 
-            foreach (UDP_DataReceiver receiver in m_pDataReceivers)
+            foreach (var receiver in _dataReceivers)
             {
                 receiver.Dispose();
             }
-            m_pDataReceivers = null;
-            foreach (Socket socket in m_pSockets)
+            _dataReceivers = null;
+            foreach (var socket in _sockets)
             {
                 socket.Close();
             }
-            m_pSockets = null;
-            m_pSendSocketsIPv4 = null;
-            m_pSendSocketsIPv6 = null;
+            _sockets = null;
+            _sendSocketsIPv4 = null;
+            _sendSocketsIPv6 = null;
         }
 
         /// <summary>
@@ -594,35 +604,35 @@ namespace LumiSoft.Net.UDP
         /// <param name="packet">UDP packet to send.</param>
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="count">Number of bytes to send.</param>
-        /// <param name="remoteEP">Remote end point.</param>
-        /// <param name="localEP">Returns local IP end point which was used to send UDP packet.</param>
+        /// <param name="remoteEp">Remote end point.</param>
+        /// <param name="localEp">Returns local IP end point which was used to send UDP packet.</param>
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
-        /// <exception cref="InvalidOperationException">Is raised whan UDP server is not running and this method is accessed.</exception>
-        /// <exception cref="ArgumentNullException">Is raised when any of the arumnets is null.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when UDP server is not running and this method is accessed.</exception>
+        /// <exception cref="ArgumentNullException">Is raised when any of the arguments is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        internal void SendPacket(Socket socket, byte[] packet, int offset, int count, IPEndPoint remoteEP, out IPEndPoint localEP)
+        internal void SendPacket(Socket socket, byte[] packet, int offset, int count, IPEndPoint remoteEp, out IPEndPoint localEp)
         {
             // Round-Robin all local end points, if no end point specified.
             if (socket == null)
             {
                 // Get right IP address family socket which matches remote end point.
-                if (remoteEP.AddressFamily == AddressFamily.InterNetwork)
+                if (remoteEp.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if (m_pSendSocketsIPv4.Count == 0)
+                    if (_sendSocketsIPv4.Count == 0)
                     {
                         throw new ArgumentException("There is no suitable IPv4 local end point in this.Bindings.");
                     }
 
-                    socket = m_pSendSocketsIPv4.Next();
+                    socket = _sendSocketsIPv4.Next();
                 }
-                else if (remoteEP.AddressFamily == AddressFamily.InterNetworkV6)
+                else if (remoteEp.AddressFamily == AddressFamily.InterNetworkV6)
                 {
-                    if (m_pSendSocketsIPv6.Count == 0)
+                    if (_sendSocketsIPv6.Count == 0)
                     {
                         throw new ArgumentException("There is no suitable IPv6 local end point in this.Bindings.");
                     }
 
-                    socket = m_pSendSocketsIPv6.Next();
+                    socket = _sendSocketsIPv6.Next();
                 }
                 else
                 {
@@ -631,12 +641,12 @@ namespace LumiSoft.Net.UDP
             }
 
             // Send packet.
-            socket.SendTo(packet, 0, count, SocketFlags.None, remoteEP);
+            socket.SendTo(packet, 0, count, SocketFlags.None, remoteEp);
 
-            localEP = (IPEndPoint)socket.LocalEndPoint;
+            localEp = (IPEndPoint)socket.LocalEndPoint;
 
-            m_BytesSent += count;
-            m_PacketsSent++;
+            _bytesSent += count;
+            _acketsSent++;
         }
 
         /// <summary>
@@ -645,14 +655,14 @@ namespace LumiSoft.Net.UDP
         /// <param name="x">Exception occured.</param>
         private void OnError(Exception x)
         {
-            Error?.Invoke(this, new Error_EventArgs(x, new System.Diagnostics.StackTrace()));
+            Error?.Invoke(this, new ErrorEventArgs(x, new System.Diagnostics.StackTrace()));
         }
 
         /// <summary>
         /// Raises PacketReceived event.
         /// </summary>
         /// <param name="e">Event data.</param>
-        private void OnUdpPacketReceived(UDP_e_PacketReceived e)
+        private void OnUdpPacketReceived(UdpEPacketReceived e)
         {
             PacketReceived?.Invoke(this, e);
         }
@@ -662,7 +672,7 @@ namespace LumiSoft.Net.UDP
         /// </summary>
         /// <param name="e">Packet event data.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>e</b> is null reference.</exception>
-        private void ProcessUdpPacket(UDP_e_PacketReceived e)
+        private void ProcessUdpPacket(UdpEPacketReceived e)
         {
             if (e == null)
             {

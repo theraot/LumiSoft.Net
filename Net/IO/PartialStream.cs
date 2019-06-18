@@ -8,17 +8,17 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class PartialStream : Stream
     {
-        private bool m_IsDisposed;
-        private readonly long m_Length;
-        private long m_Position;
-        private readonly Stream m_pStream;
-        private readonly long m_Start;
+        private bool _isDisposed;
+        private readonly long _length;
+        private long _osition;
+        private readonly Stream _stream;
+        private readonly long _start;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="stream">Source stream.</param>
-        /// <param name="start">Zero based start positon in source stream.</param>
+        /// <param name="start">Zero based start position in source stream.</param>
         /// <param name="length">Length of stream.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
         /// <exception cref="ArgumentException">Is raised when any of the arguments has invalid value.</exception>
@@ -36,14 +36,14 @@ namespace LumiSoft.Net.IO
             {
                 throw new ArgumentException("Argument 'start' value must be >= 0.");
             }
-            if ((start + length) > stream.Length)
+            if (start + length > stream.Length)
             {
                 throw new ArgumentException("Argument 'length' value will exceed source stream length.");
             }
 
-            m_pStream = stream;
-            m_Start = start;
-            m_Length = length;
+            _stream = stream;
+            _start = start;
+            _length = length;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -71,7 +71,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -88,7 +88,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -106,12 +106,12 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
 
-                return m_Length;
+                return _length;
             }
         }
 
@@ -123,17 +123,17 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
 
-                return m_Position;
+                return _osition;
             }
 
             set
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -142,7 +142,7 @@ namespace LumiSoft.Net.IO
                     throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
                 }
 
-                m_Position = value;
+                _osition = value;
             }
         }
 
@@ -151,12 +151,12 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public new void Dispose()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 return;
             }
 
-            m_IsDisposed = true;
+            _isDisposed = true;
 
             base.Dispose();
         }
@@ -167,7 +167,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -183,17 +183,17 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            if (m_pStream.Position != (m_Start + m_Position))
+            if (_stream.Position != _start + _osition)
             {
-                m_pStream.Position = m_Start + m_Position;
+                _stream.Position = _start + _osition;
             }
-            int readedCount = m_pStream.Read(buffer, offset, Math.Min(count, (int)(Length - m_Position)));
-            m_Position += readedCount;
+            var readedCount = _stream.Read(buffer, offset, Math.Min(count, (int)(Length - _osition)));
+            _osition += readedCount;
 
             return readedCount;
         }
@@ -207,24 +207,24 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
 
             if (origin == SeekOrigin.Begin)
             {
-                m_Position = 0;
+                _osition = 0;
             }
             else if (origin == SeekOrigin.Current)
             {
             }
             else if (origin == SeekOrigin.End)
             {
-                m_Position = m_Length;
+                _osition = _length;
             }
 
-            return m_Position;
+            return _osition;
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override void SetLength(long value)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -254,7 +254,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }

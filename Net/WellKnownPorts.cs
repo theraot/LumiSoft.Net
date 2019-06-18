@@ -8,70 +8,70 @@ namespace LumiSoft.Net
         /// <summary>
         /// DNS protocol.
         /// </summary>
-        public static readonly int DNS = 53;
+        public static readonly int Dns = 53;
 
         /// <summary>
         /// FTP - control (command) port.
         /// </summary>
-        public static readonly int FTP_Control = 21;
+        public static readonly int FtpControl = 21;
 
         /// <summary>
         /// FTP over SSL protocol.
         /// </summary>
-        public static readonly int FTP_Control_SSL = 990;
+        public static readonly int FtpControlSsl = 990;
         /// <summary>
         /// FTP - data port.
         /// </summary>
-        public static readonly int FTP_Data = 20;
+        public static readonly int FtpData = 20;
 
         /// <summary>
         /// HTTP protocol.
         /// </summary>
-        public static readonly int HTTP = 80;
+        public static readonly int Http = 80;
 
         /// <summary>
         /// HTTPS protocol.
         /// </summary>
-        public static readonly int HTTPS = 443;
+        public static readonly int Https = 443;
 
         /// <summary>
         /// IMAP4 protocol.
         /// </summary>
-        public static readonly int IMAP4 = 143;
+        public static readonly int Imap4 = 143;
 
         /// <summary>
         /// IMAP4 over SSL protocol.
         /// </summary>
-        public static readonly int IMAP4_SSL = 993;
+        public static readonly int Imap4Ssl = 993;
 
         /// <summary>
         /// NNTP (Network News Transfer Protocol)  protocol.
         /// </summary>
-        public static readonly int NNTP = 119;
+        public static readonly int Nntp = 119;
 
         /// <summary>
         /// NTP (Network Time Protocol) protocol.
         /// </summary>
-        public static readonly int NTP = 123;
+        public static readonly int Ntp = 123;
 
         /// <summary>
         /// POP3 protocol.
         /// </summary>
-        public static readonly int POP3 = 110;
+        public static readonly int Pop3 = 110;
 
         /// <summary>
         /// POP3 over SSL protocol.
         /// </summary>
-        public static readonly int POP3_SSL = 995;
+        public static readonly int Pop3Ssl = 995;
 
         /// <summary>
         /// SMTP protocol.
         /// </summary>
-        public static readonly int SMTP = 25;
+        public static readonly int Smtp = 25;
 
         /// <summary>
         /// SMTP over SSL protocol.
         /// </summary>
-        public static readonly int SMTP_SSL = 465;
+        public static readonly int SmtpSsl = 465;
     }
 }

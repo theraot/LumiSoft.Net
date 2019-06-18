@@ -8,28 +8,28 @@ namespace LumiSoft.Net
     /// </summary>
     public class CircleCollection<T>
     {
-        private int m_Index;
-        private readonly List<T> m_pItems;
+        private int _index;
+        private readonly List<T> _items;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public CircleCollection()
         {
-            m_pItems = new List<T>();
+            _items = new List<T>();
         }
 
         /// <summary>
         /// Gets number of items in the collection.
         /// </summary>
-        public int Count => m_pItems.Count;
+        public int Count => _items.Count;
 
         /// <summary>
         /// Gets item at the specified index.
         /// </summary>
         /// <param name="index">Item zero based index.</param>
         /// <returns>Returns item at the specified index.</returns>
-        public T this[int index] => m_pItems[index];
+        public T this[int index] => _items[index];
 
         /// <summary>
         /// Adds specified items to the collection.
@@ -43,7 +43,7 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("items");
             }
 
-            foreach (T item in items)
+            foreach (var item in items)
             {
                 Add(item);
             }
@@ -61,10 +61,10 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("item");
             }
 
-            m_pItems.Add(item);
+            _items.Add(item);
 
             // Reset loop index.
-            m_Index = 0;
+            _index = 0;
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace LumiSoft.Net
         /// </summary>
         public void Clear()
         {
-            m_pItems.Clear();
+            _items.Clear();
 
             // Reset loop index.
-            m_Index = 0;
+            _index = 0;
         }
 
         /// <summary>
@@ -85,28 +85,28 @@ namespace LumiSoft.Net
         /// <returns>Returns true if the collection contain the specified item, otherwise false.</returns>
         public bool Contains(T item)
         {
-            return m_pItems.Contains(item);
+            return _items.Contains(item);
         }
 
         /// <summary>
         /// Gets next item from the collection. This method is thread-safe.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Is raised when thre is no items in the collection.</exception>
+        /// <exception cref="InvalidOperationException">Is raised when there is no items in the collection.</exception>
         public T Next()
         {
-            if (m_pItems.Count == 0)
+            if (_items.Count == 0)
             {
                 throw new InvalidOperationException("There is no items in the collection.");
             }
 
-            lock (m_pItems)
+            lock (_items)
             {
-                var item = m_pItems[m_Index];
+                var item = _items[_index];
 
-                m_Index++;
-                if (m_Index >= m_pItems.Count)
+                _index++;
+                if (_index >= _items.Count)
                 {
-                    m_Index = 0;
+                    _index = 0;
                 }
 
                 return item;
@@ -125,10 +125,10 @@ namespace LumiSoft.Net
                 throw new ArgumentNullException("item");
             }
 
-            m_pItems.Remove(item);
+            _items.Remove(item);
 
             // Reset loop index.
-            m_Index = 0;
+            _index = 0;
         }
 
         /// <summary>
@@ -137,9 +137,9 @@ namespace LumiSoft.Net
         /// <returns>Returns elements in a new array.</returns>
         public T[] ToArray()
         {
-            lock (m_pItems)
+            lock (_items)
             {
-                return m_pItems.ToArray();
+                return _items.ToArray();
             }
         }
 
@@ -149,16 +149,16 @@ namespace LumiSoft.Net
         /// <returns>Returns elements in a new array.</returns>
         public T[] ToCurrentOrderArray()
         {
-            lock (m_pItems)
+            lock (_items)
             {
-                int index = m_Index;
-                var retVal = new T[m_pItems.Count];
-                for (int i = 0; i < m_pItems.Count; i++)
+                var index = _index;
+                var retVal = new T[_items.Count];
+                for (var i = 0; i < _items.Count; i++)
                 {
-                    retVal[i] = m_pItems[index];
+                    retVal[i] = _items[index];
 
                     index++;
-                    if (index >= m_pItems.Count)
+                    if (index >= _items.Count)
                     {
                         index = 0;
                     }

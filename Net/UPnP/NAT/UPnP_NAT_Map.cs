@@ -3,20 +3,20 @@
     /// <summary>
     /// This class represents NAT port mapping entry.
     /// </summary>
-    public class UPnP_NAT_Map
+    public class UPnPnatMap
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="enabled">Specifies if NAT port map is enabled.</param>
-        /// <param name="protocol">Port mapping protocol. Nomrally this value TCP or UDP.</param>
-        /// <param name="remoteHost">Remote host IP address. NOTE: Some implementations may use wilcard(*,?) values.</param>
-        /// <param name="externalPort">NAT external port number. NOTE: Some implementations may use wilcard(*,?) values.</param>
+        /// <param name="protocol">Port mapping protocol. Normally this value TCP or UDP.</param>
+        /// <param name="remoteHost">Remote host IP address. NOTE: Some implementations may use wildcard(*,?) values.</param>
+        /// <param name="externalPort">NAT external port number. NOTE: Some implementations may use wildcard(*,?) values.</param>
         /// <param name="internalHost">Internal host IP address.</param>
         /// <param name="internalPort">Internal host port number.</param>
         /// <param name="description">NAT port mapping description.</param>
         /// <param name="leaseDuration">Lease duration in in seconds. Value null means "never expires".</param>
-        public UPnP_NAT_Map(bool enabled, string protocol, string remoteHost, string externalPort, string internalHost, int internalPort, string description, int leaseDuration)
+        public UPnPnatMap(bool enabled, string protocol, string remoteHost, string externalPort, string internalHost, int internalPort, string description, int leaseDuration)
         {
             Enabled = enabled;
             Protocol = protocol;
@@ -31,7 +31,7 @@
         /// <summary>
         /// Gets NAT port mapping description.
         /// </summary>
-        public string Description { get; } = "";
+        public string Description { get; }
 
         /// <summary>
         /// Gets if NAT port map is enabled.
@@ -39,14 +39,14 @@
         public bool Enabled { get; }
 
         /// <summary>
-        /// Gets NAT external port number. NOTE: Some implementations may use wilcard(*,?) values.
+        /// Gets NAT external port number. NOTE: Some implementations may use wildcard(*,?) values.
         /// </summary>
-        public string ExternalPort { get; } = "";
+        public string ExternalPort { get; }
 
         /// <summary>
         /// Gets internal host IP address.
         /// </summary>
-        public string InternalHost { get; } = "";
+        public string InternalHost { get; }
 
         /// <summary>
         /// Gets internal host port number.
@@ -59,13 +59,13 @@
         public int LeaseDuration { get; }
 
         /// <summary>
-        /// Gets port mapping protocol. Nomrally this value TCP or UDP.
+        /// Gets port mapping protocol. Normally this value TCP or UDP.
         /// </summary>
-        public string Protocol { get; } = "";
+        public string Protocol { get; }
 
         /// <summary>
-        /// Gets remote host IP address. NOTE: Some implementations may use wilcard(*,?) values.
+        /// Gets remote host IP address. NOTE: Some implementations may use wildcard(*,?) values.
         /// </summary>
-        public string RemoteHost { get; } = "";
+        public string RemoteHost { get; }
     }
 }

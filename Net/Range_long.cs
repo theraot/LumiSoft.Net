@@ -3,13 +3,13 @@
     /// <summary>
     /// This class represent 2-point <b>long</b> value range.
     /// </summary>
-    public class Range_long
+    public class RangeLong
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="value">Start/End value.</param>
-        public Range_long(long value)
+        public RangeLong(long value)
         {
             Start = value;
             End = value;
@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="start">Range start value.</param>
         /// <param name="end">Range end value.</param>
-        public Range_long(long start, long end)
+        public RangeLong(long start, long end)
         {
             Start = start;
             End = end;

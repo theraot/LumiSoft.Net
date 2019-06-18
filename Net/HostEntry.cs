@@ -28,7 +28,7 @@ namespace LumiSoft.Net
 
             HostName = hostName;
             Addresses = ipAddresses ?? throw new ArgumentNullException("ipAddresses");
-            Aliases = (aliases == null ? new string[0] : aliases);
+            Aliases = aliases == null ? new string[0] : aliases;
         }
 
         /// <summary>

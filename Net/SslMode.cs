@@ -13,11 +13,11 @@ namespace LumiSoft.Net
         /// <summary>
         /// Connection is SSL.
         /// </summary>
-        SSL,
+        Ssl,
 
         /// <summary>
         /// Connection will be switched to SSL with start TLS.
         /// </summary>
-        TLS
+        Tls
     }
 }

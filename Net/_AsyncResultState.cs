@@ -77,7 +77,7 @@ namespace LumiSoft.Net
         /// <summary>
         /// Sets AsyncResult value.
         /// </summary>
-        /// <param name="asyncResult">Asycnhronous result to wrap.</param>
+        /// <param name="asyncResult">Asynchronous result to wrap.</param>
         public void SetAsyncResult(IAsyncResult asyncResult)
         {
             AsyncResult = asyncResult ?? throw new ArgumentNullException("asyncResult");

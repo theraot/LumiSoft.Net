@@ -5,14 +5,14 @@ using System.Net.Sockets;
 namespace LumiSoft.Net.UDP
 {
     /// <summary>
-    /// This class provides data for the <see cref="UDP_DataReceiver.PacketReceived"/> event.
+    /// This class provides data for the <see cref="UdpDataReceiver.PacketReceived"/> event.
     /// </summary>
-    public class UDP_e_PacketReceived : EventArgs
+    public class UdpEPacketReceived : EventArgs
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
-        internal UDP_e_PacketReceived()
+        internal UdpEPacketReceived()
         {
         }
 
@@ -29,7 +29,7 @@ namespace LumiSoft.Net.UDP
         /// <summary>
         /// Gets remote host from where data was received.
         /// </summary>
-        public IPEndPoint RemoteEP { get; private set; }
+        public IPEndPoint RemoteEp { get; private set; }
 
         /// <summary>
         /// Gets socket which received data.
@@ -42,13 +42,13 @@ namespace LumiSoft.Net.UDP
         /// <param name="socket">Socket which received data.</param>
         /// <param name="buffer">Data buffer.</param>
         /// <param name="count">Number of bytes stored in <b>buffer</b></param>
-        /// <param name="remoteEP">Remote IP end point from where data was received.</param>
-        internal void Reuse(Socket socket, byte[] buffer, int count, IPEndPoint remoteEP)
+        /// <param name="remoteEp">Remote IP end point from where data was received.</param>
+        internal void Reuse(Socket socket, byte[] buffer, int count, IPEndPoint remoteEp)
         {
             Socket = socket;
             Buffer = buffer;
             Count = count;
-            RemoteEP = remoteEP;
+            RemoteEp = remoteEp;
         }
     }
 }

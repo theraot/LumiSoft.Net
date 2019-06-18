@@ -8,14 +8,14 @@ namespace LumiSoft.Net.UPnP
     /// <summary>
     /// This class represents UPnP error.
     /// </summary>
-    public class UPnP_Exception : Exception
+    public class UPnPException : Exception
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="errorCode">UPnP error code.</param>
         /// <param name="errorText">UPnP error text.</param>
-        public UPnP_Exception(int errorCode, string errorText) : base("UPnP error: " + errorCode + " " + errorText + ".")
+        public UPnPException(int errorCode, string errorText) : base("UPnP error: " + errorCode + " " + errorText + ".")
         {
             ErrorCode = errorCode;
             ErrorText = errorText;
@@ -29,7 +29,7 @@ namespace LumiSoft.Net.UPnP
         /// <summary>
         /// Gets UPnP error text.
         /// </summary>
-        public string ErrorText { get; } = "";
+        public string ErrorText { get; }
 
         /// <summary>
         /// Parses UPnP exception from UPnP xml error.
@@ -38,14 +38,14 @@ namespace LumiSoft.Net.UPnP
         /// <returns>Returns UPnP exception.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null reference.</exception>
         /// <exception cref="ParseException">Is raised when parsing fails.</exception>
-        public static UPnP_Exception Parse(Stream stream)
+        public static UPnPException Parse(Stream stream)
         {
             if (stream == null)
             {
                 throw new ArgumentNullException("stream");
             }
 
-            int errorCode = -1;
+            var errorCode = -1;
             string errorText = null;
 
             try
@@ -78,17 +78,20 @@ namespace LumiSoft.Net.UPnP
                         break;
                     }
 
-                    if (currentNode.ChildNodes.Count > 0)
+                    if (currentNode.ChildNodes.Count <= 0)
                     {
-                        for (int i = 0; i < currentNode.ChildNodes.Count; i++)
-                        {
-                            queue.Insert(i, currentNode.ChildNodes[i]);
-                        }
+                        continue;
+                    }
+
+                    for (var i = 0; i < currentNode.ChildNodes.Count; i++)
+                    {
+                        queue.Insert(i, currentNode.ChildNodes[i]);
                     }
                 }
             }
             catch
             {
+                // ignored
             }
 
             if (errorCode == -1 || errorText == null)
@@ -96,7 +99,7 @@ namespace LumiSoft.Net.UPnP
                 throw new ParseException("Failed to parse UPnP error.");
             }
 
-            return new UPnP_Exception(errorCode, errorText);
+            return new UPnPException(errorCode, errorText);
         }
     }
 }

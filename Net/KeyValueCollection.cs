@@ -6,41 +6,41 @@ namespace LumiSoft.Net
     /// <summary>
     /// Represents a collection that can be accessed either with the key or with the index.
     /// </summary>
-    public class KeyValueCollection<K, V> : IEnumerable
+    public class KeyValueCollection<TK, TV> : IEnumerable
     {
-        private readonly Dictionary<K, V> m_pDictionary;
-        private readonly List<V> m_pList;
+        private readonly Dictionary<TK, TV> _dictionary;
+        private readonly List<TV> _list;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public KeyValueCollection()
         {
-            m_pDictionary = new Dictionary<K, V>();
-            m_pList = new List<V>();
+            _dictionary = new Dictionary<TK, TV>();
+            _list = new List<TV>();
         }
 
         /// <summary>
         /// Gets number of items int he collection.
         /// </summary>
-        public int Count => m_pList.Count;
+        public int Count => _list.Count;
 
         /// <summary>
         /// Gets item with the specified key.
         /// </summary>
         /// <param name="key">Key.</param>
         /// <returns>Returns item with the specified key. If the specified key is not found, a get operation throws a KeyNotFoundException.</returns>
-        public V this[K key] => m_pDictionary[key];
+        public TV this[TK key] => _dictionary[key];
 
         /// <summary>
         /// Adds the specified key and value to the collection.
         /// </summary>
         /// <param name="key">Key.</param>
         /// <param name="value">Value.</param>
-        public void Add(K key, V value)
+        public void Add(TK key, TV value)
         {
-            m_pDictionary.Add(key, value);
-            m_pList.Add(value);
+            _dictionary.Add(key, value);
+            _list.Add(value);
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace LumiSoft.Net
         /// </summary>
         public void Clear()
         {
-            m_pDictionary.Clear();
-            m_pList.Clear();
+            _dictionary.Clear();
+            _list.Clear();
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="key">Key.</param>
         /// <returns>Returns true if the collection contains specified key.</returns>
-        public bool ContainsKey(K key)
+        public bool ContainsKey(TK key)
         {
-            return m_pDictionary.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace LumiSoft.Net
         /// <returns>Returns IEnumerator interface.</returns>
         public IEnumerator GetEnumerator()
         {
-            return m_pList.GetEnumerator();
+            return _list.GetEnumerator();
         }
 
         /// <summary>
@@ -76,29 +76,29 @@ namespace LumiSoft.Net
         /// </summary>
         /// <param name="key">Key.</param>
         /// <returns>Returns if key found and removed, otherwise false.</returns>
-        public bool Remove(K key)
+        public bool Remove(TK key)
         {
-            var value = default(V);
-            if (m_pDictionary.TryGetValue(key, out value))
+            if (!_dictionary.TryGetValue(key, out var value))
             {
-                m_pDictionary.Remove(key);
-                m_pList.Remove(value);
-
-                return true;
+                return false;
             }
 
-            return false;
+            _dictionary.Remove(key);
+            _list.Remove(value);
+
+            return true;
+
         }
 
         /// <summary>
         /// Copies all elements to new array, all elements will be in order they added. This method is thread-safe.
         /// </summary>
         /// <returns>Returns elements in a new array.</returns>
-        public V[] ToArray()
+        public TV[] ToArray()
         {
-            lock (m_pList)
+            lock (_list)
             {
-                return m_pList.ToArray();
+                return _list.ToArray();
             }
         }
 
@@ -108,9 +108,9 @@ namespace LumiSoft.Net
         /// <param name="key">Key.</param>
         /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found.</param>
         /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
-        public bool TryGetValue(K key, out V value)
+        public bool TryGetValue(TK key, out TV value)
         {
-            return m_pDictionary.TryGetValue(key, out value);
+            return _dictionary.TryGetValue(key, out value);
         }
 
         /// <summary>
@@ -119,18 +119,19 @@ namespace LumiSoft.Net
         /// <param name="index">Zero based item index.</param>
         /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found.</param>
         /// <returns>Returns true if the collection contains specified key and value stored to <b>value</b> argument.</returns>
-        public bool TryGetValueAt(int index, out V value)
+        public bool TryGetValueAt(int index, out TV value)
         {
-            value = default(V);
+            value = default(TV);
 
-            if (m_pList.Count > 0 && index >= 0 && index < m_pList.Count)
+            if (_list.Count <= 0 || index < 0 || index >= _list.Count)
             {
-                value = m_pList[index];
-
-                return true;
+                return false;
             }
 
-            return false;
+            value = _list[index];
+
+            return true;
+
         }
     }
 }

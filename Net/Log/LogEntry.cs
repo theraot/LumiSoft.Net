@@ -14,7 +14,7 @@ namespace LumiSoft.Net.Log
         /// </summary>
         /// <param name="type">Log entry type.</param>
         /// <param name="id">Log entry ID.</param>
-        /// <param name="size">Specified how much data was readed or written.</param>
+        /// <param name="size">Specified how much data was read or written.</param>
         /// <param name="text">Description text.</param>
         public LogEntry(LogEntryType type, string id, long size, string text)
         {
@@ -34,18 +34,18 @@ namespace LumiSoft.Net.Log
         /// <param name="userIdentity">Log entry owner user or null if none.</param>
         /// <param name="size">Log entry read/write size in bytes.</param>
         /// <param name="text">Log text.</param>
-        /// <param name="localEP">Local IP end point.</param>
-        /// <param name="remoteEP">Remote IP end point.</param>
+        /// <param name="localEp">Local IP end point.</param>
+        /// <param name="remoteEp">Remote IP end point.</param>
         /// <param name="data">Log data.</param>
-        public LogEntry(LogEntryType type, string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEP, IPEndPoint remoteEP, byte[] data)
+        public LogEntry(LogEntryType type, string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp, byte[] data)
         {
             EntryType = type;
             ID = id;
             UserIdentity = userIdentity;
             Size = size;
             Text = text;
-            LocalEndPoint = localEP;
-            RemoteEndPoint = remoteEP;
+            LocalEndPoint = localEp;
+            RemoteEndPoint = remoteEp;
             Data = data;
 
             Time = DateTime.Now;
@@ -59,32 +59,32 @@ namespace LumiSoft.Net.Log
         /// <param name="userIdentity">Log entry owner user or null if none.</param>
         /// <param name="size">Log entry read/write size in bytes.</param>
         /// <param name="text">Log text.</param>
-        /// <param name="localEP">Local IP end point.</param>
-        /// <param name="remoteEP">Remote IP end point.</param>
+        /// <param name="localEp">Local IP end point.</param>
+        /// <param name="remoteEp">Remote IP end point.</param>
         /// <param name="exception">Exception happened. Can be null.</param>
-        public LogEntry(LogEntryType type, string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEP, IPEndPoint remoteEP, Exception exception)
+        public LogEntry(LogEntryType type, string id, GenericIdentity userIdentity, long size, string text, IPEndPoint localEp, IPEndPoint remoteEp, Exception exception)
         {
             EntryType = type;
             ID = id;
             UserIdentity = userIdentity;
             Size = size;
             Text = text;
-            LocalEndPoint = localEP;
-            RemoteEndPoint = remoteEP;
+            LocalEndPoint = localEp;
+            RemoteEndPoint = remoteEp;
             Exception = exception;
 
             Time = DateTime.Now;
         }
 
         /// <summary>
-        /// Gest log data. Value null means no log data.
+        /// Gets log data. Value null means no log data.
         /// </summary>
         public byte[] Data { get; }
 
         /// <summary>
         /// Gets log entry type.
         /// </summary>
-        public LogEntryType EntryType { get; } = LogEntryType.Text;
+        public LogEntryType EntryType { get; }
 
         /// <summary>
         /// Gets exception happened. This property is available only if LogEntryType.Exception.
@@ -94,7 +94,7 @@ namespace LumiSoft.Net.Log
         /// <summary>
         /// Gets log entry ID.
         /// </summary>
-        public string ID { get; } = "";
+        public string ID { get; }
 
         /// <summary>
         /// Gets local IP end point. Value null means no local end point.
@@ -107,14 +107,14 @@ namespace LumiSoft.Net.Log
         public IPEndPoint RemoteEndPoint { get; }
 
         /// <summary>
-        /// Gets how much data was readed or written, depends on <b>LogEntryType</b>.
+        /// Gets how much data was read or written, depends on <b>LogEntryType</b>.
         /// </summary>
         public long Size { get; }
 
         /// <summary>
         /// Gets describing text.
         /// </summary>
-        public string Text { get; } = "";
+        public string Text { get; }
 
         /// <summary>
         /// Gets time when log entry was created.

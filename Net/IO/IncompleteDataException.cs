@@ -11,7 +11,7 @@ namespace LumiSoft.Net.IO
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public IncompleteDataException() : base()
+        public IncompleteDataException()
         {
         }
 

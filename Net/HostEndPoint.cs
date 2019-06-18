@@ -49,12 +49,12 @@ namespace LumiSoft.Net
         /// <summary>
         /// Gets host name or IP address.
         /// </summary>
-        public string Host { get; } = "";
+        public string Host { get; }
 
         /// <summary>
         /// Gets if <b>Host</b> is IP address.
         /// </summary>
-        public bool IsIPAddress => Net_Utils.IsIPAddress(Host);
+        public bool IsIPAddress => NetUtils.IsIPAddress(Host);
 
         /// <summary>
         /// Gets the port number of the endpoint. Value -1 means port not specified.
@@ -93,22 +93,21 @@ namespace LumiSoft.Net
             }
 
             // We have host name with port.
-            if (value.IndexOf(':') > -1)
+            if (value.IndexOf(':') <= -1)
             {
-                var host_port = value.Split(new[] { ':' }, 2);
-
-                try
-                {
-                    return new HostEndPoint(host_port[0], Convert.ToInt32(host_port[1]));
-                }
-                catch
-                {
-                    throw new ArgumentException("Argument 'value' has invalid value.");
-                }
+                return new HostEndPoint(value, defaultPort);
             }
-            // We have host name without port.
 
-            return new HostEndPoint(value, defaultPort);
+            var hostPort = value.Split(new[] { ':' }, 2);
+
+            try
+            {
+                return new HostEndPoint(hostPort[0], Convert.ToInt32(hostPort[1]));
+            }
+            catch
+            {
+                throw new ArgumentException("Argument 'value' has invalid value.");
+            }
         }
 
         /// <summary>
@@ -122,7 +121,7 @@ namespace LumiSoft.Net
                 return Host;
             }
 
-            return Host + ":" + Port.ToString();
+            return Host + ":" + Port;
         }
     }
 }

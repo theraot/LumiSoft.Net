@@ -10,15 +10,15 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class MultiStream : Stream
     {
-        private bool m_IsDisposed;
-        private Queue<Stream> m_pStreams;
+        private bool _isDisposed;
+        private Queue<Stream> _streams;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public MultiStream()
         {
-            m_pStreams = new Queue<Stream>();
+            _streams = new Queue<Stream>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -46,7 +46,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -63,7 +63,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -81,13 +81,13 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
 
                 long length = 0;
-                foreach (Stream stream in m_pStreams.ToArray())
+                foreach (var stream in _streams.ToArray())
                 {
                     length += stream.Length;
                 }
@@ -105,7 +105,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -113,9 +113,10 @@ namespace LumiSoft.Net.IO
                 throw new NotSupportedException();
             }
 
+            // ReSharper disable once ValueParameterNotUsed
             set
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -132,7 +133,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>stream</b> is null.</exception>
         public void AppendStream(Stream stream)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException(GetType().Name);
             }
@@ -141,7 +142,7 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentNullException("stream");
             }
 
-            m_pStreams.Enqueue(stream);
+            _streams.Enqueue(stream);
         }
 
         /// <summary>
@@ -149,13 +150,13 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public new void Dispose()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 return;
             }
 
-            m_IsDisposed = true;
-            m_pStreams = null;
+            _isDisposed = true;
+            _streams = null;
 
             base.Dispose();
         }
@@ -166,7 +167,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -182,31 +183,31 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
 
             while (true)
             {
-                // We have readed all streams data, no data left.
-                if (m_pStreams.Count == 0)
+                // We have read all streams data, no data left.
+                if (_streams.Count == 0)
                 {
                     return 0;
                 }
 
-                int readedCount = m_pStreams.Peek().Read(buffer, offset, count);
-                // We have readed all current stream data.
-                if (readedCount == 0)
+                var readCount = _streams.Peek().Read(buffer, offset, count);
+                // We have read all current stream data.
+                if (readCount == 0)
                 {
                     // Move to next stream .
-                    m_pStreams.Dequeue();
+                    _streams.Dequeue();
 
                     // Next while loop will process "read".
                 }
                 else
                 {
-                    return readedCount;
+                    return readCount;
                 }
             }
         }
@@ -221,7 +222,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -237,7 +238,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="Seek">Is raised when this method is accessed.</exception>
         public override void SetLength(long value)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -256,7 +257,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }

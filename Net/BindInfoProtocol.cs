@@ -8,11 +8,11 @@ namespace LumiSoft.Net
         /// <summary>
         /// TCP protocol.
         /// </summary>
-        TCP,
+        Tcp,
 
         /// <summary>
         /// UDP protocol.
         /// </summary>
-        UDP
+        Udp
     }
 }

@@ -8,9 +8,9 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class MemoryStreamEx : Stream
     {
-        private bool m_IsDisposed;
-        private readonly int m_MaxMemSize = 32000;
-        private Stream m_pStream;
+        private bool _isDisposed;
+        private readonly int _maxMemSize;
+        private Stream _stream;
 
         /// <summary>
         /// Default constructor.
@@ -18,13 +18,13 @@ namespace LumiSoft.Net.IO
         /// <param name="memSize">Maximum bytes store to memory, before switching over temporary file.</param>
         public MemoryStreamEx(int memSize)
         {
-            m_MaxMemSize = memSize;
+            _maxMemSize = memSize;
 
-            m_pStream = new MemoryStream();
+            _stream = new MemoryStream();
         }
 
         /// <summary>
-        /// Destructor - Just incase user won't call dispose.
+        /// Destructor - Just in case user won't call dispose.
         /// </summary>
         ~MemoryStreamEx()
         {
@@ -39,7 +39,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -56,7 +56,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -73,7 +73,7 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -91,12 +91,12 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
 
-                return m_pStream.Length;
+                return _stream.Length;
             }
         }
 
@@ -108,17 +108,17 @@ namespace LumiSoft.Net.IO
         {
             get
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
 
-                return m_pStream.Position;
+                return _stream.Position;
             }
 
             set
             {
-                if (m_IsDisposed)
+                if (_isDisposed)
                 {
                     throw new ObjectDisposedException("SmartStream");
                 }
@@ -127,7 +127,7 @@ namespace LumiSoft.Net.IO
                     throw new ArgumentException("Property 'Position' value must be >= 0 and <= this.Length.");
                 }
 
-                m_pStream.Position = value;
+                _stream.Position = value;
             }
         }
 
@@ -136,14 +136,14 @@ namespace LumiSoft.Net.IO
         /// </summary>
         public new void Dispose()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 return;
             }
 
-            m_IsDisposed = true;
-            m_pStream?.Close();
-            m_pStream = null;
+            _isDisposed = true;
+            _stream?.Close();
+            _stream = null;
 
             base.Dispose();
         }
@@ -154,12 +154,12 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override void Flush()
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            m_pStream.Flush();
+            _stream.Flush();
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -182,7 +182,7 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentNullException("buffer");
             }
 
-            return m_pStream.Read(buffer, offset, count);
+            return _stream.Read(buffer, offset, count);
         }
 
         /// <summary>
@@ -194,12 +194,12 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ObjectDisposedException">Is raised when this object is disposed and this method is accessed.</exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            return m_pStream.Seek(offset, origin);
+            return _stream.Seek(offset, origin);
         }
 
         /// <summary>
@@ -210,12 +210,12 @@ namespace LumiSoft.Net.IO
         /// <exception cref="NotSupportedException">Is raised when this method is accessed.</exception>
         public override void SetLength(long value)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
 
-            m_pStream.SetLength(value);
+            _stream.SetLength(value);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed)
+            if (_isDisposed)
             {
                 throw new ObjectDisposedException("SmartStream");
             }
@@ -240,17 +240,17 @@ namespace LumiSoft.Net.IO
             }
 
             // We need switch to temporary file.
-            if (m_pStream is MemoryStream && (m_pStream.Position + count) > m_MaxMemSize)
+            if (_stream is MemoryStream && _stream.Position + count > _maxMemSize)
             {
                 var fs = new FileStream(Path.GetTempPath() + "ls-" + Guid.NewGuid().ToString().Replace("-", "") + ".tmp", FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 32000, FileOptions.DeleteOnClose);
 
-                m_pStream.Position = 0;
-                Net_Utils.StreamCopy(m_pStream, fs, 8000);
-                m_pStream.Close();
-                m_pStream = fs;
+                _stream.Position = 0;
+                NetUtils.StreamCopy(_stream, fs, 8000);
+                _stream.Close();
+                _stream = fs;
             }
 
-            m_pStream.Write(buffer, offset, count);
+            _stream.Write(buffer, offset, count);
         }
     }
 }

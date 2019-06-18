@@ -8,7 +8,7 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class Base64
     {
-        private readonly static short[] BASE64_DECODE_TABLE = new short[]{
+        private readonly static short[] _base64_Decode_Table = {
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  // 0 -    9
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //10 -   19
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,  //20 -   29
@@ -22,15 +22,6 @@ namespace LumiSoft.Net.IO
             29,30,31,32,33,34,35,36,37,38,  //100 - 109
             39,40,41,42,43,44,45,46,47,48,  //110 - 119
             49,50,51,-1,-1,-1,-1,-1         //120 - 127
-        };
-        private readonly static byte[] BASE64_ENCODE_TABLE = new[]{
-            (byte)'A',(byte)'B',(byte)'C',(byte)'D',(byte)'E',(byte)'F',(byte)'G',(byte)'H',(byte)'I',(byte)'J',
-            (byte)'K',(byte)'L',(byte)'M',(byte)'N',(byte)'O',(byte)'P',(byte)'Q',(byte)'R',(byte)'S',(byte)'T',
-            (byte)'U',(byte)'V',(byte)'W',(byte)'X',(byte)'Y',(byte)'Z',(byte)'a',(byte)'b',(byte)'c',(byte)'d',
-            (byte)'e',(byte)'f',(byte)'g',(byte)'h',(byte)'i',(byte)'j',(byte)'k',(byte)'l',(byte)'m',(byte)'n',
-            (byte)'o',(byte)'p',(byte)'q',(byte)'r',(byte)'s',(byte)'t',(byte)'u',(byte)'v',(byte)'w',(byte)'x',
-            (byte)'y',(byte)'z',(byte)'0',(byte)'1',(byte)'2',(byte)'3',(byte)'4',(byte)'5',(byte)'6',(byte)'7',
-            (byte)'8',(byte)'9',(byte)'+',(byte)'/'
         };
 
         /// <summary>
@@ -51,7 +42,7 @@ namespace LumiSoft.Net.IO
             var encBuffer = Encoding.ASCII.GetBytes(value);
             var buffer = new byte[encBuffer.Length];
 
-            int decodedCount = Decode(encBuffer, 0, encBuffer.Length, buffer, 0, ignoreNonBase64Chars);
+            var decodedCount = Decode(encBuffer, 0, encBuffer.Length, buffer, 0, ignoreNonBase64Chars);
             var retVal = new byte[decodedCount];
             Array.Copy(buffer, retVal, decodedCount);
 
@@ -77,7 +68,7 @@ namespace LumiSoft.Net.IO
 
             var buffer = new byte[data.Length];
 
-            int decodedCount = Decode(data, offset, count, buffer, 0, ignoreNonBase64Chars);
+            var decodedCount = Decode(data, offset, count, buffer, 0, ignoreNonBase64Chars);
             var retVal = new byte[decodedCount];
             Array.Copy(buffer, retVal, decodedCount);
 
@@ -97,7 +88,7 @@ namespace LumiSoft.Net.IO
         /// <exception cref="ArgumentNullException">Is raised when <b>encBuffer</b> or <b>encBuffer</b> is null reference.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of valid range.</exception>
         /// <exception cref="FormatException">Is raised when <b>encBuffer</b> contains invalid base64 data.</exception>
-        public int Decode(byte[] encBuffer, int encOffset, int encCount, byte[] buffer, int offset, bool ignoreNonBase64Chars)
+        public static int Decode(byte[] encBuffer, int encOffset, int encCount, byte[] buffer, int offset, bool ignoreNonBase64Chars)
         {
             if (encBuffer == null)
             {
@@ -155,19 +146,19 @@ namespace LumiSoft.Net.IO
                     // |    8-bit         |    8-bit        |    8-bit         |
             */
 
-            int decodeOffset = encOffset;
-            int decodedOffset = 0;
+            var decodeOffset = encOffset;
+            var decodedOffset = 0;
             var base64Block = new byte[4];
 
             // Decode while we have data.
-            while ((decodeOffset - encOffset) < encCount)
+            while (decodeOffset - encOffset < encCount)
             {
                 // Read 4-byte base64 block.
-                int offsetInBlock = 0;
+                var offsetInBlock = 0;
                 while (offsetInBlock < 4)
                 {
                     // Check that we won't exceed buffer data.
-                    if ((decodeOffset - encOffset) >= encCount)
+                    if (decodeOffset - encOffset >= encCount)
                     {
                         if (offsetInBlock == 0)
                         {
@@ -202,19 +193,19 @@ namespace LumiSoft.Net.IO
                     }
                     // Non-base64 char.
 
-                    if (b > 127 || BASE64_DECODE_TABLE[b] == -1)
+                    if (b > 127 || _base64_Decode_Table[b] == -1)
                     {
                         if (!ignoreNonBase64Chars)
                         {
                             throw new FormatException("Invalid base64 char '" + b + "'.");
                         }
-                        // Igonre that char.
+                        // Ignore that char.
                         //else{
                     }
                     // Base64 char.
                     else
                     {
-                        base64Block[offsetInBlock++] = (byte)BASE64_DECODE_TABLE[b];
+                        base64Block[offsetInBlock++] = (byte)_base64_Decode_Table[b];
                     }
                 }
 
@@ -244,7 +235,7 @@ namespace LumiSoft.Net.IO
         /// <param name="count">Number of bytes available in the buffer.</param>
         /// <param name="last">Last data block.</param>
         /// <returns>Returns encoded data.</returns>
-        public byte[] Encode(byte[] buffer, int offset, int count, bool last)
+        public static byte[] Encode(byte[] buffer, int offset, int count, bool last)
         {
             throw new NotImplementedException();
         }

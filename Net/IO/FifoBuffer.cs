@@ -7,10 +7,10 @@ namespace LumiSoft.Net.IO
     /// </summary>
     public class FifoBuffer
     {
-        private readonly byte[] m_pBuffer;
-        private readonly object m_pLock = new object();
-        private int m_ReadOffset;
-        private int m_WriteOffset;
+        private readonly byte[] _buffer;
+        private readonly object _lock = new object();
+        private int _readOffset;
+        private int _writeOffset;
 
         /// <summary>
         /// Default constructor.
@@ -24,28 +24,28 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentException("Argument 'maxSize' value must be >= 1.");
             }
 
-            m_pBuffer = new byte[maxSize];
+            _buffer = new byte[maxSize];
         }
 
         /// <summary>
-        /// Gets number of bytes avialable in FIFO.
+        /// Gets number of bytes available in FIFO.
         /// </summary>
-        public int Available => m_WriteOffset - m_ReadOffset;
+        public int Available => _writeOffset - _readOffset;
 
         /// <summary>
         /// Gets maximum number of bytes can buffer in FIFO.
         /// </summary>
-        public int MaxSize => m_pBuffer.Length;
+        public int MaxSize => _buffer.Length;
 
         /// <summary>
         /// Clears buffer data.
         /// </summary>
         public void Clear()
         {
-            lock (m_pLock)
+            lock (_lock)
             {
-                m_ReadOffset = 0;
-                m_WriteOffset = 0;
+                _readOffset = 0;
+                _writeOffset = 0;
             }
         }
 
@@ -55,7 +55,7 @@ namespace LumiSoft.Net.IO
         /// <param name="buffer">Buffer where to store data.</param>
         /// <param name="offset">Index in the buffer.</param>
         /// <param name="count">Maximum number of bytes to read.</param>
-        /// <returns>Returns number of bytes readed. Returns 0 if no data in the buffer.</returns>
+        /// <returns>Returns number of bytes read. Returns 0 if no data in the buffer.</returns>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of allowed range.</exception>
         public int Read(byte[] buffer, int offset, int count)
@@ -77,14 +77,16 @@ namespace LumiSoft.Net.IO
                 throw new ArgumentOutOfRangeException("count", "Argument 'count' is bigger than than argument 'buffer' can store.");
             }
 
-            lock (m_pLock)
+            lock (_lock)
             {
-                int countToRead = Math.Min(count, m_WriteOffset - m_ReadOffset);
-                if (countToRead > 0)
+                var countToRead = Math.Min(count, _writeOffset - _readOffset);
+                if (countToRead <= 0)
                 {
-                    Array.Copy(m_pBuffer, m_ReadOffset, buffer, offset, countToRead);
-                    m_ReadOffset += countToRead;
+                    return countToRead;
                 }
+
+                Array.Copy(_buffer, _readOffset, buffer, offset, countToRead);
+                _readOffset += countToRead;
 
                 return countToRead;
             }
@@ -95,8 +97,8 @@ namespace LumiSoft.Net.IO
         /// </summary>
         /// <param name="buffer">Data buffer.</param>
         /// <param name="offset">Index in the buffer.</param>
-        /// <param name="count">Number of bytes to wrtite.</param>
-        /// <param name="ignoreBufferFull">If true, disables excption raising when FIFO full.</param>
+        /// <param name="count">Number of bytes to write.</param>
+        /// <param name="ignoreBufferFull">If true, disables exception raising when FIFO full.</param>
         /// <exception cref="ArgumentNullException">Is raised when <b>buffer</b> is null reference.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Is raised when any of the arguments has out of allowed range.</exception>
         /// <exception cref="DataSizeExceededException">Is raised when ignoreBufferFull = false and FIFO buffer has no room to store data.</exception>
@@ -110,14 +112,14 @@ namespace LumiSoft.Net.IO
             {
                 throw new ArgumentOutOfRangeException("offset", "Argument 'offset' value must be >= 0.");
             }
-            if (count < 0 || (count + offset) > buffer.Length)
+            if (count < 0 || count + offset > buffer.Length)
             {
                 throw new ArgumentOutOfRangeException("count");
             }
 
-            lock (m_pLock)
+            lock (_lock)
             {
-                int freeSpace = m_pBuffer.Length - m_WriteOffset;
+                var freeSpace = _buffer.Length - _writeOffset;
 
                 // We don't have enough room to store data.
                 if (freeSpace < count)
@@ -125,13 +127,13 @@ namespace LumiSoft.Net.IO
                     TrimStart();
 
                     // Recalculate free space.
-                    freeSpace = m_pBuffer.Length - m_WriteOffset;
+                    freeSpace = _buffer.Length - _writeOffset;
 
                     // After trim we can store data.
                     if (freeSpace >= count)
                     {
-                        Array.Copy(buffer, offset, m_pBuffer, m_WriteOffset, count);
-                        m_WriteOffset += count;
+                        Array.Copy(buffer, offset, _buffer, _writeOffset, count);
+                        _writeOffset += count;
                     }
                     // We have not enough space.
                     else
@@ -145,8 +147,8 @@ namespace LumiSoft.Net.IO
                 // Store data to buffer.
                 else
                 {
-                    Array.Copy(buffer, offset, m_pBuffer, m_WriteOffset, count);
-                    m_WriteOffset += count;
+                    Array.Copy(buffer, offset, _buffer, _writeOffset, count);
+                    _writeOffset += count;
                 }
             }
         }
@@ -156,14 +158,16 @@ namespace LumiSoft.Net.IO
         /// </summary>
         private void TrimStart()
         {
-            if (m_ReadOffset > 0)
+            if (_readOffset <= 0)
             {
-                var buffer = new byte[Available];
-                Array.Copy(m_pBuffer, m_ReadOffset, buffer, 0, buffer.Length);
-                Array.Copy(buffer, m_pBuffer, buffer.Length);
-                m_ReadOffset = 0;
-                m_WriteOffset = buffer.Length;
+                return;
             }
+
+            var buffer = new byte[Available];
+            Array.Copy(_buffer, _readOffset, buffer, 0, buffer.Length);
+            Array.Copy(buffer, _buffer, buffer.Length);
+            _readOffset = 0;
+            _writeOffset = buffer.Length;
         }
     }
 }
