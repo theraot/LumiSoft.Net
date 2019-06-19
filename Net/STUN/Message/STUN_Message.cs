@@ -97,6 +97,10 @@ namespace LumiSoft.Net.STUN.Message
         {
             TransactionId = new byte[12];
             new Random().NextBytes(TransactionId);
+            ChangeRequest = new STUN_t_ChangeRequest(true, true);
+            Password = string.Empty;
+            ServerName = string.Empty;
+            UserName = string.Empty;
         }
 
         public IPEndPoint ChangedAddress { get; set; }

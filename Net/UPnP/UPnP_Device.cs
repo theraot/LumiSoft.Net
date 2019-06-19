@@ -73,10 +73,6 @@ namespace LumiSoft.Net.UPnP
         /// </summary>
         public string ModelUrl { get; private set; } = string.Empty;
 
-        // iconList
-        // serviceList
-        // deviceList
-
         /// <summary>
         ///     Gets device UI url.
         /// </summary>

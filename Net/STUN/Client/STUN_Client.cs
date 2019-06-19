@@ -1,6 +1,7 @@
 ﻿// ReSharper disable ConvertIfStatementToReturnStatement
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -264,7 +265,7 @@ namespace LumiSoft.Net.STUN.Client
             }
 
             var endPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0], port);
-
+            var comparer = EqualityComparer<IPEndPoint>.Default;
             /*
                 In test I, the client sends a STUN Binding Request to a server, without any flags set in the
                 CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute. This causes the server
@@ -369,7 +370,7 @@ namespace LumiSoft.Net.STUN.Client
                     throw new Exception("STUN not available.");
                 }
 
-                if (!test3.MappedAddress.Equals(test1.MappedAddress))
+                if (!comparer.Equals(test3.MappedAddress, test1.MappedAddress))
                 {
                     return new STUN_Result(STUN_NetType.Symmetric, test1.MappedAddress);
                 }
