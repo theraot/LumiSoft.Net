@@ -62,30 +62,34 @@ namespace Experiment
         {
             var stunEndpoint = GetEndPoint("STUN Server: ", "STUN Port (empty for default = 3478)", 3478);
             var local = GetEndPoint("Specify local IP?", "Local IP Address: ", "Local Port: ");
-            var result = STUN_Client.Query(stunEndpoint, local);
-            var publicEndPoint = result.PublicEndPoint;
-            if (publicEndPoint != null)
+            using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
-                Console.WriteLine(publicEndPoint.ToString());
-            }
-            var netType = result.NetType;
-            Console.WriteLine(netType.ToString());
-            if (netType == STUN_NetType.FullCone || netType == STUN_NetType.OpenInternet)
-            {
-                if (Ask("Listen?", new[] { "Y", "N" }, "Y") == "Y")
+                socket.Bind(local);
+                var result = STUN_Client.Query(stunEndpoint, socket);
+                var publicEndPoint = result.PublicEndPoint;
+                if (publicEndPoint != null)
                 {
-                    Server(publicEndPoint);
-                    return;
+                    Console.WriteLine(publicEndPoint.ToString());
                 }
-            }
+                var netType = result.NetType;
+                Console.WriteLine(netType.ToString());
+                if (netType == STUN_NetType.FullCone || netType == STUN_NetType.OpenInternet)
+                {
+                    if (Ask("Listen?", new[] { "Y", "N" }, "Y") == "Y")
+                    {
+                        Server(socket);
+                        return;
+                    }
+                }
 
-            Client();
+                Client(socket);
+            }
         }
 
-        private static void Client()
+        private static void Client(Socket socket)
         {
             var endPoint = GetEndPoint("Listener IP Address:", "Listener Port:");
-            using (var udpClient = new UdpClient())
+            using (var udpClient = new UdpClient{Client = socket})
             {
                 udpClient.Connect(endPoint.Address, endPoint.Port);
                 Console.WriteLine("Text to send (empty to exit):");
@@ -103,7 +107,7 @@ namespace Experiment
             Console.WriteLine("The End");
         }
 
-        private static void Server(IPEndPoint publicEndPoint)
+        private static void Server(Socket socket)
         {
             using (var cancellationTokenSource = new CancellationTokenSource())
             {
@@ -112,29 +116,33 @@ namespace Experiment
                 (
                     () =>
                     {
-                        var udpClient = new UdpClient(publicEndPoint.Port);
-                        Console.WriteLine($"Listening on {udpClient.Client.LocalEndPoint as IPEndPoint}");
+                        var udpClient = new UdpClient
+                        {
+                            Client = socket
+                        };
                         while (!token.IsCancellationRequested)
                         {
                             var receiveTask = udpClient.ReceiveAsync();
-                            receiveTask.Wait(token);
-                            if (receiveTask.IsCanceled)
+                            try
                             {
-                                break;
+                                receiveTask.Wait(token);
+                                var result = receiveTask.Result;
+                                var receiveBytes = result.Buffer;
+                                var remoteIpEndPoint = result.RemoteEndPoint;
+                                var data = Encoding.ASCII.GetString(receiveBytes);
+                                Console.Write(remoteIpEndPoint.Address + ":" + data);
                             }
-
-                            var result = receiveTask.Result;
-                            var receiveBytes = result.Buffer;
-                            var remoteIpEndPoint = result.RemoteEndPoint;
-                            var data = Encoding.ASCII.GetString(receiveBytes);
-                            Console.Write(remoteIpEndPoint.Address + ":" + data);
+                            catch (OperationCanceledException exception)
+                            {
+                                GC.KeepAlive(exception);
+                            }
                         }
                     }
                 );
-                Console.WriteLine("Press any key to exit");
+                Console.WriteLine("Listening (Press any key to exit)");
                 serverThread.Start();
                 Console.ReadKey();
-                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Cancel(false);
             }
 
             Console.WriteLine("The End");
