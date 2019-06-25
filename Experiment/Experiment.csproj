@@ -33,4 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Net\Net.csproj" />
+  </ItemGroup>
 </Project>
