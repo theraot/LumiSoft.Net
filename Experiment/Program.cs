@@ -67,13 +67,11 @@ namespace Experiment
             var local = GetEndPoint("Specify local IP?", "Local IP Address: ", "Local Port: ");
             var result = STUN_Client.Query(server, serverPort, local);
             var netType = result.NetType;
-            if (netType != STUN_NetType.UdpBlocked)
+            Console.WriteLine(netType.ToString());
+            var publicEndPoint = result.PublicEndPoint;
+            if (publicEndPoint != null)
             {
-                Console.WriteLine(result.PublicEndPoint.ToString());
-            }
-            else
-            {
-                Console.WriteLine("Blocked");
+                Console.WriteLine(publicEndPoint.ToString());
             }
         }
 
