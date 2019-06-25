@@ -200,7 +200,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns UDP network info.</returns>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
-        private static STUN_Result Query(IPEndPoint stunEndPoint, Socket socket)
+        public static STUN_Result Query(IPEndPoint stunEndPoint, Socket socket)
         {
             if (stunEndPoint == null)
             {
