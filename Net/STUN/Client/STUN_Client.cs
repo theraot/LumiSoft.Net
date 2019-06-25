@@ -12,49 +12,21 @@ namespace LumiSoft.Net.STUN.Client
     /// <summary>
     ///     This class implements STUN client. Defined in RFC 3489.
     /// </summary>
-    /// <example>
-    ///     <code>
-    /// // Create new socket for STUN client.
-    /// Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
-    /// socket.Bind(new IPEndPoint(IPAddress.Any,0));
-    /// // Query STUN server
-    /// STUN_Result result = STUN_Client.Query("stunserver.org",3478,socket);
-    /// if(result.NetType != STUN_NetType.UdpBlocked){
-    ///     // UDP blocked or !!!! bad STUN server
-    /// }
-    /// else{
-    ///     IPEndPoint publicEP = result.PublicEndPoint;
-    ///     // Do your stuff
-    /// }
-    /// </code>
-    /// </example>
     public static class STUN_Client
     {
         /// <summary>
         ///     Resolves socket local end point to public end point.
         /// </summary>
-        /// <param name="stunServer">STUN server.</param>
-        /// <param name="port">STUN server port. Default port is 3478.</param>
-        /// <param name="socket">UDP socket to use.</param>
+        /// <param name="stunEndPoint">STUN server.</param>
         /// <returns>Returns public IP end point.</returns>
         /// <exception cref="T:System.ArgumentNullException">Is raised when <b>stunServer</b> or <b>socket</b> is null reference.</exception>
         /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
-        public static IPEndPoint GetPublicEndPoint(string stunServer, int port, Socket socket)
+        public static IPEndPoint GetPublicEndPoint(IPEndPoint stunEndPoint, Socket socket)
         {
-            if (stunServer == null)
+            if (stunEndPoint == null)
             {
-                throw new ArgumentNullException(nameof(stunServer));
-            }
-
-            if (stunServer.Length == 0)
-            {
-                throw new ArgumentException("Argument 'stunServer' value must be specified.", nameof(stunServer));
-            }
-
-            if (port < 1)
-            {
-                throw new ArgumentException("Invalid argument 'port' value.", nameof(port));
+                throw new ArgumentNullException(nameof(stunEndPoint));
             }
 
             if (socket == null)
@@ -67,14 +39,13 @@ namespace LumiSoft.Net.STUN.Client
                 throw new ArgumentException("Socket must be UDP socket.");
             }
 
-            var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(stunServer)[0], port);
             try
             {
                 var stunMessage = DoTransaction
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
-                    remoteEndPoint,
+                    stunEndPoint,
                     1000
                 );
                 if (stunMessage == null)
@@ -106,28 +77,17 @@ namespace LumiSoft.Net.STUN.Client
         /// <summary>
         ///     Resolves local IP to public IP using STUN.
         /// </summary>
-        /// <param name="stunServer">STUN server.</param>
-        /// <param name="port">STUN server port. Default port is 3478.</param>
+        /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="localIP">Local IP address.</param>
         /// <returns>Returns public IP address.</returns>
         /// <exception cref="T:System.ArgumentNullException">Is raised when <b>stunServer</b> or <b>localIP</b> is null reference.</exception>
         /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
         /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
-        public static IPAddress GetPublicIP(string stunServer, int port, IPAddress localIP)
+        public static IPAddress GetPublicIP(IPEndPoint stunEndPoint, IPAddress localIP)
         {
-            if (stunServer == null)
+            if (stunEndPoint == null)
             {
-                throw new ArgumentNullException(nameof(stunServer));
-            }
-
-            if (stunServer.Length == 0)
-            {
-                throw new ArgumentException("Argument 'stunServer' value must be specified.", nameof(stunServer));
-            }
-
-            if (port < 1)
-            {
-                throw new ArgumentException("Invalid argument 'port' value.", nameof(port));
+                throw new ArgumentNullException(nameof(stunEndPoint));
             }
 
             if (localIP == null)
@@ -142,7 +102,7 @@ namespace LumiSoft.Net.STUN.Client
 
             using (var ret = CreateSocket(localIP))
             {
-                var stunResult = Query(stunServer, port, ret);
+                var stunResult = Query(stunEndPoint, ret);
                 if (stunResult.PublicEndPoint == null)
                 {
                     throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
@@ -209,17 +169,16 @@ namespace LumiSoft.Net.STUN.Client
         /// <summary>
         ///     Gets NAT info from STUN server.
         /// </summary>
-        /// <param name="host">STUN server name or IP.</param>
-        /// <param name="port">STUN server port. Default port is 3478.</param>
+        /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="localEndPoint">Local IP end point.</param>
         /// <returns>Returns UDP network info.</returns>
         /// <exception cref="T:System.ArgumentNullException">Is raised when <b>host</b> or <b>localEndPoint</b> is null reference.</exception>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
-        public static STUN_Result Query(string host, int port, IPEndPoint localEndPoint)
+        public static STUN_Result Query(IPEndPoint stunEndPoint, IPEndPoint localEndPoint)
         {
-            if (host == null)
+            if (stunEndPoint == null)
             {
-                throw new ArgumentNullException(nameof(host));
+                throw new ArgumentNullException(nameof(stunEndPoint));
             }
 
             if (localEndPoint == null)
@@ -230,23 +189,22 @@ namespace LumiSoft.Net.STUN.Client
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
                 socket.Bind(localEndPoint);
-                return Query(host, port, socket);
+                return Query(stunEndPoint, socket);
             }
         }
 
         /// <summary>
         ///     Gets NAT info from STUN server.
         /// </summary>
-        /// <param name="host">STUN server name or IP.</param>
-        /// <param name="port">STUN server port. Default port is 3478.</param>
+        /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns UDP network info.</returns>
         /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
-        private static STUN_Result Query(string host, int port, Socket socket)
+        private static STUN_Result Query(IPEndPoint stunEndPoint, Socket socket)
         {
-            if (host == null)
+            if (stunEndPoint == null)
             {
-                throw new ArgumentNullException(nameof(host));
+                throw new ArgumentNullException(nameof(stunEndPoint));
             }
 
             if (socket == null)
@@ -254,17 +212,11 @@ namespace LumiSoft.Net.STUN.Client
                 throw new ArgumentNullException(nameof(socket));
             }
 
-            if (port < 1)
-            {
-                throw new ArgumentException("Port value must be >= 1.", nameof(port));
-            }
-
             if (socket.ProtocolType != ProtocolType.Udp)
             {
                 throw new ArgumentException("Socket must be UDP socket.");
             }
 
-            var endPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0], port);
             var comparer = EqualityComparer<IPEndPoint>.Default;
 
             // Refer to https://upload.wikimedia.org/wikipedia/commons/e/ea/STUN_Algorithm4.svg
@@ -276,7 +228,7 @@ namespace LumiSoft.Net.STUN.Client
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
-                    endPoint,
+                    stunEndPoint,
                     1600
                 );
                 // received?
@@ -297,7 +249,7 @@ namespace LumiSoft.Net.STUN.Client
                             ChangeRequest = new STUN_t_ChangeRequest(true, true)
                         },
                         socket,
-                        endPoint,
+                        stunEndPoint,
                         1600
                     );
                     // received?
@@ -319,7 +271,7 @@ namespace LumiSoft.Net.STUN.Client
                         ChangeRequest = new STUN_t_ChangeRequest(true, true)
                     },
                     socket,
-                    endPoint,
+                    stunEndPoint,
                     1600
                 );
                 // received?
@@ -366,7 +318,7 @@ namespace LumiSoft.Net.STUN.Client
                     // "Restricted port" NAT
                     return new STUN_Result(STUN_NetType.PortRestrictedCone, test1.MappedAddress);
                 }
-                
+
                 // "Restricted cone" NAT
                 return new STUN_Result(STUN_NetType.RestrictedCone, test1.MappedAddress);
             }
