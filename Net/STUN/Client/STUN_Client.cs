@@ -266,63 +266,12 @@ namespace LumiSoft.Net.STUN.Client
 
             var endPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0], port);
             var comparer = EqualityComparer<IPEndPoint>.Default;
-            /*
-                In test I, the client sends a STUN Binding Request to a server, without any flags set in the
-                CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute. This causes the server
-                to send the response back to the address and port that the request came from.
 
-                In test II, the client sends a Binding Request with both the "change IP" and "change port" flags
-                from the CHANGE-REQUEST attribute set.
-
-                In test III, the client sends a Binding Request with only the "change port" flag set.
-
-                                    +--------+
-                                    |  Test  |
-                                    |   I    |
-                                    +--------+
-                                         |
-                                         |
-                                         V
-                                        /\                    /\
-                                     N /  \ Y                /  \ Y              +--------+
-                      UDP     <-------/Resp\--------------->/ IP \-------------->|  Test  |
-                      Blocked         \ ?  /                \Same/               |   IIA  |
-                                       \  /                  \? /                +--------+
-                                        \/                    \/                     |
-                                                              | N                    |
-                                                              |                      V
-                                                              V                     /\
-                                                          +--------+  Sym.       N /  \
-                                                          |  Test  |  UDP     <---/Resp\
-                                                          |   IIB  |  Firewall    \ ?  /
-                                                          +--------+               \  /
-                                                              |                     \/
-                                                              V                     |Y
-                              /\        /\                    /\                    |
-               Symmetric  N  /  \   Y  /  \   +--------+  N  /  \                   V
-                  NAT  <--- / IP \<---/Resp\- |  Test  |<---/Resp\                Open
-                            \Same/    \ ?  /  |   III  |    \ ?  /                Internet
-                             \? /      \  /   +--------+     \  /
-                              \/        \/                    \/
-                              |         |                     |Y
-                              |         |                     |
-                              |         v                     V
-                              |       Error                 Full
-                              |                             Cone
-                              V              /\
-                          +--------+        /  \ Y
-                          |  Test  |------>/Resp\---->Restricted
-                          |   IV   |       \ ?  /
-                          +--------+        \  /
-                                             \/
-                                              |N
-                                              |       Port
-                                              +------>Restricted
-
-            */
+            // Refer to https://upload.wikimedia.org/wikipedia/commons/e/ea/STUN_Algorithm4.svg
 
             try
             {
+                // Test I: Request echo from same address, same port
                 var test1 = DoTransaction
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
@@ -330,34 +279,57 @@ namespace LumiSoft.Net.STUN.Client
                     endPoint,
                     1600
                 );
+                // received?
                 if (test1 == null)
                 {
+                    // UDP blocked
                     return new STUN_Result(STUN_NetType.UdpBlocked, null);
                 }
 
+                // Public IP is link's IP?
                 if (socket.LocalEndPoint.Equals(test1.MappedAddress))
                 {
-                    var test2A = new STUN_Message(STUN_MessageType.BindingRequest)
+                    // Test II: request echo from different address, different port
+                    var test2A = DoTransaction
+                    (
+                        new STUN_Message(STUN_MessageType.BindingRequest)
+                        {
+                            ChangeRequest = new STUN_t_ChangeRequest(true, true)
+                        },
+                        socket,
+                        endPoint,
+                        1600
+                    );
+                    // received?
+                    if (test2A == null)
                     {
-                        ChangeRequest = new STUN_t_ChangeRequest(true, true)
-                    };
-                    if (DoTransaction(test2A, socket, endPoint, 1600) == null)
-                    {
+                        // "Symmetric" Firewall
                         return new STUN_Result(STUN_NetType.SymmetricUdpFirewall, test1.MappedAddress);
                     }
 
+                    // Open Internet
                     return new STUN_Result(STUN_NetType.OpenInternet, test1.MappedAddress);
                 }
 
-                var test2B = new STUN_Message(STUN_MessageType.BindingRequest)
+                // Test II: request echo from different address, different port
+                var test2B = DoTransaction
+                (
+                    new STUN_Message(STUN_MessageType.BindingRequest)
+                    {
+                        ChangeRequest = new STUN_t_ChangeRequest(true, true)
+                    },
+                    socket,
+                    endPoint,
+                    1600
+                );
+                // received?
+                if (test2B != null)
                 {
-                    ChangeRequest = new STUN_t_ChangeRequest(true, true)
-                };
-                if (DoTransaction(test2B, socket, endPoint, 1600) != null)
-                {
+                    // "Full-cone" NAT
                     return new STUN_Result(STUN_NetType.FullCone, test1.MappedAddress);
                 }
 
+                // Test I (Server #2): Request echo from same address, same port
                 var test3 = DoTransaction
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
@@ -370,29 +342,38 @@ namespace LumiSoft.Net.STUN.Client
                     throw new Exception("STUN not available.");
                 }
 
+                // Public IP and port are constant?
                 if (!comparer.Equals(test3.MappedAddress, test1.MappedAddress))
                 {
+                    // "Symmetric" NAT
                     return new STUN_Result(STUN_NetType.Symmetric, test1.MappedAddress);
                 }
 
+                // Test III:Request echo from same address, different port
                 var test4 = DoTransaction
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest)
                     {
                         ChangeRequest = new STUN_t_ChangeRequest(false, true)
-                    }, socket, test1.ChangedAddress, 1600
+                    },
+                    socket,
+                    test1.ChangedAddress,
+                    1600
                 );
+                // received?
                 if (test4 == null)
                 {
+                    // "Restricted port" NAT
                     return new STUN_Result(STUN_NetType.PortRestrictedCone, test1.MappedAddress);
                 }
-
+                
+                // "Restricted cone" NAT
                 return new STUN_Result(STUN_NetType.RestrictedCone, test1.MappedAddress);
             }
             finally
             {
-                var now = DateTime.Now;
-                while (now.AddMilliseconds(200) > DateTime.Now)
+                var start = DateTime.Now;
+                while ((DateTime.Now - start).TotalMilliseconds < 200)
                 {
                     if (!socket.Poll(1, SelectMode.SelectRead))
                     {
