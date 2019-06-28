@@ -13,6 +13,10 @@ namespace Experiment
 
         private static T Ask<T>(string prompt, TryParse<T> tryParse)
         {
+            if (tryParse == null)
+            {
+                throw new ArgumentNullException(nameof(tryParse));
+            }
             while (true)
             {
                 Console.WriteLine(prompt);
@@ -25,6 +29,10 @@ namespace Experiment
 
         private static T Ask<T>(string prompt, TryParse<T> tryParse, T @default)
         {
+            if (tryParse == null)
+            {
+                throw new ArgumentNullException(nameof(tryParse));
+            }
             while (true)
             {
                 Console.WriteLine(prompt);
@@ -182,23 +190,17 @@ namespace Experiment
             {
                 return new IPEndPoint(localIPAddress, localPort);
             }
-            if (defaultPort.HasValue)
-            {
-                localPort = Ask
+            localPort = defaultPort.HasValue
+                ? Ask
                 (
                     portPrompt,
                     TryParsePositiveInt,
                     defaultPort.Value
-                );
-            }
-            else
-            {
-                localPort = Ask<int>
+                ) : Ask<int>
                 (
                     portPrompt,
                     TryParsePositiveInt
                 );
-            }
 
             return new IPEndPoint(localIPAddress, localPort);
 
