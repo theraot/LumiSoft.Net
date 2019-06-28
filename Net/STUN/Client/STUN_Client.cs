@@ -20,9 +20,9 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns public IP end point.</returns>
-        /// <exception cref="T:System.ArgumentNullException">Is raised when <b>stunServer</b> or <b>socket</b> is null reference.</exception>
-        /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Is raised when <paramref name="stunEndPoint"/> or <paramref name="socket"/> is null reference.</exception>
+        /// <exception cref="T:System.ArgumentException">Is raised when <paramref name="socket"/> is not <see cref="ProtocolType.Udp"/>.</exception>
+        /// <exception cref="T:System.IO.IOException">Is raised when no connection to <paramref name="stunEndPoint"/>.</exception>
         public static IPEndPoint GetPublicEndPoint(IPEndPoint stunEndPoint, Socket socket)
         {
             if (stunEndPoint == null)
@@ -56,10 +56,6 @@ namespace LumiSoft.Net.STUN.Client
 
                 return stunMessage.SourceAddress;
             }
-            catch
-            {
-                throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
-            }
             finally
             {
                 var now = DateTime.Now;
@@ -81,9 +77,9 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="localIP">Local IP address.</param>
         /// <returns>Returns public IP address.</returns>
-        /// <exception cref="T:System.ArgumentNullException">Is raised when <b>stunServer</b> or <b>localIP</b> is null reference.</exception>
-        /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
-        /// <exception cref="T:System.IO.IOException">Is raised when no connection to STUN server.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Is raised when <paramref name="stunEndPoint"/> or <paramref name="localIP"/> is null reference.</exception>
+        /// <exception cref="T:System.ArgumentException">Is raised when <paramref name="localIP"/> is <see cref="AddressFamily.InterNetwork"/> or <see cref="AddressFamily.InterNetworkV6"/>.</exception>
+        /// <exception cref="T:System.IO.IOException">Is raised when no connection to <paramref name="stunEndPoint"/>.</exception>
         public static IPAddress GetPublicIP(IPEndPoint stunEndPoint, IPAddress localIP)
         {
             if (stunEndPoint == null)
@@ -173,8 +169,8 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="localEndPoint">Local IP end point.</param>
         /// <returns>Returns UDP network info.</returns>
-        /// <exception cref="T:System.ArgumentNullException">Is raised when <b>host</b> or <b>localEndPoint</b> is null reference.</exception>
-        /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Is raised when <paramref name="stunEndPoint"/> or <paramref name="localEndPoint"/> is null reference.</exception>
+        /// <exception cref="T:System.IO.IOException">Is raised when no connection to <paramref name="stunEndPoint"/>.</exception>
         public static STUN_Result Query(IPEndPoint stunEndPoint, IPEndPoint localEndPoint)
         {
             if (stunEndPoint == null)
@@ -200,7 +196,9 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="stunEndPoint">STUN server.</param>
         /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns UDP network info.</returns>
-        /// <exception cref="T:System.Exception">Throws exception if unexpected error happens.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Is raised when <paramref name="stunEndPoint"/> or <paramref name="socket"/> is null reference.</exception>
+        /// <exception cref="T:System.ArgumentException">Is raised when <paramref name="socket"/> is not <see cref="ProtocolType.Udp"/>.</exception>
+        /// <exception cref="T:System.IO.IOException">Is raised when no connection to <paramref name="stunEndPoint"/>.</exception>
         public static STUN_Result Query(IPEndPoint stunEndPoint, Socket socket)
         {
             if (stunEndPoint == null)
@@ -292,7 +290,7 @@ namespace LumiSoft.Net.STUN.Client
                 );
                 if (test3 == null)
                 {
-                    throw new Exception("STUN not available.");
+                    throw new IOException("Failed to STUN public IP address. STUN server name is invalid or firewall blocks STUN.");
                 }
 
                 // Public IP and port are constant?
