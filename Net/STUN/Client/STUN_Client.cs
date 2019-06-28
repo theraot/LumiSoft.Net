@@ -14,6 +14,8 @@ namespace LumiSoft.Net.STUN.Client
     /// </summary>
     public static class STUN_Client
     {
+        private const int _millisecondsTimeout = 1600;
+
         /// <summary>
         ///     Resolves socket local end point to public end point.
         /// </summary>
@@ -46,8 +48,7 @@ namespace LumiSoft.Net.STUN.Client
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
-                    stunEndPoint,
-                    1000
+                    stunEndPoint
                 );
                 if (stunMessage == null)
                 {
@@ -227,8 +228,7 @@ namespace LumiSoft.Net.STUN.Client
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
-                    stunEndPoint,
-                    1600
+                    stunEndPoint
                 );
                 // received?
                 if (test1 == null)
@@ -248,8 +248,7 @@ namespace LumiSoft.Net.STUN.Client
                             ChangeRequest = new STUN_t_ChangeRequest(true, true)
                         },
                         socket,
-                        stunEndPoint,
-                        1600
+                        stunEndPoint
                     );
                     // received?
                     if (test2A == null)
@@ -270,8 +269,7 @@ namespace LumiSoft.Net.STUN.Client
                         ChangeRequest = new STUN_t_ChangeRequest(true, true)
                     },
                     socket,
-                    stunEndPoint,
-                    1600
+                    stunEndPoint
                 );
                 // received?
                 if (test2B != null)
@@ -285,8 +283,7 @@ namespace LumiSoft.Net.STUN.Client
                 (
                     new STUN_Message(STUN_MessageType.BindingRequest),
                     socket,
-                    test1.ChangedAddress,
-                    1600
+                    test1.ChangedAddress
                 );
                 if (test3 == null)
                 {
@@ -308,8 +305,7 @@ namespace LumiSoft.Net.STUN.Client
                         ChangeRequest = new STUN_t_ChangeRequest(false, true)
                     },
                     socket,
-                    test1.ChangedAddress,
-                    1600
+                    test1.ChangedAddress
                 );
                 // received?
                 if (test4 == null)
@@ -336,7 +332,7 @@ namespace LumiSoft.Net.STUN.Client
             }
         }
 
-        private static STUN_Message DoTransaction(STUN_Message request, Socket socket, EndPoint remoteEndPoint, int millisecondsTimeout)
+        private static STUN_Message DoTransaction(STUN_Message request, Socket socket, EndPoint remoteEndPoint)
         {
             var byteData = request.ToByteData();
             var start = DateTime.Now;
@@ -376,7 +372,7 @@ namespace LumiSoft.Net.STUN.Client
                 {
                     return stunMessage;
                 }
-            } while ((DateTime.Now - start).TotalMilliseconds > millisecondsTimeout);
+            } while ((DateTime.Now - start).TotalMilliseconds > _millisecondsTimeout);
 
             return null;
         }
