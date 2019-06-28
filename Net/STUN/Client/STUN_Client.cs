@@ -18,6 +18,7 @@ namespace LumiSoft.Net.STUN.Client
         ///     Resolves socket local end point to public end point.
         /// </summary>
         /// <param name="stunEndPoint">STUN server.</param>
+        /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns public IP end point.</returns>
         /// <exception cref="T:System.ArgumentNullException">Is raised when <b>stunServer</b> or <b>socket</b> is null reference.</exception>
         /// <exception cref="T:System.ArgumentException">Is raised when any of the arguments has invalid value.</exception>
