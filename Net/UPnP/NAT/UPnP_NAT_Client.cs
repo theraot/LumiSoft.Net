@@ -14,9 +14,9 @@ namespace LumiSoft.Net.UPnP.NAT
     /// </summary>
     public class UPnP_NAT_Client
     {
-        private string _baseUrl;
-        private string _controlUrl;
-        private string _serviceType;
+        private readonly string _baseUrl;
+        private readonly string _controlUrl;
+        private readonly string _serviceType;
 
         /// <summary>
         ///     Default constructor.
@@ -32,13 +32,25 @@ namespace LumiSoft.Net.UPnP.NAT
 
                 foreach (var gatewayIPAddressInformation in adapter.GetIPProperties().GatewayAddresses)
                 {
-                    ProcessDevices(UPnP_Client.Search(gatewayIPAddressInformation.Address, "urn:schemas-upnp-org:device:InternetGatewayDevice:1", 1200));
+                    ProcessDevices
+                        (
+                            UPnP_Client.Search(gatewayIPAddressInformation.Address, "urn:schemas-upnp-org:device:InternetGatewayDevice:1", 1200)
+                            , out var baseUrl
+                            , out var controlUrl
+                            , out var serviceType
+                    );
+                    _baseUrl = baseUrl;
+                    _controlUrl = controlUrl;
+                    _serviceType = serviceType;
                     return;
                 }
             }
 
-            void ProcessDevices(UPnP_Device[] devices)
+            void ProcessDevices(UPnP_Device[] devices, out string baseUrl, out string controlUrl, out string serviceType)
             {
+                baseUrl = null;
+                controlUrl = null;
+                serviceType = null;
                 if (devices == null)
                 {
                     return;
@@ -81,9 +93,9 @@ namespace LumiSoft.Net.UPnP.NAT
                                 continue;
                             }
 
-                            _baseUrl = devices[0].BaseUrl;
-                            _serviceType = "urn:schemas-upnp-org:service:WANPPPConnection:1";
-                            _controlUrl = node.InnerText;
+                            baseUrl = devices[0].BaseUrl;
+                            serviceType = "urn:schemas-upnp-org:service:WANPPPConnection:1";
+                            controlUrl = node.InnerText;
 
                             return;
                         }
@@ -102,9 +114,9 @@ namespace LumiSoft.Net.UPnP.NAT
                                 continue;
                             }
 
-                            _baseUrl = devices[0].BaseUrl;
-                            _serviceType = "urn:schemas-upnp-org:service:WANIPConnection:1";
-                            _controlUrl = node.InnerText;
+                            baseUrl = devices[0].BaseUrl;
+                            serviceType = "urn:schemas-upnp-org:service:WANIPConnection:1";
+                            controlUrl = node.InnerText;
 
                             return;
                         }
