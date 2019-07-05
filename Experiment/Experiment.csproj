@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <Configurations>Debug;Release</Configurations>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFrameworks>net461;netcoreapp2.2</TargetFrameworks>
     <ProjectGuid>{F89E4EBA-6124-46E9-8207-4A5A0F50D19F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Experiment</RootNamespace>
@@ -33,6 +33,9 @@
     <DebugType>pdbonly</DebugType>
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Net\Net.csproj" />
   </ItemGroup>
