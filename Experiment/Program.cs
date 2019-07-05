@@ -234,12 +234,11 @@ namespace Experiment
         private static void Main()
         {
             TraceRoute();
-            var stunEndpoint = GetEndPoint("STUN Server: ", "STUN Port (empty for default = 3478)", 3478);
             var local = GetEndPoint("Specify local IP?", "Local IP Address: ", "Local Port: ");
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
                 socket.Bind(local);
-                var result = STUN_Client.Query(stunEndpoint, socket);
+                var result = STUN_Client.Query(GetEndPoint("First STUN Server: ", "First STUN Sever Port (empty for default = 3478)", 3478), socket);
                 var publicEndPoint = result.PublicEndPoint;
                 if (publicEndPoint != null)
                 {
