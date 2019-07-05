@@ -34,12 +34,16 @@ namespace Theraot.Net
 
             void OnPingCompleted(object sender, PingCompletedEventArgs e)
             {
-                var address = e.Reply.Address;
-                var status = e.Reply.Status;
-                var done = status == IPStatus.TimedOut
-                           || !next.Invoke(destination, new TraceNode(address, status, e.Reply.Options?.Ttl))
-                           || status == IPStatus.Success
-                           || address.Equals(destination);
+                var reply = e.Reply;
+                var address = reply.Address;
+                var status = reply.Status;
+                var done = reply != null
+                           && (
+                               status == IPStatus.TimedOut
+                               || !next.Invoke(destination, new TraceNode(address, status, reply.Options?.Ttl))
+                               || status == IPStatus.Success
+                               || address.Equals(destination)
+                           );
                 if (done)
                 {
                     pings[0].Dispose();
