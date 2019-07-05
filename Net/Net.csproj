@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <Configurations>Debug;Release</Configurations>
-    <TargetFrameworks>net20;net30;net35;net40;net45;net46;net47;netcoreapp2.1</TargetFrameworks>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <ProjectGuid>{7AB36CCF-5FFD-4780-A54E-A102ECA028B5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>LumiSoft.Net</RootNamespace>

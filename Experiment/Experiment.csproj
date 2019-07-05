@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <Configurations>Debug;Release</Configurations>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <ProjectGuid>{F89E4EBA-6124-46E9-8207-4A5A0F50D19F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Experiment</RootNamespace>
