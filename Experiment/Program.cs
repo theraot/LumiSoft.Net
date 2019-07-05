@@ -1,5 +1,6 @@
 ﻿using LumiSoft.Net.STUN.Client;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -9,7 +10,9 @@ namespace Experiment
 {
     internal static class Program
     {
-        public delegate bool TryParse<T>(string input, out T item);
+        private delegate bool TryParse<T>(string input, out T item);
+
+        private static List<object> StaticObjects { get; } = new List<object>();
 
         private static T Ask<T>(string prompt, TryParse<T> tryParse)
         {
@@ -19,6 +22,7 @@ namespace Experiment
             }
             while (true)
             {
+                Clear();
                 Console.WriteLine(prompt);
                 if (tryParse(Console.ReadLine(), out var value))
                 {
@@ -35,6 +39,7 @@ namespace Experiment
             }
             while (true)
             {
+                Clear();
                 Console.WriteLine(prompt);
                 var input = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
@@ -53,8 +58,9 @@ namespace Experiment
             var validDefault = @default != null && Array.IndexOf(answers, @default) != -1;
             var prompt = $"{query} ({string.Join("/", answers)}{(validDefault ? ", empty for default = " + @default : string.Empty)})";
             string input;
-            do
+            while (true)
             {
+                Clear();
                 Console.WriteLine(prompt);
                 input = Console.ReadLine();
 
@@ -62,8 +68,141 @@ namespace Experiment
                 {
                     return @default;
                 }
-            } while (Array.FindIndex(answers, check => check.Equals(input, StringComparison.InvariantCultureIgnoreCase)) == -1);
-            return input;
+
+                var index = Array.FindIndex(answers, check => check.Equals(input, StringComparison.InvariantCultureIgnoreCase));
+                if (index != -1)
+                {
+                    return answers[index];
+                }
+            }
+        }
+
+        private static void Clear()
+        {
+            Console.Clear();
+            foreach (var staticObject in StaticObjects)
+            {
+                Console.WriteLine(staticObject);
+            }
+
+            Console.WriteLine();
+        }
+
+        private static void Client(Socket socket)
+        {
+            var endPoint = GetEndPoint("Listener IP Address:", "Listener Port:");
+            using (var udpClient = new UdpClient { Client = socket })
+            {
+                udpClient.Connect(endPoint.Address, endPoint.Port);
+                Console.WriteLine($"Text to send to {endPoint}. (empty to exit):");
+                while (true)
+                {
+                    var input = Console.ReadLine();
+                    if (string.IsNullOrEmpty(input))
+                    {
+                        if (Ask("Exit?", new[] { "Y", "N" }, "N") == "Y")
+                        {
+                            break;
+                        }
+
+                        continue;
+                    }
+                    var data = Encoding.ASCII.GetBytes(input);
+                    udpClient.Send(data, data.Length);
+                }
+            }
+            Console.WriteLine("The End");
+        }
+
+        private static IPEndPoint GetEndPoint(string specifyPrompt, string ipAddressPrompt, string portPrompt, int? defaultPort = null)
+        {
+            return Ask(specifyPrompt, new[] { "Y", "N" }, "N") == "Y"
+                ? GetEndPoint(ipAddressPrompt, portPrompt, defaultPort)
+                : new IPEndPoint(IPAddress.Any, 0);
+        }
+
+        private static IPEndPoint GetEndPoint(string ipAddressPrompt, string portPrompt, int? defaultPort = null)
+        {
+            var port = -1;
+            var ipAddress = Ask
+            (
+                ipAddressPrompt,
+                (string input, out IPAddress address) =>
+                {
+                    var index = input.IndexOf(':');
+                    if (index == -1)
+                    {
+                        if (!string.IsNullOrWhiteSpace(input))
+                        {
+                            return TryParseIPAddress(input, out address);
+                        }
+                        address = default;
+                        return false;
+                    }
+                    var pending = input.Substring(index + 1);
+                    if (TryParsePositiveInt(pending, out port))
+                    {
+                        input = input.Substring(0, index);
+                        if (!string.IsNullOrWhiteSpace(input))
+                        {
+                            return TryParseIPAddress(input, out address);
+                        }
+                    }
+                    address = default;
+                    return false;
+                }
+            );
+            if (port != -1)
+            {
+                return new IPEndPoint(ipAddress, port);
+            }
+
+            var staticObject = $"\nIP Address: {ipAddress}";
+            StaticObjects.Add($"\nIP Address: {ipAddress}");
+            port = defaultPort.HasValue
+                ? Ask
+                (
+                    portPrompt,
+                    TryParsePositiveInt,
+                    defaultPort.Value
+                ) : Ask<int>
+                (
+                    portPrompt,
+                    TryParsePositiveInt
+                );
+            StaticObjects.Remove(staticObject);
+
+            return new IPEndPoint(ipAddress, port);
+
+            bool TryParseIPAddress(string input, out IPAddress address)
+            {
+                if (IPAddress.TryParse(input, out address))
+                {
+                    return true;
+                }
+
+                if (input.Length > 255)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    var hostInfo = Dns.GetHostEntry(input);
+                    address = hostInfo.AddressList[0];
+                    return true;
+                }
+                catch (SocketException exception)
+                {
+                    GC.KeepAlive(exception);
+                    return false;
+                }
+            }
+
+            bool TryParsePositiveInt(string input, out int result)
+            {
+                return int.TryParse(input, out result) && result > 0;
+            }
         }
 
         private static void Main()
@@ -77,10 +216,10 @@ namespace Experiment
                 var publicEndPoint = result.PublicEndPoint;
                 if (publicEndPoint != null)
                 {
-                    Console.WriteLine(publicEndPoint.ToString());
+                    StaticObjects.Add($"Public IP: {publicEndPoint}");
                 }
                 var netType = result.NetType;
-                Console.WriteLine(netType.ToString());
+                StaticObjects.Add($"Network Type: {netType}");
                 if (netType == STUN_NetType.FullCone || netType == STUN_NetType.OpenInternet)
                 {
                     if (Ask("Listen?", new[] { "Y", "N" }, "Y") == "Y")
@@ -92,27 +231,6 @@ namespace Experiment
 
                 Client(socket);
             }
-        }
-
-        private static void Client(Socket socket)
-        {
-            var endPoint = GetEndPoint("Listener IP Address:", "Listener Port:");
-            using (var udpClient = new UdpClient{Client = socket})
-            {
-                udpClient.Connect(endPoint.Address, endPoint.Port);
-                Console.WriteLine("Text to send (empty to exit):");
-                while (true)
-                {
-                    var input = Console.ReadLine();
-                    if (string.IsNullOrEmpty(input))
-                    {
-                        break;
-                    }
-                    var data = Encoding.ASCII.GetBytes(input);
-                    udpClient.Send(data, data.Length);
-                }
-            }
-            Console.WriteLine("The End");
         }
 
         private static void Server(Socket socket)
@@ -147,92 +265,44 @@ namespace Experiment
                         }
                     }
                 );
-                Console.WriteLine("Listening (Press any key to exit)");
+                StaticObjects.Add("Listening");
                 serverThread.Start();
-                Console.ReadKey();
+                IPEndPoint target = null;
+                object staticObject = null;
+                while (true)
+                {
+                    if (target == null)
+                    {
+                        target = GetEndPoint("Target IP: ", "Target Port: ");
+                        staticObject = $"Text to send to: {target}. (empty to exit)";
+                        StaticObjects.Add(staticObject);
+                    }
+                    else
+                    {
+                        var text = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(text))
+                        {
+                            if (Ask("Exit?", new[] { "Y", "N" }, "N") == "Y")
+                            {
+                                break;
+                            }
+                        }
+                        else if (text == ".")
+                        {
+                            target = null;
+                            StaticObjects.Remove(staticObject);
+                            staticObject = null;
+                        }
+                        else
+                        {
+                            socket.SendTo(Encoding.ASCII.GetBytes(text), target);
+                        }
+                    }
+                }
                 cancellationTokenSource.Cancel(false);
             }
 
             Console.WriteLine("The End");
-        }
-
-        private static IPEndPoint GetEndPoint(string specifyPrompt, string ipAddressPrompt, string portPrompt, int? defaultPort = null)
-        {
-            return Ask(specifyPrompt, new[] { "Y", "N" }, "N") == "Y"
-                ? GetEndPoint(ipAddressPrompt, portPrompt, defaultPort)
-                : new IPEndPoint(IPAddress.Any, 0);
-        }
-
-        private static IPEndPoint GetEndPoint(string ipAddressPrompt, string portPrompt, int? defaultPort = null)
-        {
-            var localPort = -1;
-            var localIPAddress = Ask
-            (
-                ipAddressPrompt,
-                (string input, out IPAddress ipAddress) =>
-                {
-                    var index = input.IndexOf(':');
-                    if (index == -1)
-                    {
-                        return TryParseIPAddress(input, out ipAddress);
-                    }
-                    var pending = input.Substring(index + 1);
-                    if (TryParsePositiveInt(pending, out localPort))
-                    {
-                        input = input.Substring(0, index);
-                        return TryParseIPAddress(input, out ipAddress);
-                    }
-                    ipAddress = default;
-                    return false;
-                }
-            );
-            if (localPort != -1)
-            {
-                return new IPEndPoint(localIPAddress, localPort);
-            }
-            localPort = defaultPort.HasValue
-                ? Ask
-                (
-                    portPrompt,
-                    TryParsePositiveInt,
-                    defaultPort.Value
-                ) : Ask<int>
-                (
-                    portPrompt,
-                    TryParsePositiveInt
-                );
-
-            return new IPEndPoint(localIPAddress, localPort);
-
-            bool TryParseIPAddress(string input, out IPAddress ipAddress)
-            {
-                if (IPAddress.TryParse(input, out ipAddress))
-                {
-                    return true;
-                }
-
-                if (input.Length > 255)
-                {
-                    return false;
-                }
-
-                try
-                {
-                    var hostInfo = Dns.GetHostEntry(input);
-                    ipAddress = hostInfo.AddressList[0];
-                    return true;
-                }
-                catch (SocketException exception)
-                {
-                    GC.KeepAlive(exception);
-                    return false;
-                }
-            }
-
-            bool TryParsePositiveInt(string input, out int port)
-            {
-                return int.TryParse(input, out port) && port > 0;
-            }
         }
     }
 }
