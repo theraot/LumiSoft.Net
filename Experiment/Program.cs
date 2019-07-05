@@ -205,8 +205,25 @@ namespace Experiment
             }
         }
 
+        private static void TraceRoute(IPAddress destination)
+        {
+            var ipAddresses = new List<IPAddress>();
+            Theraot.Net.TraceRoute.Trace
+            (
+                destination,
+                (_, node) =>
+                {
+                    ipAddresses.Add(node.Address);
+                    return true;
+                },
+                () => StaticObjects.Add( "Trace Route: " + string.Join(" -> ", ipAddresses.ConvertAll(input => input.ToString())))
+            );
+        }
+
         private static void Main()
         {
+            var externalIP = IPAddress.Parse(ExternalIP.Get());
+            TraceRoute(externalIP);
             var stunEndpoint = GetEndPoint("STUN Server: ", "STUN Port (empty for default = 3478)", 3478);
             var local = GetEndPoint("Specify local IP?", "Local IP Address: ", "Local Port: ");
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
@@ -216,7 +233,7 @@ namespace Experiment
                 var publicEndPoint = result.PublicEndPoint;
                 if (publicEndPoint != null)
                 {
-                    StaticObjects.Add($"Public IP: {publicEndPoint}");
+                    StaticObjects.Add($"Public End Point: {publicEndPoint}");
                 }
                 var netType = result.NetType;
                 StaticObjects.Add($"Network Type: {netType}");
